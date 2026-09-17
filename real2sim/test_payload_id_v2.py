@@ -39,4 +39,3 @@ def test_dynamic_rejects_missing_references():
     base=_record(); payload=_record(); payload['guard_passed']=np.array([False])
     out=dynamic_inertia_identify(base,payload,{'mass_kg':.4,'center_of_mass_m':[0,0,0]})
     assert out['accepted'] is False and out['source']=='UNOBSERVABLE'
-

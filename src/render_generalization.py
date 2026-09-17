@@ -40,7 +40,7 @@ try:
    box.set_world_pose(v['box'],v['box_quat']);box.set_linear_velocity(np.zeros(3));box.set_angular_velocity(np.zeros(3))
    # Render only. Recorded body and joint states are never re-integrated by physics.
    omni.physx.get_physx_interface().update_transformations(True,True,True,False)
-   
+
    for _ in range(8):world.render()
    if os.environ.get('FR3_RENDER_TEST'):print('STATE_CHECK',frame_id,v['box'],box.get_world_pose()[0].tolist(),float(np.max(np.abs(robot.get_joint_positions()-np.array(v['q'])[ix]))),flush=True)
    pictures=[cv2.cvtColor(c.get_rgba()[:,:,:3].astype(np.uint8),cv2.COLOR_RGB2BGR) for c in views]
