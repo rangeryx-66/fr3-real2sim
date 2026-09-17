@@ -20,6 +20,8 @@ The repository does **not** redistribute AnyGrasp SDK, weights or issued license
 
 `calibration/` and `src/` also retain historical research entry points for audit. The supported workflow is described below; a historical runner's absolute path or result directory is not a current default. `config/mv_sam3d_static_frozen_v1.json` records the tested 8-view selection (2/4 are ablations). `config/fr3.urdf` and `config/fr3.srdf` are the generated FR3 descriptions used in the experiments.
 
+For an agent that invokes grasp, scan, reconstruction and PayloadID as separate skills, see [the handoff contract](docs/AGENT_HANDOFF.md). `scripts/make_handoff.py` converts existing results into read-only, SHA-256-provenanced stage JSON and rejects incomplete safety/QA gates. It does not operate the robot. In particular, the station scan is an independent scene until a physical placement record proves identity continuity, and a raw MV-SAM3D GLB is only a visual result.
+
 ## External versions and setup
 
 Use Linux with an NVIDIA GPU. The reference host used Isaac Sim 6.0.1 / Python 3.12, a separate RoboStack ROS 2 Humble/MoveIt environment, a separate AnyGrasp environment, a separate MV-SAM3D environment, and a Drake/official PayloadID environment. Keep these interpreters separate; Isaac's Python, ROS, AnyGrasp and the official estimator have incompatible dependency sets. A package-exact ROS environment export is `ros_environment_explicit.txt`; paths and GPU drivers are host specific.
