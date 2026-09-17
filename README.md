@@ -38,7 +38,7 @@ Place the vendor supplied AnyGrasp files at their original SDK relative location
 
 ```text
 $ANYGRASP_SDK_ROOT/
-  gsnet.py
+  gsnet.py or gsnet*.so      # vendor Python/compiled module
   log/checkpoint_detection.tar   # vendor checkpoint; not committed
   license/                   # complete issued license bundle; not committed
 ```

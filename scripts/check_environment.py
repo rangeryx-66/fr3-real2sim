@@ -36,7 +36,8 @@ def main() -> int:
         add('ROS Python', value('ROS_ENV')/'bin/python')
     if 'grasp' in requested or 'payload' in requested:
         sdk = value('ANYGRASP_SDK_ROOT')
-        add('AnyGrasp SDK gsnet.py', sdk/'gsnet.py')
+        add('AnyGrasp SDK gsnet module', sdk,
+            (sdk/'gsnet.py').exists() or any(sdk.glob('gsnet*.so')))
         add('AnyGrasp checkpoint', sdk/'log/checkpoint_detection.tar')
         license_dir = sdk/'license'
         add('AnyGrasp issued license directory', license_dir,
