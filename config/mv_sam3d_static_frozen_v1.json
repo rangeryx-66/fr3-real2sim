@@ -1,0 +1,51 @@
+{
+  "schema": "fr3_mv_sam3d_static_config/v1",
+  "frozen": true,
+  "grasp_executor": "unchanged_frozen_external_executor",
+  "acquisition": {
+    "mode": "post_place_stationary_scan",
+    "scan_station": "<run_dir>/scan_station",
+    "object_state": "placed_released_arm_parked",
+    "source_frames": 1800,
+    "rings": [
+      {"name": "horizontal", "frames": 900, "elevation_deg": 14},
+      {"name": "high", "frames": 900, "elevation_deg": 34}
+    ],
+    "gripper_occlusion": "excluded_by_object_and_gripper_masks",
+    "camera_pose": "T_base_camera_from_scan_manifest"
+  },
+  "view_selection": {
+    "default_count": 8,
+    "ablation_counts": [2, 4, 8],
+    "indices_by_count": {
+      "2": [0, 900],
+      "4": [0, 899, 900, 1799],
+      "8": [0, 299, 599, 899, 900, 1199, 1499, 1799]
+    },
+    "policy": "cross_ring_view_diversity_with_high_mask_overlap",
+    "mask_iou_min_observed": 0.9008,
+    "gt_used_for_selection": false
+  },
+  "reconstruction": {
+    "backend": "official_mv_sam3d",
+    "repository": "${MV_SAM3D_ROOT}",
+    "entrypoint": "run_inference_weighted.py",
+    "decode_formats": ["gaussian", "mesh"],
+    "mask_prompt": "object_name",
+    "texture_baking": false,
+    "raw_output_requires_metric_calibration": true,
+    "metric_constraint": "RGB-D depth + T_base_camera + object mask after inference",
+    "gt_used_for_generation_or_alignment": false
+  },
+  "outputs": {
+    "glb": "result.glb",
+    "gaussian": "result.ply",
+    "preview": "render_mesh_preview.py",
+    "downstream": "metric_calibration_then_collision_and_isaac_packaging"
+  },
+  "audit": {
+    "gpu5_oom_retry": "preserved_in_results/mv_sam3d_soup_stationary_v2/mv_02.log",
+    "selected_run": "GPU4 rerun with identical inputs and model settings",
+    "report": "results/mv_sam3d_soup_stationary_v2/MV_SAM3D_STATIC_REPORT.md"
+  }
+}

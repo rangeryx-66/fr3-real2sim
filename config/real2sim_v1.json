@@ -1,0 +1,78 @@
+{
+  "schema": "fr3_real2sim_config/v1",
+  "grasp_executor": "frozen; external dependency",
+  "required_state": "FREE_SPACE_STABLE",
+  "scan": {
+    "camera": "independent fixed oblique rgbd 640x480@30Hz",
+    "scan_station_B_m": [0.5, 0.0, 0.32],
+    "nominal_fx_px": 800,
+    "frames_per_pass": 12,
+    "formal_passes": 2,
+    "second_pass": "physical place/regrasp, approximately orthogonal",
+    "trajectory_profile": "continuous",
+    "continuous_trajectory": {
+      "step_deg": 10,
+      "tilt_deg": 22,
+      "frames_per_pass": 30,
+      "settle_seconds": 0.04,
+      "selection": "fixed high-overlap serpentine; next-best-view audit proposes the next physical reorientation"
+    },
+    "object_mask": "Isaac instance segmentation in v1",
+    "gripper_mask": "Isaac instance segmentation in v1",
+    "reconstruction": {
+      "final_backend": "ReconViaGen v0.5 official hybrid multi-view",
+      "input": "RGB-D + T_base_camera + T_C_object + object/gripper masks",
+      "metric_constraint": "RGB-D and robot pose in base/object metric frame; real depth wins; reject conflicting generated faces",
+      "fallback_and_audit": ["BundleSDF", "VGGT"],
+      "gt_used_for_generation_or_alignment": false
+    },
+    "frame_quality": {
+      "min_object_pixels": 3500,
+      "min_depth_valid_ratio": 0.985,
+      "max_gripper_occlusion": 0.42,
+      "mask_close_px": 3,
+      "mask_erode_px": 1,
+      "gripper_guard_px": 5,
+      "depth_median_px": 3,
+      "max_local_depth_delta_mm": 4
+    },
+    "fusion": {
+      "geometry_backend": "ReconViaGen v0.5 complete mesh + RGB-D metric constraint + TSDF audit",
+      "voxel_m": 0.0015,
+      "truncation_m": 0.006,
+      "bundlesdf_neural_mesh_candidate": {
+        "mesh_resolution_m": 0.002,
+        "global_steps": 3000,
+        "accepted": false,
+        "reason": "geometry metrics and small-component noise regressed"
+      },
+      "texture_resolution": 2048,
+      "texture_occlusion_depth_tolerance_m": 0.004,
+      "texture_luma_floor_lab": 96,
+      "texture_exposure_gain_limits": [0.65, 2.2],
+      "vggt_metric_fusion": {
+        "status": "fallback/audit_only; not final mesh backend",
+        "model": "official VGGT",
+        "checkpoint": "/data1/home/rangeryx/vggt/checkpoint/model.pt",
+        "real_depth_priority": true,
+        "gripper_excluded": true,
+        "confidence_quantile": 0.75,
+        "conflict_threshold_fraction": 0.20,
+        "conflict_tolerance": "max(5 mm, 10% of measured depth)",
+        "fallback_policy": "fill only invalid real depth; reject conflicting prediction; never hallucinate"
+      }
+    }
+  },
+  "payload_id": {
+    "duration_s": 15.0,
+    "command_rate_hz": 30.0,
+    "measurement_rate_hz": 240.0,
+    "joint_amplitude_rad": [0.025, 0.03, 0.02, 0.035, 0.025, 0.04, 0.045],
+    "relative_translation_abort_m": 0.003,
+    "relative_rotation_abort_deg": 5.0,
+    "contact_threshold_N": 0.1,
+    "parameter_order": ["m", "hx", "hy", "hz", "Ixx", "Ixy", "Ixz", "Iyy", "Iyz", "Izz"]
+  },
+  "collision": {"method": "CoACD", "threshold": 0.05, "max_parts": 24},
+  "ground_truth_policy": "evaluation-only after estimates are written"
+}
