@@ -2,6 +2,8 @@
 
 This is the integration contract for an agent that invokes the existing **Grasp**, **ScanStation**, **MV-SAM3D**, **PayloadID**, and **AssetExport** skills. It describes actual artifacts and safety gates. `scripts/make_handoff.py` emits a normalized read-only handoff JSON for the first four stages; it does not move the robot or change a model. Source artifacts remain authoritative.
 
+For PayloadID implementation and reproduction, including the TCP Jacobian origin fix, corrected `dq` semantics, actual-opening empty baseline, per-pose Drake q-mismatch compensation and COM confidence gate, read [`FR3_PAYLOAD_COM_GUIDE.md`](FR3_PAYLOAD_COM_GUIDE.md) before running a capture. The historical estimator-only entry point is not the final q-compensated production path.
+
 ## State and ordering
 
 ```text
