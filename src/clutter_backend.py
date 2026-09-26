@@ -11,11 +11,11 @@ from pathlib import Path
 import numpy as np
 from scipy.spatial.transform import Rotation
 import rclpy
-from backend import Backend, Failure, ROOT, BASE, TCP, GROUP, TOUCH, pose, stamped
+from backend import Backend, Failure, ROOT, BASE, TCP, GROUP, TOUCH, PROFILE, pose, stamped
 from moveit_msgs.srv import GetCartesianPath, GetStateValidity, ApplyPlanningScene, GetPlanningScene
 from moveit_msgs.msg import RobotState, CollisionObject, AttachedCollisionObject, AllowedCollisionEntry, PlanningSceneComponents
 from shape_msgs.msg import SolidPrimitive
-from frames import grasp_to_tcp
+from frames import grasp_to_robot_tcp
 import plant
 
 def transform(p,q_wxyz):
@@ -113,8 +113,8 @@ class ClutterBackend(Backend):
         detail=dict(rank=g['rank'],score=g['score'],checks=[],stage='GRASP_IK')
         started=time.monotonic();self.last_contacts=[]
         try:
-            if not 0<g['width']<=.08:raise Failure('GRIPPER_WIDTH','out of range')
-            pre,grasp,lift=grasp_to_tcp(data['T_B_C'],g['rotation'],g['translation'],g['depth'])
+            if not 0<g['width']<=PROFILE.open_width_m:raise Failure('GRIPPER_WIDTH','out of range')
+            pre,grasp,lift=grasp_to_robot_tcp(data['T_B_C'],g['rotation'],g['translation'],g['depth'],PROFILE.grasp_tip_offset_m)
             current=self.measured();gs=self.ik(grasp,current)
             detail['checks']+=['grasp_ik','joint_limits','self_collision','robot_world_collision']
             detail['stage']='PREGRASP';ps=self.ik(pre,gs);detail['checks'].append('pregrasp_ik_collision')
@@ -124,8 +124,9 @@ class ClutterBackend(Backend):
             T_B_O=transform(self.initial['box'],self.initial['box_quat'])
             self.attach(grasp,T_B_O)
             width=float(np.sum(np.abs(grasp[:3,1]@T_B_O[:3,:3])*[.045,.045,.05]))
-            for name in ['fr3_finger_joint1','fr3_finger_joint2']:
-                gs.joint_state.position[gs.joint_state.name.index(name)]=min(.04,width/2)
+            from robot_profile import gripper_positions
+            for name,value in gripper_positions(PROFILE,min(PROFILE.open_width_m,width)).items():
+                if name in gs.joint_state.name:gs.joint_state.position[gs.joint_state.name.index(name)]=value
             gs=self.with_attachment(gs);micro=grasp.copy();micro[2,3]+=.005
             self.support_contact(True)
             mt=self.cartesian(gs,micro)
@@ -159,7 +160,7 @@ class ClutterBackend(Backend):
         try:
             plant.command(dict(op='reset',seed=seed));plant.settle(1.)
             self.attached=None;result['tf_check']=self.check_fk()
-            self.reset_scene();self.gripper(.08);plant.settle(.3)
+            self.reset_scene();self.gripper(PROFILE.open_width_m);plant.settle(.3)
             self.initial=plant.state();result['planning_scene_world_ids']=self.scene_ids;result['initial_layout']=self.initial['clutter']['obstacles'];result['initial_target']=dict(position=self.initial['box'],quaternion_wxyz=self.initial['box_quat'])
             plant.command(dict(op='arm_metrics'));self.phase('PERCEPTION')
             data,path=self.perception(seed);result['grasp_input']=path;result['grasp_sha256']=hashlib.sha256(Path(path).read_bytes()).hexdigest()

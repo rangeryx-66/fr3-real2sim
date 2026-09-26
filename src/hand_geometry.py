@@ -2,10 +2,12 @@
 import itertools
 import numpy as np
 from frames import grasp_to_tcp
+from robot_profile import get_profile
+_PROFILE=get_profile()
 
 SIZE=np.array([.045,.045,.05])
-PAD_X=(-.00875,.00875)
-PAD_Z=(-.009,.0095)  # .0584 + (.04525 +/-.0185/2) - .1034
+PAD_X=(-.028,.028) if _PROFILE.name=='piper' else (-.00875,.00875)
+PAD_Z=(-.070,-.006) if _PROFILE.name=='piper' else (-.009,.0095)  # .0584 + (.04525 +/-.0185/2) - .1034
 
 def clip(poly,axis,bound,sign):
     out=[]

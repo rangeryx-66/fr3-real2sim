@@ -7,8 +7,8 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 import rclpy
 from moveit_msgs.srv import GetPositionFK
-from clutter_backend import ClutterBackend,ROOT,BASE,TCP,transform
-from frames import grasp_to_tcp
+from clutter_backend import ClutterBackend,ROOT,BASE,TCP,PROFILE,transform
+from frames import grasp_to_robot_tcp
 from hand_geometry import geometry
 import plant
 
@@ -35,7 +35,7 @@ class ContactBackend(ClutterBackend):
         return data,str(path)
     def candidate(self,g,data):
         detail,plan=super().candidate(g,data)
-        pre,H,lift=grasp_to_tcp(data['T_B_C'],g['rotation'],g['translation'],g['depth'])
+        pre,H,lift=grasp_to_robot_tcp(data['T_B_C'],g['rotation'],g['translation'],g['depth'],PROFILE.grasp_tip_offset_m)
         geom=geometry(H,transform(self.initial['box'],self.initial['box_quat']));detail['hand_geometry']=geom
         # Robot-specific geometric gate; no score changes or pose shifts.
         # The coverage threshold is explicitly calibrated on the diagnostic box cohort.
@@ -44,7 +44,7 @@ class ContactBackend(ClutterBackend):
         if plan is not None and self.selected_targets is None:
             self.selected_targets=dict(PREGRASP=pre,APPROACH=H,LIFT=lift)
             T_C_G=np.eye(4);T_C_G[:3,:3]=g['rotation'];T_C_G[:3,3]=g['translation']
-            T_G_H=np.eye(4);T_G_H[:3,:3]=[[0,0,1],[0,1,0],[-1,0,0]];T_G_H[0,3]=g['depth']-.0095
+            T_G_H=np.eye(4);T_G_H[:3,:3]=[[0,0,1],[0,1,0],[-1,0,0]];T_G_H[0,3]=g['depth']-PROFILE.grasp_tip_offset_m
             self.telemetry['grasp']=copy.deepcopy(g)
             self.telemetry['TF']=dict(T_B_C=data['T_B_C'],T_C_G=T_C_G.tolist(),T_G_TCP=T_G_H.tolist(),T_B_TCP=H.tolist())
             self.telemetry['commanded_geometry']=geom

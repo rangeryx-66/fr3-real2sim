@@ -10,16 +10,18 @@ from sensor_msgs.msg import JointState
 from control_msgs.action import FollowJointTrajectory, GripperCommand
 from rosgraph_msgs.msg import Clock
 import plant
+from robot_profile import get_profile,gripper_positions
+PROFILE=get_profile()
 class Bridge(Node):
     def __init__(self):
-        super().__init__('isaac_fr3_controller')
+        super().__init__(f'isaac_{PROFILE.name}_controller')
         self.group=ReentrantCallbackGroup();self.busy=threading.Lock()
         self.pub=self.create_publisher(JointState,'/joint_states',10)
         self.clock=self.create_publisher(Clock,'/clock',10)
         self.publish_group=MutuallyExclusiveCallbackGroup()
         self.create_timer(.02,self.publish,callback_group=self.publish_group)
-        self.arm=ActionServer(self,FollowJointTrajectory,'/fr3_arm_controller/follow_joint_trajectory',execute_callback=self.execute,goal_callback=self.goal,cancel_callback=self.cancel,callback_group=self.group)
-        self.hand=ActionServer(self,GripperCommand,'/franka_gripper/gripper_action',execute_callback=self.gripper,goal_callback=self.goal,cancel_callback=self.cancel,callback_group=self.group)
+        self.arm=ActionServer(self,FollowJointTrajectory,PROFILE.arm_action,execute_callback=self.execute,goal_callback=self.goal,cancel_callback=self.cancel,callback_group=self.group)
+        self.hand=ActionServer(self,GripperCommand,PROFILE.gripper_action,execute_callback=self.gripper,goal_callback=self.goal,cancel_callback=self.cancel,callback_group=self.group)
     def goal(self,request):return GoalResponse.ACCEPT if not self.busy.locked() else GoalResponse.REJECT
     def cancel(self,handle):
         plant.submit({'op':'stop'});return CancelResponse.ACCEPT
@@ -53,10 +55,13 @@ class Bridge(Node):
         result=GripperCommand.Result()
         with self.busy:
             try:
-                opening=max(0.,min(.04,h.request.command.position))
-                r=plant.command(dict(op='trajectory',names=['fr3_finger_joint1','fr3_finger_joint2'],points=[dict(t=1.,q=[opening,opening])],gripper=True))
-                s=plant.state();result.position=s['q'][s['names'].index('fr3_finger_joint1')]
-                result.reached_goal=abs(result.position-opening)<.002
+                width=max(0.,min(PROFILE.open_width_m,h.request.command.position*(2 if PROFILE.name=='fr3' else 1)))
+                desired=gripper_positions(PROFILE,width);s=plant.state();desired={n:q for n,q in desired.items() if n in s['names']}
+                r=plant.command(dict(op='trajectory',names=list(desired),points=[dict(t=1.,q=list(desired.values()))],gripper=True))
+                s=plant.state();actual=float(s['q'][s['names'].index(PROFILE.command_gripper_joint)])
+                result.position=actual
+                goal=width/2 if PROFILE.name=='fr3' else width
+                result.reached_goal=abs(actual-goal)<.002
                 result.stalled=not result.reached_goal
                 if not r['ok']:raise RuntimeError(str(r))
                 h.succeed()

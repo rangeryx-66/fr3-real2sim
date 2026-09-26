@@ -1,7 +1,8 @@
 import json
 import time
+import os
 from urllib.request import Request, urlopen
-URL='http://127.0.0.1:18765'
+URL='http://127.0.0.1:'+os.environ.get('PLANT_PORT','18765')
 def state(view=''):
     with urlopen(URL+('/'+view if view else ''),timeout=3) as f:return json.load(f)
 def submit(data):

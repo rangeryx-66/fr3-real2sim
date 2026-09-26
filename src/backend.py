@@ -5,6 +5,7 @@ import json
 import subprocess
 import time
 import traceback
+import hashlib
 import xml.etree.ElementTree as ET
 from pathlib import Path
 import numpy as np
@@ -18,13 +19,15 @@ from moveit_msgs.msg import RobotState, Constraints, JointConstraint, CollisionO
 from shape_msgs.msg import SolidPrimitive
 from geometry_msgs.msg import Pose, PoseStamped
 from control_msgs.action import GripperCommand
-from frames import grasp_to_tcp, pose_values
+from frames import grasp_to_robot_tcp, pose_values
+from robot_profile import get_profile
 import plant
 ROOT=Path(__file__).resolve().parents[1]
 RUN=ROOT/'results'/('run_'+str(time.time_ns()))
 RUN.mkdir(parents=True,exist_ok=True)
-BASE='fr3_link0';TCP='fr3_hand_tcp';GROUP='fr3_arm'
-TOUCH=['fr3_leftfinger','fr3_rightfinger']
+PROFILE=get_profile()
+BASE=PROFILE.base_link;TCP=PROFILE.tcp_link;GROUP=PROFILE.move_group
+TOUCH=list(PROFILE.touch_links)
 class Failure(RuntimeError):
     def __init__(self,category,detail=''):super().__init__(detail);self.category=category
 
@@ -36,15 +39,15 @@ def stamped(T):
 
 class Backend(Node):
     def __init__(self):
-        super().__init__('anygrasp_moveit_backend')
+        super().__init__(f'anygrasp_moveit_{PROFILE.name}_backend')
         self.rpc={}
         for name,typ in [('compute_ik',GetPositionIK),('compute_fk',GetPositionFK),('check_state_validity',GetStateValidity),('plan_kinematic_path',GetMotionPlan),('compute_cartesian_path',GetCartesianPath),('apply_planning_scene',ApplyPlanningScene),('get_planning_scene',GetPlanningScene)]:
             c=self.create_client(typ,'/'+name)
             if not c.wait_for_service(timeout_sec=60):raise Failure('NO_PLAN','service unavailable '+name)
             self.rpc[name]=c
         self.exec_client=ActionClient(self,ExecuteTrajectory,'/execute_trajectory')
-        self.hand=ActionClient(self,GripperCommand,'/franka_gripper/gripper_action')
-        self.limits={j.attrib['name']:(float(j.find('limit').attrib['lower']),float(j.find('limit').attrib['upper'])) for j in ET.parse(ROOT/'config/fr3.urdf').findall('joint') if j.attrib['type'] in ['revolute','prismatic']}
+        self.hand=ActionClient(self,GripperCommand,PROFILE.gripper_action)
+        self.limits={j.attrib['name']:(float(j.find('limit').attrib['lower']),float(j.find('limit').attrib['upper'])) for j in ET.parse(PROFILE.urdf).findall('joint') if j.attrib['type'] in ['revolute','prismatic'] and j.find('limit') is not None}
     def future(self,f,timeout=90):
         rclpy.spin_until_future_complete(self,f,timeout_sec=timeout)
         if not f.done():raise Failure('NO_PLAN','ROS operation timeout')
@@ -67,7 +70,7 @@ class Backend(Node):
         r=self.action(self.exec_client,g,category)
         if r.error_code.val!=1:raise Failure(category,'execution code '+str(r.error_code.val))
     def gripper(self,width):
-        g=GripperCommand.Goal();g.command.position=width/2;g.command.max_effort=30.
+        g=GripperCommand.Goal();g.command.position=width/2 if PROFILE.name=='fr3' else width;g.command.max_effort=30.
         return self.action(self.hand,g,'BAD_CONTACT')
     def validate(self,state):
         for n,q in zip(state.joint_state.name,state.joint_state.position):
@@ -76,7 +79,8 @@ class Backend(Node):
         r=self.call('check_state_validity',req)
         if not r.valid:
             pairs=[(c.contact_body_1,c.contact_body_2) for c in r.contacts]
-            category='TABLE_COLLISION' if any('table' in x for pair in pairs for x in pair) else 'SELF_COLLISION' if all(x.startswith('fr3') for pair in pairs for x in pair) and pairs else 'WORLD_COLLISION'
+            is_robot=lambda x:any(x.startswith(prefix) for prefix in PROFILE.robot_link_prefixes)
+            category='TABLE_COLLISION' if any('table' in x for pair in pairs for x in pair) else 'SELF_COLLISION' if all(is_robot(x) for pair in pairs for x in pair) and pairs else 'WORLD_COLLISION'
             raise Failure(category,str(pairs))
     def ik(self,T,seed):
         req=GetPositionIK.Request();ik=req.ik_request;ik.group_name=GROUP;ik.ik_link_name=TCP;ik.pose_stamped=stamped(T);ik.robot_state=seed;ik.avoid_collisions=False;ik.timeout.sec=1
@@ -108,7 +112,7 @@ class Backend(Node):
         req=GetMotionPlan.Request();r=req.motion_plan_request;r.group_name=GROUP;r.pipeline_id='ompl';r.planner_id='RRTConnect';r.start_state=start;r.num_planning_attempts=5;r.allowed_planning_time=5.;r.max_velocity_scaling_factor=.15;r.max_acceleration_scaling_factor=.15
         con=Constraints()
         for n,q in zip(goal.joint_state.name,goal.joint_state.position):
-            if n.startswith('fr3_joint'):
+            if n in PROFILE.arm_joints:
                 c=JointConstraint();c.joint_name=n;c.position=q;c.tolerance_above=.001;c.tolerance_below=.001;c.weight=1.;con.joint_constraints.append(c)
         r.goal_constraints=[con]
         out=self.call('plan_kinematic_path',req).motion_plan_response
@@ -137,21 +141,41 @@ class Backend(Node):
             fi=acm.entry_names.index(name);acm.entry_values[bi].enabled[fi]=True;acm.entry_values[fi].enabled[bi]=True
         s.allowed_collision_matrix=acm
         if not self.call('apply_planning_scene',req).success:raise Failure('NO_PLAN','planning scene update failed')
+    def allow_collision_pair(self,first,second,allowed):
+        """Set one explicit ACM pair for phase-specific support contact."""
+        get=GetPlanningScene.Request();get.components.components=PlanningSceneComponents.ALLOWED_COLLISION_MATRIX
+        acm=self.call('get_planning_scene',get).scene.allowed_collision_matrix
+        for name in [first,second]:
+            if name not in acm.entry_names:
+                acm.entry_names.append(name)
+                for row in acm.entry_values:row.enabled.append(False)
+                row=AllowedCollisionEntry();row.enabled=[False]*len(acm.entry_names);acm.entry_values.append(row)
+        i,j=acm.entry_names.index(first),acm.entry_names.index(second)
+        acm.entry_values[i].enabled[j]=bool(allowed);acm.entry_values[j].enabled[i]=bool(allowed)
+        req=ApplyPlanningScene.Request();req.scene.is_diff=True;req.scene.allowed_collision_matrix=acm
+        if not self.call('apply_planning_scene',req).success:raise Failure('NO_PLAN','ACM update failed')
     def trial(self,index):
         result={'trial':index,'success':False,'candidates':[]}
         self.executions=[];self.stage='RESET'
         try:
             plant.command({'op':'reset'});plant.settle(1.)
-            result['tf_check']=self.check_fk();self.scene();self.gripper(.08)
+            result['tf_check']=self.check_fk();self.scene();self.gripper(PROFILE.open_width_m)
             self.stage='PERCEPTION'
             capture=plant.command({'op':'capture'})
             if not capture['ok'] or capture.get('object_points',0)<30:raise Failure('NO_GRASP',str(capture))
             output=RUN/f'trial_{index:02d}_grasps.json'
-            cmd=['/data1/home/rangeryx/.conda/envs/anygrasp/bin/python',str(ROOT/'src/infer.py'),'--input',capture['path'],'--output',str(output)]
-            with open(RUN/f'infer_{index:02d}.log','w') as f:
-                r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=180,env={**os.environ,"CUDA_VISIBLE_DEVICES":"1","LD_LIBRARY_PATH":"","PYTHONPATH":"","PATH":"/data1/home/rangeryx/.conda/envs/anygrasp/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin","CONDA_PREFIX":"/data1/home/rangeryx/.conda/envs/anygrasp"})
-            if r.returncode:raise Failure('NO_GRASP','inference subprocess failed; see log')
+            replay=os.environ.get('GRASP_REPLAY_JSON')
+            if replay:
+                source=Path(replay)
+                if not source.is_file():raise Failure('NO_GRASP','GRASP_REPLAY_JSON missing')
+                output.write_bytes(source.read_bytes());result['grasp_replay_source']=str(source)
+            else:
+                cmd=['/data1/home/rangeryx/.conda/envs/anygrasp/bin/python',str(ROOT/'src/infer.py'),'--input',capture['path'],'--output',str(output),'--top-k','20']
+                with open(RUN/f'infer_{index:02d}.log','w') as f:
+                    r=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT,timeout=180,env={**os.environ,"CUDA_VISIBLE_DEVICES":"1","LD_LIBRARY_PATH":"","PYTHONPATH":"","PATH":"/data1/home/rangeryx/.conda/envs/anygrasp/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin","CONDA_PREFIX":"/data1/home/rangeryx/.conda/envs/anygrasp"})
+                if r.returncode:raise Failure('NO_GRASP','inference subprocess failed; see log')
             data=json.loads(output.read_text())
+            result['grasp_json_sha256']=hashlib.sha256(output.read_bytes()).hexdigest()
             if data['frame']!='camera_optical':raise Failure('TF_ERROR','unexpected grasp frame')
             if not data['grasps']:raise Failure('NO_GRASP','zero candidates')
             result['capture']=capture
@@ -160,11 +184,16 @@ class Backend(Node):
             for g in data['grasps']:
                 detail={'rank':g['rank'],'score':g['score']}
                 try:
-                    if not 0<g['width']<=.08:raise Failure('GRIPPER_WIDTH','outside Franka Hand opening')
-                    pre,grasp,lift=grasp_to_tcp(data['T_B_C'],g['rotation'],g['translation'],g['depth'])
+                    if not 0<g['width']<=PROFILE.open_width_m:raise Failure('GRIPPER_WIDTH',f'outside {PROFILE.name} gripper opening')
+                    pre,grasp,lift=grasp_to_robot_tcp(data['T_B_C'],g['rotation'],g['translation'],g['depth'],PROFILE.grasp_tip_offset_m)
                     current=self.measured()
                     gs=self.ik(grasp,current);ps=self.ik(pre,gs)
                     approach=self.cartesian(ps,grasp)
+                    # Piper has one fewer arm DOF than FR3.  Reject grasps
+                    # whose approach is feasible but whose required vertical
+                    # lift runs into a wrist/joint limit.
+                    try:self.cartesian(gs,lift)
+                    except Failure as e:raise Failure('LIFT_FAIL',str(e))
                     traj=self.plan(current,ps)
                     detail['status']='VALID';detail['T_B_TCP']=grasp.tolist();chosen=(pre,grasp,lift,traj,approach,g)
                 except Failure as e:detail.update(status=e.category,detail=str(e))
@@ -188,7 +217,15 @@ class Backend(Node):
             if not recent or not all(min(h['forces'])>.1 for h in recent):raise Failure('BAD_CONTACT','no sustained bilateral finger/box contact')
             self.stage='LIFT'
             self.scene(attach=True)
-            try:lt=self.cartesian(self.measured(),lift)
+            # The attached target begins in real table contact.  Permit only
+            # that support pair for a 5 mm micro-lift, then restore collision
+            # checking before the remaining target-height lift.
+            actual=plant.state();micro=np.eye(4);micro[:3,:3]=Rotation.from_quat(np.roll(actual['tcp_quat'],-1)).as_matrix();micro[:3,3]=actual['tcp'];micro[2,3]+=.005
+            self.allow_collision_pair('box','table',True)
+            try:self.execute(self.cartesian(self.measured(),micro),'LIFT_FAIL')
+            finally:self.allow_collision_pair('box','table',False)
+            final=micro.copy();final[2,3]+=.095
+            try:lt=self.cartesian(self.measured(),final)
             except Failure as e:raise Failure('LIFT_FAIL',str(e))
             self.execute(lt,'LIFT_FAIL')
             self.stage='HOLD'

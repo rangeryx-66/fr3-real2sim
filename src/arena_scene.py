@@ -60,7 +60,8 @@ class ArenaMonitor(ns['ClutterMonitor']):
     def __init__(self,world,stage,material):
         self.bodies=[spawn(world,stage,material,f'clutter_{i}',s) for i,s in enumerate(DEFAULT['objects'][1:])]
         self.target=world.scene.get_object('box')
-        self.filters=[str(p.GetPath()) for p in stage.Traverse() if str(p.GetPath()).startswith('/World/FR3/') and p.HasAPI(UsdPhysics.RigidBodyAPI)]+['/World/box']
+        robot_root='/World/Piper/' if os.environ.get('GRASP_ROBOT','fr3')=='piper' else '/World/FR3/'
+        self.filters=[str(p.GetPath()) for p in stage.Traverse() if str(p.GetPath()).startswith(robot_root) and p.HasAPI(UsdPhysics.RigidBodyAPI)]+['/World/box']
         self.contacts=world.scene.add(RigidPrim(prim_paths_expr='/World/clutter_.*',name='clutter_contacts',contact_filter_prim_paths_expr=self.filters,track_contact_forces=True,prepare_contact_sensors=True))
         ns['SIZES']=np.array([np.diff(np.array(INVENTORY[s['asset']]['bounds']),axis=0)[0] for s in DEFAULT['objects'][1:]])
         assert all(np.max(np.abs(np.mean(INVENTORY[s['asset']]['bounds'],axis=0)))<1e-6 for s in DEFAULT['objects'][1:])

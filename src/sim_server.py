@@ -1,5 +1,6 @@
 """Isaac Sim physics plant. No IK, grasp heuristics, pose attachment or planning."""
 import argparse
+import os
 import json
 import queue
 import threading
@@ -13,6 +14,10 @@ p.add_argument('--port',type=int,default=18765)
 p.add_argument('--clutter',action='store_true')
 a=p.parse_args()
 ROOT=Path(__file__).resolve().parents[1]
+import sys
+sys.path.insert(0,str(ROOT/'src'))
+from robot_profile import get_profile,gripper_positions
+PROFILE=get_profile()
 from isaacsim import SimulationApp
 app=SimulationApp({'headless':True,'active_gpu':a.gpu,'physics_gpu':a.gpu,'multi_gpu':False})
 from isaacsim.core.api import World
@@ -26,8 +31,8 @@ from isaacsim.asset.importer.urdf import URDFImporter, URDFImporterConfig
 from pxr import UsdGeom, UsdPhysics, PhysxSchema
 import omni.usd
 DT=1/240
-HOME=np.array([0.,-.5,0.,-2.,0.,1.5,.785398])
-BOX=np.array([.5,0,.025])
+HOME=np.asarray(PROFILE.home,dtype=float)
+BOX=np.array([float(os.environ.get('GRASP_SCENE_X','.5')),0,.025])
 SIZE=np.array([.045,.045,.05])
 T_B_C=np.diag([1.,-1.,-1.,1.]); T_B_C[:3,3]=[.5,0,.8]
 world=World(stage_units_in_meters=1.,physics_dt=DT,rendering_dt=1/30,backend='numpy',device='cpu')
@@ -37,27 +42,45 @@ world.scene.add(FixedCuboid('/World/table',name='table',position=[.5,0,-.025],sc
 box=world.scene.add(DynamicCuboid('/World/box',name='box',position=BOX,scale=SIZE,mass=.06,color=np.array([.8,.12,.08]),physics_material=mat))
 asset=ROOT/'assets'
 asset.mkdir(exist_ok=True)
-asset_file=asset/'asset_path.txt'
+asset_file=asset/f'{PROFILE.name}_asset_path.txt'
+drive_kp={'.*joint[1-7]':10000.,'.*finger_joint.*':1000.} if PROFILE.name=='fr3' else {'.*joint[1-6]':10000.,'.*gripper.*':1000.}
+drive_kd={'.*joint[1-7]':400.,'.*finger_joint.*':40.} if PROFILE.name=='fr3' else {'.*joint[1-6]':400.,'.*gripper.*':40.}
 if asset_file.exists() and Path(asset_file.read_text().strip()).exists():
     usd=asset_file.read_text().strip()
 else:
-    usd=URDFImporter(URDFImporterConfig(urdf_path=str(ROOT/'config/fr3.urdf'),usd_path=str(asset),fix_base=True,allow_self_collision=True,merge_fixed_joints=False,joint_drive_type='force',joint_target_type='position',override_joint_stiffness={'.*joint[1-7]':10000.,'.*finger_joint.*':1000.},override_joint_damping={'.*joint[1-7]':400.,'.*finger_joint.*':40.})).import_urdf()
+    usd=URDFImporter(URDFImporterConfig(urdf_path=str(PROFILE.urdf),usd_path=str(asset),fix_base=True,allow_self_collision=True,merge_fixed_joints=False,joint_drive_type='force',joint_target_type='position',override_joint_stiffness=drive_kp,override_joint_damping=drive_kd)).import_urdf()
     asset_file.write_text(usd)
-add_reference_to_stage(usd,'/World/FR3')
+add_reference_to_stage(usd,PROFILE.usd_prim)
 stage=omni.usd.get_context().get_stage()
-robot=world.scene.add(SingleArticulation('/World/FR3',name='fr3'))
-finger_paths=[str(p.GetPath()) for p in stage.Traverse() if p.GetName() in ['fr3_leftfinger','fr3_rightfinger'] and p.HasAPI(UsdPhysics.RigidBodyAPI)]
+robot=world.scene.add(SingleArticulation(PROFILE.usd_prim,name=PROFILE.name))
+finger_paths=[str(p.GetPath()) for p in stage.Traverse() if p.GetName() in PROFILE.touch_links and p.HasAPI(UsdPhysics.RigidBodyAPI)]
 print('FINGER_PATHS',finger_paths,flush=True)
 assert len(finger_paths)==2, finger_paths
 for path in finger_paths:
     prim=stage.GetPrimAtPath(path)
     PhysxSchema.PhysxContactReportAPI.Apply(prim).CreateThresholdAttr(0.)
-contacts=world.scene.add(RigidPrim(prim_paths_expr=finger_paths[0].rsplit("/",1)[0]+"/fr3_.*finger",name='contacts',contact_filter_prim_paths_expr=['/World/box'],track_contact_forces=True,prepare_contact_sensors=True,max_contact_count=512))
+if PROFILE.name=='fr3':
+    contacts=world.scene.add(RigidPrim(prim_paths_expr=finger_paths[0].rsplit('/',1)[0]+'/fr3_.*finger',name='contacts',contact_filter_prim_paths_expr=['/World/box'],track_contact_forces=True,prepare_contact_sensors=True,max_contact_count=512))
+else:
+    _finger_views=[world.scene.add(RigidPrim(prim_paths_expr=path,name=f'piper_contact_{i}',contact_filter_prim_paths_expr=['/World/box'],track_contact_forces=True,prepare_contact_sensors=True,max_contact_count=256)) for i,path in enumerate(finger_paths)]
+    class _PairContacts:
+        prim_paths=finger_paths
+        def get_contact_force_matrix(self,dt):
+            return np.concatenate([np.asarray(v.get_contact_force_matrix(dt=dt)).reshape(1,-1,3) for v in _finger_views],axis=0)
+        def get_contact_force_data(self,dt):
+            rows=[];offset=0
+            for v in _finger_views:
+                force,point,normal,separation,count,index=[np.asarray(x) for x in v.get_contact_force_data(dt=dt)]
+                rows.append((force,point,normal,separation,count,index+offset));offset+=len(force)
+            return tuple(np.concatenate([r[i] for r in rows],axis=0) for i in range(6))
+    contacts=_PairContacts()
 from contact_trace import ContactTrace
 trace=ContactTrace(contacts)
-palm=SingleXFormPrim(finger_paths[0].rsplit('/',1)[0])
+palm_paths=([finger_paths[0].rsplit('/',1)[0]] if PROFILE.name=='piper' else [str(p.GetPath()) for p in stage.Traverse() if p.GetName()=='fr3_hand'])
+assert len(palm_paths)==1,palm_paths
+palm=SingleXFormPrim(palm_paths[0])
 clutter_enabled=True
-tcp_paths=[str(p.GetPath()) for p in stage.Traverse() if p.GetName()=='fr3_hand_tcp']
+tcp_paths=[str(p.GetPath()) for p in stage.Traverse() if p.GetName()==PROFILE.tcp_link]
 assert len(tcp_paths)==1,tcp_paths
 tcp=SingleXFormPrim(tcp_paths[0])
 camera=Camera('/World/camera',position=T_B_C[:3,3],resolution=(640,480),frequency=30)
@@ -69,12 +92,15 @@ world.reset()
 camera.initialize()
 camera.add_distance_to_image_plane_to_frame()
 names=robot.dof_names
-arm=[names.index('fr3_joint'+str(i)) for i in range(1,8)]
-fingers=[names.index('fr3_finger_joint'+str(i)) for i in [1,2]]
+arm=[names.index(n) for n in PROFILE.arm_joints]
+fingers=[names.index(n) for n in PROFILE.physical_finger_joints if n in names]
+gripper_dofs={n:names.index(n) for n in gripper_positions(PROFILE,PROFILE.open_width_m) if n in names}
 baseline_kp,baseline_kd=robot.get_articulation_controller().get_gains()
 baseline_kp=np.array(baseline_kp,copy=True);baseline_kd=np.array(baseline_kd,copy=True)
 print('BASELINE_GAINS',json.dumps(dict(names=names,kp=baseline_kp.tolist(),kd=baseline_kd.tolist())),flush=True)
-q=np.zeros(len(names));q[arm]=HOME;q[fingers]=.04
+q=np.zeros(len(names));q[arm]=HOME
+for n,v in gripper_positions(PROFILE,PROFILE.open_width_m).items():
+    if n in gripper_dofs:q[gripper_dofs[n]]=v
 robot.set_joint_positions(q)
 robot.apply_action(ArticulationAction(joint_positions=q))
 for _ in range(240): world.step(render=(_%8==0))
@@ -106,7 +132,9 @@ try:
                 if op=='reset':
                     if active: raise RuntimeError('trajectory active')
                     box.set_world_pose(BOX,[1,0,0,0]);box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
-                    target[arm]=HOME;target[fingers]=.04
+                    target[arm]=HOME
+                    for n,v in gripper_positions(PROFILE,PROFILE.open_width_m).items():
+                        if n in gripper_dofs:target[gripper_dofs[n]]=v
                     robot.set_joint_positions(target);robot.set_joint_velocities(np.zeros(len(names)))
                     history=[]
                     if clutter:

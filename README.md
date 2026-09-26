@@ -1,4 +1,4 @@
-# FR3 grasp, scan and physical asset identification
+# FR3/Piper grasp, scan and physical asset identification
 
 This repository contains the research code used to grasp objects with AnyGrasp + MoveIt 2 + FR3/Franka Hand in Isaac Sim, scan released objects with a stationary RGB-D camera, reconstruct visual shape with the **external official MV-SAM3D** implementation, and estimate payload mass and center of mass (COM) from paired empty/loaded FR3 torque records. It also contains CoACD collision and Isaac USD packaging utilities.
 
@@ -67,6 +67,23 @@ bash run.sh trial 10   # AnyGrasp + MoveIt trials, separate terminal
 Wait for `SIM_READY` and MoveIt's planning ready log before trials. The Arena household-object branch is `calibration/launch_real2sim.py` with `--target`, `--seed`, `--mode ANYGRASP`, `--gpu`, `--port`, `--domain`, `--output`, `--skip-scan` and optionally `--capture-payload --payload-v2 --mass-com-only`; run `--help` for all arguments. It launches the same frozen executor via `run_real2sim_pipeline.py`. Set `ROS_DOMAIN_ID` to avoid other ROS sessions. The simulator uses local HTTP only for transport between runtimes; MoveIt handles IK, collision and trajectory planning. The grasp result is determined from actual contact, target lift and hold, not trajectory completion.
 
 Transforms use column vectors, meters and `T_A_B` mapping B coordinates into A. AnyGrasp input/output is `camera_optical`; `T_base_camera` is saved with scan/grasp data. The mapping to `fr3_hand_tcp` is documented in `src/frames.py`; do not apply the flange mount transform a second time. The target is a free PhysX body during physical success checks.
+
+## Piper simulation backend (branch `piper`)
+
+The Piper port changes only the grasp robot layer. AnyGrasp inference, top-K score/rank/pose and the FR3 backend remain available. `src/robot_profile.py` contains link/action/joint names and opening conventions; `src/backend.py` is shared, while `src/piper_backend.py` and `src/fr3_backend.py` are explicit entry points. The vendored Piper description comes from AgileX's official `agx_arm_urdf` at the commit recorded in `third_party/agilex_piper/COMMITS.txt`; the MoveIt reference configuration is pinned there as well. Run:
+
+```bash
+python3 scripts/prepare_piper_description.py  # expands official Piper + gripper files
+export GRASP_ROBOT=piper
+bash run.sh piper-sim       # terminal 1
+bash run.sh piper-bridge    # terminal 2
+bash run.sh piper-moveit    # terminal 3
+bash run.sh piper-trial 10  # terminal 4
+```
+
+The generated `config/piper.urdf` and `config/piper.srdf` are host-local and gitignored because mesh paths are absolute. The generator defines `tcp_link` at the official distal finger plane (`gripper_base z=0.138 m`). AnyGrasp's grasp frame is mapped to the common TCP convention (+z approach, +y jaw separation), then applies a Piper-specific 20 mm insertion into the official 76.5 mm finger span. This value is independent of the FR3 9.5 mm TCP/tip correction. Candidate checks use Piper's official six joint limits, self/world/table collision, pregrasp, Cartesian approach and Cartesian lift. Physical success still requires bilateral contact, at least 8 cm true target lift and a two-second stable hold.
+
+For paired reachability studies, set the same `GRASP_SCENE_X` for both robots before starting either simulator. Never compare runs with different scene coordinates or AnyGrasp JSON. `GRASP_ROBOT=fr3` remains the default and retains the prior actions, frames and joint names. The scan and PayloadID sections below are still FR3-only; this branch does not silently apply FR3 hand or dynamics parameters to Piper.
 
 ## Reproduce a stationary scan and MV-SAM3D inference
 

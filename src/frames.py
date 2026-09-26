@@ -10,9 +10,9 @@ def rigid(T):
         raise ValueError('TF_ERROR: transform is not SE(3)')
     return T
 
-def grasp_to_tcp(T_B_C, rotation, translation, depth):
+def grasp_to_robot_tcp(T_B_C, rotation, translation, depth, tip_offset_m=.0095):
     # GraspNet: +x approach, +y jaw separation, +z height.
-    # Franka Hand TCP: +z approach, +y jaw separation; x_H = -z_G.
+    # Robot grasp TCP convention: +z approach, +y jaw separation; x_H=-z_G.
     T_C_G = np.eye(4)
     T_C_G[:3,:3] = rotation
     T_C_G[:3,3] = translation
@@ -21,13 +21,17 @@ def grasp_to_tcp(T_B_C, rotation, translation, depth):
     # GraspNet finger tips are at x_G=depth (graspnetAPI/utils/utils.py).
     # Official FR3 finger collision tip: .0584+.04525+.0185/2=.1129 m
     # in hand coordinates; official TCP is z=.1034 m, hence 9.5 mm behind tip.
-    T_G_H[0,3] = float(depth) - 0.0095
+    T_G_H[0,3] = float(depth) - float(tip_offset_m)
     T_B_H = rigid(T_B_C) @ rigid(T_C_G) @ rigid(T_G_H)
     pre = T_B_H.copy()
     pre[:3,3] -= 0.08 * T_B_H[:3,2]
     lift = T_B_H.copy()
     lift[2,3] += 0.10
     return pre, T_B_H, lift
+
+def grasp_to_tcp(T_B_C, rotation, translation, depth):
+    """Backward-compatible FR3 conversion."""
+    return grasp_to_robot_tcp(T_B_C,rotation,translation,depth,.0095)
 
 def pose_values(T):
     T = rigid(T)
