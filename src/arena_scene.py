@@ -6,7 +6,9 @@ from scipy.spatial.transform import Rotation
 from pxr import Usd,UsdGeom,UsdPhysics,PhysxSchema,Gf,UsdShade
 from isaacsim.core.utils.stage import add_reference_to_stage
 from isaacsim.core.prims import SingleRigidPrim,RigidPrim
+from workspace_mount import load_mount,transform_pose
 ROOT=Path(__file__).resolve().parents[1]
+MOUNT=load_mount()
 INVENTORY=json.loads((ROOT/'assets/arena_complex/inventory.json').read_text())
 PROTOCOL=json.loads((ROOT/'ARENA_COMPLEX_PROTOCOL.json').read_text())
 TARGET=os.environ.get('FR3_ARENA_TARGET','mustard')
@@ -22,7 +24,8 @@ def spawn(world,stage,material,name,spec):
     mass=UsdPhysics.MassAPI(prim).GetMassAttr().Get()
     if not mass or mass<=0:UsdPhysics.MassAPI.Apply(prim).CreateMassAttr(.2)
     PhysxSchema.PhysxContactReportAPI.Apply(prim).CreateThresholdAttr(0.)
-    b=world.scene.add(SingleRigidPrim('/World/'+name,name=name,position=np.array(spec['position']),orientation=np.array(spec['quaternion_wxyz'])))
+    position,orientation=transform_pose(spec['position'],spec['quaternion_wxyz'],MOUNT)
+    b=world.scene.add(SingleRigidPrim('/World/'+name,name=name,position=position,orientation=orientation))
     for p in Usd.PrimRange(prim):
         if p.HasAPI(UsdPhysics.CollisionAPI):UsdShade.MaterialBindingAPI.Apply(p).Bind(UsdShade.Material(stage.GetPrimAtPath('/World/grasp_material')),bindingStrength='strongerThanDescendants',materialPurpose='physics')
     print('ARENA_BODY',name,spec['asset'],'mass',UsdPhysics.MassAPI(prim).GetMassAttr().Get(),flush=True)
@@ -32,7 +35,9 @@ def table(world,stage,material):
     for p in list(Usd.PrimRange(prim)):
         if p.IsInstance():p.SetInstanceable(False)
     bounds=np.array(INVENTORY['table']['bounds']);shift=np.array([.5,0,0])-np.r_[bounds.mean(0)[:2],bounds[1,2]]
-    xf=UsdGeom.Xformable(prim);xf.AddTranslateOp().Set(Gf.Vec3d(*shift.tolist()))
+    position,orientation=transform_pose(shift,[1,0,0,0],MOUNT)
+    xf=UsdGeom.Xformable(prim);xf.AddTranslateOp().Set(Gf.Vec3d(*position.tolist()))
+    xf.AddOrientOp().Set(Gf.Quatf(float(orientation[0]),Gf.Vec3f(*map(float,orientation[1:]))))
     for p in Usd.PrimRange(prim):
         if p.HasAPI(UsdPhysics.RigidBodyAPI):
             rb=UsdPhysics.RigidBodyAPI(p);rb.CreateKinematicEnabledAttr(True)
@@ -43,7 +48,8 @@ def table(world,stage,material):
     return spawn(world,stage,material,'box',DEFAULT['objects'][0])
 def reset_target(box,seed):
     spec=EPISODES[seed]['objects'][0];assert spec['asset']==TARGET
-    box.set_world_pose(spec['position'],spec['quaternion_wxyz']);box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
+    position,orientation=transform_pose(spec['position'],spec['quaternion_wxyz'],MOUNT)
+    box.set_world_pose(position,orientation);box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
 def target_mask(camera,valid):
     data=camera.get_current_frame()['instance_id_segmentation']
     raw=data['data'].reshape(-1)
@@ -65,5 +71,8 @@ class ArenaMonitor(ns['ClutterMonitor']):
         self.contacts=world.scene.add(RigidPrim(prim_paths_expr='/World/clutter_.*',name='clutter_contacts',contact_filter_prim_paths_expr=self.filters,track_contact_forces=True,prepare_contact_sensors=True))
         ns['SIZES']=np.array([np.diff(np.array(INVENTORY[s['asset']]['bounds']),axis=0)[0] for s in DEFAULT['objects'][1:]])
         assert all(np.max(np.abs(np.mean(INVENTORY[s['asset']]['bounds'],axis=0)))<1e-6 for s in DEFAULT['objects'][1:])
-        ns['layout']=lambda seed:(np.array([s['position'] for s in EPISODES[seed]['objects'][1:]]),np.array([s['quaternion_wxyz'] for s in EPISODES[seed]['objects'][1:]]))
+        def mounted_layout(seed):
+            poses=[transform_pose(s['position'],s['quaternion_wxyz'],MOUNT) for s in EPISODES[seed]['objects'][1:]]
+            return np.array([p for p,_ in poses]),np.array([q for _,q in poses])
+        ns['layout']=mounted_layout
         self.armed=False;self.seed=DEFAULT['seed'];self.phase='IDLE';self.metrics={};self.events=[]

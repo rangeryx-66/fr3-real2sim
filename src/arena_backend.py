@@ -35,11 +35,14 @@ def geometry(H,O):
     return result
 import contact_backend
 contact_backend.geometry=geometry
+from workspace_mount import load_mount,transform_pose
 from generalization_backend import HeldOut
 class ArenaBackend(HeldOut):
     def reset_scene(self):
         super().reset_scene()
-        b=np.array(INVENTORY['table']['bounds']);T=np.eye(4);T[:3,3]=[.5,0,-(b[1,2]-b[0,2])/2]
+        b=np.array(INVENTORY['table']['bounds'])
+        p,q=transform_pose([.5,0,-(b[1,2]-b[0,2])/2],[1,0,0,0],load_mount())
+        T=cb.transform(p,q)
         req=ApplyPlanningScene.Request();req.scene.is_diff=True
         req.scene.world.collision_objects=[original_box('table',b[1]-b[0],T)];self.apply(req)
     def episode(self,seed,mode='B'):

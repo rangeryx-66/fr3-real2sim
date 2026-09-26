@@ -17,7 +17,9 @@ ROOT=Path(__file__).resolve().parents[1]
 import sys
 sys.path.insert(0,str(ROOT/'src'))
 from robot_profile import get_profile,gripper_positions
+from workspace_mount import load_mount,transform_matrix,transform_point,transform_pose
 PROFILE=get_profile()
+MOUNT=load_mount()
 from isaacsim import SimulationApp
 app=SimulationApp({'headless':True,'active_gpu':a.gpu,'physics_gpu':a.gpu,'multi_gpu':False})
 from isaacsim.core.api import World
@@ -32,13 +34,15 @@ from pxr import UsdGeom, UsdPhysics, PhysxSchema
 import omni.usd
 DT=1/240
 HOME=np.asarray(PROFILE.home,dtype=float)
-BOX=np.array([float(os.environ.get('GRASP_SCENE_X','.5')),0,.025])
+BOX=transform_point([float(os.environ.get('GRASP_SCENE_X','.5')),0,.025],MOUNT)
 SIZE=np.array([.045,.045,.05])
-T_B_C=np.diag([1.,-1.,-1.,1.]); T_B_C[:3,3]=[.5,0,.8]
+T_B_C_NOMINAL=np.diag([1.,-1.,-1.,1.]); T_B_C_NOMINAL[:3,3]=[.5,0,.8]
+T_B_C=transform_matrix(T_B_C_NOMINAL,MOUNT)
 world=World(stage_units_in_meters=1.,physics_dt=DT,rendering_dt=1/30,backend='numpy',device='cpu')
-world.scene.add_default_ground_plane(z_position=-.06)
+world.scene.add_default_ground_plane(z_position=float(transform_point([0,0,-.06],MOUNT)[2]))
 mat=PhysicsMaterial('/World/grasp_material',static_friction=0.8,dynamic_friction=0.7,restitution=0.0)
-world.scene.add(FixedCuboid('/World/table',name='table',position=[.5,0,-.025],scale=[.7,.7,.05],physics_material=mat))
+table_p,table_q=transform_pose([.5,0,-.025],[1,0,0,0],MOUNT)
+world.scene.add(FixedCuboid('/World/table',name='table',position=table_p,orientation=table_q,scale=[.7,.7,.05],physics_material=mat))
 box=world.scene.add(DynamicCuboid('/World/box',name='box',position=BOX,scale=SIZE,mass=.06,color=np.array([.8,.12,.08]),physics_material=mat))
 asset=ROOT/'assets'
 asset.mkdir(exist_ok=True)

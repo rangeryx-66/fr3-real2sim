@@ -16,6 +16,7 @@ from moveit_msgs.srv import GetCartesianPath, GetStateValidity, ApplyPlanningSce
 from moveit_msgs.msg import RobotState, CollisionObject, AttachedCollisionObject, AllowedCollisionEntry, PlanningSceneComponents
 from shape_msgs.msg import SolidPrimitive
 from frames import grasp_to_robot_tcp
+from workspace_mount import load_mount,transform_grasp_data
 import plant
 
 def transform(p,q_wxyz):
@@ -145,7 +146,11 @@ class ClutterBackend(Backend):
     def perception(self,seed):
         cache=self.output/'inputs';cache.mkdir(exist_ok=True)
         out=cache/f'seed_{seed:04d}_grasps.json'
-        if out.exists():return json.loads(out.read_text()),str(out)
+        if out.exists():
+            data=json.loads(out.read_text())
+            if PROFILE.name=='piper' and os.environ.get('PIPER_REPLAY_NOMINAL_MOUNT')=='1':
+                data=transform_grasp_data(data,load_mount())
+            return data,str(out)
         capture=plant.command(dict(op='capture'))
         if not capture['ok'] or capture.get('object_points',0)<30:raise Failure('NO_GRASP',str(capture))
         cmd=['/data1/home/rangeryx/.conda/envs/anygrasp/bin/python',str(ROOT/'src/infer.py'),'--input',capture['path'],'--output',str(out),'--top-k','20']

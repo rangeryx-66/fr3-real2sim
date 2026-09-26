@@ -21,6 +21,7 @@ from geometry_msgs.msg import Pose, PoseStamped
 from control_msgs.action import GripperCommand
 from frames import grasp_to_robot_tcp, pose_values
 from robot_profile import get_profile
+from workspace_mount import load_mount, transform_pose
 import plant
 ROOT=Path(__file__).resolve().parents[1]
 RUN=ROOT/'results'/('run_'+str(time.time_ns()))
@@ -122,9 +123,10 @@ class Backend(Node):
         req=ApplyPlanningScene.Request();s=req.scene;s.is_diff=True;s.robot_state.is_diff=True
         if not attach:
             detach=AttachedCollisionObject();detach.object.id='box';detach.object.operation=CollisionObject.REMOVE;s.robot_state.attached_collision_objects=[detach]
-        for name,center,size in [('table',[.5,0,-.025],[.7,.7,.05]),('box',plant.state()['box'],[.045,.045,.05])]:
+        table_p,table_q=transform_pose([.5,0,-.025],[1,0,0,0],load_mount())
+        for name,center,size,orientation in [('table',table_p,[.7,.7,.05],table_q),('box',plant.state()['box'],[.045,.045,.05],[1,0,0,0])]:
             obj=CollisionObject();obj.id=name;obj.header.frame_id=BASE;obj.operation=CollisionObject.ADD
-            shape=SolidPrimitive();shape.type=SolidPrimitive.BOX;shape.dimensions=size;pp=Pose();pp.position.x,pp.position.y,pp.position.z=map(float,center);pp.orientation.w=1.;obj.primitives=[shape];obj.primitive_poses=[pp]
+            shape=SolidPrimitive();shape.type=SolidPrimitive.BOX;shape.dimensions=size;pp=Pose();pp.position.x,pp.position.y,pp.position.z=map(float,center);pp.orientation.w,pp.orientation.x,pp.orientation.y,pp.orientation.z=map(float,orientation);obj.primitives=[shape];obj.primitive_poses=[pp]
             if name=='box' and attach:
                 att=AttachedCollisionObject();att.link_name=TCP;att.touch_links=TOUCH;att.object=obj;s.robot_state.attached_collision_objects=[att]
             else:s.world.collision_objects.append(obj)

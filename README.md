@@ -85,6 +85,10 @@ The generated `config/piper.urdf` and `config/piper.srdf` are host-local and git
 
 For paired reachability studies, set the same `GRASP_SCENE_X` for both robots before starting either simulator. Never compare runs with different scene coordinates or AnyGrasp JSON. `GRASP_ROBOT=fr3` remains the default and retains the prior actions, frames and joint names. The scan and PayloadID sections below are still FR3-only; this branch does not silently apply FR3 hand or dynamics parameters to Piper.
 
+The frozen Arena mounting pose, offline sweep protocol, audit findings, and
+40-scene FR3/Piper results are documented in
+[`docs/PIPER_MOUNT_WORKSPACE_SWEEP.md`](docs/PIPER_MOUNT_WORKSPACE_SWEEP.md).
+
 ## Reproduce a stationary scan and MV-SAM3D inference
 
 The station runner creates a clean station scene and parks the arm out of view. For the tested continuous two-ring distribution:
