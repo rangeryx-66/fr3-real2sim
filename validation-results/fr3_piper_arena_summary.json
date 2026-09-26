@@ -1,0 +1,64 @@
+{
+  "schema": "fr3_piper_paired_arena_summary/v1",
+  "paired_episodes": 40,
+  "all_paired_grasp_inputs_identical": true,
+  "objects": [
+    "mustard",
+    "raisin",
+    "hidden_tuna",
+    "bowl",
+    "banana",
+    "sugar",
+    "soup",
+    "mug"
+  ],
+  "seeds": "1000-1039",
+  "overall": {
+    "FR3": {
+      "success": 18,
+      "non_target_contact": 4,
+      "non_target_disturbance": 4,
+      "episodes_with_selected_candidate": 37,
+      "no_executable_candidate": 3,
+      "candidates_checked": 691,
+      "executable_candidates": 206,
+      "mean_planning_seconds": 26.8763568437309
+    },
+    "Piper": {
+      "success": 5,
+      "non_target_contact": 0,
+      "non_target_disturbance": 0,
+      "episodes_with_selected_candidate": 6,
+      "no_executable_candidate": 34,
+      "candidates_checked": 691,
+      "executable_candidates": 11,
+      "mean_planning_seconds": 23.06282514142804,
+      "episode_categories": {
+        "SUCCESS": 5,
+        "SCENE_COLLISION": 21,
+        "NO_IK": 7,
+        "INSUFFICIENT_PAD_OVERLAP": 5,
+        "TABLE_COLLISION": 1,
+        "BAD_CONTACT": 1
+      },
+      "candidate_status": {
+        "NO_IK": 563,
+        "VALID": 11,
+        "INSUFFICIENT_PAD_OVERLAP": 11,
+        "SCENE_COLLISION": 49,
+        "APPROACH_FAIL": 18,
+        "TABLE_COLLISION": 39
+      }
+    }
+  },
+  "success_by_object": {
+    "mustard": {"FR3": 4, "Piper": 2, "episodes": 5},
+    "raisin": {"FR3": 4, "Piper": 1, "episodes": 5},
+    "hidden_tuna": {"FR3": 0, "Piper": 0, "episodes": 5},
+    "bowl": {"FR3": 0, "Piper": 0, "episodes": 5},
+    "banana": {"FR3": 0, "Piper": 0, "episodes": 5},
+    "sugar": {"FR3": 5, "Piper": 1, "episodes": 5},
+    "soup": {"FR3": 5, "Piper": 0, "episodes": 5},
+    "mug": {"FR3": 0, "Piper": 1, "episodes": 5}
+  }
+}

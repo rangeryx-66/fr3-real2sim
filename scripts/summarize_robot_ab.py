@@ -20,11 +20,19 @@ def metrics(rows):
     executable=sum(sum(c.get('status')=='VALID' for c in x.get('candidates',[])) for x in rows)
     status=Counter(c.get('status','UNKNOWN') for x in rows for c in x.get('candidates',[]))
     ranks=[x['selected_rank'] for x in rows if x.get('selected_rank') is not None]
+    selected=sum(x.get('selected_rank') is not None for x in rows)
+    exhausted=sum(
+        x.get('selected_rank') is None
+        and x.get('last_stage') in {'CANDIDATE_CHECK','PREGRASP','APPROACH'}
+        for x in rows
+    )
     return dict(n=len(rows),success=sum(bool(x['success']) for x in rows),categories=dict(cats),
                 non_target_contact=sum(bool(x.get('non_target_contact')) for x in rows),
                 non_target_disturbance=sum(bool(x.get('non_target_disturbance')) for x in rows),
                 candidates_checked=checked,executable_candidates=executable,
                 executable_ratio=executable/checked if checked else None,candidate_status=dict(status),
+                episodes_with_selected_candidate=selected,
+                no_executable_candidate=exhausted,
                 mean_selected_rank=statistics.fmean(ranks) if ranks else None,
                 mean_planning_seconds=statistics.fmean(x.get('planning_seconds',0.) for x in rows) if rows else None)
 
@@ -45,9 +53,9 @@ def main():
         report['per_object'][obj]={robot:metrics([x for (o,_),x in rows.items() if o==obj]) for robot,rows in all_rows.items()}
     a.output.parent.mkdir(parents=True,exist_ok=True);a.output.write_text(json.dumps(report,indent=2))
     md=['# FR3 vs Piper paired Arena benchmark','',f"Paired episodes: {report['paired_count']}; identical AnyGrasp JSON: {report['all_paired_grasp_inputs_identical']}",'',
-        '|Robot|Success|Contact|Disturbance|Executable candidates|Mean rank|Mean planning (s)|','|---|---:|---:|---:|---:|---:|---:|']
+        '|Robot|Success|Contact|Disturbance|No executable candidate|Executable candidates|Mean rank|Mean planning (s)|','|---|---:|---:|---:|---:|---:|---:|---:|']
     for robot,m in report['overall'].items():
-        md.append(f"|{robot}|{m['success']}/{m['n']}|{m['non_target_contact']}/{m['n']}|{m['non_target_disturbance']}/{m['n']}|{m['executable_candidates']}/{m['candidates_checked']}|{m['mean_selected_rank']}|{m['mean_planning_seconds']}|")
+        md.append(f"|{robot}|{m['success']}/{m['n']}|{m['non_target_contact']}/{m['n']}|{m['non_target_disturbance']}/{m['n']}|{m['no_executable_candidate']}/{m['n']}|{m['executable_candidates']}/{m['candidates_checked']}|{m['mean_selected_rank']}|{m['mean_planning_seconds']}|")
     md+=['','|Object|FR3|Piper|','|---|---:|---:|']
     for obj,r in report['per_object'].items():md.append(f"|{obj}|{r['FR3']['success']}/{r['FR3']['n']}|{r['Piper']['success']}/{r['Piper']['n']}|")
     a.output.with_suffix('.md').write_text('\n'.join(md)+'\n')
