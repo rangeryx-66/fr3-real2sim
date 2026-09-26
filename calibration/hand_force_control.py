@@ -84,7 +84,11 @@ class HandCalibration:
         self.mode='position';self.goal=0.;self.gate_active=False;self.robot.get_articulation_controller().set_gains(kps=self.kp,kds=self.kd,save_to_usd=False)
         self.robot.apply_action(ArticulationAction(joint_efforts=np.zeros(2),joint_indices=self.fingers))
     def close_force(self,total_force):
-        assert 0<total_force<=60
+        # The continuous clutter demo uses up to 70 N after the grasp has
+        # reached a clear calibration zone.  This matches the existing
+        # per-finger 35 N effort saturation; ordinary grasp execution remains
+        # capped at 60 N by UnseenBackend.
+        assert 0<total_force<=70
         kp,kd=[np.array(x,copy=True) for x in self.robot.get_articulation_controller().get_gains()];kp[self.fingers]=0.;kd[self.fingers]=0.
         self.robot.get_articulation_controller().set_gains(kps=kp,kds=kd,save_to_usd=False)
         self.mode='force';self.goal=total_force/2;self.integral[:]=0;self.filtered[:]=0;self.contact_seen[:]=False;self.ramp[:]=0

@@ -14,7 +14,7 @@ from moveit_msgs.srv import ApplyPlanningScene,GetPlanningScene
 from moveit_msgs.msg import PlanningSceneComponents
 import plant
 
-PY=os.environ.get('ISAAC_PYTHON', '/data1/home/rangeryx/isaaclab-arena/.venv/bin/python')
+PY='/data1/home/rangeryx/isaaclab-arena/.venv/bin/python'
 ANYGRASP_ATTEMPT_BUDGET=3
 FAMILY_FALLBACK_ATTEMPT_BUDGET=2
 
@@ -225,9 +225,9 @@ class UnseenBackend(StabilityBackend):
                     result['anygrasp_replay']=dict(source_json=str(out),source_result=str(replay_reference),transport='T_B_target_current * inv(T_B_target_source) * T_B_TCP_source')
                 else:
                     out=self.output/(label+'_anygrasp.json')
-                    env={**os.environ,'CUDA_VISIBLE_DEVICES':os.environ.get('UNSEEN_GPU','3'),'LD_LIBRARY_PATH':'','PYTHONPATH':'','PATH':str(Path(os.environ.get('ANYGRASP_PYTHON', '/data1/home/rangeryx/.conda/envs/anygrasp/bin/python')).parent)+':/usr/local/bin:/usr/bin:/bin','CONDA_PREFIX':str(Path(os.environ.get('ANYGRASP_PYTHON', '/data1/home/rangeryx/.conda/envs/anygrasp/bin/python')).parent.parent)}
+                    env={**os.environ,'CUDA_VISIBLE_DEVICES':os.environ.get('UNSEEN_GPU','3'),'LD_LIBRARY_PATH':'','PYTHONPATH':'','PATH':'/data1/home/rangeryx/.conda/envs/anygrasp/bin:/usr/local/bin:/usr/bin:/bin','CONDA_PREFIX':'/data1/home/rangeryx/.conda/envs/anygrasp'}
                     with (self.output/(label+'_infer.log')).open('w') as log:
-                        subprocess.run([os.environ.get('ANYGRASP_PYTHON', '/data1/home/rangeryx/.conda/envs/anygrasp/bin/python'),str(ROOT/'src/infer.py'),'--input',capture['path'],'--output',str(out),'--top-k','20'],env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=180)
+                        subprocess.run(['/data1/home/rangeryx/.conda/envs/anygrasp/bin/python',str(ROOT/'src/infer.py'),'--input',capture['path'],'--output',str(out),'--top-k','20'],env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=180)
                 data=json.loads(out.read_text());result['anygrasp_json_sha256']=hashlib.sha256(out.read_bytes()).hexdigest()
                 parents=[]
                 for g in data['grasps']:
