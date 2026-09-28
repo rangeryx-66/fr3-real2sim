@@ -48,7 +48,12 @@ def stage(target,mode,env):
     return result
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--objects',nargs='*');a=parser.parse_args()
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--objects',nargs='*')
+    parser.add_argument('--gpu',type=int,default=1)
+    parser.add_argument('--port',type=int,default=18781)
+    parser.add_argument('--ros-domain',type=int,default=217)
+    a=parser.parse_args()
     protocol=json.loads((ROOT/'ARENA_COMPLEX_PROTOCOL.json').read_text())
     objects=a.objects or protocol['classes']
     if any(obj not in protocol['classes'] for obj in objects):parser.error('unknown Arena object')
@@ -56,31 +61,32 @@ def main():
     OUT.mkdir(parents=True,exist_ok=True)
     run_config=dict(ik_random_seeds=6,manifold_limit=24,base_pose='0.329,-0.175,0.237,56.295',
                     pedestal_size='0.10,0.10,0.20',cutoff_local='05:00 Asia/Shanghai',
-                    input_manifest=str(OUT/'input_manifest.json'))
-    (OUT/'run_config.json').write_text(json.dumps(run_config,indent=2)+'\n')
+                    input_manifest=str(OUT/'input_manifest.json'),gpu=a.gpu,port=a.port,ros_domain=a.ros_domain,
+                    objects=objects)
+    (OUT/f'run_config_gpu{a.gpu}.json').write_text(json.dumps(run_config,indent=2)+'\n')
     report={}
     for target in objects:
         if seconds_left()<180:
             report[target]={'status':'CUTOFF_05_00'};break
         env={**os.environ,'R1A7_BASE_POSE':'0.329,-0.175,0.237,56.295',
-             'R1A7_PEDESTAL_SIZE':'0.10,0.10,0.20','R1A7_PLANT_PORT':'18781',
+             'R1A7_PEDESTAL_SIZE':'0.10,0.10,0.20','R1A7_PLANT_PORT':str(a.port),
              'R1A7_IK_RANDOM_SEEDS':'6','R1A7_MANIFOLD_LIMIT':'24',
-             'R1A7_ARENA_ASSET_DIR':ASSETS,'ROS_DOMAIN_ID':'217','ROS_LOCALHOST_ONLY':'1',
+             'R1A7_ARENA_ASSET_DIR':ASSETS,'ROS_DOMAIN_ID':str(a.ros_domain),'ROS_LOCALHOST_ONLY':'1',
              'NO_PROXY':'127.0.0.1,localhost','no_proxy':'127.0.0.1,localhost',
              'OMNI_KIT_ACCEPT_EULA':'YES','ACCEPT_EULA':'Y'}
         procs=[];report[target]={}
         try:
             logs=OUT/target
             print('ARENA_START',target,flush=True)
-            procs.append(start([SIM,'-u',str(ROOT/'src/r1a7_sim_server.py'),'--gpu','1',
-                                '--port','18781','--arena-target',target],logs/'sim.log',env))
+            procs.append(start([SIM,'-u',str(ROOT/'src/r1a7_sim_server.py'),'--gpu',str(a.gpu),
+                                '--port',str(a.port),'--arena-target',target],logs/'sim.log',env))
             procs.append(start(['ros2','launch',str(ROOT/'src/r1a7_moveit.launch.py')],logs/'moveit.log',env))
             procs.append(start([sys.executable,'-u',str(ROOT/'src/r1a7_ros_bridge.py')],logs/'bridge.log',env))
-            ready(18781,target,procs)
+            ready(a.port,target,procs)
             for mode in ('raw','adapted'):
                 report[target][mode]=stage(target,mode,env)
                 print('ARENA_STAGE',target,mode,json.dumps(report[target][mode]),flush=True)
-                (OUT/'orchestration.json').write_text(json.dumps(report,indent=2)+'\n')
+                (OUT/f'orchestration_gpu{a.gpu}.json').write_text(json.dumps(report,indent=2)+'\n')
                 if report[target][mode].get('status')=='CUTOFF_05_00':break
                 if report[target][mode].get('exit_code')!=0:raise RuntimeError(target+' '+mode+' failed')
         except Exception as error:
@@ -88,7 +94,7 @@ def main():
             print('ARENA_ERROR',target,repr(error),flush=True)
         finally:
             stop(procs)
-            (OUT/'orchestration.json').write_text(json.dumps(report,indent=2)+'\n')
+            (OUT/f'orchestration_gpu{a.gpu}.json').write_text(json.dumps(report,indent=2)+'\n')
         if any(value.get('status')=='CUTOFF_05_00' for value in report[target].values() if isinstance(value,dict)):
             break
     print('ARENA_AB_DONE',json.dumps(report),flush=True)
