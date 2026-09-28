@@ -8,6 +8,8 @@ It must be checked against the physical adapter before hardware use.
 """
 from pathlib import Path
 import copy
+import math
+import os
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -24,7 +26,14 @@ ET.SubElement(arm, 'link', name='r1a7_world')
 world_mount = ET.SubElement(arm, 'joint', name='r1a7_world_mount', type='fixed')
 ET.SubElement(world_mount, 'parent', link='r1a7_world')
 ET.SubElement(world_mount, 'child', link='base_link')
-ET.SubElement(world_mount, 'origin', xyz='0 0 0', rpy='0 0 1.5707963267948966')
+placement = [float(value) for value in os.environ.get(
+    'R1A7_BASE_POSE', '0,0,0,90').split(',')]
+if len(placement) != 4 or not all(math.isfinite(value) for value in placement):
+    raise ValueError('R1A7_BASE_POSE must be x,y,z,yaw_deg')
+x, y, z, yaw_deg = placement
+ET.SubElement(world_mount, 'origin',
+              xyz=f'{x:.9g} {y:.9g} {z:.9g}',
+              rpy=f'0 0 {math.radians(yaw_deg):.12g}')
 links = {e.get('name'): 'dex1_' + e.get('name') for e in hand.findall('link')}
 joints = {e.get('name'): 'dex1_' + e.get('name') for e in hand.findall('joint')}
 for element in list(hand):

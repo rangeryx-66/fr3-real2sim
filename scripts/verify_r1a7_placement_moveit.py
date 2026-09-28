@@ -165,6 +165,9 @@ def main():
     p.add_argument('--seeds',type=int,default=12)
     p.add_argument('--branches',type=int,default=3)
     p.add_argument('--timeout',type=float,default=.15)
+    p.add_argument('--tcp-offset',nargs=3,type=float,default=(0.,0.,0.),
+                   metavar=('DX','DY','DZ'),
+                   help='hypothetical TCP translation in the frozen grasp local frame, metres')
     p.add_argument('--scene-json',type=Path)
     p.add_argument('--scene-only',action='store_true',
                    help='load optional scene objects and check home, then exit')
@@ -186,7 +189,10 @@ def main():
             print('SCENE_ONLY',result,flush=True)
             return
         rows = []
-        for rank,grasp in enumerate(frozen_targets()):
+        tcp_shift=np.eye(4)
+        tcp_shift[:3,3]=args.tcp_offset
+        for rank,frozen_grasp in enumerate(frozen_targets()):
+            grasp=frozen_grasp @ tcp_shift
             target = world_to_model @ grasp
             grasp_solutions = []
             codes = []
@@ -226,7 +232,7 @@ def main():
                   f'full={row.get("full_ok",False)}',flush=True)
         m = [min(row['grasp_margins_rad'][j] for j in ('J5','J6','J7'))
              for row in rows if row['self_collision_free_ik']]
-        output = dict(base=list(args.base),scene_objects=added,
+        output = dict(base=list(args.base),tcp_offset_m=list(args.tcp_offset),scene_objects=added,
                       definitions=dict(pregrasp_m=PREGRASP_M,lift_m=LIFT_M,
                                        step_m=STEP_M,interaction_m=INTERACTION_M,
                                        max_joint_step_rad=MAX_JOINT_STEP_RAD),
@@ -236,7 +242,11 @@ def main():
                                    all_interactions=sum(r.get('full_ok',False) for r in rows),
                                    interaction_directions=sum(r.get('interaction_directions',0) for r in rows),
                                    focus_grasp_margin_median_rad=float(np.median(m)) if m else None,
-                                   focus_grasp_margin_min_rad=min(m,default=None)),
+                                   focus_grasp_margin_min_rad=min(m,default=None),
+                                   safe_grasp_005=sum(v>.05 for v in m),
+                                   safe_grasp_008=sum(v>.08 for v in m),
+                                   safe_complete_005=sum(r.get('full_ok',False) and r['path_focus_margin_min_rad']>.05 for r in rows),
+                                   safe_complete_008=sum(r.get('full_ok',False) and r['path_focus_margin_min_rad']>.08 for r in rows)),
                       candidates=rows)
         args.output.parent.mkdir(parents=True,exist_ok=True)
         args.output.write_text(json.dumps(output,indent=2)+'\n')

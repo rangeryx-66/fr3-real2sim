@@ -1,6 +1,8 @@
 """Isaac Sim physics plant. No IK, grasp heuristics, pose attachment or planning."""
 import argparse
+import hashlib
 import json
+import os
 import queue
 import threading
 import time
@@ -29,15 +31,24 @@ DT=1/240
 HOME=np.array([0.,1.3,1.0,-1.3,0.,0.,0.])
 BOX=np.array([.5,0,.025])
 SIZE=np.array([.045,.045,.05])
+BASE_POSE=np.array([float(v) for v in os.environ.get('R1A7_BASE_POSE','0,0,0,90').split(',')])
+PEDESTAL_SIZE=np.array([float(v) for v in os.environ.get('R1A7_PEDESTAL_SIZE','0.10,0.10,0.20').split(',')])
+assert BASE_POSE.shape==(4,) and PEDESTAL_SIZE.shape==(3,) and np.all(PEDESTAL_SIZE>0)
 T_B_C=np.diag([1.,-1.,-1.,1.]); T_B_C[:3,3]=[.5,0,.8]
 world=World(stage_units_in_meters=1.,physics_dt=DT,rendering_dt=1/30,backend='numpy',device='cpu')
 world.scene.add_default_ground_plane(z_position=-.06)
 mat=PhysicsMaterial('/World/grasp_material',static_friction=0.8,dynamic_friction=0.7,restitution=0.0)
 world.scene.add(FixedCuboid('/World/table',name='table',position=[.5,0,-.025],scale=[.7,.7,.05],physics_material=mat))
+if BASE_POSE[2]>0:
+    world.scene.add(FixedCuboid('/World/r1a7_pedestal',name='r1a7_pedestal',
+        position=[BASE_POSE[0],BASE_POSE[1],PEDESTAL_SIZE[2]/2],
+        scale=PEDESTAL_SIZE,physics_material=mat))
+    print('PEDESTAL',json.dumps(dict(base=BASE_POSE.tolist(),size=PEDESTAL_SIZE.tolist())),flush=True)
 box=world.scene.add(DynamicCuboid('/World/box',name='box',position=BOX,scale=SIZE,mass=.06,color=np.array([.8,.12,.08]),physics_material=mat))
 asset=ROOT/'assets'
 asset.mkdir(exist_ok=True)
-asset_file=asset/'r1a7_dex1_filtered_asset_path.txt'
+model_hash=hashlib.sha256((ROOT/'config/r1a7_dex1.urdf').read_bytes()).hexdigest()[:12]
+asset_file=asset/f'r1a7_dex1_filtered_asset_path_{model_hash}.txt'
 if asset_file.exists() and Path(asset_file.read_text().strip()).exists():
     usd=asset_file.read_text().strip()
 else:
@@ -190,11 +201,13 @@ try:
         world.step(render=tick%(24 if clutter else 8)==0);tick+=1
         f=np.array([float(np.linalg.norm(np.asarray(view.get_contact_force_matrix(dt=DT)).reshape(-1,3).sum(axis=0))) for view in _finger_views])
         bp,bq=box.get_world_pose();tp,tq=tcp.get_world_pose()
-        sample=dict(t=tick*DT,z=float(bp[2]),forces=f.tolist(),box=bp.tolist(),tcp=tp.tolist())
+        measured_q=robot.get_joint_positions()
+        sample=dict(t=tick*DT,z=float(bp[2]),forces=f.tolist(),box=bp.tolist(),tcp=tp.tolist(),
+                    arm_tracking_error_rad=float(np.max(np.abs(target[arm]-measured_q[arm]))))
         history.append(sample)
         if len(history)>2400: history=history[-2400:]
         clutter_state=clutter.sample(tick*DT,bp) if clutter else None
         with lock:
-            state=dict(t=tick*DT,names=names,q=robot.get_joint_positions().tolist(),box=bp.tolist(),box_quat=bq.tolist(),tcp=tp.tolist(),tcp_quat=tq.tolist(),forces=f.tolist(),results=results.copy(),history=history[::8],busy=active is not None,clutter=clutter_state)
+            state=dict(t=tick*DT,names=names,q=measured_q.tolist(),box=bp.tolist(),box_quat=bq.tolist(),tcp=tp.tolist(),tcp_quat=tq.tolist(),forces=f.tolist(),results=results.copy(),history=history[::8],busy=active is not None,clutter=clutter_state)
 finally:
     server.shutdown();app.close()

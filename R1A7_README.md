@@ -21,15 +21,24 @@ separate descriptions:
 
 | Joint | Parent → child | xyz (m) | rpy (rad) |
 | --- | --- | --- | --- |
-| `r1a7_world_mount` | world → `base_link` | 0, 0, 0 | 0, 0, +π/2 |
+| `r1a7_world_mount` | world → `base_link` | Set by `R1A7_BASE_POSE` | yaw from `R1A7_BASE_POSE` |
 | `r1a7_dex1_mount` | `Link7` → `dex1_base_link` | 0, −0.047736, 0 | 0, 0, π |
 | `r1a7_tcp_joint` | `dex1_base_link` → `r1a7_tcp` | 0, 0.097343, 0.0142 | 0, −π/2, −π/2 |
 
-The world mount is the approved benchmark placement. The arm-to-Dex1 adapter
+The default world mount reproduces the earlier benchmark placement. The arm-to-Dex1 adapter
 transform and finger-center TCP are derived from the published meshes/URDF,
 not an official combined assembly. Verify the adapter against real hardware
 before sending physical commands. Run `python3 scripts/audit_r1a7_model.py`
 to compare the combined model with the upstream source.
+
+The generated world mount defaults to the earlier `(0, 0, 0; +90°)`
+diagnostic placement. Set `R1A7_BASE_POSE=x,y,z,yaw_deg` consistently for
+Isaac, MoveIt, bridge, and trial to evaluate another installation; the
+model generator only changes this fixed world mount, not official Unitree
+arm geometry or joint limits. `R1A7_PEDESTAL_SIZE` sets a world-frame
+support box size (X,Y,Z metres) in Isaac and MoveIt; the default is
+`0.10,0.10,0.20`. `R1A7_MIN_JOINT_MARGIN_RAD` sets the executor's
+J5/J6/J7 threshold (default `0.05`).
 
 The MoveIt group is `r1a7_arm`, a chain from `r1a7_world` to `r1a7_tcp`.
 It contains J1–J7 and uses KDL 7DoF redundancy with multiple seeds. The
@@ -54,6 +63,13 @@ outside this checkout. Keep the same `R1A7_ROS_DOMAIN_ID` and
 ./run.sh r1a7-bridge
 ./run.sh r1a7-trial --trials 10
 ```
+
+For the C-installation validation, export
+`R1A7_BASE_POSE=0.329,-0.175,0.237,56.295` and
+`R1A7_PEDESTAL_SIZE=0.10,0.10,0.20` in every terminal before these
+commands. The measured C-placement benchmark is documented in
+`R1A7_INSTALLATION_VALIDATION.md`: exact frozen grasps currently collide
+with the table, so do not attempt grasp execution on hardware at C.
 
 To replay the exact AnyGrasp JSONs of a previous FR3 run, pass
 `--grasps-dir /absolute/path/to/fr3/results/run_...` to `r1a7-trial`.

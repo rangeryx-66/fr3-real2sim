@@ -1,5 +1,11 @@
 # R1-7a base placement: path and joint-margin study
 
+**Subsequent full-scene validation:** the C placement is kinematically
+promising but is not executable for the unchanged tabletop grasps: all
+ten IK-feasible unique grasp poses collide with the table through Dex1
+finger geometry. See `R1A7_INSTALLATION_VALIDATION.md` before using the
+installation recommendation below.
+
 This study continues the frozen AnyGrasp IK diagnosis. The 11 unique
 grasp poses are the byte-identical inputs used in ten benchmark repeats
 (110 candidate occurrences). No inference, grasp pose, motion planning,

@@ -1,5 +1,10 @@
 # R1-7a + Dex1 validation on labserver_inschool
 
+This report covers the original world-origin installation. For the later
+C placement `(0.329, -0.175, 0.237 m; +56.295°)` and its full-scene
+benchmark, see `R1A7_INSTALLATION_VALIDATION.md`. C restores 100/110
+kinematic candidate IK but the frozen Dex1 grasps collide with the table.
+
 ## Setup and provenance
 
 - Base placement: world origin, +90° yaw toward table +X, as approved.

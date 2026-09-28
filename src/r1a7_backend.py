@@ -28,6 +28,11 @@ RUN.mkdir(parents=True,exist_ok=True)
 BASE='r1a7_world';TCP='r1a7_tcp';GROUP='r1a7_arm'
 JOINTS=tuple(f'J{i}' for i in range(1,8))
 TOUCH=['dex1_Link1_3','dex1_Link2_3']
+FOCUS=('J5','J6','J7')
+MIN_MARGIN=float(os.environ.get('R1A7_MIN_JOINT_MARGIN_RAD','0.05'))
+BASE_POSE=tuple(float(v) for v in os.environ.get('R1A7_BASE_POSE','0,0,0,90').split(','))
+PEDESTAL_SIZE=tuple(float(v) for v in os.environ.get('R1A7_PEDESTAL_SIZE','0.10,0.10,0.20').split(','))
+if len(BASE_POSE)!=4 or len(PEDESTAL_SIZE)!=3:raise ValueError('invalid R1 installation parameters')
 class Failure(RuntimeError):
     def __init__(self,category,detail=''):super().__init__(detail);self.category=category
 
@@ -66,9 +71,13 @@ class R1A7Backend(Node):
         if r.status!=4:raise Failure(category,'action status '+str(r.status))
         return r.result
     def execute(self,traj,category):
-        self.executions.append({'stage':self.stage,'joint_names':list(traj.joint_trajectory.joint_names),'points':[{'t':p.time_from_start.sec+p.time_from_start.nanosec*1e-9,'q':list(p.positions)} for p in traj.joint_trajectory.points]})
+        record={'stage':self.stage,'joint_names':list(traj.joint_trajectory.joint_names),'points':[{'t':p.time_from_start.sec+p.time_from_start.nanosec*1e-9,'q':list(p.positions)} for p in traj.joint_trajectory.points]}
+        self.executions.append(record)
+        start_t=plant.state()['t']
         g=ExecuteTrajectory.Goal();g.trajectory=traj
         r=self.action(self.exec_client,g,category)
+        history=[h for h in plant.state()['history'] if h['t']>=start_t]
+        record['max_arm_tracking_error_rad']=max((h.get('arm_tracking_error_rad',0.) for h in history),default=None)
         if r.error_code.val!=1:raise Failure(category,'execution code '+str(r.error_code.val))
     def gripper(self,width):
         g=GripperCommand.Goal();g.command.position=width;g.command.max_effort=20.
@@ -81,12 +90,22 @@ class R1A7Backend(Node):
         if not r.valid:
             pairs=[(c.contact_body_1,c.contact_body_2) for c in r.contacts]
             category='TABLE_COLLISION' if any('table' in x for pair in pairs for x in pair) else 'SELF_COLLISION' if pairs and all(x.startswith(('Link','dex1_','base_link')) for pair in pairs for x in pair) else 'WORLD_COLLISION'
-            raise Failure(category,str(pairs))
+            raise Failure('COLLISION',category+': '+str(pairs))
+    def margin(self,state):
+        values=dict(zip(state.joint_state.name,state.joint_state.position))
+        return min(min(values[n]-self.limits[n][0],self.limits[n][1]-values[n]) for n in FOCUS)
+    def trajectory_margin(self,traj):
+        names=list(traj.joint_trajectory.joint_names)
+        return min((min(min(p.positions[names.index(n)]-self.limits[n][0],
+                            self.limits[n][1]-p.positions[names.index(n)]) for n in FOCUS)
+                    for p in traj.joint_trajectory.points),default=float('inf'))
+    def require_margin(self,margin,where):
+        if margin<=MIN_MARGIN:raise Failure('LOW_JOINT_MARGIN',f'{where}: {margin:.6f} <= {MIN_MARGIN:.6f} rad')
     def ik(self,T,seed):
         # KDL searches the 7D nullspace from each seed. A failed seed does not
         # imply that the target pose is outside the redundant arm's workspace.
         candidates=[seed]
-        for _ in range(12):
+        for _ in range(int(os.environ.get('R1A7_IK_RANDOM_SEEDS','24'))):
             state=RobotState();state.joint_state=JointState()
             state.joint_state.name=list(seed.joint_state.name)
             values=dict(zip(seed.joint_state.name,seed.joint_state.position))
@@ -94,15 +113,20 @@ class R1A7Backend(Node):
                 lo,hi=self.limits[name];values[name]=float(self.rng.uniform(lo+.01,hi-.01))
             state.joint_state.position=[values[n] for n in state.joint_state.name]
             candidates.append(state)
-        reasons=[]
+        reasons=[];reason_categories=[]
         for candidate in candidates:
             req=GetPositionIK.Request();ik=req.ik_request;ik.group_name=GROUP;ik.ik_link_name=TCP;ik.pose_stamped=stamped(T);ik.robot_state=candidate;ik.avoid_collisions=False;ik.timeout.nanosec=250_000_000
             r=self.call('compute_ik',req)
             if r.error_code.val!=1:
-                reasons.append(str(r.error_code.val));continue
-            try:self.validate(r.solution);return r.solution
-            except Failure as e:reasons.append(e.category)
-        category='IK_FOUND_BUT_COLLISION' if any(x in ('SELF_COLLISION','TABLE_COLLISION','WORLD_COLLISION') for x in reasons) else 'NO_IK'
+                reasons.append(str(r.error_code.val));reason_categories.append('NO_IK');continue
+            try:
+                self.validate(r.solution)
+                margin=self.margin(r.solution)
+                self.require_margin(margin,'IK')
+                return r.solution
+            except Failure as e:
+                reasons.append(f'{e.category}:{e}');reason_categories.append(e.category)
+        category='COLLISION' if 'COLLISION' in reason_categories else 'LOW_JOINT_MARGIN' if 'LOW_JOINT_MARGIN' in reason_categories else 'NO_IK'
         raise Failure(category,','.join(reasons))
     def check_fk(self):
         req=GetPositionFK.Request();req.header.frame_id=BASE;req.fk_link_names=[TCP];req.robot_state=self.measured()
@@ -116,9 +140,10 @@ class R1A7Backend(Node):
     def cartesian(self,start,T):
         req=GetCartesianPath.Request();req.header.frame_id=BASE;req.start_state=start;req.group_name=GROUP;req.link_name=TCP;req.waypoints=[pose(T)];req.max_step=.003;req.jump_threshold=1.5;req.avoid_collisions=True
         r=self.call('compute_cartesian_path',req)
-        if r.error_code.val!=1 or r.fraction<.999:raise Failure('APPROACH_FAIL',f'fraction={r.fraction}, code={r.error_code.val}')
+        if r.error_code.val!=1 or r.fraction<.999:raise Failure('NO_PLAN',f'Cartesian fraction={r.fraction}, code={r.error_code.val}')
         pts=r.solution.joint_trajectory.points
-        if len(pts)<2 or pts[-1].time_from_start.sec+pts[-1].time_from_start.nanosec*1e-9<=0:raise Failure('APPROACH_FAIL','untimed Cartesian path')
+        if len(pts)<2 or pts[-1].time_from_start.sec+pts[-1].time_from_start.nanosec*1e-9<=0:raise Failure('NO_PLAN','untimed Cartesian path')
+        self.require_margin(self.trajectory_margin(r.solution),'Cartesian path')
         # Slow Cartesian motion while preserving the computed joint path.
         for p in pts:
             t=(p.time_from_start.sec+p.time_from_start.nanosec*1e-9)*3
@@ -134,15 +159,27 @@ class R1A7Backend(Node):
         r.goal_constraints=[con]
         out=self.call('plan_kinematic_path',req).motion_plan_response
         if out.error_code.val!=1:raise Failure('NO_PLAN',str(out.error_code.val))
+        self.require_margin(self.trajectory_margin(out.trajectory),'planned path')
         return out.trajectory
     def scene(self,attach=False):
         req=ApplyPlanningScene.Request();s=req.scene;s.is_diff=True;s.robot_state.is_diff=True
         if not attach:
             detach=AttachedCollisionObject();detach.object.id='box';detach.object.operation=CollisionObject.REMOVE;s.robot_state.attached_collision_objects=[detach]
-        for name,center,size in [('table',[.5,0,-.025],[.7,.7,.05]),('box',plant.state()['box'],[.045,.045,.05])]:
+        geometry=[('table',[.5,0,-.025],[.7,.7,.05]),
+                  ('box',plant.state()['box'],[.045,.045,.05])]
+        if BASE_POSE[2]>0:
+            geometry.append(('r1a7_pedestal',[BASE_POSE[0],BASE_POSE[1],PEDESTAL_SIZE[2]/2],list(PEDESTAL_SIZE)))
+        for name,center,size in geometry:
             obj=CollisionObject();obj.id=name;obj.header.frame_id=BASE;obj.operation=CollisionObject.ADD
             shape=SolidPrimitive();shape.type=SolidPrimitive.BOX;shape.dimensions=size;pp=Pose();pp.position.x,pp.position.y,pp.position.z=map(float,center);pp.orientation.w=1.;obj.primitives=[shape];obj.primitive_poses=[pp]
             if name=='box' and attach:
+                live=plant.state()
+                tcp_rotation=Rotation.from_quat(np.roll(live['tcp_quat'],-1))
+                relative=tcp_rotation.inv().apply(np.array(center)-np.array(live['tcp']))
+                relative_quat=tcp_rotation.inv().as_quat()
+                obj.header.frame_id=TCP
+                pp.position.x,pp.position.y,pp.position.z=map(float,relative)
+                pp.orientation.x,pp.orientation.y,pp.orientation.z,pp.orientation.w=map(float,relative_quat)
                 att=AttachedCollisionObject();att.link_name=TCP;att.touch_links=TOUCH;att.object=obj;s.robot_state.attached_collision_objects=[att]
             else:s.world.collision_objects.append(obj)
         # Only finger-to-target contact is allowed; table and palm remain checked.
@@ -190,8 +227,14 @@ class R1A7Backend(Node):
                     current=self.measured()
                     gs=self.ik(grasp,current);ps=self.ik(pre,gs)
                     approach=self.cartesian(ps,grasp)
+                    micro_check=self.cartesian(gs,micro)
+                    lift_check=self.cartesian(gs,lift)
                     traj=self.plan(current,ps)
-                    detail['status']='VALID';detail['T_B_TCP']=grasp.tolist();chosen=(pre,grasp,micro,lift,traj,approach,g)
+                    detail['status']='VALID';detail['T_B_TCP']=grasp.tolist()
+                    detail['joint_margin_rad']=min(self.margin(gs),self.margin(ps),
+                        self.trajectory_margin(approach),self.trajectory_margin(micro_check),
+                        self.trajectory_margin(lift_check),self.trajectory_margin(traj))
+                    chosen=(pre,grasp,micro,lift,traj,approach,g)
                 except Failure as e:detail.update(status=e.category,detail=str(e))
                 except ValueError as e:detail.update(status='TF_ERROR',detail=str(e))
                 result['candidates'].append(detail)
@@ -233,6 +276,13 @@ class R1A7Backend(Node):
             result.update(success=True,category='SUCCESS')
         except Failure as e:result.update(category=e.category,detail=str(e))
         except Exception as e:result.update(category='SYSTEM_ERROR',detail=str(e),traceback=traceback.format_exc())
+        try:
+            measured=plant.state()
+            hold=[h for h in measured['history'] if h['t']>=measured['t']-2.2]
+            tcp=np.array([h['tcp'] for h in hold])
+            result['drive_metrics']={'recent_max_arm_tracking_error_rad':max((h.get('arm_tracking_error_rad',0.) for h in hold),default=None),
+                                     'recent_tcp_range_m':(np.ptp(tcp,axis=0).tolist() if len(tcp) else None)}
+        except Exception:pass
         result['last_stage']=self.stage
         result['executions']=self.executions
         (RUN/f'trial_{index:02d}.json').write_text(json.dumps(result,indent=2))
