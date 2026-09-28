@@ -14,6 +14,7 @@ p.add_argument('--gpu',type=int,default=1)
 p.add_argument('--port',type=int,default=18765)
 p.add_argument('--clutter',action='store_true')
 p.add_argument('--object-id',default='benchmark_box')
+p.add_argument('--arena-target')
 a=p.parse_args()
 ROOT=Path(__file__).resolve().parents[1]
 from isaacsim import SimulationApp
@@ -32,10 +33,23 @@ DT=1/240
 HOME=np.array([0.,1.3,1.0,-1.3,0.,0.,0.])
 OBJECTS={'benchmark_box':dict(id='benchmark_box',shape='box',size=[.045,.045,.05],mass=.06)}
 OBJECTS.update({o['id']:o for o in json.loads((ROOT/'config/r1a7_generalization_objects.json').read_text())})
-if a.object_id not in OBJECTS:raise ValueError('unknown object '+a.object_id)
-OBJECT=OBJECTS[a.object_id]
+ARENA_TARGET=a.arena_target
+if ARENA_TARGET:
+    ARENA_INVENTORY=json.loads((ROOT/'assets/arena_complex/inventory.json').read_text())
+    ARENA_PROTOCOL=json.loads((ROOT/'ARENA_COMPLEX_PROTOCOL.json').read_text())
+    ARENA_EPISODES={episode['seed']:episode for episode in ARENA_PROTOCOL['episodes']}
+    if ARENA_TARGET not in ARENA_PROTOCOL['classes']:raise ValueError('unknown Arena target '+ARENA_TARGET)
+    os.environ['FR3_ARENA_TARGET']=ARENA_TARGET
+    bounds=np.array(ARENA_INVENTORY[ARENA_TARGET]['bounds'])
+    OBJECT=dict(id=ARENA_TARGET,shape='arena_mesh',size=(bounds[1]-bounds[0]).tolist(),
+                registry_name=ARENA_INVENTORY[ARENA_TARGET]['registry_name'],
+                usd_path=ARENA_INVENTORY[ARENA_TARGET]['usd_path'])
+    initial=next(ep for ep in ARENA_EPISODES.values() if ep['target']==ARENA_TARGET)
+else:
+    if a.object_id not in OBJECTS:raise ValueError('unknown object '+a.object_id)
+    OBJECT=OBJECTS[a.object_id]
 SIZE=np.array(OBJECT.get('size',[2*OBJECT['radius'],2*OBJECT['radius'],OBJECT['height']]) if OBJECT['shape']=='cylinder' else OBJECT['size'],dtype=float)
-BOX=np.array([.5,0,SIZE[2]/2])
+BOX=np.array(initial['objects'][0]['position'] if ARENA_TARGET else [.5,0,SIZE[2]/2])
 OBJECT_YAW=0.
 def yaw_quat(yaw):return np.array([np.cos(yaw/2),0.,0.,np.sin(yaw/2)])
 BASE_POSE=np.array([float(v) for v in os.environ.get('R1A7_BASE_POSE','0,0,0,90').split(',')])
@@ -43,15 +57,25 @@ PEDESTAL_SIZE=np.array([float(v) for v in os.environ.get('R1A7_PEDESTAL_SIZE','0
 assert BASE_POSE.shape==(4,) and PEDESTAL_SIZE.shape==(3,) and np.all(PEDESTAL_SIZE>0)
 T_B_C=np.diag([1.,-1.,-1.,1.]); T_B_C[:3,3]=[.5,0,.8]
 world=World(stage_units_in_meters=1.,physics_dt=DT,rendering_dt=1/30,backend='numpy',device='cpu')
-world.scene.add_default_ground_plane(z_position=-.06)
+world.scene.add_default_ground_plane(z_position=-.76 if ARENA_TARGET else -.06)
 mat=PhysicsMaterial('/World/grasp_material',static_friction=0.8,dynamic_friction=0.7,restitution=0.0)
-world.scene.add(FixedCuboid('/World/table',name='table',position=[.5,0,-.025],scale=[.7,.7,.05],physics_material=mat))
+if ARENA_TARGET:
+    import arena_scene
+    scene_stage=omni.usd.get_context().get_stage()
+    box=arena_scene.table(world,scene_stage,mat)
+    arena_clutter=[arena_scene.spawn(world,scene_stage,mat,f'clutter_{i}',spec)
+                   for i,spec in enumerate(initial['objects'][1:])]
+else:
+    world.scene.add(FixedCuboid('/World/table',name='table',position=[.5,0,-.025],scale=[.7,.7,.05],physics_material=mat))
+    arena_clutter=[]
 if BASE_POSE[2]>0:
     world.scene.add(FixedCuboid('/World/r1a7_pedestal',name='r1a7_pedestal',
         position=[BASE_POSE[0],BASE_POSE[1],PEDESTAL_SIZE[2]/2],
         scale=PEDESTAL_SIZE,physics_material=mat))
     print('PEDESTAL',json.dumps(dict(base=BASE_POSE.tolist(),size=PEDESTAL_SIZE.tolist())),flush=True)
-if OBJECT['shape']=='cylinder':
+if ARENA_TARGET:
+    pass
+elif OBJECT['shape']=='cylinder':
     box=world.scene.add(DynamicCylinder('/World/box',name='box',position=BOX,radius=float(OBJECT['radius']),height=float(OBJECT['height']),mass=float(OBJECT['mass']),color=np.array([.8,.12,.08]),physics_material=mat))
 else:
     box=world.scene.add(DynamicCuboid('/World/box',name='box',position=BOX,scale=SIZE,mass=float(OBJECT['mass']),color=np.array([.8,.12,.08]),physics_material=mat))
@@ -93,6 +117,7 @@ clutter=ClutterMonitor(world,stage,mat) if a.clutter else None
 world.reset()
 camera.initialize()
 camera.add_distance_to_image_plane_to_frame()
+if ARENA_TARGET:camera.add_instance_id_segmentation_to_frame()
 names=robot.dof_names
 arm=[names.index('J'+str(i)) for i in range(1,8)]
 fingers=[names.index('dex1_Joint1_1'),names.index('dex1_Joint2_1')]
@@ -113,6 +138,7 @@ robot.set_joint_positions(q)
 robot.apply_action(ArticulationAction(joint_positions=q))
 for _ in range(240): world.step(render=(_%8==0))
 commands=queue.Queue(); state={}; lock=threading.Lock(); tick=240; active=None; target=q.copy(); results={}; history=[]
+seed=initial['seed'] if ARENA_TARGET else None
 class Handler(BaseHTTPRequestHandler):
     def log_message(self,*args): pass
     def do_GET(self):
@@ -139,12 +165,23 @@ try:
                 op=cmd['op']
                 if op=='reset':
                     if active: raise RuntimeError('trajectory active')
-                    xy=np.asarray(cmd.get('xy',[.5,0.]),dtype=float)
-                    if xy.shape!=(2,) or not (.37<=xy[0]<=.62 and -.14<=xy[1]<=.14):raise ValueError('target placement outside benchmark workspace')
-                    OBJECT_YAW=float(cmd.get('yaw',0.))
-                    if not np.isfinite(OBJECT_YAW):raise ValueError('invalid object yaw')
-                    BOX[:]=[xy[0],xy[1],SIZE[2]/2]
-                    box.set_world_pose(BOX,yaw_quat(OBJECT_YAW));box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
+                    if ARENA_TARGET:
+                        seed=int(cmd['seed']);episode=ARENA_EPISODES[seed]
+                        if episode['target']!=ARENA_TARGET:raise ValueError('Arena target/seed mismatch')
+                        spec=episode['objects'][0];BOX[:]=spec['position']
+                        OBJECT_YAW=float(2*np.arctan2(spec['quaternion_wxyz'][3],spec['quaternion_wxyz'][0]))
+                        box.set_world_pose(spec['position'],spec['quaternion_wxyz'])
+                        box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
+                        for body,other in zip(arena_clutter,episode['objects'][1:]):
+                            body.set_world_pose(other['position'],other['quaternion_wxyz'])
+                            body.set_linear_velocity([0,0,0]);body.set_angular_velocity([0,0,0])
+                    else:
+                        xy=np.asarray(cmd.get('xy',[.5,0.]),dtype=float)
+                        if xy.shape!=(2,) or not (.37<=xy[0]<=.62 and -.14<=xy[1]<=.14):raise ValueError('target placement outside benchmark workspace')
+                        OBJECT_YAW=float(cmd.get('yaw',0.))
+                        if not np.isfinite(OBJECT_YAW):raise ValueError('invalid object yaw')
+                        BOX[:]=[xy[0],xy[1],SIZE[2]/2]
+                        box.set_world_pose(BOX,yaw_quat(OBJECT_YAW));box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
                     target[arm]=HOME;target[fingers]=-.02
                     robot.set_joint_positions(target);robot.set_joint_velocities(np.zeros(len(names)))
                     history=[]
@@ -191,10 +228,12 @@ try:
                     rel=xyz-bp
                     cy,sy=np.cos(OBJECT_YAW),np.sin(OBJECT_YAW)
                     local=np.stack((cy*rel[:,0]+sy*rel[:,1],-sy*rel[:,0]+cy*rel[:,1],rel[:,2]),axis=-1)
-                    if OBJECT['shape']=='cylinder':mask=(np.linalg.norm(local[:,:2],axis=1)<=float(OBJECT['radius'])+.002)&(np.abs(local[:,2])<=SIZE[2]/2+.002)
+                    if ARENA_TARGET:mask=arena_scene.target_mask(camera,valid)
+                    elif OBJECT['shape']=='cylinder':mask=(np.linalg.norm(local[:,:2],axis=1)<=float(OBJECT['radius'])+.002)&(np.abs(local[:,2])<=SIZE[2]/2+.002)
                     else:mask=(np.abs(local)<=SIZE/2+.002).all(axis=1)
                     path=ROOT/'results'/f'{token}_cloud.npz'
-                    np.savez_compressed(path,points=pts,mask=mask,T_B_C=T_B_C,K=K)
+                    if ARENA_TARGET:np.savez_compressed(path,points=pts,mask=mask,T_B_C=T_B_C,K=K,rgb=camera.get_rgba())
+                    else:np.savez_compressed(path,points=pts,mask=mask,T_B_C=T_B_C,K=K)
                     results[token]={'ok':True,'path':str(path),'object_points':int(mask.sum())}
                 elif op=='trajectory':
                     if active: raise RuntimeError('trajectory active')
@@ -226,7 +265,12 @@ try:
                     arm_tracking_error_rad=float(np.max(np.abs(target[arm]-measured_q[arm]))))
         history.append(sample)
         if len(history)>2400: history=history[-2400:]
-        clutter_state=clutter.sample(tick*DT,bp) if clutter else None
+        if ARENA_TARGET:
+            clutter_state={'obstacles':[dict(id=f'clutter_{i}',position=body.get_world_pose()[0].tolist(),
+                                      quaternion_wxyz=body.get_world_pose()[1].tolist(),
+                                      aabb_size=(np.array(ARENA_INVENTORY[spec['asset']]['bounds'])[1]-np.array(ARENA_INVENTORY[spec['asset']]['bounds'])[0]).tolist())
+                                        for i,(body,spec) in enumerate(zip(arena_clutter,ARENA_EPISODES[seed]['objects'][1:]))]}
+        else:clutter_state=clutter.sample(tick*DT,bp) if clutter else None
         with lock:
             state=dict(t=tick*DT,names=names,q=measured_q.tolist(),box=bp.tolist(),box_quat=bq.tolist(),object={**OBJECT,'size':SIZE.tolist(),'yaw':OBJECT_YAW},tcp=tp.tolist(),tcp_quat=tq.tolist(),forces=f.tolist(),results=results.copy(),history=history[::8],busy=active is not None,clutter=clutter_state)
 finally:

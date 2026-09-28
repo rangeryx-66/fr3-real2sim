@@ -52,6 +52,70 @@ def variants(raw, limit=80):
             return
 
 
+def manifold_variants(raw, surface_anchor, limit=100):
+    """Sample the Dex1 pose manifold around an AnyGrasp surface-region seed.
+
+    The anchor comes from the asset's actual surface mesh. The same bounded
+    translations, angles and ordering apply to every Arena object.
+    """
+    raw=np.asarray(raw,dtype=float)
+    anchor=np.asarray(surface_anchor,dtype=float)
+    count=0
+    local=list(variants(raw,limit=100))
+    selected={0,1,2,3,6,8,10,12}
+    for index in sorted(selected):
+        yield local[index];count+=1
+        if count>=limit:return
+    toward=anchor-raw[:3,3]
+    surface_search=[(blend,depth,pitch,yaw)
+                    for blend,depth,pitch,yaw in (
+                        (.5,0.,0.,0.),(1.,0.,0.,0.),
+                        (.5,-.02,0.,0.),(.5,.02,0.,0.),
+                        (1.,-.02,0.,0.),(1.,.02,0.,0.),
+                        (.5,0.,-20.,0.),(.5,0.,20.,0.),
+                        (1.,0.,-20.,0.),(1.,0.,20.,0.),
+                        (.5,0.,0.,-30.),(.5,0.,0.,30.),
+                        (1.,0.,0.,-30.),(1.,0.,0.,30.),
+                        (1.,-.02,-20.,0.),(1.,.02,20.,0.),
+                        (1.,-.02,0.,-30.),(1.,.02,0.,30.),
+                        (.5,-.02,20.,-30.),(.5,.02,-20.,30.),
+                        (1.,-.02,20.,30.),(1.,.02,-20.,-30.),
+                    )]
+    for blend,depth,pitch,yaw in surface_search:
+        T=raw.copy()
+        T[:3,:3]=raw[:3,:3]@Rotation.from_euler('xyz',(0.,pitch,yaw),degrees=True).as_matrix()
+        T[:3,3]+=blend*toward+depth*T[:3,2]
+        dp=float(np.linalg.norm(T[:3,3]-raw[:3,3]))
+        if dp>.065:continue
+        dr=float((Rotation.from_matrix(raw[:3,:3]).inv()*Rotation.from_matrix(T[:3,:3])).magnitude())
+        yield Variant(T,f'surface_blend{blend:.1f}_depth{depth:+.3f}_pitch{pitch:+.0f}_yaw{yaw:+.0f}',dp,dr)
+        count+=1
+        if count>=limit:return
+    for index,variant in enumerate(local):
+        if index in selected:continue
+        yield variant;count+=1
+        if count>=limit:return
+
+
+def surface_contact_geometry(T, surface_points):
+    """Check bilateral Dex1 pad coverage against an official asset surface."""
+    points=np.asarray(surface_points,dtype=float)
+    if not len(points):return False,'no target surface points',0.
+    local=(points-T[:3,3])@T[:3,:3]
+    region=local[(local[:,0]>=-.032)&(local[:,0]<=.005)&
+                 (local[:,2]>=.002)&(local[:,2]<=.048)&(np.abs(local[:,1])<=.055)]
+    if len(region)<12:return False,'surface misses Dex1 pad overlap',0.
+    lo,hi=np.quantile(region[:,1],[.05,.95]);width=float(hi-lo)
+    if not (.018<=width<=.085) or lo>-.006 or hi<.006:
+        return False,'no bilateral surface within Dex1 opening',0.
+    midpoint=float((lo+hi)/2)
+    if abs(midpoint)>.018:return False,'surface off jaw centre',0.
+    span_x=float(np.ptp(region[:,0]));span_z=float(np.ptp(region[:,2]))
+    if span_x<.004 or span_z<.006:return False,'insufficient pad contact area',0.
+    score=max(0.,1.-abs(midpoint)/.018)*min(1.,span_x/.02)*min(1.,span_z/.025)
+    return True,'bilateral target surface overlaps Dex1 pads',float(score)
+
+
 def contact_geometry(T, box_center, box_size=(.045, .045, .05), shape='box', object_yaw=0.):
     """Necessary parallel-jaw contact conditions for the Dex1 terminal pads.
 

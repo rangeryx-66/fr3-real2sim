@@ -6,6 +6,7 @@ import subprocess
 import time
 import traceback
 import hashlib
+from functools import lru_cache
 from collections import Counter
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -17,13 +18,13 @@ from rclpy.action import ActionClient
 from moveit_msgs.srv import GetPositionIK, GetPositionFK, GetStateValidity, GetMotionPlan, GetCartesianPath, ApplyPlanningScene, GetPlanningScene
 from moveit_msgs.action import ExecuteTrajectory
 from moveit_msgs.msg import RobotState, Constraints, JointConstraint, CollisionObject, AttachedCollisionObject, AllowedCollisionEntry, PlanningSceneComponents
-from shape_msgs.msg import SolidPrimitive
-from geometry_msgs.msg import Pose, PoseStamped
+from shape_msgs.msg import SolidPrimitive, Mesh, MeshTriangle
+from geometry_msgs.msg import Pose, PoseStamped, Point
 from sensor_msgs.msg import JointState
 from control_msgs.action import GripperCommand
 from frames import pose_values
 from r1a7_frames import grasp_to_r1a7_tcp
-from r1a7_grasp_adaptation import variants, contact_geometry, pad_table_penetration, path_targets
+from r1a7_grasp_adaptation import variants, manifold_variants, contact_geometry, surface_contact_geometry, pad_table_penetration, path_targets
 import r1a7_plant as plant
 ROOT=Path(__file__).resolve().parents[1]
 RUN=Path(os.environ.get('R1A7_RUN_DIR',str(ROOT/'results'/('run_'+str(time.time_ns())))))
@@ -44,6 +45,19 @@ def pose(T):
 
 def stamped(T):
     m=PoseStamped();m.header.frame_id=BASE;m.pose=pose(T);return m
+
+@lru_cache(maxsize=16)
+def arena_surface(name):
+    source=Path(os.environ.get('R1A7_ARENA_ASSET_DIR','/data1/home/rangeryx/fr3_moveit_grasp/assets/arena_complex'))/f'{name}_mesh.npz'
+    with np.load(source) as data:
+        return np.asarray(data['vertices']),np.asarray(data['triangles'])
+
+@lru_cache(maxsize=16)
+def arena_mesh(name):
+    vertices,triangles=arena_surface(name)
+    mesh=Mesh();mesh.vertices=[Point(x=float(v[0]),y=float(v[1]),z=float(v[2])) for v in vertices]
+    mesh.triangles=[MeshTriangle(vertex_indices=[int(i) for i in f]) for f in triangles]
+    return mesh
 
 class R1A7Backend(Node):
     def __init__(self):
@@ -171,8 +185,14 @@ class R1A7Backend(Node):
         if not attach:
             detach=AttachedCollisionObject();detach.object.id='box';detach.object.operation=CollisionObject.REMOVE;s.robot_state.attached_collision_objects=[detach]
         live=plant.state();target=live['object']
-        geometry=[('table',[.5,0,-.025],[.7,.7,.05]),
-                  ('box',live['box'],target['size'])]
+        if target['shape']=='arena_mesh':
+            inventory=json.loads((ROOT/'assets/arena_complex/inventory.json').read_text())
+            tb=np.array(inventory['table']['bounds']);table_size=tb[1]-tb[0]
+            geometry=[('table',[.5,0,-table_size[2]/2],table_size.tolist()),('box',live['box'],target['size'])]
+            geometry.extend((ob['id'],ob['position'],(np.asarray(ob['aabb_size'])+.002).tolist())
+                            for ob in live['clutter']['obstacles'])
+        else:
+            geometry=[('table',[.5,0,-.025],[.7,.7,.05]),('box',live['box'],target['size'])]
         if BASE_POSE[2]>0:
             geometry.append(('r1a7_pedestal',[BASE_POSE[0],BASE_POSE[1],PEDESTAL_SIZE[2]/2],list(PEDESTAL_SIZE)))
         for name,center,size in geometry:
@@ -183,7 +203,9 @@ class R1A7Backend(Node):
             pp=Pose();pp.position.x,pp.position.y,pp.position.z=map(float,center);pp.orientation.w=1.
             if name=='box':
                 bq=live['box_quat'];pp.orientation.x,pp.orientation.y,pp.orientation.z,pp.orientation.w=map(float,[bq[1],bq[2],bq[3],bq[0]])
-            obj.primitives=[shape];obj.primitive_poses=[pp]
+            if name=='box' and target['shape']=='arena_mesh':
+                obj.meshes=[arena_mesh(target['id'])];obj.mesh_poses=[pp]
+            else:obj.primitives=[shape];obj.primitive_poses=[pp]
             if name=='box' and attach:
                 tcp_rotation=Rotation.from_quat(np.roll(live['tcp_quat'],-1))
                 relative=tcp_rotation.inv().apply(np.array(center)-np.array(live['tcp']))
@@ -206,9 +228,14 @@ class R1A7Backend(Node):
             fi=acm.entry_names.index(name);acm.entry_values[bi].enabled[fi]=True;acm.entry_values[fi].enabled[bi]=True
         s.allowed_collision_matrix=acm
         if not self.call('apply_planning_scene',req).success:raise Failure('NO_PLAN','planning scene update failed')
-    def evaluate_variant(self,T,raw,box_center,seed,quick=False):
+    def arena_points(self):
+        live=plant.state();vertices,_=arena_surface(live['object']['id'])
+        return Rotation.from_quat(np.roll(live['box_quat'],-1)).apply(vertices)+np.asarray(live['box'])
+    def evaluate_variant(self,T,raw,box_center,seed,quick=False,surface_points=None):
         obj=plant.state()['object']
-        ok,reason,contact_score=contact_geometry(T,box_center,obj['size'],obj['shape'],obj['yaw'])
+        if obj['shape']=='arena_mesh':
+            ok,reason,contact_score=surface_contact_geometry(T,self.arena_points() if surface_points is None else surface_points)
+        else:ok,reason,contact_score=contact_geometry(T,box_center,obj['size'],obj['shape'],obj['yaw'])
         if not ok:raise Failure('BAD_GRASP_GEOMETRY',reason)
         table_depth=pad_table_penetration(T)
         if table_depth>.001:raise Failure('COLLISION',f'TABLE_COLLISION: official Dex1 pad vertices penetrate {table_depth:.4f} m')
@@ -235,6 +262,7 @@ class R1A7Backend(Node):
         cached=self.adaptation_cache.get(key)
         if cached is not None:return cached
         details=[];feasible=[];home=self.measured()
+        surface=self.arena_points() if obj['shape']=='arena_mesh' else None
         for g in data['grasps']:
             record={'rank':g['rank'],'anygrasp_score':g['score'],'raw_grasp':g,
                     'variants_tested':0,'failures':{}}
@@ -244,10 +272,17 @@ class R1A7Backend(Node):
             _,raw,_,_=grasp_to_r1a7_tcp(data['T_B_C'],g['rotation'],g['translation'],g['depth'])
             record['raw_T_B_TCP']=raw.tolist()
             best=None
-            for v in (list(variants(raw,limit=int(os.environ.get('R1A7_VARIANT_LIMIT','46')))) if mode=='adapted' else [next(variants(raw))]):
+            if surface is not None:
+                anchor=surface[np.argmin(np.sum((surface-raw[:3,3])**2,axis=1))]
+                nearby=surface[np.sum((surface-anchor)**2,axis=1)<.09**2]
+                choices=manifold_variants(raw,anchor,limit=int(os.environ.get('R1A7_MANIFOLD_LIMIT','100'))) if mode=='adapted' else [next(variants(raw))]
+            else:
+                nearby=None
+                choices=variants(raw,limit=int(os.environ.get('R1A7_VARIANT_LIMIT','46'))) if mode=='adapted' else [next(variants(raw))]
+            for v in choices:
                 record['variants_tested']+=1
                 try:
-                    evaluated=self.evaluate_variant(v.transform,raw,box_center,home,quick=mode=='adapted')
+                    evaluated=self.evaluate_variant(v.transform,raw,box_center,home,quick=mode=='adapted',surface_points=nearby)
                     if best is None or evaluated['score']>best[0]['score']:best=(evaluated,v)
                 except Failure as e:
                     record['failures'][e.category]=record['failures'].get(e.category,0)+1
@@ -323,7 +358,9 @@ class R1A7Backend(Node):
         self.executions=[];self.stage='RESET'
         try:
             reset={'op':'reset'}
-            if scenario:reset.update(xy=scenario['xy'],yaw=scenario['yaw'])
+            if scenario:
+                if 'seed' in scenario:reset['seed']=scenario['seed']
+                else:reset.update(xy=scenario['xy'],yaw=scenario['yaw'])
             plant.command(reset);plant.settle(1.)
             result['tf_check']=self.check_fk();self.scene();self.gripper(.09)
             result['object']=plant.state()['object'];result['scenario']=scenario
@@ -423,7 +460,11 @@ class R1A7Backend(Node):
                         break
                     if detail is feasible[-1][0]:break
                     result.setdefault('recovery_events',[]).append('next_adapted_candidate')
-                    plant.command({'op':'reset',**({'xy':scenario['xy'],'yaw':scenario['yaw']} if scenario else {})})
+                    retry_reset={'op':'reset'}
+                    if scenario:
+                        if 'seed' in scenario:retry_reset['seed']=scenario['seed']
+                        else:retry_reset.update(xy=scenario['xy'],yaw=scenario['yaw'])
+                    plant.command(retry_reset)
                     plant.settle(1.);self.scene();self.gripper(.09)
                 except ValueError as error:
                     last_failure=Failure('TF_ERROR',str(error));attempt.update(status='TF_ERROR',detail=str(error))
