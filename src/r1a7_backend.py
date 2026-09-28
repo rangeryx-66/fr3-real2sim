@@ -22,10 +22,10 @@ from sensor_msgs.msg import JointState
 from control_msgs.action import GripperCommand
 from frames import pose_values
 from r1a7_frames import grasp_to_r1a7_tcp
-from r1a7_grasp_adaptation import variants, contact_geometry, path_targets
+from r1a7_grasp_adaptation import variants, contact_geometry, pad_table_penetration, path_targets
 import r1a7_plant as plant
 ROOT=Path(__file__).resolve().parents[1]
-RUN=ROOT/'results'/('run_'+str(time.time_ns()))
+RUN=Path(os.environ.get('R1A7_RUN_DIR',str(ROOT/'results'/('run_'+str(time.time_ns())))))
 RUN.mkdir(parents=True,exist_ok=True)
 BASE='r1a7_world';TCP='r1a7_tcp';GROUP='r1a7_arm'
 JOINTS=tuple(f'J{i}' for i in range(1,8))
@@ -169,18 +169,24 @@ class R1A7Backend(Node):
         req=ApplyPlanningScene.Request();s=req.scene;s.is_diff=True;s.robot_state.is_diff=True
         if not attach:
             detach=AttachedCollisionObject();detach.object.id='box';detach.object.operation=CollisionObject.REMOVE;s.robot_state.attached_collision_objects=[detach]
+        live=plant.state();target=live['object']
         geometry=[('table',[.5,0,-.025],[.7,.7,.05]),
-                  ('box',plant.state()['box'],[.045,.045,.05])]
+                  ('box',live['box'],target['size'])]
         if BASE_POSE[2]>0:
             geometry.append(('r1a7_pedestal',[BASE_POSE[0],BASE_POSE[1],PEDESTAL_SIZE[2]/2],list(PEDESTAL_SIZE)))
         for name,center,size in geometry:
             obj=CollisionObject();obj.id=name;obj.header.frame_id=BASE;obj.operation=CollisionObject.ADD
-            shape=SolidPrimitive();shape.type=SolidPrimitive.BOX;shape.dimensions=size;pp=Pose();pp.position.x,pp.position.y,pp.position.z=map(float,center);pp.orientation.w=1.;obj.primitives=[shape];obj.primitive_poses=[pp]
+            shape=SolidPrimitive();shape.type=SolidPrimitive.BOX;shape.dimensions=size
+            if name=='box' and target['shape']=='cylinder':
+                shape.type=SolidPrimitive.CYLINDER;shape.dimensions=[float(target['height']),float(target['radius'])]
+            pp=Pose();pp.position.x,pp.position.y,pp.position.z=map(float,center);pp.orientation.w=1.
+            if name=='box':
+                bq=live['box_quat'];pp.orientation.x,pp.orientation.y,pp.orientation.z,pp.orientation.w=map(float,[bq[1],bq[2],bq[3],bq[0]])
+            obj.primitives=[shape];obj.primitive_poses=[pp]
             if name=='box' and attach:
-                live=plant.state()
                 tcp_rotation=Rotation.from_quat(np.roll(live['tcp_quat'],-1))
                 relative=tcp_rotation.inv().apply(np.array(center)-np.array(live['tcp']))
-                relative_quat=tcp_rotation.inv().as_quat()
+                relative_quat=(tcp_rotation.inv()*Rotation.from_quat(np.roll(live['box_quat'],-1))).as_quat()
                 obj.header.frame_id=TCP
                 pp.position.x,pp.position.y,pp.position.z=map(float,relative)
                 pp.orientation.x,pp.orientation.y,pp.orientation.z,pp.orientation.w=map(float,relative_quat)
@@ -200,8 +206,11 @@ class R1A7Backend(Node):
         s.allowed_collision_matrix=acm
         if not self.call('apply_planning_scene',req).success:raise Failure('NO_PLAN','planning scene update failed')
     def evaluate_variant(self,T,raw,box_center,seed,quick=False):
-        ok,reason,contact_score=contact_geometry(T,box_center)
+        obj=plant.state()['object']
+        ok,reason,contact_score=contact_geometry(T,box_center,obj['size'],obj['shape'],obj['yaw'])
         if not ok:raise Failure('BAD_GRASP_GEOMETRY',reason)
+        table_depth=pad_table_penetration(T)
+        if table_depth>.001:raise Failure('COLLISION',f'TABLE_COLLISION: official Dex1 pad vertices penetrate {table_depth:.4f} m')
         pre,micro,lift=path_targets(T)
         gs=self.ik(T,seed,random_seeds=3 if quick else None)
         ps=self.ik(pre,gs,random_seeds=3 if quick else None)
@@ -219,7 +228,9 @@ class R1A7Backend(Node):
                     displacement_m=displacement,angular_rad=angular,score=score)
     def select_candidates(self,data,mode,box_center):
         """Keep raw candidates unchanged and rank collision-free Dex1 alternatives."""
-        key=(mode,json.dumps(data['grasps'],sort_keys=True),tuple(np.round(box_center,5)))
+        obj=plant.state()['object']
+        key=(mode,json.dumps(data['grasps'],sort_keys=True),tuple(np.round(box_center,5)),
+             obj['id'],tuple(obj['size']),round(obj['yaw'],5))
         cached=self.adaptation_cache.get(key)
         if cached is not None:return cached
         details=[];feasible=[];home=self.measured()
@@ -248,18 +259,24 @@ class R1A7Backend(Node):
                 feasible.append((record,g,v.transform))
             else:record['status']=max(record['failures'],key=record['failures'].get) if record['failures'] else 'NO_IK'
             details.append(record)
+            print('CANDIDATE_CHECK',json.dumps(dict(rank=g['rank'],status=record['status'],
+                 variants_tested=record['variants_tested'],failures=record['failures'])),flush=True)
         feasible.sort(key=lambda item:item[0]['score'],reverse=True)
         self.adaptation_cache[key]=(details,[(r,g,T.tolist()) for r,g,T in feasible])
         return self.adaptation_cache[key]
-    def trial(self,index,grasps_json=None,mode='adapted'):
+    def trial(self,index,grasps_json=None,mode='adapted',scenario=None):
         result={'trial':index,'success':False,'candidates':[]}
         self.executions=[];self.stage='RESET'
         try:
-            plant.command({'op':'reset'});plant.settle(1.)
+            reset={'op':'reset'}
+            if scenario:reset.update(xy=scenario['xy'],yaw=scenario['yaw'])
+            plant.command(reset);plant.settle(1.)
             result['tf_check']=self.check_fk();self.scene();self.gripper(.09)
+            result['object']=plant.state()['object'];result['scenario']=scenario
             self.stage='PERCEPTION'
             capture=plant.command({'op':'capture'})
-            if not capture['ok'] or capture.get('object_points',0)<30:raise Failure('NO_GRASP',str(capture))
+            if not capture['ok']:raise Failure('NO_GRASP',str(capture))
+            result['object_points']=capture.get('object_points',0)
             if grasps_json is None:
                 output=RUN/f'trial_{index:02d}_grasps.json'
                 cmd=['/data1/home/rangeryx/.conda/envs/anygrasp/bin/python',str(ROOT/'src/infer.py'),'--input',capture['path'],'--output',str(output)]
@@ -271,8 +288,13 @@ class R1A7Backend(Node):
                 result['reused_anygrasp_output']=str(output)
             data=json.loads(output.read_text())
             if data['frame']!='camera_optical':raise Failure('TF_ERROR','unexpected grasp frame')
-            if not data['grasps']:raise Failure('NO_GRASP','zero candidates')
             result['capture']=capture
+            if capture.get('object_points',0)<30:
+                raise Failure('NO_GRASP','AnyGrasp ran, but the target region has fewer than 30 visible points')
+            if not data['grasps']:raise Failure('NO_GRASP','zero candidates')
+            if mode=='capture':
+                result.update(category='CAPTURED',grasp_count=len(data['grasps']),grasp_file=str(output))
+                raise StopIteration
             self.stage='CANDIDATE_CHECK'
             box_center=plant.state()['box']
             details,feasible=self.select_candidates(data,mode,box_center)
@@ -338,6 +360,7 @@ class R1A7Backend(Node):
             if min(heights)<z0+.07:raise Failure('DROP','object lost lift height during hold')
             if max(heights)-min(heights)>.01:raise Failure('CONTACT_LOSS','unstable hold height')
             result.update(success=True,category='SUCCESS')
+        except StopIteration:pass
         except Failure as e:result.update(category=e.category,detail=str(e))
         except Exception as e:result.update(category='SYSTEM_ERROR',detail=str(e),traceback=traceback.format_exc())
         try:
@@ -353,10 +376,12 @@ class R1A7Backend(Node):
         print(json.dumps({k:v for k,v in result.items() if k not in ['hold_samples','candidates','executions','close_samples']}),flush=True)
         return result
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--trials',type=int,default=10);p.add_argument('--grasps-json',type=Path);p.add_argument('--grasps-dir',type=Path);p.add_argument('--mode',choices=['raw','adapted'],default='adapted');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--trials',type=int,default=10);p.add_argument('--grasps-json',type=Path);p.add_argument('--grasps-dir',type=Path);p.add_argument('--scenarios-json',type=Path);p.add_argument('--mode',choices=['capture','raw','adapted'],default='adapted');a=p.parse_args()
     if a.grasps_json and a.grasps_dir:p.error('use either --grasps-json or --grasps-dir')
     rclpy.init();node=R1A7Backend()
-    results=[node.trial(i+1,(a.grasps_dir/f'trial_{i+1:02d}_grasps.json' if a.grasps_dir else a.grasps_json),a.mode) for i in range(a.trials)]
+    scenarios=json.loads(a.scenarios_json.read_text()) if a.scenarios_json else [None]*a.trials
+    if len(scenarios)!=a.trials:p.error('scenario count must match --trials')
+    results=[node.trial(i+1,(a.grasps_dir/f'trial_{i+1:02d}_grasps.json' if a.grasps_dir else a.grasps_json),a.mode,scenarios[i]) for i in range(a.trials)]
     from collections import Counter
     report={'mode':a.mode,'trials':len(results),'successes':sum(r['success'] for r in results),
             'categories':dict(Counter(r['category'] for r in results)),

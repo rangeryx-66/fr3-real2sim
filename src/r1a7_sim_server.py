@@ -13,12 +13,13 @@ p=argparse.ArgumentParser()
 p.add_argument('--gpu',type=int,default=1)
 p.add_argument('--port',type=int,default=18765)
 p.add_argument('--clutter',action='store_true')
+p.add_argument('--object-id',default='benchmark_box')
 a=p.parse_args()
 ROOT=Path(__file__).resolve().parents[1]
 from isaacsim import SimulationApp
 app=SimulationApp({'headless':True,'active_gpu':a.gpu,'physics_gpu':a.gpu,'multi_gpu':False})
 from isaacsim.core.api import World
-from isaacsim.core.api.objects import DynamicCuboid, FixedCuboid
+from isaacsim.core.api.objects import DynamicCuboid, DynamicCylinder, FixedCuboid
 from isaacsim.core.api.materials import PhysicsMaterial
 from isaacsim.core.prims import SingleArticulation, RigidPrim, SingleXFormPrim
 from isaacsim.core.utils.stage import add_reference_to_stage
@@ -29,8 +30,14 @@ from pxr import UsdGeom, UsdPhysics, PhysxSchema
 import omni.usd
 DT=1/240
 HOME=np.array([0.,1.3,1.0,-1.3,0.,0.,0.])
-BOX=np.array([.5,0,.025])
-SIZE=np.array([.045,.045,.05])
+OBJECTS={'benchmark_box':dict(id='benchmark_box',shape='box',size=[.045,.045,.05],mass=.06)}
+OBJECTS.update({o['id']:o for o in json.loads((ROOT/'config/r1a7_generalization_objects.json').read_text())})
+if a.object_id not in OBJECTS:raise ValueError('unknown object '+a.object_id)
+OBJECT=OBJECTS[a.object_id]
+SIZE=np.array(OBJECT.get('size',[2*OBJECT['radius'],2*OBJECT['radius'],OBJECT['height']]) if OBJECT['shape']=='cylinder' else OBJECT['size'],dtype=float)
+BOX=np.array([.5,0,SIZE[2]/2])
+OBJECT_YAW=0.
+def yaw_quat(yaw):return np.array([np.cos(yaw/2),0.,0.,np.sin(yaw/2)])
 BASE_POSE=np.array([float(v) for v in os.environ.get('R1A7_BASE_POSE','0,0,0,90').split(',')])
 PEDESTAL_SIZE=np.array([float(v) for v in os.environ.get('R1A7_PEDESTAL_SIZE','0.10,0.10,0.20').split(',')])
 assert BASE_POSE.shape==(4,) and PEDESTAL_SIZE.shape==(3,) and np.all(PEDESTAL_SIZE>0)
@@ -44,7 +51,11 @@ if BASE_POSE[2]>0:
         position=[BASE_POSE[0],BASE_POSE[1],PEDESTAL_SIZE[2]/2],
         scale=PEDESTAL_SIZE,physics_material=mat))
     print('PEDESTAL',json.dumps(dict(base=BASE_POSE.tolist(),size=PEDESTAL_SIZE.tolist())),flush=True)
-box=world.scene.add(DynamicCuboid('/World/box',name='box',position=BOX,scale=SIZE,mass=.06,color=np.array([.8,.12,.08]),physics_material=mat))
+if OBJECT['shape']=='cylinder':
+    box=world.scene.add(DynamicCylinder('/World/box',name='box',position=BOX,radius=float(OBJECT['radius']),height=float(OBJECT['height']),mass=float(OBJECT['mass']),color=np.array([.8,.12,.08]),physics_material=mat))
+else:
+    box=world.scene.add(DynamicCuboid('/World/box',name='box',position=BOX,scale=SIZE,mass=float(OBJECT['mass']),color=np.array([.8,.12,.08]),physics_material=mat))
+print('OBJECT',json.dumps(OBJECT),flush=True)
 asset=ROOT/'assets'
 asset.mkdir(exist_ok=True)
 model_hash=hashlib.sha256((ROOT/'config/r1a7_dex1.urdf').read_bytes()).hexdigest()[:12]
@@ -128,7 +139,12 @@ try:
                 op=cmd['op']
                 if op=='reset':
                     if active: raise RuntimeError('trajectory active')
-                    box.set_world_pose(BOX,[1,0,0,0]);box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
+                    xy=np.asarray(cmd.get('xy',[.5,0.]),dtype=float)
+                    if xy.shape!=(2,) or not (.37<=xy[0]<=.62 and -.14<=xy[1]<=.14):raise ValueError('target placement outside benchmark workspace')
+                    OBJECT_YAW=float(cmd.get('yaw',0.))
+                    if not np.isfinite(OBJECT_YAW):raise ValueError('invalid object yaw')
+                    BOX[:]=[xy[0],xy[1],SIZE[2]/2]
+                    box.set_world_pose(BOX,yaw_quat(OBJECT_YAW));box.set_linear_velocity([0,0,0]);box.set_angular_velocity([0,0,0])
                     target[arm]=HOME;target[fingers]=-.02
                     robot.set_joint_positions(target);robot.set_joint_velocities(np.zeros(len(names)))
                     history=[]
@@ -172,7 +188,11 @@ try:
                     pts=pts[valid]
                     xyz=pts@T_B_C[:3,:3].T+T_B_C[:3,3]
                     bp,_=box.get_world_pose()
-                    mask=(np.abs(xyz-bp)<=SIZE/2+.002).all(axis=1)
+                    rel=xyz-bp
+                    cy,sy=np.cos(OBJECT_YAW),np.sin(OBJECT_YAW)
+                    local=np.stack((cy*rel[:,0]+sy*rel[:,1],-sy*rel[:,0]+cy*rel[:,1],rel[:,2]),axis=-1)
+                    if OBJECT['shape']=='cylinder':mask=(np.linalg.norm(local[:,:2],axis=1)<=float(OBJECT['radius'])+.002)&(np.abs(local[:,2])<=SIZE[2]/2+.002)
+                    else:mask=(np.abs(local)<=SIZE/2+.002).all(axis=1)
                     path=ROOT/'results'/f'{token}_cloud.npz'
                     np.savez_compressed(path,points=pts,mask=mask,T_B_C=T_B_C,K=K)
                     results[token]={'ok':True,'path':str(path),'object_points':int(mask.sum())}
@@ -208,6 +228,6 @@ try:
         if len(history)>2400: history=history[-2400:]
         clutter_state=clutter.sample(tick*DT,bp) if clutter else None
         with lock:
-            state=dict(t=tick*DT,names=names,q=measured_q.tolist(),box=bp.tolist(),box_quat=bq.tolist(),tcp=tp.tolist(),tcp_quat=tq.tolist(),forces=f.tolist(),results=results.copy(),history=history[::8],busy=active is not None,clutter=clutter_state)
+            state=dict(t=tick*DT,names=names,q=measured_q.tolist(),box=bp.tolist(),box_quat=bq.tolist(),object={**OBJECT,'size':SIZE.tolist(),'yaw':OBJECT_YAW},tcp=tp.tolist(),tcp_quat=tq.tolist(),forces=f.tolist(),results=results.copy(),history=history[::8],busy=active is not None,clutter=clutter_state)
 finally:
     server.shutdown();app.close()
