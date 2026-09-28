@@ -5,6 +5,7 @@ import json
 import subprocess
 import time
 import traceback
+import hashlib
 from collections import Counter
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -264,7 +265,60 @@ class R1A7Backend(Node):
         feasible.sort(key=lambda item:item[0]['score'],reverse=True)
         self.adaptation_cache[key]=(details,[(r,g,T.tolist()) for r,g,T in feasible])
         return self.adaptation_cache[key]
-    def trial(self,index,grasps_json=None,mode='adapted',scenario=None):
+    def verify_close(self,result,label):
+        self.stage=label
+        close_result=self.gripper(0.)
+        plant.settle(.3)
+        s=plant.state();recent=[h for h in s['history'] if h['t']>=s['t']-.2]
+        finger_q={n:q for n,q in zip(s['names'],s['q']) if n.startswith('dex1_Joint')}
+        bilateral_force=bool(recent and all(min(h['forces'])>.1 for h in recent))
+        bilateral_stall=all(finger_q.get(n,.0245)<.018 for n in ('dex1_Joint1_1','dex1_Joint2_1'))
+        evidence=dict(stage=label,bilateral_force=bilateral_force,bilateral_stall=bilateral_stall,
+                      finger_q=finger_q,reported_position_m=close_result.position)
+        result.setdefault('contact_checks',[]).append(evidence)
+        result['contact_evidence']={'bilateral_force':bilateral_force,'bilateral_stall':bilateral_stall}
+        result['close_finger_q']=finger_q;result['close_reported_position_m']=close_result.position
+        result['close_samples']=recent
+        if not (bilateral_force or bilateral_stall):raise Failure('BAD_CONTACT','no bilateral force or finger stall')
+
+    def micro_lift_check(self,grasp,z0):
+        self.stage='MICRO_LIFT'
+        self.scene(attach=True)
+        micro=path_targets(grasp)[1]
+        mt=self.cartesian(self.measured(),micro)
+        self.execute(mt,'NO_PLAN')
+        if plant.state()['box'][2]<z0+.012:
+            raise Failure('CONTACT_LOSS','object did not follow 2 cm micro-lift')
+
+    def recover_contact(self,grasp,raw,z0,result):
+        """One bounded re-close and 3 mm depth correction, then require a loaded micro-lift."""
+        result.setdefault('recovery_events',[]).append('reclose')
+        # A failed micro-lift leaves the hand 2 cm above the object. Detach the
+        # planning proxy, reopen, and return to the checked grasp before closing.
+        self.scene(attach=False)
+        self.gripper(.09)
+        if np.linalg.norm(np.asarray(plant.state()['tcp'])-grasp[:3,3])>.002:
+            self.stage='CONTACT_RECOVERY_RETURN'
+            self.execute(self.cartesian(self.measured(),grasp),'NO_PLAN')
+        try:
+            self.verify_close(result,'RECLOSE')
+            self.micro_lift_check(grasp,z0)
+            return grasp
+        except Failure as error:
+            if error.category not in ('BAD_CONTACT','CONTACT_LOSS'):raise
+        corrected=grasp.copy();corrected[:3,3]+=.003*grasp[:3,2]
+        result['recovery_events'].append('depth_correction_3mm')
+        self.scene(attach=False)
+        self.gripper(.09)
+        box_center=plant.state()['box']
+        self.evaluate_variant(corrected,raw,box_center,self.measured())
+        self.stage='DEPTH_CORRECTION'
+        self.execute(self.cartesian(self.measured(),corrected),'NO_PLAN')
+        self.verify_close(result,'CORRECTED_CLOSE')
+        self.micro_lift_check(corrected,z0)
+        return corrected
+
+    def trial(self,index,grasps_json=None,mode='adapted',scenario=None,reference_capture=None):
         result={'trial':index,'success':False,'candidates':[]}
         self.executions=[];self.stage='RESET'
         try:
@@ -274,8 +328,19 @@ class R1A7Backend(Node):
             result['tf_check']=self.check_fk();self.scene();self.gripper(.09)
             result['object']=plant.state()['object'];result['scenario']=scenario
             self.stage='PERCEPTION'
-            capture=plant.command({'op':'capture'})
-            if not capture['ok']:raise Failure('NO_GRASP',str(capture))
+            if reference_capture:
+                cloud=Path(reference_capture['cloud'])
+                digest=hashlib.sha256(cloud.read_bytes()).hexdigest()
+                if digest!=reference_capture['cloud_sha256']:
+                    raise Failure('TF_ERROR','FR3 reference point cloud hash mismatch')
+                with np.load(cloud) as points:
+                    point_count=int(np.count_nonzero(points['mask']))
+                    camera_pose=points['T_B_C'].tolist()
+                capture=dict(ok=True,path=str(cloud),object_points=point_count,
+                             source='fr3_reference',sha256=digest,T_B_C=camera_pose)
+            else:
+                capture=plant.command({'op':'capture'})
+                if not capture['ok']:raise Failure('NO_GRASP',str(capture))
             result['object_points']=capture.get('object_points',0)
             if grasps_json is None:
                 output=RUN/f'trial_{index:02d}_grasps.json'
@@ -288,6 +353,14 @@ class R1A7Backend(Node):
                 result['reused_anygrasp_output']=str(output)
             data=json.loads(output.read_text())
             if data['frame']!='camera_optical':raise Failure('TF_ERROR','unexpected grasp frame')
+            if reference_capture:
+                grasp_digest=hashlib.sha256(output.read_bytes()).hexdigest()
+                if grasp_digest!=reference_capture['grasps_sha256']:
+                    raise Failure('TF_ERROR','FR3 reference AnyGrasp output hash mismatch')
+                if not np.allclose(data['T_B_C'],capture['T_B_C'],atol=1e-9):
+                    raise Failure('TF_ERROR','FR3 reference camera transform mismatch')
+                result['reference_input']=dict(cloud_sha256=digest,grasps_sha256=grasp_digest,
+                                               fr3_trial=reference_capture['fr3_trial'])
             result['capture']=capture
             if capture.get('object_points',0)<30:
                 raise Failure('NO_GRASP','AnyGrasp ran, but the target region has fewer than 30 visible points')
@@ -301,65 +374,63 @@ class R1A7Backend(Node):
             result['mode']=mode;result['candidates']=details
             result['candidate_counts']={'raw':len(data['grasps']),'path_valid':len(feasible),
                                         'collision_free':len(feasible)}
-            chosen=None
-            for detail,g,T_list in feasible:
+            result['candidate_attempts']=[]
+            last_failure=None
+            max_candidates=3 if mode=='adapted' else 1
+            for detail,g,T_list in feasible[:max_candidates]:
+                attempt=dict(rank=g['rank'],variant=detail.get('variant'),status='STARTED')
+                result['candidate_attempts'].append(attempt)
                 try:
                     grasp=np.asarray(T_list)
                     current=self.measured()
                     evaluated=self.evaluate_variant(grasp,np.asarray(detail['raw_T_B_TCP']),box_center,current)
                     traj=self.plan(current,evaluated['pre_state'])
-                    pre,micro,lift=evaluated['pre'],evaluated['micro'],evaluated['lift']
-                    approach=evaluated['approach']
                     detail['status']='PLANNED';detail['planning_margin_rad']=self.trajectory_margin(traj)
-                    chosen=(pre,grasp,micro,lift,traj,approach,g)
-                except Failure as e:detail.update(status=e.category,detail=str(e))
-                except ValueError as e:detail.update(status='TF_ERROR',detail=str(e))
-                if chosen:break
-            if chosen is None:raise Failure('NO_EXECUTABLE_CANDIDATE','all top-K candidates rejected')
-            pre,grasp,micro,lift,traj,approach,g=chosen
-            result['selected_rank']=g['rank']
-            self.stage='PREGRASP'
-            self.execute(traj,'NO_PLAN')
-            # Recompute from measured pregrasp to prevent stale start-state execution.
-            self.stage='APPROACH'
-            approach=self.cartesian(self.measured(),grasp);self.execute(approach,'APPROACH_FAIL')
-            z0=plant.state()['box'][2];result['initial_z']=z0
-            self.stage='CLOSE'
-            close_result=self.gripper(0.)
-            plant.settle(.3)
-            s=plant.state();recent=[h for h in s['history'] if h['t']>=s['t']-.2]
-            result['close_samples']=recent
-            finger_q={n:q for n,q in zip(s['names'],s['q']) if n.startswith('dex1_Joint')}
-            result['close_finger_q']=finger_q
-            result['close_reported_position_m']=close_result.position
-            # Isaac's imported finger-link contact sensor can report zero even
-            # when both prismatic drives physically stall on the target. A
-            # bilateral stall is preliminary evidence; the loaded micro-lift
-            # below is the decisive physical contact test.
-            bilateral_force=bool(recent and all(min(h['forces'])>.1 for h in recent))
-            bilateral_stall=all(finger_q.get(n,.0245)<.018 for n in ('dex1_Joint1_1','dex1_Joint2_1'))
-            result['contact_evidence']={'bilateral_force':bilateral_force,'bilateral_stall':bilateral_stall}
-            if not (bilateral_force or bilateral_stall):raise Failure('BAD_CONTACT','no bilateral force or finger stall')
-            self.stage='MICRO_LIFT'
-            self.scene(attach=True)
-            mt=self.cartesian(self.measured(),micro)
-            self.execute(mt,'NO_PLAN')
-            s=plant.state()
-            if s['box'][2]<z0+.012:raise Failure('CONTACT_LOSS','object did not follow 2 cm micro-lift')
-            self.stage='LIFT'
-            try:lt=self.cartesian(self.measured(),lift)
-            except Failure as e:raise Failure('NO_PLAN',str(e))
-            self.execute(lt,'NO_PLAN')
-            self.stage='HOLD'
-            start=plant.state()['t'];plant.settle(2.2);s=plant.state()
-            samples=[h for h in s['history'] if start<=h['t']<=start+2.1]
-            result['hold_samples']=samples
-            if len(samples)<2 or samples[-1]['t']-samples[0]['t']<2.:raise Failure('DROP','insufficient physics samples')
-            heights=[h['z'] for h in samples];result['lift_m']=max(heights)-z0
-            if max(heights)<z0+.08:raise Failure('CONTACT_LOSS','object not lifted 8 cm')
-            if min(heights)<z0+.07:raise Failure('DROP','object lost lift height during hold')
-            if max(heights)-min(heights)>.01:raise Failure('CONTACT_LOSS','unstable hold height')
-            result.update(success=True,category='SUCCESS')
+                    result['planning_succeeded']=True
+                    result['selected_rank']=g['rank']
+                    self.stage='PREGRASP';self.execute(traj,'NO_PLAN')
+                    self.stage='APPROACH'
+                    self.execute(self.cartesian(self.measured(),grasp),'NO_PLAN')
+                    z0=plant.state()['box'][2];result['initial_z']=z0
+                    try:
+                        self.verify_close(result,'CLOSE')
+                        self.micro_lift_check(grasp,z0)
+                    except Failure as error:
+                        if mode!='adapted' or error.category not in ('BAD_CONTACT','CONTACT_LOSS'):
+                            raise
+                        attempt['initial_contact_failure']=error.category
+                        grasp=self.recover_contact(grasp,np.asarray(detail['raw_T_B_TCP']),z0,result)
+                    self.stage='LIFT'
+                    lift=path_targets(grasp)[2]
+                    self.execute(self.cartesian(self.measured(),lift),'NO_PLAN')
+                    self.stage='HOLD'
+                    start=plant.state()['t'];plant.settle(2.2);s=plant.state()
+                    samples=[h for h in s['history'] if start<=h['t']<=start+2.1]
+                    result['hold_samples']=samples
+                    if len(samples)<2 or samples[-1]['t']-samples[0]['t']<2.:raise Failure('DROP','insufficient physics samples')
+                    heights=[h['z'] for h in samples];result['lift_m']=max(heights)-z0
+                    if max(heights)<z0+.08:raise Failure('CONTACT_LOSS','object not lifted 8 cm')
+                    if min(heights)<z0+.07:raise Failure('DROP','object lost lift height during hold')
+                    if max(heights)-min(heights)>.01:raise Failure('CONTACT_LOSS','unstable hold height')
+                    attempt['status']='SUCCESS'
+                    result.update(success=True,category='SUCCESS')
+                    break
+                except Failure as error:
+                    last_failure=error
+                    attempt.update(status=error.category,detail=str(error),stage=self.stage)
+                    detail.update(status=error.category,detail=str(error))
+                    if mode!='adapted' or error.category not in ('BAD_CONTACT','CONTACT_LOSS','NO_PLAN'):
+                        break
+                    if detail is feasible[-1][0]:break
+                    result.setdefault('recovery_events',[]).append('next_adapted_candidate')
+                    plant.command({'op':'reset',**({'xy':scenario['xy'],'yaw':scenario['yaw']} if scenario else {})})
+                    plant.settle(1.);self.scene();self.gripper(.09)
+                except ValueError as error:
+                    last_failure=Failure('TF_ERROR',str(error));attempt.update(status='TF_ERROR',detail=str(error))
+                    break
+            if not result['success']:
+                if last_failure:raise last_failure
+                raise Failure('NO_EXECUTABLE_CANDIDATE','all top-K candidates rejected')
         except StopIteration:pass
         except Failure as e:result.update(category=e.category,detail=str(e))
         except Exception as e:result.update(category='SYSTEM_ERROR',detail=str(e),traceback=traceback.format_exc())
@@ -376,18 +447,22 @@ class R1A7Backend(Node):
         print(json.dumps({k:v for k,v in result.items() if k not in ['hold_samples','candidates','executions','close_samples']}),flush=True)
         return result
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('--trials',type=int,default=10);p.add_argument('--grasps-json',type=Path);p.add_argument('--grasps-dir',type=Path);p.add_argument('--scenarios-json',type=Path);p.add_argument('--mode',choices=['capture','raw','adapted'],default='adapted');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--trials',type=int,default=10);p.add_argument('--grasps-json',type=Path);p.add_argument('--grasps-dir',type=Path);p.add_argument('--scenarios-json',type=Path);p.add_argument('--reference-manifest',type=Path);p.add_argument('--mode',choices=['capture','raw','adapted'],default='adapted');a=p.parse_args()
     if a.grasps_json and a.grasps_dir:p.error('use either --grasps-json or --grasps-dir')
     rclpy.init();node=R1A7Backend()
     scenarios=json.loads(a.scenarios_json.read_text()) if a.scenarios_json else [None]*a.trials
     if len(scenarios)!=a.trials:p.error('scenario count must match --trials')
-    results=[node.trial(i+1,(a.grasps_dir/f'trial_{i+1:02d}_grasps.json' if a.grasps_dir else a.grasps_json),a.mode,scenarios[i]) for i in range(a.trials)]
+    references=json.loads(a.reference_manifest.read_text()) if a.reference_manifest else [None]*a.trials
+    if len(references)!=a.trials:p.error('reference count must match --trials')
+    results=[node.trial(i+1,(a.grasps_dir/f'trial_{i+1:02d}_grasps.json' if a.grasps_dir else a.grasps_json),a.mode,scenarios[i],references[i]) for i in range(a.trials)]
     from collections import Counter
     report={'mode':a.mode,'trials':len(results),'successes':sum(r['success'] for r in results),
             'categories':dict(Counter(r['category'] for r in results)),
             'candidate_counts':{key:sum(r.get('candidate_counts',{}).get(key,0) for r in results)
                                 for key in ('raw','path_valid','collision_free')},
-            'planning_successes':sum('selected_rank' in r for r in results),
+            'planning_successes':sum(r.get('planning_succeeded',False) for r in results),
+            'contact_loss_events':sum(a.get('status')=='CONTACT_LOSS' or a.get('initial_contact_failure')=='CONTACT_LOSS' for r in results for a in r.get('candidate_attempts',[])),
+            'recovery_events':dict(Counter(event for r in results for event in r.get('recovery_events',[]))),
             'approach_executions':sum(r.get('last_stage') in ('CLOSE','MICRO_LIFT','LIFT','HOLD') for r in results),
             'final_grasp_success_rate':sum(r['success'] for r in results)/len(results),
             'passed':len(results)>=10 and sum(r['success'] for r in results[-10:])>=8}
