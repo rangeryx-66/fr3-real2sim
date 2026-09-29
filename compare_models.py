@@ -43,6 +43,12 @@ def provider_command(name, input_path, output_path, args):
         python = args.economicgrasp_python or os.environ.get('ECONOMICGRASP_PYTHON', sys.executable)
         return [python, str(ROOT / 'src/infer_economicgrasp.py'), '--input', str(input_path),
                 '--output', str(output_path), '--top-k', str(args.provider_top_k)]
+    if name == 'zerograsp':
+        python = args.zerograsp_python or os.environ.get('ZEROGRASP_PYTHON')
+        if not python:
+            raise FileNotFoundError('set --zerograsp-python to ZeroGrasp .venv/bin/python')
+        return [python, str(ROOT / 'src/infer_zerograsp.py'), '--input', str(input_path),
+                '--output', str(output_path), '--top-k', str(args.provider_top_k)]
     raise FileNotFoundError(f'{name} native inference adapter/weights are not installed; provide --predictions {name}=FILE')
 
 
@@ -57,6 +63,7 @@ def main():
     parser.add_argument('--graspness-python')
     parser.add_argument('--anygrasp-python')
     parser.add_argument('--economicgrasp-python')
+    parser.add_argument('--zerograsp-python')
     parser.add_argument('--provider-top-k', type=int, default=200)
     parser.add_argument('--top-k', type=int, default=100)
     parser.add_argument('--target-radius-m', type=float, default=.04)
