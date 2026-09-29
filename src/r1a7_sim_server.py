@@ -4,6 +4,8 @@ import hashlib
 import json
 import os
 import queue
+import shutil
+import subprocess
 import threading
 import time
 from pathlib import Path
@@ -112,10 +114,24 @@ tcp=SingleXFormPrim(tcp_paths[0])
 camera=Camera('/World/camera',position=T_B_C[:3,3],resolution=(640,480),frequency=30)
 camera.set_world_pose(position=T_B_C[:3,3],orientation=np.array([0,1,0,0]),camera_axes='ros')
 camera.set_clipping_range(.05,2.)
+presentation_camera=None
+if os.environ.get('R1A7_PRESENTATION_CAMERA')=='1':
+    from scipy.spatial.transform import Rotation
+    eye=np.array([1.05,-.85,.80]);focus=np.array([.50,0.,.08])
+    forward=(focus-eye)/np.linalg.norm(focus-eye)
+    right=np.cross(forward,np.array([0.,0.,1.]));right/=np.linalg.norm(right)
+    down=np.cross(forward,right)
+    quat_xyzw=Rotation.from_matrix(np.column_stack((right,down,forward))).as_quat()
+    quat_wxyz=np.roll(quat_xyzw,1)
+    presentation_camera=Camera('/World/presentation_camera',position=eye,
+                               resolution=(960,540),frequency=30)
+    presentation_camera.set_world_pose(position=eye,orientation=quat_wxyz,camera_axes='ros')
+    presentation_camera.set_clipping_range(.05,3.)
 from clutter_scene import ClutterMonitor
 clutter=ClutterMonitor(world,stage,mat) if a.clutter else None
 world.reset()
 camera.initialize()
+if presentation_camera is not None:presentation_camera.initialize()
 camera.add_distance_to_image_plane_to_frame()
 if ARENA_TARGET:camera.add_instance_id_segmentation_to_frame()
 names=robot.dof_names
@@ -138,6 +154,7 @@ robot.set_joint_positions(q)
 robot.apply_action(ArticulationAction(joint_positions=q))
 for _ in range(240): world.step(render=(_%8==0))
 commands=queue.Queue(); state={}; lock=threading.Lock(); tick=240; active=None; target=q.copy(); results={}; history=[]
+recorder=None; recorder_frames=0; recorder_path=None
 seed=initial['seed'] if ARENA_TARGET else None
 class Handler(BaseHTTPRequestHandler):
     def log_message(self,*args): pass
@@ -235,6 +252,28 @@ try:
                     if ARENA_TARGET:np.savez_compressed(path,points=pts,mask=mask,T_B_C=T_B_C,K=K,rgb=camera.get_rgba())
                     else:np.savez_compressed(path,points=pts,mask=mask,T_B_C=T_B_C,K=K)
                     results[token]={'ok':True,'path':str(path),'object_points':int(mask.sum())}
+                elif op=='video_start':
+                    if recorder is not None:raise RuntimeError('video already recording')
+                    ffmpeg=shutil.which('ffmpeg')
+                    if ffmpeg is None:raise RuntimeError('ffmpeg unavailable')
+                    recorder_path=Path(cmd['path']).resolve()
+                    if recorder_path.suffix.lower()!='.mp4':raise ValueError('video path must end in .mp4')
+                    recorder_path.parent.mkdir(parents=True,exist_ok=True)
+                    video_log=(recorder_path.parent/(recorder_path.stem+'.ffmpeg.log')).open('w')
+                    video_size='960x540' if presentation_camera is not None else '640x480'
+                    recorder=subprocess.Popen([ffmpeg,'-hide_banner','-loglevel','error','-y',
+                        '-f','rawvideo','-pixel_format','rgb24','-video_size',video_size,
+                        '-framerate','30','-i','pipe:0','-c:v','libx264','-preset','veryfast',
+                        '-crf','18','-pix_fmt','yuv420p',str(recorder_path)],
+                        stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=video_log)
+                    video_log.close();recorder_frames=0
+                    results[token]={'ok':True,'path':str(recorder_path)}
+                elif op=='video_stop':
+                    if recorder is None:raise RuntimeError('video not recording')
+                    recorder.stdin.close();code=recorder.wait(timeout=60)
+                    results[token]={'ok':code==0,'path':str(recorder_path),
+                                    'frames':recorder_frames,'exit_code':code}
+                    recorder=None
                 elif op=='trajectory':
                     if active: raise RuntimeError('trajectory active')
                     idx=[names.index(n) for n in cmd['names']]
@@ -257,7 +296,14 @@ try:
                     results[active['id']]={'ok':bool(ok),'joint_error':error}
                     active=None
         robot.apply_action(ArticulationAction(joint_positions=target))
-        world.step(render=tick%(24 if clutter else 8)==0);tick+=1
+        rendered=tick%(24 if clutter else 8)==0
+        world.step(render=rendered);tick+=1
+        if recorder is not None and rendered:
+            frame=np.asarray((presentation_camera or camera).get_rgba())
+            expected=(540,960) if presentation_camera is not None else (480,640)
+            if frame.shape[:2]!=expected:raise RuntimeError('unexpected video camera frame size')
+            recorder.stdin.write(np.ascontiguousarray(frame[:,:,:3],dtype=np.uint8).tobytes())
+            recorder_frames+=1
         f=np.array([float(np.linalg.norm(np.asarray(view.get_contact_force_matrix(dt=DT)).reshape(-1,3).sum(axis=0))) for view in _finger_views])
         bp,bq=box.get_world_pose();tp,tq=tcp.get_world_pose()
         measured_q=robot.get_joint_positions()
@@ -274,4 +320,6 @@ try:
         with lock:
             state=dict(t=tick*DT,names=names,q=measured_q.tolist(),box=bp.tolist(),box_quat=bq.tolist(),object={**OBJECT,'size':SIZE.tolist(),'yaw':OBJECT_YAW},tcp=tp.tolist(),tcp_quat=tq.tolist(),forces=f.tolist(),results=results.copy(),history=history[::8],busy=active is not None,clutter=clutter_state)
 finally:
+    if recorder is not None:
+        recorder.stdin.close();recorder.wait(timeout=60)
     server.shutdown();app.close()
