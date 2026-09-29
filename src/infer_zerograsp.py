@@ -11,6 +11,7 @@ from pathlib import Path
 import subprocess
 import sys
 import time
+import types
 
 import numpy as np
 
@@ -83,6 +84,21 @@ def main():
         config.update_octree = True
         model = BaseTrainer.load_from_checkpoint(str(checkpoint), config=config, strict=False)
         model.cuda().eval()
+        # ZeroGrasp pins an OFE submodule revision whose forward signature
+        # gained batch_start_id/batch_end_id, while the released model still
+        # calls the older six-argument form. Bridge that upstream mismatch
+        # for this single-frame, single-target inference only.
+        ofe = model.model.ofe
+        original_ofe_forward = ofe.forward
+        def single_target_ofe_forward(self, points, masks, depth, intrinsics, batch_id, grid_size):
+            if depth.shape[0] != 1:
+                raise ValueError('ZeroGrasp OFE adapter requires one target in one frame')
+            object_mask = masks[..., 0].reshape(1, *depth.shape[-2:]).contiguous()
+            start = torch.zeros(1, dtype=torch.int32, device=points.device)
+            end = torch.ones(1, dtype=torch.int32, device=points.device)
+            return original_ofe_forward(points, object_mask, depth, intrinsics,
+                                        batch_id, start, end, grid_size)
+        ofe.forward = types.MethodType(single_target_ofe_forward, ofe)
         batch = fetch_data(str(rgb_path), str(depth_path), str(mask_path),
                            str(camera_path), config, 1.0)
         with torch.no_grad():
