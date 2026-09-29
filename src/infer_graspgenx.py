@@ -30,6 +30,8 @@ def main():
     parser.add_argument('--num-grasps', type=int, default=200)
     parser.add_argument('--top-k', type=int, default=200)
     parser.add_argument('--seed', type=int, default=20260929)
+    parser.add_argument('--max-input-points', type=int, default=32768,
+                        help='Deterministic cap before upstream quadratic KNN preprocessing')
     args = parser.parse_args()
     source = args.source.resolve()
     checkpoint = args.checkpoint_root or source / 'ext/graspgenx_checkpoints/release'
@@ -53,6 +55,11 @@ def main():
     target = np.ascontiguousarray(points[valid & mask])
     if len(target) < 30:
         raise RuntimeError('target region has fewer than 30 usable points')
+    original_target_count = len(target)
+    if len(target) > args.max_input_points:
+        selection = np.random.default_rng(args.seed).choice(
+            len(target), args.max_input_points, replace=False)
+        target = np.ascontiguousarray(target[selection])
     torch.manual_seed(args.seed)
     np.random.seed(args.seed)
     dex1 = Dex1Geometry()
@@ -76,7 +83,11 @@ def main():
                                        'checkpoint_gen': str(checkpoint / 'gen/epoch_736.pth'),
                                        'checkpoint_dis': str(checkpoint / 'dis/epoch_1056.pth'),
                                        'frame': 'camera_optical', 'T_B_C': T_B_C,
-                                       'grasps': out, 'dex1_sweep_params': params,
+                                       'grasps': out, 'input_target_points': original_target_count,
+                                       'sampled_target_points': len(target),
+                                       'input_sampling_seed': args.seed,
+                                       'max_input_points': args.max_input_points,
+                                       'dex1_sweep_params': params,
                                        'dex1_provenance': dex1.provenance()}, indent=2))
     print(json.dumps({'model': 'graspgenx', 'candidates': len(out),
                       'planner': args.planner, 'target_points': len(target),
