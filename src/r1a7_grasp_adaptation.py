@@ -5,6 +5,7 @@ from pathlib import Path
 import struct
 import numpy as np
 from scipy.spatial.transform import Rotation
+from r1a7_calibration import load_calibration
 
 ROOT=Path(__file__).resolve().parents[1]
 
@@ -102,11 +103,13 @@ def surface_contact_geometry(T, surface_points):
     points=np.asarray(surface_points,dtype=float)
     if not len(points):return False,'no target surface points',0.
     local=(points-T[:3,3])@T[:3,:3]
-    region=local[(local[:,0]>=-.032)&(local[:,0]<=.005)&
-                 (local[:,2]>=.002)&(local[:,2]<=.048)&(np.abs(local[:,1])<=.055)]
+    proxy=load_calibration()['contact_proxy']
+    lower=np.asarray(proxy['surface_region_tcp_min_m'])
+    upper=np.asarray(proxy['surface_region_tcp_max_m'])
+    region=local[np.all((local>=lower)&(local<=upper),axis=1)]
     if len(region)<12:return False,'surface misses Dex1 pad overlap',0.
     lo,hi=np.quantile(region[:,1],[.05,.95]);width=float(hi-lo)
-    if not (.018<=width<=.085) or lo>-.006 or hi<.006:
+    if not (proxy['grasp_width_range_m'][0]<=width<=proxy['grasp_width_range_m'][1]) or lo>-.006 or hi<.006:
         return False,'no bilateral surface within Dex1 opening',0.
     midpoint=float((lo+hi)/2)
     if abs(midpoint)>.018:return False,'surface off jaw centre',0.
@@ -127,6 +130,8 @@ def contact_geometry(T, box_center, box_size=(.045, .045, .05), shape='box', obj
     the final test; this geometric proxy cannot assert force closure.
     """
     center = np.asarray(box_center, dtype=float)
+    proxy=load_calibration()['contact_proxy']
+    center_min=proxy['box_center_tcp_min_m'];center_max=proxy['box_center_tcp_max_m']
     local = T[:3, :3].T @ (center - T[:3, 3])
     jaw = T[:3, 1]
     local_jaw = Rotation.from_euler('z',-object_yaw).apply(jaw)
@@ -134,13 +139,13 @@ def contact_geometry(T, box_center, box_size=(.045, .045, .05), shape='box', obj
         projected_width = float(box_size[0]*np.linalg.norm(local_jaw[:2])+box_size[2]*abs(local_jaw[2]))
     else:
         projected_width = float(np.sum(np.abs(local_jaw) * np.asarray(box_size)))
-    if not -.026 <= local[0] <= .002:
+    if not center_min[0] <= local[0] <= center_max[0]:
         return False, 'object outside finger-pad height', 0.
-    if abs(local[1]) > .014:
+    if not center_min[1] <= local[1] <= center_max[1]:
         return False, 'object off jaw centre', 0.
-    if not .004 <= local[2] <= .042:
+    if not center_min[2] <= local[2] <= center_max[2]:
         return False, 'insufficient grasp depth', 0.
-    if abs(jaw[2]) > .35 or not .018 <= projected_width <= .085:
+    if abs(jaw[2]) > .35 or not proxy['grasp_width_range_m'][0] <= projected_width <= proxy['grasp_width_range_m'][1]:
         return False, 'jaw alignment/opening', 0.
     score = (max(0., 1.-abs(local[1])/.014) *
              max(0., 1.-abs(local[0]+.014)/.018) *

@@ -10,6 +10,7 @@ from sensor_msgs.msg import JointState
 from control_msgs.action import FollowJointTrajectory, GripperCommand
 from rosgraph_msgs.msg import Clock
 import r1a7_plant as plant
+from r1a7_calibration import load_calibration, width_to_finger_q
 class Bridge(Node):
     def __init__(self):
         super().__init__('isaac_r1a7_controller')
@@ -53,12 +54,13 @@ class Bridge(Node):
         result=GripperCommand.Result()
         with self.busy:
             try:
-                opening=max(.001,min(.09,h.request.command.position))
-                # Official Dex1 prismatic axes close symmetrically as q rises.
-                joint_q=(.05-opening)/2.
+                opening_config=load_calibration()['simulated_opening']
+                opening=max(opening_config['closed_width_m'],
+                            min(opening_config['open_width_m'],h.request.command.position))
+                joint_q=width_to_finger_q(opening)
                 r=plant.command(dict(op='trajectory',names=['dex1_Joint1_1','dex1_Joint2_1'],points=[dict(t=1.,q=[joint_q,joint_q])],gripper=True))
                 s=plant.state();measured=s['q'][s['names'].index('dex1_Joint1_1')]
-                result.position=.05-2*measured
+                result.position=opening+2*(joint_q-measured)
                 result.reached_goal=abs(result.position-opening)<.003
                 result.stalled=not result.reached_goal
                 if not r['ok']:raise RuntimeError(str(r))

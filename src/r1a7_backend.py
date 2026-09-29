@@ -24,6 +24,7 @@ from sensor_msgs.msg import JointState
 from control_msgs.action import GripperCommand
 from frames import pose_values
 from r1a7_frames import grasp_to_r1a7_tcp
+from r1a7_calibration import load_calibration
 from r1a7_grasp_adaptation import variants, manifold_variants, contact_geometry, surface_contact_geometry, pad_table_penetration, path_targets
 import r1a7_plant as plant
 ROOT=Path(__file__).resolve().parents[1]
@@ -306,8 +307,9 @@ class R1A7Backend(Node):
         plant.settle(.3)
         s=plant.state();recent=[h for h in s['history'] if h['t']>=s['t']-.2]
         finger_q={n:q for n,q in zip(s['names'],s['q']) if n.startswith('dex1_Joint')}
-        bilateral_force=bool(recent and all(min(h['forces'])>.1 for h in recent))
-        bilateral_stall=all(finger_q.get(n,.0245)<.018 for n in ('dex1_Joint1_1','dex1_Joint2_1'))
+        proxy=load_calibration()['contact_proxy']
+        bilateral_force=bool(recent and all(min(h['forces'])>proxy['bilateral_force_threshold_n'] for h in recent))
+        bilateral_stall=all(finger_q.get(n,.0245)<proxy['finger_stall_q_threshold_m'] for n in ('dex1_Joint1_1','dex1_Joint2_1'))
         evidence=dict(stage=label,bilateral_force=bilateral_force,bilateral_stall=bilateral_stall,
                       finger_q=finger_q,reported_position_m=close_result.position)
         result.setdefault('contact_checks',[]).append(evidence)

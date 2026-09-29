@@ -11,8 +11,12 @@ import copy
 import math
 import os
 import xml.etree.ElementTree as ET
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / 'src'))
+from r1a7_calibration import load_calibration
+calibration = load_calibration()
 OFFICIAL = ROOT / 'third_party/unitree_ros/robots'
 ARM = OFFICIAL / 'r1_7a_description/R1_7a.urdf'
 HAND = OFFICIAL / 'dexterous_hand_description/dex1_1/dex1_1.urdf'
@@ -52,7 +56,9 @@ for element in list(hand):
 mount = ET.SubElement(arm, 'joint', name='r1a7_dex1_mount', type='fixed')
 ET.SubElement(mount, 'parent', link='Link7')
 ET.SubElement(mount, 'child', link='dex1_base_link')
-ET.SubElement(mount, 'origin', xyz='0 -0.047736 0', rpy='0 0 3.141592653589793')
+mount_cal = calibration['link7_to_dex1_base']
+ET.SubElement(mount, 'origin', xyz=' '.join(map(str, mount_cal['xyz_m'])),
+              rpy=' '.join(map(str, mount_cal['rpy_rad'])))
 
 # Official Dex1 finger terminal joints put both pads at local y=0.097343 m,
 # z=0.0142 m when the gripper is centered. +Z is approach; +Y is jaw width.
@@ -60,8 +66,9 @@ ET.SubElement(arm, 'link', name='r1a7_tcp')
 tcp = ET.SubElement(arm, 'joint', name='r1a7_tcp_joint', type='fixed')
 ET.SubElement(tcp, 'parent', link='dex1_base_link')
 ET.SubElement(tcp, 'child', link='r1a7_tcp')
-ET.SubElement(tcp, 'origin', xyz='0 0.097343 0.0142',
-              rpy='0 -1.5707963267948966 -1.5707963267948966')
+tcp_cal = calibration['dex1_base_to_tcp']
+ET.SubElement(tcp, 'origin', xyz=' '.join(map(str, tcp_cal['xyz_m'])),
+              rpy=' '.join(map(str, tcp_cal['rpy_rad'])))
 
 # The upstream URDFs use paths relative to their separate description roots.
 # Isaac accepts absolute mesh paths; moveit.launch.py converts them to file://.

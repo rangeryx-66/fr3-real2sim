@@ -22,13 +22,15 @@ separate descriptions:
 | Joint | Parent → child | xyz (m) | rpy (rad) |
 | --- | --- | --- | --- |
 | `r1a7_world_mount` | world → `base_link` | Set by `R1A7_BASE_POSE` | yaw from `R1A7_BASE_POSE` |
-| `r1a7_dex1_mount` | `Link7` → `dex1_base_link` | 0, −0.047736, 0 | 0, 0, π |
-| `r1a7_tcp_joint` | `dex1_base_link` → `r1a7_tcp` | 0, 0.097343, 0.0142 | 0, −π/2, −π/2 |
+| `r1a7_dex1_mount` | `Link7` → `dex1_base_link` | Read from `config/end_effector_calibration.yaml` | Read from calibration |
+| `r1a7_tcp_joint` | `dex1_base_link` → `r1a7_tcp` | Read from `config/end_effector_calibration.yaml` | Read from calibration |
 
 The default world mount reproduces the earlier benchmark placement. The arm-to-Dex1 adapter
-transform and finger-center TCP are derived from the published meshes/URDF,
-not an official combined assembly. Verify the adapter against real hardware
-before sending physical commands. Run `python3 scripts/audit_r1a7_model.py`
+transform and finger-center TCP remain provisional mesh-derived simulation values. Unitree
+does not publish an R1-A7 + Dex1 combined assembly or a Dex1 grasp TCP in the source URDFs.
+The simulation ROS gripper action is not the official Dex1 real-robot DDS motor interface.
+Calibrate the adapter, TCP, pad gap and motor mapping before sending physical commands.
+Run `python3 scripts/audit_r1a7_model.py`
 to compare the combined model with the upstream source.
 
 The generated world mount defaults to the earlier `(0, 0, 0; +90°)`
