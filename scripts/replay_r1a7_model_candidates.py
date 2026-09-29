@@ -16,7 +16,7 @@ import r1a7_backend as backend
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--provider', required=True,
-                        choices=('graspgenx', 'zerograsp', 'economicgrasp', 'graspness'))
+                        choices=('graspgenx', 'zerograsp', 'economicgrasp', 'graspness', 'anygrasp'))
     parser.add_argument('--grasps-dir', required=True, type=Path)
     parser.add_argument('--scenarios-json', required=True, type=Path)
     parser.add_argument('--reference-manifest', required=True, type=Path)
@@ -36,10 +36,15 @@ def main():
         for index, (scenario, reference) in enumerate(zip(scenarios, references), 1):
             path = args.grasps_dir / f'trial_{index:02d}_grasps.json'
             data = json.loads(path.read_text())
-            if data.get('provider') != args.provider:
-                raise ValueError(f'{path}: provider mismatch')
-            if data.get('source_scene_sha256') != reference['cloud_sha256']:
-                raise ValueError(f'{path}: scene hash mismatch')
+            if args.provider == 'anygrasp':
+                import hashlib
+                if hashlib.sha256(path.read_bytes()).hexdigest() != reference['grasps_sha256']:
+                    raise ValueError(f'{path}: frozen AnyGrasp hash mismatch')
+            else:
+                if data.get('provider') != args.provider:
+                    raise ValueError(f'{path}: provider mismatch')
+                if data.get('source_scene_sha256') != reference['cloud_sha256']:
+                    raise ValueError(f'{path}: scene hash mismatch')
             results.append(node.trial(index, path, 'adapted', scenario, reference))
     finally:
         node.destroy_node()

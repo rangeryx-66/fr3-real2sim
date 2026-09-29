@@ -94,14 +94,22 @@ def main():
                    '--economicgrasp-python', args.economicgrasp_python,
                    '--graspness-python', args.graspness_python,
                    '--provider-top-k', '200', '--top-k', '100']
-        with (scene_dir / 'inference.log').open('w') as stream:
-            completed = subprocess.run(command, cwd=ROOT,
-                                       env={**os.environ, 'CUDA_VISIBLE_DEVICES': args.gpu,
-                                            'PYTHONPATH': ''},
-                                       stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
-        if completed.returncode:
-            raise RuntimeError(f'inference failed for seed {seed}; see {scene_dir / "inference.log"}')
-        report = json.loads((diagnostics / 'candidates.json').read_text())
+        report_path = diagnostics / 'candidates.json'
+        report = json.loads(report_path.read_text()) if report_path.is_file() else None
+        reusable = (report is not None and report.get('scene_sha256') == row['cloud_sha256']
+                    and report.get('models', {}).get('anygrasp', {}).get('native_file_sha256')
+                    == row['grasps_sha256'] and all(
+                        report.get('models', {}).get(name, {}).get('status') == 'OK'
+                        for name in PROVIDERS))
+        if not reusable:
+            with (scene_dir / 'inference.log').open('w') as stream:
+                completed = subprocess.run(command, cwd=ROOT,
+                                           env={**os.environ, 'CUDA_VISIBLE_DEVICES': args.gpu,
+                                                'PYTHONPATH': ''},
+                                           stdout=stream, stderr=subprocess.STDOUT, timeout=1800)
+            if completed.returncode:
+                raise RuntimeError(f'inference failed for seed {seed}; see {scene_dir / "inference.log"}')
+            report = json.loads(report_path.read_text())
         outputs = {}
         for name in PROVIDERS:
             if report['models'][name]['status'] != 'OK':

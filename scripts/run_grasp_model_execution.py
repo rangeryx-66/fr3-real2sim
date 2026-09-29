@@ -12,7 +12,7 @@ from zoneinfo import ZoneInfo
 
 from run_r1a7_generalization import ROOT, SIM, start, stop, ready
 
-PROVIDERS = ('graspgenx', 'zerograsp', 'economicgrasp', 'graspness')
+PROVIDERS = ('graspgenx', 'zerograsp', 'economicgrasp', 'graspness', 'anygrasp')
 ASSETS = '/data1/home/rangeryx/fr3_moveit_grasp/assets/arena_complex'
 
 
@@ -29,11 +29,14 @@ def main():
     parser.add_argument('--gpu', type=int, default=5)
     parser.add_argument('--port', type=int, default=18789)
     parser.add_argument('--ros-domain', type=int, default=229)
+    parser.add_argument('--manifold-limit', type=int, default=8)
     args = parser.parse_args()
     protocol = json.loads((ROOT / 'ARENA_COMPLEX_PROTOCOL.json').read_text())
     objects = args.objects or protocol['classes']
     if any(obj not in protocol['classes'] for obj in objects):
         parser.error('unknown Arena asset')
+    if args.manifold_limit < 1:
+        parser.error('manifold-limit must be positive')
     now = datetime.now(ZoneInfo('Asia/Shanghai'))
     deadline = now.replace(hour=5, minute=0, second=0, microsecond=0)
     if deadline <= now:
@@ -41,6 +44,7 @@ def main():
     args.output_dir.mkdir(parents=True, exist_ok=True)
     report = {'config': {'objects': objects, 'pose_index': args.pose_index,
                          'providers': args.providers, 'gpu': args.gpu,
+                         'manifold_limit': args.manifold_limit,
                          'deadline': deadline.isoformat()}, 'objects': {}}
     for obj in objects:
         if (deadline - datetime.now(ZoneInfo('Asia/Shanghai'))).total_seconds() < 240:
@@ -62,7 +66,8 @@ def main():
         env = {**os.environ, 'R1A7_BASE_POSE': '0.329,-0.175,0.237,56.295',
                'R1A7_PEDESTAL_SIZE': '0.10,0.10,0.20',
                'R1A7_PLANT_PORT': str(args.port), 'R1A7_IK_RANDOM_SEEDS': '6',
-               'R1A7_MANIFOLD_LIMIT': '24', 'R1A7_ARENA_ASSET_DIR': ASSETS,
+               'R1A7_MANIFOLD_LIMIT': str(args.manifold_limit),
+               'R1A7_ARENA_ASSET_DIR': ASSETS,
                'ROS_DOMAIN_ID': str(args.ros_domain), 'ROS_LOCALHOST_ONLY': '1',
                'NO_PROXY': '127.0.0.1,localhost', 'no_proxy': '127.0.0.1,localhost',
                'OMNI_KIT_ACCEPT_EULA': 'YES', 'ACCEPT_EULA': 'Y'}
@@ -88,7 +93,8 @@ def main():
                 grasp_dir = dest / 'inputs'
                 grasp_dir.mkdir(exist_ok=True)
                 for index, ref in enumerate(refs, 1):
-                    original = args.inference_dir / f"seed_{ref['seed']}" / f'{provider}_grasps.json'
+                    original = (Path(ref['grasps']) if provider == 'anygrasp' else
+                                args.inference_dir / f"seed_{ref['seed']}" / f'{provider}_grasps.json')
                     if not original.is_file():
                         raise FileNotFoundError(original)
                     (grasp_dir / f'trial_{index:02d}_grasps.json').write_bytes(original.read_bytes())
