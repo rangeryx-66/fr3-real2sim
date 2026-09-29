@@ -106,8 +106,11 @@ frame direction filter to all providers. `--target-radius-m` controls the
 target region near the mask. The full scene cloud is checked at
 pregrasp, mid-approach and grasp against **official Dex1-1 URDF collision
 STLs** at 1 cm intervals along an 8 cm approach. The non-watertight base-link
-mesh is evaluated by surface distance; watertight finger meshes use signed
-distance. Target points are exempted only inside the aperture defined by
+mesh is evaluated by unsigned surface distance; watertight finger meshes use
+signed distance. A positive distance below the configured 3 mm margin is
+`LOW_CLEARANCE`, separate from mesh penetration `COLLISION`. Such a candidate
+is still queried for IK but is not counted as collision-free. Target points
+are exempted only inside the aperture defined by
 the official terminal pad meshes (3 mm tolerance in depth/height);
 target-mask pixels on a nearby door panel
 remain collision obstacles. This is a point-cloud check, not a continuous
@@ -135,39 +138,43 @@ Scene: original FR3 arena `seed_1000` mustard frame, same frozen point cloud,
 target mask and calibration. R1 base: `(0.329, -0.175, 0.237 m; yaw 56.3°)`.
 These are diagnostic candidate counts, **not** grasp success rates.
 
-| Provider | Native candidates | Dex1 scene collision-free | R1 IK + self collision | Margin J5/J6/J7 > 0.05 rad | Fresh inference wall time |
-|---|---:|---:|---:|---:|---:|
-| Frozen AnyGrasp | 20 | 1 | 0 | 0 | unavailable: frozen output |
-| Graspness | 11 | 0 | 0 | 0 | 4.7 s |
-| EconomicGrasp | 25 | 1 | 1 | 1 | 5.0 s |
-| GraspGenX | 200 | 67 | 27 | 17 | 8.1 s |
-| ZeroGrasp | 140 after native NMS | 0 | 0 | 0 | 9.5 s |
+| Provider | Native | ≥3 mm clear | Low clearance | IK + self collision, including low clearance | Clear and IK | Fresh inference wall time |
+|---|---:|---:|---:|---:|---:|---:|
+| Frozen AnyGrasp | 20 | 1 | 8 | 5 | 0 | unavailable: frozen output |
+| Graspness | 11 | 0 | 0 | 0 | 0 | 4.7 s |
+| EconomicGrasp | 25 | 1 | 0 | 1 | 1 | 5.0 s |
+| GraspGenX | 200 | 67 | 20 | 27 | 27 | 8.1 s |
+| ZeroGrasp | 140 after native NMS | 0 | 1 | 1 | 0 | 9.5 s |
 
 The five-provider full candidate record is
 `docs/grasp_compare_seed1000_five_models.json`;
 `docs/grasp_compare_seed1000_five_models.html` shows the same scene in camera coordinates
 (requires Plotly CDN to load).
-The MoveIt IK checks for the other four providers were carried over only
-after matching the scene hash, native file hash and each saved TCP pose.
-ZeroGrasp had no candidate passing the common scene collision gate, so no
-ZeroGrasp IK query was made.
+The candidate file was regenerated with all five providers after fixing a
+clearance classification error. The earlier version called a positive
+2.73 mm distance from the non-watertight Dex1 base mesh `COLLISION` and
+skipped IK. The **identical** AnyGrasp rank 14 TCP pose succeeded in the
+[paired R1 Raw benchmark](../R1A7_ARENA_AB_REPORT.md) on this scene. It is now
+`LOW_CLEARANCE` with a kinematic, self-collision-free IK solution. A separate
+read-only IK query of that pose found J5/J6/J7 margin 0.102 rad. The 3 mm
+point-cloud margin still does not certify it as collision-free, while the
+prior MoveIt/Isaac pipeline executed it successfully. No raw grasp was changed.
 Inference wall time includes interpreter/model startup and excludes shared
 Dex1 filtering and MoveIt IK. GraspGenX produced 200 proposals; this single
 scene cannot establish a grasp-success ranking. AnyGrasp was a previously
 frozen top-20 baseline; the other three predictors generated fresh candidates
 from the same frame. ZeroGrasp also generated fresh candidates from that
-frame. Scores remain on each model's own scale. The 140 ZeroGrasp candidates
-all passed the target-region filter but collided with the official Dex1
-geometry during pregrasp or approach; this may reflect its generic gripper
-pose distribution as well as the current mount/TCP calibration and strict
-depth-cloud collision approximation.
+frame. Scores remain on each model's own scale. One ZeroGrasp candidate is
+IK-feasible but below the 3 mm clearance margin; this does not establish an
+executable grasp.
 
 The target-aware collision rule materially changes the result. If the entire
 target mask is exempted, the same source proposals yield 74/8/18/17
 collision-free candidates (GraspGenX/Graspness/EconomicGrasp/AnyGrasp).
 Restricting contact exemption to the official Dex1 finger aperture gives the
-67/0/1/1 counts above. Most newly rejected generic-gripper poses intersect
-Dex1's palm or finger links. This strict test can also reject plausible
+67/0/1/1 ≥3 mm clear counts above. Many rejected generic-gripper poses
+intersect Dex1's palm or finger links, while others only miss the clearance
+margin. This strict test can also reject plausible
 contacts when the depth cloud or provisional TCP is inaccurate; validate
 across further shared frames before selecting a model for hardware work.
 
