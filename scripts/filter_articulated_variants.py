@@ -32,16 +32,28 @@ def main():
     anchor=np.median(target,axis=0)
     tree=cKDTree(target)
     raw=read_candidates(args.native,'graspgenx',scene)
-    accepted=[];counts={'raw':len(raw),'variants':0,'target_near':0,
+    accepted=[];raw_decisions=[];variant_decisions=[]
+    counts={'raw':len(raw),'variants':0,'target_near':0,
                         'collision_free':0,'collision':0,'low_clearance':0}
     for candidate in raw:
+        raw_check=checker.check(candidate.T_B_TCP,candidate.width_m)
+        raw_decisions.append({'rank':candidate.rank,'score':candidate.score,
+            'T_B_TCP':candidate.T_B_TCP.tolist(),'collision':raw_check})
         for variant in manifold_variants(candidate.T_B_TCP,anchor,limit=args.per_raw_limit):
             if variant.label=='raw': continue
             counts['variants']+=1
             distance=float(tree.query(variant.transform[:3,3])[0])
-            if distance>.05:continue
+            record={'raw_rank':candidate.rank,'variant':variant.label,
+                'translation_m':variant.translation_m,
+                'rotation_rad':variant.rotation_rad,'target_distance_m':distance}
+            if distance>.05:
+                record['status']='OUTSIDE_TARGET_REGION'
+                variant_decisions.append(record)
+                continue
             counts['target_near']+=1
             check=checker.check(variant.transform,candidate.width_m)
+            record.update(status=check['status'],collision=check)
+            variant_decisions.append(record)
             counts['collision' if check['status']=='COLLISION' else
                    'collision_free' if check['status']=='FREE' else 'low_clearance']+=1
             if check['status']!='FREE':continue
@@ -53,7 +65,9 @@ def main():
     accepted.sort(key=lambda row:row['score'],reverse=True)
     args.output.parent.mkdir(parents=True,exist_ok=True)
     args.output.write_text(json.dumps({'kind':'Dex1 local manifold; raw GraspGenX unchanged',
-        'counts':counts,'candidates':accepted[:args.top_k]},indent=2))
+        'counts':counts,'raw_decisions':raw_decisions,
+        'variant_decisions':variant_decisions,
+        'candidates':accepted[:args.top_k]},indent=2))
     print(json.dumps({'counts':counts,'saved':min(len(accepted),args.top_k)}),flush=True)
 
 

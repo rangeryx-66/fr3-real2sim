@@ -190,6 +190,8 @@ class ArticulatedBackend(R1A7Backend):
             trajectory = self.cartesian(self.measured(),target_pose)
             self.execute(trajectory,'NO_PLAN')
             after = plant.state()
+            self.scene()
+            self.validate(self.measured())
             after_relative = np.linalg.inv(matrix(after['moving_pose']['position'],
                 after['moving_pose']['quaternion_wxyz'])) @ matrix(after['tcp'],after['tcp_quat'])
             after_translation_error = float(np.linalg.norm(after_relative[:3,3]-T_moving_tcp[:3,3]))

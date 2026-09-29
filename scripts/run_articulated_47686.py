@@ -177,6 +177,7 @@ def run(args):
         counts = common['models']['graspgenx']['counts']
         report['candidate_counts'] = counts
         report['graspgenx_native'] = str(native)
+        report['raw_collision_filter'] = str(filter_dir/'candidates.json')
         report['stages'].append('GRASP_CANDIDATES_FILTERED'); save()
         variants_file = output/'dex1_variants.json'
         cmd = [str(args.filter_python),str(ROOT/'scripts/filter_articulated_variants.py'),
@@ -187,6 +188,7 @@ def run(args):
                            check=True,timeout=900)
         variants = json.loads(variants_file.read_text())
         report['variant_counts'] = variants['counts']
+        report['variant_decisions_file'] = str(variants_file)
         variant_candidates = [SimpleNamespace(rank=row['raw_rank'],score=row['score'],
             T_B_TCP=np.asarray(row['T_B_TCP']),variant=row['variant'],
             checks={'dex1_scene_collision':row['collision'],
