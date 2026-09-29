@@ -4,7 +4,16 @@ This repository contains the research code used to grasp objects with AnyGrasp +
 
 **Reproduction status.** The grasp and PayloadID branches were run on the lab Isaac host. The stationary scan and official MV-SAM3D 2/4/8-view inference were run there as separate stages. `result.glb` is an MV-SAM3D output; it does **not** by itself have verified metric scale, collision or measured inertial properties. The provided metric/CoACD/USD utilities require metric mesh and inertial inputs. There is currently no validated one-command `MV-SAM3D GLB → metric USD` runner, so do not describe an arbitrary GLB as a validated physical asset. The station simulator initializes an object at the scan station; automatically transporting a previously grasped object to that station is not part of the tested runner.
 
-The repository does **not** redistribute AnyGrasp SDK, weights or issued license files, MV-SAM3D weights, Isaac/Arena assets, the official Scalable Real2Sim code or generated experiments. Get each from its original distributor under its own terms. No GT mesh, pose or dynamics parameter is used to fit the PayloadID estimator; GT is used only after fitting for evaluation.
+The repository does **not** redistribute AnyGrasp SDK, weights or issued license files, MV-SAM3D weights, Isaac/Arena assets, the official Scalable Real2Sim code or full generated experiments. Get each from its original distributor under its own terms. A small R1 grasp-candidate diagnostic record is included in `docs/`. No GT mesh, pose or dynamics parameter is used to fit the PayloadID estimator; GT is used only after fitting for evaluation.
+
+## R1-7a grasp candidate comparison
+
+`compare_models.py` normalizes 6-DoF candidates from GraspGenX, Graspness,
+EconomicGrasp, and frozen AnyGrasp, then applies the same target, approach,
+official Dex1-1 mesh collision, and optional R1 MoveIt IK checks. ZeroGrasp
+and RegionNormalizedGrasp GraspNetAPI `.npy` predictions can be imported into
+the same format. The runner does not command the robot. See
+[the setup and first same-frame result](docs/GRASP_MODEL_COMPARISON.md).
 
 ## Code map
 
