@@ -8,11 +8,12 @@ The repository does **not** redistribute AnyGrasp SDK, weights or issued license
 
 ## R1-7a grasp candidate comparison
 
-`compare_models.py` normalizes 6-DoF candidates from GraspGenX, Graspness,
-EconomicGrasp, and frozen AnyGrasp, then applies the same target, approach,
-official Dex1-1 mesh collision, and optional R1 MoveIt IK checks. ZeroGrasp
-and RegionNormalizedGrasp GraspNetAPI `.npy` predictions can be imported into
-the same format. The runner does not command the robot. See
+`compare_models.py` normalizes 6-DoF candidates from GraspGenX, ZeroGrasp,
+Graspness, EconomicGrasp, and frozen AnyGrasp, then applies the same target,
+approach, official Dex1-1 mesh collision, and optional R1 MoveIt IK checks.
+RegionNormalizedGrasp GraspNetAPI `.npy` predictions can be imported into
+the same format; calibrated native inference is still pending. The runner
+does not command the robot. See
 [the setup and first same-frame result](docs/GRASP_MODEL_COMPARISON.md).
 
 ## Code map

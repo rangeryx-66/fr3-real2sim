@@ -147,9 +147,10 @@ The five-provider full candidate record is
 `docs/grasp_compare_seed1000_five_models.json`;
 `docs/grasp_compare_seed1000_five_models.html` shows the same scene in camera coordinates
 (requires Plotly CDN to load).
-The earlier `docs/grasp_compare_seed1000_candidates.json` retains the
-MoveIt IK details for the other four providers. ZeroGrasp had no candidate
-passing the common scene collision gate, so no ZeroGrasp IK query was made.
+The MoveIt IK checks for the other four providers were carried over only
+after matching the scene hash, native file hash and each saved TCP pose.
+ZeroGrasp had no candidate passing the common scene collision gate, so no
+ZeroGrasp IK query was made.
 Inference wall time includes interpreter/model startup and excludes shared
 Dex1 filtering and MoveIt IK. GraspGenX produced 200 proposals; this single
 scene cannot establish a grasp-success ranking. AnyGrasp was a previously
