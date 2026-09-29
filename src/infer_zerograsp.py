@@ -24,6 +24,7 @@ def main():
         'ZEROGRASP_ROOT', '/data1/home/rangeryx/ZeroGrasp')))
     parser.add_argument('--checkpoint', type=Path)
     parser.add_argument('--top-k', type=int, default=200)
+    parser.add_argument('--seed', type=int, default=20260929)
     args = parser.parse_args()
     source = args.source.resolve()
     checkpoint = (args.checkpoint or source / 'checkpoints/mirage.ckpt').resolve()
@@ -35,6 +36,10 @@ def main():
     import torch.nn.functional as F
     import yaml
     from graspnetAPI import GraspGroup
+
+    np.random.seed(args.seed)
+    torch.manual_seed(args.seed)
+    torch.cuda.manual_seed_all(args.seed)
 
     started = time.monotonic()
     with np.load(args.input) as data:
