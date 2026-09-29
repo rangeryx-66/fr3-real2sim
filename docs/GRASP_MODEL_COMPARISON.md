@@ -64,8 +64,28 @@ the same sampled scene cloud without its native collision filter. Its
 MinkowskiEngine, PointNet2 and KNN extensions must be built in its Python
 environment.
 
-ZeroGrasp and RegionNormalizedGrasp can be compared now from
-their original GraspNetAPI `N x 17` `.npy` files or the same JSON contract:
+ZeroGrasp now has a native single-frame adapter. It uses the official Mirage
+checkpoint, RGB-D, mask and supplied camera intrinsics. Install its octree
+extensions in a separate environment and run:
+
+```bash
+python compare_models.py --scene /path/to/frame.npz \
+  --models graspgenx zerograsp economicgrasp graspness \
+  --graspgenx-python /path/to/GraspGenX/.venv/bin/python \
+  --zerograsp-python /path/to/ZeroGrasp/.venv/bin/python \
+  --economicgrasp-python /path/to/EconomicGrasp/python \
+  --graspness-python /path/to/graspness/python
+```
+
+The released ZeroGrasp model calls an older OFE signature than the submodule
+revision pinned by its repository. The adapter bridges that signature for one
+target in one frame without changing model weights. Depth is passed in
+millimetres, as required by its loader, and results are converted back to
+metres. The official GraspNet GraspGroup pose convention is retained.
+
+RegionNormalizedGrasp and any precomputed ZeroGrasp result can also be
+compared from original GraspNetAPI `N x 17` `.npy` files or the same JSON
+contract:
 
 ```bash
 python compare_models.py --scene /path/to/frame.npz \
@@ -75,11 +95,9 @@ python compare_models.py --scene /path/to/frame.npz \
   --graspgenx-python /path/to/GraspGenX/.venv/bin/python
 ```
 
-Those two upstream inference environments are not yet wired to
-the one-command runner. If no prediction is supplied, the model is reported
-`UNAVAILABLE`, never counted as zero successful grasps. ZeroGrasp's released
-checkpoint is downloaded but its octree model environment is not yet built;
-RNGNet has a checkpoint but its demo pins older
+RNGNet native inference is not yet wired to the one-command runner. If no
+prediction is supplied, it is reported `UNAVAILABLE`, never counted as zero
+successful grasps. RNGNet has a checkpoint but its demo pins older
 PyTorch/CUDA and assumes GraspNet camera calibration. Feeding it the current
 frame without a verified camera adapter would be an invalid comparison.
 
@@ -123,15 +141,25 @@ These are diagnostic candidate counts, **not** grasp success rates.
 | Graspness | 11 | 0 | 0 | 0 | 4.7 s |
 | EconomicGrasp | 25 | 1 | 1 | 1 | 5.0 s |
 | GraspGenX | 200 | 67 | 27 | 17 | 8.1 s |
+| ZeroGrasp | 140 after native NMS | 0 | 0 | 0 | 9.5 s |
 
-The saved full candidate record is `docs/grasp_compare_seed1000_candidates.json`;
-`docs/grasp_compare_seed1000.html` shows the same scene in camera coordinates
+The five-provider full candidate record is
+`docs/grasp_compare_seed1000_five_models.json`;
+`docs/grasp_compare_seed1000_five_models.html` shows the same scene in camera coordinates
 (requires Plotly CDN to load).
+The earlier `docs/grasp_compare_seed1000_candidates.json` retains the
+MoveIt IK details for the other four providers. ZeroGrasp had no candidate
+passing the common scene collision gate, so no ZeroGrasp IK query was made.
 Inference wall time includes interpreter/model startup and excludes shared
 Dex1 filtering and MoveIt IK. GraspGenX produced 200 proposals; this single
 scene cannot establish a grasp-success ranking. AnyGrasp was a previously
 frozen top-20 baseline; the other three predictors generated fresh candidates
-from the same frame. Scores remain on each model's own scale.
+from the same frame. ZeroGrasp also generated fresh candidates from that
+frame. Scores remain on each model's own scale. The 140 ZeroGrasp candidates
+all passed the target-region filter but collided with the official Dex1
+geometry during pregrasp or approach; this may reflect its generic gripper
+pose distribution as well as the current mount/TCP calibration and strict
+depth-cloud collision approximation.
 
 The target-aware collision rule materially changes the result. If the entire
 target mask is exempted, the same source proposals yield 74/8/18/17
@@ -142,8 +170,10 @@ Dex1's palm or finger links. This strict test can also reject plausible
 contacts when the depth cloud or provisional TCP is inaccurate; validate
 across further shared frames before selecting a model for hardware work.
 
-Pinned sources in this run: GraspGenX `b942909`, EconomicGrasp `4119bdc`,
-Graspness `b5abf5a`. Official checkpoint SHA256: GraspGenX generator
+Pinned sources in this run: GraspGenX `b942909`, ZeroGrasp `152f67c`,
+EconomicGrasp `4119bdc`, Graspness `b5abf5a`. Official checkpoint SHA256:
+ZeroGrasp Mirage `0460111a60b31b7b35f6a256e17a95be96ff31bc4abfec3f9a341df93213bc65`,
+GraspGenX generator
 `8b55f31cdb8340a573b4df27b027c15cff326bd6debcb389bf631d2aaab7ac44`,
 discriminator `cbf3f3bdb2e4c03fca8486ed24de0e6a8a859e6bd22bce2f1434a610335abd3e`,
 EconomicGrasp `33c99bf43d599bd259c53c090badd83771ca34b8bebdb4a27a9a45a80df32223`,
