@@ -15,11 +15,13 @@ def main():
                         default=ROOT / 'results/grasp_model_execution')
     parser.add_argument('--execution-dir', type=Path,
                         default=ROOT / 'results/grasp_model_execution_trials')
-    parser.add_argument('--pose-index', type=int, choices=range(1, 6), default=1)
+    parser.add_argument('--pose-index', type=int, choices=range(0, 6), default=1,
+                        help='1..5 selects one pose per asset; 0 summarizes all 40 scenes')
     parser.add_argument('--output', type=Path)
     args = parser.parse_args()
     rows = json.loads((ROOT / 'results/r1a7_arena_ab/input_manifest.json').read_text())['rows']
-    rows = [r for r in rows if (r['seed'] - 1000) % 5 + 1 == args.pose_index]
+    if args.pose_index:
+        rows = [r for r in rows if (r['seed'] - 1000) % 5 + 1 == args.pose_index]
     details = []
     for row in rows:
         seed, obj = row['seed'], row['target']
@@ -28,7 +30,8 @@ def main():
         trial_path = args.execution_dir / obj
         trials = {}
         for provider in PROVIDERS:
-            path = trial_path / provider / 'trial_01.json'
+            trial_index = ((seed - 1000) % 5 + 1) if args.pose_index == 0 else 1
+            path = trial_path / provider / f'trial_{trial_index:02d}.json'
             trials[provider] = json.loads(path.read_text()) if path.is_file() else None
         item = {'seed': seed, 'target': obj, 'providers': {}}
         for provider in PROVIDERS:
@@ -69,6 +72,7 @@ def main():
             'executed_scenes': len(executed),
             'successes': sum(r['success'] for r in executed),
             'success_rate': sum(r['success'] for r in executed) / len(executed) if executed else None,
+            'end_to_end_success_rate': sum(r['success'] for r in executed) / len(rows),
             'planning_successes': sum(r['planning_succeeded'] for r in executed),
             'failure_categories': dict(Counter(r['category'] for r in executed if not r['success'])),
         }
