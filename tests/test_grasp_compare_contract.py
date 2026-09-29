@@ -69,6 +69,27 @@ class CandidateContract(unittest.TestCase):
         self.assertEqual(verdict['status'], 'COLLISION')
         self.assertEqual(verdict['allowed_target_contact_points'], 0)
 
+    def test_positive_surface_gap_is_low_clearance_not_penetration(self):
+        import open3d as o3d
+
+        class SurfaceRay:
+            def compute_distance(self, points):
+                return o3d.core.Tensor(np.full(len(points), .0027, dtype=np.float32))
+
+        class GapChecker(Dex1SceneCollision):
+            def _contact_bounds(self, width_m):
+                return np.array([-.1, -.1, -.1]), np.array([.1, .1, .1])
+
+            def _raycast(self, width_m):
+                bounds = np.array([[-1., -1., -1.], [1., 1., 1.]])
+                return [('base_link', SurfaceRay(), bounds, False)], bounds
+
+        scene = Scene(Path('/tmp/gap.npz'), np.array([[10., 10., 10.], [0., 0., 0.]]),
+                      np.array([True, False]), np.eye(4), None, 'test')
+        verdict = GapChecker(scene, Dex1Geometry()).check(np.eye(4), .05)
+        self.assertEqual(verdict['status'], 'LOW_CLEARANCE')
+        self.assertAlmostEqual(verdict['min_surface_distance_m'], .0027, places=5)
+
 
 if __name__ == '__main__':
     unittest.main()

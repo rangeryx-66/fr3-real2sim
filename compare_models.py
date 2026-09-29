@@ -180,6 +180,11 @@ def main():
                     c['checks'].get('ik', {}).get('kinematic_ik', False) and
                     c['checks'].get('ik', {}).get('self_collision_free', False)
                     for c in candidates)
+                report['models'][name]['collision_free_ik_feasible'] = sum(
+                    c['checks']['dex1_scene_collision']['status'] == 'FREE' and
+                    c['checks'].get('ik', {}).get('kinematic_ik', False) and
+                    c['checks'].get('ik', {}).get('self_collision_free', False)
+                    for c in candidates)
         ik_output.write_text(json.dumps(report, indent=2))
     if args.visualize:
         from grasp_compare.visualize import save_html

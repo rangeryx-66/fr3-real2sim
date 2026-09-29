@@ -13,7 +13,7 @@ def filter_candidates(candidates, scene, collision_checker, *, target_radius_m=.
         direction /= np.linalg.norm(direction)
     counts = {'raw': len(candidates), 'target': 0, 'approach': 0,
               'collision_free': 0, 'collision': 0, 'collision_unknown': 0,
-              'width_unreachable': 0}
+              'low_clearance': 0, 'width_unreachable': 0}
     accepted = []
     for candidate in candidates:
         # Providers disagree on grasp origin (wrist vs. contact centre). Test
@@ -44,10 +44,13 @@ def filter_candidates(candidates, scene, collision_checker, *, target_radius_m=.
         if collision['status'] == 'WIDTH_UNREACHABLE':
             counts['width_unreachable'] += 1
             continue
-        if collision['status'] != 'FREE':
+        if collision['status'] == 'LOW_CLEARANCE':
+            counts['low_clearance'] += 1
+        elif collision['status'] != 'FREE':
             counts['collision_unknown'] += 1
         else:
             counts['collision_free'] += 1
         accepted.append(candidate)
-    accepted.sort(key=lambda c: c.score, reverse=True)
+    accepted.sort(key=lambda c: (c.checks['dex1_scene_collision']['status'] == 'FREE', c.score),
+                  reverse=True)
     return accepted[:max_candidates], counts

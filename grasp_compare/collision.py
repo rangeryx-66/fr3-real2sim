@@ -67,6 +67,7 @@ class Dex1SceneCollision:
         obstacles_B = np.concatenate((self.obstacles_B, self.target_B[~allowed_contact]), axis=0)
         if len(obstacles_B) == 0:
             return {'status': 'UNKNOWN_NO_OBSTACLES', 'reason': 'scene has no points outside the Dex1 aperture'}
+        low_clearance = None
         retreats = np.linspace(self.approach_m, 0.0,
                                max(2, int(np.ceil(self.approach_m / .01)) + 1))
         for retreat in retreats:
@@ -85,12 +86,24 @@ class Dex1SceneCollision:
                 points = o3d.core.Tensor(np.asarray(subset, dtype=np.float32))
                 distance = (ray.compute_signed_distance(points).numpy() if watertight
                             else ray.compute_distance(points).numpy())
-                if np.any(distance <= self.clearance_m):
-                    return {'status': 'COLLISION', 'retreat_m': float(retreat),
-                            'mesh_link': name, 'min_signed_distance_m': float(np.min(distance)),
+                closest = float(np.min(distance))
+                detail = {'retreat_m': float(retreat), 'mesh_link': name,
+                            'min_signed_distance_m' if watertight else 'min_surface_distance_m': closest,
                             'obstacle_points_checked': len(subset),
                             'allowed_target_contact_points': int(allowed_contact.sum()),
                             'mesh_watertight': watertight}
+                # A positive 2.7 mm surface distance is not mesh penetration.
+                # In particular, base_link is not watertight, so its unsigned
+                # distance cannot establish whether a point is inside it.
+                if watertight and closest <= 0:
+                    return {'status': 'COLLISION', **detail}
+                if closest <= self.clearance_m and (low_clearance is None or
+                        closest < low_clearance.get('min_distance_m', float('inf'))):
+                    low_clearance = {'status': 'LOW_CLEARANCE', **detail,
+                                     'min_distance_m': closest,
+                                     'required_clearance_m': self.clearance_m}
+        if low_clearance is not None:
+            return low_clearance
         return {'status': 'FREE',
                 'non_watertight_collision_links': [n for n, _, _, ok in pieces if not ok],
                 'obstacle_points_total': len(obstacles_B),

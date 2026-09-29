@@ -107,10 +107,12 @@ def main():
     try:
         for model, candidates in data['candidates'].items():
             for c in candidates:
-                if c['checks']['dex1_scene_collision']['status'] != 'FREE':
-                    c['checks']['ik'] = {'status': 'SKIPPED_COLLISION'}
+                scene_status = c['checks']['dex1_scene_collision']['status']
+                if scene_status not in ('FREE', 'LOW_CLEARANCE'):
+                    c['checks']['ik'] = {'status': 'SKIPPED_COLLISION_GATE'}
                     continue
                 c['checks']['ik'] = node.check(c['T_B_TCP'], c['width_m'])
+                c['checks']['ik']['scene_clearance_status'] = scene_status
             if 'raw_candidates' in data and model in data['raw_candidates']:
                 by_rank = {c['rank']: c['checks'].get('ik') for c in candidates}
                 for raw in data['raw_candidates'][model]:
