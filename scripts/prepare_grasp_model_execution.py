@@ -26,11 +26,13 @@ def provider_grasps(report, name, limit, open_width):
     """Preserve each provider's TCP exactly; change representation if needed."""
     result = []
     standard_tcp = graspnet_to_tcp(0)
-    for candidate in report['raw_candidates'][name]:
-        if candidate['checks'].get('target') != 'PASS':
-            continue
-        if candidate['checks'].get('approach') != 'PASS':
-            continue
+    eligible = [candidate for candidate in report['raw_candidates'][name][:100]
+                if candidate['checks'].get('target') == 'PASS' and
+                candidate['checks'].get('approach') == 'PASS']
+    priority = {'FREE': 2, 'LOW_CLEARANCE': 1}
+    eligible.sort(key=lambda c: (priority.get(
+        c['checks']['dex1_scene_collision']['status'], 0), c['score']), reverse=True)
+    for candidate in eligible:
         T_C_TCP = np.asarray(candidate['T_C_TCP'], dtype=float)
         # GraspGenX uses a gripper-base origin rather than GraspNet's grasp
         # centre. Express the identical TCP as a zero-depth GraspNet pose so
@@ -121,6 +123,7 @@ def main():
             output.write_text(json.dumps({'frame': 'camera_optical',
                 'T_B_C': json.loads(frozen.read_text())['T_B_C'],
                 'provider': name, 'source_scene_sha256': row['cloud_sha256'],
+                'selection_policy': 'native_top100_then_free_low_clearance_collision_then_native_score',
                 'grasps': grasps}, indent=2))
             outputs[name] = {'status': 'OK', 'top_k': len(grasps),
                              'file': str(output), 'diagnostic_counts': report['models'][name]['counts']}
