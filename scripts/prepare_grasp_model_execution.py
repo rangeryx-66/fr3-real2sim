@@ -115,8 +115,18 @@ def main():
         outputs = {}
         for name in PROVIDERS:
             if report['models'][name]['status'] != 'OK':
+                # An inference crash on a valid frozen scene is an end-to-end
+                # failure, not a missing trial. Keep it distinct from a model
+                # that ran correctly and predicted zero candidates.
+                output = scene_dir / f'{name}_grasps.json'
+                reason = report['models'][name].get('reason', '')
+                output.write_text(json.dumps({'frame': 'camera_optical',
+                    'T_B_C': json.loads(frozen.read_text())['T_B_C'],
+                    'provider': name, 'source_scene_sha256': row['cloud_sha256'],
+                    'inference_status': report['models'][name]['status'],
+                    'inference_error': reason[-1000:], 'grasps': []}, indent=2))
                 outputs[name] = {'status': report['models'][name]['status'],
-                                 'reason': report['models'][name].get('reason')}
+                                 'top_k': 0, 'file': str(output), 'reason': reason}
                 continue
             grasps = provider_grasps(report, name, args.top_k, open_width)
             output = scene_dir / f'{name}_grasps.json'
