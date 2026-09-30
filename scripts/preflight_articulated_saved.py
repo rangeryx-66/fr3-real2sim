@@ -43,6 +43,7 @@ def main():
     p.add_argument('--arc-goal-deg',type=float,default=22.,help='Explicit shortened physical test goal, default retains 22 degrees')
     p.add_argument('--record-overview',action='store_true')
     p.add_argument('--isolation-diagnostics',action='store_true')
+    p.add_argument('--contact-model-check',action='store_true')
     p.add_argument('--cutoff-local',help='ISO 8601 cutoff; defaults to next 05:00 Shanghai')
     p.add_argument('--raw-ranks',type=int,nargs='*')
     p.add_argument('--variants-file',type=Path)
@@ -115,7 +116,7 @@ def main():
             '--home-q',*[str(x) for x in home_q],
             '--door-mass-model',args.door_mass_model,
             *(['--record-overview'] if args.record_overview else []),
-            *(['--enable-isolation-diagnostics'] if args.isolation_diagnostics else []),
+            *(['--enable-isolation-diagnostics'] if args.isolation_diagnostics or args.contact_model_check else []),
             '--camera-offset',*[str(x) for x in source['camera_offset_m']]],output/'isaac.log',env))
         processes.append(start(['ros2','launch',str(ROOT/'src/r1a7_moveit.launch.py')],
                                output/'moveit.log',env))
@@ -167,6 +168,10 @@ def main():
             report['status']='INITIAL_DOOR_DRIFT';save();return
         if report['handle_visible_pixels_evaluation_only'] < 30:
             report['status']='HANDLE_NOT_VISIBLE';save();return
+        if args.contact_model_check:
+            from articulated_demo.isolation_diagnostics import run_contact_model_test
+            run_contact_model_test(node,placed_pose(candidates[0]),output,report,save)
+            return
         if args.isolation_diagnostics:
             from articulated_demo.isolation_diagnostics import run_tests
             run_tests(node,placed_pose(candidates[0]),output,report,save)

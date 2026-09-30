@@ -36,7 +36,7 @@ def local_handle_frame(tree, points, origin, radius=.035):
     return anchor, tangent
 
 
-def handle_variants(raw, anchor, tangent, limit):
+def handle_variants(raw, anchor, tangent, limit, pad_center=None):
     """Bounded door-handle manifold: slide, axial roll, and insertion depth."""
     raw = np.asarray(raw, dtype=float)
     count = 0
@@ -44,6 +44,18 @@ def handle_variants(raw, anchor, tangent, limit):
         yield variant
         count += 1
         if count >= limit: return
+    if pad_center is not None:
+        # Centre the local handle patch on the actual official pad aperture.
+        # Use the generic orientation search; no asset-specific TCP offset.
+        for pitch in (-20., -10., 0., 10., 20.):
+            T=raw.copy()
+            T[:3,:3]=raw[:3,:3]@Rotation.from_euler('y',pitch,degrees=True).as_matrix()
+            T[:3,3]=anchor-T[:3,:3]@pad_center
+            distance=float(np.linalg.norm(T[:3,3]-raw[:3,3]))
+            if distance>.065:continue
+            yield Variant(T,f'official_pad_center_pitch{pitch:+.0f}',distance,float(np.deg2rad(abs(pitch))))
+            count+=1
+            if count>=limit:return
     settings = [(s,0.,0.) for s in (-.012,.012,-.022,.022)]
     settings += [(0.,a,0.) for a in (-15.,15.,-30.,30.)]
     settings += [(0.,0.,d) for d in (-.008,.008)]
@@ -75,6 +87,8 @@ def main():
     scene=load_scene(args.scene)
     checker=Dex1SceneCollision(scene,clearance_m=args.clearance_m)
     target=scene.points_B[scene.target_mask]
+    pad_low,pad_high=checker._contact_bounds(round(checker.geometry.open_width,5))
+    pad_center=(pad_low+pad_high)/2
     tree=cKDTree(target)
     raw=read_candidates(args.native,'graspgenx',scene)
     if args.raw_ranks is not None:
@@ -90,8 +104,9 @@ def main():
         raw_check=checker.check(candidate.T_B_TCP,candidate.width_m)
         raw_decisions.append({'rank':candidate.rank,'score':candidate.score,
             'T_B_TCP':candidate.T_B_TCP.tolist(),'collision':raw_check,
+            'closure':checker.check_closure(candidate.T_B_TCP),
             'local_anchor_B':anchor.tolist(),'local_handle_axis_B':tangent.tolist()})
-        for variant in handle_variants(candidate.T_B_TCP,anchor,tangent,args.per_raw_limit):
+        for variant in handle_variants(candidate.T_B_TCP,anchor,tangent,args.per_raw_limit,pad_center):
             if variant.label=='raw': continue
             counts['variants']+=1
             distance=float(tree.query(variant.transform[:3,3])[0])
@@ -104,6 +119,9 @@ def main():
                 continue
             counts['target_near']+=1
             check=checker.check(variant.transform,candidate.width_m)
+            if check['status']=='FREE':
+                closure=checker.check_closure(variant.transform)
+                check={**closure, 'approach':check}
             record.update(status=check['status'],collision=check)
             variant_decisions.append(record)
             counts['collision' if check['status']=='COLLISION' else

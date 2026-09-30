@@ -103,14 +103,14 @@ source_to_world = np.array([[0., 0., 1.], [1., 0., 0.], [0., 1., 0.]])
 asset_rotation = Rotation.from_euler('z', a.asset_yaw_deg, degrees=True).as_matrix() @ source_to_world
 handle_bounds = np.asarray(manifest['grasp_mesh_bounds_source'], dtype=float)
 handle_center = asset_xyz + asset_rotation @ (handle_bounds.mean(axis=0) * scale)
-fixture_size=np.array([.70,.25,a.fixture_height_m])
-fixture_quat=np.array([1.,0.,0.,0.])
-if asset_id!='47686':
-    extents=(np.asarray(manifest['static_source_bounds'])[1]-np.asarray(manifest['static_source_bounds'])[0])*scale
-    fixture_size=np.array([extents[2],extents[0],a.fixture_height_m])
-    fixture_quat=np.roll(Rotation.from_euler('z',a.asset_yaw_deg,degrees=True).as_quat(),1)
+sys.path.insert(0,str(ROOT))
+from articulated_demo.kinematics import URDFChain
+from articulated_demo.fixture_geometry import fixture_box
+asset_chain=URDFChain(asset_urdf)
+fixture=fixture_box(manifest,asset_chain,asset_urdf,asset_rotation,asset_xyz,a.fixture_height_m)
+fixture_size=np.array(fixture['size']);fixture_quat=np.array(fixture['quaternion_wxyz'])
 world.scene.add(FixedCuboid('/World/cabinet_fixture', name='cabinet_fixture',
-    position=[a.asset_x, a.asset_y, a.fixture_height_m/2],
+    position=fixture['center'],
     scale=fixture_size,orientation=fixture_quat,physics_material=mat))
 asset_quat = np.roll(Rotation.from_matrix(asset_rotation).as_quat(), 1)
 xyz_op.Set(Gf.Vec3d(*asset_xyz))
@@ -209,13 +209,13 @@ def collision_boxes():
               'quaternion_wxyz':asset_quat.tolist()}
     door = {'id':'cabinet_door', **oriented_box(door_bound.GetBox(), door_bound.GetMatrix())}
     return [static, door,
-            {'id':'cabinet_fixture','center':[a.asset_x,a.asset_y,a.fixture_height_m/2],
+            {'id':'cabinet_fixture','center':fixture['center'],
              'size':fixture_size.tolist(),
              'quaternion_wxyz':fixture_quat.tolist()}]
 if a.door_sanity_only:
     from articulated_demo.isolation_diagnostics import run_door_without_robot
     run_door_without_robot(a.door_sanity_only,world,stage,articulation,asset_chain,
-        asset_path,moving_path,contact_target_path,asset_rotation,asset_xyz,handle_center,mass_audit,manifest,DT)
+        asset_path,moving_path,contact_target_path,asset_rotation,asset_xyz,handle_center,mass_audit,manifest,DT,fixture['audit'])
     app.close();sys.exit(0)
 contact_paths = [one_prim(name, '/World/R1A7') for name in ('dex1_Link1_3', 'dex1_Link2_3')]
 for path in contact_paths:
@@ -223,6 +223,12 @@ for path in contact_paths:
 finger_views = [world.scene.add(RigidPrim(prim_paths_expr=path, name=f'finger_contact_{i}',
     contact_filter_prim_paths_expr=[contact_target_path], track_contact_forces=True,
     prepare_contact_sensors=True, max_contact_count=256)) for i, path in enumerate(contact_paths)]
+body_views=[]
+if a.enable_isolation_diagnostics:
+    body_views=[world.scene.add(RigidPrim(prim_paths_expr=one_prim(name,'/World/R1A7'),name=f'finger_body_contact_{i}',
+        contact_filter_prim_paths_expr=[contact_target_path],track_contact_forces=True,
+        prepare_contact_sensors=True,max_contact_count=256))
+        for i,name in enumerate(('dex1_Link1_2','dex1_Link2_2'))]
 door_contacts=None
 if a.enable_isolation_diagnostics:
     diagnostic_contact_paths=[str(prim.GetPath()) for prim in stage.Traverse()
@@ -471,6 +477,7 @@ try:
         aq = float(articulation.get_joint_positions()[0])
         sample = {'t':tick*DT,'joint_q':aq,'forces':force,'tcp':tp.tolist(),
             'force_vectors_world':np.asarray(force_vectors).tolist(),
+            'finger_body_contact_n':[float(np.linalg.norm(np.asarray(v.get_contact_force_matrix(dt=DT)).reshape(-1,3),axis=1).sum()) for v in body_views],
             'joint_velocity_rad_s':float(articulation.get_joint_velocities()[0]),
             'applied_door_torque_nm':diagnostic_torque,
             'door_net_collision_force_n':float(np.linalg.norm(door_contacts.get_net_contact_forces(dt=DT))) if door_contacts else None,
@@ -485,12 +492,12 @@ try:
                     'quaternion_wxyz':mq.tolist()},
                 'door_link_pose':{'position':lp.tolist(),'quaternion_wxyz':lq.tolist()},
                 'tcp':tp.tolist(),'tcp_quat':tq.tolist(),
-                'forces':force,'results':results.copy(),'history':history[::8],
+                'forces':force,'finger_body_contact_n':sample['finger_body_contact_n'],'results':results.copy(),'history':history[::8],
                 'busy':active is not None,'camera_T_B_C':T_B_C.tolist(),
                 'robot_base_pose':BASE_POSE.tolist(),'robot_support_bottom_z_m':support_bottom,
                 'robot_support_xy_m':PEDESTAL_SIZE[:2].tolist(),
                 'paused':False,
-                'door_mass_model':a.door_mass_model,'mass_audit':mass_audit,
+                'door_mass_model':a.door_mass_model,'mass_audit':mass_audit,'fixture_audit':fixture['audit'],
                 'startup_joint_range_rad':[min(startup_angles),max(startup_angles)],
                 'asset_root_pose':{'position':asset_xyz.tolist(),'quaternion_wxyz':asset_quat.tolist()},
                 'collision_boxes':boxes,'handle_center_from_source':handle_center.tolist(),

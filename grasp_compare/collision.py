@@ -50,7 +50,7 @@ class Dex1SceneCollision:
                            np.max([p[2][1] for p in pieces], axis=0)])
         return pieces, bounds
 
-    def check(self, T_B_TCP, width_m=None):
+    def check(self, T_B_TCP, width_m=None, *, approach=True, contact_mask=None):
         if self.obstacles_B is None:
             return {'status': 'UNKNOWN_NO_TARGET_MASK', 'reason': 'no target mask to separate contact from obstacles'}
         if width_m is not None and float(width_m) > self.geometry.open_width + 1e-6:
@@ -63,13 +63,17 @@ class Dex1SceneCollision:
         T_B_TCP = np.asarray(T_B_TCP)
         contact_low, contact_high = self._contact_bounds(round(width, 5))
         target_TCP = transform_points(np.linalg.inv(T_B_TCP), self.target_B)
-        allowed_contact = np.all((target_TCP >= contact_low) & (target_TCP <= contact_high), axis=1)
-        obstacles_B = np.concatenate((self.obstacles_B, self.target_B[~allowed_contact]), axis=0)
+        allowed_contact = (np.all((target_TCP >= contact_low) & (target_TCP <= contact_high), axis=1)
+                           if contact_mask is None else np.asarray(contact_mask, dtype=bool))
+        # Target contact is permitted only on the official distal pads.
+        # Finger bodies must still be checked against every target point.
+        obstacles_B = np.concatenate((self.obstacles_B, self.target_B), axis=0)
+        pad_obstacles_B = np.concatenate((self.obstacles_B, self.target_B[~allowed_contact]), axis=0)
         if len(obstacles_B) == 0:
             return {'status': 'UNKNOWN_NO_OBSTACLES', 'reason': 'scene has no points outside the Dex1 aperture'}
         low_clearance = None
         retreats = np.linspace(self.approach_m, 0.0,
-                               max(2, int(np.ceil(self.approach_m / .01)) + 1))
+                               max(2, int(np.ceil(self.approach_m / .01)) + 1)) if approach else np.array([0.])
         for retreat in retreats:
             pose = T_B_TCP.copy()
             pose[:3, 3] -= retreat * T_B_TCP[:3, 2]
@@ -79,8 +83,10 @@ class Dex1SceneCollision:
             if not len(nearby):
                 continue
             for name, ray, mesh_bounds, watertight in pieces:
-                subset = nearby[np.all((nearby >= mesh_bounds[0] - self.clearance_m)
-                                       & (nearby <= mesh_bounds[1] + self.clearance_m), axis=1)]
+                link_points = (transform_points(np.linalg.inv(pose), pad_obstacles_B)
+                               if name in ('Link1_3', 'Link2_3') and retreat <= 1e-6 else nearby)
+                subset = link_points[np.all((link_points >= mesh_bounds[0] - self.clearance_m)
+                                       & (link_points <= mesh_bounds[1] + self.clearance_m), axis=1)]
                 if not len(subset):
                     continue
                 points = o3d.core.Tensor(np.asarray(subset, dtype=np.float32))
@@ -109,3 +115,30 @@ class Dex1SceneCollision:
                 'obstacle_points_total': len(obstacles_B),
                 'allowed_target_contact_points': int(allowed_contact.sum()),
                 'path_samples_m': retreats.tolist()}
+
+    def check_closure(self, T_B_TCP):
+        """Sweep official finger bodies to the observed pad-contact aperture.
+
+        This is a point-cloud prefilter, not a substitute for closed-state
+        MoveIt and physical contact validation. Never exempt finger bodies.
+        """
+        if self.target_B is None:
+            return {'status': 'UNKNOWN_NO_TARGET_MASK'}
+        local = transform_points(np.linalg.inv(T_B_TCP), self.target_B)
+        low, high = self._contact_bounds(round(self.geometry.open_width, 5))
+        contact = np.all((local >= low) & (local <= high), axis=1)
+        if not contact.any():
+            return {'status': 'BAD_GRASP_GEOMETRY', 'reason': 'no target in official pad aperture'}
+        span = float(np.ptp(local[contact, 1]))
+        stop = max(self.geometry.closed_width,
+                   self.geometry.open_width - (high[1] - low[1] - span))
+        widths = np.linspace(self.geometry.open_width, stop,
+                             max(2, int(np.ceil((self.geometry.open_width-stop)/.002))+1))
+        for width in widths:
+            result = self.check(T_B_TCP, float(width), approach=False, contact_mask=contact)
+            if result['status'] != 'FREE':
+                return {**result, 'stage': 'closure', 'width_m': float(width),
+                        'estimated_contact_width_m': stop}
+        return {'status': 'FREE', 'stage': 'closure',
+                'estimated_contact_width_m': stop, 'width_samples_m': widths.tolist(),
+                'allowed_contact_links': ['Link1_3', 'Link2_3']}
