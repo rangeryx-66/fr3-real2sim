@@ -48,8 +48,10 @@ def ready(port, processes, deadline):
 
 
 def run(args):
-    if args.action != 'open' or args.target_part != 'cabinet door handle':
-        raise ValueError('this v1 demo supports opening the 47686 cabinet door handle only')
+    if args.action != 'open' or args.target_part not in ('cabinet door handle','microwave door handle'):
+        raise ValueError('this minimal demo supports opening one door by its handle only')
+    manifest=json.loads((args.asset_root/'manifest.json').read_text())
+    asset_id=manifest['asset_id']
     plant.URL = f'http://127.0.0.1:{args.port}'
     os.environ['ROS_DOMAIN_ID'] = str(args.ros_domain)
     os.environ['ROS_LOCALHOST_ONLY'] = '1'
@@ -60,16 +62,17 @@ def run(args):
                 now.replace(hour=5,minute=0,second=0,microsecond=0))
     if not args.cutoff_local and deadline <= now:
         deadline += timedelta(days=1)
-    if args.stage == 'full' and datetime.now(tz) >= deadline:
+    if args.stage in ('full','preflight') and datetime.now(tz) >= deadline:
         raise TimeoutError(f'articulated experiment cutoff reached: {deadline.isoformat()}')
     output = args.output.resolve(); output.mkdir(parents=True,exist_ok=True)
-    report = {'schema':'r1a7_articulated_demo/v1','asset_id':'47686',
+    report = {'schema':'r1a7_articulated_demo/v1','asset_id':asset_id,
         'task':args.task,'target_part':args.target_part,
         'action':args.action,'deadline':deadline.isoformat(),'stages':[],'candidates':[],
         'asset_installation':{'x_m':args.asset_x,'y_m':args.asset_y,
             'yaw_deg':args.asset_yaw_deg,'fixture_height_m':args.fixture_height_m},
         'home_q':args.home_q,
         'camera_offset_m':args.camera_offset,
+        'robot_base_pose':args.base_pose,'support_bottom_z_m':args.support_bottom_z,
         'success_criterion':{'joint_delta_deg':20,'hold_s':2,'no_slip':True},
         'status':'STARTED'}
     def save(): (output/'report.json').write_text(json.dumps(report,indent=2,default=str))
@@ -80,18 +83,22 @@ def run(args):
         if not args.sam3_python.is_file(): raise FileNotFoundError(args.sam3_python)
         if not args.graspgenx_python.is_file(): raise FileNotFoundError(args.graspgenx_python)
         if not args.filter_python.is_file(): raise FileNotFoundError(args.filter_python)
-    env = {**os.environ, 'R1A7_BASE_POSE':'0.329,-0.175,0.237,56.295',
+    env = {**os.environ, 'R1A7_BASE_POSE':','.join(map(str,args.base_pose)),
+        'R1A7_SUPPORT_BOTTOM_Z':str(args.support_bottom_z),
         'R1A7_PEDESTAL_SIZE':'0.10,0.10,0.20','R1A7_PLANT_PORT':str(args.port),
         'R1A7_RUN_DIR':str(output), 'ROS_DOMAIN_ID':str(args.ros_domain),
         'ROS_LOCALHOST_ONLY':'1','NO_PROXY':'127.0.0.1,localhost',
         'no_proxy':'127.0.0.1,localhost','OMNI_KIT_ACCEPT_EULA':'YES','ACCEPT_EULA':'Y'}
     processes = []; node = None; recording = False
     try:
+        # Generate before either process reads it; avoid a startup mount race.
+        subprocess.run([sys.executable,str(ROOT/'scripts/prepare_r1a7_description.py')],env=env,check=True)
         processes.append(start([SIM,'-u',str(ROOT/'src/r1a7_articulated_sim_server.py'),
             '--gpu',str(args.gpu),'--port',str(args.port),'--asset-root',str(args.asset_root),
             '--asset-x',str(args.asset_x),'--asset-y',str(args.asset_y),
             '--asset-yaw-deg',str(args.asset_yaw_deg),
             '--fixture-height-m',str(args.fixture_height_m),
+            '--door-mass-model',args.door_mass_model,
             '--home-q',*[str(value) for value in args.home_q],
             '--camera-offset',*[str(value) for value in args.camera_offset]],
             output/'isaac.log',env))
@@ -106,6 +113,9 @@ def run(args):
             'initial_q_rad':state['joint_q'],'moving_link':state['moving_link'],
             'fixture_height_m':state['fixture_height_m']}
         if args.stage in ('preflight','full'):
+            plant.settle(3.)
+            report['startup_physics']={k:plant.state().get(k) for k in
+                ('door_mass_model','mass_audit','startup_joint_range_rad')}
             frozen=plant.command({'op':'pause'},timeout=10)
             if not frozen.get('ok'):raise RuntimeError('Isaac physics pause failed')
             report['planning_joint_q_rad']=float(plant.state()['joint_q'])
@@ -131,13 +141,15 @@ def run(args):
         if args.stage == 'smoke':
             report['status']='SIM_CAPTURE_SMOKE_PASS'; return report
         if args.stage == 'motion-smoke':
-            rclpy.init(); node = ArticulatedBackend(args.asset_root/'urdf/47686.urdf')
+            rclpy.init(); node = ArticulatedBackend(args.asset_root/'urdf'/f'{asset_id}.urdf')
             node.scene()
             report['fk_tcp_check'] = node.check_fk()
+            node.validate(node.measured())
+            report['home_state_validity']={'valid':True}
             report['stages'].append('MOVEIT_SCENE_AND_FK_PASS')
             report['status'] = 'MOTION_SMOKE_PASS'
             return report
-        if args.stage == 'full' and datetime.now(tz) >= deadline: raise TimeoutError('05:00 cutoff before SAM3')
+        if args.stage in ('full','preflight') and datetime.now(tz) >= deadline: raise TimeoutError('05:00 cutoff before SAM3')
         sam_cmd = [str(args.sam3_python),str(ROOT/'scripts/infer_sam3_part.py'),
             '--rgb',str(output/'rgb.png'),'--prompt',args.sam3_prompt,
             '--min-score',str(args.sam3_min_score),
@@ -170,7 +182,8 @@ def run(args):
         cmd = [str(args.graspgenx_python),str(ROOT/'src/infer_graspgenx.py'),
                '--input',str(scene_path),'--output',str(native),'--top-k','100']
         with (output/'graspgenx.log').open('w') as log:
-            subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=900)
+            grasp_env=env.copy();grasp_env.pop('PYTHONPATH',None)
+            subprocess.run(cmd,env=grasp_env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=900)
         filter_dir = output/'dex1_filter'
         filter_env = env.copy(); filter_env.pop('PYTHONPATH',None)
         cmd = [str(args.filter_python),str(ROOT/'compare_models.py'),
@@ -219,8 +232,8 @@ def run(args):
                           else variant_candidates + [c for c in filtered
                            if c.checks['dex1_scene_collision']['status']=='FREE'])
         if not candidate_pool: raise Failure('NO_GRASP','no Dex1 collision-free handle candidates')
-        if args.stage == 'full' and datetime.now(tz) >= deadline: raise TimeoutError('05:00 cutoff before MoveIt')
-        rclpy.init(); node = ArticulatedBackend(args.asset_root/'urdf/47686.urdf')
+        if args.stage in ('full','preflight') and datetime.now(tz) >= deadline: raise TimeoutError('05:00 cutoff before MoveIt')
+        rclpy.init(); node = ArticulatedBackend(args.asset_root/'urdf'/f'{asset_id}.urdf')
         node.scene()
         report['fk_tcp_check'] = node.check_fk()
         report['stages'].append('MOVEIT_READY'); save()
@@ -235,7 +248,7 @@ def run(args):
             raise
         chosen = None
         for candidate in candidate_pool[:args.max_candidates]:
-            if args.stage == 'full' and datetime.now(tz) >= deadline: raise TimeoutError('05:00 cutoff during candidate search')
+            if args.stage in ('full','preflight') and datetime.now(tz) >= deadline: raise TimeoutError('05:00 cutoff during candidate search')
             record = {'rank':candidate.rank,'score':candidate.score,
                       'variant':getattr(candidate,'variant','raw'),
                       'T_B_TCP':candidate.T_B_TCP.tolist(),'checks':candidate.checks}
@@ -245,20 +258,22 @@ def run(args):
             try:
                 if args.stage == 'preflight':
                     preflight = candidate_preflight(node,candidate.T_B_TCP,
-                        random_seeds=args.ik_random_seeds,timeout_s=args.ik_timeout_s)
+                        random_seeds=args.ik_random_seeds,timeout_s=args.ik_timeout_s,
+                        optimize_redundancy=True)
                     record.update(preflight)
                     if preflight['status']=='FULL_PATH_PLANNED' and chosen is None:
                         chosen = (candidate,None)
                 else:
+                    plan={}
                     preflight = candidate_preflight(node,candidate.T_B_TCP,
-                        random_seeds=args.ik_random_seeds,timeout_s=args.ik_timeout_s)
+                        random_seeds=args.ik_random_seeds,timeout_s=args.ik_timeout_s,
+                        optimize_redundancy=True,plan_sink=plan)
                     record['full_path_preflight']=preflight
                     if preflight['status']!='FULL_PATH_PLANNED':
                         record['status']=preflight['status']
                         save();continue
-                    plan = node.candidate_plan(candidate)
-                    record.update(status='EXECUTABLE',grasp_margin_rad=plan['grasp_margin_rad'],
-                                  path_margin_rad=plan['path_margin_rad'])
+                    record.update(status='EXECUTABLE',
+                                  path_margin_rad=preflight['full_arc_min_margin_rad'])
                     chosen = (candidate,plan); break
             except Failure as error:
                 record.update(status=error.category,detail=str(error))
@@ -297,67 +312,13 @@ def run(args):
             return report
         if chosen is None: raise Failure('NO_PLAN','no complete pregrasp/approach candidate')
         report['selected_rank'] = chosen[0].rank; save()
-        resumed=plant.command({'op':'resume'},timeout=10)
-        if not resumed.get('ok'):raise RuntimeError('Isaac physics resume failed')
-        plant.settle(.05)
-        report['joint_q_after_resume_rad']=float(plant.state()['joint_q'])
-        if abs(report['joint_q_after_resume_rad']-report['planning_joint_q_rad'])>.03:
-            raise Failure('CONTACT_LOSS','door moved while resuming the frozen grasp scene')
-        if abs(report['joint_q_after_resume_rad']) > np.deg2rad(2):
-            raise Failure('INITIAL_DOOR_DRIFT','door is no longer near closed after physics resumed')
         video = output/'execution.mp4'
         if not plant.command({'op':'video_start','path':str(video)})['ok']:
             raise RuntimeError('Isaac video recorder failed')
         recording = True
-        plan = chosen[1]
-        node.stage='PREGRASP'; node.execute(plan['pre_traj'],'NO_PLAN')
-        node.stage='APPROACH'; node.execute(node.cartesian(node.measured(),plan['grasp']),'NO_PLAN')
-        report['stages'].append('MOVEIT_GRASP_POSE'); save()
-        node.stage='CLOSE'; close_result = node.gripper(0.)
-        plant.settle(.4)
-        closed = plant.state()
-        bilateral_force = all(float(force)>.2 for force in closed['forces'])
-        report['contact_at_close'] = {'finger_forces_n':closed['forces'],
-            'bilateral_force':bilateral_force,'gripper_stalled':bool(close_result.stalled),
-            'gripper_reached_goal':bool(close_result.reached_goal)}
-        if not bilateral_force:
-            raise Failure('BAD_CONTACT','Dex1 lacks bilateral measured handle contact')
-        q0 = float(closed['joint_q'])
-        if abs(q0) > np.deg2rad(2):
-            raise Failure('BAD_CONTACT','door moved out of the planned 0→22 degree range during approach')
-        report['stages'].append('DEX1_CLOSED'); save()
-        target_q = min(np.deg2rad(22),float(plant.state()['joint_limits']['upper'])-.02)
-        report['joint_path'] = node.follow_joint(q0,target_q,
+        from articulated_demo.execute_preflight import execute_preflight
+        execute_preflight(node,chosen[1],report,save,
             stop_requested=lambda: datetime.now(tz)>=deadline)
-        report['stages'].append('ARTICULATION_PATH_EXECUTED'); save()
-        hold_start = plant.state()['t']
-        plant.settle(2.2)
-        final = plant.state()
-        joint_delta = float(final['joint_q']-q0)
-        report['actual_joint_delta_deg'] = float(np.rad2deg(joint_delta))
-        report['actual_joint_q_rad'] = final['joint_q']
-        report['joint_history'] = final['history']
-        report['trajectories'] = node.executions
-        hold = [sample for sample in final['history'] if sample['t'] >= hold_start]
-        T_at_close = np.linalg.inv(matrix(closed['moving_pose']['position'],
-            closed['moving_pose']['quaternion_wxyz'])) @ matrix(closed['tcp'],closed['tcp_quat'])
-        T_at_end = np.linalg.inv(matrix(final['moving_pose']['position'],
-            final['moving_pose']['quaternion_wxyz'])) @ matrix(final['tcp'],final['tcp_quat'])
-        slip_m = float(np.linalg.norm(T_at_end[:3,3]-T_at_close[:3,3]))
-        slip_rad = float((Rotation.from_matrix(T_at_close[:3,:3]).inv() *
-            Rotation.from_matrix(T_at_end[:3,:3])).magnitude())
-        report['hold'] = {'samples':len(hold),
-            'duration_s':float(hold[-1]['t']-hold[0]['t']) if len(hold)>1 else 0.,
-            'min_joint_delta_deg':float(np.rad2deg(min(sample['joint_q']-q0 for sample in hold))) if hold else None,
-            'relative_tcp_slip_m':slip_m,'relative_tcp_slip_rad':slip_rad,
-            'final_finger_forces_n':final['forces']}
-        if joint_delta < np.deg2rad(20):
-            raise Failure('CONTACT_LOSS','door failed to reach 20 degrees')
-        if report['hold']['duration_s'] < 2. or report['hold']['min_joint_delta_deg'] < 20:
-            raise Failure('CONTACT_LOSS','door did not remain open 20 degrees for 2 seconds')
-        if slip_m > .005 or slip_rad > np.deg2rad(10):
-            raise Failure('CONTACT_LOSS','Dex1 slipped relative to the door during hold')
-        report['status']='SUCCESS'
         return report
     finally:
         if node is not None:
@@ -395,6 +356,9 @@ def main():
     parser.add_argument('--asset-y',type=float,default=.05)
     parser.add_argument('--asset-yaw-deg',type=float,default=-90.)
     parser.add_argument('--fixture-height-m',type=float,default=.18)
+    parser.add_argument('--base-pose',type=float,nargs=4,default=(.329,-.175,.237,56.295),metavar=('X','Y','Z','YAW_DEG'))
+    parser.add_argument('--support-bottom-z',type=float,default=0.)
+    parser.add_argument('--door-mass-model',choices=('geometry','legacy'),default='geometry')
     parser.add_argument('--home-q',type=float,nargs=7,
                         default=(0.,1.3,1.,-1.3,0.,0.,0.))
     parser.add_argument('--camera-offset',type=float,nargs=3,default=(.20,-.75,.36),

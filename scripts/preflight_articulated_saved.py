@@ -11,6 +11,8 @@ import os
 from pathlib import Path
 import sys
 import time
+from datetime import datetime,timedelta
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import rclpy
@@ -34,6 +36,16 @@ def main():
     p.add_argument('--timeout-s',type=float,default=.25)
     p.add_argument('--ablation-candidates',type=int,default=5)
     p.add_argument('--require-home-valid',action='store_true')
+    p.add_argument('--door-mass-model',choices=('geometry','legacy'),default='geometry')
+    p.add_argument('--startup-hold-s',type=float,default=3.)
+    p.add_argument('--optimize-redundancy',action='store_true')
+    p.add_argument('--execute-best',action='store_true',help='Only execute after full arc preflight passes; saved perception replay')
+    p.add_argument('--cutoff-local',help='ISO 8601 cutoff; defaults to next 05:00 Shanghai')
+    p.add_argument('--raw-ranks',type=int,nargs='*')
+    p.add_argument('--variants-file',type=Path)
+    p.add_argument('--asset-root',type=Path,default=Path('/data1/home/rangeryx/datasets/physx_mobility/prepared/47686_v1'))
+    p.add_argument('--base-pose',type=float,nargs=4)
+    p.add_argument('--support-bottom-z',type=float,default=0.)
     p.add_argument('--asset-x',type=float)
     p.add_argument('--asset-y',type=float)
     p.add_argument('--asset-yaw-deg',type=float)
@@ -42,7 +54,13 @@ def main():
     p.add_argument('--port',type=int,default=18816)
     p.add_argument('--ros-domain',type=int,default=122)
     args=p.parse_args()
+    tz=ZoneInfo('Asia/Shanghai');now=datetime.now(tz)
+    deadline=datetime.fromisoformat(args.cutoff_local).astimezone(tz) if args.cutoff_local else now.replace(hour=5,minute=0,second=0,microsecond=0)
+    if not args.cutoff_local and deadline<=now:deadline+=timedelta(days=1)
     source=json.loads((args.source/'report.json').read_text())
+    asset_id=json.loads((args.asset_root/'manifest.json').read_text())['asset_id']
+    base_pose=args.base_pose or source.get('robot_base_pose',[.329,-.175,.237,56.295])
+    support_bottom=args.support_bottom_z if args.base_pose else source.get('support_bottom_z_m',args.support_bottom_z)
     original=source['asset_installation']
     placement=dict(original)
     home_q=args.home_q if args.home_q is not None else source.get('home_q',[0.,1.3,1.,-1.3,0.,0.,0.])
@@ -50,7 +68,9 @@ def main():
     if args.asset_y is not None:placement['y_m']=args.asset_y
     if args.asset_yaw_deg is not None:placement['yaw_deg']=args.asset_yaw_deg
     output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
-    variants=json.loads((args.source/'dex1_variants.json').read_text())['candidates']
+    variants=json.loads((args.variants_file or args.source/'dex1_variants.json').read_text())['candidates']
+    if args.raw_ranks:
+        variants=[item for item in variants if item['raw_rank'] in args.raw_ranks]
     candidates=variants[:args.max_candidates]
     delta=Rotation.from_euler('z',placement['yaw_deg']-original['yaw_deg'],
                               degrees=True).as_matrix()
@@ -66,6 +86,7 @@ def main():
             'source':str(args.source.resolve()),'source_capture_sha256':source['capture']['sha256'],
             'asset_installation':placement,'candidate_results':[],
             'home_q':home_q,
+            'robot_base_pose':base_pose,'support_bottom_z_m':support_bottom,
             'transformed_from_source_installation':placement!=original,
             'status':'STARTED'}
     def save(): (output/'report.json').write_text(json.dumps(report,indent=2,default=str))
@@ -74,18 +95,21 @@ def main():
     os.environ['ROS_DOMAIN_ID']=str(args.ros_domain)
     os.environ['ROS_LOCALHOST_ONLY']='1'
     plant.URL=f'http://127.0.0.1:{args.port}'
-    env={**os.environ,'R1A7_BASE_POSE':'0.329,-0.175,0.237,56.295',
+    env={**os.environ,'R1A7_BASE_POSE':','.join(map(str,base_pose)),
+         'R1A7_SUPPORT_BOTTOM_Z':str(support_bottom),
          'R1A7_PEDESTAL_SIZE':'0.10,0.10,0.20',
          'R1A7_RUN_DIR':str(output),'NO_PROXY':'127.0.0.1,localhost',
          'no_proxy':'127.0.0.1,localhost','OMNI_KIT_ACCEPT_EULA':'YES','ACCEPT_EULA':'Y'}
-    processes=[];node=None
+    processes=[];node=None;recording=False;accepted=[]
     try:
         processes.append(start([SIM,'-u',str(ROOT/'src/r1a7_articulated_sim_server.py'),
             '--gpu',str(args.gpu),'--port',str(args.port),
+            '--asset-root',str(args.asset_root),
             '--asset-x',str(placement['x_m']),'--asset-y',str(placement['y_m']),
             '--asset-yaw-deg',str(placement['yaw_deg']),
             '--fixture-height-m',str(placement['fixture_height_m']),
             '--home-q',*[str(x) for x in home_q],
+            '--door-mass-model',args.door_mass_model,
             '--camera-offset',*[str(x) for x in source['camera_offset_m']]],output/'isaac.log',env))
         processes.append(start(['ros2','launch',str(ROOT/'src/r1a7_moveit.launch.py')],
                                output/'moveit.log',env))
@@ -93,6 +117,12 @@ def main():
                                output/'bridge.log',env))
         state=ready(args.port,processes,time.monotonic()+150)
         report['settled_joint_q_rad']=state['joint_q']
+        plant.settle(args.startup_hold_s)
+        state=plant.state()
+        report['startup_physics']={k:state.get(k) for k in
+            ('door_mass_model','mass_audit','startup_joint_range_rad')}
+        report['startup_physics']['hold_s']=args.startup_hold_s
+        report['startup_physics']['after_hold_joint_q_rad']=state['joint_q']
         report['collision_boxes']=state['collision_boxes']
         if not plant.command({'op':'pause'},timeout=10).get('ok'):
             raise RuntimeError('Isaac physics pause failed')
@@ -100,8 +130,7 @@ def main():
         capture=output/'capture.npz'
         plant.command({'op':'capture','path':str(capture),
             'evaluation_mask_path':str(output/'eval_gt_handle_mask.npy')},timeout=90)
-        rclpy.init();node=ArticulatedBackend(
-            Path('/data1/home/rangeryx/datasets/physx_mobility/prepared/47686_v1/urdf/47686.urdf'))
+        rclpy.init();node=ArticulatedBackend(args.asset_root/'urdf'/f'{asset_id}.urdf')
         node.scene();report['fk_tcp_check']=node.check_fk()
         live=plant.state()
         source_q=float(source.get('planning_joint_q_rad',
@@ -133,11 +162,16 @@ def main():
         if report['handle_visible_pixels_evaluation_only'] < 30:
             report['status']='HANDLE_NOT_VISIBLE';save();return
         for item in candidates:
+            if datetime.now(tz)>=deadline:raise Failure('CUTOFF_05_00','preflight deadline reached')
+            plan={}
             result=candidate_preflight(node,placed_pose(item),
-                random_seeds=args.random_seeds,timeout_s=args.timeout_s)
+                random_seeds=args.random_seeds,timeout_s=args.timeout_s,
+                optimize_redundancy=args.optimize_redundancy,plan_sink=plan)
             report['candidate_results'].append({'raw_rank':item['raw_rank'],
                 'variant':item['variant'],**result})
             save()
+            if result['status']=='FULL_PATH_PLANNED' and plan:
+                accepted.append((result['full_arc_min_margin_rad'],item,plan))
         home=node.measured()
         ablation=[]
         diverse=[];seen=set()
@@ -170,8 +204,29 @@ def main():
             'status':dict(Counter(x['status'] for x in report['candidate_results']))}
         report['status']='PREFLIGHT_COMPLETE';save()
         print(json.dumps(report['funnel']),flush=True)
+        if args.execute_best:
+            if not accepted:raise Failure('NO_PLAN','no complete optimized arc; execution forbidden')
+            from articulated_demo.execute_preflight import execute_preflight
+            _,item,plan=max(accepted,key=lambda entry:entry[0])
+            report['selected_candidate']={k:item[k] for k in ('raw_rank','variant')}
+            report['selected_arc_min_margin_rad']=max(accepted,key=lambda entry:entry[0])[0]
+            report['kind']='saved real RGB/SAM3/GraspGenX candidate replay with physical execution'
+            report['status']='EXECUTING';save()
+            video=output/'execution.mp4'
+            if not plant.command({'op':'video_start','path':str(video)})['ok']:raise RuntimeError('video recording failed')
+            recording=True
+            execute_preflight(node,plan,report,save,stop_requested=lambda:datetime.now(tz)>=deadline)
+    except Failure as error:
+        report['status']=error.category;report['detail']=str(error);save()
     finally:
         try:
+            if node is not None:
+                try:
+                    state=plant.state();report['actual_joint_q_rad']=state['joint_q']
+                    report['joint_history']=state['history'];report['trajectories']=node.executions
+                except Exception as error:report['readback_error']=str(error)
+            if recording:
+                report['video_result']=plant.command({'op':'video_stop'},timeout=90)
             if node is not None:
                 node.destroy_node()
                 if rclpy.ok():rclpy.shutdown()

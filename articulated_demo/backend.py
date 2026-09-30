@@ -1,5 +1,6 @@
 """MoveIt executor for a grasped URDF revolute part; Isaac owns the physics."""
 import math
+import os
 import sys
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -40,7 +41,7 @@ class ArticulatedBackend(R1A7Backend):
 
     @staticmethod
     def _door_collision_meshes(asset_urdf):
-        """Load the seven convex collision STLs in the asset's moving link."""
+        """Load the prepared collision STLs in the asset's moving door link."""
         path=Path(asset_urdf)
         root=ET.parse(path).getroot()
         link=next(l for l in root.findall('link') if l.get('name')=='l_1')
@@ -68,8 +69,8 @@ class ArticulatedBackend(R1A7Backend):
             rpy=np.fromstring(origin.get('rpy','0 0 0'),sep=' ') if origin is not None else np.zeros(3)
             T=np.eye(4);T[:3,:3]=Rotation.from_euler('xyz',rpy).as_matrix();T[:3,3]=xyz
             pieces.append((mesh,T))
-        if len(pieces)!=7:
-            raise ValueError(f'expected 7 official cabinet door collision meshes, got {len(pieces)}')
+        if not pieces:
+            raise ValueError('prepared door has no collision mesh')
         return pieces
 
     def measured(self):
@@ -140,7 +141,7 @@ class ArticulatedBackend(R1A7Backend):
         raise failures[0]
 
     def scene(self, collision_boxes=None, moving_pose_override=None,
-              door_collision_mode='mesh'):
+              door_collision_mode='mesh',allow_moving_door_for_planner=False):
         """Keep the mounted cabinet in the world; allow only finger-door touch."""
         state = plant.state()
         req = ApplyPlanningScene.Request()
@@ -149,10 +150,13 @@ class ArticulatedBackend(R1A7Backend):
         scene.robot_state.is_diff = True
         geometry = [{'id':'table','center':[.5, 0, -.025],
                      'size':[.9, .9, .05]}]
-        if BASE_POSE[2] > 0:
+        base_pose=state.get('robot_base_pose',BASE_POSE)
+        support_bottom=float(state.get('robot_support_bottom_z_m',os.environ.get('R1A7_SUPPORT_BOTTOM_Z','0')))
+        support_xy=state.get('robot_support_xy_m',PEDESTAL_SIZE[:2])
+        if base_pose[2] > support_bottom:
             geometry.append({'id':'r1a7_pedestal',
-                'center':[BASE_POSE[0], BASE_POSE[1], PEDESTAL_SIZE[2]/2],
-                'size':list(PEDESTAL_SIZE)})
+                'center':[base_pose[0], base_pose[1], (base_pose[2]+support_bottom)/2],
+                'size':[support_xy[0],support_xy[1],base_pose[2]-support_bottom]})
         geometry += state['collision_boxes'] if collision_boxes is None else collision_boxes
         for item in geometry:
             name,center,size = item['id'],item['center'],item['size']
@@ -195,13 +199,21 @@ class ArticulatedBackend(R1A7Backend):
         get = GetPlanningScene.Request()
         get.components.components = PlanningSceneComponents.ALLOWED_COLLISION_MATRIX
         acm = self.call('get_planning_scene',get).scene.allowed_collision_matrix
-        for name in ['cabinet_door'] + TOUCH:
+        robot_links=[l.get('name') for l in ET.parse(ROOT/'config/r1a7_dex1.urdf').findall('link')]
+        for name in ['cabinet_door'] + TOUCH + robot_links:
             if name not in acm.entry_names:
                 acm.entry_names.append(name)
                 for row in acm.entry_values: row.enabled.append(False)
                 row = AllowedCollisionEntry(); row.enabled = [False] * len(acm.entry_names)
                 acm.entry_values.append(row)
         target_index = acm.entry_names.index('cabinet_door')
+        # Reset transient planner permissions on every scene update. Full
+        # paired robot/door state validity is restored during dense arc checks.
+        for name in robot_links:
+            index=acm.entry_names.index(name)
+            allowed=allow_moving_door_for_planner or name in TOUCH
+            acm.entry_values[target_index].enabled[index]=allowed
+            acm.entry_values[index].enabled[target_index]=allowed
         for name in TOUCH:
             index = acm.entry_names.index(name)
             acm.entry_values[target_index].enabled[index] = True

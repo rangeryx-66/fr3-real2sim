@@ -114,7 +114,7 @@ def probe_ik(node, target, seed, *, random_seeds=8, timeout_s=.25,
 
 
 def candidate_preflight(node, T_grasp, *, random_seeds=8, timeout_s=.25,
-                        arc_step_deg=2.):
+                        arc_step_deg=2.,optimize_redundancy=False,plan_sink=None):
     """Plan without execution; update moving-door OBB at every arc step."""
     import r1a7_plant as plant
     row = {'status':'STARTED','arc_waypoints_planned':0}
@@ -163,8 +163,21 @@ def candidate_preflight(node, T_grasp, *, random_seeds=8, timeout_s=.25,
         except Failure as error:
             row['status']='NO_PREGRASP_PLAN'; row['detail']=str(error); return row
         current = trajectory_end(pre_state,approach)
+        row['grasp_joint_q']=[dict(zip(current.joint_state.name,current.joint_state.position))[n] for n in JOINTS]
         root0 = node.chain.root_to_link(initial['moving_link'],
                                         {initial['joint_name']:q0})
+        if optimize_redundancy:
+            from .redundant_path import plan_redundant_arc
+            outcome,segments=plan_redundant_arc(node,current,T_grasp,initial,
+                boxes,T_moving0,root0,q_goal)
+            row.update(outcome)
+            row['arc_waypoints_planned']=sum(r['status']=='PLANNED' for r in row['arc'])
+            if row['status']=='FULL_PATH_PLANNED' and not row['initial_door_angle_ok']:
+                row['status']='INITIAL_DOOR_DRIFT'
+            if row['status']=='FULL_PATH_PLANNED' and plan_sink is not None:
+                plan_sink.update(pre_traj=preplan,approach=approach,arc_segments=segments,
+                    initial_joint_q_rad=q0,grasp=T_grasp,arc=row['arc'])
+            return row
         arc = []
         row['arc'] = arc
         for q in np.linspace(q0,q_goal,max(2,int(math.ceil(math.degrees(q_goal-q0)/arc_step_deg))+1))[1:]:
@@ -187,6 +200,7 @@ def candidate_preflight(node, T_grasp, *, random_seeds=8, timeout_s=.25,
                     else 'LOW_JOINT_MARGIN' if not diagnostic['margin_over_005']
                     else 'NO_ARC_PLAN')
                 row['detail']=str(error)
+                row['failed_door_angle_deg']=float(math.degrees(q))
                 row['failed_arc_angle_deg']=float(math.degrees(q-q0));return row
             current = trajectory_end(current,segment)
             arc.append({'joint_angle_deg':float(math.degrees(q-q0)),

@@ -9,6 +9,8 @@ import subprocess
 import threading
 import time
 import itertools
+import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import numpy as np
@@ -24,10 +26,14 @@ p.add_argument('--asset-yaw-deg', type=float, default=-90.)
 p.add_argument('--fixture-height-m', type=float, default=.18)
 p.add_argument('--home-q',type=float,nargs=7,
                default=(0.,1.3,1.,-1.3,0.,0.,0.),metavar='Q')
+p.add_argument('--door-mass-model',choices=('geometry','legacy'),default='geometry')
+p.add_argument('--overview-dir',type=Path,help='Render two whole-scene views and exit without robot execution')
 p.add_argument('--camera-offset', type=float, nargs=3, default=(.20, -.75, .36),
                metavar=('DX', 'DY', 'DZ'))
 a = p.parse_args()
 ROOT = Path(__file__).resolve().parents[1]
+# Keep the imported robot and MoveIt world mount consistent for every layout.
+subprocess.run([sys.executable,str(ROOT/'scripts/prepare_r1a7_description.py')],check=True)
 from isaacsim import SimulationApp
 app = SimulationApp({'headless': True, 'active_gpu': a.gpu, 'physics_gpu': a.gpu,
                      'multi_gpu': False})
@@ -49,11 +55,21 @@ BASE_POSE = np.array([float(v) for v in os.environ.get('R1A7_BASE_POSE',
 PEDESTAL_SIZE = np.array([float(v) for v in os.environ.get('R1A7_PEDESTAL_SIZE',
                                '0.10,0.10,0.20').split(',')])
 manifest = json.loads((a.asset_root / 'manifest.json').read_text())
-if manifest['asset_id'] != '47686':
-    raise ValueError('this minimal demo requires PhysX-Mobility 47686')
-asset_usd = a.asset_root / 'usd/47686/47686.usda/47686/47686.usda'
+asset_id=manifest['asset_id']
+asset_urdf=a.asset_root/'urdf'/f'{asset_id}.urdf'
+moving_link=manifest.get('moving_link','abstract_2_1')
+door_link_name=manifest.get('door_link','l_1')
+asset_usd = a.asset_root / f'usd/{asset_id}/{asset_id}.usda/{asset_id}/{asset_id}.usda'
 if not asset_usd.is_file():
-    raise FileNotFoundError(asset_usd)
+    version=manifest.get('prepared_geometry_sha256',hashlib.sha256(asset_urdf.read_bytes()).hexdigest())[:12]
+    cache=a.asset_root/f'usd/imported_path_{version}.txt'
+    if cache.exists() and Path(cache.read_text().strip()).is_file():asset_usd=Path(cache.read_text().strip())
+    else:
+        directory=a.asset_root/'usd'/version;directory.mkdir(parents=True,exist_ok=True)
+        imported=URDFImporter(URDFImporterConfig(urdf_path=str(asset_urdf),usd_path=str(directory),
+            fix_base=True,allow_self_collision=False,merge_fixed_joints=False,
+            joint_drive_type='force',joint_target_type='position')).import_urdf()
+        asset_usd=Path(imported);cache.write_text(str(asset_usd))
 world = World(stage_units_in_meters=1., physics_dt=DT, rendering_dt=1/30,
               backend='numpy', device='cpu')
 world.scene.add_default_ground_plane(z_position=-.76)
@@ -61,10 +77,11 @@ mat = PhysicsMaterial('/World/grasp_material', static_friction=.8,
                       dynamic_friction=.7, restitution=0.)
 world.scene.add(FixedCuboid('/World/table', name='table', position=[.5, 0, -.025],
                             scale=[.9, .9, .05], physics_material=mat))
-if BASE_POSE[2] > 0:
+support_bottom=float(os.environ.get('R1A7_SUPPORT_BOTTOM_Z','0'))
+if BASE_POSE[2] > support_bottom:
     world.scene.add(FixedCuboid('/World/r1a7_pedestal', name='r1a7_pedestal',
-        position=[BASE_POSE[0], BASE_POSE[1], PEDESTAL_SIZE[2]/2],
-        scale=PEDESTAL_SIZE, physics_material=mat))
+        position=[BASE_POSE[0], BASE_POSE[1], (BASE_POSE[2]+support_bottom)/2],
+        scale=[PEDESTAL_SIZE[0],PEDESTAL_SIZE[1],BASE_POSE[2]-support_bottom], physics_material=mat))
 stage = omni.usd.get_context().get_stage()
 asset_parent = UsdGeom.Xform.Define(stage, '/World/articulated_pose')
 xyz_op = asset_parent.AddTranslateOp()
@@ -77,14 +94,27 @@ source_to_world = np.array([[0., 0., 1.], [1., 0., 0.], [0., 1., 0.]])
 asset_rotation = Rotation.from_euler('z', a.asset_yaw_deg, degrees=True).as_matrix() @ source_to_world
 handle_bounds = np.asarray(manifest['grasp_mesh_bounds_source'], dtype=float)
 handle_center = asset_xyz + asset_rotation @ (handle_bounds.mean(axis=0) * scale)
+fixture_size=np.array([.70,.25,a.fixture_height_m])
+fixture_quat=np.array([1.,0.,0.,0.])
+if asset_id!='47686':
+    extents=(np.asarray(manifest['static_source_bounds'])[1]-np.asarray(manifest['static_source_bounds'])[0])*scale
+    fixture_size=np.array([extents[2],extents[0],a.fixture_height_m])
+    fixture_quat=np.roll(Rotation.from_euler('z',a.asset_yaw_deg,degrees=True).as_quat(),1)
 world.scene.add(FixedCuboid('/World/cabinet_fixture', name='cabinet_fixture',
     position=[a.asset_x, a.asset_y, a.fixture_height_m/2],
-    scale=[.70, .25, a.fixture_height_m], physics_material=mat))
+    scale=fixture_size,orientation=fixture_quat,physics_material=mat))
 asset_quat = np.roll(Rotation.from_matrix(asset_rotation).as_quat(), 1)
 xyz_op.Set(Gf.Vec3d(*asset_xyz))
 quat_op.Set(Gf.Quatf(*asset_quat))
 asset_path = '/World/articulated_pose/asset'
 add_reference_to_stage(str(asset_usd), asset_path)
+# Passive asset joint: the robot must supply the opening force.
+for prim in stage.Traverse():
+    if str(prim.GetPath()).startswith(asset_path) and prim.IsA(UsdPhysics.RevoluteJoint):
+        drive=UsdPhysics.DriveAPI.Get(prim,'angular')
+        if drive:
+            drive.CreateStiffnessAttr().Set(0.);drive.CreateDampingAttr().Set(0.)
+            drive.CreateMaxForceAttr().Set(0.)
 articulation = world.scene.add(SingleArticulation(asset_path, name='cabinet'))
 asset_joint_name = manifest['joint_name']
 
@@ -110,10 +140,37 @@ def one_prim(name, under):
         raise RuntimeError(f'expected one {name} under {under}, got {len(matches)}')
     return str(matches[0].GetPath())
 
-moving_path = one_prim('abstract_2_1', asset_path)
+moving_path = one_prim(moving_link, asset_path)
 moving = SingleXFormPrim(moving_path)
-contact_target_path = one_prim('l_1', moving_path)
+contact_target_path = one_prim(door_link_name, moving_path)
 door_link = SingleXFormPrim(contact_target_path)
+sys.path.insert(0,str(ROOT))
+from articulated_demo.kinematics import URDFChain
+asset_chain=URDFChain(asset_urdf)
+# Prepared inertias placed both moving-body COMs at their link origins. l_1's
+# origin is the asset origin, far outside the door. Preserve source masses,
+# but put COMs at the moving geometry center and use a uniform-box inertia.
+# This is a documented simulation approximation, not a measured door inertia.
+mass_audit=[]
+geometry_bounds=np.asarray(manifest['moving_source_bounds'])*scale
+geometry_center=geometry_bounds.mean(axis=0)
+geometry_size=geometry_bounds[1]-geometry_bounds[0]
+urdf_links={l.get('name'):l for l in ET.parse(asset_urdf).findall('link')}
+for link_name,link_path in ((moving_link,moving_path),(door_link_name,contact_target_path)):
+    api=UsdPhysics.MassAPI(stage.GetPrimAtPath(link_path))
+    previous={'center_of_mass':list(api.GetCenterOfMassAttr().Get()),
+              'diagonal_inertia':list(api.GetDiagonalInertiaAttr().Get()),
+              'mass_kg':float(api.GetMassAttr().Get())}
+    mass=float(urdf_links[link_name].find('inertial/mass').get('value'))
+    local=np.linalg.inv(asset_chain.root_to_link(link_name,{}))@np.r_[geometry_center,1.]
+    inertia=mass/12*np.array([geometry_size[1]**2+geometry_size[2]**2,
+        geometry_size[0]**2+geometry_size[2]**2,geometry_size[0]**2+geometry_size[1]**2])
+    if a.door_mass_model=='geometry':
+        api.CreateCenterOfMassAttr().Set(Gf.Vec3f(*local[:3]))
+        api.CreateDiagonalInertiaAttr().Set(Gf.Vec3f(*inertia))
+        api.CreatePrincipalAxesAttr().Set(Gf.Quatf(1.))
+    mass_audit.append({'link':link_name,'before':previous,
+        'geometry_com_local_m':local[:3].tolist(),'geometry_inertia_kg_m2':inertia.tolist()})
 static_bounds = np.asarray(manifest['static_source_bounds'], dtype=float) * scale
 def oriented_box(bounds, world_matrix):
     """Convert a USD box and its live transform to a MoveIt oriented box."""
@@ -143,8 +200,8 @@ def collision_boxes():
     door = {'id':'cabinet_door', **oriented_box(door_bound.GetBox(), door_bound.GetMatrix())}
     return [static, door,
             {'id':'cabinet_fixture','center':[a.asset_x,a.asset_y,a.fixture_height_m/2],
-             'size':[.70,.25,a.fixture_height_m],
-             'quaternion_wxyz':[1.,0.,0.,0.]}]
+             'size':fixture_size.tolist(),
+             'quaternion_wxyz':fixture_quat.tolist()}]
 contact_paths = [one_prim(name, '/World/R1A7') for name in ('dex1_Link1_3', 'dex1_Link2_3')]
 for path in contact_paths:
     PhysxSchema.PhysxContactReportAPI.Apply(stage.GetPrimAtPath(path)).CreateThresholdAttr(0.)
@@ -164,6 +221,17 @@ camera.set_world_pose(position=eye,
 camera.set_clipping_range(.05, 3.)
 world.reset(); camera.initialize(); camera.add_distance_to_image_plane_to_frame()
 camera.add_instance_id_segmentation_to_frame()
+overview=[]
+if a.overview_dir:
+    focus=np.array([a.asset_x+.05,a.asset_y-.05,.32])
+    for index,offset in enumerate(([1.1,-1.4,.9],[-1.1,-1.1,.8])):
+        position=focus+offset;direction=(focus-position)/np.linalg.norm(focus-position)
+        xaxis=np.cross(direction,[0.,0.,1.]);xaxis/=np.linalg.norm(xaxis)
+        rotation=np.column_stack((xaxis,np.cross(direction,xaxis),direction))
+        view=Camera(f'/World/overview_{index}',position=position,resolution=(1280,960),frequency=30)
+        view.set_focal_length(2.)
+        view.set_world_pose(position=position,orientation=np.roll(Rotation.from_matrix(rotation).as_quat(),1),camera_axes='ros')
+        view.initialize();overview.append(view)
 names = robot.dof_names
 arm = [names.index(f'J{i}') for i in range(1, 8)]
 fingers = [names.index('dex1_Joint1_1'), names.index('dex1_Joint2_1')]
@@ -178,12 +246,29 @@ kp[fingers] = 800.; kd[fingers] = 30.
 controller.set_gains(kps=kp, kds=kd, save_to_usd=False)
 q = np.zeros(len(names)); q[arm] = HOME; q[fingers] = -.02
 robot.set_joint_positions(q); robot.apply_action(ArticulationAction(joint_positions=q))
-for i in range(240): world.step(render=i % 8 == 0)
-# Reset the freely swinging door once after the arm has settled. This is the
-# trial's initial condition; opening is never scripted through this joint.
 articulation.set_joint_positions(np.array([0.]))
 articulation.set_joint_velocities(np.array([0.]))
-world.step(render=True)
+startup_angles=[]
+for i in range(240):
+    world.step(render=i % 8 == 0)
+    startup_angles.append(float(articulation.get_joint_positions()[0]))
+if a.overview_dir:
+    import cv2
+    a.overview_dir.mkdir(parents=True,exist_ok=True)
+    for _ in range(32):world.step(render=True)
+    for index,view in enumerate(overview):
+        image=np.asarray(view.get_rgba())[:,:,:3]
+        cv2.imwrite(str(a.overview_dir/f'overview_{index}.png'),cv2.cvtColor(image,cv2.COLOR_RGB2BGR))
+    (a.overview_dir/'scene.json').write_text(json.dumps({'asset_id':asset_id,
+        'asset_installation':{'x_m':a.asset_x,'y_m':a.asset_y,'yaw_deg':a.asset_yaw_deg},
+        'robot_base_pose':BASE_POSE.tolist(),
+        'table_top_z_m':0.,'table_front_edge_y_m':-.45,
+        'robot_base_below_table_m':float(-BASE_POSE[2]),
+        'robot_base_distance_outside_table_m':float(-.45-BASE_POSE[1]),
+        'joint_axis_world':(asset_rotation@asset_chain.joints[moving_link].axis).tolist(),
+        'actual_joint_q_rad':float(articulation.get_joint_positions()[0]),
+        'note':'whole-scene render only; no grasp or object-joint actuation'},indent=2))
+    app.close();sys.exit(0)
 commands = queue.Queue(); state = {}; lock = threading.Lock()
 tick = 240; active = None; target = q.copy(); results = {}; history = []
 paused = False
@@ -244,8 +329,9 @@ try:
                         instance_ids = np.asarray(segment['data']).reshape(depth.shape)
                         labels = {int(key):str(value) for key,value in segment['info']['idToLabels'].items()}
                         # Asset-derived oracle is saved separately and is never an input to the full demo.
+                        stems=[s.replace('-','').lower() for s in manifest['grasp_mesh_stems']]
                         selected = [key for key,value in labels.items()
-                                    if 'original29' in value.replace('-','').lower()]
+                                    if any(stem in value.replace('-','').lower() for stem in stems)]
                         evaluator_mask = np.isin(instance_ids,selected)
                         eval_path = Path(cmd['evaluation_mask_path']).resolve()
                         eval_path.parent.mkdir(parents=True,exist_ok=True)
@@ -327,13 +413,17 @@ try:
         with lock:
             state = {'t':tick*DT,'names':names,'q':robot.get_joint_positions().tolist(),
                 'joint_name':asset_joint_name,'joint_q':aq,'joint_limits':manifest['source_joint_limits_rad'],
-                'moving_link':'abstract_2_1','moving_pose':{'position':mp.tolist(),
+                'moving_link':moving_link,'asset_id':asset_id,'moving_pose':{'position':mp.tolist(),
                     'quaternion_wxyz':mq.tolist()},
                 'door_link_pose':{'position':lp.tolist(),'quaternion_wxyz':lq.tolist()},
                 'tcp':tp.tolist(),'tcp_quat':tq.tolist(),
                 'forces':force,'results':results.copy(),'history':history[::8],
                 'busy':active is not None,'camera_T_B_C':T_B_C.tolist(),
+                'robot_base_pose':BASE_POSE.tolist(),'robot_support_bottom_z_m':support_bottom,
+                'robot_support_xy_m':PEDESTAL_SIZE[:2].tolist(),
                 'paused':False,
+                'door_mass_model':a.door_mass_model,'mass_audit':mass_audit,
+                'startup_joint_range_rad':[min(startup_angles),max(startup_angles)],
                 'asset_root_pose':{'position':asset_xyz.tolist(),'quaternion_wxyz':asset_quat.tolist()},
                 'collision_boxes':boxes,'handle_center_from_source':handle_center.tolist(),
                 'fixture_height_m':a.fixture_height_m}
