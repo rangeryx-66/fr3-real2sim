@@ -25,8 +25,9 @@ def main():
     p.add_argument('--output',type=Path,required=True)
     p.add_argument('--deadline-s',type=float,default=300)
     p.add_argument('--seeds',type=int,default=4)
+    p.add_argument('--max-candidates',type=int,default=100)
     args=p.parse_args()
-    variants=json.loads(args.variants.read_text())['candidates']
+    variants=json.loads(args.variants.read_text())['candidates'][:args.max_candidates]
     model=ROOT/'config/r1a7_dex1.urdf'
     names=tuple(f'J{i}' for i in range(1,8))
     joints={j.get('name'):j for j in ET.parse(model).findall('joint')}

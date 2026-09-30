@@ -22,6 +22,8 @@ p.add_argument('--asset-x', type=float, default=.45)
 p.add_argument('--asset-y', type=float, default=.05)
 p.add_argument('--asset-yaw-deg', type=float, default=-90.)
 p.add_argument('--fixture-height-m', type=float, default=.18)
+p.add_argument('--home-q',type=float,nargs=7,
+               default=(0.,1.3,1.,-1.3,0.,0.,0.),metavar='Q')
 p.add_argument('--camera-offset', type=float, nargs=3, default=(.20, -.75, .36),
                metavar=('DX', 'DY', 'DZ'))
 a = p.parse_args()
@@ -41,7 +43,7 @@ from pxr import Gf, Usd, UsdGeom, UsdPhysics, PhysxSchema
 import omni.usd
 
 DT = 1 / 240
-HOME = np.array([0., 1.3, 1.0, -1.3, 0., 0., 0.])
+HOME = np.array(a.home_q,dtype=float)
 BASE_POSE = np.array([float(v) for v in os.environ.get('R1A7_BASE_POSE',
                            '0.329,-0.175,0.237,56.3').split(',')])
 PEDESTAL_SIZE = np.array([float(v) for v in os.environ.get('R1A7_PEDESTAL_SIZE',
@@ -111,21 +113,38 @@ def one_prim(name, under):
 moving_path = one_prim('abstract_2_1', asset_path)
 moving = SingleXFormPrim(moving_path)
 contact_target_path = one_prim('l_1', moving_path)
+door_link = SingleXFormPrim(contact_target_path)
 static_bounds = np.asarray(manifest['static_source_bounds'], dtype=float) * scale
-static_corners = np.array([asset_rotation @ np.array([static_bounds[i, j] for j, i in enumerate(choice)])
-                           + asset_xyz for choice in itertools.product((0, 1), repeat=3)])
-static_min, static_max = static_corners.min(axis=0), static_corners.max(axis=0)
+def oriented_box(bounds, world_matrix):
+    """Convert a USD box and its live transform to a MoveIt oriented box."""
+    low = np.asarray(bounds.GetMin(), dtype=float)
+    high = np.asarray(bounds.GetMax(), dtype=float)
+    center_local = Gf.Vec3d(*((low + high) / 2))
+    center = np.asarray(world_matrix.Transform(center_local), dtype=float)
+    basis = np.column_stack([
+        np.asarray(world_matrix.TransformDir(Gf.Vec3d(*axis)), dtype=float)
+        for axis in np.eye(3)])
+    lengths = np.linalg.norm(basis, axis=0)
+    rotation = basis / lengths
+    if not np.allclose(rotation.T @ rotation, np.eye(3), atol=1e-4):
+        raise RuntimeError('cabinet USD collision transform contains shear')
+    quat = np.roll(Rotation.from_matrix(rotation).as_quat(), 1)
+    return {'center':center.tolist(), 'size':((high-low)*lengths).tolist(),
+            'quaternion_wxyz':quat.tolist()}
+
 def collision_boxes():
     cache = UsdGeom.BBoxCache(Usd.TimeCode.Default(),
         [UsdGeom.Tokens.default_, UsdGeom.Tokens.render, UsdGeom.Tokens.proxy])
-    door = cache.ComputeWorldBound(stage.GetPrimAtPath(moving_path)).ComputeAlignedRange()
-    low = np.asarray(door.GetMin(), dtype=float); high = np.asarray(door.GetMax(), dtype=float)
-    return [{'id':'cabinet_static','center':((static_min+static_max)/2).tolist(),
-             'size':(static_max-static_min).tolist()},
-            {'id':'cabinet_door','center':((low+high)/2).tolist(),
-             'size':(high-low).tolist()},
+    door_bound = cache.ComputeWorldBound(stage.GetPrimAtPath(moving_path))
+    static = {'id':'cabinet_static',
+              'center':(asset_xyz + asset_rotation @ static_bounds.mean(axis=0)).tolist(),
+              'size':(static_bounds[1]-static_bounds[0]).tolist(),
+              'quaternion_wxyz':asset_quat.tolist()}
+    door = {'id':'cabinet_door', **oriented_box(door_bound.GetBox(), door_bound.GetMatrix())}
+    return [static, door,
             {'id':'cabinet_fixture','center':[a.asset_x,a.asset_y,a.fixture_height_m/2],
-             'size':[.70,.25,a.fixture_height_m]}]
+             'size':[.70,.25,a.fixture_height_m],
+             'quaternion_wxyz':[1.,0.,0.,0.]}]
 contact_paths = [one_prim(name, '/World/R1A7') for name in ('dex1_Link1_3', 'dex1_Link2_3')]
 for path in contact_paths:
     PhysxSchema.PhysxContactReportAPI.Apply(stage.GetPrimAtPath(path)).CreateThresholdAttr(0.)
@@ -160,8 +179,14 @@ controller.set_gains(kps=kp, kds=kd, save_to_usd=False)
 q = np.zeros(len(names)); q[arm] = HOME; q[fingers] = -.02
 robot.set_joint_positions(q); robot.apply_action(ArticulationAction(joint_positions=q))
 for i in range(240): world.step(render=i % 8 == 0)
+# Reset the freely swinging door once after the arm has settled. This is the
+# trial's initial condition; opening is never scripted through this joint.
+articulation.set_joint_positions(np.array([0.]))
+articulation.set_joint_velocities(np.array([0.]))
+world.step(render=True)
 commands = queue.Queue(); state = {}; lock = threading.Lock()
 tick = 240; active = None; target = q.copy(); results = {}; history = []
+paused = False
 recorder = None; recorder_frames = 0; recorder_path = None
 boxes = collision_boxes()
 
@@ -247,6 +272,7 @@ try:
                     results[token] = {'ok':code==0,'frames':recorder_frames,'exit_code':code}
                     recorder = None
                 elif op == 'trajectory':
+                    if paused:raise RuntimeError('physics paused; resume before trajectory')
                     if active: raise RuntimeError('trajectory active')
                     idx = [names.index(n) for n in cmd['names']]
                     ts = np.array([point['t'] for point in cmd['points']])
@@ -259,9 +285,19 @@ try:
                 elif op == 'stop':
                     if active: results[active['id']] = {'ok':False,'reason':'canceled'}
                     active = None; target = robot.get_joint_positions().copy(); results[token] = {'ok':True}
+                elif op == 'pause':
+                    if active:raise RuntimeError('cannot pause during robot motion')
+                    paused=True;results[token]={'ok':True}
+                elif op == 'resume':
+                    paused=False;results[token]={'ok':True}
                 else: raise ValueError('unknown operation')
             except Exception as error:
                 results[token] = {'ok':False,'reason':str(error)}
+        if paused:
+            with lock:
+                state={**state,'paused':True,'results':results.copy(),'busy':False}
+            time.sleep(.01)
+            continue
         if active:
             elapsed = (tick - active['start']) * DT
             for i,j in enumerate(active['idx']):
@@ -282,7 +318,8 @@ try:
                  for view in finger_views]
         if rendered:
             boxes = collision_boxes()
-        mp,mq = moving.get_world_pose(); tp,tq = tcp.get_world_pose()
+        mp,mq = moving.get_world_pose(); lp,lq = door_link.get_world_pose()
+        tp,tq = tcp.get_world_pose()
         aq = float(articulation.get_joint_positions()[0])
         sample = {'t':tick*DT,'joint_q':aq,'forces':force,'tcp':tp.tolist()}
         history.append(sample)
@@ -291,9 +328,12 @@ try:
             state = {'t':tick*DT,'names':names,'q':robot.get_joint_positions().tolist(),
                 'joint_name':asset_joint_name,'joint_q':aq,'joint_limits':manifest['source_joint_limits_rad'],
                 'moving_link':'abstract_2_1','moving_pose':{'position':mp.tolist(),
-                    'quaternion_wxyz':mq.tolist()},'tcp':tp.tolist(),'tcp_quat':tq.tolist(),
+                    'quaternion_wxyz':mq.tolist()},
+                'door_link_pose':{'position':lp.tolist(),'quaternion_wxyz':lq.tolist()},
+                'tcp':tp.tolist(),'tcp_quat':tq.tolist(),
                 'forces':force,'results':results.copy(),'history':history[::8],
                 'busy':active is not None,'camera_T_B_C':T_B_C.tolist(),
+                'paused':False,
                 'asset_root_pose':{'position':asset_xyz.tolist(),'quaternion_wxyz':asset_quat.tolist()},
                 'collision_boxes':boxes,'handle_center_from_source':handle_center.tolist(),
                 'fixture_height_m':a.fixture_height_m}

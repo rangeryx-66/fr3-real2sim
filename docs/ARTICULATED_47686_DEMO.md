@@ -25,8 +25,10 @@ is `抓住把手打开柜门`, resolved before execution to `cabinet door handle
 ## Run
 
 On the Isaac host, use the ROS/MoveIt environment that already launches the
-R1 backend. The official SAM3 repository and its authorized checkpoint must
-be available; the runner never uses a simulator mask as a substitute.
+R1 backend. The official SAM3 repository and checkpoint must be available;
+the runner never uses a simulator mask as a substitute. The server has the
+ModelScope `facebook/sam3.1` checkpoint at
+`/data1/home/rangeryx/sam3_1_weights/sam3.1_multiplex.pt`.
 
 ```bash
 cd /data1/home/rangeryx/fr3_real2sim_r1a7
@@ -34,8 +36,8 @@ export SAM3_ROOT=/data1/home/rangeryx/sam3_official
 export SAM3_DEPENDENCY_OVERLAY=/data1/home/rangeryx/sam3_overlay
 python scripts/run_articulated_47686.py \
   --stage full \
-  --sam3-checkpoint /path/to/authorized/sam3.pt \
-  --cutoff-local 2026-09-30T05:00:00+08:00 \
+  --sam3-checkpoint /data1/home/rangeryx/sam3_1_weights/sam3.1_multiplex.pt \
+  --cutoff-local 2026-10-01T05:00:00+08:00 \
   --output results/articulated_47686_demo
 ```
 
@@ -48,6 +50,12 @@ recorded 0.18 m fixture. These are simulation installation parameters, not
 modifications to the source asset. Freeze a single chosen installation before
 the full grasp trial.
 
+Use `--stage preflight` first. It pauses Isaac during RGB-D inference and
+planning, reports each IK/collision/path gate and never executes the grasp.
+`--stage full` cannot execute unless the whole pregrasp, approach and
+0→22° articulated path is planned collision-free. Current preflight has not
+passed; see [the current diagnostic](ARTICULATED_47686_IK_DIAGNOSTIC.md).
+
 The full run saves captured RGB-D and calibration, the SAM3 mask and overlay,
 raw GraspGen-X candidates, Dex1 collision checks, local variants, planning
 and execution records, contact forces, joint-angle history and an RGB video.
@@ -57,7 +65,8 @@ reset. Its opening motion must be caused by the planned R1 arm trajectory.
 
 ## Diagnostic status
 
-The first fixed-pose Isaac capture and the MoveIt FK smoke test passed.
+The following paragraphs preserve the initial baseline before the current
+diagnostic. The first fixed-pose Isaac capture and the MoveIt FK smoke test passed.
 Asset URDF moving-link FK and Isaac agreed within `9e-8 m` and `1.3e-8 rad`
 at a measured nonzero door angle. The official SAM3 code imports, but the
 available Hugging Face account received HTTP 403 for the gated checkpoint.

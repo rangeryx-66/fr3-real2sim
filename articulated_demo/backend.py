@@ -1,6 +1,7 @@
 """MoveIt executor for a grasped URDF revolute part; Isaac owns the physics."""
 import math
 import sys
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import numpy as np
@@ -8,8 +9,8 @@ from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation
 from moveit_msgs.msg import AllowedCollisionEntry, CollisionObject, PlanningSceneComponents
 from moveit_msgs.srv import ApplyPlanningScene, GetPlanningScene
-from shape_msgs.msg import SolidPrimitive
-from geometry_msgs.msg import Pose
+from shape_msgs.msg import SolidPrimitive, Mesh, MeshTriangle
+from geometry_msgs.msg import Pose, Point
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'src'))
@@ -35,6 +36,41 @@ class ArticulatedBackend(R1A7Backend):
             BASE, TCP, JOINTS)
         self.stage = 'READY'
         self.executions = []
+        self.door_collision_meshes = self._door_collision_meshes(asset_urdf)
+
+    @staticmethod
+    def _door_collision_meshes(asset_urdf):
+        """Load the seven convex collision STLs in the asset's moving link."""
+        path=Path(asset_urdf)
+        root=ET.parse(path).getroot()
+        link=next(l for l in root.findall('link') if l.get('name')=='l_1')
+        pieces=[]
+        for collision in link.findall('collision'):
+            spec=collision.find('geometry/mesh')
+            if spec is None:continue
+            scale=np.fromstring(spec.get('scale','1 1 1'),sep=' ')
+            if len(scale)!=3:raise ValueError('invalid cabinet mesh scale')
+            mesh_path=(path.parent/spec.get('filename')).resolve()
+            coordinates=[]
+            for line in mesh_path.read_text().splitlines():
+                tokens=line.split()
+                if tokens and tokens[0]=='vertex':
+                    coordinates.append(np.asarray([float(x) for x in tokens[1:4]])*scale)
+            if not coordinates or len(coordinates)%3:
+                raise ValueError(f'unsupported or malformed cabinet collision STL: {mesh_path}')
+            mesh=Mesh()
+            mesh.vertices=[Point(x=float(v[0]),y=float(v[1]),z=float(v[2]))
+                           for v in coordinates]
+            mesh.triangles=[MeshTriangle(vertex_indices=[i,i+1,i+2])
+                            for i in range(0,len(coordinates),3)]
+            origin=collision.find('origin')
+            xyz=np.fromstring(origin.get('xyz','0 0 0'),sep=' ') if origin is not None else np.zeros(3)
+            rpy=np.fromstring(origin.get('rpy','0 0 0'),sep=' ') if origin is not None else np.zeros(3)
+            T=np.eye(4);T[:3,:3]=Rotation.from_euler('xyz',rpy).as_matrix();T[:3,3]=xyz
+            pieces.append((mesh,T))
+        if len(pieces)!=7:
+            raise ValueError(f'expected 7 official cabinet door collision meshes, got {len(pieces)}')
+        return pieces
 
     def measured(self):
         """Clamp submillimetre Isaac finger servo drift at the URDF bounds.
@@ -103,26 +139,59 @@ class ArticulatedBackend(R1A7Backend):
                 raise selected
         raise failures[0]
 
-    def scene(self):
+    def scene(self, collision_boxes=None, moving_pose_override=None,
+              door_collision_mode='mesh'):
         """Keep the mounted cabinet in the world; allow only finger-door touch."""
         state = plant.state()
         req = ApplyPlanningScene.Request()
         scene = req.scene
         scene.is_diff = True
         scene.robot_state.is_diff = True
-        geometry = [('table', [.5, 0, -.025], [.9, .9, .05])]
+        geometry = [{'id':'table','center':[.5, 0, -.025],
+                     'size':[.9, .9, .05]}]
         if BASE_POSE[2] > 0:
-            geometry.append(('r1a7_pedestal', [BASE_POSE[0], BASE_POSE[1], PEDESTAL_SIZE[2]/2], list(PEDESTAL_SIZE)))
-        geometry += [(item['id'],item['center'],item['size']) for item in state['collision_boxes']]
-        for name,center,size in geometry:
+            geometry.append({'id':'r1a7_pedestal',
+                'center':[BASE_POSE[0], BASE_POSE[1], PEDESTAL_SIZE[2]/2],
+                'size':list(PEDESTAL_SIZE)})
+        geometry += state['collision_boxes'] if collision_boxes is None else collision_boxes
+        for item in geometry:
+            name,center,size = item['id'],item['center'],item['size']
+            if name=='cabinet_door' and door_collision_mode=='mesh':
+                continue
             obj = CollisionObject(); obj.id = name; obj.header.frame_id = BASE
             obj.operation = CollisionObject.ADD
             shape = SolidPrimitive(); shape.type = SolidPrimitive.BOX
             shape.dimensions = [float(x) for x in size]
             pose = Pose(); pose.position.x,pose.position.y,pose.position.z = map(float,center)
-            pose.orientation.w = 1.
+            quat = item.get('quaternion_wxyz',[1.,0.,0.,0.])
+            pose.orientation.w,pose.orientation.x,pose.orientation.y,pose.orientation.z = map(float,quat)
             obj.primitives = [shape]; obj.primitive_poses = [pose]
             scene.world.collision_objects.append(obj)
+        if door_collision_mode=='mesh':
+            moving=(matrix(state['moving_pose']['position'],
+                           state['moving_pose']['quaternion_wxyz'])
+                    if moving_pose_override is None else moving_pose_override)
+            l1=moving @ self.chain.joints['l_1'].origin
+            if moving_pose_override is None and 'door_link_pose' in state:
+                measured_link=matrix(state['door_link_pose']['position'],
+                                     state['door_link_pose']['quaternion_wxyz'])
+                position_error=np.linalg.norm(l1[:3,3]-measured_link[:3,3])
+                angle_error=(Rotation.from_matrix(l1[:3,:3]).inv()*
+                             Rotation.from_matrix(measured_link[:3,:3])).magnitude()
+                if position_error>.002 or angle_error>.02:
+                    raise Failure('FRAME_ERROR',
+                        f'URDF/Isaac cabinet moving link mismatch: {position_error:.4f} m, '
+                        f'{angle_error:.4f} rad')
+            door=CollisionObject();door.id='cabinet_door';door.header.frame_id=BASE
+            door.operation=CollisionObject.ADD
+            for mesh,local in self.door_collision_meshes:
+                T=l1@local
+                pose=Pose()
+                pose.position.x,pose.position.y,pose.position.z=map(float,T[:3,3])
+                quat=Rotation.from_matrix(T[:3,:3]).as_quat()
+                pose.orientation.x,pose.orientation.y,pose.orientation.z,pose.orientation.w=map(float,quat)
+                door.meshes.append(mesh);door.mesh_poses.append(pose)
+            scene.world.collision_objects.append(door)
         get = GetPlanningScene.Request()
         get.components.components = PlanningSceneComponents.ALLOWED_COLLISION_MATRIX
         acm = self.call('get_planning_scene',get).scene.allowed_collision_matrix
