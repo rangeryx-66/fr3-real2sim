@@ -35,6 +35,8 @@ p.add_argument('--overview-dir',type=Path,help='Render two whole-scene views and
 p.add_argument('--planning-preview-report',type=Path,help='Render prescribed planned IK waypoints without execution or contact claims')
 p.add_argument('--planning-preview-video',type=Path)
 p.add_argument('--record-overview',action='store_true',help='Record two whole-scene views during real physics execution')
+p.add_argument('--enable-isolation-diagnostics',action='store_true',help='Allow explicit passive door torque and temporary locked-door tests')
+p.add_argument('--door-sanity-only',type=Path,help='No robot loaded: save isolated passive-door torque sweep here')
 p.add_argument('--camera-offset', type=float, nargs=3, default=(.20, -.75, .36),
                metavar=('DX', 'DY', 'DZ'))
 a = p.parse_args()
@@ -137,8 +139,9 @@ else:
         fix_base=True, allow_self_collision=False, merge_fixed_joints=False,
         joint_drive_type='force', joint_target_type='position')).import_urdf()
     asset_file.write_text(robot_usd)
-add_reference_to_stage(robot_usd, '/World/R1A7')
-robot = world.scene.add(SingleArticulation('/World/R1A7', name='r1a7'))
+if not a.door_sanity_only:
+    add_reference_to_stage(robot_usd, '/World/R1A7')
+    robot = world.scene.add(SingleArticulation('/World/R1A7', name='r1a7'))
 
 def one_prim(name, under):
     matches = [prim for prim in stage.Traverse()
@@ -209,12 +212,24 @@ def collision_boxes():
             {'id':'cabinet_fixture','center':[a.asset_x,a.asset_y,a.fixture_height_m/2],
              'size':fixture_size.tolist(),
              'quaternion_wxyz':fixture_quat.tolist()}]
+if a.door_sanity_only:
+    from articulated_demo.isolation_diagnostics import run_door_without_robot
+    run_door_without_robot(a.door_sanity_only,world,stage,articulation,asset_chain,
+        asset_path,moving_path,contact_target_path,asset_rotation,asset_xyz,handle_center,mass_audit,manifest,DT)
+    app.close();sys.exit(0)
 contact_paths = [one_prim(name, '/World/R1A7') for name in ('dex1_Link1_3', 'dex1_Link2_3')]
 for path in contact_paths:
     PhysxSchema.PhysxContactReportAPI.Apply(stage.GetPrimAtPath(path)).CreateThresholdAttr(0.)
 finger_views = [world.scene.add(RigidPrim(prim_paths_expr=path, name=f'finger_contact_{i}',
     contact_filter_prim_paths_expr=[contact_target_path], track_contact_forces=True,
     prepare_contact_sensors=True, max_contact_count=256)) for i, path in enumerate(contact_paths)]
+door_contacts=None
+if a.enable_isolation_diagnostics:
+    diagnostic_contact_paths=[str(prim.GetPath()) for prim in stage.Traverse()
+        if str(prim.GetPath()).startswith(asset_path) and not str(prim.GetPath()).startswith(moving_path)
+        and prim.HasAPI(UsdPhysics.RigidBodyAPI)] + ['/World/table','/World/cabinet_fixture']
+    door_contacts=world.scene.add(RigidPrim(prim_paths_expr=contact_target_path,name='door_diagnostic_contacts',
+        contact_filter_prim_paths_expr=diagnostic_contact_paths,track_contact_forces=True,prepare_contact_sensors=True,max_contact_count=256))
 tcp = SingleXFormPrim(one_prim('r1a7_tcp', '/World/R1A7'))
 # Camera-optical rotation: columns are image right, image down, viewing forward.
 eye = handle_center + np.array(a.camera_offset); focus = handle_center + [0., 0., .02]
@@ -286,6 +301,7 @@ if a.overview_dir:
 commands = queue.Queue(); state = {}; lock = threading.Lock()
 tick = 240; active = None; target = q.copy(); results = {}; history = []
 paused = False
+diagnostic_torque=0.
 recorder = None; recorder_frames = 0; recorder_path = None
 boxes = collision_boxes()
 
@@ -319,7 +335,31 @@ try:
             token, cmd = commands.get_nowait()
             try:
                 op = cmd['op']
-                if op == 'reset':
+                if op.startswith('diagnostic_'):
+                    if not a.enable_isolation_diagnostics:raise RuntimeError('isolation diagnostic operations disabled')
+                    if active:raise RuntimeError('robot trajectory active')
+                    if op=='diagnostic_door_torque':
+                        diagnostic_torque=float(cmd['torque_nm']);results[token]={'ok':True}
+                    elif op=='diagnostic_reset_door':
+                        diagnostic_torque=0.;articulation.set_joint_positions(np.array([0.]));articulation.set_joint_velocities(np.array([0.]))
+                        results[token]={'ok':True}
+                    elif op=='diagnostic_lock_door':
+                        aq=float(articulation.get_joint_positions()[0])
+                        limits=np.array([[[aq,aq]]]) if cmd['locked'] else np.array([[[manifest['source_joint_limits_rad']['lower'],manifest['source_joint_limits_rad']['upper']]]])
+                        articulation._articulation_view._physics_view.set_dof_limits(limits.astype(np.float32),np.array([0],dtype=np.int32))
+                        results[token]={'ok':True,'limits_rad':limits.tolist()}
+                    elif op=='diagnostic_audit':
+                        joints=[{str(at.GetName()):str(at.Get()) for at in prim.GetAttributes()} for prim in stage.Traverse()
+                            if str(prim.GetPath()).startswith(asset_path) and prim.IsA(UsdPhysics.RevoluteJoint)]
+                        T=np.eye(4);T[:3,:3]=asset_rotation;T[:3,3]=asset_xyz
+                        hinge=asset_chain.joints[moving_link];H=T@asset_chain.root_to_link(hinge.parent,{})@hinge.origin
+                        axis=H[:3,:3]@hinge.axis;radial=handle_center-H[:3,3];radius=np.linalg.norm(np.cross(axis,radial))
+                        results[token]={'ok':True,'joint_usd_attributes':joints,'hinge_axis_world':axis.tolist(),
+                            'hinge_origin_world':H[:3,3].tolist(),'handle_center_world':handle_center.tolist(),
+                            'handle_radius_m':float(radius),'mass_audit':mass_audit,
+                            'joint_limits_rad':manifest['source_joint_limits_rad'],'robot_base_pose':BASE_POSE.tolist()}
+                    else:raise ValueError('unknown isolation operation')
+                elif op == 'reset':
                     if active: raise RuntimeError('trajectory active')
                     target[arm] = HOME; target[fingers] = -.02
                     robot.set_joint_positions(target)
@@ -408,6 +448,7 @@ try:
                     results[active['id']] = {'ok':active['gripper'] or error < .025,
                                              'joint_error':error}; active = None
         robot.apply_action(ArticulationAction(joint_positions=target))
+        if a.enable_isolation_diagnostics:articulation.set_joint_efforts(np.array([diagnostic_torque]))
         rendered = tick % 8 == 0
         world.step(render=rendered); tick += 1
         if recorder is not None and rendered:
@@ -421,14 +462,20 @@ try:
             else:frame = np.asarray(camera.get_rgba())[:,:,:3]
             recorder.stdin.write(np.ascontiguousarray(frame,dtype=np.uint8).tobytes())
             recorder_frames += 1
-        force = [float(np.linalg.norm(np.asarray(view.get_contact_force_matrix(dt=DT)).reshape(-1,3), axis=1).sum())
-                 for view in finger_views]
+        force_vectors=[np.asarray(view.get_contact_force_matrix(dt=DT)).reshape(-1,3).sum(axis=0) for view in finger_views]
+        force = [float(np.linalg.norm(np.asarray(view.get_contact_force_matrix(dt=DT)).reshape(-1,3),axis=1).sum()) for view in finger_views]
         if rendered:
             boxes = collision_boxes()
         mp,mq = moving.get_world_pose(); lp,lq = door_link.get_world_pose()
         tp,tq = tcp.get_world_pose()
         aq = float(articulation.get_joint_positions()[0])
-        sample = {'t':tick*DT,'joint_q':aq,'forces':force,'tcp':tp.tolist()}
+        sample = {'t':tick*DT,'joint_q':aq,'forces':force,'tcp':tp.tolist(),
+            'force_vectors_world':np.asarray(force_vectors).tolist(),
+            'joint_velocity_rad_s':float(articulation.get_joint_velocities()[0]),
+            'applied_door_torque_nm':diagnostic_torque,
+            'door_net_collision_force_n':float(np.linalg.norm(door_contacts.get_net_contact_forces(dt=DT))) if door_contacts else None,
+            'actual_dof_actuation_torque_nm':float(articulation._articulation_view._physics_view.get_dof_actuation_forces()[0,0]) if a.enable_isolation_diagnostics else None,
+            'door_collision_by_body_n':dict(zip(diagnostic_contact_paths,np.linalg.norm(np.asarray(door_contacts.get_contact_force_matrix(dt=DT)).reshape(-1,3),axis=1).tolist())) if door_contacts else None}
         history.append(sample)
         if len(history)>2400: history=history[-2400:]
         with lock:
