@@ -7,8 +7,10 @@ import r1a7_plant as plant
 
 
 def execute_preflight(node,plan,report,save,stop_requested=None):
-    if not plan.get('arc_segments') or plan['arc'][-1]['door_angle_deg']<21.99:
-        raise Failure('NO_PLAN','complete 0→22 degree preflight is required')
+    goal=float(plan.get('arc_goal_deg',22.))
+    if not 20.<=goal<=22. or not plan.get('arc_segments') or plan['arc'][-1]['door_angle_deg']<goal-.01:
+        raise Failure('NO_PLAN','complete preflight to the explicitly requested 20–22 degree goal is required')
+    report['physical_execution_goal_deg']=goal
     if any(r['status']!='PLANNED' or r['margin_rad']<=.05 or r.get('all_joint_min_margin_rad',0.)<=.05 for r in plan['arc']):
         raise Failure('NO_PLAN','arc contains unsafe or unplanned segments')
     if not plant.command({'op':'resume'},timeout=10).get('ok'):

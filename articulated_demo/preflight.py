@@ -114,7 +114,7 @@ def probe_ik(node, target, seed, *, random_seeds=8, timeout_s=.25,
 
 
 def candidate_preflight(node, T_grasp, *, random_seeds=8, timeout_s=.25,
-                        arc_step_deg=2.,optimize_redundancy=False,plan_sink=None):
+                        arc_step_deg=2.,optimize_redundancy=False,plan_sink=None,arc_goal_deg=22.):
     """Plan without execution; update moving-door OBB at every arc step."""
     import r1a7_plant as plant
     row = {'status':'STARTED','arc_waypoints_planned':0}
@@ -123,7 +123,8 @@ def candidate_preflight(node, T_grasp, *, random_seeds=8, timeout_s=.25,
     T_moving0 = matrix(initial['moving_pose']['position'],
                        initial['moving_pose']['quaternion_wxyz'])
     q0 = float(initial['joint_q'])
-    q_goal = min(math.radians(22),float(initial['joint_limits']['upper'])-.02)
+    if not 0.<arc_goal_deg<=22.:raise ValueError('arc goal must be within 0→22 degrees')
+    q_goal = min(math.radians(arc_goal_deg),float(initial['joint_limits']['upper'])-.02)
     row['arc_start_deg'] = float(math.degrees(q0))
     row['arc_goal_deg'] = float(math.degrees(q_goal))
     row['initial_door_angle_ok'] = abs(q0) <= math.radians(2)
@@ -176,7 +177,7 @@ def candidate_preflight(node, T_grasp, *, random_seeds=8, timeout_s=.25,
                 row['status']='INITIAL_DOOR_DRIFT'
             if row['status']=='FULL_PATH_PLANNED' and plan_sink is not None:
                 plan_sink.update(pre_traj=preplan,approach=approach,arc_segments=segments,
-                    initial_joint_q_rad=q0,grasp=T_grasp,arc=row['arc'])
+                    initial_joint_q_rad=q0,grasp=T_grasp,arc=row['arc'],arc_goal_deg=arc_goal_deg)
             return row
         arc = []
         row['arc'] = arc

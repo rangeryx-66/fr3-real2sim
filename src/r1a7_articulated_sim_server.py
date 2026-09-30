@@ -34,6 +34,7 @@ p.add_argument('--door-mass-model',choices=('geometry','legacy'),default='geomet
 p.add_argument('--overview-dir',type=Path,help='Render two whole-scene views and exit without robot execution')
 p.add_argument('--planning-preview-report',type=Path,help='Render prescribed planned IK waypoints without execution or contact claims')
 p.add_argument('--planning-preview-video',type=Path)
+p.add_argument('--record-overview',action='store_true',help='Record two whole-scene views during real physics execution')
 p.add_argument('--camera-offset', type=float, nargs=3, default=(.20, -.75, .36),
                metavar=('DX', 'DY', 'DZ'))
 a = p.parse_args()
@@ -228,7 +229,7 @@ camera.set_clipping_range(.05, 3.)
 world.reset(); camera.initialize(); camera.add_distance_to_image_plane_to_frame()
 camera.add_instance_id_segmentation_to_frame()
 overview=[]
-if a.overview_dir or a.planning_preview_report:
+if a.overview_dir or a.planning_preview_report or a.record_overview:
     focus=np.array([a.asset_x+.05,a.asset_y-.05,.32])
     for index,offset in enumerate(([1.1,-1.4,.9],[-1.1,-1.1,.8])):
         position=focus+offset;direction=(focus-position)/np.linalg.norm(focus-position)
@@ -359,7 +360,7 @@ try:
                     recorder_path = Path(cmd['path']).resolve()
                     recorder_path.parent.mkdir(parents=True, exist_ok=True)
                     recorder = subprocess.Popen([ffmpeg,'-hide_banner','-loglevel','error','-y',
-                        '-f','rawvideo','-pixel_format','rgb24','-video_size','640x480',
+                        '-f','rawvideo','-pixel_format','rgb24','-video_size','1920x720' if a.record_overview else '640x480',
                         '-framerate','30','-i','pipe:0','-c:v','libx264','-preset','veryfast',
                         '-crf','18','-pix_fmt','yuv420p',str(recorder_path)],
                         stdin=subprocess.PIPE, stdout=subprocess.DEVNULL,
@@ -410,7 +411,14 @@ try:
         rendered = tick % 8 == 0
         world.step(render=rendered); tick += 1
         if recorder is not None and rendered:
-            frame = np.asarray(camera.get_rgba())[:,:,:3]
+            if a.record_overview:
+                import cv2
+                frame=np.hstack([cv2.resize(np.asarray(v.get_rgba())[:,:,:3],(960,720)) for v in overview])
+                angle=np.degrees(float(articulation.get_joint_positions()[0]))
+                cv2.rectangle(frame,(0,0),(1920,70),(15,15,15),-1)
+                cv2.putText(frame,f'PHYSICS EXECUTION | passive door | measured angle: {angle:.2f} deg',
+                    (20,45),cv2.FONT_HERSHEY_SIMPLEX,.9,(245,245,245),2,cv2.LINE_AA)
+            else:frame = np.asarray(camera.get_rgba())[:,:,:3]
             recorder.stdin.write(np.ascontiguousarray(frame,dtype=np.uint8).tobytes())
             recorder_frames += 1
         force = [float(np.linalg.norm(np.asarray(view.get_contact_force_matrix(dt=DT)).reshape(-1,3), axis=1).sum())

@@ -40,6 +40,8 @@ def main():
     p.add_argument('--startup-hold-s',type=float,default=3.)
     p.add_argument('--optimize-redundancy',action='store_true')
     p.add_argument('--execute-best',action='store_true',help='Only execute after full arc preflight passes; saved perception replay')
+    p.add_argument('--arc-goal-deg',type=float,default=22.,help='Explicit shortened physical test goal, default retains 22 degrees')
+    p.add_argument('--record-overview',action='store_true')
     p.add_argument('--cutoff-local',help='ISO 8601 cutoff; defaults to next 05:00 Shanghai')
     p.add_argument('--raw-ranks',type=int,nargs='*')
     p.add_argument('--variants-file',type=Path)
@@ -89,6 +91,7 @@ def main():
             'robot_base_pose':base_pose,'support_bottom_z_m':support_bottom,
             'transformed_from_source_installation':placement!=original,
             'status':'STARTED'}
+    report['requested_arc_goal_deg']=args.arc_goal_deg
     def save(): (output/'report.json').write_text(json.dumps(report,indent=2,default=str))
     save()
     os.environ['R1A7_PLANT_PORT']=str(args.port)
@@ -110,6 +113,7 @@ def main():
             '--fixture-height-m',str(placement['fixture_height_m']),
             '--home-q',*[str(x) for x in home_q],
             '--door-mass-model',args.door_mass_model,
+            *(['--record-overview'] if args.record_overview else []),
             '--camera-offset',*[str(x) for x in source['camera_offset_m']]],output/'isaac.log',env))
         processes.append(start(['ros2','launch',str(ROOT/'src/r1a7_moveit.launch.py')],
                                output/'moveit.log',env))
@@ -166,7 +170,7 @@ def main():
             plan={}
             result=candidate_preflight(node,placed_pose(item),
                 random_seeds=args.random_seeds,timeout_s=args.timeout_s,
-                optimize_redundancy=args.optimize_redundancy,plan_sink=plan)
+                optimize_redundancy=args.optimize_redundancy,plan_sink=plan,arc_goal_deg=args.arc_goal_deg)
             report['candidate_results'].append({'raw_rank':item['raw_rank'],
                 'variant':item['variant'],**result})
             save()
