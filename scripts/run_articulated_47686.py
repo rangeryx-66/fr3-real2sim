@@ -110,9 +110,9 @@ def run(args):
             if not frozen.get('ok'):raise RuntimeError('Isaac physics pause failed')
             report['planning_joint_q_rad']=float(plant.state()['joint_q'])
             report['stages'].append('PHYSICS_PAUSED_FOR_PLANNING');save()
-            if args.stage == 'full' and abs(report['planning_joint_q_rad']) > np.deg2rad(3):
+            if args.stage == 'full' and abs(report['planning_joint_q_rad']) > np.deg2rad(2):
                 raise Failure('INITIAL_DOOR_DRIFT',
-                    'door moved more than 3 degrees before the 0→22 degree trial')
+                    'door moved more than 2 degrees before the 0→22 degree trial')
         capture = output/'capture.npz'
         result = plant.command({'op':'capture','path':str(capture),
             'evaluation_mask_path':str(output/'eval_gt_handle_mask.npy')},timeout=90)
@@ -303,6 +303,8 @@ def run(args):
         report['joint_q_after_resume_rad']=float(plant.state()['joint_q'])
         if abs(report['joint_q_after_resume_rad']-report['planning_joint_q_rad'])>.03:
             raise Failure('CONTACT_LOSS','door moved while resuming the frozen grasp scene')
+        if abs(report['joint_q_after_resume_rad']) > np.deg2rad(2):
+            raise Failure('INITIAL_DOOR_DRIFT','door is no longer near closed after physics resumed')
         video = output/'execution.mp4'
         if not plant.command({'op':'video_start','path':str(video)})['ok']:
             raise RuntimeError('Isaac video recorder failed')
@@ -321,9 +323,10 @@ def run(args):
         if not bilateral_force:
             raise Failure('BAD_CONTACT','Dex1 lacks bilateral measured handle contact')
         q0 = float(closed['joint_q'])
-        if q0 > np.deg2rad(10): raise Failure('BAD_CONTACT','door moved too far during approach')
+        if abs(q0) > np.deg2rad(2):
+            raise Failure('BAD_CONTACT','door moved out of the planned 0→22 degree range during approach')
         report['stages'].append('DEX1_CLOSED'); save()
-        target_q = min(q0+np.deg2rad(22),float(plant.state()['joint_limits']['upper'])-.02)
+        target_q = min(np.deg2rad(22),float(plant.state()['joint_limits']['upper'])-.02)
         report['joint_path'] = node.follow_joint(q0,target_q,
             stop_requested=lambda: datetime.now(tz)>=deadline)
         report['stages'].append('ARTICULATION_PATH_EXECUTED'); save()

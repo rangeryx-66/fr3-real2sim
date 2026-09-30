@@ -126,7 +126,7 @@ def candidate_preflight(node, T_grasp, *, random_seeds=8, timeout_s=.25,
     q_goal = min(math.radians(22),float(initial['joint_limits']['upper'])-.02)
     row['arc_start_deg'] = float(math.degrees(q0))
     row['arc_goal_deg'] = float(math.degrees(q_goal))
-    row['initial_door_angle_ok'] = abs(q0) <= math.radians(3)
+    row['initial_door_angle_ok'] = abs(q0) <= math.radians(2)
     if q0 >= q_goal:
         row['status']='INITIAL_DOOR_DRIFT'
         return row

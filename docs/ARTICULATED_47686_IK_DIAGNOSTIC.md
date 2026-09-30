@@ -9,7 +9,7 @@
 - 每个 GraspGen-X raw candidate 使用把手目标点云的最近邻局部 PCA 确定锚点和长轴；围绕该 candidate 做把手方向滑动、绕把手轴旋转以及有限 depth/approach 扰动。原始候选及 score 不改。
 - 单独记录无碰撞 IK、MoveIt state validity、J5/J6/J7 margin、pregrasp IK、approach、home→pregrasp 规划，以及按 2° 递进的 0→22° 门板碰撞场景规划。只有 `FULL_PATH_PLANNED` 才允许进入物理执行。
 - 修正完整执行阶段的候选顺序：先检查 Dex1 局部候选及 raw 无碰撞候选，避免默认 `--max-candidates 80` 全部消耗在 raw top-80 上。安装位姿的 home state validity 也单独记录，碰撞即停止预检。
-- 相机捕获前暂停 Isaac 物理，使 RGB-D、门板角度和 MoveIt planning scene 一致。保留开门前恢复物理后的角度漂移保护。门板初始角超过 3° 的规划不标记为完整 0→22° 预检通过。
+- 相机捕获前暂停 Isaac 物理，使 RGB-D、门板角度和 MoveIt planning scene 一致。保留开门前恢复物理后的角度漂移保护。门板初始角超过 2° 的规划不标记为完整 0→22° 预检通过；执行终点也固定为绝对门角 22°，与预检一致。
 
 ## 已完成的诊断
 

@@ -128,7 +128,7 @@ def main():
                                            'detail':str(error)}
         if args.require_home_valid and not report['home_state_validity']['valid']:
             report['status']='HOME_COLLISION';save();return
-        if abs(live_q) > np.deg2rad(3):
+        if abs(live_q) > np.deg2rad(2):
             report['status']='INITIAL_DOOR_DRIFT';save();return
         if report['handle_visible_pixels_evaluation_only'] < 30:
             report['status']='HANDLE_NOT_VISIBLE';save();return
