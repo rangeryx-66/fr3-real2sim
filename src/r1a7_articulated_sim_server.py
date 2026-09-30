@@ -1,4 +1,8 @@
-"""Isaac R1/Dex1 + PhysX-Mobility 47686 plant; no scripted object-joint motion."""
+"""Isaac R1/Dex1 articulation plant; physical execution never scripts the door.
+
+An explicit planning-preview mode renders prescribed saved IK waypoints.
+Its watermarked output cannot count as a manipulation experiment.
+"""
 import argparse
 import hashlib
 import json
@@ -28,6 +32,8 @@ p.add_argument('--home-q',type=float,nargs=7,
                default=(0.,1.3,1.,-1.3,0.,0.,0.),metavar='Q')
 p.add_argument('--door-mass-model',choices=('geometry','legacy'),default='geometry')
 p.add_argument('--overview-dir',type=Path,help='Render two whole-scene views and exit without robot execution')
+p.add_argument('--planning-preview-report',type=Path,help='Render prescribed planned IK waypoints without execution or contact claims')
+p.add_argument('--planning-preview-video',type=Path)
 p.add_argument('--camera-offset', type=float, nargs=3, default=(.20, -.75, .36),
                metavar=('DX', 'DY', 'DZ'))
 a = p.parse_args()
@@ -222,7 +228,7 @@ camera.set_clipping_range(.05, 3.)
 world.reset(); camera.initialize(); camera.add_distance_to_image_plane_to_frame()
 camera.add_instance_id_segmentation_to_frame()
 overview=[]
-if a.overview_dir:
+if a.overview_dir or a.planning_preview_report:
     focus=np.array([a.asset_x+.05,a.asset_y-.05,.32])
     for index,offset in enumerate(([1.1,-1.4,.9],[-1.1,-1.1,.8])):
         position=focus+offset;direction=(focus-position)/np.linalg.norm(focus-position)
@@ -252,6 +258,13 @@ startup_angles=[]
 for i in range(240):
     world.step(render=i % 8 == 0)
     startup_angles.append(float(articulation.get_joint_positions()[0]))
+if a.planning_preview_report:
+    if not a.planning_preview_video:raise ValueError('preview video output is required')
+    sys.path.insert(0,str(ROOT/'scripts'))
+    from render_articulated_plan_preview import render_preview
+    render_preview(a.planning_preview_report,a.planning_preview_video,
+        world,robot,articulation,overview,q,arm,fingers,BASE_POSE,a)
+    app.close();sys.exit(0)
 if a.overview_dir:
     import cv2
     a.overview_dir.mkdir(parents=True,exist_ok=True)
