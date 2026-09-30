@@ -229,7 +229,8 @@ def run_tests(node,grasp,output,report,save):
     report['status']='ISOLATION_DIAGNOSTICS_COMPLETE';checkpoint()
 
 
-def run_contact_model_test(node,grasp,output,report,save):
+def run_contact_model_test(node,grasp,output,report,save,*,load_limit_m=.00025,
+                           initial_margin_gate=.1,use_cartesian=False,keep_locked=False,pregrasp_retreat_m=.08,prepared_plan=None):
     """Closed-state and 0.25 mm contact probe only; no opening arc search."""
     diagnostic={'kind':'collision model verification, fixed base and contact parameters'}
     report['isolation']=diagnostic
@@ -239,12 +240,16 @@ def run_contact_model_test(node,grasp,output,report,save):
     checked_command({'op':'resume'})
     checked_command({'op':'diagnostic_reset_door'});plant.settle(.2);checked_command({'op':'pause'})
     node.scene();home=node.measured()
-    _,gs=probe_ik(node,grasp,home,random_seeds=8,timeout_s=.25)
-    if gs is None:raise Failure('NO_IK','isolated grasp pose unavailable')
-    pre=grasp.copy();pre[:3,3]-=.08*grasp[:3,2]
-    _,ps=probe_ik(node,pre,gs,random_seeds=8,timeout_s=.25)
-    if ps is None:raise Failure('NO_IK','isolated pregrasp unavailable')
-    approach=node.cartesian(ps,grasp);preplan=node.plan(home,ps)
+    if prepared_plan is not None:
+        gs=prepared_plan['grasp'];ps=prepared_plan['prestate']
+        approach=prepared_plan['approach'];preplan=prepared_plan['preplan']
+    else:
+        _,gs=probe_ik(node,grasp,home,random_seeds=8,timeout_s=.25)
+        if gs is None:raise Failure('NO_IK','isolated grasp pose unavailable')
+        pre=grasp.copy();pre[:3,3]-=pregrasp_retreat_m*grasp[:3,2]
+        _,ps=probe_ik(node,pre,gs,random_seeds=8,timeout_s=.25)
+        if ps is None:raise Failure('NO_IK','isolated pregrasp unavailable')
+        approach=node.cartesian(ps,grasp);preplan=node.plan(home,ps)
     for trajectory in (preplan,approach):
         names=list(trajectory.joint_trajectory.joint_names)
         for point in trajectory.joint_trajectory.points:
@@ -253,8 +258,8 @@ def run_contact_model_test(node,grasp,output,report,save):
                 raise Failure('LOW_JOINT_MARGIN','contact-test trajectory outside unchanged margin gate')
     start=trajectory_end(ps,approach)
     diagnostic['comfortable_grasp_margin']=margins(node,values(start))
-    if diagnostic['comfortable_grasp_margin']['all_joint_min_rad']<=.1:
-        raise Failure('LOW_JOINT_MARGIN','isolated load test requires >0.1 rad at starting pose')
+    if diagnostic['comfortable_grasp_margin']['all_joint_min_rad']<=initial_margin_gate:
+        raise Failure('LOW_JOINT_MARGIN','load test starting pose outside requested unchanged margin gate')
     node.scene();checked_command({'op':'resume'})
     checked_command({'op':'diagnostic_lock_door','locked':True})
     load={'rows':[],'method':'locked door; displacement-controlled tangential pull; force from finger-door contact vectors',
@@ -267,6 +272,8 @@ def run_contact_model_test(node,grasp,output,report,save):
         result=node.gripper(0.);plant.settle(.5)
         closed=plant.state();load['close_forces_n']=closed['forces'];load['gripper_stalled']=bool(result.stalled)
         load['close_finger_body_contact_n']=closed.get('finger_body_contact_n',[])
+        load['closed_joint_state']={'names':closed['names'],'q':closed['q']}
+        load['closed_tcp']={'position':closed['tcp'],'quaternion_wxyz':closed['tcp_quat']}
         try:
             node.scene();node.validate(node.measured())
             load['closed_state_collision_valid']=True
@@ -281,28 +288,34 @@ def run_contact_model_test(node,grasp,output,report,save):
         reference=np.array(closed['tcp']);hinge=np.array(audit['hinge_origin_world']);axis=np.array(audit['hinge_axis_world'])
         reference_pose=matrix(closed['tcp'],closed['tcp_quat'])
         tangent=np.cross(axis,reference-hinge);tangent/=np.linalg.norm(tangent)
+        load['reference_T_B_TCP']=reference_pose.tolist()
         load['tangent_world']=tangent.tolist();load['locked_angle_deg']=math.degrees(closed['joint_q'])
-        for displacement in (0.,.00025):
+        for displacement in np.arange(0.,load_limit_m+.00001,.00025):
             if displacement:
                 goal=reference_pose.copy();goal[:3,3]+=displacement*tangent
                 node.scene();measured=node.measured()
-                solutions,trials=max_margin_ik(node,goal,measured)
-                if not solutions:
-                    load['load_ik_failure_trials']=trials
-                    raise Failure('LOAD_NO_SAFE_IK','no collision-free IK for small isolated loading displacement')
-                chosen=min(solutions,key=lambda s:np.linalg.norm(values(s[0])-values(measured)))[0]
-                old=values(measured);new=values(chosen)
-                trajectory=RobotTrajectory();trajectory.joint_trajectory.joint_names=list(JOINTS)
-                for alpha in np.linspace(0,1,11):
-                    qr=old+alpha*(new-old);node.validate(with_q(measured,qr))
-                    if margins(node,qr)['all_joint_min_rad']<=.05:raise Failure('LOW_JOINT_MARGIN','loading interpolation outside margin')
-                    point=JointTrajectoryPoint();point.positions=qr.tolist();point.velocities=[0.]*7
-                    point.time_from_start=Duration(sec=int(2*alpha),nanosec=int((2*alpha%1)*1e9))
-                    trajectory.joint_trajectory.points.append(point)
-                for pt in trajectory.joint_trajectory.points:
-                    qdict=dict(zip(trajectory.joint_trajectory.joint_names,pt.positions))
-                    if margins(node,np.array([qdict[n] for n in JOINTS]))['all_joint_min_rad']<=.05:
-                        raise Failure('LOW_JOINT_MARGIN','load test left safe comfortable workspace')
+                if use_cartesian:
+                    trajectory=node.cartesian(measured,goal)
+                    from .local_grasp_search import validate_trajectory
+                    validate_trajectory(node,measured,trajectory)
+                else:
+                    solutions,trials=max_margin_ik(node,goal,measured)
+                    if not solutions:
+                        load['load_ik_failure_trials']=trials
+                        raise Failure('LOAD_NO_SAFE_IK','no collision-free IK for small isolated loading displacement')
+                    chosen=min(solutions,key=lambda s:np.linalg.norm(values(s[0])-values(measured)))[0]
+                    old=values(measured);new=values(chosen)
+                    trajectory=RobotTrajectory();trajectory.joint_trajectory.joint_names=list(JOINTS)
+                    for alpha in np.linspace(0,1,11):
+                        qr=old+alpha*(new-old);node.validate(with_q(measured,qr))
+                        if margins(node,qr)['all_joint_min_rad']<=.05:raise Failure('LOW_JOINT_MARGIN','loading interpolation outside margin')
+                        point=JointTrajectoryPoint();point.positions=qr.tolist();point.velocities=[0.]*7
+                        point.time_from_start=Duration(sec=int(2*alpha),nanosec=int((2*alpha%1)*1e9))
+                        trajectory.joint_trajectory.points.append(point)
+                    for pt in trajectory.joint_trajectory.points:
+                        qdict=dict(zip(trajectory.joint_trajectory.joint_names,pt.positions))
+                        if margins(node,np.array([qdict[n] for n in JOINTS]))['all_joint_min_rad']<=.05:
+                            raise Failure('LOW_JOINT_MARGIN','load test left safe comfortable workspace')
                 node.stage='ISOLATED_TANGENTIAL_PULL';node.execute(trajectory,'NO_PLAN')
             begin=plant.state()['t'];plant.settle(.5);state=plant.state()
             samples=[h for h in state['history'] if h['t']>=begin]
@@ -317,7 +330,10 @@ def run_contact_model_test(node,grasp,output,report,save):
                 'actual_door_angle_deg':math.degrees(state['joint_q']),
                 'all_joint_margin_rad':margins(node,values(node.measured()))['all_joint_min_rad']}
             load['rows'].append(row)
-            if abs(state['joint_q']-closed['joint_q'])>math.radians(.1):row['status']='DOOR_LOCK_FAILURE'
+            row['finger_body_peak_n']=max((max(h.get('finger_body_contact_n',[0.])) for h in samples),default=0.)
+            if row['all_joint_margin_rad']<=.05:row['status']='LOW_JOINT_MARGIN'
+            elif row['finger_body_peak_n']>.2:row['status']='NON_PAD_CONTACT'
+            elif abs(state['joint_q']-closed['joint_q'])>math.radians(.1):row['status']='DOOR_LOCK_FAILURE'
             elif lost>.2:row['status']='SINGLE_SIDE_CONTACT_LOSS'
             elif slipped>.005:row['status']='GRASP_SLIP_FAILURE'
             else:
@@ -331,5 +347,49 @@ def run_contact_model_test(node,grasp,output,report,save):
     except Failure as error:load['status']=error.category;load['detail']=str(error)
     finally:
         if recording:load['video_result']=checked_command({'op':'video_stop'})
-        checked_command({'op':'diagnostic_lock_door','locked':False});checkpoint()
+        if not keep_locked or load.get('status')!='NO_FAILURE_WITHIN_TEST_RANGE':
+            checked_command({'op':'diagnostic_lock_door','locked':False})
+        checkpoint()
     report['status']='ISOLATION_DIAGNOSTICS_COMPLETE';checkpoint()
+
+
+def continue_tangential_capacity(node,probe,output):
+    """Continue the verified locked grasp; unchanged collision/contact gates."""
+    from .local_grasp_search import validate_trajectory
+    result={'rows':list(probe['rows']),'max_stable_tangential_force':probe['max_stable_tangential_force'],
+            'zero_displacement_preload_n':probe.get('zero_displacement_tangential_preload_n'),
+            'range_limit_m':.015,'status':'RUNNING'}
+    reference=np.asarray(probe['reference_T_B_TCP']);tangent=np.asarray(probe['tangent_world'])
+    try:
+        for distance in np.arange(.00225,.01501,.00025):
+            target=reference.copy();target[:3,3]+=distance*tangent
+            node.scene();measured=node.measured();trajectory=node.cartesian(measured,target)
+            validate_trajectory(node,measured,trajectory)
+            node.stage='CAPACITY_TANGENTIAL_PULL';node.execute(trajectory,'NO_PLAN')
+            begin=plant.state()['t'];plant.settle(.5);state=plant.state()
+            samples=[h for h in state['history'] if h['t']>=begin]
+            forces=[sum(np.dot(v,tangent) for v in h['force_vectors_world']) for h in samples]
+            lost=sum(not all(f>.2 for f in h['forces']) for h in samples)/max(1,len(samples))
+            body=max((max(h.get('finger_body_contact_n',[0.])) for h in samples),default=0.)
+            slip=float(np.linalg.norm(np.array(state['tcp'])-reference[:3,3]))
+            row={'commanded_tangential_displacement_m':float(distance),
+                 'measured_tangential_force_n':float(abs(np.mean(forces))),
+                 'relative_slip_m':slip,'single_side_contact_loss_fraction':lost,
+                 'finger_body_peak_n':body,'forces_n':state['forces'],
+                 'all_joint_margin_rad':margins(node,values(node.measured()))['all_joint_min_rad']}
+            if row['all_joint_margin_rad']<=.05:row['status']='LOW_JOINT_MARGIN'
+            elif body>.2:row['status']='NON_PAD_CONTACT'
+            elif abs(state['joint_q']-np.deg2rad(probe['locked_angle_deg']))>np.deg2rad(.1):row['status']='DOOR_LOCK_FAILURE'
+            elif lost>.2:row['status']='SINGLE_SIDE_CONTACT_LOSS'
+            elif slip>.005:row['status']='GRASP_SLIP_FAILURE'
+            else:
+                row['status']='STABLE'
+                result['max_stable_tangential_force']=max(result['max_stable_tangential_force'] or 0.,row['measured_tangential_force_n'])
+            result['rows'].append(row);(output/'capacity.json').write_text(json.dumps(result,indent=2))
+            if row['status']!='STABLE':result['status']=row['status'];break
+        else:result['status']='NO_FAILURE_WITHIN_TEST_RANGE'
+    except Failure as error:result['status']=error.category;result['detail']=str(error)
+    finally:
+        checked_command({'op':'diagnostic_lock_door','locked':False})
+        (output/'capacity.json').write_text(json.dumps(result,indent=2))
+    return result

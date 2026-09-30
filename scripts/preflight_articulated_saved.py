@@ -44,6 +44,7 @@ def main():
     p.add_argument('--record-overview',action='store_true')
     p.add_argument('--isolation-diagnostics',action='store_true')
     p.add_argument('--contact-model-check',action='store_true')
+    p.add_argument('--local-grasp-search',action='store_true')
     p.add_argument('--cutoff-local',help='ISO 8601 cutoff; defaults to next 05:00 Shanghai')
     p.add_argument('--raw-ranks',type=int,nargs='*')
     p.add_argument('--variants-file',type=Path)
@@ -116,7 +117,7 @@ def main():
             '--home-q',*[str(x) for x in home_q],
             '--door-mass-model',args.door_mass_model,
             *(['--record-overview'] if args.record_overview else []),
-            *(['--enable-isolation-diagnostics'] if args.isolation_diagnostics or args.contact_model_check else []),
+            *(['--enable-isolation-diagnostics'] if args.isolation_diagnostics or args.contact_model_check or args.local_grasp_search else []),
             '--camera-offset',*[str(x) for x in source['camera_offset_m']]],output/'isaac.log',env))
         processes.append(start(['ros2','launch',str(ROOT/'src/r1a7_moveit.launch.py')],
                                output/'moveit.log',env))
@@ -168,6 +169,10 @@ def main():
             report['status']='INITIAL_DOOR_DRIFT';save();return
         if report['handle_visible_pixels_evaluation_only'] < 30:
             report['status']='HANDLE_NOT_VISIBLE';save();return
+        if args.local_grasp_search:
+            from articulated_demo.local_grasp_search import run_search
+            run_search(node,[(item,placed_pose(item)) for item in candidates],output,report,save)
+            return
         if args.contact_model_check:
             from articulated_demo.isolation_diagnostics import run_contact_model_test
             run_contact_model_test(node,placed_pose(candidates[0]),output,report,save)

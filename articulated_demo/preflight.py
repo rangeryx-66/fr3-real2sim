@@ -33,7 +33,7 @@ def moved_door_boxes(boxes, T_moving0, T_movingq):
 
 
 def probe_ik(node, target, seed, *, random_seeds=8, timeout_s=.25,
-             optimized_seeds=2):
+             optimized_seeds=2,solution_sink=None):
     """Return every layer separately; collision never hides kinematic IK."""
     values = dict(zip(seed.joint_state.name,seed.joint_state.position))
     attempts = [values]
@@ -102,6 +102,7 @@ def probe_ik(node, target, seed, *, random_seeds=8, timeout_s=.25,
                 counts=result['collision_reason_counts']
                 counts['ROBOT_SELF_COLLISION']=counts.get('ROBOT_SELF_COLLISION',0)+1
             continue
+        if solution_sink is not None:solution_sink.append(response.solution)
         result['collision_free'] += 1
         margin = float(node.margin(response.solution))
         q = dict(zip(response.solution.joint_state.name,response.solution.joint_state.position))
