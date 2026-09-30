@@ -344,7 +344,9 @@ try:
                 if op.startswith('diagnostic_'):
                     if not a.enable_isolation_diagnostics:raise RuntimeError('isolation diagnostic operations disabled')
                     if active:raise RuntimeError('robot trajectory active')
-                    if op=='diagnostic_door_torque':
+                    if op=='diagnostic_closure_history':
+                        results[token]={'ok':True,'samples':[h for h in history if h['t']>=float(cmd['since_t'])]}
+                    elif op=='diagnostic_door_torque':
                         diagnostic_torque=float(cmd['torque_nm']);results[token]={'ok':True}
                     elif op=='diagnostic_reset_door':
                         diagnostic_torque=0.;articulation.set_joint_positions(np.array([0.]));articulation.set_joint_velocities(np.array([0.]))
@@ -475,7 +477,11 @@ try:
         mp,mq = moving.get_world_pose(); lp,lq = door_link.get_world_pose()
         tp,tq = tcp.get_world_pose()
         aq = float(articulation.get_joint_positions()[0])
-        sample = {'t':tick*DT,'joint_q':aq,'forces':force,'tcp':tp.tolist(),
+        measured_q=robot.get_joint_positions().tolist()
+        finger_q=[measured_q[i] for i in fingers]
+        sample = {'names':names,'robot_q':measured_q,'finger_q':finger_q,
+            'finger_aperture_m':.09-sum(float(v)+.02 for v in finger_q),
+            'tcp_quat':tq.tolist(),'t':tick*DT,'joint_q':aq,'forces':force,'tcp':tp.tolist(),
             'force_vectors_world':np.asarray(force_vectors).tolist(),
             'finger_body_contact_n':[float(np.linalg.norm(np.asarray(v.get_contact_force_matrix(dt=DT)).reshape(-1,3),axis=1).sum()) for v in body_views],
             'joint_velocity_rad_s':float(articulation.get_joint_velocities()[0]),

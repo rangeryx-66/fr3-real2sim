@@ -45,6 +45,7 @@ def main():
     p.add_argument('--isolation-diagnostics',action='store_true')
     p.add_argument('--contact-model-check',action='store_true')
     p.add_argument('--local-grasp-search',action='store_true')
+    p.add_argument('--collision-profile',choices=('official_stl','isaac_convex_hull'),default='isaac_convex_hull')
     p.add_argument('--cutoff-local',help='ISO 8601 cutoff; defaults to next 05:00 Shanghai')
     p.add_argument('--raw-ranks',type=int,nargs='*')
     p.add_argument('--variants-file',type=Path)
@@ -97,6 +98,8 @@ def main():
     report['requested_arc_goal_deg']=args.arc_goal_deg
     def save(): (output/'report.json').write_text(json.dumps(report,indent=2,default=str))
     save()
+    os.environ['DEX1_COLLISION_PROFILE']=args.collision_profile
+    report['collision_profile']=args.collision_profile
     os.environ['R1A7_PLANT_PORT']=str(args.port)
     os.environ['ROS_DOMAIN_ID']=str(args.ros_domain)
     os.environ['ROS_LOCALHOST_ONLY']='1'

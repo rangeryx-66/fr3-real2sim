@@ -74,7 +74,7 @@ def main():
             row['status']=row['approach']['status']
             if row['status']=='FREE':
                 row['closure']=checker.check_closure(T);row['status']=row['closure']['status']
-                if row['status']=='FREE':report['candidates'].append(row)
+                if row['status']=='CLOSURE_UNVERIFIED':report['candidates'].append(row)
         report['decisions'].append(row)
         args.output.write_text(json.dumps(report,indent=2))
         print(row['variant'],row['status'],len(report['candidates']),flush=True)

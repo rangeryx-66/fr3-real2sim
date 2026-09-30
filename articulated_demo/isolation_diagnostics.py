@@ -168,6 +168,7 @@ def run_tests(node,grasp,output,report,save):
         checked_command({'op':'video_start','path':str(output/'isolated_grasp.mp4')});recording=True
         node.stage='ISOLATED_PREGRASP';node.execute(preplan,'NO_PLAN')
         node.stage='ISOLATED_APPROACH';node.execute(approach,'NO_PLAN')
+        closure_begin=plant.state()['t']
         result=node.gripper(0.);plant.settle(.5)
         closed=plant.state();load['close_forces_n']=closed['forces'];load['gripper_stalled']=bool(result.stalled)
         if not all(f>.2 for f in closed['forces']):
@@ -269,11 +270,38 @@ def run_contact_model_test(node,grasp,output,report,save,*,load_limit_m=.00025,
         checked_command({'op':'video_start','path':str(output/'isolated_grasp.mp4')});recording=True
         node.stage='ISOLATED_PREGRASP';node.execute(preplan,'NO_PLAN')
         node.stage='ISOLATED_APPROACH';node.execute(approach,'NO_PLAN')
+        closure_begin=plant.state()['t']
         result=node.gripper(0.);plant.settle(.5)
         closed=plant.state();load['close_forces_n']=closed['forces'];load['gripper_stalled']=bool(result.stalled)
         load['close_finger_body_contact_n']=closed.get('finger_body_contact_n',[])
         load['closed_joint_state']={'names':closed['names'],'q':closed['q']}
         load['closed_tcp']={'position':closed['tcp'],'quaternion_wxyz':closed['tcp_quat']}
+        load['actual_closure_samples']=checked_command({'op':'diagnostic_closure_history','since_t':closure_begin})['samples']
+        load['actual_aperture_m']=load['actual_closure_samples'][-1]['finger_aperture_m']
+        replay=[]
+        from moveit_msgs.msg import RobotState
+        for sample in load['actual_closure_samples']:
+            measured=RobotState();measured.joint_state.name=sample['names'];positions=list(sample['robot_q']);clamps=[]
+            # Same existing measured-state normalization as ArticulatedBackend.
+            # Preserve raw telemetry and aperture; this is not a joint-limit change.
+            for i,name in enumerate(sample['names']):
+                if name not in node.limits:continue
+                lo,hi=node.limits[name];raw=positions[i]
+                if lo-1e-4<=raw<lo:positions[i]=lo
+                elif hi<raw<=hi+1e-4:positions[i]=hi
+                if positions[i]!=raw:clamps.append({'joint':name,'raw':raw,'validation_value':positions[i]})
+            measured.joint_state.position=positions
+            try:
+                node.validate(measured);replay.append({'t':sample['t'],'valid':True,'numerical_bound_clamps':clamps})
+            except Failure as error:
+                replay.append({'t':sample['t'],'valid':False,'detail':str(error),'numerical_bound_clamps':clamps})
+        load['actual_closure_moveit_replay']=replay
+        load['actual_closure_min_joint_margin_rad']=min(margins(node,np.array([sample['robot_q'][sample['names'].index(j)] for j in JOINTS]))['all_joint_min_rad'] for sample in load['actual_closure_samples'])
+        load['closure_body_force_peak_n']=max((max(h.get('finger_body_contact_n',[0.])) for h in load['actual_closure_samples']),default=0.)
+        checkpoint()
+        if any(not r['valid'] for r in replay):raise Failure('COLLISION','measured closure sweep contains an invalid MoveIt state')
+        if load['closure_body_force_peak_n']>1e-6:raise Failure('COLLISION','metal body contact during actual closure')
+        if load['actual_closure_min_joint_margin_rad']<=.05:raise Failure('LOW_JOINT_MARGIN','measured closure outside unchanged margin gate')
         try:
             node.scene();node.validate(node.measured())
             load['closed_state_collision_valid']=True
@@ -281,7 +309,7 @@ def run_contact_model_test(node,grasp,output,report,save,*,load_limit_m=.00025,
             load['closed_state_collision_valid']=False
             load['closed_state_collision_detail']=str(error)
             raise
-        if any(f>.2 for f in closed.get('finger_body_contact_n',[])):
+        if any(f>1e-6 for f in closed.get('finger_body_contact_n',[])):
             raise Failure('COLLISION','non-pad finger body carries target contact')
         if not all(f>.2 for f in closed['forces']):
             load['status']='BAD_CONTACT_AT_ZERO_LOAD';checkpoint();return

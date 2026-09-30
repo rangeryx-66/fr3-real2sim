@@ -98,7 +98,7 @@ def main():
         raw=raw[:args.max_raw]
     accepted=[];raw_decisions=[];variant_decisions=[]
     counts={'raw':len(raw),'variants':0,'target_near':0,
-                        'collision_free':0,'collision':0,'low_clearance':0}
+                        'collision_free':0,'closure_unverified':0,'collision':0,'low_clearance':0}
     for candidate in raw:
         anchor,tangent=local_handle_frame(tree,target,candidate.T_B_TCP[:3,3])
         raw_check=checker.check(candidate.T_B_TCP,candidate.width_m)
@@ -125,13 +125,15 @@ def main():
             record.update(status=check['status'],collision=check)
             variant_decisions.append(record)
             counts['collision' if check['status']=='COLLISION' else
-                   'collision_free' if check['status']=='FREE' else 'low_clearance']+=1
-            if check['status']!='FREE':continue
+                   'collision_free' if check['status']=='FREE' else
+                   'closure_unverified' if check['status']=='CLOSURE_UNVERIFIED' else 'low_clearance']+=1
+            if check['status'] not in ('FREE','CLOSURE_UNVERIFIED'):continue
             score=float(candidate.score - 3*variant.translation_m - .1*variant.rotation_rad)
             accepted.append({'raw_rank':candidate.rank,'raw_score':candidate.score,
                 'score':score,'variant':variant.label,'T_B_TCP':variant.transform.tolist(),
                 'translation_m':variant.translation_m,'rotation_rad':variant.rotation_rad,
-                'target_distance_m':distance,'width_m':candidate.width_m,'collision':check})
+                'target_distance_m':distance,'width_m':candidate.width_m,'collision':check,
+                'requires_actual_closure_validation':check['status']=='CLOSURE_UNVERIFIED'})
     accepted.sort(key=lambda row:row['score'],reverse=True)
     first_by_raw={}
     for row in accepted:

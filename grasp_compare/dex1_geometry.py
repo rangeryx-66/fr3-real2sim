@@ -68,7 +68,7 @@ class Dex1Geometry:
     def width_for_q(self, q):
         return self.open_width - 2 * (float(q) - self.q_min)
 
-    def link_poses(self, width_m):
+    def link_poses(self, width_m, finger_q=None):
         q = self.q_for_width(width_m)
         poses = {'base_link': np.eye(4)}
         pending = ['base_link']
@@ -79,7 +79,7 @@ class Dex1Geometry:
                 T = poses[parent] @ origin(joint.find('origin'))
                 if joint.get('type') == 'prismatic':
                     axis = np.fromstring(joint.find('axis').get('xyz'), sep=' ')
-                    slide = np.eye(4); slide[:3, 3] = axis * q
+                    slide = np.eye(4); slide[:3, 3] = axis * (q if finger_q is None else float(finger_q[0 if joint.get('name') == 'Joint1_1' else 1]))
                     T = T @ slide
                 elif joint.get('type') == 'revolute':
                     axis = np.fromstring(joint.find('axis').get('xyz'), sep=' ')
@@ -89,10 +89,22 @@ class Dex1Geometry:
                 pending.append(child)
         return poses
 
-    @lru_cache(maxsize=12)
-    def meshes_in_tcp(self, width_m):
+    def finger_translations_in_tcp(self, finger_q):
+        reference=self.link_poses(self.open_width)
+        actual=self.link_poses(self.open_width,finger_q)
+        rotation=np.linalg.inv(self.T_D_TCP)[:3,:3]
+        out={}
+        for name in reference:
+            if not np.allclose(reference[name][:3,:3],actual[name][:3,:3],atol=1e-12):
+                raise ValueError('translation-only collision reuse requires prismatic fingers')
+            out[name]=rotation@(actual[name][:3,3]-reference[name][:3,3])
+        return out
+
+    @lru_cache(maxsize=128)
+    def meshes_in_tcp(self, width_m, finger_q=None):
         import trimesh
-        poses = self.link_poses(width_m)
+        from dex1_collision_profile import enabled, proxy_path
+        poses = self.link_poses(width_m, finger_q)
         pieces = []
         for name, link in self.links.items():
             if name not in poses:
@@ -104,6 +116,8 @@ class Dex1Geometry:
                 mesh_path = (self.urdf.parent / mesh_node.get('filename')).resolve()
                 if not mesh_path.is_file():
                     raise FileNotFoundError(mesh_path)
+                if enabled():
+                    mesh_path = proxy_path(name)
                 mesh = trimesh.load(mesh_path, force='mesh', process=True)
                 scale = mesh_node.get('scale')
                 if scale:
@@ -113,6 +127,11 @@ class Dex1Geometry:
         if not pieces:
             raise RuntimeError('official Dex1 URDF has no loadable collision meshes')
         return pieces
+
+    def measured_pad_aperture(self, finger_q):
+        pads=sorted([mesh.bounds for name,mesh in self.meshes_in_tcp(self.open_width,tuple(finger_q))
+                     if name in ('Link1_3','Link2_3')],key=lambda b:b[:,1].mean())
+        return float(pads[1][0,1]-pads[0][1,1])
 
     def sweep_params(self):
         """Derive GraspGenX open/mid free-space boxes from official pad meshes."""
@@ -147,5 +166,6 @@ class Dex1Geometry:
     def provenance(self):
         return {'urdf': str(self.urdf), 'urdf_sha256': self.sha256,
                 'collision_links': [name for name, _ in self.meshes_in_tcp(self.open_width)],
+                'collision_profile': __import__('os').environ.get('DEX1_COLLISION_PROFILE', 'official_stl'),
                 'mount_status': self.calibration['link7_to_dex1_base']['status'],
                 'tcp_status': self.calibration['dex1_base_to_tcp']['status']}

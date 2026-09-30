@@ -19,6 +19,9 @@ def generate_launch_description():
         subprocess.run([sys.executable, str(ROOT / 'scripts/make_r1a7_j7_fixed.py')], check=True)
     model_path = ROOT / ('config/r1a7_dex1_j7_fixed.urdf' if variant == 'j7_fixed' else 'config/r1a7_dex1.urdf')
     model = ET.parse(model_path).getroot()
+    sys.path.insert(0, str(ROOT/'src'))
+    from dex1_collision_profile import apply_profile
+    apply_profile(model)
     for mesh in model.findall('.//mesh'):
         path = Path(mesh.get('filename'))
         if not path.is_file():

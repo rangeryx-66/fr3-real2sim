@@ -20,8 +20,10 @@ class Dex1SceneCollision:
                          else None)
 
     @lru_cache(maxsize=12)
-    def _contact_bounds(self, width_m):
-        pads = [mesh.bounds for name, mesh in self.geometry.meshes_in_tcp(width_m)
+    def _contact_bounds(self, width_m, finger_q=None):
+        shifts=self.geometry.finger_translations_in_tcp(finger_q) if finger_q is not None else {}
+        pads = [mesh.bounds + shifts.get(name,0) for name, mesh in self.geometry.meshes_in_tcp(
+                self.geometry.open_width if finger_q is not None else width_m)
                 if name in ('Link1_3', 'Link2_3')]
         if len(pads) != 2:
             raise RuntimeError('official Dex1 terminal-pad meshes unavailable')
@@ -36,10 +38,10 @@ class Dex1SceneCollision:
         return low - tolerance, high + tolerance
 
     @lru_cache(maxsize=12)
-    def _raycast(self, width_m):
+    def _raycast(self, width_m, finger_q=None):
         import open3d as o3d
         pieces = []
-        for name, mesh in self.geometry.meshes_in_tcp(width_m):
+        for name, mesh in self.geometry.meshes_in_tcp(width_m, finger_q):
             tensor_mesh = o3d.t.geometry.TriangleMesh(
                 o3d.core.Tensor(np.asarray(mesh.vertices, dtype=np.float32)),
                 o3d.core.Tensor(np.asarray(mesh.faces, dtype=np.uint32)))
@@ -50,7 +52,7 @@ class Dex1SceneCollision:
                            np.max([p[2][1] for p in pieces], axis=0)])
         return pieces, bounds
 
-    def check(self, T_B_TCP, width_m=None, *, approach=True, contact_mask=None):
+    def check(self, T_B_TCP, width_m=None, *, approach=True, contact_mask=None, finger_q=None):
         if self.obstacles_B is None:
             return {'status': 'UNKNOWN_NO_TARGET_MASK', 'reason': 'no target mask to separate contact from obstacles'}
         if width_m is not None and float(width_m) > self.geometry.open_width + 1e-6:
@@ -58,10 +60,14 @@ class Dex1SceneCollision:
                     'dex1_open_width_m': self.geometry.open_width}
         width = self.geometry.open_width if width_m is None else float(width_m)
         width = min(self.geometry.open_width, max(self.geometry.closed_width, width))
-        pieces, bounds = self._raycast(round(width, 5))
+        shifts=self.geometry.finger_translations_in_tcp(finger_q) if finger_q is not None else {}
+        pieces, bounds = self._raycast(round(self.geometry.open_width if finger_q is not None else width, 5))
+        if shifts:
+            pieces=[(name,ray,mesh_bounds+shifts[name],watertight) for name,ray,mesh_bounds,watertight in pieces]
+            bounds=np.stack((np.min([p[2][0] for p in pieces],axis=0),np.max([p[2][1] for p in pieces],axis=0)))
         import open3d as o3d
         T_B_TCP = np.asarray(T_B_TCP)
-        contact_low, contact_high = self._contact_bounds(round(width, 5))
+        contact_low, contact_high = self._contact_bounds(round(width, 5), finger_q)
         target_TCP = transform_points(np.linalg.inv(T_B_TCP), self.target_B)
         allowed_contact = (np.all((target_TCP >= contact_low) & (target_TCP <= contact_high), axis=1)
                            if contact_mask is None else np.asarray(contact_mask, dtype=bool))
@@ -89,7 +95,7 @@ class Dex1SceneCollision:
                                        & (link_points <= mesh_bounds[1] + self.clearance_m), axis=1)]
                 if not len(subset):
                     continue
-                points = o3d.core.Tensor(np.asarray(subset, dtype=np.float32))
+                points = o3d.core.Tensor(np.asarray(subset-shifts.get(name,0), dtype=np.float32))
                 distance = (ray.compute_signed_distance(points).numpy() if watertight
                             else ray.compute_distance(points).numpy())
                 closest = float(np.min(distance))
@@ -139,6 +145,29 @@ class Dex1SceneCollision:
             if result['status'] != 'FREE':
                 return {**result, 'stage': 'closure', 'width_m': float(width),
                         'estimated_contact_width_m': stop}
-        return {'status': 'FREE', 'stage': 'closure',
+        return {'status': 'CLOSURE_UNVERIFIED', 'stage': 'closure',
+                'actual_closure_verified': False,
+                'reason': 'point-cloud span is an estimate; replay measured closure before accepting grasp',
                 'estimated_contact_width_m': stop, 'width_samples_m': widths.tolist(),
                 'allowed_contact_links': ['Link1_3', 'Link2_3']}
+
+    def check_actual_closure(self, samples):
+        """Validate measured asymmetric fingers and measured TCP at each step.
+
+        Pad target-contact region is fixed at the initially open aperture;
+        the target remains an obstacle for every metal body throughout closure.
+        """
+        from scipy.spatial.transform import Rotation
+        rows=[]; contact=None
+        for sample in samples:
+            T=np.eye(4);T[:3,3]=sample['tcp']
+            w,x,y,z=sample['tcp_quat'];T[:3,:3]=Rotation.from_quat([x,y,z,w]).as_matrix()
+            if contact is None:
+                low,high=self._contact_bounds(round(self.geometry.open_width,5))
+                local=transform_points(np.linalg.inv(T),self.target_B)
+                contact=np.all((local>=low)&(local<=high),axis=1)
+            q=tuple(sample['finger_q'])
+            result=self.check(T,approach=False,contact_mask=contact,finger_q=q)
+            rows.append({'t':sample['t'],'finger_q':q,'actual_aperture_m':sample['finger_aperture_m'],**result})
+        return {'status':'FREE' if all(r['status']=='FREE' for r in rows) and rows else 'REJECTED',
+                'samples':rows,'endpoint_source':'measured joint positions; not point-cloud width'}
