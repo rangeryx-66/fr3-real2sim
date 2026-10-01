@@ -3,7 +3,7 @@
 Contact offset is a physics envelope, not permission for metal contact. Raw
 body triangles remain forbidden regardless of what cooking does to them.
 """
-import argparse,json,sys
+import argparse,hashlib,json,sys
 from pathlib import Path
 import numpy as np,trimesh,fcl
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT));sys.path.insert(0,str(ROOT/'scripts'))
@@ -68,13 +68,13 @@ def validate(data,manifest,target_body,poses=None):
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('export',type=Path);p.add_argument('output',type=Path);p.add_argument('--ownership',type=Path,default=ROOT/'config/piper_contact_ownership.json');p.add_argument('--target-body',default='l_1');p.add_argument('--observations',type=Path);a=p.parse_args();data=json.loads(a.export.read_text());manifest=json.loads(a.ownership.read_text());r=validate(data,manifest,a.target_body)
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('export',type=Path);p.add_argument('output',type=Path);p.add_argument('--ownership',type=Path,default=ROOT/'config/piper_contact_ownership.json');p.add_argument('--target-body',default='l_1');p.add_argument('--observations',type=Path);a=p.parse_args();data=json.loads(a.export.read_text());manifest=json.loads(a.ownership.read_text());r=validate(data,manifest,a.target_body);r['cooked_export_sha256']=hashlib.sha256(a.export.read_bytes()).hexdigest();r['ownership_manifest_sha256']=hashlib.sha256(a.ownership.read_bytes()).hexdigest()
     if a.observations:
         states=json.loads(a.observations.read_text());replay=[];owner_registry={e['path']:e.get('owner') for e in data['shapes']}
         for i,s in enumerate(states):
             poses={n:np.array(t) for n,t in s['finger_world_poses'].items()}
             if s.get('T_moving_link'):poses['__target__']=np.array(s['T_moving_link'])
             v=validate(data,manifest,a.target_body,poses);native=s.get('ownership',{});native_classification=all(c.get('owner')=='pad' and c.get('allowed_pad_target',True) for c in native.get('contacts',[]) if c['force_n']>0);replay.append({'sample':i,'phase':s['phase'],'aperture_m':s['aperture_m'],'geometry_safe':v['geometry_safe'],'cooked_metal_intersections':v['cooked_metal_intersections'],'cooked_metal_contact_envelope_potential_pairs':v['cooked_metal_contact_envelope_potential_pairs'],'raw_metal_intersections':v['raw_metal_intersections'],'native_metal_contacts':native.get('metal_contacts'),'native_identity_contact_safe':native_classification,'unified_safe':v['geometry_safe'] and native_classification,'minimum_cooked_metal_distance_m':min(x['distance_m'] for x in v['cooked_pairs'] if x['owner']=='metal')})
-        r['replay']=replay;r['geometry_safe_all_samples']=all(x['geometry_safe'] for x in replay);r['unified_safe_all_samples']=all(x['unified_safe'] for x in replay);r['native_contact_owner_mismatches']=sum(any(c.get('owner')!=owner_registry.get(c.get('collider')) for c in s.get('ownership',{}).get('contacts',[])) for s in states);r['native_metal_contact_samples']=sum((x['native_metal_contacts'] or 0)>0 for x in replay)
+        r['observations_sha256']=hashlib.sha256(a.observations.read_bytes()).hexdigest();r['replay']=replay;r['geometry_safe_all_samples']=all(x['geometry_safe'] for x in replay);r['unified_safe_all_samples']=all(x['unified_safe'] for x in replay);r['native_contact_owner_mismatches']=sum(any(c.get('owner')!=owner_registry.get(c.get('collider')) for c in s.get('ownership',{}).get('contacts',[])) for s in states);r['native_metal_contact_samples']=sum((x['native_metal_contacts'] or 0)>0 for x in replay)
     a.output.write_text(json.dumps(r,indent=2));print({k:v for k,v in r.items() if k not in ['cooked_pairs','raw_official_audit','replay']})
 if __name__=='__main__':main()

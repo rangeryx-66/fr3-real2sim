@@ -10,7 +10,6 @@ from scipy.optimize import least_squares
 from scipy.spatial.transform import Rotation
 from scipy.spatial import cKDTree
 from articulated_demo.kinematics import URDFChain, transform
-from .collision_surface import intersection_points
 
 
 def origin(item):
@@ -110,15 +109,12 @@ class Model:
 
     def margin(self,q):return float(np.min(np.minimum(q-self.limits[:,0],self.limits[:,1]-q)))
 
-    def pad_contact(self,name,world_point,T,tolerance=.001):
-        if name not in self.pads:return False
-        p=(np.linalg.inv(T)@np.r_[world_point,1])[:3];b=self.pads[name]
-        projection=p.copy();projection[2]=b[0,2];triangles=self.pad_triangles[name]
-        closest=trimesh.triangles.closest_point(triangles,np.tile(projection,(len(triangles),1)))
-        return bool(np.min(np.linalg.norm(closest-projection,axis=1))<.00005 and abs(p[2]-b[0,2])<=tolerance)
+    def pad_contact(self,*args,**kwargs):
+        raise RuntimeError('Point-projection contact classification is retired; use native collider ownership and validate_piper_owned_contact.py')
 
     def check(self,q,base,angle=0,width=.1,allow_pad=False,clearance=False,finger_q=None):
         if time.time()>getattr(self,'deadline_timestamp',float('inf')):raise TimeoutError('CUTOFF_05_00')
+        if allow_pad:return False,'OWNED_CONTACT_VALIDATION_REQUIRED',None
         if self.margin(q)<=.05:return False,'LOW_JOINT_MARGIN',None
         P=self.poses(q,base,width,finger_q);robots=[(n,obj(g,P[n])) for n,g in self.robot]
         for i,(a,A) in enumerate(robots):
@@ -143,36 +139,6 @@ class Model:
                 if target in ('mobile_base','mast') and n in ('base_link','link1'):continue
                 result=fcl.CollisionResult();count=fcl.collide(A,B,fcl.CollisionRequest(num_max_contacts=64,enable_contact=True),result)
                 if count:
-                    def on_handle(point):
-                        if self.target_tree is None:return False
-                        moving=self.manifest['moving_link'];D0=self.asset_T@self.asset.root_to_link(moving,{joint:0.});D=self.asset_T@self.asset.root_to_link(moving,{joint:angle})
-                        reference=(D0@np.linalg.inv(D)@np.r_[point,1])[:3]
-                        if self.target_tree.query(reference)[0]<.005:return True
-                        # Opposite handle surface may be occluded in RGB-D.
-                        # Extrude only along the actual closing direction and
-                        # no farther than the measured current jaw opening.
-                        opening=width if finger_q is None else abs(float(finger_q[0])-float(finger_q[1]))
-                        axis=(D0@np.linalg.inv(D)@P['tcp_link'])[:3,1]
-                        indices=self.target_tree.query_ball_point(reference,opening+.005)
-                        if not indices:return False
-                        delta=self.target_tree.data[indices]-reference;parallel=delta@axis
-                        lateral=np.linalg.norm(delta-parallel[:,None]*axis,axis=1)
-                        return bool(np.any((lateral<.005)&(np.abs(parallel)<=opening+.005)))
-                    def pad_triangle(contact):
-                        # BVH contact.pos can be an object vertex outside the
-                        # finger triangle. Check the entire intersection segment;
-                        # a nearest-point projection alone can hide body overlap.
-                        if n not in self.pads:return False
-                        mesh=self.robot_hulls[n];index=int(contact.b1)
-                        if not 0<=index<len(mesh.triangles):return False
-                        if id(B) not in collision_surfaces:return False
-                        scene_mesh,scene_pose=collision_surfaces[id(B)]
-                        if not 0<=int(contact.b2)<len(scene_mesh.triangles):return False
-                        triangle=mesh.triangles[index]@P[n][:3,:3].T+P[n][:3,3]
-                        other=scene_mesh.triangles[int(contact.b2)]@scene_pose[:3,:3].T+scene_pose[:3,3]
-                        points=intersection_points(triangle,other)
-                        return len(points)>0 and all(self.pad_contact(n,p,P[n],tolerance=1e-6) and on_handle(p) for p in points)
-                    if allow_pad and target in self.manifest['moving_links'] and result.contacts and all(pad_triangle(c) for c in result.contacts):continue
                     return False,'COLLISION:'+n+':'+target,None
                 if clearance:minimum=min(minimum,float(fcl.distance(A,B)))
         return True,'FREE',minimum if clearance else None

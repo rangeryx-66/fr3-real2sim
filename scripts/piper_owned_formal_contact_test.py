@@ -24,7 +24,7 @@ def main():
     pole=SingleXFormPrim('/World/r1a7_pedestal',reset_xform_properties=False);base_link=SingleXFormPrim(scene['one_prim']('base_link','/World/Piper'),reset_xform_properties=False)
     export_cooked(stage,a.output/'cooked_initial.json')
     subprocess.run(['env','-u','PYTHONPATH',a.geometry_python,str(ROOT/'scripts/associate_piper_target_collider.py'),str(a.output/'cooked_initial.json'),str(a.plan.parent/'target_points.npy'),str(a.output/'target_collider_association.json')],check=True)
-    association=json.loads((a.output/'target_collider_association.json').read_text());native=NativeOwnershipReports(stage,[scene['contact_target_path']],dt,association['allowed_pad_targets'])
+    association=json.loads((a.output/'target_collider_association.json').read_text())
     qtarget=np.array(robot.get_joint_positions()).copy();qtarget[fingers]=[.05,-.05]
     for _ in range(24):world.step(render=True)
     actual_base=matrix(*base_link.get_world_pose());expected=matrix(base[:3],np.roll(Rotation.from_euler('z',base[3],degrees=True).as_quat(),1))
@@ -48,7 +48,7 @@ def main():
             if limit is None or abs(float(limit)-10.)>1e-6:raise RuntimeError('imported finger effort limit differs from official 10 N')
     # Re-authoring maxForce previously rebuilt runtime-only zero-gain drives.
     # Persist the existing gains and read-check the original effort limits.
-    camera=scene['overview'][0];record=subprocess.Popen([shutil.which('ffmpeg'),'-y','-f','rawvideo','-pix_fmt','rgb24','-s','1280x960','-r','30','-i','-','-an','-c:v','libx264','-preset','fast','-crf','21','-pix_fmt','yuv420p',str(a.output/'execution.mp4')],stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=open(a.output/'ffmpeg.log','w'))
+    camera=scene['overview'][0];record=subprocess.Popen([shutil.which('ffmpeg'),'-y','-f','rawvideo','-pix_fmt','rgb24','-s','1280x960','-r','16','-i','-','-an','-c:v','libx264','-preset','fast','-crf','21','-pix_fmt','yuv420p',str(a.output/'execution.mp4')],stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=open(a.output/'ffmpeg.log','w'))
     rows=[];tick=0;phase='FIXED_BASE';status='STARTED';reference=None;loss_steps=0
     limits=ET.parse(ROOT/'config/piper.urdf').getroot();limits=np.array([[float(limits.find(f"joint[@name='joint{i}']/limit").get(k)) for k in ('lower','upper')] for i in range(1,7)])
     result={'kind':'real finger contact; passive door; no ideal attachment','mode':report['mode'],'base_initial':base,'base_final':base,'base_locked_during_manipulation':True,'bootstrap_sha256':scene['bootstrap_hash'],'finger_effort_limit_n':10.,'friction_unchanged':True,'asset_parameters_unchanged':True,'joint_names':names,'selected':chosen,'legal_real_grasp':False}
@@ -58,6 +58,13 @@ def main():
     result['controller_gains']={'arm_kp':10000.,'arm_kd':400.,'finger_kp':1000.,'finger_kd':40.,'source':'existing PiPER simulation profile, not measured hardware gains'}
     result['gripper_mechanical_coupling']='official mimic folded to q2=-q1; virtual command w=2*q1'
     result['simulation_urdf_sha256']=hashlib.sha256((ROOT/'config/piper_sim.urdf').read_bytes()).hexdigest()
+    def sample_physics():
+        q=np.asarray(robot.get_joint_positions());poses={}
+        for n,view in zip(('gripper_link1','gripper_link2'),scene['finger_views']):
+            p,r=view.get_world_poses();poses[n]=matrix(p[0],r[0]).tolist()
+        p,r=scene['door_contacts'].get_world_poses()
+        return {'phase':phase,'q':q.tolist(),'aperture_m':float(q[fingers[0]]-q[fingers[1]]),'margin_rad':float(np.min(np.minimum(q[arm]-limits[:,0],limits[:,1]-q[arm]))),'finger_world_poses':poses,'T_moving_link':matrix(p[0],r[0]).tolist()}
+    native=NativeOwnershipReports(stage,[scene['contact_target_path']],dt,association['allowed_pad_targets'],world=world,sample_provider=sample_physics)
     def step():
         nonlocal tick,loss_steps
         if datetime.now(zone)>=deadline:raise RuntimeError('CUTOFF_05_00')
@@ -70,7 +77,7 @@ def main():
         scene_forces={name:float(np.linalg.norm(view.get_contact_force_matrix(dt=dt))) for name,view in scene['scene_monitor_views']}
         T=matrix(*tcp.get_world_pose());L=matrix(*scene['door_link'].get_world_pose());rel=np.linalg.inv(L)@T
         slip=0. if reference is None else float(np.linalg.norm(rel[:3,3]-reference[:3,3]))
-        state={'t':tick*dt,'phase':phase,'robot_q':q.tolist(),'command_q':qtarget.tolist(),'actual_aperture_m':float(q[fingers[0]]-q[fingers[1]]),'door_angle_deg':float(np.rad2deg(door.get_joint_positions()[0])),'margin_rad':margin,'forces_n':forces,'nonpad_force_n':nonpad,'palm_wrist_force_n':bodyforce,'relative_slip_m':slip,'T_tcp':T.tolist(),'T_moving_link':L.tolist(),'contacts':contacts,'ownership':ownership,'pre_step_finger_world_poses':pre_poses,'pre_step_moving_link_world_pose':pre_object_pose,'geometry_pose_time':'after physics step; native contact generation precedes integration','aperture_m':float(q[fingers[0]]-q[fingers[1]]),
+        state={'t':tick*dt,'physics_time_s':ownership['physics_time_s'],'phase':phase,'robot_q':q.tolist(),'command_q':qtarget.tolist(),'actual_aperture_m':float(q[fingers[0]]-q[fingers[1]]),'door_angle_deg':float(np.rad2deg(door.get_joint_positions()[0])),'margin_rad':margin,'forces_n':forces,'nonpad_force_n':nonpad,'palm_wrist_force_n':bodyforce,'relative_slip_m':slip,'T_tcp':T.tolist(),'T_moving_link':L.tolist(),'contacts':contacts,'ownership':ownership,'pre_step_finger_world_poses':pre_poses,'pre_step_moving_link_world_pose':pre_object_pose,'geometry_pose_time':'after physics step; native contact generation precedes integration','aperture_m':float(q[fingers[0]]-q[fingers[1]]),
                'T_base':actual_mount.tolist(),'base_position_error_m':mount_error,
                'finger_world_poses':{n:matrix(*f.get_world_pose()).tolist() for n,f in finger_xforms.items()},
                'all_contact_force_by_finger_n':[float(np.linalg.norm(v.get_net_contact_forces(dt=dt))) for v in scene['finger_views']],
@@ -122,7 +129,7 @@ def main():
             validation=json.loads((a.output/'closure_validation.json').read_text())
             result['legal_real_grasp']=min(closed['forces_n'])>=.2 and closed['ownership']['metal_contacts']==0 and closed['ownership']['pad_target_violations']==0 and validation['geometry_safe']
             if not result['legal_real_grasp']:raise RuntimeError('FORMAL_CLOSURE_GEOMETRY_OR_CONTACT_FAILURE')
-            closure_rows=[r for r in rows if r['phase']=='CLOSE'];(a.output/'closure_observations.json').write_text(json.dumps(closure_rows))
+            closure_rows=[r for r in native.physics_steps if r['phase']=='CLOSE'];(a.output/'closure_observations.json').write_text(json.dumps(closure_rows))
             subprocess.run(['env','-u','PYTHONPATH',a.geometry_python,str(ROOT/'scripts/validate_piper_owned_contact.py'),str(a.output/'cooked_closed.json'),str(a.output/'closure_replay.json'),'--ownership',str(a.ownership),'--observations',str(a.output/'closure_observations.json')],check=True)
             replay=json.loads((a.output/'closure_replay.json').read_text())
             if not replay['unified_safe_all_samples']:raise RuntimeError('FORMAL_CLOSURE_REPLAY_FORBIDDEN_CONTACT')
@@ -136,6 +143,7 @@ def main():
     finally:
         export_cooked(stage,a.output/'cooked_final.json')
         result['door_opening_arc_executed']=False;result['target_collider_association']=association;result['owned_colliders']=scene['owned_contact_colliders'];result['native_contact_classification']='native collider identity only';result['native_metal_contact_samples']=sum(r['ownership']['metal_contacts']>0 for r in rows);result['pad_wrong_target_samples']=sum(r['ownership']['pad_target_violations']>0 for r in rows)
+        result['physics_step_samples']=len(native.physics_steps);(a.output/'physics_steps.json').write_text(json.dumps(native.physics_steps))
         result.update(status=status,sample_count=len(rows),max_actual_door_angle_deg=max((r['door_angle_deg'] for r in rows),default=0),minimum_joint_margin_rad=min((r['margin_rad'] for r in rows),default=None),maximum_relative_slip_m=max((r['relative_slip_m'] for r in rows),default=None))
         (a.output/'report.json').write_text(json.dumps(result,indent=2));(a.output/'observations.json').write_text(json.dumps(rows));record.stdin.close();record.wait(timeout=30);print(json.dumps(result,indent=2),flush=True);app.close()
 

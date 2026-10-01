@@ -5,13 +5,29 @@
     "native_contact_owner_mismatches": 0,
     "native_metal_contact_samples": 0,
     "bilateral_pad_contact_all_hold_pull_samples": true,
-    "measured_mean_finger_origin_displacement_m": 0.0015240539934808016,
-    "ownership_manifest_sha256": "80bde12bed67663ab54454e5bec104948cc60a1d0763a8a367b1b84cb6d72cf8",
-    "observations_sha256": "3898e4347b9da53ee2ba44ffc76c4a1018ddeb127a113f7a6ccfce44066c5165"
+    "measured_mean_finger_origin_displacement_m": 0.0015210145435569347,
+    "measured_tangential_displacement_m": 0.001518508709050628,
+    "off_axis_displacement_m": 8.727280360516779e-05,
+    "ownership_manifest_sha256": "63fbdfa56d4d39d328aa4d9a3780aedd834a4e11dd2237397c26e140b83a20a0",
+    "observations_sha256": "55a67b58c4a8b03d23f58552a2dccf2cabb0e7f1d1ca7e4ba7d760b3762e175b",
+    "cooked_export_sha256": "d468fd40150e99642360d9b6722b5791d9074f028936af13d243313809ca94d4",
+    "physics_substeps_recorded": 2700,
+    "minimum_physics_joint_margin_rad": 0.34603816148681643,
+    "simulated_duration_s": 11.250000586733222,
+    "pad_force_min_n": [
+      9.772092923732576,
+      9.790341020784968
+    ],
+    "pad_force_max_n": [
+      9.968633818889709,
+      9.98710436085376
+    ],
+    "actual_closure_aperture_m": 0.024001561105251312
   },
   "formal": {
     "status": "NATIVE_FORBIDDEN_CONTACT",
     "sample_count": 10076,
+    "physics_step_samples": 18896,
     "base_final": [
       0.5,
       -0.55,
@@ -21,17 +37,38 @@
     "minimum_joint_margin_rad": 0.36151200410766604,
     "native_metal_contact_samples": 1,
     "pad_wrong_target_samples": 0,
-    "max_actual_door_angle_deg": 0.0002268919488415122,
-    "door_opening_arc_executed": false
+    "max_actual_door_angle_deg": 0.0002258819731650874,
+    "door_opening_arc_executed": false,
+    "failure_phase": "CLOSE",
+    "actual_failure_aperture_m": 0.02444498986005783,
+    "nonpad_force_n": 0.7792845645875016,
+    "pad_forces_n": [
+      0.0,
+      0.0
+    ],
+    "raw_intersecting_triangle_pairs": 6
   },
   "formal_offline": {
     "unified_safe_all_samples": false,
     "native_contact_owner_mismatches": 0,
     "native_metal_contact_samples": 1,
     "raw_metal_intersections": 1,
-    "cooked_metal_contact_envelope_potential_pairs": 32
+    "cooked_metal_contact_envelope_potential_pairs": 32,
+    "cooked_export_sha256": "0f746555d43fcce6b49dbabbc51f2c3cf92d6f70719f4bc4656c013b623b7c3e"
   },
   "official_geometry_sources": "AgileX agx_arm_urdf f6642ce0d7872c686f29c99e9e10cd23d1d49313",
-  "server_evidence_directory": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/piper_contact_ownership_delivery",
-  "evidence_directory_repo_relative": "results/piper_contact_ownership/piper_contact_ownership_delivery"
+  "server_evidence_directory": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/piper_contact_ownership_delivery_v2",
+  "evidence_directory_repo_relative": "results/piper_contact_ownership/piper_contact_ownership_delivery_v2",
+  "ownership": "504 forbidden body convexes plus one owned distal pad collider per finger; four official DAE/STL pad face IDs",
+  "discarded_all_tetra_prototype": "f39c802 acceptance superseded due transient impulse spike; current pad one convex shape",
+  "fixed_parameters": [
+    "robot base",
+    "IK",
+    "joint margin threshold >0.05 rad",
+    "friction",
+    "10N finger effort cap",
+    "gains",
+    "official geometry dimensions",
+    "articulation parameters"
+  ]
 }

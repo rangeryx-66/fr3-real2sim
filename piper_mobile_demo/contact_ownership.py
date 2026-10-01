@@ -77,14 +77,19 @@ def build_manifest(root,output,source_cooked_export):
         pieces.append(('pad',*hull(remaining)))
         tetrahedra=[]
         for owner,vertices,triangles in pieces:
+            if owner=='pad':
+                # One convex pad avoids artificial internal pad contact faces.
+                tetrahedra.append((owner,vertices,triangles));continue
             center=vertices.mean(0)
             for triangle in triangles:
                 v,f=hull(np.vstack([center,vertices[triangle]]));tetrahedra.append((owner,v,f))
         pieces=tetrahedra
         source_shapes=[e for e in source_export['shapes'] if e.get('rigid_body_path','').split('/')[-1]==name and e.get('raw_points')]
         if len(source_shapes)!=1:raise RuntimeError('native source export must have one original collider per finger')
-        native_raw=np.asarray(source_shapes[0]['raw_points']);nearest=np.min(np.linalg.norm(native_raw[:,None,:]-mesh.vertices[None,:,:],axis=2),axis=1)
-        if len(native_raw)!=len(mesh.vertices) or nearest.max()>1e-7:raise RuntimeError('native source collider does not match official STL vertices')
+        native_raw=np.asarray(source_shapes[0]['raw_points']);distances=np.linalg.norm(native_raw[:,None,:]-mesh.vertices[None,:,:],axis=2)
+        # USD importer duplicates vertices at normal/material seams. Compare
+        # both geometric point sets, not unwelded versus welded vertex counts.
+        if distances.min(axis=1).max()>1e-7 or distances.min(axis=0).max()>1e-7:raise RuntimeError('native source collider does not match official STL vertex geometry')
         offsets=np.asarray(source_shapes[0]['runtime_body_shapes']['contact_offsets']).reshape(-1);rests=np.asarray(source_shapes[0]['runtime_body_shapes']['rest_offsets']).reshape(-1)
         if len(offsets)!=1 or len(rests)!=1:raise RuntimeError('native source offset identity is ambiguous')
         volume=sum(abs(trimesh.Trimesh(v,f,process=False).volume) for _,v,f in pieces);original=abs(mesh.convex_hull.volume)
@@ -94,7 +99,7 @@ def build_manifest(root,output,source_cooked_export):
         for i,f in enumerate(mesh.faces):
             if set(f.tolist())<=pad_vertex_ids:original_pad_faces.append(i)
         if len(original_pad_faces)!=4:raise RuntimeError('official STL surface ownership not exactly four faces')
-        result['fingers'][name]={'source_contact_offset_m':float(offsets[0]),'source_rest_offset_m':float(rests[0]),'tessellation':'convex partition into centroid/facet tetrahedra; exterior and union conserved','stl_sha256':hashlib.sha256(stl.read_bytes()).hexdigest(),'dae_sha256':hashlib.sha256(dae.read_bytes()).hexdigest(),'official_surface_geometry_id':gid,'official_surface_material':material,'dae_to_stl_max_vertex_error_m':float(delta.max()),'official_pad_face_ids':original_pad_faces,'pad_vertices':points.tolist(),'partition_apex_z_m':depth,'source_hull_volume_m3':original,'partition_volume_m3':float(volume),'source_bounds':mesh.bounds.tolist(),'pieces':[{'owner':owner,'vertices':v.tolist(),'faces':f.tolist()} for owner,v,f in pieces]}
+        result['fingers'][name]={'source_contact_offset_m':float(offsets[0]),'source_rest_offset_m':float(rests[0]),'tessellation':'metal centroid/facet tetrahedra; one convex pad; exterior and union conserved','stl_sha256':hashlib.sha256(stl.read_bytes()).hexdigest(),'dae_sha256':hashlib.sha256(dae.read_bytes()).hexdigest(),'official_surface_geometry_id':gid,'official_surface_material':material,'dae_to_stl_max_vertex_error_m':float(delta.max()),'official_pad_face_ids':original_pad_faces,'pad_vertices':points.tolist(),'partition_apex_z_m':depth,'source_hull_volume_m3':original,'partition_volume_m3':float(volume),'source_bounds':mesh.bounds.tolist(),'pieces':[{'owner':owner,'vertices':v.tolist(),'faces':f.tolist()} for owner,v,f in pieces]}
     output.write_text(json.dumps(result,indent=2));return result
 
 
@@ -144,16 +149,25 @@ def install_owned_colliders(stage,manifest):
 
 
 class NativeOwnershipReports:
-    def __init__(self,stage,target_paths,physics_dt,allowed_pad_targets=None):
+    def __init__(self,stage,target_paths,physics_dt,allowed_pad_targets=None,world=None,sample_provider=None):
         from pxr import PhysicsSchemaTools,Usd
         import omni.physx
         self.dt=physics_dt;self.targets=set(target_paths);self.allowed_pad_targets=set(allowed_pad_targets or target_paths);self.rows=[];self.paths={};self.decode=PhysicsSchemaTools.intToSdfPath
         for p in Usd.PrimRange.Stage(stage,Usd.TraverseInstanceProxies()):
             owner=p.GetAttribute('contact:owner').Get()
             if owner:self.paths[str(p.GetPath())]=(p.GetAttribute('contact:finger').Get(),owner)
+        self.world=world;self.sample_provider=sample_provider;self.window_dt=0.;self.window_steps=0;self.physics_time=0.;self.physics_steps=[]
+        if world is not None:world.add_physics_callback('piper_owned_contact_clock',self.on_physics_step)
         self.subscription=omni.physx.get_physx_simulation_interface().subscribe_contact_report_events(self.callback)
 
-    def clear(self):self.rows=[]
+    def clear(self):self.rows=[];self.window_dt=0.;self.window_steps=0
+
+    def on_physics_step(self,dt):
+        if self.physics_steps:self.physics_steps[-1]['ownership']=self.summarize(self.physics_steps[-1]['contacts'],self.physics_steps[-1]['physics_dt_s'])
+        dt=float(dt);self.window_dt+=dt;self.window_steps+=1;self.physics_time+=dt
+        if self.sample_provider is not None:
+            sample=self.sample_provider();sample.update(t=self.physics_time-dt,physics_dt_s=dt,geometry_pose_time='native rigid-body tensor pose immediately before physics integration',contacts=[])
+            self.physics_steps.append(sample)
 
     def callback(self,headers,data):
         for h in headers:
@@ -169,8 +183,19 @@ class NativeOwnershipReports:
             finger,owner=self.paths[owned]
             for d in data[h.contact_data_offset:h.contact_data_offset+h.num_contact_data]:
                 impulse=np.array([d.impulse.x,d.impulse.y,d.impulse.z]);force=float(np.linalg.norm(impulse)/self.dt)
-                self.rows.append({'collider':owned,'target':target,'finger':finger,'owner':owner,'allowed_pad_target':any(target==t or target.startswith(t+'/') for t in self.allowed_pad_targets),'force_n':force,'impulse_world_ns':impulse.tolist(),'separation_m':float(d.separation),'face0':int(d.face_index0),'face1':int(d.face_index1)})
+                if owned==b:impulse=-impulse
+                contact={'collider':owned,'target':target,'finger':finger,'owner':owner,'allowed_pad_target':any(target==t or target.startswith(t+'/') for t in self.allowed_pad_targets),'force_n':force,'impulse_world_ns':impulse.tolist(),'separation_m':float(d.separation),'face0':int(d.face_index0),'face1':int(d.face_index1)}
+                self.rows.append(contact)
+                if self.physics_steps:self.physics_steps[-1]['contacts'].append(contact)
+
+    def summarize(self,rows,dt):
+        active=[x for x in rows if x['force_n']>0]
+        if dt<=0:raise RuntimeError('native physics contact interval was not measured')
+        impulses={n:np.sum([x['impulse_world_ns'] for x in active if x['finger']==n and x['owner']=='pad'],axis=0) if any(x['finger']==n and x['owner']=='pad' for x in active) else np.zeros(3) for n in FINGERS}
+        return {'contacts':rows.copy(),'pad_forces_n':{n:float(np.linalg.norm(v)/dt) for n,v in impulses.items()},'pad_force_impulse_sum_over_nominal_dt_n':{n:sum(x['force_n'] for x in active if x['finger']==n and x['owner']=='pad') for n in FINGERS},'metal_contacts':sum(x['owner']!='pad' for x in active),'pad_target_violations':sum(x['owner']=='pad' and not x['allowed_pad_target'] for x in active),'unknown_allowed':False,'classification':'native collider ID; no position projection','force_rule':'net native impulse divided by measured physics interval, not by control-loop dt'}
 
     def state(self):
-        active=[x for x in self.rows if x['force_n']>0]
-        return {'contacts':self.rows.copy(),'pad_forces_n':{n:sum(x['force_n'] for x in active if x['finger']==n and x['owner']=='pad') for n in FINGERS},'metal_contacts':sum(x['owner']!='pad' for x in active),'pad_target_violations':sum(x['owner']=='pad' and not x['allowed_pad_target'] for x in active),'unknown_allowed':False,'classification':'native collider ID; no position projection'}
+        dt=self.window_dt if self.world is not None else self.dt
+        result=self.summarize(self.rows,dt);result.update(physics_window_dt_s=dt,physics_substeps=self.window_steps,physics_time_s=self.physics_time)
+        if self.physics_steps:self.physics_steps[-1]['ownership']=self.summarize(self.physics_steps[-1]['contacts'],self.physics_steps[-1]['physics_dt_s'])
+        return result
