@@ -105,3 +105,11 @@ No legitimate grasp was certified; no opening or mobile-base motion was attempte
 - [Omni Physics cooking export API](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/extensions/runtime/source/omni.physx/docs/api/python.html)
 - [PhysX convex hull schema and vertex limit](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/107.3/dev_guide/schemas/physxschema.html)
 - [PhysX cooking plane-tolerance semantics](https://nvidia-omniverse.github.io/PhysX/physx/5.4.1/_api_build/structPxCookingParams.html)
+
+## Follow-up: unified ownership
+
+The legacy point-projection contact classifier documented above is superseded
+by [PIPER_CONTACT_OWNERSHIP.md](PIPER_CONTACT_OWNERSHIP.md). Native collider
+ownership now accepts a canonical interior-box closure and measured 1.524 mm
+pull, and rejects the unchanged formal grasp on its first non-pad body contact.
+The historical audit data and rejected wider-handle diagnostics are retained.

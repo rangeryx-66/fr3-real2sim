@@ -23,7 +23,10 @@ def export_cooked(stage, output):
         path=str(body.GetPath())
         try:
             view=simulation.create_rigid_body_view(path)
-            runtime[path]={'contact_offsets':np.asarray(view.get_contact_offsets()).tolist(),'rest_offsets':np.asarray(view.get_rest_offsets()).tolist(),'materials':np.asarray(view.get_material_properties()).tolist()}
+            offsets=np.asarray(view.get_contact_offsets());rests=np.asarray(view.get_rest_offsets());materials=np.asarray(view.get_material_properties())
+            runtime[path]={'contact_offsets':offsets.tolist(),'rest_offsets':rests.tolist(),'materials':materials.tolist()}
+            if offsets.size>64:
+                runtime[path]={'native_shape_count':int(offsets.size),'representation':'unique native values; shape-order identity not inferred','contact_offsets':[np.unique(offsets).tolist()],'rest_offsets':[np.unique(rests).tolist()],'materials':np.unique(materials.reshape(-1,materials.shape[-1]),axis=0).tolist()}
         except Exception as error:runtime[path]={'error':repr(error)}
     for prim in Usd.PrimRange.Stage(stage, Usd.TraverseInstanceProxies()):
         if not prim.HasAPI(UsdPhysics.CollisionAPI):continue
@@ -31,6 +34,7 @@ def export_cooked(stage, output):
         entry={'path':path,'type':prim.GetTypeName(), 'world_transform':np.asarray(UsdGeom.XformCache().GetLocalToWorldTransform(prim)).T.tolist(),
                'attributes':{a.GetName():str(a.Get()) for a in prim.GetAttributes() if a.GetName().startswith(('physics:','physxCollision:','physxConvexHullCollision:','physxConvexDecompositionCollision:'))},
                'offsets':{},'convexes':[]}
+        entry['owner']=prim.GetAttribute('contact:owner').Get();entry['finger']=prim.GetAttribute('contact:finger').Get()
         api=PhysxSchema.PhysxCollisionAPI(prim)
         for name,attr in [('contactOffset',api.GetContactOffsetAttr()),('restOffset',api.GetRestOffsetAttr())]:
             entry['offsets'][name]={'schema_value':attr.Get(),'authored':attr.HasAuthoredValueOpinion()}
