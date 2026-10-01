@@ -69,8 +69,10 @@ for monitor_name in ['link1','link2','link3','link4','link5','link6','flange_lin
 
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source',type=Path,required=True);p.add_argument('--asset-root',type=Path,required=True);p.add_argument('--plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--gpu',type=int,default=6);p.add_argument('--overview-only',action='store_true');p.add_argument('--gripper-sanity',action='store_true');p.add_argument('--candidate-index',type=int);p.add_argument('--deadline-shanghai');p.add_argument('--geometry-python',default=os.environ.get('PIPER_GEOMETRY_PYTHON','/data1/home/rangeryx/.conda/envs/anygrasp/bin/python'))
-    a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True);report=json.loads(a.plan.read_text());chosen=report['best'] if a.candidate_index is None else report['rows'][a.candidate_index]
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--source',type=Path,required=True);p.add_argument('--asset-root',type=Path,required=True);p.add_argument('--plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--gpu',type=int,default=6);p.add_argument('--contact-audit-only',action='store_true',help='Export measured closure cooking data and stop before any door-opening motion');p.add_argument('--overview-only',action='store_true');p.add_argument('--gripper-sanity',action='store_true');p.add_argument('--candidate-index',type=int);p.add_argument('--deadline-shanghai');p.add_argument('--geometry-python',default=os.environ.get('PIPER_GEOMETRY_PYTHON','/data1/home/rangeryx/.conda/envs/anygrasp/bin/python'))
+    a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True);report=json.loads(a.plan.read_text())
+    if a.contact_audit_only and report['mode']=='mobile_recovery':raise RuntimeError('contact audit requires fixed base')
+    chosen=report['best'] if a.candidate_index is None else report['rows'][a.candidate_index]
     original=json.loads((a.source/'report.json').read_text())['robot_base_pose'];base=original if report['mode']=='mobile_recovery' else (chosen['base'] if chosen else original)
     zone=ZoneInfo('Asia/Shanghai');now=datetime.now(zone);deadline=datetime.fromisoformat(a.deadline_shanghai) if a.deadline_shanghai else now.replace(hour=5,minute=0,second=0,microsecond=0)
     if deadline.tzinfo is None:deadline=deadline.replace(tzinfo=zone)
@@ -80,7 +82,7 @@ def main():
     from isaacsim.core.api.objects import FixedCuboid
     from isaacsim.core.prims import SingleXFormPrim
     from isaacsim.core.utils.types import ArticulationAction
-    from pxr import UsdPhysics,PhysxSchema,UsdGeom
+    from pxr import UsdPhysics,PhysxSchema,UsdGeom,Usd
     import cv2
     chassis=world.scene.add(FixedCuboid('/World/mobile_base',name='mobile_base',position=[base[0],base[1],-.66],orientation=np.roll(Rotation.from_euler('z',base[3],degrees=True).as_quat(),1),scale=[.34,.30,.20],physics_material=scene['mat']))
     pole=SingleXFormPrim('/World/r1a7_pedestal');base_link=SingleXFormPrim(scene['one_prim']('base_link','/World/Piper'))
@@ -98,10 +100,10 @@ def main():
     measured_tcp=matrix(*tcp.get_world_pose());position_error=float(np.linalg.norm(expected_tcp[:3,3]-measured_tcp[:3,3]));rotation_error=float(Rotation.from_matrix(expected_tcp[:3,:3]@measured_tcp[:3,:3].T).magnitude())
     if position_error>.001 or rotation_error>.001:raise RuntimeError('URDF/Isaac FK_TCP_MISMATCH')
     collision_audit=[]
-    for prim in stage.Traverse():
+    for prim in Usd.PrimRange.Stage(stage,Usd.TraverseInstanceProxies()):
         if str(prim.GetPath()).startswith('/World/Piper') and prim.IsA(UsdGeom.Mesh) and prim.HasAPI(UsdPhysics.CollisionAPI):
             mesh=UsdGeom.Mesh(prim);points=np.array(mesh.GetPointsAttr().Get());approx=UsdPhysics.MeshCollisionAPI(prim).GetApproximationAttr().Get()
-            collision_audit.append({'path':str(prim.GetPath()),'approximation':str(approx),'local_bounds':np.array([points.min(0),points.max(0)]).tolist(),'world_transform':np.array(UsdGeom.XformCache().GetLocalToWorldTransform(prim)).T.tolist()})
+            collision_audit.append({'source':'authored USD mesh; see cooked_shapes.json for actual cooking output','path':str(prim.GetPath()),'approximation':str(approx),'local_bounds':np.array([points.min(0),points.max(0)]).tolist(),'world_transform':np.array(UsdGeom.XformCache().GetLocalToWorldTransform(prim)).T.tolist()})
             if approx!='convexHull':raise RuntimeError('ISAAC_COLLISION_REPRESENTATION_MISMATCH:'+str(approx))
     (a.output/'collision_audit.json').write_text(json.dumps(collision_audit,indent=2))
     # Official 10 N finger effort limits: do not increase to conceal contact failure.
@@ -203,9 +205,23 @@ def main():
             for opening in np.linspace(.1,0,480):qtarget[fingers]=[opening/2,-opening/2];step()
             for _ in range(240):closed=step()
             result['actual_closure']=closed
+            if a.contact_audit_only:
+                from piper_mobile_demo.cooked_geometry import export_cooked
+                export_cooked(stage,a.output/'cooked_shapes.json')
+                subprocess.run(['env','-u','PYTHONPATH',a.geometry_python,str(ROOT/'scripts/validate_piper_cooked_contact.py'),str(a.output/'cooked_shapes.json'),str(a.output/'contact_validation.json')],check=True)
+                result['contact_validation']=json.loads((a.output/'contact_validation.json').read_text())
+                (a.output/'closure_observations.json').write_text(json.dumps(rows))
+                subprocess.run(['env','-u','PYTHONPATH',a.geometry_python,str(ROOT/'scripts/replay_piper_contact_geometry.py'),str(a.output/'cooked_shapes.json'),str(a.output/'closure_observations.json'),str(a.output/'closure_replay.json')],check=True)
+                result['closure_replay']=json.loads((a.output/'closure_replay.json').read_text())['summary']
+                result['pad_only_contact_verified']=min(closed['forces_n'])>=.2 and closed['nonpad_force_n']<=.01 and closed['palm_wrist_force_n']<=.01 and all(result['closure_replay']['invalid_samples_by_mode'].get(mode,1)==0 for mode in ['physx_cooked','raw_finger_raw_target'])
+                result['contact_point_label_provenance']='legacy application projection within 1 mm of original flat patch; not a PhysX material/shape identity'
+                result['door_opening_executed']=False
+                raise RuntimeError('CONTACT_AUDIT_COMPLETE_NO_OPENING')
             if min(closed['forces_n'])<.2:raise RuntimeError('BAD_CONTACT')
             if abs(closed['robot_q'][fingers[0]]+closed['robot_q'][fingers[1]])>.0002:raise RuntimeError('GRIPPER_COUPLING_ERROR')
-            result['physx_pad_only_closure']=True
+            result['legacy_contact_point_pad_label']=True
+            result['contact_point_label_provenance']='application projection within 1 mm; not native PhysX pad classification'
+            result['physx_pad_only_closure']=True # retained legacy key; strict offline audit still controls legality
             request={'source':str(a.source),'asset_root':str(a.asset_root),'target_points':str(a.plan.parent/'target_points.npy'),'selected':chosen,'actual_q':closed['robot_q'],'actual_door_angle_deg':closed['door_angle_deg']}
             (a.output/'closed_path_request.json').write_text(json.dumps(request))
             subprocess.run(['env','-u','PYTHONPATH',a.geometry_python,str(ROOT/'scripts/check_piper_closed_path.py'),str(a.output/'closed_path_request.json'),str(a.output/'closed_path_check.json')],check=True)
