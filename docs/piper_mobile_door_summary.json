@@ -1,0 +1,147 @@
+{
+  "branch": "codex/piper-mobile-door",
+  "baseline_commit": "cc8b930",
+  "same_scene": "PhysX-Mobility prepared 7320_v1",
+  "asset_installation": {
+    "x_m": 0.5,
+    "y_m": -0.05,
+    "yaw_deg": -90.0,
+    "fixture_height_m": 0.04
+  },
+  "fixed_base": [
+    0.5,
+    -0.55,
+    -0.1,
+    150.0
+  ],
+  "safety_margin_rad": 0.05,
+  "door_sanity": {
+    "opening_threshold": "opens >0.5 deg in 1s; upper bound, not measured static friction",
+    "torque_upper_bound_nm": 0.0025,
+    "tangential_force_upper_bound_n": 0.0060585758068632395,
+    "max_angle_deg": 90.00000250447816,
+    "fixture_table_static_contact_peak_n": 0.0
+  },
+  "final_strict_trial": {
+    "status": "CLOSED_PATH_COLLISION:gripper_link1:l_1",
+    "legal_real_grasp": false,
+    "physx_pad_only_closure": true,
+    "max_actual_door_angle_deg": 1.9264714268274474e-08,
+    "minimum_joint_margin_rad": 0.36151200410766604,
+    "maximum_relative_slip_m": 0.0,
+    "fk_tcp_check": {
+      "position_error_m": 1.7019974025000094e-07,
+      "rotation_error_rad": 2.4898038887913754e-07
+    },
+    "closed_path_check": {
+      "status": "CLOSED_PATH_COLLISION:gripper_link1:l_1",
+      "finger_positions": [
+        0.01193250808864832,
+        -0.01193633396178484
+      ],
+      "initial_state_valid": false,
+      "rows": [],
+      "failed_angle_deg": -1.0014042572947802e-07
+    },
+    "platform_assumption": {
+      "type": "parameterized simulation chassis, not an official mobile robot",
+      "chassis_size_m": [
+        0.34,
+        0.3,
+        0.2
+      ],
+      "chassis_center_z_m": -0.66,
+      "mast_size_m": [
+        0.1,
+        0.1,
+        0.4600000000000001
+      ],
+      "floor_z_m": -0.76,
+      "movement": "kinematic SE2 reposition, then fixed root"
+    },
+    "door_mass_model": "inherited baseline geometry COM/inertia approximation; source mass preserved; no new tuning"
+  },
+  "historical_trial_NOT_VALIDATED": {
+    "status": "CONTACT_LOSS",
+    "observed_angle_deg": 16.367210388183594,
+    "minimum_joint_margin_rad": 0.36151200410766604,
+    "slip_m": 0.0010818582916021068,
+    "retrospective_strict_status": "COLLISION_AT_CLOSURE; earlier nearest-projection gate was too permissive",
+    "success": false
+  },
+  "r1_baseline": {
+    "archival_not_rerun": true,
+    "same_capture_sha256": "b39b1f7db232b900a22e39f3d0dfffc0e4d8006f012597a56acd18e9135faaf2",
+    "pad_only_closure": {
+      "success": 0,
+      "trials": 5
+    },
+    "minimum_measured_arm_margin_rad": 0.0967,
+    "opening": "blocked before opening by metal contact; no comparable certified opening angle"
+  },
+  "mobile_base": {
+    "implemented": "SE2 placement search, collision-checked reposition, stop/lock, manipulate",
+    "physically_tested": false,
+    "reason": "fixed base already has full 22-degree arm paths; unresolved finger/handle geometry is not evidence that base relocation helps"
+  },
+  "funnels": {
+    "piper_fixed_preflight_v3": {
+      "tested_variants": 162,
+      "counts": {
+        "NO_IK": 126,
+        "NO_PREGRASP_PLAN": 4,
+        "IK_BRANCH_JUMP": 4,
+        "COLLISION:gripper_link2:l_0": 2,
+        "ARC_NO_IK": 8,
+        "COLLISION:gripper_link1:l_0": 2,
+        "NO_PREGRASP_IK": 10,
+        "COLLISION:gripper_link2:l_1": 2,
+        "FULL_PATH_PLANNED": 4
+      },
+      "max_planned_angle_deg": 22.0,
+      "best_min_margin_rad": 0.35648015112806,
+      "qualification": "open-gripper planning only; does not establish a legal real closure"
+    },
+    "piper_fixed_region_refinement": {
+      "tested_variants": 84,
+      "counts": {
+        "IK_BRANCH_JUMP": 16,
+        "NO_PREGRASP_PLAN": 5,
+        "ARC_NO_IK": 6,
+        "FULL_PATH_PLANNED": 51,
+        "NO_PREGRASP_IK": 1,
+        "COLLISION:gripper_link2:l_1": 3,
+        "NO_IK": 2
+      },
+      "max_planned_angle_deg": 22.0,
+      "best_min_margin_rad": 0.5296526651682936,
+      "qualification": "open-gripper planning only; does not establish a legal real closure"
+    },
+    "piper_fixed_center_search": {
+      "tested_variants": 20,
+      "counts": {
+        "FULL_PATH_PLANNED": 12,
+        "ARC_NO_IK": 4,
+        "IK_BRANCH_JUMP": 3,
+        "COLLISION:gripper_link2:l_1": 1
+      },
+      "max_planned_angle_deg": 22.0,
+      "best_min_margin_rad": 0.36147960638890675,
+      "qualification": "open-gripper planning only; does not establish a legal real closure"
+    },
+    "piper_fixed_region_centers": {
+      "tested_variants": 20,
+      "counts": {
+        "FULL_PATH_PLANNED": 20
+      },
+      "max_planned_angle_deg": 22.0,
+      "best_min_margin_rad": 0.5302278388374171,
+      "qualification": "open-gripper planning only; does not establish a legal real closure"
+    }
+  },
+  "shared_input_sha256": {
+    "capture.npz": "b39b1f7db232b900a22e39f3d0dfffc0e4d8006f012597a56acd18e9135faaf2",
+    "handle_mask.npy": "5a83f7822d56eafa70289e029d90b44a3401e4ced60c3bc4faeb26b9a2f0bc6c",
+    "graspgenx_native.json": "02ad2f9a36137ecff6db684b6e20934f2cdc3f96b32fa60f42d0e418f1619d38"
+  }
+}
