@@ -8,7 +8,7 @@ def atomic_xml(tree, path, **options):
     with tempfile.NamedTemporaryFile(dir=path.parent, suffix=path.suffix, delete=False) as f:
         temporary=Path(f.name)
     try:
-        tree.write(temporary, **options);os.replace(temporary,path)
+        tree.write(temporary, **options);os.chmod(temporary,0o644);os.replace(temporary,path)
     finally:
         temporary.unlink(missing_ok=True)
 

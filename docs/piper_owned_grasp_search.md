@@ -130,3 +130,10 @@ A concurrent stress check performed 20 publications and 2,000 XML read pairs
 without parse errors or changing the generated URDF bytes. Parallel episodes use
 separate output directories and disjoint candidate queues; interrupted startup
 runs are archived and rerun, not counted as grasp failures.
+
+Final bounded-search measurements are recorded in
+`piper_formal_owned_search_results.md` and the adjacent JSON files. The online
+contact guard also checks each physics substep, avoiding cancellation inside a
+control-window aggregate. Positive pad contact during pregrasp/approach rejects
+the episode. Slip is reported as unmeasured until a legal relative grasp frame
+has actually been established.

@@ -49,7 +49,7 @@ def bootstrap(a,base):
     with tempfile.NamedTemporaryFile(dir=ROOT/'config',suffix='.urdf',delete=False) as f:
         temporary=Path(f.name)
     try:
-        ET.ElementTree(robot).write(temporary,encoding='unicode');os.replace(temporary,ROOT/'config/piper_sim.urdf')
+        ET.ElementTree(robot).write(temporary,encoding='unicode');os.chmod(temporary,0o644);os.replace(temporary,ROOT/'config/piper_sim.urdf')
     finally:
         temporary.unlink(missing_ok=True)
     # Importer proxy is prepared by us; original command URDF is preserved.

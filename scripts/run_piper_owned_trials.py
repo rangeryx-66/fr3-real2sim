@@ -15,6 +15,9 @@ def main():
     if deadline<=now and not a.deadline_shanghai:deadline+=timedelta(days=1)
     a.output.mkdir(parents=True,exist_ok=True);plan=a.output/'plan.json';shutil.copy(a.search.parent/'target_points.npy',a.output/'target_points.npy')
     summary_path=a.output/'summary.json';summary=json.loads(summary_path.read_text()) if summary_path.exists() else {'fixed_base':json.loads(a.fixed_base_report.read_text())['base_final'],'deadline_shanghai':deadline.isoformat(),'opening_goals_deg':[1,5,10,22],'physical_trials':[],'mobile_base_enabled':False,'raw_perception_unchanged':True}
+    # A retried startup error is historical, not the status of the resumed run.
+    summary['status']='RUNNING'
+    for key in ('blocked_trial','returncode'):summary.pop(key,None)
     done={r['variant'] for r in summary['physical_trials']}
     while True:
         if datetime.now(deadline.tzinfo)>=deadline:summary['status']='CUTOFF_05_00';break

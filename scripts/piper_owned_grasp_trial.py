@@ -104,7 +104,8 @@ def main():
             cv2.putText(image,f'door={state["door_angle_deg"]:.2f} deg  margin={margin:.3f} rad  slip={slip*1000:.1f} mm',(12,61),cv2.FONT_HERSHEY_SIMPLEX,.65,(255,255,255),1);record.stdin.write(np.ascontiguousarray(image).tobytes())
         tick+=1
         if margin<=.05 or any(s['margin_rad']<=.05 for s in native.physics_steps[physics_begin:]):raise RuntimeError('LOW_JOINT_MARGIN')
-        if ownership['metal_contacts'] or ownership['pad_target_violations']:raise RuntimeError('NATIVE_FORBIDDEN_CONTACT')
+        if ownership['metal_contacts'] or ownership['pad_target_violations'] or any(s['ownership']['metal_contacts'] or s['ownership']['pad_target_violations'] for s in native.physics_steps[physics_begin:]):raise RuntimeError('NATIVE_FORBIDDEN_CONTACT')
+        if phase in ('PREGRASP','APPROACH') and any(any(c['force_n']>0 for c in s['ownership']['contacts']) for s in native.physics_steps[physics_begin:]):raise RuntimeError('APPROACH_CONTACT')
         if phase in ('PREGRASP','APPROACH','CLOSE','CLOSURE_HOLD','PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD') and bodyforce>0:raise RuntimeError('NON_PAD_CONTACT')
         if phase in ('PREGRASP','APPROACH','CLOSE','CLOSURE_HOLD','PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD') and max(scene_forces.values(),default=0)>0:raise RuntimeError('SCENE_COLLISION')
         if phase in ('PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD'):
@@ -199,7 +200,7 @@ def main():
         world.pause()
         export_cooked(stage,a.output/'cooked_final.json')
         result['door_opening_arc_executed']=any(s['phase']=='OPEN_DOOR' for s in native.physics_steps);result['target_collider_association']=association;result['owned_colliders']=scene['owned_contact_colliders'];result['native_contact_classification']='native collider identity only';result['native_metal_contact_samples']=sum(r['ownership']['metal_contacts']>0 for r in rows);result['pad_wrong_target_samples']=sum(r['ownership']['pad_target_violations']>0 for r in rows)
-        result['physics_step_samples']=len(native.physics_steps);result['native_contact_header_count']=native.contact_header_count;result['native_decoded_path_cache_size']=len(native.decoded_paths);(a.output/'physics_steps.json').write_text(json.dumps(native.physics_steps))
+        result['slip_reference_established']=reference is not None;result['physics_step_samples']=len(native.physics_steps);result['native_contact_header_count']=native.contact_header_count;result['native_decoded_path_cache_size']=len(native.decoded_paths);(a.output/'physics_steps.json').write_text(json.dumps(native.physics_steps))
         if native.physics_steps:
             last=native.physics_steps[-1]
             result['stop_state']={'phase':last['phase'],'finger_joint_positions_m':last['q'][6:],'aperture_m':last['aperture_m'],'pad_forces_n':last['ownership']['pad_forces_n'],'metal_contacts':last['ownership']['metal_contacts'],'pad_target_violations':last['ownership']['pad_target_violations'],'relative_slip_m':last['relative_slip_m'],'door_angle_deg':last['door_angle_deg'],'joint_margin_rad':last['margin_rad']}
