@@ -14,6 +14,7 @@ def main():
     model.deadline_timestamp=r.get('deadline_timestamp',float('inf'))
     owner=OwnedFingerScene(ROOT,r['export'],r['ownership'],r['allowed_targets'],model.manifest['moving_link'])
     owner.reference_angle_rad=np.deg2rad(r.get('export_door_angle_deg',0.))
+    if r.get('export_moving_pose') is not None:owner.moving_reference=np.asarray(r['export_moving_pose'])
     out={'kind':r['kind'],'collision_source':'native PhysX cooked convexes plus unchanged official raw nonpad faces','geometry_export_sha256':hashlib.sha256(Path(r['export']).read_bytes()).hexdigest(),'rows':[]}
     if r['kind']=='audit':
         states=json.loads(Path(r['observations']).read_text());mismatches=0
@@ -27,8 +28,16 @@ def main():
             native=s['ownership'];contacts=[c for c in native['contacts'] if c['force_n']>0]
             mismatch=sum(c['owner']!=registry.get(c['collider']) for c in contacts);mismatches+=mismatch
             loaded=s['phase'] in ['CLOSURE_HOLD','PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD']
-            valid=(safe and not mismatch and not native['metal_contacts'] and not native['pad_target_violations'] and s['margin_rad']>.05 and (not loaded or min(native['pad_forces_n'].values())>=.2) and s.get('relative_slip_m',0)<=r.get('slip_limit_m',.001))
-            out['rows'].append({'sample':i,'t':s['t'],'phase':s['phase'],'valid':valid,'geometry_safe':safe,'reason':why,'metal_contacts':native['metal_contacts'],'pad_force_n':native['pad_forces_n'],'margin_rad':s['margin_rad'],'slip_m':s.get('relative_slip_m',0)})
+            violations=[]
+            if not safe:violations.append(why)
+            if mismatch:violations.append('NATIVE_OWNER_MISMATCH')
+            if native['metal_contacts']:violations.append('METAL_CONTACT')
+            if native['pad_target_violations']:violations.append('PAD_WRONG_TARGET')
+            if s['margin_rad']<=.05:violations.append('LOW_JOINT_MARGIN')
+            if loaded and min(native['pad_forces_n'].values())<.2:violations.append('NO_BILATERAL_PAD_CONTACT')
+            if s.get('relative_slip_m',0)>r.get('slip_limit_m',.001):violations.append('GRASP_SLIP')
+            valid=not violations
+            out['rows'].append({'sample':i,'t':s['t'],'phase':s['phase'],'valid':valid,'geometry_safe':safe,'reason':why,'violations':violations,'metal_contacts':native['metal_contacts'],'pad_force_n':native['pad_forces_n'],'margin_rad':s['margin_rad'],'slip_m':s.get('relative_slip_m',0)})
             if not valid:
                 out.update(status='OWNED_TRAJECTORY_REJECTED',failed_sample=i,failure=out['rows'][-1]);break
         else:out['status']='OWNED_TRAJECTORY_VALID'

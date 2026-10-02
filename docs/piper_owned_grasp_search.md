@@ -33,6 +33,15 @@ This uses no object ID or object-specific offset. The maximum per-axis position
 offset is 8 mm and RPY component is 12 degrees. Older-frame results are retained
 as diagnostics, not silently relabeled as corrected-frame trials.
 
+`--handle-regions 5 --samples 0` additionally applies the same bounded search
+at five longitudinal anchors from the segmented point cloud's 5th–95th
+percentiles. Each anchor uses its own local PCA neighborhood and retains the
+reference grasp's offset from the observed local surface. These translations
+can be centimeters along the existing handle; the 8 mm bound applies to the
+local perturbation around each anchor, not to the total slide. Regions enter
+physical validation in round-robin order, so a low-score center cannot starve
+the upper/lower regions. Neither asset IDs nor fixed global offsets select them.
+
 ## Acceptance gates
 
 1. Open-gripper approach collision-free, exact IK and margin >0.05 rad.
@@ -99,3 +108,25 @@ Each run writes video, complete physics-step poses/contact records, actual cooke
 exports, planning requests/results, closure/pull replay audits and `report.json`.
 An early forbidden-contact stop has a measured *partial* closure aperture. It
 must not be interpreted as a completed closure or a pad-only grasp.
+
+## Execution integrity
+
+Cooked-shape exports pause the physics timeline. Exporting may call Kit updates;
+these must not advance an unrecorded closure or keep moving after a guard stops
+the trial. Prediction uses the actual tensor moving-link pose and measured door
+angle captured with the paused export, rather than an asynchronously updated USD
+pose. Closure-hold also checks palm and scene contacts with a zero-force rule.
+
+The native ownership callback caches decoded collider paths and the two finger
+body prefixes. Recorded contact replay verifies identical ownership and force
+statistics, including unknown collider and wrong-target rejection. This removes
+repeated rebuilding of a 1,010-collider map for unrelated contact headers; it
+changes neither geometry nor contact acceptance. The microbenchmark is a callback
+timing result, not a grasp success or end-to-end simulation speed claim.
+
+URDF/SRDF and the simulation importer proxy are published by atomic replacement.
+This prevents a concurrent episode from reading an empty, partly written model.
+A concurrent stress check performed 20 publications and 2,000 XML read pairs
+without parse errors or changing the generated URDF bytes. Parallel episodes use
+separate output directories and disjoint candidate queues; interrupted startup
+runs are archived and rerun, not counted as grasp failures.

@@ -1,5 +1,5 @@
 """Real PiPER finger closure and passive-door interaction; no ideal attachment."""
-import argparse,json,os,sys,hashlib,subprocess,shutil
+import argparse,json,os,sys,hashlib,subprocess,shutil,tempfile
 from pathlib import Path
 from datetime import datetime,timedelta
 from zoneinfo import ZoneInfo
@@ -45,7 +45,13 @@ def bootstrap(a,base):
     for joint in robot.findall('joint'):
         for mimic in joint.findall('mimic'):joint.remove(mimic)
         if joint.get('name')=='gripper_joint2':ET.SubElement(joint,'mimic',joint='gripper_joint1',multiplier='-1.0',offset='0.0')
-    ET.ElementTree(robot).write(ROOT/'config/piper_sim.urdf',encoding='unicode')
+    # Preserve identical bytes while publishing the shared importer proxy atomically.
+    with tempfile.NamedTemporaryFile(dir=ROOT/'config',suffix='.urdf',delete=False) as f:
+        temporary=Path(f.name)
+    try:
+        ET.ElementTree(robot).write(temporary,encoding='unicode');os.replace(temporary,ROOT/'config/piper_sim.urdf')
+    finally:
+        temporary.unlink(missing_ok=True)
     # Importer proxy is prepared by us; original command URDF is preserved.
     source=source.replace("subprocess.run([sys.executable,str(ROOT/'scripts/prepare_piper_description.py')],check=True)","pass # already prepared")
     source=source.replace('usd_path=str(asset_cache)', 'usd_path=str(asset_cache / model_hash)')

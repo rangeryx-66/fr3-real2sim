@@ -53,7 +53,7 @@ def main():
     rows=[];tick=0;phase='FIXED_BASE';status='STARTED';reference=None;loss_steps=0
     limits=ET.parse(ROOT/'config/piper.urdf').getroot();limits=np.array([[float(limits.find(f"joint[@name='joint{i}']/limit").get(k)) for k in ('lower','upper')] for i in range(1,7)])
     result={'kind':'real finger contact; passive door; no ideal attachment','mode':report['mode'],'base_initial':base,'base_final':base,'base_locked_during_manipulation':True,'bootstrap_sha256':scene['bootstrap_hash'],'finger_effort_limit_n':10.,'friction_unchanged':True,'asset_parameters_unchanged':True,'joint_names':names,'selected':chosen,'legal_real_grasp':False}
-    result['stage_tests']=[];result['slip_limit_m']=a.slip_limit_mm/1000;result['legal_closure']=False;result['legal_pull']=False
+    result['stage_tests']=[];result['gpu_index']=a.gpu;result['slip_limit_m']=a.slip_limit_mm/1000;result['legal_closure']=False;result['legal_pull']=False
     result['fk_tcp_check']={'position_error_m':position_error,'rotation_error_rad':rotation_error}
     result['platform_assumption']={'type':'parameterized simulation chassis, not an official mobile robot','chassis_size_m':[.34,.30,.20],'chassis_center_z_m':-.66,'mast_size_m':[.10,.10,base[2]+.56],'floor_z_m':-.76,'movement':'kinematic SE2 reposition, then fixed root'}
     result['door_mass_model']='inherited baseline geometry COM/inertia approximation; source mass preserved; no new tuning'
@@ -105,8 +105,8 @@ def main():
         tick+=1
         if margin<=.05 or any(s['margin_rad']<=.05 for s in native.physics_steps[physics_begin:]):raise RuntimeError('LOW_JOINT_MARGIN')
         if ownership['metal_contacts'] or ownership['pad_target_violations']:raise RuntimeError('NATIVE_FORBIDDEN_CONTACT')
-        if phase in ('PREGRASP','APPROACH','CLOSE','PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD') and bodyforce>.01:raise RuntimeError('NON_PAD_CONTACT')
-        if phase in ('PREGRASP','APPROACH','CLOSE','PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD') and max(scene_forces.values(),default=0)>.01:raise RuntimeError('SCENE_COLLISION')
+        if phase in ('PREGRASP','APPROACH','CLOSE','CLOSURE_HOLD','PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD') and bodyforce>0:raise RuntimeError('NON_PAD_CONTACT')
+        if phase in ('PREGRASP','APPROACH','CLOSE','CLOSURE_HOLD','PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD') and max(scene_forces.values(),default=0)>0:raise RuntimeError('SCENE_COLLISION')
         if phase in ('PULL_DIAGNOSTIC','PULL_HOLD','OPEN_DOOR','STAGE_HOLD'):
             if any(min(s['ownership']['pad_forces_n'].values())<.2 for s in native.physics_steps[physics_begin:]):raise RuntimeError('CONTACT_LOSS')
             if slip>a.slip_limit_mm/1000 or any(s['relative_slip_m']>a.slip_limit_mm/1000 for s in native.physics_steps[physics_begin:]):raise RuntimeError('GRASP_SLIP')
@@ -115,9 +115,9 @@ def main():
         old=qtarget[arm].copy()
         for f in np.linspace(0,1,int(duration/dt)):
             blend=f*f*(3-2*f);qtarget[arm]=old+blend*(np.asarray(q)-old);step()
-    export_angle=0.;reference_tcp=None;reference_angle=0.;active_stage=None
+    export_angle=0.;export_moving_pose=None;reference_tcp=None;reference_angle=0.;active_stage=None
     def worker(kind,label,**extra):
-        request={'kind':kind,'source':str(a.source),'asset_root':str(a.asset_root),'export':str(a.output/'cooked_closed.json'),'ownership':str(a.ownership),'allowed_targets':association['allowed_pad_targets'],'base':base,'deadline_timestamp':deadline.timestamp(),'export_door_angle_deg':export_angle,'slip_limit_m':a.slip_limit_mm/1000,**extra}
+        request={'kind':kind,'source':str(a.source),'asset_root':str(a.asset_root),'export':str(a.output/'cooked_closed.json'),'ownership':str(a.ownership),'allowed_targets':association['allowed_pad_targets'],'base':base,'deadline_timestamp':deadline.timestamp(),'export_door_angle_deg':export_angle,'export_moving_pose':export_moving_pose.tolist(),'slip_limit_m':a.slip_limit_mm/1000,**extra}
         request_path=a.output/(label+'_request.json');response_path=a.output/(label+'_response.json');request_path.write_text(json.dumps(request))
         subprocess.run(['env','-u','PYTHONPATH',a.geometry_python,str(ROOT/'scripts/piper_owned_path.py'),str(request_path),str(response_path)],check=True)
         return json.loads(response_path.read_text())
@@ -159,7 +159,12 @@ def main():
             for opening in np.linspace(.1,0,480):qtarget[fingers]=[opening/2,-opening/2];step()
             phase='CLOSURE_HOLD';closed=hold(1.)
             result['actual_closure']=closed;export_angle=closed['door_angle_deg']
+            world.pause()
             export_cooked(stage,a.output/'cooked_closed.json')
+            export_angle=float(np.rad2deg(door.get_joint_positions()[0]));export_moving_pose=actual_link().copy()
+            export_q=robot.get_joint_positions()
+            result['closure_after_export']={'finger_joint_positions_m':export_q[fingers].tolist(),'aperture_m':float(export_q[fingers[0]]-export_q[fingers[1]]),'door_angle_deg':export_angle,'moving_link_pose':export_moving_pose.tolist()}
+            world.play()
             closure_begin=next(i for i,s in enumerate(native.physics_steps) if s['phase']=='CLOSE')
             audit('closure',closure_begin);result['legal_closure']=True
             reference_tcp=actual_tcp();reference_angle=float(np.rad2deg(door.get_joint_positions()[0]));reference=np.linalg.inv(actual_link())@reference_tcp
@@ -191,9 +196,10 @@ def main():
         if active_stage is not None:result['stage_tests'].append(stage_summary(active_stage[0],active_stage[1],status))
         result['exception_type']=type(e).__name__;print('STOP',status,flush=True)
     finally:
+        world.pause()
         export_cooked(stage,a.output/'cooked_final.json')
         result['door_opening_arc_executed']=any(s['phase']=='OPEN_DOOR' for s in native.physics_steps);result['target_collider_association']=association;result['owned_colliders']=scene['owned_contact_colliders'];result['native_contact_classification']='native collider identity only';result['native_metal_contact_samples']=sum(r['ownership']['metal_contacts']>0 for r in rows);result['pad_wrong_target_samples']=sum(r['ownership']['pad_target_violations']>0 for r in rows)
-        result['physics_step_samples']=len(native.physics_steps);(a.output/'physics_steps.json').write_text(json.dumps(native.physics_steps))
+        result['physics_step_samples']=len(native.physics_steps);result['native_contact_header_count']=native.contact_header_count;result['native_decoded_path_cache_size']=len(native.decoded_paths);(a.output/'physics_steps.json').write_text(json.dumps(native.physics_steps))
         if native.physics_steps:
             last=native.physics_steps[-1]
             result['stop_state']={'phase':last['phase'],'finger_joint_positions_m':last['q'][6:],'aperture_m':last['aperture_m'],'pad_forces_n':last['ownership']['pad_forces_n'],'metal_contacts':last['ownership']['metal_contacts'],'pad_target_violations':last['ownership']['pad_target_violations'],'relative_slip_m':last['relative_slip_m'],'door_angle_deg':last['door_angle_deg'],'joint_margin_rad':last['margin_rad']}

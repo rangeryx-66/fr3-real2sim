@@ -156,6 +156,8 @@ class NativeOwnershipReports:
         for p in Usd.PrimRange.Stage(stage,Usd.TraverseInstanceProxies()):
             owner=p.GetAttribute('contact:owner').Get()
             if owner:self.paths[str(p.GetPath())]=(p.GetAttribute('contact:finger').Get(),owner)
+        self.finger_body_paths={path.rsplit('/contact_owned/',1)[0]:finger for path,(finger,owner) in self.paths.items()}
+        self.decoded_paths={};self.contact_header_count=0
         self.world=world;self.sample_provider=sample_provider;self.window_dt=0.;self.window_steps=0;self.physics_time=0.;self.physics_steps=[]
         if world is not None:world.add_physics_callback('piper_owned_contact_clock',self.on_physics_step)
         self.subscription=omni.physx.get_physx_simulation_interface().subscribe_contact_report_events(self.callback)
@@ -170,13 +172,17 @@ class NativeOwnershipReports:
             self.physics_steps.append(sample)
 
     def callback(self,headers,data):
+        self.contact_header_count+=len(headers)
+        def path(key):
+            if key not in self.decoded_paths:self.decoded_paths[key]=str(self.decode(key))
+            return self.decoded_paths[key]
         for h in headers:
-            a,b=str(self.decode(h.collider0)),str(self.decode(h.collider1))
+            a,b=path(h.collider0),path(h.collider1)
             matches=lambda path:any(path==t or path.startswith(t+'/') for t in self.targets)
             if a in self.paths and matches(b):owned=a;target=b
             elif b in self.paths and matches(a):owned=b;target=a
             else:
-                bodies={path.rsplit('/contact_owned/',1)[0]:finger for path,(finger,owner) in self.paths.items()}
+                bodies=self.finger_body_paths
                 unknown=next(((path,other,finger) for path,other in [(a,b),(b,a)] for body,finger in bodies.items() if path.startswith(body+'/') and matches(other)),None)
                 if unknown is None:continue
                 owned,target,finger=unknown;self.paths[owned]=(finger,'unknown')

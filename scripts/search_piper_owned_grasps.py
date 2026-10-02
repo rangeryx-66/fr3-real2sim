@@ -14,7 +14,7 @@ from piper_mobile_demo.owned_scene import OwnedFingerScene
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     for name in ['source','asset-root','reference-plan','reference-trial','native-export','association','output']:p.add_argument('--'+name,type=Path,required=True)
-    p.add_argument('--ownership',type=Path,default=ROOT/'config/piper_contact_ownership.json');p.add_argument('--samples',type=int,default=160);p.add_argument('--max-planned-trials',type=int,default=96);p.add_argument('--variant-prefix',default='local');p.add_argument('--resume',action='store_true')
+    p.add_argument('--ownership',type=Path,default=ROOT/'config/piper_contact_ownership.json');p.add_argument('--samples',type=int,default=160);p.add_argument('--handle-regions',type=int,default=0);p.add_argument('--max-planned-trials',type=int,default=96);p.add_argument('--variant-prefix',default='local');p.add_argument('--resume',action='store_true')
     a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True)
     source=json.loads((a.source/'report.json').read_text());old=json.loads(a.reference_plan.read_text());seeds=[r for r in old['rows'] if r.get('q_grasp')]
     # Fixed base comes from the previously executed trial, never searched here.
@@ -45,6 +45,21 @@ def main():
             rot=np.zeros(3);rot[i]=deg
             for offset in offsets[:5]:settings.append((np.asarray(offset),rot))
     settings.extend(((u[:3]*2-1)*.008,(u[3:]*2-1)*12) for u in qmc.Halton(6,scramble=False).random(a.samples))
+    regions=[(0,point,frame)]
+    if a.handle_regions:
+        regions=[];coordinates=(targets-anchor)@axis
+        for i,quantile in enumerate(np.linspace(.05,.95,a.handle_regions)):
+            coordinate=np.quantile(coordinates,quantile)
+            section=targets[abs(coordinates-coordinate)<np.ptp(pad_vertices[:,0])/2]
+            if len(section)<64:continue
+            center=np.median(section,axis=0);rp=center+point-anchor
+            neighbors=targets[tree.query_ball_point(rp,frame_radius)]
+            if len(neighbors)<64:continue
+            _,_,v=np.linalg.svd(neighbors-np.median(neighbors,axis=0),full_matrices=False);tangent=v[0]
+            if tangent@axis<0:tangent=-tangent
+            n=T0[:3,2]-tangent*(tangent@T0[:3,2]);n/=np.linalg.norm(n)
+            regions.append((i,rp,np.column_stack((tangent,np.cross(n,tangent),n))))
+    settings=[(i,rp,rf,offset,rpy) for i,rp,rf in regions for offset,rpy in settings]
     report={'mode':'fixed','base':base.tolist(),'source':str(a.source),'asset_root':str(a.asset_root),'ownership_sha256':__import__('hashlib').sha256(a.ownership.read_bytes()).hexdigest(),'native_export':str(a.native_export),'search_frame':frame.tolist(),'frame_neighborhood_radius_m':frame_radius,'frame_point_count':len(local),'frame_singular_values':singular.tolist(),'pad_centre_tcp':pad_centre.tolist(),'bounds':{'translation_handle_m':.008,'rpy_handle_deg':12},'raw_perception_changed':False,'closure_rule':'predicted width is diagnostic only; actual PhysX closure mandatory','rows':[],'best':None}
     if a.resume:
         previous=json.loads((a.output/'report.json').read_text())
@@ -52,11 +67,12 @@ def main():
         assert np.allclose(previous['search_frame'],frame,atol=1e-12), 'search frame changed; use a new output directory'
         report=previous;settings=[]
     seen=set()
-    for index,(offset,rpy) in enumerate(settings):
-        T=T0.copy();T[:3,:3]=frame@Rotation.from_euler('xyz',rpy,degrees=True).as_matrix()@frame.T@T0[:3,:3];T[:3,3]=point+frame@offset-T[:3,:3]@pad_centre
+    report['handle_regions']=[{'region':i,'pad_anchor_world':rp.tolist(),'frame':rf.tolist()} for i,rp,rf in regions]
+    for index,(region,rp,rf,offset,rpy) in enumerate(settings):
+        T=T0.copy();T[:3,:3]=rf@Rotation.from_euler('xyz',rpy,degrees=True).as_matrix()@frame.T@T0[:3,:3];T[:3,3]=rp+rf@offset-T[:3,:3]@pad_centre
         sig=tuple(np.round(T[:3].ravel(),8))
         if sig in seen:continue
-        seen.add(sig);row={'variant':f'{a.variant_prefix}_{index:04d}','T':T.tolist(),'base':base.tolist(),'raw_rank':pivot['raw_rank'],'offset_handle_m':offset.tolist(),'rpy_handle_deg':rpy.tolist(),'pad_anchor_world':point.tolist()}
+        seen.add(sig);row={'variant':f'{a.variant_prefix}_{index:04d}','region':region,'T':T.tolist(),'base':base.tolist(),'raw_rank':pivot['raw_rank'],'offset_handle_m':offset.tolist(),'rpy_handle_deg':rpy.tolist(),'pad_anchor_world':rp.tolist(),'raw_translation_delta_m':(T[:3,3]-T0[:3,3]).tolist(),'raw_rotation_delta_deg':float(np.rad2deg(Rotation.from_matrix(T[:3,:3]@T0[:3,:3].T).magnitude()))}
         q=model.ik(T,base,pivot['q_grasp'],starts=5)
         if q is None:row['status']='NO_IK'
         else:
@@ -85,6 +101,9 @@ def main():
             row['score']=np.linalg.norm(row['offset_handle_m'])*20+np.linalg.norm(row['rpy_handle_deg'])*.002+.001/max(.05,row['minimum_joint_margin_rad'])
     report['closure_rule']='predicted width is diagnostic only; actual PhysX closure mandatory'
     eligible=sorted([r for r in report['rows'] if r['status']=='APPROACH_PLANNED_PENDING_REAL_CLOSURE'],key=lambda r:r['score'])
+    if a.handle_regions:
+        groups=[[r for r in eligible if r.get('region')==i] for i,_,_ in regions]
+        eligible=[group[k] for k in range(max((len(g) for g in groups),default=0)) for group in groups if k<len(group)]
     # Plan and collision-check the home->pregrasp route only for leading poses.
     reference_path=pivot['preplan'];reference_valid=all(owner.check_robot(model,q,base,finger_q=[.05,-.05],allow_pad=False)[0] for x,y in zip(reference_path,reference_path[1:]) for q in np.linspace(x,y,max(2,int(np.ceil(np.max(np.abs(np.asarray(y)-x))/.025))+1)))
     trials=[];report['planning_complete']=False

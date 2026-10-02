@@ -1,7 +1,17 @@
 #!/usr/bin/env python3
 """Create a self-contained Piper+official gripper URDF/SRDF from vendored upstream files."""
 from pathlib import Path
-import copy, xml.etree.ElementTree as ET
+import copy, os, tempfile, xml.etree.ElementTree as ET
+
+def atomic_xml(tree, path, **options):
+    # Readers must never observe a partially rewritten shared model.
+    with tempfile.NamedTemporaryFile(dir=path.parent, suffix=path.suffix, delete=False) as f:
+        temporary=Path(f.name)
+    try:
+        tree.write(temporary, **options);os.replace(temporary,path)
+    finally:
+        temporary.unlink(missing_ok=True)
+
 
 ROOT=Path(__file__).resolve().parents[1]
 SRC=ROOT/'third_party/agilex_piper/description'
@@ -24,7 +34,7 @@ for mesh in base.findall('.//mesh'):
     raw=mesh.attrib['filename']; name=raw.split('/meshes/',1)[1]
     mesh.attrib['filename']=str((SRC/'meshes'/name).resolve())
 ET.indent(base)
-ET.ElementTree(base).write(ROOT/'config/piper.urdf',encoding='unicode',xml_declaration=True)
+atomic_xml(ET.ElementTree(base),ROOT/'config/piper.urdf',encoding='unicode',xml_declaration=True)
 
 robot=ET.Element('robot',{'name':'piper'})
 group=ET.SubElement(robot,'group',{'name':'arm'}); ET.SubElement(group,'chain',{'base_link':'base_link','tip_link':'tcp_link'})
@@ -40,5 +50,5 @@ for a,b,reason in [
  ('gripper_base','gripper_link1','Adjacent'),('gripper_base','gripper_link2','Adjacent'),
  ('gripper_link1','gripper_link2','Default')]:
     ET.SubElement(robot,'disable_collisions',{'link1':a,'link2':b,'reason':reason})
-ET.indent(robot); ET.ElementTree(robot).write(ROOT/'config/piper.srdf',encoding='unicode',xml_declaration=True)
+ET.indent(robot); atomic_xml(ET.ElementTree(robot),ROOT/'config/piper.srdf',encoding='unicode',xml_declaration=True)
 print(ROOT/'config/piper.urdf'); print(ROOT/'config/piper.srdf')
