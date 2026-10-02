@@ -16,6 +16,7 @@ def matrix(p,q):
 
 def main():
  p=argparse.ArgumentParser(description=__doc__);p.add_argument('--measured-report',type=Path,required=True);p.add_argument('--pull-plan',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--gpu',type=int,default=7);p.add_argument('--deadline-shanghai',default='2026-10-02T05:00:00+08:00');p.add_argument('--geometry-python',default='/data1/home/rangeryx/.conda/envs/anygrasp/bin/python');p.add_argument('--ownership',type=Path,default=ROOT/'config/piper_contact_ownership.json');p.add_argument('--width-m',type=float,default=.024);p.add_argument('--length-m',type=float,default=.016);p.add_argument('--thickness-m',type=float,default=.006)
+ p.add_argument('--contact-aware-calibration',type=Path,help='Optional new controller positive control; legacy position closure remains default')
  a=p.parse_args();a.output.mkdir(parents=True,exist_ok=True);r=json.loads(a.measured_report.read_text());pull=json.loads(a.pull_plan.read_text());base=r['base_final'];zone=ZoneInfo('Asia/Shanghai');deadline=datetime.fromisoformat(a.deadline_shanghai)
  if datetime.now(zone)>=deadline:raise RuntimeError('CUTOFF_05_00')
  os.environ['OMNI_KIT_ACCEPT_EULA']='YES';os.environ['ACCEPT_EULA']='Y'
@@ -82,7 +83,7 @@ def main():
   import xml.etree.ElementTree as ET
   root=ET.parse(ROOT/'config/piper.urdf').getroot();limits=np.array([[float(root.find(f"joint[@name='joint{i}']/limit").get(k)) for k in ['lower','upper']] for i in range(1,7)])
   video=subprocess.Popen([shutil.which('ffmpeg'),'-y','-f','rawvideo','-pix_fmt','rgb24','-s','1280x960','-r','16','-i','-','-an','-c:v','libx264','-preset','fast','-crf','23','-pix_fmt','yuv420p',str(a.output/'diagnostic.mp4')],stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=open(a.output/'ffmpeg.log','w'))
-  phase='SETTLE';tick=0
+  phase='SETTLE';tick=0;force_mode=False;closing_effort=0.
   def sample_physics():
    q=np.asarray(robot.get_joint_positions());poses={}
    for n,view in views:
@@ -92,10 +93,18 @@ def main():
   def step():
    nonlocal tick
    if datetime.now(zone)>=deadline:raise RuntimeError('CUTOFF_05_00')
-   pre_poses={n:matrix(*frame.get_world_pose()).tolist() for n,frame in fingerframes.items()};native.clear();controller.apply_action(ArticulationAction(joint_positions=qtarget));world.step(render=tick%8==0)
+   pre_poses={n:matrix(*frame.get_world_pose()).tolist() for n,frame in fingerframes.items()};native.clear()
+   if force_mode:
+    controller.apply_action(ArticulationAction(joint_positions=qtarget[arm],joint_indices=arm));controller.apply_action(ArticulationAction(joint_efforts=np.array([-closing_effort,closing_effort]),joint_indices=fingers))
+   else:controller.apply_action(ArticulationAction(joint_positions=qtarget))
+   if a.contact_aware_calibration:
+    world.step(render=False,update_fabric=True)
+    if tick%8==0:world.render()
+   else:world.step(render=tick%8==0)
    q=np.asarray(robot.get_joint_positions());margin=float(np.min(np.minimum(q[arm]-limits[:,0],limits[:,1]-q[arm])));contacts=[];forces=[]
    ownership=native.state();contacts=ownership['contacts'];forces=[ownership['pad_forces_n'][name] for name,_ in views]
-   row={'t':tick/240,'physics_time_s':ownership['physics_time_s'],'phase':phase,'q':q.tolist(),'aperture_m':float(q[fingers[0]]-q[fingers[1]]),'margin_rad':margin,'finger_forces_n':forces,'contacts':contacts,'ownership':ownership,'pre_step_finger_world_poses':pre_poses,'geometry_pose_time':'after physics step; native contact generation precedes integration','finger_world_poses':{name:matrix(*frame.get_world_pose()).tolist() for name,frame in fingerframes.items()},'body_force_n':sum(float(np.linalg.norm(v.get_contact_force_matrix(dt=1/240))) for v in bodyviews)};observations.append(row)
+   row={'t':tick/240,'physics_time_s':ownership['physics_time_s'],'phase':phase,'q':q.tolist(),'aperture_m':float(q[fingers[0]]-q[fingers[1]]),'margin_rad':margin,'finger_forces_n':forces,'contacts':contacts,'ownership':ownership,'pre_step_finger_world_poses':pre_poses,'geometry_pose_time':'after physics step; native contact generation precedes integration','finger_world_poses':{name:matrix(*frame.get_world_pose()).tolist() for name,frame in fingerframes.items()},'body_force_n':sum(float(np.linalg.norm(v.get_contact_force_matrix(dt=1/240))) for v in bodyviews)}
+   observations.append(row)
    if tick%8==0 and np.asarray(camera.get_rgba()).ndim==3:
     image=np.asarray(camera.get_rgba())[:,:,:3].copy();cv2.rectangle(image,(0,0),(1280,80),(10,10,10),-1);cv2.putText(image,'CANONICAL LOCKED HANDLE / DIAGNOSTIC ONLY',(12,30),cv2.FONT_HERSHEY_SIMPLEX,.7,(255,255,255),1);cv2.putText(image,f'{phase}: aperture={row["aperture_m"]*1000:.2f} mm; force={forces[0]:.2f}/{forces[1]:.2f} N',(12,63),cv2.FONT_HERSHEY_SIMPLEX,.65,(255,255,255),1);video.stdin.write(np.ascontiguousarray(image).tobytes())
    tick+=1
@@ -106,7 +115,21 @@ def main():
   for _ in range(240):step()
   export_cooked(stage,a.output/'cooked_open.json')
   phase='CLOSE'
-  for opening in np.linspace(.1,0,480):qtarget[fingers]=[opening/2,-opening/2];step()
+  if a.contact_aware_calibration:
+   from articulated_interaction.control import ContactClosure
+   cal=json.loads(a.contact_aware_calibration.read_text());assert cal['ownership_sha256']==hashlib.sha256(a.ownership.read_bytes()).hexdigest();closure=ContactClosure(cal['preload_n'],cal['finger_effort_limit_n']);state=observations[-1]
+   for _ in range(3600):
+    cmd=closure.update(state['aperture_m'],list(state['ownership']['pad_forces_n'].values()),1/240)
+    if cmd['mode']=='position':qtarget[fingers]=[cmd['opening_m']/2,-cmd['opening_m']/2]
+    else:
+     if not force_mode:kp[fingers]=0.;controller.set_gains(kps=kp,kds=kd,save_to_usd=True);force_mode=True
+     closing_effort=cmd['closing_effort_n']
+    state=step()
+    if closure.state=='FORCE_HOLD':break
+   else:raise RuntimeError('CONTACT_AWARE_PRELOAD_FAILED')
+   result['contact_aware_calibration']=cal;result['force_hold_effort_n']=closing_effort
+  else:
+   for opening in np.linspace(.1,0,480):qtarget[fingers]=[opening/2,-opening/2];step()
   phase='CLOSURE_HOLD'
   for _ in range(240):closed=step()
   result['actual_closure']=closed;export_cooked(stage,a.output/'cooked_closed.json')

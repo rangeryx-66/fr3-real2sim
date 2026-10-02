@@ -191,6 +191,13 @@ class NativeOwnershipReports:
                 impulse=np.array([d.impulse.x,d.impulse.y,d.impulse.z]);force=float(np.linalg.norm(impulse)/self.dt)
                 if owned==b:impulse=-impulse
                 contact={'collider':owned,'target':target,'finger':finger,'owner':owner,'allowed_pad_target':any(target==t or target.startswith(t+'/') for t in self.allowed_pad_targets),'force_n':force,'impulse_world_ns':impulse.tolist(),'separation_m':float(d.separation),'face0':int(d.face_index0),'face1':int(d.face_index1)}
+                contact.update(collider0=a,collider1=b,normal_reference='native report direction; original collider ordering preserved')
+                try:
+                    contact['contact_point_world_m']=[float(d.position.x),float(d.position.y),float(d.position.z)]
+                    contact['native_normal_world']=[float(d.normal.x),float(d.normal.y),float(d.normal.z)]
+                except Exception as error:
+                    # Diagnostic metadata must never suppress a safety event.
+                    contact['diagnostic_attribute_error']=repr(error)
                 self.rows.append(contact)
                 if self.physics_steps:self.physics_steps[-1]['contacts'].append(contact)
 
