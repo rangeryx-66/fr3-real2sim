@@ -23,7 +23,7 @@ env -u PYTHONPATH -u CUDA_VISIBLE_DEVICES \
 
 - 数据集 joint 信息仅供仿真场景组装；运行控制器的机器人模型不加载 object URDF/joint。
 - 对对象 joint、axis/origin 及 link pose 查询设置运行期访问保护。控制器仅使用机器人状态、EE、左右接触载荷和实际 RGB-D。
-- 实际完成原 approach、慢闭合和双侧保持后，使用受力限速、有限 Cartesian lead、受限 jaw-balance 顺应和观测姿态跟随；无预生成 hinge arc。
+- 实际完成原 approach、慢闭合和双侧保持后，使用受力限速、有限 Cartesian lead、受限 jaw-balance 顺应和观测姿态跟随；无预生成 hinge arc。目前是位置命令上的有限 lead/接触反馈，**不是已验证的六轴 F/T admittance controller**。
 - 保留闭合保持时的命令/实测偏差，避免把重力下沉重复积分成下降命令。既有 IK、robot drive gains、force limits 不变。
 - 拟合仅接收实测 EE SE(3)，复用现有 `fit_articulation`。只有高质量 revolute fit 才保存估计并使用其轴线生成后续切向控制；**该后续分支本轮未获得实际接触验证**。
 - 所有试验先暂停仿真、保存 fit，再读取一次最终门角及静态 GT axis/origin 做评估。没有执行期 GT moving-link trajectory。
@@ -60,4 +60,6 @@ env -u PYTHONPATH -u CUDA_VISIBLE_DEVICES \
 - q/EE/force 及观测变换完整 240 Hz 日志、实际 PhysX 子步、cooked export 和原始视频保存在服务器 `results/unknown_contact_v1...v7`。公开 control trace 下采样至 30 Hz，probe trace 保留 240 Hz。
 - v1 的重力跟踪偏差累积 bug、v2 的 OpenCV 大数组错误已修正；它们不算成功/可靠性重复。中途取消的调试/重复对照也不计入完整试验。
 
-检查：原 baseline 文件哈希不变；运行期 GT 访问保护测试通过；robot-only model 无 asset 定义；full-image RGB-D 反投影与 PnP 已知位移检查通过；现有圆弧/直线/激励不足 fitting 回归通过。**这些检查不替代真实闭环成功，当前仍未达到 5°。**
+检查：原 baseline 文件哈希不变；运行期 GT 访问保护测试通过；robot-only model 无 asset 定义；full-image RGB-D 反投影与 PnP 已知位移检查通过；现有圆弧/直线/激励不足 fitting 回归通过。截止入口检查通过：过期 deadline 下不加载场景、不启动试验/对照，输出零次试验。
+
+**这些检查不替代真实闭环成功，当前仍未达到 5°。**

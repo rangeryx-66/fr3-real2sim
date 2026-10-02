@@ -18,7 +18,10 @@ def main():
  a=parser().parse_args();a.output.mkdir(parents=True,exist_ok=True)
  if not a.trial:
   runs=[];success=None
+  (a.output/'summary.json').write_text(json.dumps({'mode':'unknown-articulation real-contact RGB-D probe','runs':[],'successes':0,'complete':False},indent=2))
   def run(index,name,control=False,duration=100):
+   if datetime.now(ZoneInfo('Asia/Shanghai'))>=datetime.fromisoformat(a.deadline_shanghai):
+    return {'status':'CUTOFF_05_00','success':False}
    out=a.output/name;cmd=[sys.executable,__file__,'--trial','--source',str(a.source),'--asset-root',str(a.asset_root),'--plan',str(a.plan),'--output',str(out),'--candidate',str(index),'--gpu',str(a.gpu),'--deadline-shanghai',a.deadline_shanghai]
    if control:cmd+=['--no-operation','--control-duration',str(duration)]
    with open(a.output/(name+'.log'),'w') as f:ret=subprocess.run(cmd,stdout=f,stderr=subprocess.STDOUT)
@@ -40,7 +43,9 @@ def main():
   else:
    # Even a failed contact run gets a passive initial-state control.
    run(0,'no_operation',True,max((x['report'].get('duration_s',5.) for x in runs),default=5.))
-  d=json.loads((a.output/'summary.json').read_text());d.update(complete=True,first_success_candidate=None if not success else success[0],attempted_grasp_candidates=sum(x['name'].startswith('candidate') for x in runs),actual_contact_success_count=sum(x['report'].get('success',False) for x in runs if x['name']!='no_operation'),grasp_run_count=sum(x['name']!='no_operation' for x in runs));(a.output/'summary.json').write_text(json.dumps(d,indent=2));return
+  d=json.loads((a.output/'summary.json').read_text());d.update(complete=True,deadline_reached=datetime.now(ZoneInfo('Asia/Shanghai'))>=datetime.fromisoformat(a.deadline_shanghai),first_success_candidate=None if not success else success[0],attempted_grasp_candidates=sum(x['name'].startswith('candidate') for x in runs),actual_contact_success_count=sum(x['report'].get('success',False) for x in runs if x['name']!='no_operation'),grasp_run_count=sum(x['name']!='no_operation' for x in runs));(a.output/'summary.json').write_text(json.dumps(d,indent=2));return
+ if datetime.now(ZoneInfo('Asia/Shanghai'))>=datetime.fromisoformat(a.deadline_shanghai):
+  (a.output/'report.json').write_text(json.dumps({'status':'CUTOFF_05_00','success':False},indent=2));return
  source=json.loads((a.source/'report.json').read_text());base=source['robot_base_pose'];plan=json.loads(a.plan.read_text());chosen=plan['trial_candidates'][0]
  if base!=chosen['base']:raise RuntimeError('BASE_CHANGED')
  a.ownership=None;scene=bootstrap(a,base);world=scene['world'];app=scene['app'];robot=scene['robot'];stage=scene['stage'];arm=scene['arm'];fingers=scene['fingers'];names=scene['names'];controller=scene['controller'];dt=scene['DT']
