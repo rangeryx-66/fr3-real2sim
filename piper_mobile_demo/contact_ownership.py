@@ -1,8 +1,9 @@
 """Native collider ownership; no contact-position classification.
 
 The official distal surface is an independent four-triangle DAE geometry.
-A tetrahedral/pyramidal interior partition gives that surface its own collider.
-The partition changes neither the exterior nor the union of the original hull.
+A convex interior partition gives that surface its own collider.
+Authored v2 pieces partition the original native envelope; independent cooking
+can still alter the union. Execution must pass the cooked exterior audit.
 It does NOT claim that the mathematical interior cut is a real pad thickness.
 All other exposed surfaces are forbidden finger body, regardless of material.
 """
@@ -59,31 +60,35 @@ def official_pad_surface(path):
 def build_manifest(root,output,source_cooked_export):
     import trimesh,hashlib
     source_export=json.loads(source_cooked_export.read_text());source_sha=hashlib.sha256(source_cooked_export.read_bytes()).hexdigest()
-    result={'native_source_export_sha256':source_sha,'schema':'piper-contact-ownership-v1','runtime_classification':'native collider path ONLY; unknown collider is forbidden','partition_rule':'official four-triangle distal DAE surface forms base of interior pyramid; apex at source hull vertex centroid; all complement pieces forbidden','physical_pad_thickness_claim':False,'fingers':{}}
+    result={'native_source_export_sha256':source_sha,'schema':'piper-contact-ownership-v2-native-envelope','runtime_classification':'native collider path ONLY; unknown collider is forbidden','partition_rule':'official four-triangle distal DAE surface forms base of interior pyramid; apex at source hull vertex centroid; all complement pieces forbidden','physical_pad_thickness_claim':False,'fingers':{}}
     for name in FINGERS:
         stl=root/'third_party/agilex_piper/description/meshes'/f'{name}.stl';dae=stl.parent/'dae'/f'{name}.dae';mesh=trimesh.load(stl,force='mesh');points,faces,gid,material=official_pad_surface(dae)
         # DAE has lower coordinate precision than STL. Resolve its vertices to
         # the official collision STL without moving any official vertex.
         ids=np.argmin(np.linalg.norm(points[:,None,:]-mesh.vertices[None,:,:],axis=2),axis=1);delta=np.linalg.norm(points-mesh.vertices[ids],axis=1)
         if delta.max()>1e-7:raise RuntimeError('DAE/STL distal surface mismatch')
-        points=mesh.vertices[ids];apex=mesh.convex_hull.vertices.mean(0);depth=float(apex[2])
+        points=mesh.vertices[ids]
+        source_shapes=[e for e in source_export['shapes'] if e.get('rigid_body_path','').split('/')[-1]==name and e.get('raw_points')]
+        if len(source_shapes)!=1 or len(source_shapes[0].get('convexes',[]))!=1:raise RuntimeError('original native collision envelope ambiguous')
+        envelope_vertices=np.asarray(source_shapes[0]['convexes'][0]['vertices'])
+        envelope=ConvexHull(envelope_vertices)
+        apex=envelope_vertices.mean(0);depth=float(apex[2])
         pv,pf=hull(np.vstack([points,apex]));planes=ConvexHull(pv).equations
-        remaining=mesh.convex_hull.vertices.copy();pieces=[]
+        # Separate a full-depth rear solid before the oblique ownership cuts.
+        # This is an interior partition only; pad exterior remains its exact
+        # official footprint, and the rear remains forbidden.
+        remaining=clip(envelope_vertices,np.array([0.,0.,1.]),-depth)
+        rear=clip(envelope_vertices,np.array([0.,0.,-1.]),depth)
+        pieces=[]
+        if rear is not None:pieces.append(('metal',*hull(rear)))
         for plane in planes:
             exterior=clip(remaining,-plane[:3],-plane[3])
             if exterior is not None and abs(trimesh.Trimesh(*hull(exterior),process=False).volume)>1e-18:pieces.append(('metal',*hull(exterior)))
             remaining=clip(remaining,plane[:3],plane[3])
             if remaining is None:raise RuntimeError('pad partition unexpectedly empty')
         pieces.append(('pad',*hull(remaining)))
-        tetrahedra=[]
-        for owner,vertices,triangles in pieces:
-            if owner=='pad':
-                # One convex pad avoids artificial internal pad contact faces.
-                tetrahedra.append((owner,vertices,triangles));continue
-            center=vertices.mean(0)
-            for triangle in triangles:
-                v,f=hull(np.vstack([center,vertices[triangle]]));tetrahedra.append((owner,v,f))
-        pieces=tetrahedra
+        # Ownership partitions the frozen original native envelope, not a new
+        # independently simplified hull of the dense visual STL.
         source_shapes=[e for e in source_export['shapes'] if e.get('rigid_body_path','').split('/')[-1]==name and e.get('raw_points')]
         if len(source_shapes)!=1:raise RuntimeError('native source export must have one original collider per finger')
         native_raw=np.asarray(source_shapes[0]['raw_points']);distances=np.linalg.norm(native_raw[:,None,:]-mesh.vertices[None,:,:],axis=2)
@@ -92,14 +97,14 @@ def build_manifest(root,output,source_cooked_export):
         if distances.min(axis=1).max()>1e-7 or distances.min(axis=0).max()>1e-7:raise RuntimeError('native source collider does not match official STL vertex geometry')
         offsets=np.asarray(source_shapes[0]['runtime_body_shapes']['contact_offsets']).reshape(-1);rests=np.asarray(source_shapes[0]['runtime_body_shapes']['rest_offsets']).reshape(-1)
         if len(offsets)!=1 or len(rests)!=1:raise RuntimeError('native source offset identity is ambiguous')
-        volume=sum(abs(trimesh.Trimesh(v,f,process=False).volume) for _,v,f in pieces);original=abs(mesh.convex_hull.volume)
+        volume=sum(abs(trimesh.Trimesh(v,f,process=False).volume) for _,v,f in pieces);original=float(envelope.volume)
         if abs(volume-original)>1e-12:raise RuntimeError('partition does not conserve hull volume')
         original_pad_faces=[]
         pad_vertex_ids=set(ids.tolist())
         for i,f in enumerate(mesh.faces):
             if set(f.tolist())<=pad_vertex_ids:original_pad_faces.append(i)
         if len(original_pad_faces)!=4:raise RuntimeError('official STL surface ownership not exactly four faces')
-        result['fingers'][name]={'source_contact_offset_m':float(offsets[0]),'source_rest_offset_m':float(rests[0]),'tessellation':'metal centroid/facet tetrahedra; one convex pad; exterior and union conserved','stl_sha256':hashlib.sha256(stl.read_bytes()).hexdigest(),'dae_sha256':hashlib.sha256(dae.read_bytes()).hexdigest(),'official_surface_geometry_id':gid,'official_surface_material':material,'dae_to_stl_max_vertex_error_m':float(delta.max()),'official_pad_face_ids':original_pad_faces,'pad_vertices':points.tolist(),'partition_apex_z_m':depth,'source_hull_volume_m3':original,'partition_volume_m3':float(volume),'source_bounds':mesh.bounds.tolist(),'pieces':[{'owner':owner,'vertices':v.tolist(),'faces':f.tolist()} for owner,v,f in pieces]}
+        result['fingers'][name]={'source_contact_offset_m':float(offsets[0]),'source_rest_offset_m':float(rests[0]),'tessellation':'rear-first convex halfspace partition of original native collision envelope; authored exterior and union conserved; cooked acceptance requires audit','source_collision_envelope_vertices':envelope_vertices.tolist(),'stl_sha256':hashlib.sha256(stl.read_bytes()).hexdigest(),'dae_sha256':hashlib.sha256(dae.read_bytes()).hexdigest(),'official_surface_geometry_id':gid,'official_surface_material':material,'dae_to_stl_max_vertex_error_m':float(delta.max()),'official_pad_face_ids':original_pad_faces,'pad_vertices':points.tolist(),'partition_apex_z_m':depth,'source_hull_volume_m3':original,'partition_volume_m3':float(volume),'source_bounds':mesh.bounds.tolist(),'pieces':[{'owner':owner,'vertices':v.tolist(),'faces':f.tolist()} for owner,v,f in pieces]}
     output.write_text(json.dumps(result,indent=2));return result
 
 
@@ -135,8 +140,17 @@ def install_owned_colliders(stage,manifest):
         paths=[]
         for i,piece in enumerate(spec['pieces']):
             path=bodypath+'/contact_owned/'+piece['owner']+'_'+str(i);m=UsdGeom.Mesh.Define(stage,path);prim=m.GetPrim();v=np.asarray(piece['vertices']);v=v@relative[:3,:3].T+relative[:3,3]
-            m.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(v.astype(np.float32)));m.CreateFaceVertexCountsAttr([3]*len(piece['faces']));m.CreateFaceVertexIndicesAttr(np.asarray(piece['faces']).reshape(-1).tolist());m.CreateSubdivisionSchemeAttr('none');m.CreateVisibilityAttr('invisible')
+            # Normalize local coordinates to micrometres, with an exactly compensating
+            # USD scale. World-space official vertices and dimensions do not change.
+            if 'source_collision_envelope_vertices' in spec:
+                center=v.mean(0)
+                m.AddTranslateOp().Set(Gf.Vec3d(*center))
+                m.AddScaleOp().Set(Gf.Vec3f(1e-6,1e-6,1e-6))
+                points=((v-center)*1e6).astype(np.float32)
+            else:points=v.astype(np.float32) # preserve legacy baseline installer
+            m.CreatePointsAttr(Vt.Vec3fArray.FromNumpy(points));m.CreateFaceVertexCountsAttr([3]*len(piece['faces']));m.CreateFaceVertexIndicesAttr(np.asarray(piece['faces']).reshape(-1).tolist());m.CreateSubdivisionSchemeAttr('none');m.CreateVisibilityAttr('invisible')
             UsdPhysics.CollisionAPI.Apply(prim);UsdPhysics.MeshCollisionAPI.Apply(prim).CreateApproximationAttr('convexHull');PhysxSchema.PhysxConvexHullCollisionAPI.Apply(prim).CreateMinThicknessAttr(0.);api=PhysxSchema.PhysxCollisionAPI.Apply(prim);api.CreateContactOffsetAttr(spec['source_contact_offset_m']);api.CreateRestOffsetAttr(spec['source_rest_offset_m'])
+            if 'source_collision_envelope_vertices' in spec:PhysxSchema.PhysxConvexHullCollisionAPI(prim).CreateHullVertexLimitAttr(255)
             prim.CreateAttribute('contact:owner',Sdf.ValueTypeNames.Token).Set(piece['owner']);prim.CreateAttribute('contact:finger',Sdf.ValueTypeNames.Token).Set(name)
             if material:UsdShade.MaterialBindingAPI.Apply(prim).Bind(material,materialPurpose='physics')
             paths.append(path)

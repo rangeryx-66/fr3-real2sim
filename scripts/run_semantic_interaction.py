@@ -4,6 +4,7 @@ Object joint/link truth is recorded in evaluation records, never controller inpu
 No attachments, object actuation, hinge-arc commands, or base reposition.
 """
 from piper_mobile_execute import *
+from articulated_interaction.contact_validation import audit_envelope,NonpadClassifier
 from articulated_interaction.control import JawCenteredClosure,PadCompliantPull
 from piper_mobile_demo.contact_ownership import NativeOwnershipReports
 from piper_mobile_demo.cooked_geometry import export_cooked
@@ -42,14 +43,17 @@ def main():
  allowed=[e['path'] for e in export['shapes'] if 'handlepiece' in e['path'].replace('_','').lower()]
  if len(allowed)!=len(meta['interaction_geometry']['pieces']):raise RuntimeError('NATIVE_HANDLE_PIECE_ASSOCIATION:'+str((len(allowed),len(meta['interaction_geometry']['pieces']))))
  association={'allowed_pad_targets':allowed,'method':'explicit generated semantic handle collision piece identity; no contact projection','expected_piece_count':len(allowed)};(a.output/'association.json').write_text(json.dumps(association,indent=2))
- ownership=json.loads(a.ownership.read_text());phase='SETTLE';tick=0;rows=[];evaluation=[];mode='position';effort=0.;status='STARTED';legal=False;pull=False
+ ownership=json.loads(a.ownership.read_text());envelope=audit_envelope(ROOT,export,ownership);(a.output/'ownership_envelope_audit.json').write_text(json.dumps(envelope,indent=2))
+ if not envelope['passed']:
+  world.pause();app.close();raise RuntimeError('OWNERSHIP_COOKED_EXTERIOR_MISMATCH')
+ validator=NonpadClassifier(ROOT,export,ownership,allowed)
+ phase='SETTLE';tick=0;rows=[];evaluation=[];mode='position';effort=0.;status='STARTED';legal=False;pull=False
  def sample():
   q=np.asarray(robot.get_joint_positions());P=poses(q)
   return {'phase':phase,'q':q.tolist(),'aperture_m':float(q[fingers[0]]-q[fingers[1]]),'margin_rad':float(np.min(np.minimum(q[arm]-limits[:,0],limits[:,1]-q[arm]))),'finger_world_poses':{n:P[n].tolist() for n in ['gripper_link1','gripper_link2']},'T_tcp':P['tcp_link'].tolist()}
  def sample_physics():
   state=sample()
-  if a.diagnose_first_nonpad:
-   pL,qL=scene['door_contacts'].get_world_poses();state['diagnostic_target_world_pose_pre']=matrix(pL[0],qL[0]).tolist()
+  pL,qL=scene['door_contacts'].get_world_poses();state['diagnostic_target_world_pose_pre']=matrix(pL[0],qL[0]).tolist()
   return state
  native=NativeOwnershipReports(stage,[scene['contact_target_path']]+list(scene['diagnostic_contact_paths']),dt,allowed,world=world,sample_provider=sample_physics)
  video=subprocess.Popen([shutil.which('ffmpeg'),'-y','-f','rawvideo','-pix_fmt','rgb24','-s','1280x960','-r','30','-i','-','-an','-c:v','libx264','-preset','fast','-crf','23','-pix_fmt','yuv420p',str(a.output/'probe.mp4')],stdin=subprocess.PIPE,stdout=subprocess.DEVNULL,stderr=open(a.output/'ffmpeg.log','w'))
@@ -66,10 +70,16 @@ def main():
   # Simulator truth is isolated in this evaluation collector.
   pL,qL=scene['door_contacts'].get_world_poses();L=matrix(pL[0],qL[0]);evaluation.append({'t':state['t'],'joint_rad':float(scene['articulation'].get_joint_positions()[0]),'T_moving_link':L.tolist()})
   if tick%8==0:
-   image=np.asarray(scene['overview'][0].get_rgba())[:,:,:3].copy();cv2.rectangle(image,(0,0),(1280,70),(10,10,10),-1);force=list(contacts['pad_forces_n'].values());cv2.putText(image,f'SENSOR-ONLY INTERACTION | {phase} | pad={force} | metal={contacts["metal_contacts"]}',(12,28),cv2.FONT_HERSHEY_SIMPLEX,.55,(255,255,255),1);cv2.putText(image,f'aperture={state["aperture_m"]*1000:.1f} mm | margin={state["margin_rad"]:.3f} rad | no GT motion commands',(12,57),cv2.FONT_HERSHEY_SIMPLEX,.6,(255,255,255),1);video.stdin.write(np.ascontiguousarray(image).tobytes())
+   image=np.asarray(scene['overview'][0].get_rgba())[:,:,:3].copy();cv2.rectangle(image,(0,0),(1280,70),(10,10,10),-1);force=list(contacts['pad_forces_n'].values());cv2.putText(image,f'SENSOR-ONLY INTERACTION | {phase} | pad={force} | nonpad reports={contacts["metal_contacts"]}',(12,28),cv2.FONT_HERSHEY_SIMPLEX,.55,(255,255,255),1);cv2.putText(image,f'aperture={state["aperture_m"]*1000:.1f} mm | margin={state["margin_rad"]:.3f} rad | no GT motion commands',(12,57),cv2.FONT_HERSHEY_SIMPLEX,.6,(255,255,255),1);video.stdin.write(np.ascontiguousarray(image).tobytes())
   tick+=1
   if state['margin_rad']<=.05:raise RuntimeError('LOW_JOINT_MARGIN')
-  if any(s['ownership']['metal_contacts'] or s['ownership']['pad_target_violations'] for s in native.physics_steps[begin:]):raise RuntimeError('NONPAD_IMPULSE_PAUSE_FOR_DISTANCE_CLASSIFICATION' if a.diagnose_first_nonpad and not contacts['pad_target_violations'] else 'NATIVE_METAL_OR_WRONG_TARGET_CONTACT')
+  for substep in native.physics_steps[begin:]:
+   classification=validator.classify(substep['contacts'],substep['finger_world_poses'],np.asarray(substep['diagnostic_target_world_pose_pre']),substep['physics_dt_s'])
+   substep['nonpad_classification']=classification
+   state['nonpad_classification']=classification
+   if substep['ownership']['pad_target_violations']:raise RuntimeError('WRONG_PAD_TARGET_CONTACT')
+   if classification['confirmed_forbidden']:raise RuntimeError(classification['events'][-1]['classification'])
+   if a.diagnose_first_nonpad and classification['events']:raise RuntimeError('NONPAD_IMPULSE_PAUSE_FOR_DISTANCE_CLASSIFICATION')
   if phase in ('PREGRASP','APPROACH') and any(c['force_n']>0 for c in contacts['contacts']):raise RuntimeError('APPROACH_CONTACT')
   if phase not in ('SETTLE','EXPORT'):
    forces={n:float(np.linalg.norm(v.get_contact_force_matrix(dt=contacts['physics_window_dt_s']))) for n,v in scene['scene_monitor_views']};body=sum(float(np.linalg.norm(v.get_contact_force_matrix(dt=contacts['physics_window_dt_s']))) for v in scene['body_views'])
@@ -97,7 +107,7 @@ def main():
    def pad_centers(state):
     return [(np.asarray(state['finger_world_poses'][n])@np.r_[np.asarray(ownership['fingers'][n]['pad_vertices']).mean(0),1])[:3] for n in ('gripper_link1','gripper_link2')]
    def pad_forces(state):return [state['ownership']['pad_forces_n'][n] for n in ('gripper_link1','gripper_link2')]
-   for _ in range(int(60/dt)):
+   for _ in range(int(600/dt)):
     cmd=closure.update(np.asarray(state['T_tcp']),state['aperture_m'],pad_forces(state),pad_centers(state),dt);phase=cmd['state']
     if max(pad_forces(state))>cal['max_pad_load_n']:raise RuntimeError('LOW_PRELOAD_FORCE_LIMIT')
     if cmd['mode']=='position':qtarget[fingers]=[cmd['opening_m']/2,-cmd['opening_m']/2]
@@ -134,5 +144,11 @@ def main():
   report={'status':status,'asset_id':meta['asset_id'],'base_fixed':base,'selected':chosen,'legal_preload_native_only_pending_offline_audit':legal,'ee_reached_2mm':pull,'minimum_joint_margin_rad':min((r['margin_rad'] for r in rows),default=None),'metal_contact_samples':sum(r['ownership']['metal_contacts']>0 for r in rows),'controller_information':['robot q/FK','left/right pad load','pad centers from official robot geometry','initial handle primitive pose'],'GT_scope':'evaluation_gt.json only; no GT joint type/axis/angle in controller','calibration':cal,'probe_geometry':'separate PCA semantic bar/support proxies; official robot and visual geometry unchanged','closure':'slow close -> pause unilateral -> geometry-directed centering -> bilateral low preload; no fixed aperture','wrist_wrench_used':False,'raw_triangle_policy':'diagnostic only; no penetration threshold used'}
   report.update(deadline_shanghai=deadline.isoformat(),fk_tcp_position_error_m=fk_error,physics_dt_s=dt,video_fps=30,arm_gains_unchanged=[10000,400],force_hold_finger_kp=0,finger_kd_unchanged=40,friction_unchanged=True,object_actuation='none; initial closed reset in inherited scene setup only')
   if evaluation:report['actual_joint_displacement_rad']=evaluation[-1]['joint_rad']-evaluation[0]['joint_rad']
+  report['nonpad_events']=validator.events
+  report['nonpad_impulse_samples']=report['metal_contact_samples']
+  report['metal_contact_samples_scope']='native non-pad impulse count; NOT confirmed illegal contact count'
+  report['representation_warning_events']=sum(e['classification']=='PROXIMITY_OR_REPRESENTATION_WARNING' for e in validator.events)
+  report['confirmed_forbidden_events']=sum(e['classification'].startswith('CONFIRMED_FORBIDDEN') for e in validator.events)
+  report['ownership_envelope_audit']=envelope
   (a.output/'report.json').write_text(json.dumps(report,indent=2));print(json.dumps({k:v for k,v in report.items() if k!='selected'},indent=2),flush=True);app.close()
 if __name__=='__main__':main()
