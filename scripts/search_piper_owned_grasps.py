@@ -45,7 +45,7 @@ def main():
             rot=np.zeros(3);rot[i]=deg
             for offset in offsets[:5]:settings.append((np.asarray(offset),rot))
     settings.extend(((u[:3]*2-1)*.008,(u[3:]*2-1)*12) for u in qmc.Halton(6,scramble=False).random(a.samples))
-    report={'mode':'fixed','base':base.tolist(),'source':str(a.source),'asset_root':str(a.asset_root),'ownership_sha256':__import__('hashlib').sha256(a.ownership.read_bytes()).hexdigest(),'native_export':str(a.native_export),'search_frame':frame.tolist(),'frame_neighborhood_radius_m':frame_radius,'frame_point_count':len(local),'frame_singular_values':singular.tolist(),'pad_centre_tcp':pad_centre.tolist(),'bounds':{'translation_handle_m':.008,'rpy_handle_deg':12},'raw_perception_changed':False,'closure_rule':'prediction is ranking only; actual PhysX closure mandatory','rows':[],'best':None}
+    report={'mode':'fixed','base':base.tolist(),'source':str(a.source),'asset_root':str(a.asset_root),'ownership_sha256':__import__('hashlib').sha256(a.ownership.read_bytes()).hexdigest(),'native_export':str(a.native_export),'search_frame':frame.tolist(),'frame_neighborhood_radius_m':frame_radius,'frame_point_count':len(local),'frame_singular_values':singular.tolist(),'pad_centre_tcp':pad_centre.tolist(),'bounds':{'translation_handle_m':.008,'rpy_handle_deg':12},'raw_perception_changed':False,'closure_rule':'predicted width is diagnostic only; actual PhysX closure mandatory','rows':[],'best':None}
     if a.resume:
         previous=json.loads((a.output/'report.json').read_text())
         assert previous['base']==base.tolist() and previous['ownership_sha256']==report['ownership_sha256'] and previous['native_export']==str(a.native_export)
@@ -77,8 +77,13 @@ def main():
                         # Do not interpret this aperture prediction as closure.
                         target_vertices=np.vstack([x.vertices@owner.moving_reference[:3,:3].T+owner.moving_reference[:3,3] for x in owner.raw_scene if x.path in allowed]);local_target=(target_vertices-T[:3,3])@T[:3,:3]
                         width=float(np.ptp(local_target[:,1]));ok,reason=owner.check_robot(model,current,base,finger_q=[width/2,-width/2])
-                        row.update(predicted_width_m=width,prediction_only_geometry_safe=ok,prediction_only_reason=reason,score=(0 if ok else 1)+np.linalg.norm(offset)*20+np.linalg.norm(rpy)*.002)
+                        row.update(predicted_width_m=width,prediction_only_geometry_safe=ok,prediction_only_reason=reason)
         report['rows'].append(row);report['counts']=dict(Counter(x['status'] for x in report['rows']));(a.output/'report.json').write_text(json.dumps(report,indent=2));print(index,row['status'],flush=True)
+    for row in report['rows']:
+        if 'q_grasp' in row:
+            # Predicted aperture is diagnostic only, including in ranking.
+            row['score']=np.linalg.norm(row['offset_handle_m'])*20+np.linalg.norm(row['rpy_handle_deg'])*.002+.001/max(.05,row['minimum_joint_margin_rad'])
+    report['closure_rule']='predicted width is diagnostic only; actual PhysX closure mandatory'
     eligible=sorted([r for r in report['rows'] if r['status']=='APPROACH_PLANNED_PENDING_REAL_CLOSURE'],key=lambda r:r['score'])
     # Plan and collision-check the home->pregrasp route only for leading poses.
     reference_path=pivot['preplan'];reference_valid=all(owner.check_robot(model,q,base,finger_q=[.05,-.05],allow_pad=False)[0] for x,y in zip(reference_path,reference_path[1:]) for q in np.linspace(x,y,max(2,int(np.ceil(np.max(np.abs(np.asarray(y)-x))/.025))+1)))

@@ -197,7 +197,9 @@ def main():
         if native.physics_steps:
             last=native.physics_steps[-1]
             result['stop_state']={'phase':last['phase'],'finger_joint_positions_m':last['q'][6:],'aperture_m':last['aperture_m'],'pad_forces_n':last['ownership']['pad_forces_n'],'metal_contacts':last['ownership']['metal_contacts'],'pad_target_violations':last['ownership']['pad_target_violations'],'relative_slip_m':last['relative_slip_m'],'door_angle_deg':last['door_angle_deg'],'joint_margin_rad':last['margin_rad']}
-            result['active_forbidden_contacts']=[c for c in last['ownership']['contacts'] if c['force_n']>0 and (c['owner']!='pad' or not c['allowed_pad_target'])]
+            first_bad=next((s for s in native.physics_steps if s['ownership']['metal_contacts'] or s['ownership']['pad_target_violations']),None)
+            result['active_forbidden_contacts']=[] if first_bad is None else [c for c in first_bad['ownership']['contacts'] if c['force_n']>0 and (c['owner']!='pad' or not c['allowed_pad_target'])]
+            result['first_forbidden_contact_state']=None if first_bad is None else {k:first_bad[k] for k in ['phase','t','aperture_m','door_angle_deg','margin_rad']}
         result.update(status=status,sample_count=len(rows),max_actual_door_angle_deg=max((r['door_angle_deg'] for r in rows),default=0),minimum_joint_margin_rad=min((r['margin_rad'] for r in rows),default=None),maximum_relative_slip_m=max((r['relative_slip_m'] for r in rows),default=None))
         (a.output/'report.json').write_text(json.dumps(result,indent=2));(a.output/'observations.json').write_text(json.dumps(rows));record.stdin.close();record.wait(timeout=30);print(json.dumps(result,indent=2),flush=True);app.close()
 

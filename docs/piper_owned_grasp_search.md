@@ -38,6 +38,7 @@ as diagnostics, not silently relabeled as corrected-frame trials.
 1. Open-gripper approach collision-free, exact IK and margin >0.05 rad.
 2. PhysX performs the complete closure under unchanged effort limit. Measured
    finger positions, not predicted width, define the subsequent closed geometry.
+   Predicted width does not penalize or qualify the candidate in ranking either.
 3. Both independently identified pad colliders maintain force >=0.2 N during
    the measured closure hold. Any positive non-pad native impulse is forbidden.
 4. Replay every recorded closure physics step against exported native convex
