@@ -60,6 +60,7 @@ class Benchmark:
    if key=='plan' and job['mode']=='plan':continue
    path=Path(job[key]) if job.get(key) else None
    if path and path.is_file():inputs[key]=sha(path)
+   if key=='reference_safety_memory' and path and (path.parent/'adopted_estimate.json').is_file():inputs['adopted_estimate']=sha(path.parent/'adopted_estimate.json')
   for key,path in [('scene_prior',Path(job['source'])/'report.json'),('asset_manifest',Path(job['asset_root'])/'manifest.json')]:
    if path.is_file():inputs[key]=sha(path)
   if job.get('import_spec'):
@@ -155,7 +156,7 @@ class Benchmark:
   out.mkdir(parents=True,exist_ok=True)
   # Artifacts are copied/referenced read-only. This is an explicit import of a
   # versioned DEV experiment, not automatic cache reuse under new code.
-  copies=['estimated_articulation.json','structured_memory.json','initial_scene_private.json','plant_setup_private.json','command_tape.json','native_robot_dofs.json','robot_control_check_initial.json','robot_control_check_grasp.json']
+  copies=['estimated_articulation.json','structured_memory.json','adopted_estimate.json','initial_scene_private.json','plant_setup_private.json','command_tape.json','native_robot_dofs.json','robot_control_check_initial.json','robot_control_check_grasp.json']
   provenance={'source':str(source),'original_job_file':str(job_file),'original_job_sha256':sha(job_file),'original_episode_id':report.get('episode_id'),'explicit_import':True,'files':{},'source_code_version':spec.get('source_code_version','DEV_PRE_FREEZE_VERSION_SEE_ORIGINAL_RUN')}
   for name in copies:
    path=source/name
@@ -218,7 +219,8 @@ class Benchmark:
   if file.exists() and read(file).get('dev_gate_recorded'):
    summary=read(file);self.run(summary['selected_job']);return summary
   spec=self.config.get('imports',{}).get('dev_kinematic',self.config.get('imports',{}).get('dev_reference'));plant=self.config['physics']['hidden_dev_conditions']['LOW']
-  job=self.job(f"episodes/{episode['episode_id']}/dev_reference",gpu=self.gpus[0],mode='physics_reference',plant=plant,episode_id=episode['episode_id'],import_spec=spec) if spec else self.job(f"episodes/{episode['episode_id']}/dev_reference",gpu=self.gpus[0],mode='physics_reference',plant=plant,episode_id=episode['episode_id'])
+  job=self.job(f"episodes/{episode['episode_id']}/dev_kinematics",gpu=self.gpus[0],mode='kinematics',continue_manipulation=True,plant=plant,episode_id=episode['episode_id'])
+  if spec:job['import_spec']=spec
   report=self.run(job);summary={'episode_id':episode['episode_id'],'asset_id':episode['asset_id'],'split':'DEV','stages':{k:{'status':'NOT_RUN'} for k in 'ABCDEFGHI'},'dev_gate_recorded':True,'selected_job':job,'selected_report':str(Path(job['output'])/'report.json'),'not_in_unseen_denominator':True}
   summary['stages']['A']={'status':'SUCCESS','source':'frozen DEV prepared geometry','proxy_approximate':True,'geometry_improvement_measured':False}
   if report['status']=='BLOCKED_IMPORT_PENDING':
@@ -228,7 +230,7 @@ class Benchmark:
   summary['stages']['C']={'status':'SUCCESS' if identified else 'FAILED','reason':report['status'],'attempt_history':report.get('attempt_history',[])}
   summary['stages']['D']={'status':'SUCCESS' if identified else 'UNOBSERVABLE','estimate':report.get('estimate'),'evaluation':report.get('evaluation')}
   summary['initial_dev_progress_deg']=report.get('evaluation',{}).get('actual_door_displacement_deg',report.get('evaluation',{}).get('actual_final_door_angle_deg'))
-  summary['stages']['I']={'status':'NOT_RUN','reason':'physics reference protocol is not a final 5 degree manipulation','actual_angle_deg':summary['initial_dev_progress_deg']}
+  summary['stages']['I']={'status':'KINEMATIC_ONLY_SUCCESS' if report.get('success') else 'NOT_RUN','reason':'initial D-stage interaction; physics has not been identified','actual_angle_deg':summary['initial_dev_progress_deg'],'physics_updated':False}
   if identified:summary=self.compile_kinematic_prior(episode,summary)
   write(file,summary);write(self.output/'dev_gate.json',{'episode_summary':str(file),'recorded':True,'full_loop_completed':False,'status':'DEV_INTERACTION_MEASURED' if identified else 'DEV_BLOCKED','reason':report['status'],'test_outcomes_used':False});return summary
  def dev_full(self):
@@ -298,7 +300,12 @@ class Benchmark:
   if file.exists():self.sensitivity=read(file);return self.sensitivity
   if not self.calibration:self.calibrate()
   if not self.calibration:return {'status':'BLOCKED_ROBOT_CALIBRATION'}
-  conditions=self.config['physics']['hidden_dev_conditions'];base=self.job('sensitivity/LOW_0',gpu=self.gpus[0],mode='sensitivity_reference',plant=conditions['LOW'],episode_id='DEV_sensitivity')
+  dev_file=self.output/'episodes'/self.dev_episode()['episode_id']/'episode_summary.json'
+  if not dev_file.exists():self.dev_setup()
+  dev=read(dev_file)
+  if dev['stages']['D']['status']!='SUCCESS':return {'status':'BLOCKED_DEV_KINEMATIC_IDENTIFICATION'}
+  selected=dev['selected_job'];context=self.kinematic_context(selected,Path(selected['output']),self.output/'sensitivity/kinematic_context')
+  conditions=self.config['physics']['hidden_dev_conditions'];base=self.job('sensitivity/LOW_0',source=selected['source'],asset=selected['asset_root'],plan=selected['plan'],gpu=self.gpus[0],mode='sensitivity_reference',plant=conditions['LOW'],episode_id='DEV_sensitivity',candidate=selected.get('candidate',0),initial_articulation_rad=selected.get('initial_articulation_rad',0.),initial_estimate=str(self.output/'sensitivity/kinematic_context/kinematic_fit_for_twins.json'),initial_estimate_memory=str(self.output/'sensitivity/kinematic_context/kinematic_memory_for_twins.json'),fixed_fixture=context['scene']['fixture'])
   report=self.run(base)
   if not (Path(base['output'])/'observable/P2.json').exists() or not read(Path(base['output'])/'observable/P2.json')['provenance'].get('complete'):
    result={'status':'BLOCKED_DEV_REFERENCE','report':report};write(file,result);return result
@@ -310,7 +317,7 @@ class Benchmark:
     todo.append((level,repeat,params))
   alljobs=[base]
   for start in range(0,len(todo),len(self.gpus)):
-   jobs=[self.job(f'sensitivity/{label}_{i}',gpu=self.gpus[k],mode='replay',role='reference_sensitivity',plant=params,replay_commands=str(commands),reference_safety_memory=str(Path(base['output'])/'structured_memory.json'),fixed_fixture=fixed,episode_id='DEV_sensitivity') for k,(label,i,params) in enumerate(todo[start:start+len(self.gpus)])]
+   jobs=[self.job(f'sensitivity/{label}_{i}',source=base['source'],asset=base['asset_root'],plan=base['plan'],gpu=self.gpus[k],mode='replay',role='reference_sensitivity',plant=params,replay_commands=str(commands),reference_safety_memory=str(Path(base['output'])/'structured_memory.json'),fixed_fixture=fixed,episode_id='DEV_sensitivity',candidate=base.get('candidate',0),initial_articulation_rad=base.get('initial_articulation_rad',0.)) for k,(label,i,params) in enumerate(todo[start:start+len(self.gpus)])]
    with concurrent.futures.ThreadPoolExecutor(max_workers=len(jobs)) as pool:list(pool.map(self.run,jobs))
    alljobs+=jobs
   logs={name:[] for name in conditions};failures=[]
@@ -404,10 +411,12 @@ class Benchmark:
   import xml.etree.ElementTree as ET
   folder=Path(folder);out=Path(out);out.mkdir(parents=True,exist_ok=True)
   scene=read(folder/'initial_scene_private.json');W=np.eye(4);W[:3,:3]=scene['asset_rotation'];W[:3,3]=scene['asset_xyz']
-  memory=read(folder/'structured_memory.json');accepted=[record for record in memory['fit_history'] if record.get('accepted')]
+  memory=read(folder/'structured_memory.json')
+  if memory.get('GT_inputs') is not False:raise RuntimeError('KINEMATIC_STAGE_MEMORY_MUST_BE_EE_ONLY')
+  accepted=[record for record in memory['fit_history'] if record.get('accepted')]
   if not accepted:raise RuntimeError('NO_SAVED_PRE_PHYSICS_KINEMATIC_ESTIMATE')
-  # Physics reference has continue_manipulation=False: its accepted estimate is
-  # frozen before P1. Do not use subsequently appended P4 poses as fit support.
+  # The final accepted D-stage estimate is frozen before any physics probes.
+  # Keep exactly its EE support; E-stage observations never replace/refine it.
   record=accepted[-1];fit=record['fit'];support=memory['supporting_observations'][:record['observation_count']]
   write(out/'kinematic_fit_for_twins.json',fit)
   write(out/'kinematic_memory_for_twins.json',{'source':'measured EE SE(3) before physics probes only','estimated_articulation':fit,'supporting_observations':support,'attempt_history':memory.get('attempt_history',[]),'fit_history':[record],'GT_inputs':False})
@@ -453,8 +462,11 @@ class Benchmark:
   summary=self.compile_kinematic_prior(episode,summary)
   if not self.calibration or not self.sensitivity or self.sensitivity.get('status')!='OBSERVABLE_RESPONSE':
    summary['stages']['E']={'status':'BLOCKED','reason':'DEV_SENSITIVITY_OR_ROBOT_CALIBRATION_NOT_VALIDATED'};summary['stages']['F']={'status':'NOT_IDENTIFIED','accepted_parameters':None};summary['stages']['H']={'status':'BLOCKED','reason':'NO_INDEPENDENT_HELDOUT_ROLLOUT_WITH_VALIDATED_PHYSICS_PROTOCOL'};write(out/'episode_summary.json',summary);return summary
-  selected=summary['selected_job'];reference={**selected,'mode':'physics_reference','role':'reference','output':str(out/'physics_reference'),'continue_manipulation':False,'robot_calibration_id':self.calibration['calibration_id']}
-  reference.pop('import_spec',None) if episode.get('split')!='DEV' else None
+  selected=summary['selected_job'];context=self.kinematic_context(selected,Path(selected['output']),out)
+  scene=context['scene'];memory=context['memory'];fit=context['fit'];support=context['support'];inertia_prior=context['inertia_prior'];compile_twins=context['compile_twins']
+  reference={**selected,'mode':'physics_reference','role':'reference','output':str(out/'physics_reference'),'continue_manipulation':False,'robot_calibration_id':self.calibration['calibration_id'],'initial_estimate':str(out/'kinematic_fit_for_twins.json'),'initial_estimate_memory':str(out/'kinematic_memory_for_twins.json'),'fixed_fixture':scene['fixture']}
+  # D's explicit import must never be reused as E's response: it has no P1-P4.
+  reference.pop('import_spec',None)
   # Hidden parameters are consumed by scene assembly; only observable training
   # logs enter the estimator. The seeded plant is unchanged in final manipulation.
   reference['plant']=self.reference_parameters(episode)
@@ -471,7 +483,7 @@ class Benchmark:
   if len(reference_logs)!=3:
    summary['stages']['E']={'status':'FAILED','reason':r['status'],'complete_training_probes':list(reference_logs)};write(out/'episode_summary.json',summary);return summary
   summary['stages']['E']={'status':'SUCCESS','training_probe_ids':['P1','P2','P3'],'reference_final_status':r['status']}
-  context=self.kinematic_context(selected,folder,out);scene=context['scene'];memory=context['memory'];fit=context['fit'];support=context['support'];inertia_prior=context['inertia_prior'];compile_twins=context['compile_twins']
+  write(out/'kinematic_stage_binding.json',{'source_stage':'D','source_run':str(Path(selected['output'])),'fit_sha256':sha(out/'kinematic_fit_for_twins.json'),'memory_sha256':sha(out/'kinematic_memory_for_twins.json'),'physics_reference':str(folder),'physics_stage_refitted_articulation':False,'T1_T2_use_completed_D_estimate':True})
   twins=compile_twins(out/'twins')
   tape=read(folder/'command_tape.json');first_heldout=next((i for i,frame in enumerate(tape) if frame['phase']=='P4'),len(tape))
   training_tape=tape[:first_heldout]

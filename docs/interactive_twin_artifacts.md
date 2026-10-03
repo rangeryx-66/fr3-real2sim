@@ -35,7 +35,9 @@ The moving-link coordinate origin changes; its surfaces, COM, mass and inertia d
 
 The compiler requires `q_initial=0` in the prepared prior's coordinate. Nonzero initial scenes must first be baked into a separate start-at-zero prior during scene preparation, using the authorized initialization configuration. A nonzero argument is rejected rather than querying GT online or silently moving the asset.
 
-The frozen twin operation window is ±10° (`policy_not_physical_limit`). It applies consistently to T0/T1/T2 and avoids using the GT axis to resolve the estimated axis's sign. It is not an estimated full joint limit. `observed_range` is separately calculated from measured EE poses and contains only actual observed motion.
+The frozen twin operation window is ±10° (`policy_not_physical_limit`). It is **controller policy metadata only**, never authored as a URDF/native physical joint limit. T0 preserves the prepared prior's physical stops, including its closed-door stop. T1/T2 preserve the same scalar physical range in the estimated coordinate. If the saved estimated axis points opposite the prepared axis, the coordinate is inverted and limits `[lower, upper]` become `[-upper, -lower]`; the estimated axis and axis line themselves are not replaced or aligned with the prior. Exactly perpendicular directions make sign transfer ambiguous and are explicitly rejected.
+
+The source axis is consulted only by this preparation/compiler coordinate-convention conversion. It is not passed to the EE fitter/controller. These limits are **prepared prior values, not interaction-identified limits**. For a nonzero initial configuration, the existing preparation bake has already shifted limits by `-q_initial`; those shifted bounds are preserved or sign-inverted. `observed_range` remains separately calculated from measured EE poses and contains only actual observed motion. No full range is inferred from a short opening.
 
 ## Physics and native replay
 

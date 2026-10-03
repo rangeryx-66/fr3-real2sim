@@ -80,6 +80,24 @@ class InitialState(unittest.TestCase):
                 self.assertEqual(state['mass_kg'], target['mass_kg'])
             self.assertTrue(metadata['initial_state_bake']['restore_mass_properties_before_world_reset'])
 
+    def test_twins_preserve_baked_stops_in_both_estimated_axis_coordinates(self):
+        q = .03
+        result = bake_initial_articulation(self.asset, self.root/'zero', q)
+        baked = Path(result['asset_root']);chain = URDFChain(baked/'urdf/test.urdf');joint = chain.joints['door']
+        prepared_axis = (chain.root_to_link(joint.parent,{}) @ joint.origin)[:3,:3] @ joint.axis
+        for sign in (1,-1):
+            estimate = {'joint_type':'revolute','confidence':.99,'revolute':{'axis':(sign*prepared_axis).tolist(),'point_on_axis':[.1,.2,.3]}}
+            twins = write_twins(baked,self.root/f'twins_sign_{sign}',estimate,np.eye(4))
+            for version,paths in twins['versions'].items():
+                limit = ET.parse(paths['urdf']).getroot().find("joint[@name='hinge']/limit")
+                expected = [-q,1.5-q] if version=='T0' or sign==1 else [-(1.5-q),q]
+                np.testing.assert_allclose([float(limit.get('lower')),float(limit.get('upper'))],expected,atol=1e-12)
+                metadata = json.loads((Path(paths['asset_root'])/'twin.json').read_text())
+                self.assertFalse(metadata['operational_joint_window']['authored_to_physical_joint'])
+                self.assertLess(metadata['initial_geometry_audit']['max_translation_error_m'],1e-12)
+        original = ET.parse(self.urdf).getroot().find("joint[@name='hinge']/limit")
+        self.assertEqual([float(original.get('lower')),float(original.get('upper'))],[0.,1.5])
+
     def test_legacy_recompute_would_be_wrong_and_restore_is_required(self):
         q = .03
         result = bake_initial_articulation(self.asset, self.root / 'zero', q)

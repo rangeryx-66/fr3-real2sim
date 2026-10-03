@@ -135,6 +135,43 @@ class TwinArtifacts(unittest.TestCase):
         self.assertEqual(meta["operational_joint_window"]["source"], "frozen policy_not_physical_limit")
         self.assertFalse(meta["geometry_relations"]["geometry_improvement_measured"])
 
+    def test_operation_window_does_not_replace_physical_closed_stop(self):
+        summary = self.compile(operational_joint_limits_rad=[-.03, .04])
+        for version, paths in summary["versions"].items():
+            tree = ET.parse(paths["urdf"])
+            node = tree.getroot().find("joint[@name='hinge']/limit")
+            metadata = json.loads((Path(paths["asset_root"])/"twin.json").read_text())
+            sign = metadata["physical_joint_limits"]["coordinate_sign_vs_prepared_prior"]
+            expected = [0., 1.5] if sign == 1 else [-1.5, 0.]
+            np.testing.assert_allclose([float(node.get("lower")), float(node.get("upper"))], expected)
+            self.assertEqual(node.get("effort"), "3")
+            self.assertEqual(node.get("velocity"), "0.2")
+            self.assertFalse(metadata["operational_joint_window"]["authored_to_physical_joint"])
+            self.assertEqual(metadata["operational_joint_window"]["upper"], .04)
+            manifest = json.loads((Path(paths["asset_root"])/"manifest.json").read_text())
+            self.assertEqual(manifest["source_joint_limits_rad"], {"lower": expected[0], "upper": expected[1]})
+        t0 = ET.parse(summary["versions"]["T0"]["urdf"]).getroot().find("joint[@name='hinge']/limit")
+        self.assertEqual(t0.attrib, ET.parse(self.urdf).getroot().find("joint[@name='hinge']/limit").attrib)
+
+    def test_opposite_estimated_axis_inverts_limits_without_snapping_axis(self):
+        chain = URDFChain(self.urdf); joint = chain.joints["door"]
+        prior_axis = (self.world @ chain.root_to_link(joint.parent, {}) @ joint.origin)[:3,:3] @ joint.axis
+        estimated_axis = Rotation.from_rotvec([.08, -.03, .02]).apply(-prior_axis)
+        self.estimate["revolute"]["axis"] = estimated_axis.tolist()
+        summary = self.compile()
+        for version in ("T1", "T2"):
+            paths = summary["versions"][version]; tree = ET.parse(paths["urdf"])
+            limit = tree.getroot().find("joint[@name='hinge']/limit")
+            np.testing.assert_allclose([float(limit.get("lower")),float(limit.get("upper"))],[-1.5,0.])
+            current = URDFChain(paths["urdf"]); hinge = current.joints["door"]
+            axis_world = (self.world @ current.root_to_link(hinge.parent,{}) @ hinge.origin)[:3,:3] @ hinge.axis
+            np.testing.assert_allclose(axis_world,estimated_axis,atol=1e-12)
+            self.assertGreater(np.linalg.norm(axis_world+prior_axis),.01)
+            metadata = json.loads((Path(paths["asset_root"])/"twin.json").read_text())
+            self.assertEqual(metadata["joint_coordinate_convention"]["coordinate_sign_vs_prepared_prior"],-1)
+            self.assertFalse(metadata["physical_joint_limits"]["full_joint_limits_identified"])
+        np.testing.assert_allclose(json.loads((self.root/"twins/estimated_articulation.json").read_text())["axis_world"],estimated_axis,atol=1e-12)
+
     def test_reject_gt_nonzero_start_and_reference_output(self):
         dirty = {**self.estimate, "evaluation": {"GT_axis": [0, 0, 1]}}
         with self.assertRaisesRegex(ValueError, "GROUND_TRUTH_IN_ESTIMATED_PAYLOAD"):

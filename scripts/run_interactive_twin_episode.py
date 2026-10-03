@@ -274,12 +274,25 @@ def main():
      # remain sealed behind GroundTruthGate until the experiment is stopped.
      estimate_path=Path(job['initial_estimate']);loaded=json.loads(estimate_path.read_text())
      if loaded.get('joint_type')!='revolute' or loaded.get('confidence',0)<=.9 or 'revolute' not in loaded:raise RuntimeError('INVALID_SAVED_ESTIMATE')
-     evidence=json.loads(Path(job.get('initial_estimate_memory',estimate_path.parent/'structured_memory.json')).read_text())
+     evidence_path=Path(job.get('initial_estimate_memory',estimate_path.parent/'structured_memory.json'))
+     evidence=json.loads(evidence_path.read_text())
      if evidence.get('GT_inputs') is not False:raise RuntimeError('ESTIMATE_PROVENANCE_NOT_SENSOR_ONLY')
-     observations=np.asarray(evidence['supporting_observations']);axis=np.asarray(loaded['revolute']['axis'])
+     accepted=[item for item in evidence.get('fit_history',[]) if item.get('accepted') and item.get('fit')==loaded]
+     if not accepted:raise RuntimeError('SAVED_ESTIMATE_SUPPORT_MISMATCH')
+     count=int(accepted[-1]['observation_count']);observations=np.asarray(evidence['supporting_observations'][:count])
+     if count<12 or len(observations)!=count or np.max(np.linalg.norm(observations[:,:3,3]-observations[0,:3,3],axis=1))<.005:raise RuntimeError('SAVED_ESTIMATE_EXCITATION_INSUFFICIENT')
+     axis=np.asarray(loaded['revolute']['axis'])
      observed_rotation=Rotation.from_matrix(observations[-1,:3,:3]@observations[0,:3,:3].T).as_rotvec()
      memory.estimate=loaded;memory.follow_sign=1. if observed_rotation@axis>=0 else -1.
      memory.estimates.append({'fit':loaded,'accepted':True,'observation_count':0,'source':'saved_EE_only_estimate','source_path':str(estimate_path)})
+     # Prior D support is evidence from a completed experiment. Keep it separate
+     # from this run's measured trajectory; use the current EE as safety anchor.
+     (a.output/'adopted_estimate.json').write_text(json.dumps({
+      'schema':'adopted-ee-articulation-v1','fit':loaded,'GT_inputs':False,
+      'supporting_observations':observations.tolist(),'support_scope':'prior_completed_D_before_current_physics',
+      'activation_time_s':tick*dt,'initial_ee':E0.tolist(),
+      'source_estimate_path':str(estimate_path.resolve()),'source_estimate_sha256':hashlib.sha256(estimate_path.read_bytes()).hexdigest(),
+      'source_memory_path':str(evidence_path.resolve()),'source_memory_sha256':hashlib.sha256(evidence_path.read_bytes()).hexdigest()},indent=2))
      memory.save();following=True
     for attempt in range(0 if following else 4):
      direction=memory.begin_attempt(attempt,tick*dt);drive.set_direction(direction,tcp());drive.active=True

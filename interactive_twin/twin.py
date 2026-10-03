@@ -154,18 +154,52 @@ def _set_dynamics(joint, parameters):
     return values
 
 
-def _set_limits(joint, limits):
+def _operational_window(limits):
+    """A controller motion budget; never author it as a physical joint stop."""
     lo, hi = map(float, limits)
     if not (math.isfinite(lo) and math.isfinite(hi) and lo <= 0 <= hi and lo < hi):
         raise ValueError("OPERATIONAL_WINDOW_MUST_CONTAIN_INITIAL_ZERO")
+    return {"lower": lo, "upper": hi}
+
+
+def _prior_physical_limits(joint):
     node = joint.find("limit")
     if node is None:
-        raise ValueError("INITIAL_PRIOR_REQUIRES_EXISTING_EFFORT_VELOCITY_LIMITS")
-    # Effort and speed caps remain the initial prior; only task motion budget is
-    # expressed in the estimated coordinate, whose sign is not aligned using GT.
-    node.set("lower", str(lo))
-    node.set("upper", str(hi))
+        raise ValueError("INITIAL_PRIOR_REQUIRES_EXISTING_PHYSICAL_LIMITS")
+    lo, hi = float(node.get("lower")), float(node.get("upper"))
+    if not (math.isfinite(lo) and math.isfinite(hi) and lo <= 0 <= hi and lo < hi):
+        raise ValueError("PREPARED_PHYSICAL_LIMITS_MUST_CONTAIN_INITIAL_ZERO")
     return {"lower": lo, "upper": hi}
+
+
+def _physical_limits_in_estimated_coordinate(root, chain, joint_name, estimate, world, prior):
+    """Transfer prepared stop coordinates without replacing the estimated axis.
+
+    A revolute axis is an unoriented line. The prior direction is consulted ONLY
+    to choose whether its existing scalar coordinate has the same sign as the
+    saved estimated direction. Axis orientation/location still come entirely
+    from the EE estimate. Misalignment is retained, not corrected using prior.
+    """
+    joint = _joint(root, joint_name)
+    parent = joint.find("parent").get("link")
+    # chain.joints is keyed by child; it still represents the read-only prior.
+    prior_joint = chain.joints[joint.find("child").get("link")]
+    prior_axis_world = (world @ chain.root_to_link(parent, {}) @ prior_joint.origin)[:3, :3] @ prior_joint.axis
+    prior_axis_world = prior_axis_world / np.linalg.norm(prior_axis_world)
+    agreement = float(prior_axis_world @ np.asarray(estimate["axis_world"]))
+    if abs(agreement) <= 1e-12:
+        raise ValueError("ESTIMATED_AXIS_COORDINATE_SIGN_AMBIGUOUS_WITH_PRIOR")
+    sign = 1 if agreement > 0 else -1
+    limits = dict(prior) if sign == 1 else {"lower": -prior["upper"], "upper": -prior["lower"]}
+    if sign == -1:
+        node = joint.find("limit")
+        node.set("lower", format(limits["lower"], ".17g"))
+        node.set("upper", format(limits["upper"], ".17g"))
+    return {"limits": limits, "coordinate_sign_vs_prepared_prior": sign,
+            "coordinate_relation": "q_twin = sign * q_prepared_prior",
+            "axis_direction_dot_prior_diagnostic": agreement,
+            "prior_axis_use": "coordinate sign convention only; estimated axis direction and line unchanged",
+            "limit_source": "prepared URDF prior, including any initialization re-zero; not interaction-identified"}
 
 
 def reframe_moving_child(root, chain, joint_name, estimate, T_world_asset):
@@ -316,13 +350,19 @@ def write_twins(asset_root, output_dir, estimated_articulation, T_world_asset, *
         prior.update({key: float(initial_physics_prior[key]) for key in ("tau_c", "b")})
     prior = _set_dynamics(joint, prior)
     fixed_inertia_prior = None if initial_physics_prior is None else initial_physics_prior.get("J_eff")
-    limits = _set_limits(joint, operational_joint_limits_rad)
+    limits = _operational_window(operational_joint_limits_rad)
+    physical_prior = _prior_physical_limits(joint)
     _absolute_resources(root, source_urdf)
     initial_root = copy.deepcopy(root)
     updated_root = copy.deepcopy(root)
     reframe = None
+    updated_limits = {"limits": physical_prior, "coordinate_sign_vs_prepared_prior": 1,
+                      "coordinate_relation": "q_twin = q_prepared_prior",
+                      "prior_axis_use": "unchanged prepared coordinate; no accepted estimate"}
     if estimate:
-        reframe = reframe_moving_child(updated_root, URDFChain(source_urdf), name, estimate, W_asset)
+        chain = URDFChain(source_urdf)
+        reframe = reframe_moving_child(updated_root, chain, name, estimate, W_asset)
+        updated_limits = _physical_limits_in_estimated_coordinate(updated_root, chain, name, estimate, W_asset, physical_prior)
     physics = _physics_result(physics_estimate, prior)
     if physics["updated"] and estimate is None:
         raise ValueError("PHYSICS_UPDATE_REQUIRES_ACCEPTED_KINEMATIC_ESTIMATE")
@@ -345,6 +385,8 @@ def write_twins(asset_root, output_dir, estimated_articulation, T_world_asset, *
         (directory / "urdf").mkdir(parents=True)
         robot = copy.deepcopy(initial_root if version == "T0" else updated_root)
         selected_physics = prior if version != "T2" else physics["parameters"]
+        physical_limits = physical_prior if version == "T0" else updated_limits["limits"]
+        coordinate_sign = 1 if version == "T0" else updated_limits["coordinate_sign_vs_prepared_prior"]
         _set_dynamics(_joint(robot, name), selected_physics)
         urdf = directory / "urdf" / source_urdf.name
         ET.indent(robot)
@@ -356,7 +398,9 @@ def write_twins(asset_root, output_dir, estimated_articulation, T_world_asset, *
                 "physics_updated": version == "T2" and physics["updated"],
                 "estimated_articulation": estimate if version != "T0" else None,
                 "observed_range": observed if version != "T0" else None,
-                "operational_joint_window": {**limits, "units": "rad", "source": "frozen policy_not_physical_limit", "full_joint_limits_identified": False},
+                "operational_joint_window": {**limits, "units": "rad", "source": "frozen policy_not_physical_limit", "full_joint_limits_identified": False, "authored_to_physical_joint": False},
+                "physical_joint_limits": {**physical_limits, "units": "rad", "source": "prepared URDF prior; not estimated from observed motion", "prepared_prior_limits": physical_prior, "coordinate_sign_vs_prepared_prior": coordinate_sign, "full_joint_limits_identified": False},
+                "joint_coordinate_convention": {"coordinate_sign_vs_prepared_prior": 1, "prior_axis_use": "unchanged prepared coordinate"} if version == "T0" else updated_limits,
                 "physics": physics if version == "T2" else {"status": "INITIAL_PRIOR", "updated": False, "parameters": prior, "J_eff_prior_fixed": fixed_inertia_prior, "parameter_semantics": PARAMETER_SEMANTICS},
                 "native_physics_application": {"dynamicFrictionEffort": selected_physics["tau_c"],
                     "viscousFrictionCoefficient": selected_physics["b"] * math.pi / 180.,
@@ -369,14 +413,15 @@ def write_twins(asset_root, output_dir, estimated_articulation, T_world_asset, *
                 "fixture_must_be_frozen_from_initial_scene": True,
                 "resource_policy": "read-only absolute references; source assets must remain available"}
         meta = copy.deepcopy(manifest)
-        # The legacy loader expects these names, but their contents now describe
-        # the twin, and are explicitly NOT an identified physical joint limit.
+        # Legacy loader fields remain actual physical prior stops in this
+        # twin's coordinate. The controller operation window is metadata only.
         axis_element = _joint(robot, name).find("axis")
         meta.update(prepared_urdf=str(urdf), prepared_geometry_sha256=hashlib.sha256(urdf.read_bytes()).hexdigest(),
-                    source_joint_limits_rad=limits, source_joint_axis="1 0 0" if axis_element is None else axis_element.get("xyz", "1 0 0"))
+                    source_joint_limits_rad=physical_limits, source_joint_axis="1 0 0" if axis_element is None else axis_element.get("xyz", "1 0 0"))
         meta["interactive_twin"] = {"version": version, "twin_metadata": str(directory / "twin.json"),
             "axis_source": "EE-only estimate" if twin["kinematics_updated"] else "initial prepared prior",
-            "legacy_source_joint_limits_field_semantics": "frozen policy_not_physical_limit",
+            "legacy_source_joint_limits_field_semantics": "prepared physical prior limits in twin coordinate; not interaction-identified",
+            "coordinate_sign_vs_prepared_prior": coordinate_sign,
             "geometry_changed": False, "coordinate_frame_reexpressed": bool(twin["kinematics_updated"]),
             "reference_modified": False, "freeze_fixture_layout_from_initial_scene": True}
         (directory / "manifest.json").write_text(json.dumps(meta, indent=2) + "\n")

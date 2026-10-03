@@ -1,7 +1,7 @@
 {
   "schema": "interactive-twin-benchmark-v1",
   "mode": "SIM_TO_SIM_BLIND_SYSID",
-  "output": "results/interactive_twin_benchmark_20261003",
+  "output": "results/interactive_twin_benchmark_20261003_v2",
   "prepared_roots": [
     "results/semantic_interaction/asset",
     "results/interactive_twin_asset_preparation/assets"
@@ -107,45 +107,9 @@
       ]
     },
     "dev_kinematic": {
-      "run_dir": "results/interactive_twin_dev_20261003/reference_low",
-      "job_file": "results/interactive_twin_dev_20261003/reference_low_job.json"
-    },
-    "dev_reference": {
-      "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/LOW_0"
-    },
-    "sensitivity": {
-      "runs": [
-        {
-          "condition": "LOW",
-          "repeat": 0,
-          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/LOW_0"
-        },
-        {
-          "condition": "LOW",
-          "repeat": 1,
-          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/LOW_1"
-        },
-        {
-          "condition": "MEDIUM",
-          "repeat": 0,
-          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/MEDIUM_0"
-        },
-        {
-          "condition": "MEDIUM",
-          "repeat": 1,
-          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/MEDIUM_1"
-        },
-        {
-          "condition": "HIGH",
-          "repeat": 0,
-          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/HIGH_0"
-        },
-        {
-          "condition": "HIGH",
-          "repeat": 1,
-          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/HIGH_1"
-        }
-      ]
+      "run_dir": "results/interactive_twin_dev_20261003/final_D_stage",
+      "job_file": "results/interactive_twin_dev_20261003/final_D_stage_job.json",
+      "source_code_version": "post D-to-E boundary fix independent kinematics runner; no TEST observations"
     }
   }
 }

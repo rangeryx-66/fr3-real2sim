@@ -1,6 +1,8 @@
 """Orchestration contract test with fake rollouts; no simulation-success claim."""
 import ast
 from copy import deepcopy
+import hashlib
+import importlib.util
 from pathlib import Path
 import sys
 import tempfile
@@ -112,7 +114,7 @@ class FitHeldoutBoundary(unittest.TestCase):
                 "revolute": {"axis": [0, 0, 1], "point_on_axis": [.2, .1, .3], "radius_m": .3}}
             selected_folder = out / "selected_kinematics"
             write(selected_folder / "initial_scene_private.json", {"asset_rotation": np.eye(3).tolist(), "asset_xyz": [0, 0, 0], "fixture": {"frozen": True}})
-            write(selected_folder / "structured_memory.json", {"fit_history": [{"accepted": True, "fit": fit, "observation_count": 2}], "supporting_observations": [np.eye(4).tolist()] * 5, "attempt_history": []})
+            write(selected_folder / "structured_memory.json", {"fit_history": [{"accepted": True, "fit": fit, "observation_count": 2}], "supporting_observations": [np.eye(4).tolist()] * 5, "attempt_history": [], "GT_inputs": False})
             summary = read(out / "episode_summary.json"); summary["selected_job"]["output"] = str(selected_folder); write(out / "episode_summary.json", summary)
             calls = []; fitted = [False]; reference_plant = [None]
 
@@ -121,10 +123,17 @@ class FitHeldoutBoundary(unittest.TestCase):
                 directory = Path(job["output"])
                 if job["mode"] == "physics_reference":
                     self.assertEqual(job["initial_articulation_rad"], q_initial)
+                    self.assertEqual(read(job["initial_estimate"]), fit)
+                    adopted = read(job["initial_estimate_memory"])
+                    self.assertEqual(adopted["fit_history"][0]["fit"], fit)
+                    self.assertEqual(len(adopted["supporting_observations"]), 2)
                     reference_plant[0] = job["plant"]
                     write(directory / "initial_scene_private.json", {"asset_rotation": np.eye(3).tolist(), "asset_xyz": [0, 0, 0], "fixture": {"frozen": True}})
-                    write(directory / "structured_memory.json", {"fit_history": [{"accepted": True, "fit": fit, "observation_count": 2}],
-                        "supporting_observations": [np.eye(4).tolist()] * 5, "attempt_history": []})
+                    # Actual E memories mark loaded D support as external, with
+                    # observation_count=0. They must never replace D's support.
+                    write(directory / "structured_memory.json", {"fit_history": [{"accepted": True, "fit": fit, "observation_count": 0,
+                        "source": "saved_EE_only_estimate"}], "supporting_observations": [np.eye(4).tolist()] * 5,
+                        "attempt_history": [], "GT_inputs": False})
                     write(directory / "command_tape.json", [{"phase": p} for p in ("SETTLE", "P1", "P2", "P3", "P4", "FINAL_HOLD")])
                     for probe in ("P1", "P2", "P3", "P4"):
                         write(directory / "observable" / (probe + ".json"), {"probe_id": probe, "provenance": {"complete": True}})
@@ -183,12 +192,114 @@ class FitHeldoutBoundary(unittest.TestCase):
             self.assertFalse(result["stages"]["I"]["physics_model_used_by_controller"])
             memory = read(out / "twins_final/structured_memory.json")
             self.assertEqual(memory["supporting_ee_observation_count"], 2)
+            self.assertEqual(read(out / "kinematic_stage_binding.json")["source_run"], str(selected_folder))
+            self.assertFalse(read(out / "kinematic_stage_binding.json")["physics_stage_refitted_articulation"])
             self.assertEqual(read(out / "heldout_comparison.json")["methods"]["B3"]["status"], "UNAVAILABLE")
             self.assertEqual(len([j for j in calls if "physics_candidates" in j["output"]]), 4)
             self.assertEqual(len([j for j in calls if "/heldout/" in j["output"]]), 4)
 
 
+@unittest.skipUnless(importlib.util.find_spec("scipy"), "SciPy is required for SE(3) replay-model validation")
+class AdoptedEstimateBoundary(unittest.TestCase):
+    def _fixture(self, root):
+        root = Path(root); prior = root / "D"; current = root / "E"
+        angles = np.linspace(0., .05, 24)
+        support = np.tile(np.eye(4), (len(angles), 1, 1))
+        for i, angle in enumerate(angles):
+            c, s = np.cos(angle), np.sin(angle)
+            support[i, :3, :3] = [[c, -s, 0], [s, c, 0], [0, 0, 1]]
+            support[i, :3, 3] = [.3*c, .3*s, 0]
+        fit = {"joint_type": "revolute", "confidence": .99,
+               "revolute": {"axis": [0, 0, 1], "point_on_axis": [0, 0, 0], "radius_m": .3}}
+        estimate_path = prior / "estimate.json"; memory_path = prior / "memory.json"
+        write(estimate_path, fit)
+        prior_memory = {"GT_inputs": False, "fit_history": [{"accepted": True, "fit": fit,
+                        "observation_count": len(support)}], "supporting_observations": support.tolist(),
+                        "attempt_history": [{"result": "RELIABLE_REVOLUTE_ESTIMATE", "end_s": 7.}]}
+        write(memory_path, prior_memory)
+        initial = support[0].copy(); initial[1, 3] += .001
+        sidecar = {"fit": fit, "supporting_observations": support.tolist(), "GT_inputs": False,
+                   "activation_time_s": 12.5, "initial_ee": initial.tolist(),
+                   "source_estimate_path": str(estimate_path), "source_memory_path": str(memory_path),
+                   "source_estimate_sha256": hashlib.sha256(estimate_path.read_bytes()).hexdigest(),
+                   "source_memory_sha256": hashlib.sha256(memory_path.read_bytes()).hexdigest(),
+                   "support_scope": "prior_completed_D_before_current_physics"}
+        write(current / "adopted_estimate.json", sidecar)
+        # Current observations remain separate, not copied D or held-out poses.
+        write(current / "structured_memory.json", {"GT_inputs": False, "fit_history": [],
+                "supporting_observations": [initial.tolist()], "attempt_history": []})
+        return current, prior_memory, sidecar
+
+    def test_adopted_D_support_and_current_run_safety_anchor_stay_separate(self):
+        from interactive_twin.replay import saved_safety_model
+        with tempfile.TemporaryDirectory() as tmp:
+            current, prior, sidecar = self._fixture(tmp)
+            result = saved_safety_model(current / "structured_memory.json")
+            self.assertEqual(result["fit"], sidecar["fit"])
+            self.assertEqual(result["activation_time_s"], 12.5)
+            self.assertEqual(result["support_observation_count"], 24)
+            np.testing.assert_array_equal(result["initial_ee"], sidecar["initial_ee"])
+            self.assertFalse(np.array_equal(result["initial_ee"], prior["supporting_observations"][0]))
+            self.assertEqual(result["follow_sign"], 1.)
+            self.assertEqual(len(read(current / "structured_memory.json")["supporting_observations"]), 1)
+
+    def test_invalid_adopted_sidecar_never_falls_back_to_other_memory(self):
+        from interactive_twin.replay import saved_safety_model
+        for failure in ("source_hash", "support", "GT"):
+            with self.subTest(failure=failure), tempfile.TemporaryDirectory() as tmp:
+                current, prior, sidecar = self._fixture(tmp)
+                # Make legacy fallback otherwise valid, so ignoring the invalid
+                # sidecar would silently switch models instead of failing.
+                write(current / "structured_memory.json", prior)
+                if failure == "source_hash":
+                    Path(sidecar["source_estimate_path"]).write_text("{}")
+                    error = "SOURCE_HASH_MISMATCH"
+                elif failure == "support":
+                    sidecar["supporting_observations"] = sidecar["supporting_observations"][:-1]
+                    error = "SUPPORT_MISMATCH"
+                else:
+                    sidecar["GT_inputs"] = True
+                    error = "PRIOR_EE_ONLY_D"
+                write(current / "adopted_estimate.json", sidecar)
+                with self.assertRaisesRegex(ValueError, error):
+                    saved_safety_model(current / "structured_memory.json")
+
+    def test_legacy_first_probe_memory_still_supported_without_sidecar(self):
+        from interactive_twin.replay import saved_safety_model
+        with tempfile.TemporaryDirectory() as tmp:
+            current, prior, sidecar = self._fixture(tmp)
+            (current / "adopted_estimate.json").unlink()
+            write(current / "structured_memory.json", prior)
+            result = saved_safety_model(current / "structured_memory.json")
+            self.assertEqual(result["activation_time_s"], 7.)
+            self.assertEqual(result["support_observation_count"], 24)
+            np.testing.assert_array_equal(result["initial_ee"], prior["supporting_observations"][0])
+
+
 class BudgetAndProjection(unittest.TestCase):
+    def test_sensitivity_reference_adopts_completed_D_model(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            b = Benchmark.__new__(Benchmark); b.output = Path(tmp)
+            b.config = {"physics": {"hidden_dev_conditions": {"LOW": {"tau_c": .001, "b": .1}}}}
+            b.calibration = {"calibration_id": "frozen-cal"}; b.gpus = [0]
+            b.dev_episode = lambda: {"episode_id": "dev_7320_00"}
+            b._import_sensitivity = lambda: None
+            selected = {"output": str(Path(tmp) / "completed_D"), "source": "source",
+                        "asset_root": "asset", "plan": "plan", "candidate": 2, "initial_articulation_rad": .03}
+            write(b.output / "episodes/dev_7320_00/episode_summary.json",
+                  {"stages": {"D": {"status": "SUCCESS"}}, "selected_job": selected})
+            b.kinematic_context = Mock(return_value={"scene": {"fixture": {"frozen": True}}})
+            b.job = lambda name, **kw: {**kw, "output": str(b.output / name)}
+            b.run = Mock(return_value={"status": "TEST_STOP_BEFORE_SIMULATION"})
+            b.sensitivity_stage()
+            b.kinematic_context.assert_called_once_with(selected, Path(selected["output"]), b.output / "sensitivity/kinematic_context")
+            job = b.run.call_args.args[0]
+            self.assertEqual(job["mode"], "sensitivity_reference")
+            self.assertEqual(job["candidate"], 2)
+            self.assertEqual(job["initial_articulation_rad"], .03)
+            self.assertEqual(job["initial_estimate"], str(b.output / "sensitivity/kinematic_context/kinematic_fit_for_twins.json"))
+            self.assertEqual(job["initial_estimate_memory"], str(b.output / "sensitivity/kinematic_context/kinematic_memory_for_twins.json"))
+
     def test_asset_budget_is_shared_between_configurations(self):
         with tempfile.TemporaryDirectory() as tmp:
             b = Benchmark.__new__(Benchmark); b.output = Path(tmp)
