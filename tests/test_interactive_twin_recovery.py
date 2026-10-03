@@ -6,12 +6,35 @@ import sys
 from pathlib import Path
 import numpy as np
 from interactive_twin_recovery.mobile import candidate_bases,eligible,at_base
-from interactive_twin_recovery.oracle import visual_prior
+from interactive_twin_recovery.oracle import visual_prior,standalone_visual_prior
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from run_interactive_twin_recovery_benchmark import summary_safe,RecoveryBenchmark
 
 
 class RecoveryBoundary(unittest.TestCase):
+ def test_visual_prior_uses_default_stops_without_changing_geometry(self):
+  import xml.etree.ElementTree as ET
+  with tempfile.TemporaryDirectory() as folder:
+   source=Path(folder)/'compiler';(source/'urdf').mkdir(parents=True)
+   urdf=source/'urdf/test.urdf'
+   urdf.write_text('''<robot name="test"><link name="root"/><link name="door">
+   <collision><origin xyz="0.2 0 0"/><geometry><box size="0.4 0.03 0.4"/></geometry></collision>
+   </link><joint name="hinge" type="revolute"><parent link="root"/><child link="door"/>
+   <origin xyz="0 0 0"/><axis xyz="0 0 1"/><limit lower="0" upper="1.5" effort="1" velocity="1"/>
+   </joint></robot>''')
+   tree=ET.parse(urdf);ET.indent(tree);tree.write(urdf,encoding='utf-8',xml_declaration=True)
+   original=urdf.read_bytes()
+   (source/'manifest.json').write_text(json.dumps({'asset_id':'test','joint_name':'hinge','interactive_twin':{}}))
+   (source/'twin.json').write_text(json.dumps({'T_world_asset_initial':np.eye(4).tolist()}))
+   output=standalone_visual_prior(source,Path(folder)/'T_prior',[-.17,.17],{'source':'visual only'})
+   limit=ET.parse(output/'urdf/test.urdf').find('joint/limit')
+   self.assertAlmostEqual(float(limit.get('lower')),-.17)
+   self.assertAlmostEqual(float(limit.get('upper')),.17)
+   self.assertEqual(urdf.read_bytes(),original)
+   metadata=json.loads((output/'twin.json').read_text())
+   self.assertEqual(metadata['initial_geometry_audit']['max_translation_error_m'],0.)
+   self.assertIsNone(metadata['estimated_articulation'])
+
  def test_missing_native_failure_metric_is_null_not_success(self):
   raw={'status':'PHYSICS_CLOCK_MISMATCH','success':False,'minimum_joint_margin_rad':float('nan')}
   safe=summary_safe(raw)

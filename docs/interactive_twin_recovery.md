@@ -62,7 +62,8 @@ P1 使用最多 9 次原生 train rollout。P3 仅在配置、命令、初始 es
 
 `visual_prior` 使用初始可见 moving-part bounds、handle、默认竖直轴、冻结 5° 轴扰动和
 20 mm axis-line 偏移，不把数据集 GT URDF 叫作视觉重建结果。它是构造的 imperfect
-visual/default prior。仅当 P1 gate 通过后比较其 held-out 响应与 P3。
+visual/default prior。独立 `T_prior` 的关节 stop 使用已冻结 DEV ±10° 默认窗口，
+不继承数据集 GT stops；该窗口不代表真实完整关节范围。仅当 P1 gate 通过后比较其 held-out 响应与 P3。
 不宣称几何精度改善或完整关节限位已识别。
 
 ## 可追溯性与恢复
@@ -73,6 +74,8 @@ visual/default prior。仅当 P1 gate 通过后比较其 held-out 响应与 P3�
 - 失败原始报告中的 NaN 不被覆盖；汇总文件将不可用指标写为 null。
 - 断点续跑保留已有候选和已消耗预算，不通过重启刷新失败资产预算。
 - `base_reposition.mp4` 与 `contact_baseline.mp4` 分别记录重定位和接触操作。
+
+只读生成当前报告：`python scripts/summarize_interactive_twin_recovery.py --output results/interactive_twin_recovery_20261003_v2`。
 
 已修复的通用问题包括：移动阶段 clock callback 释放、相同 FCL solid 的缓存、失败
 汇总 NaN 处理。缓存检查曾与原 PhysicalScene 在 12 个路径/q 状态逐一对照，判定一致。

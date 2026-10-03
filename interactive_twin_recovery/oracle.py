@@ -204,6 +204,41 @@ def visual_prior(visual,manifest,W,policy):
          'observed_range':None,'full_joint_limits_identified':False}
 
 
+def standalone_visual_prior(compiled_asset,destination,default_limits,prior):
+ """Keep the visual reframe, replacing inherited GT stops with a default window.
+
+ The compiler's T0/T1 copies are geometry-audit intermediates, not the visual
+ prior. Only this separately labeled asset is evaluated as T_prior.
+ """
+ import shutil,hashlib,xml.etree.ElementTree as ET
+ from interactive_twin.twin import audit_initial_geometry
+ destination=Path(destination)
+ if destination.exists():return destination
+ shutil.copytree(compiled_asset,destination)
+ manifest=read(destination/'manifest.json')
+ path=destination/'urdf'/f"{manifest['asset_id']}.urdf"
+ tree=ET.parse(path);joint=next(j for j in tree.findall('joint') if j.get('name')==manifest['joint_name'])
+ limits={'lower':float(default_limits[0]),'upper':float(default_limits[1])}
+ for name,value in limits.items():joint.find('limit').set(name,format(value,'.17g'))
+ ET.indent(tree);tree.write(path,encoding='utf-8',xml_declaration=True)
+ # Zero-state geometry, scale, mass and inertia must remain identical.
+ metadata=read(destination/'twin.json')
+ audit=audit_initial_geometry(Path(compiled_asset)/'urdf'/path.name,path,np.asarray(metadata['T_world_asset_initial']))
+ metadata.update(version='T_prior',kinematics_updated=False,physics_updated=False,
+   estimated_articulation=None,visual_default_prior=prior,observed_range=None,
+   physical_joint_limits={**limits,'units':'rad','source':'frozen DEV default operation window; unknown actual stops',
+                          'full_joint_limits_identified':False},
+   joint_coordinate_convention={'positive_direction':'visual/default estimated axis','GT_axis_sign_used':False},
+   initial_geometry_audit=audit)
+ manifest.update(prepared_urdf=str(path),prepared_geometry_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+                 source_joint_limits_rad=limits)
+ manifest['interactive_twin'].update(version='T_prior',twin_metadata=str(destination/'twin.json'),
+      axis_source='visual/default prior',legacy_source_joint_limits_field_semantics='default window, not dataset GT stops',
+      coordinate_sign_vs_prepared_prior=None)
+ write(destination/'twin.json',metadata);write(destination/'manifest.json',manifest)
+ return destination
+
+
 def run_prior(bench):
  from interactive_twin.twin import write_twins
  from interactive_twin.sysid import NoiseScales
@@ -223,10 +258,11 @@ def run_prior(bench):
  prior=visual_prior(visual,manifest,W,bench.experiment['prior'])
  prior_dir=bench.output/'visual_prior'
  write(prior_dir/'prior_definition.json',prior)
- artifact=prior_dir/'twins'
+ artifact=prior_dir/'compiler_geometry_audit'
  if (artifact/'twin_versions.json').exists():prior_twins=read(artifact/'twin_versions.json')
  else:prior_twins=write_twins(original_asset,artifact,prior,W,initial_physics_prior=bench.experiment['prior']['physics'])
- asset=Path(prior_twins['versions']['T1']['asset_root'])
+ asset=standalone_visual_prior(Path(prior_twins['versions']['T1']['asset_root']),prior_dir/'T_prior',
+                              bench.config['physics']['operational_joint_limits_rad'],prior)
  job=native_job(bench,reference,prior_dir/'heldout',asset,bench.experiment['prior']['physics'],refdir/'command_tape.json',bench.gpus[0])
  report=bench.run(job);p=Path(job['output'])/'observable/P4.json'
  result={'status':report['status'],'prior_source':prior['source'],'GT_twin_excluded_from_Real2Sim_prior':True,
