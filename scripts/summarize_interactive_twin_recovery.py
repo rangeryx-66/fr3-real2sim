@@ -12,6 +12,20 @@ def number(value, scale=1., precision=3):
     return '—' if value is None else f'{value*scale:.{precision}f}'
 
 
+def first_physical_failure(root, config):
+    folder = root/'mobile'/config
+    reports = sorted((p for p in folder.rglob('report.json') if p.parent.name.startswith('candidate_')),
+                     key=lambda p:p.stat().st_mtime)
+    infrastructure = ('PHYSICS_CLOCK_MISMATCH','EPISODE_WALL_CLOCK_BUDGET','PROCESS_FAILED',
+                      'IMPLEMENTATION_ERROR','CUTOFF_05_00')
+    for path in reports:
+        report = read(path)
+        status = report.get('status','')
+        if not report.get('success') and status and not status.startswith(infrastructure):
+            return {'status':status,'phase':report.get('failure_phase'), 'report':str(path)}
+    return None
+
+
 def summarize(root):
     mobile = read(root/'mobile_summary.json')
     physics = read(root/'physics_oracle/physics_decomposition.json')
@@ -29,10 +43,14 @@ def summarize(root):
                   '| 配置 | fixed IK/path | mobile IK/path | 真实抓持 | ID | ≥5° | 最小 margin (rad) | 终止状态 |',
                   '|---|---:|---:|---:|---:|---:|---:|---|']
         for row in rows:
+            blocker = first_physical_failure(root,row['config'])
+            reason = row['failure_reason']
+            if blocker and not row['mobile_5deg_success'] and blocker['status']!=reason:
+                reason += '; first physical: '+blocker['status']
             lines.append('| '+ ' | '.join([row['config'],
                 *[str(int(bool(row[k]))) for k in ('fixed_grasp_feasible','mobile_grasp_feasible',
                    'mobile_grasp_success','mobile_ID_success','mobile_5deg_success')],
-                number(row.get('minimum_joint_margin_rad')),row['failure_reason']])+' |')
+                number(row.get('minimum_joint_margin_rad')),reason])+' |')
         lines += ['', 'IK/path 仅表示静态规划可行；不能替代真实抓持或开门。详细底盘位姿与行程见 `cross_object_mobile.csv`。', '']
     else:
         lines += ['Mobile：尚无汇总结果。', '']

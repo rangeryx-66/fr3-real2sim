@@ -44,6 +44,12 @@ def context(bench):
  tape=read(refdir/'command_tape.json');end=next(i for i,f in enumerate(tape) if f['phase']=='P4')
  if tape[end-1]['phase']!='P3':raise RuntimeError('TRAIN_P4_BOUNDARY_INVALID')
  write(out/'command_train_only.json',tape[:end])
+ # Multiple native rollouts share each immutable asset. Prepare the visual
+ # import copy once before parallel app launches, avoiding directory races.
+ from interactive_twin.visual_import import compatible_urdf
+ for asset in (Path(reference['asset_root']),Path(twins['versions']['T1']['asset_root'])):
+  manifest=read(asset/'manifest.json')
+  compatible_urdf(asset/'urdf'/f"{manifest['asset_id']}.urdf",asset/'visual_compatibility')
  return old,out,c,twins,reference,refdir
 
 
