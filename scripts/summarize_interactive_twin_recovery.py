@@ -31,6 +31,7 @@ def summarize(root):
     physics = read(root/'physics_oracle/physics_decomposition.json')
     gate = read(root/'physics_oracle/stop_gate.json')
     prior = read(root/'prior_comparison.json')
+    decision = read(root/'research_decision.json')
     lines = ['# PiPER mobile recovery / physics decomposition', '',
              '**SIM_TO_SIM_BLIND_SYSID**；未验证真机 Real2Sim。平台为 kinematic SE(2)，未验证轮式导航动力学。', '']
     if mobile:
@@ -81,7 +82,7 @@ def summarize(root):
                 number(row.get('train',{}).get('ee_position_rmse_m'),1000),
                 number(h.get('ee_position_rmse_m'),1000),number(h.get('start_time_error_s')),
                 number(h.get('ee_velocity_rmse_m_s'),1000),number(h.get('final_displacement_error_m'),1000),
-                number(row.get('tau_c'))+' / '+number(row.get('b'))])+' |')
+                number(row.get('tau_c'),precision=4)+' / '+number(row.get('b'),precision=4)])+' |')
         groups = physics['groups']
         def rmse(label):
             return groups.get(label,{}).get('heldout',{}).get('metrics',{}).get('ee_position_rmse_m')
@@ -97,9 +98,13 @@ def summarize(root):
         lines += ['尚无完整分解结果；不把此前 T0 接近 GT 的结果称为 Real2Sim prior 优势。', '']
     if gate:
         lines += [f"Physics stop gate：`{gate['status']}`；45621 optimizer resumed：`{gate.get('45621_optimizer_resumed',False)}`。", '']
+    if decision:
+        lines += [f"最终研究判断：`{decision['status']}`；physics 扩展允许：`{decision['physics_expansion_allowed']}`。", '']
     lines += ['## 3. Imperfect visual prior', '']
     if prior:
         lines += [f"状态：`{prior['status']}`。", '']
+        if not prior.get('T_prior'):
+            lines += ['未获得 prior 的完整 P4 response；不计算或宣称 prior → updated 的完整 held-out RMSE 改善率。', '']
         for label in ('T_prior','T_updated'):
             if prior.get(label):
                 lines.append(f"- {label} held-out EE RMSE：{number(prior[label]['metrics']['ee_position_rmse_m'],1000)} mm。")

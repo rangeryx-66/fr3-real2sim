@@ -17,6 +17,7 @@ env -u PYTHONPATH OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
 阶段可选 `mobile / oracle / prior / full / summary`。`oracle` 和 `prior` 要求
 12 个冻结配置全部有结果。时间截止为配置中的上海时间；当前为 2026-10-04 05:00。
 结果位于 `results/interactive_twin_recovery_20261003_v2`。
+截止后重跑时复制配置，使用新的输出目录与未来截止时间；不要覆盖本轮冻结结果。
 
 ## Mobile recovery
 
@@ -86,3 +87,8 @@ visual/default prior。独立 `T_prior` 的关节 stop 使用已冻结 DEV ±10�
 PiPER SDK 的可用信号不能等同于独立双指 tactile 或腕部 F/T。完整相对滑移不是在线
 可观测量，事后 final relative transform 不能标成全程最大滑移。跨物体成功率、辨识误差
 和 physics held-out 改善必须分别报告，不能互相替代。
+
+`scripts/diagnose_twin_gravity_bias.py` 可对未做 initial-state bake 的零状态资产做
+事后解析 gravity-bias 对照。它复用当前 geometry-COM 近似和 source mass，
+需要显式给定 reference/estimated asset 与 initial-scene JSON；输出不得进入控制器
+或拟合器，也不是实际测得的铰链力矩。
