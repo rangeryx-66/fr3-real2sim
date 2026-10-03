@@ -1,0 +1,36 @@
+{
+  "schema": "mobile-oracle-experiment-v1",
+  "original_config": "configs/interactive_twin.yaml",
+  "original_output": "results/interactive_twin_benchmark_20261003_v2",
+  "output": "results/interactive_twin_recovery_20261003_v2",
+  "deadline_shanghai": "2026-10-04T05:00:00+08:00",
+  "mobile": {
+    "fixed_plan_wall_s": 600,
+    "episode_wall_s": 1500,
+    "configuration_execution_wall_s": 1800,
+    "search": {
+      "standoff_m": [0.35, 0.45, 0.55],
+      "azimuth_offsets_deg": [-45, 0, 45],
+      "yaw_offsets_deg": [-30, 0, 30],
+      "search_wall_s": 180,
+      "full_plan_base_budget": 4,
+      "full_plan_wall_s": 90,
+      "probe_workspace_m": 0.01
+    }
+  },
+  "oracle": {
+    "wrong_prior": {"tau_c": 0.012, "b": 1.0},
+    "grid": {"tau_c": [0.0, 0.004, 0.012], "b": [0.0, 0.3, 1.0]},
+    "maximum_candidates": 9,
+    "train_probes": ["P1", "P2", "P3"],
+    "heldout_probe": "P4",
+    "physics_units": "effective simulator resistance parameters, not calibrated real hinge torque",
+    "stop_if_P1_does_not_improve": true
+  },
+  "prior": {
+    "source": "visual door bounds and initial visual handle; default vertical-axis prior, no GT axis/origin",
+    "axis_perturbation_deg": 5.0,
+    "axis_line_offset_m": 0.02,
+    "physics": {"tau_c": 0.012, "b": 1.0}
+  }
+}
