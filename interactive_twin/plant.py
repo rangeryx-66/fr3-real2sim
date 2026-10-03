@@ -11,6 +11,22 @@ from pathlib import Path
 
 
 def adapt_loader_source(source, job):
+    # Isaac's OBJ converter drops valid source parts on invalid-UV errors.
+    # Only the import copy's texture references change. The authoritative URDF,
+    # FK, collision files, inertials and physical parameters stay unchanged.
+    visual_marker = "asset_urdf=a.asset_root/'urdf'/f'{asset_id}.urdf'"
+    if source.count(visual_marker) != 1:
+        raise RuntimeError('FROZEN_ASSET_URDF_MARKER_CHANGED')
+    source = source.replace(visual_marker, visual_marker + "\nfrom interactive_twin.visual_import import compatible_urdf\nasset_import_urdf,visual_import_audit=compatible_urdf(asset_urdf,a.asset_root/'visual_compatibility')")
+    source = source.replace('urdf_path=str(asset_urdf)', 'urdf_path=str(asset_import_urdf)')
+    old_version = "version=manifest.get('prepared_geometry_sha256',hashlib.sha256(asset_urdf.read_bytes()).hexdigest())[:12]"
+    if source.count(old_version) != 1:
+        raise RuntimeError('FROZEN_ASSET_CACHE_MARKER_CHANGED')
+    source = source.replace(old_version, "version=hashlib.sha256(asset_import_urdf.read_bytes()).hexdigest()[:12]")
+    old_cache = "asset_usd = a.asset_root / f'usd/{asset_id}/{asset_id}.usda/{asset_id}/{asset_id}.usda'"
+    if source.count(old_cache) != 1:
+        raise RuntimeError('FROZEN_ASSET_LEGACY_CACHE_MARKER_CHANGED')
+    source = source.replace(old_cache, "asset_usd = a.asset_root/'visual_compatibility'/'no_legacy_visual_cache.usd'")
     initial = float(job.get('initial_articulation_rad', 0.))
     marker = 'world.reset(); camera.initialize()'
     if source.count(marker) != 1:
@@ -89,6 +105,7 @@ def bootstrap_job(args, base, job):
     exec(compile(code,'<interactive_twin_scene_assembly>','exec'),namespace)
     result=namespace['bootstrap'](args,base)
     (args.output/'baked_mass_setup_private.json').write_text(json.dumps(result['baked_mass_audit'],indent=2))
+    (args.output/'visual_import_audit.json').write_text(json.dumps(result['visual_import_audit'],indent=2))
     # This private setup audit is not part of the observation/estimator interface.
     (args.output/'plant_setup_private.json').write_text(json.dumps(result['plant_resistance_audit'],indent=2))
     (args.output/'initial_scene_private.json').write_text(json.dumps({'fixture':result['fixture'],'asset_xyz':result['asset_xyz'].tolist(),'asset_rotation':result['asset_rotation'].tolist()},indent=2))

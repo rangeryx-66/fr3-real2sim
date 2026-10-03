@@ -28,6 +28,7 @@ class Vec:
  def tolist(self):return self.v
 baked_mass_audit={}
 plant_resistance_audit={}
+visual_import_audit={}
 fixture={}
 asset_xyz=Vec([parsed.asset_x,parsed.asset_y,0.])
 asset_rotation=Vec([[1.,0.,0.],[0.,1.,0.],[0.,0.,1.]])
