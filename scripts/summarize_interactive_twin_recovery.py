@@ -52,6 +52,22 @@ def summarize(root):
                    'mobile_grasp_success','mobile_ID_success','mobile_5deg_success')],
                 number(row.get('minimum_joint_margin_rad')),reason])+' |')
         lines += ['', 'IK/path 仅表示静态规划可行；不能替代真实抓持或开门。详细底盘位姿与行程见 `cross_object_mobile.csv`。', '']
+        lines += ['### 成功 episode 的实测结果', '',
+                  '| 配置 | 实际开门增量 (°) | axis error (°) | axis-line error (mm) | 最终相对平移 slip (mm) |',
+                  '|---|---:|---:|---:|---:|']
+        for row in rows:
+            if not row['mobile_5deg_success']:
+                continue
+            summary = read(root/'mobile'/row['config']/'summary.json') or {}
+            attempts = summary.get('mobile_attempts') or summary.get('fixed_attempts') or []
+            report = attempts[-1]['report'] if attempts else {}
+            evaluation = report.get('evaluation') or {}
+            lines.append('| '+' | '.join([row['config'],
+                number(evaluation.get('actual_door_displacement_deg')),
+                number(evaluation.get('axis_angular_error_deg')),
+                number(evaluation.get('axis_line_distance_m'),1000),
+                number(evaluation.get('final_true_relative_translation_slip_m'),1000)])+' |')
+        lines += ['', '开门角为实际增量，不将非零初始角计为操作成功。slip 为事后最终相对变换，不能当作全程最大值。', '']
     else:
         lines += ['Mobile：尚无汇总结果。', '']
     lines += ['## 2. DEV 7320 physics 分解', '']
