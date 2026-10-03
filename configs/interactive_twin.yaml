@@ -1,0 +1,151 @@
+{
+  "schema": "interactive-twin-benchmark-v1",
+  "mode": "SIM_TO_SIM_BLIND_SYSID",
+  "output": "results/interactive_twin_benchmark_20261003",
+  "prepared_roots": [
+    "results/semantic_interaction/asset",
+    "results/interactive_twin_asset_preparation/assets"
+  ],
+  "ranking_paths": [
+    "results/interactive_twin_asset_preparation/ranking.json"
+  ],
+  "source_roots": [
+    "/data1/home/rangeryx/datasets/physx_mobility/extracted/PhysX_mobility"
+  ],
+  "dev": {
+    "asset_root": "results/semantic_interaction/asset",
+    "source": "/data1/home/rangeryx/fr3_real2sim_r1a7/results/microwave_7320_table_edge_preflight_full_rgb",
+    "plan": "results/semantic_interaction/nominal_minimal/plan.json"
+  },
+  "runtime": {
+    "isaac_python": "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+    "analysis_python": "/data1/home/rangeryx/.conda/envs/anygrasp/bin/python",
+    "gpus": [
+      1,
+      3,
+      5,
+      7
+    ],
+    "deadline_shanghai": "2026-10-04T05:00:00+08:00",
+    "episode_wall_clock_s": 1800
+  },
+  "policy": {
+    "dev_asset_id": "7320",
+    "test_asset_count": 4,
+    "episodes_per_asset": 3,
+    "seed": 732061660,
+    "budgets": {
+      "grasp_candidates": 12,
+      "probe_directions": 4,
+      "sysid_simulations": 48,
+      "wall_clock_seconds": 25200
+    }
+  },
+  "physics": {
+    "J_eff": "fixed_original_mass_and_inertia_prior_not_optimized",
+    "initial_prior": {
+      "tau_c": 0.0,
+      "b": 0.0
+    },
+    "grid": {
+      "tau_c": [
+        0.0,
+        0.004,
+        0.012
+      ],
+      "b": [
+        0.0,
+        0.3,
+        1.0
+      ]
+    },
+    "hidden_dev_conditions": {
+      "LOW": {
+        "tau_c": 0.0005,
+        "b": 0.05
+      },
+      "MEDIUM": {
+        "tau_c": 0.003,
+        "b": 0.3
+      },
+      "HIGH": {
+        "tau_c": 0.01,
+        "b": 1.0
+      }
+    },
+    "units": "effective simulator tau_c [Nm], b [Nm s/rad]; not calibrated real hinge parameters",
+    "train_probes": [
+      "P1",
+      "P2",
+      "P3"
+    ],
+    "heldout_probe": "P4",
+    "maximum_candidates": 9,
+    "B3": "UNAVAILABLE_WITHOUT_INDEPENDENT_CURRENT_CALIBRATION",
+    "operational_joint_limits_rad": [
+      -0.1745329252,
+      0.1745329252
+    ],
+    "per_configuration_simulation_budget": 16
+  },
+  "noise_floors": {
+    "position_m": 2e-05,
+    "rotation_rad": 2e-05,
+    "joint_rad": 1.745329252e-05,
+    "joint_velocity_rad_s": 0.001,
+    "ee_velocity_m_s": 0.0001,
+    "start_time_s": 0.0041666666667,
+    "tracking_m": 2e-05
+  },
+  "budget_scope": "sysid_simulations and active wall time are shared by all three configurations per asset; global 05:00 cutoff preempts all budgets",
+  "imports": {
+    "robot_calibration": {
+      "report": "results/interactive_twin_dev_20261003/robot_calibration/robot_calibration.json",
+      "source_runs": [
+        "results/interactive_twin_dev_20261003/robot_only_smooth_0",
+        "results/interactive_twin_dev_20261003/robot_only_smooth_1"
+      ]
+    },
+    "dev_kinematic": {
+      "run_dir": "results/interactive_twin_dev_20261003/reference_low",
+      "job_file": "results/interactive_twin_dev_20261003/reference_low_job.json"
+    },
+    "dev_reference": {
+      "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/LOW_0"
+    },
+    "sensitivity": {
+      "runs": [
+        {
+          "condition": "LOW",
+          "repeat": 0,
+          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/LOW_0"
+        },
+        {
+          "condition": "LOW",
+          "repeat": 1,
+          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/LOW_1"
+        },
+        {
+          "condition": "MEDIUM",
+          "repeat": 0,
+          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/MEDIUM_0"
+        },
+        {
+          "condition": "MEDIUM",
+          "repeat": 1,
+          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/MEDIUM_1"
+        },
+        {
+          "condition": "HIGH",
+          "repeat": 0,
+          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/HIGH_0"
+        },
+        {
+          "condition": "HIGH",
+          "repeat": 1,
+          "run_dir": "results/interactive_twin_dev_20261003/taskspace_v2/HIGH_1"
+        }
+      ]
+    }
+  }
+}
