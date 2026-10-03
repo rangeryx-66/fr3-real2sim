@@ -74,6 +74,14 @@ def author_passive_resistance(stage, asset_path, configuration):
 def bootstrap_job(args, base, job):
     import piper_mobile_execute as original
     code=inspect.getsource(original.bootstrap)
+    # argparse misreads negative scientific notation as another option when it
+    # is a separate argv token. Join only these scalar options; retain str(value)
+    # exactly, without rounding near-zero placement or changing the legacy file.
+    for option,field in (('asset-x','x_m'),('asset-y','y_m'),
+                         ('asset-yaw-deg','yaw_deg'),('fixture-height-m','fixture_height_m')):
+        separated=f"'--{option}',str(place['{field}'])"
+        if code.count(separated)!=1:raise RuntimeError('FROZEN_BOOTSTRAP_SCALAR_ARG_CHANGED:'+option)
+        code=code.replace(separated,f"'--{option}='+str(place['{field}'])")
     marker="    exec(compile(source,str(legacy),'exec'),scene);sys.argv=old;"
     if code.count(marker)!=1:raise RuntimeError('FROZEN_BOOTSTRAP_HOOK_CHANGED')
     code=code.replace(marker,"    source=adapt_loader_source(source,benchmark_job)\n"+marker)
