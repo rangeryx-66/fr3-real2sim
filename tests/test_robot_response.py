@@ -20,6 +20,18 @@ CFG = {'K_n_m': 150., 'D_ns_m': 100., 'train_window_s': [0., 2.],
 
 
 class RobotResponseTests(unittest.TestCase):
+    def test_missing_structure_directions_cannot_be_silently_dropped(self):
+        from interactive_twin_response_selection.uncertainty import propagate
+        estimates = {}
+        structures = []
+        for i, point in enumerate([[0, 0, 0], [.001, 0, 0], [-.001, 0, 0], [0, .001, 0], [0, -.001, 0]]):
+            key = f'observable_S{i}'
+            structures.append({'structure_id': key, 'estimate_path': key})
+            estimates[key] = {'axis_world': [0., 0., 1.], 'point_on_axis_world_m': point}
+        with self.assertRaisesRegex(ValueError, 'INCOMPLETE_STRUCTURE_UNCERTAINTY_RESPONSE_SPAN'):
+            propagate({'structures': structures}, {}, {'combined_covariance': np.eye(4).tolist()},
+                      {}, {}, estimates.__getitem__, [])
+
     def test_command_latency_is_causal(self):
         r = record(); y = predict(r, [.075, .02], CFG); t = np.array(r['time_s'])
         self.assertEqual(float(np.max(np.abs(y[t < .575]))), 0.)

@@ -42,7 +42,9 @@ def run(root, config, read, write):
         refs = {condition: {r['name']: public_cell(r['path'], next(s['probe_id'] for s in nc['probes'] if s['name'] == r['name']))['log']
                             for r in items if r['usable']} for condition, items in inventory.items()}
         space = read(Path(data['prior_output'])/'structure_candidates.json')
-        calibration = propagate(data, bank, space, repeat, robot, read, nc['probes'])
+        from .structural_response import complete
+        covariance_data = complete(root, runner, eid, data, bank, space, nc['probes'], read, write, public_cell)
+        calibration = propagate(covariance_data, bank, space, repeat, robot, read, nc['probes'])
         write(dest/'total_uncertainty.json', calibration)
         initial = {condition: rank(base, bank, rr, calibration, nc['selection']) for condition, rr in refs.items()}
         write(dest/'grid_reselection.json', initial)

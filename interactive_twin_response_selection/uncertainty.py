@@ -32,10 +32,7 @@ def propagate(data, bank, space, repeat, robot, read, specs):
     # Full-rank native structural secants propagate assembly/gravity response,
     # not merely an ideal arc. Physics is held at the same frozen wrong prior.
     if np.linalg.matrix_rank(X, tol=1e-8) < 4:
-        # Observable S1..4 span two PCs by design. Propagate the measured native
-        # span only, explicitly retain unresolved directions as a limitation.
-        projection = inverse@X
-        normalized_C = projection@normalized_C@projection.T
+        raise ValueError('INCOMPLETE_STRUCTURE_UNCERTAINTY_RESPONSE_SPAN')
     struct = []; nuisance = []; delays = []; audits = []
     for spec in specs:
         if spec['name'] == 'stop_dwell': continue
@@ -79,7 +76,7 @@ def propagate(data, bank, space, repeat, robot, read, specs):
         nominal_robot_delay_correction_s=0., q_is_diagnostic_only=True,
         propagation_audit=audits,
         limitations=['native secants are a local approximation at frozen wrong physics prior',
-                     'unrepresented structural covariance directions are not invented',
+                     'all four structural covariance directions require native response derivatives',
                      'robot pole covariance uses low-frequency sensitivity; no model bias inflation'])
     result['calibration_sha256'] = hashlib.sha256(json.dumps(result, sort_keys=True).encode()).hexdigest()
     return result

@@ -28,7 +28,7 @@ def main():
         print('STOP: shared robot response failed independent calibration/transfer'); return
     files = sorted((ROOT/'interactive_twin_response_selection').glob('*.py'))+[Path(__file__).resolve()]
     hashes = {str(f.relative_to(ROOT)): hashlib.sha256(f.read_bytes()).hexdigest() for f in files}
-    target = out/'physics_method_frozen.json'
+    target = out/'physics_method_v2_frozen.json'
     if target.exists() and read(target)['source_hashes'] != hashes: raise ValueError('PHYSICS_METHOD_CHANGED')
     if not target.exists(): write(target, {'source_hashes': hashes, 'saved_unix_s': time.time(), 'test_read': False,
                                           'robot_calibration_sha256': hashlib.sha256((out/'robot_calibration.json').read_bytes()).hexdigest()})
