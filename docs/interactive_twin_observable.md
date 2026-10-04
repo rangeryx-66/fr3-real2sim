@@ -1,5 +1,10 @@
 # Observability-aware physics probes
 
+Actual results: [7320 / 45621 report](interactive_twin_observable_results_20261004.md).
+The bounded experiment completed, but the 7320 regression gate failed and
+45621 physics remained unidentifiable. This protocol does not replace the
+successful `3e5e856` baseline.
+
 ```bash
 env -u PYTHONPATH OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   /data1/home/rangeryx/isaaclab-arena/.venv/bin/python \
