@@ -1,0 +1,146 @@
+{
+  "schema": "shared-robot-response-gate-v1",
+  "base_commit": "79b100ce83f3cb07d75ebcb7dbdfe499a902e2a2",
+  "output": "results/interactive_twin_robot_response_20261004_v2",
+  "prior_output": "results/interactive_twin_selection_20261004",
+  "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+  "robot_calibration": {
+    "sources": [
+      "results/interactive_twin_dev_20261003/robot_only_smooth_0",
+      "results/interactive_twin_dev_20261003/robot_only_smooth_1"
+    ],
+    "model": "one directional Cartesian response pole after the frozen directional controller; no free gain",
+    "latency_bounds_s": [
+      0.0,
+      0.1
+    ],
+    "time_constant_bounds_s": [
+      0.004166666666666667,
+      0.5
+    ],
+    "initial_seeds_s": [
+      [
+        0.0,
+        0.02
+      ],
+      [
+        0.02,
+        0.08
+      ],
+      [
+        0.05,
+        0.25
+      ]
+    ],
+    "max_nfev_per_start": 120,
+    "train_window_s": [
+      0.0,
+      5.0
+    ],
+    "validation_window_s": [
+      5.0,
+      10.0
+    ],
+    "K_n_m": 150.0,
+    "D_ns_m": 100.0,
+    "max_drive_force_n": 0.2,
+    "initial_velocity_window_s": 0.05,
+    "covariance": "training residual Jacobian conditional covariance; validate systematic residual separately, never relabel it as noise",
+    "cross_asset_fit": false,
+    "continue_only_if_robot_gate_passes": true
+  },
+  "selection": {
+    "adequacy_rms": 10.0,
+    "top_k": 5,
+    "support_log_likelihood_delta": 2.995732273553991,
+    "regression_absolute_tolerance_m": 1e-05
+  },
+  "continuous_optimization": {
+    "tau_c_bounds": [
+      0.0,
+      0.012
+    ],
+    "b_bounds": [
+      0.0,
+      1.0
+    ],
+    "tau_s_excess_bounds": [
+      0.0,
+      0.012
+    ],
+    "maximum_starts_per_family": 2,
+    "maximum_native_parameter_evaluations_per_start": 12,
+    "require_robot_gate_pass": true,
+    "same_budget_all_conditions": true
+  },
+  "heldout": [
+    {
+      "name": "new_speed_pulse_v2",
+      "probe_id": "P4",
+      "split": "heldout",
+      "duration_s": 10.0,
+      "speed_m_s": 0.0004,
+      "windows": [
+        [
+          1.25,
+          5.25,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "new_restart_v2",
+      "probe_id": "P4",
+      "split": "heldout",
+      "duration_s": 12.0,
+      "speed_m_s": 0.00045,
+      "windows": [
+        [
+          0.75,
+          2.75,
+          1
+        ],
+        [
+          5.25,
+          8.75,
+          1
+        ]
+      ]
+    }
+  ],
+  "episodes": [
+    "dev_7320_00",
+    "test_45621_00"
+  ],
+  "read_new_test_only_after_selection_frozen": true,
+  "robot_gate_failure_action": "STOP; keep physics support from 79b100c as historical only; do not optimize or execute new held-out",
+  "frozen_components": [
+    "grasp",
+    "contact",
+    "proxy",
+    "base",
+    "mobile",
+    "probe",
+    "fitter",
+    "controller",
+    "safety",
+    "model-selection policy"
+  ],
+  "refinement_output": "results/interactive_twin_refinement_20261004",
+  "gpus": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "native_wall_clock_budget_s": 700,
+  "transfer": {
+    "robot_only_template_job": "results/interactive_twin_dev_20261003/robot_only_smooth_0_job.json",
+    "repeats_per_posture": 2,
+    "fit_on_transfer_data": false
+  },
+  "preregistration_amendment": {
+    "supersedes": "results/interactive_twin_robot_response_20261004/protocol_frozen.json",
+    "reason": "Protocol audit found 0.375mm/s in older P4; reserve unseen 0.400mm/s before object fitting/test. Add no-contact cross-posture validation, same frozen parameters and threshold. No heldout response inspected."
+  }
+}
