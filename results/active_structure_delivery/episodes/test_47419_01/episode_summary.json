@@ -1,0 +1,151 @@
+{
+  "episode_id": "test_47419_01",
+  "asset_id": "47419",
+  "included_in_denominator": true,
+  "fixed_base_feasible": true,
+  "mobile_recovered": false,
+  "attempts": [
+    {
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/candidate_00",
+      "status": "DANGEROUS_GEOMETRY_COLLISION:gripper_link2:/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+      "bilateral": false
+    },
+    {
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/candidate_01",
+      "status": "DANGEROUS_GEOMETRY_COLLISION:gripper_link2:/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+      "bilateral": false
+    },
+    {
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/candidate_02",
+      "status": "UNOBSERVABLE",
+      "bilateral": true
+    }
+  ],
+  "failure_stage": "PROBE_HOLD",
+  "status": "UNOBSERVABLE",
+  "fixed_plan_statuses": [
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_HOME_PLAN",
+    "PENDING_REAL_CLOSURE",
+    "NO_HOME_PLAN",
+    "PENDING_REAL_CLOSURE",
+    "PENDING_REAL_CLOSURE",
+    "PENDING_REAL_CLOSURE"
+  ],
+  "grasp_feasible": true,
+  "selected_job": {
+    "episode_id": "test_47419_01",
+    "mode": "kinematics",
+    "role": "reference",
+    "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/source",
+    "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/asset",
+    "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/planning/plan.json",
+    "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/candidate_02",
+    "gpu": 0,
+    "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+    "wall_clock_budget_s": 2400,
+    "frozen_proxy_sha256": "3aebd68e57c07572279ef5653c38e02638ac3c39a3354bb139363a7b7c8e458f",
+    "continue_manipulation": true,
+    "robot_calibration_id": "PENDING_ROBOT_ONLY_CALIBRATION",
+    "candidate": 2,
+    "plant": {},
+    "initial_articulation_rad": 0.017453292519943295,
+    "mobile_platform": true,
+    "refinement_once": true,
+    "refinement_target_deg": 10.0,
+    "structure_protocol": {
+      "fitting": {
+        "position_noise_m": 2e-05,
+        "rotation_noise_rad": 2e-05,
+        "maximum_samples": 180,
+        "max_nfev": 160
+      },
+      "selection": {
+        "minimum_validation_improvement_fraction": 0.05,
+        "maximum_validation_rms_noise_units": 10.0,
+        "minimum_train_motion_m": 0.005,
+        "minimum_reverse_motion_m": 0.005
+      },
+      "refinement": {
+        "maximum_extra_trajectories": 1,
+        "opening_deg": 10.0,
+        "reverse_deg": 2.5,
+        "switch_exclusion_s": 0.5
+      },
+      "validation": {
+        "forward_travel_m": 0.002,
+        "maximum_s": 12.0,
+        "observability_m": 0.001
+      },
+      "heldout": {
+        "schema": "frozen-forward-stop-segment-v1",
+        "active_s": 8.0,
+        "dwell_s": 2.0,
+        "fit_usage": "never",
+        "speed": "unchanged ConstrainedDrive .0005 m/s",
+        "prediction": "native same-command autonomous replay, physics unchanged"
+      },
+      "active": {
+        "discovery": {
+          "minimum_model_score_gap": 0.8,
+          "minimum_rotation_deg": 0.5,
+          "maximum_axis_dispersion_deg": 12.0,
+          "radius_range_m": [
+            0.03,
+            3.0
+          ],
+          "maximum_radius_cv": 0.35,
+          "maximum_tangent_dispersion_deg": 15.0,
+          "maximum_provisional_rotation_residual_rad": 0.002,
+          "bootstrap_seed": 61
+        },
+        "refinement": {
+          "segment_m": 0.001,
+          "segment_timeout_s": 4.0,
+          "maximum_segments": 120,
+          "maximum_path_m": 0.12,
+          "maximum_sim_s": 270.0,
+          "target_angle_deg": 6.0,
+          "robust_every_segments": 5,
+          "reverse_required": false
+        },
+        "final": {
+          "minimum_angle_deg": 2.0,
+          "position_rmse_m": 0.0003,
+          "rotation_rmse_rad": 0.001
+        }
+      }
+    }
+  },
+  "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/candidate_02/report.json",
+  "structure_validation": "NOT_REACHED",
+  "grasp": true,
+  "probe": {
+    "duration_s": 52.0125,
+    "distance_m": 0.00025748044971079126,
+    "observed_rotation_span_deg": 0.6673659105927701,
+    "sample_count": 1445,
+    "fit_input": "measured robot TCP SE(3) only",
+    "failure_phase": "PROBE_HOLD"
+  },
+  "minimum_joint_margin_rad": 0.13421170798339843,
+  "observed_slip_m": 3.5875030846341945e-05,
+  "post_episode_evaluation": {
+    "type_correct": false,
+    "actual_door_displacement_deg": -0.9999999931816488,
+    "actual_final_door_angle_deg": 6.818351216963947e-09,
+    "gt_access_after_saved_fit": true,
+    "gt_access_after_world_pause": true,
+    "final_true_relative_translation_slip_m": 0.0002655468349042341,
+    "final_true_relative_rotation_slip_deg": 0.6464885787986864
+  },
+  "refined_accepted": false,
+  "online_success": false,
+  "success": false,
+  "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/episodes/test_47419_01/candidate_02/contact_baseline.mp4"
+}

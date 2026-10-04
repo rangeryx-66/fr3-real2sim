@@ -1,0 +1,24 @@
+{
+  "kind": "generic structured-model adapter correction before TEST",
+  "reason": "The legacy predictor discarded the robust fitter latent reference_pose and substituted the first measurement, amplifying initial rotation error by estimated radius. The independent ProvisionalMemory uses the fitted SE3 reference when present. Original physical contact/safety rules and 1 mm threshold remain unchanged.",
+  "changes": [
+    "run existing robust joint fit upon provisional admission",
+    "use complete fitted reference for model-consistency prediction",
+    "same model semantics in autonomous prediction replay"
+  ],
+  "thresholds_changed": false,
+  "grasp_contact_or_controller_changed": false,
+  "GT_used_for_correction": false,
+  "affected": [
+    "dev_45600",
+    "dev_38516",
+    "dev_45403"
+  ],
+  "rerun": "dev/",
+  "DEV_observed_38516_current_prediction_error_mm": {
+    "legacy_reference": 1.0230901146625293,
+    "complete_fitted_reference": 0.08836348304505595
+  },
+  "unit_test": "synthetic complete-model prediction is consistent; added 1.1 mm deviation still exceeds original 1 mm threshold",
+  "test_started_before_fix": false
+}

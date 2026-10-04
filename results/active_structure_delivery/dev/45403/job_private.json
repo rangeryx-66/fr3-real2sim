@@ -1,0 +1,120 @@
+{
+  "episode_id": "dev_45403",
+  "mode": "kinematics",
+  "role": "reference",
+  "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45403_00/source",
+  "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45403_00/asset",
+  "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45403_00/planning/plan.json",
+  "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/45403",
+  "gpu": 2,
+  "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+  "wall_clock_budget_s": 2400,
+  "frozen_proxy_sha256": "6f47b634cec8fa75ef4d09aa1937d71a899b1ec1ae3e6e5e30b57730929a3191",
+  "continue_manipulation": true,
+  "robot_calibration_id": "PENDING_ROBOT_ONLY_CALIBRATION",
+  "candidate": 0,
+  "plant": {},
+  "initial_articulation_rad": 0.0,
+  "mobile_platform": true,
+  "refinement_once": true,
+  "refinement_target_deg": 10.0,
+  "structure_protocol": {
+    "fitting": {
+      "position_noise_m": 2e-05,
+      "rotation_noise_rad": 2e-05,
+      "maximum_samples": 180,
+      "max_nfev": 160
+    },
+    "selection": {
+      "minimum_validation_improvement_fraction": 0.05,
+      "maximum_validation_rms_noise_units": 10.0,
+      "minimum_train_motion_m": 0.005,
+      "minimum_reverse_motion_m": 0.005
+    },
+    "refinement": {
+      "maximum_extra_trajectories": 1,
+      "opening_deg": 10.0,
+      "reverse_deg": 2.5,
+      "switch_exclusion_s": 0.5
+    },
+    "validation": {
+      "forward_travel_m": 0.002,
+      "maximum_s": 12.0,
+      "observability_m": 0.001
+    },
+    "heldout": {
+      "schema": "frozen-forward-stop-segment-v1",
+      "active_s": 8.0,
+      "dwell_s": 2.0,
+      "fit_usage": "never",
+      "speed": "unchanged ConstrainedDrive .0005 m/s",
+      "prediction": "native same-command autonomous replay, physics unchanged"
+    },
+    "active": {
+      "discovery": {
+        "minimum_model_score_gap": 0.8,
+        "minimum_rotation_deg": 0.5,
+        "maximum_axis_dispersion_deg": 12.0,
+        "radius_range_m": [
+          0.03,
+          3.0
+        ],
+        "maximum_radius_cv": 0.35,
+        "maximum_tangent_dispersion_deg": 15.0,
+        "maximum_provisional_rotation_residual_rad": 0.002,
+        "bootstrap_seed": 61
+      },
+      "refinement": {
+        "segment_m": 0.001,
+        "segment_timeout_s": 4.0,
+        "maximum_segments": 120,
+        "maximum_path_m": 0.12,
+        "maximum_sim_s": 270.0,
+        "target_angle_deg": 6.0,
+        "robust_every_segments": 5,
+        "reverse_required": false
+      },
+      "final": {
+        "minimum_angle_deg": 2.0,
+        "position_rmse_m": 0.0003,
+        "rotation_rmse_rad": 0.001
+      }
+    }
+  },
+  "active_structure": {
+    "discovery": {
+      "minimum_model_score_gap": 0.8,
+      "minimum_rotation_deg": 0.5,
+      "maximum_axis_dispersion_deg": 12.0,
+      "radius_range_m": [
+        0.03,
+        3.0
+      ],
+      "maximum_radius_cv": 0.35,
+      "maximum_tangent_dispersion_deg": 15.0,
+      "maximum_provisional_rotation_residual_rad": 0.002,
+      "bootstrap_seed": 61
+    },
+    "refinement": {
+      "segment_m": 0.001,
+      "segment_timeout_s": 4.0,
+      "maximum_segments": 120,
+      "maximum_path_m": 0.12,
+      "maximum_sim_s": 270.0,
+      "target_angle_deg": 6.0,
+      "robust_every_segments": 5,
+      "reverse_required": false
+    },
+    "final": {
+      "minimum_angle_deg": 2.0,
+      "position_rmse_m": 0.0003,
+      "rotation_rmse_rad": 0.001
+    },
+    "fitting": {
+      "position_noise_m": 2e-05,
+      "rotation_noise_rad": 2e-05,
+      "maximum_samples": 180,
+      "max_nfev": 160
+    }
+  }
+}

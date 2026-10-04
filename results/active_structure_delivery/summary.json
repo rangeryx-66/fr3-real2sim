@@ -1,0 +1,86 @@
+{
+  "episodes": 12,
+  "assets": 6,
+  "executed_or_preflight_attempted": 12,
+  "interaction_coverage": {
+    "numerator": 2,
+    "denominator": 12
+  },
+  "structure_identification": {
+    "numerator": 0,
+    "denominator": 2
+  },
+  "end_to_end": {
+    "numerator": 0,
+    "denominator": 12
+  },
+  "assets_at_least_one_success": 0,
+  "assets_both_success": 0,
+  "assets_with_interaction": 1,
+  "assets_with_refined_identification": 0,
+  "accepted_discoveries": 0,
+  "strict_discovery_conditioned_refinement": {
+    "numerator": 0,
+    "denominator": 0
+  },
+  "observable_denominator_definition": "bilateral grasp plus >=5 mm measured EE travel; not a claim that angular excitation passed the stricter discovery gate",
+  "fixed_base_feasible": 4,
+  "mobile_recovered": 0,
+  "failure_breakdown": {
+    "DEPLOYMENT_UNREACHABLE": 8,
+    "BILATERAL_GRASP_FAIL": 1,
+    "ARTICULATION_UNOBSERVABLE": 1,
+    "STRUCTURE_REFINEMENT_FAIL": 2
+  },
+  "physics_fitted": false,
+  "real_robot_claim": false,
+  "regression_controls": {
+    "7320": {
+      "status": "SUCCESS",
+      "grasp": true,
+      "identification": "revolute",
+      "success": true,
+      "evaluation": {
+        "type_correct": true,
+        "axis_angular_error_deg": 0.7585563407894729,
+        "axis_line_distance_m": 0.011028183636073816,
+        "joint_origin_error_in_observed_plane_m": 0.01236703634036615,
+        "raw_origin_point_distance_m": 0.1727359159109824,
+        "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+        "gt_constrained_reconstruction_rmse_m": 0.0006426913843003868,
+        "actual_door_displacement_deg": 5.620856761932373,
+        "actual_final_door_angle_deg": 5.620856761932373,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true,
+        "final_true_relative_translation_slip_m": 0.00014539055481473413,
+        "final_true_relative_rotation_slip_deg": 0.2680167282190319
+      },
+      "source_job": "results/interactive_twin_refinement_20261004/dev_7320_00/refinement_once/job_private.json",
+      "report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/controls/7320/report.json"
+    },
+    "45621": {
+      "status": "SUCCESS",
+      "grasp": true,
+      "identification": "revolute",
+      "success": true,
+      "evaluation": {
+        "type_correct": true,
+        "axis_angular_error_deg": 1.466517459710404,
+        "axis_line_distance_m": 0.015312209014816738,
+        "joint_origin_error_in_observed_plane_m": 0.020086724995847776,
+        "raw_origin_point_distance_m": 0.15022129958529487,
+        "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+        "gt_constrained_reconstruction_rmse_m": 0.0007050480251032368,
+        "actual_door_displacement_deg": 5.584717273712158,
+        "actual_final_door_angle_deg": 5.584717273712158,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true,
+        "final_true_relative_translation_slip_m": 0.0005012635304310638,
+        "final_true_relative_rotation_slip_deg": 0.22041956163158957
+      },
+      "source_job": "results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_execution/candidate_00/job_private.json",
+      "report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/controls/45621/report.json"
+    }
+  },
+  "supplemental_structure_controls": {}
+}

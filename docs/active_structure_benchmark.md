@@ -86,3 +86,29 @@ discovery-to-refinement transitions, failure breakdown, plots, continuous
 native videos and REPORT. Deployment, interaction, discovery, refinement and
 end-to-end success have separate denominators; provisional is never counted as
 accepted structure identification.
+
+## Completed frozen run: 2026-10-05
+
+See [the complete report](../results/active_structure_delivery/REPORT.md) and
+[frozen TEST manifest](../results/active_structure_delivery/frozen_test_manifest.json).
+
+| Metric | Result |
+|---|---:|
+| Deployment coverage | 4/12 |
+| Bilateral grasp + useful motion / reachable | 2/4 |
+| Accepted or provisional discovery / useful interaction | 2/2 |
+| Final accepted structure / refinement entries | 0/2 |
+| End-to-end manipulation | 0/12 |
+| Assets with at least one / both successful configurations | 0/6, 0/6 |
+
+Both successful baseline controls passed. All three diagnostic DEV cases
+completed 51–52 refinement increments, then stopped at unchanged joint-margin
+or model-consistency guards. In fresh TEST, both 45134 configurations passed
+the provisional gate and completed 28 / 8 increments before the unchanged
+model-consistency guard stopped them. These are not accepted T2 models.
+
+Eight configurations failed deployment, one failed bilateral hold, one had
+stable grasp but only 0.257 mm total motion across four probes, and two stopped
+during refinement. No held-out structural prediction was reached. The early
+discovery gate is repaired, but accepted cross-asset reconstruction remains
+unproven; no further fitter/threshold tuning was performed.
