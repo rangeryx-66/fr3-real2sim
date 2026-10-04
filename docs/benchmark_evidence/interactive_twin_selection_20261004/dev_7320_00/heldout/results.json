@@ -1,0 +1,450 @@
+{
+  "rows": [
+    {
+      "episode": "dev_7320_00",
+      "condition": "original",
+      "model": "A_wrong_prior",
+      "candidate_id": "observable_S0_phi_008",
+      "structure_id": "observable_S0",
+      "parameters": {
+        "tau_c": 0.012,
+        "b": 1.0,
+        "tau_s": 0.012
+      },
+      "validation_rms": 674.1761854325238,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 662016.5478860643,
+        "whitened_rms": 813.6439933325042,
+        "blocks": {
+          "active_ee_pose_velocity": 1176602.9889335125,
+          "start_delay": 234.26061508403814,
+          "stop_incremental_pose": 433.93419338861577
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 9.978389258627077e-05,
+          "ee_rotation_rmse_rad": 0.0017231105082159998,
+          "ee_velocity_rmse_m_s": 3.171049391200737e-05,
+          "start_time_error_s": 0.10416666670000008,
+          "dwell_incremental_position_rmse_m": 3.997087821791561e-06,
+          "final_displacement_error_m": 0.0001564622316614936
+        },
+        "start_delay_reference_s": 0.020833333299999923,
+        "start_delay_prediction_s": 0.125,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.74793954366256e-05,
+          "predicted_net_m": 2.7396010266734054e-05,
+          "vector_error_m": 9.922910617797937e-06,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.0019617928396442053,
+        "qdot_diagnostic_rmse_rad_s": 0.000807230060373355,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    },
+    {
+      "episode": "dev_7320_00",
+      "condition": "original",
+      "model": "B_structure_only",
+      "candidate_id": "observable_S3_phi_008",
+      "structure_id": "observable_S3",
+      "parameters": {
+        "tau_c": 0.012,
+        "b": 1.0,
+        "tau_s": 0.012
+      },
+      "validation_rms": 343.94167366548663,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 168882.07139266774,
+        "whitened_rms": 410.95263886811546,
+        "blocks": {
+          "active_ee_pose_velocity": 296510.78121533035,
+          "start_delay": 9.370424567379011,
+          "stop_incremental_pose": 5584.45682002388
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 7.677219762957509e-05,
+          "ee_rotation_rmse_rad": 0.0008511524759350265,
+          "ee_velocity_rmse_m_s": 3.11214631844772e-05,
+          "start_time_error_s": 0.020833333299999923,
+          "dwell_incremental_position_rmse_m": 1.1643451248061815e-05,
+          "final_displacement_error_m": 9.143290947571275e-05
+        },
+        "start_delay_reference_s": 0.020833333299999923,
+        "start_delay_prediction_s": 0.0,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.74793954366256e-05,
+          "predicted_net_m": 6.736242824439883e-05,
+          "vector_error_m": 4.994033242320909e-05,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.0012400206008237947,
+        "qdot_diagnostic_rmse_rad_s": 0.0006672306642078579,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    },
+    {
+      "episode": "dev_7320_00",
+      "condition": "original",
+      "model": "C_two_parameter",
+      "candidate_id": "historical_S4_phi_000",
+      "structure_id": "historical_S4",
+      "parameters": {
+        "tau_c": 0.0,
+        "b": 0.0,
+        "tau_s": 0.0
+      },
+      "validation_rms": 133.36876208724382,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 7995.528906552387,
+        "whitened_rms": 89.41772143458134,
+        "blocks": {
+          "active_ee_pose_velocity": 10207.661148263955,
+          "start_delay": 9.370424567379011,
+          "stop_incremental_pose": 6008.356957649202
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 1.4731564498551915e-05,
+          "ee_rotation_rmse_rad": 0.00019911246825059042,
+          "ee_velocity_rmse_m_s": 2.3061750515494013e-05,
+          "start_time_error_s": 0.020833333299999923,
+          "dwell_incremental_position_rmse_m": 1.4068456385829415e-05,
+          "final_displacement_error_m": 6.26045171123729e-05
+        },
+        "start_delay_reference_s": 0.020833333299999923,
+        "start_delay_prediction_s": 0.0,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.74793954366256e-05,
+          "predicted_net_m": 3.902586191861175e-05,
+          "vector_error_m": 5.6497968586965724e-05,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.00015917432503121127,
+        "qdot_diagnostic_rmse_rad_s": 0.0007950585233525614,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    },
+    {
+      "episode": "dev_7320_00",
+      "condition": "original",
+      "model": "D_static_extension",
+      "candidate_id": "observable_S4_phi_002_static_0.004",
+      "structure_id": "observable_S4",
+      "parameters": {
+        "tau_c": 0.0,
+        "b": 1.0,
+        "tau_s": 0.004
+      },
+      "validation_rms": 43.044098815903354,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 1617.444156400342,
+        "whitened_rms": 40.21746083979373,
+        "blocks": {
+          "active_ee_pose_velocity": 2434.2862058845003,
+          "start_delay": 1.4992679595665885,
+          "stop_incremental_pose": 661.5052302475675
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 3.7653260813517828e-06,
+          "ee_rotation_rmse_rad": 0.00011515090560344427,
+          "ee_velocity_rmse_m_s": 2.0926896025971298e-05,
+          "start_time_error_s": 0.008333333399999976,
+          "dwell_incremental_position_rmse_m": 2.2967577079954956e-06,
+          "final_displacement_error_m": 3.3402043330965653e-06
+        },
+        "start_delay_reference_s": 0.020833333299999923,
+        "start_delay_prediction_s": 0.0291666666999999,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.74793954366256e-05,
+          "predicted_net_m": 2.5764249748080895e-05,
+          "vector_error_m": 8.673890801767475e-06,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.00010746029486113883,
+        "qdot_diagnostic_rmse_rad_s": 0.0008025206239417476,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    },
+    {
+      "episode": "dev_7320_00",
+      "condition": "additional_nonzero",
+      "model": "A_wrong_prior",
+      "candidate_id": "observable_S0_phi_008",
+      "structure_id": "observable_S0",
+      "parameters": {
+        "tau_c": 0.012,
+        "b": 1.0,
+        "tau_s": 0.012
+      },
+      "validation_rms": 331.52395318266224,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 256025.75138791942,
+        "whitened_rms": 505.98987281162005,
+        "blocks": {
+          "active_ee_pose_velocity": 454784.90665126883,
+          "start_delay": 149.9267934378893,
+          "stop_incremental_pose": 532.9892586422529
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 6.170288950265557e-05,
+          "ee_rotation_rmse_rad": 0.0011001921000167692,
+          "ee_velocity_rmse_m_s": 2.8022638627196512e-05,
+          "start_time_error_s": 0.08333333329999992,
+          "dwell_incremental_position_rmse_m": 3.2249200324904474e-06,
+          "final_displacement_error_m": 0.00011369011300069328
+        },
+        "start_delay_reference_s": 0.04166666670000008,
+        "start_delay_prediction_s": 0.125,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.829712463638219e-05,
+          "predicted_net_m": 2.7396010266734054e-05,
+          "vector_error_m": 9.798060141576186e-06,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.0009493562962710533,
+        "qdot_diagnostic_rmse_rad_s": 0.0006893283768358235,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    },
+    {
+      "episode": "dev_7320_00",
+      "condition": "additional_nonzero",
+      "model": "B_structure_only",
+      "candidate_id": "historical_S3_phi_008",
+      "structure_id": "historical_S3",
+      "parameters": {
+        "tau_c": 0.012,
+        "b": 1.0,
+        "tau_s": 0.012
+      },
+      "validation_rms": 144.02329481585664,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 23573.896850606725,
+        "whitened_rms": 153.5379329371303,
+        "blocks": {
+          "active_ee_pose_velocity": 38182.872575610294,
+          "start_delay": 5.997071766301648,
+          "stop_incremental_pose": 5588.416559574777
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 3.189107732660648e-05,
+          "ee_rotation_rmse_rad": 0.0002756689592617954,
+          "ee_velocity_rmse_m_s": 2.933222890368508e-05,
+          "start_time_error_s": 0.016666666700000166,
+          "dwell_incremental_position_rmse_m": 1.3908259095212293e-05,
+          "final_displacement_error_m": 2.7880819945035135e-05
+        },
+        "start_delay_reference_s": 0.04166666670000008,
+        "start_delay_prediction_s": 0.02499999999999991,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.829712463638219e-05,
+          "predicted_net_m": 8.360957580551757e-05,
+          "vector_error_m": 6.533599111486059e-05,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.00023932001284825117,
+        "qdot_diagnostic_rmse_rad_s": 0.0004895907209844506,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    },
+    {
+      "episode": "dev_7320_00",
+      "condition": "additional_nonzero",
+      "model": "C_two_parameter",
+      "candidate_id": "observable_S2_phi_004",
+      "structure_id": "observable_S2",
+      "parameters": {
+        "tau_c": 0.004,
+        "b": 0.3,
+        "tau_s": 0.004
+      },
+      "validation_rms": 114.99413205132986,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 11544.837125385608,
+        "whitened_rms": 107.44690374964561,
+        "blocks": {
+          "active_ee_pose_velocity": 20328.53053575802,
+          "start_delay": 95.9531476851055,
+          "stop_incremental_pose": 277.4443394437415
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 4.806647717817669e-06,
+          "ee_rotation_rmse_rad": 0.0003030332110624953,
+          "ee_velocity_rmse_m_s": 1.9172341749540758e-05,
+          "start_time_error_s": 0.06666666659999998,
+          "dwell_incremental_position_rmse_m": 2.4874827012466456e-06,
+          "final_displacement_error_m": 1.6384978423820334e-05
+        },
+        "start_delay_reference_s": 0.04166666670000008,
+        "start_delay_prediction_s": 0.10833333330000006,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.829712463638219e-05,
+          "predicted_net_m": 2.266825253881072e-05,
+          "vector_error_m": 7.852786326699026e-06,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.0003478093608396731,
+        "qdot_diagnostic_rmse_rad_s": 0.00046097722286464433,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    },
+    {
+      "episode": "dev_7320_00",
+      "condition": "additional_nonzero",
+      "model": "D_static_extension",
+      "candidate_id": "historical_S4_phi_002_static_0.012",
+      "structure_id": "historical_S4",
+      "parameters": {
+        "tau_c": 0.0,
+        "b": 1.0,
+        "tau_s": 0.012
+      },
+      "validation_rms": 110.74475193652457,
+      "native_status": "REPLAY_COMPLETE",
+      "identifiability": "MODEL_MISMATCH",
+      "test": {
+        "loss": 12578.366098170076,
+        "whitened_rms": 112.1533151456972,
+        "blocks": {
+          "active_ee_pose_velocity": 19714.94953356998,
+          "start_delay": 23.98828706520627,
+          "stop_incremental_pose": 3965.887246921035
+        },
+        "block_dimensions": {
+          "active_ee_pose_velocity": 9,
+          "start_delay": 1,
+          "stop_incremental_pose": 6
+        },
+        "metrics": {
+          "ee_position_rmse_m": 1.6507784223099084e-05,
+          "ee_rotation_rmse_rad": 0.0003093086378428354,
+          "ee_velocity_rmse_m_s": 2.3432386171038457e-05,
+          "start_time_error_s": 0.03333333340000011,
+          "dwell_incremental_position_rmse_m": 1.1704259003221033e-05,
+          "final_displacement_error_m": 1.779124281754265e-05
+        },
+        "start_delay_reference_s": 0.04166666670000008,
+        "start_delay_prediction_s": 0.008333333299999968,
+        "onset_censored": false,
+        "post_drive_drift": {
+          "reference_net_m": 1.829712463638219e-05,
+          "predicted_net_m": 2.9784788269481503e-05,
+          "vector_error_m": 4.7985829034721686e-05,
+          "duration_s": 3.0
+        },
+        "q_diagnostic_rmse_rad": 0.00028397754967488865,
+        "qdot_diagnostic_rmse_rad_s": 0.00047238559265514027,
+        "q_used_in_physics_loss": false,
+        "time_warping": false,
+        "noise_calibration_sha256": "7c31082affd1b5f8a3facfe82d62c5d5635e2db3df91bdfb4387b5d1c4b5d3cd",
+        "sample_count": 2880,
+        "evidence_units": "complete action blocks; frames are not independent likelihood trials"
+      }
+    }
+  ],
+  "decisions": [
+    {
+      "condition": "original",
+      "extension_accepted": false,
+      "accepted_family": "dynamic_viscous",
+      "physics_prediction_transfer_success": false,
+      "updated_vs_structure_improved": true,
+      "status": "MODEL_MISMATCH",
+      "test_used_only_for_final_acceptance_not_parameter_reselection": true
+    },
+    {
+      "condition": "additional_nonzero",
+      "extension_accepted": false,
+      "accepted_family": "dynamic_viscous",
+      "physics_prediction_transfer_success": false,
+      "updated_vs_structure_improved": true,
+      "status": "MODEL_MISMATCH",
+      "test_used_only_for_final_acceptance_not_parameter_reselection": true
+    }
+  ],
+  "actual_native_test": true,
+  "selection_changed_after_test": false
+}

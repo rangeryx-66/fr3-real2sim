@@ -3,6 +3,8 @@
 Independent experiment on `170bc15`; the contact, control, proxy, mobile,
 structure fitting and safety baselines remain unchanged.
 
+Completed native results: [7320 / 45621 report](interactive_twin_selection_results_20261004.md).
+
 ```bash
 env -u PYTHONPATH OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
   /data1/home/rangeryx/isaaclab-arena/.venv/bin/python \

@@ -54,6 +54,20 @@ class SelectionTests(unittest.TestCase):
         active=(t>=1)&(t<1.8)
         self.assertIsNone(onset(t,p,active,.0001,.05))
 
+    def test_inadequate_model_keeps_full_parameter_set(self):
+        names=['low_forward','high_forward','stop_dwell']
+        reference={n:{'split':'train','name':n} for n in names}
+        candidates=[{'candidate_id':str(i),'structure_id':'fixed','tau_c':i*.004,
+                     'b':0.,'tau_s':i*.004} for i in range(7)]
+        bank={c['candidate_id']:{n:{'safe':True,'log':{}} for n in names} for c in candidates}
+        policy={'top_k':5,'support_log_likelihood_delta':3,'adequacy_rms':10}
+        with patch('interactive_twin_selection.policy.score',return_value={'loss':121.}):
+            r=rank(candidates,bank,reference,{},policy)
+        self.assertEqual(r['status'],'MODEL_MISMATCH')
+        self.assertTrue(r['all_candidates_validation_inadequate'])
+        self.assertEqual(len(r['retained_parameters']),len(candidates))
+        self.assertEqual(r['parameter_intervals']['tau_c'],[0.,.024])
+
     def test_static_setup_default_and_extension(self):
         import interactive_twin.plant as plant
         from interactive_twin_selection.native import install

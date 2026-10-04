@@ -1,0 +1,186 @@
+{
+  "schema": "physics-selection-batch-v1",
+  "base_commit": "170bc15",
+  "output": "results/interactive_twin_selection_20261004",
+  "refinement_output": "results/interactive_twin_refinement_20261004",
+  "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+  "gpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "native_wall_clock_budget_s": 1000,
+  "prior_observable_output": "results/interactive_twin_observable_20261004",
+  "historical_conditional_output": "results/interactive_twin_conditional_20261004",
+  "episodes": [
+    "dev_7320_00",
+    "test_45621_00"
+  ],
+  "structure_policy": "union of all already-frozen historical and observable structure candidates; exact estimated-axis-line deduplication; no new fit or held-out-driven selection",
+  "maximum_structures": 10,
+  "physics_grid": {
+    "tau_c": [
+      0.0,
+      0.004,
+      0.012
+    ],
+    "b": [
+      0.0,
+      0.3,
+      1.0
+    ]
+  },
+  "wrong_prior": {
+    "tau_c": 0.012,
+    "b": 1.0
+  },
+  "maximum_base_parameter_points": 90,
+  "probes": [
+    {
+      "name": "low_forward",
+      "probe_id": "P1",
+      "split": "train",
+      "duration_s": 8.0,
+      "speed_m_s": 0.00025,
+      "windows": [
+        [
+          1.0,
+          6.0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "high_forward",
+      "probe_id": "P2",
+      "split": "train",
+      "duration_s": 8.0,
+      "speed_m_s": 0.0005,
+      "windows": [
+        [
+          1.0,
+          6.0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "stop_dwell",
+      "probe_id": "P3",
+      "split": "validation",
+      "duration_s": 8.0,
+      "speed_m_s": 0.00025,
+      "windows": [
+        [
+          1.0,
+          3.0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "reverse",
+      "probe_id": "P2",
+      "split": "train",
+      "duration_s": 10.0,
+      "speed_m_s": 0.0005,
+      "windows": [
+        [
+          0.5,
+          4.0,
+          1
+        ],
+        [
+          4.0,
+          9.0,
+          -1
+        ]
+      ]
+    }
+  ],
+  "maximum_reference_probes": 4,
+  "reverse_policy": "same frozen command, native safety in all existing proposal predictions required; observed reverse excursion >=1mm required for scoring; never changes other candidate support",
+  "selection": {
+    "top_k": 5,
+    "support_log_likelihood_delta": 2.995732273553991,
+    "credible_mass": 0.95,
+    "adequacy_rms": 10.0,
+    "extension_validation_improvement_fraction": 0.05,
+    "heldout_improvement_fraction": 0.05,
+    "regression_absolute_tolerance_m": 1e-05
+  },
+  "static_extension": {
+    "trigger": "ALL base candidate validation RMS above adequacy_rms",
+    "maximum_structures": 3,
+    "anchors_per_structure": 2,
+    "excess_static_effort_grid": [
+      0.004,
+      0.012
+    ],
+    "maximum_extra_parameter_points": 12,
+    "tau_s_rule": "tau_s=tau_c+excess_static; dynamic tau_c and b unchanged; native passive setup only"
+  },
+  "calibration": {
+    "robot_only_logs": [
+      "results/interactive_twin_dev_20261003/robot_only_smooth_0/observable/ROBOT_CALIBRATION.json",
+      "results/interactive_twin_dev_20261003/robot_only_smooth_1/observable/ROBOT_CALIBRATION.json"
+    ],
+    "contact_repeats": [
+      "results/act2see_contact_final_20261003/first",
+      "results/act2see_contact_final_20261003/repeat_01",
+      "results/act2see_contact_final_20261003/repeat_02",
+      "results/act2see_contact_final_20261003/repeat_03"
+    ],
+    "zero_drive": "results/act2see_contact_final_20261003/zero_probe",
+    "filter_window_samples": 25,
+    "filter_polynomial_order": 2,
+    "bootstrap_count": 128,
+    "seed": 616603,
+    "repeatability_quantile": 0.95,
+    "onset_hold_s": 0.05,
+    "onset_sigma_multiplier": 3.0,
+    "source_timestep_s": 0.004166666666666667,
+    "q_is_diagnostic_only": true
+  },
+  "heldout": {
+    "name": "unseen_three_pulses",
+    "probe_id": "P4",
+    "split": "heldout",
+    "duration_s": 12.0,
+    "speed_m_s": 0.000425,
+    "windows": [
+      [
+        1.0,
+        2.5,
+        1
+      ],
+      [
+        4.0,
+        5.5,
+        1
+      ],
+      [
+        7.0,
+        9.0,
+        1
+      ]
+    ]
+  },
+  "old_regression": "3e5e856 common-start P4; already-seen diagnostic, never used for weight, parameter or structure choice",
+  "method_decision_before_new_test": true,
+  "frozen_components": [
+    "grasp",
+    "contact",
+    "proxy",
+    "base",
+    "mobile recovery",
+    "controller",
+    "safety",
+    "1mm fitter gate",
+    "structure fitter",
+    "low/high/dwell/reverse commands"
+  ]
+}
