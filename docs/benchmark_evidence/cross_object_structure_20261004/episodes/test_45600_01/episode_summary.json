@@ -1,0 +1,117 @@
+{
+  "episode_id": "test_45600_01",
+  "asset_id": "45600",
+  "included_in_denominator": true,
+  "fixed_base_feasible": true,
+  "mobile_recovered": false,
+  "attempts": [
+    {
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_01/candidate_00",
+      "status": "UNOBSERVABLE",
+      "bilateral": true
+    }
+  ],
+  "failure_stage": "EXPLORATORY",
+  "status": "UNOBSERVABLE",
+  "fixed_plan_statuses": [
+    "NO_HOME_PLAN",
+    "PENDING_REAL_CLOSURE",
+    "NO_HOME_PLAN",
+    "NO_HOME_PLAN",
+    "PENDING_REAL_CLOSURE",
+    "NO_HOME_PLAN",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK"
+  ],
+  "grasp_feasible": true,
+  "selected_job": {
+    "episode_id": "test_45600_01",
+    "mode": "kinematics",
+    "role": "reference",
+    "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_01/source",
+    "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_01/asset",
+    "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_01/planning/plan.json",
+    "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_01/candidate_00",
+    "gpu": 0,
+    "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+    "wall_clock_budget_s": 2200,
+    "frozen_proxy_sha256": "31f31700a41801b17cbf8101977e0856c737b394ee478970a7b3005e417b5336",
+    "continue_manipulation": true,
+    "robot_calibration_id": "PENDING_ROBOT_ONLY_CALIBRATION",
+    "candidate": 0,
+    "plant": {},
+    "initial_articulation_rad": 0.017453292519943295,
+    "mobile_platform": true,
+    "refinement_once": true,
+    "refinement_target_deg": 10.0,
+    "structure_protocol": {
+      "fitting": {
+        "position_noise_m": 2e-05,
+        "rotation_noise_rad": 2e-05,
+        "maximum_samples": 180,
+        "max_nfev": 160
+      },
+      "selection": {
+        "minimum_validation_improvement_fraction": 0.05,
+        "maximum_validation_rms_noise_units": 10.0,
+        "minimum_train_motion_m": 0.005,
+        "minimum_reverse_motion_m": 0.005
+      },
+      "refinement": {
+        "maximum_extra_trajectories": 1,
+        "opening_deg": 10.0,
+        "reverse_deg": 2.5,
+        "switch_exclusion_s": 0.5
+      },
+      "validation": {
+        "forward_travel_m": 0.002,
+        "maximum_s": 12.0,
+        "observability_m": 0.001
+      },
+      "heldout": {
+        "schema": "frozen-forward-stop-segment-v1",
+        "active_s": 8.0,
+        "dwell_s": 2.0,
+        "fit_usage": "never",
+        "speed": "unchanged ConstrainedDrive .0005 m/s",
+        "prediction": "native same-command autonomous replay, physics unchanged"
+      }
+    }
+  },
+  "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_01/candidate_00/report.json",
+  "structure_validation": "NOT_REACHED",
+  "grasp": true,
+  "probe": {
+    "duration_s": 44.0,
+    "distance_m": 0.020014556426515413,
+    "observed_rotation_span_deg": 1.6427148422856248,
+    "sample_count": 1292,
+    "fit_input": "measured robot TCP SE(3) only",
+    "failure_phase": "EXPLORATORY"
+  },
+  "minimum_joint_margin_rad": 0.14835708228149413,
+  "observed_slip_m": 0.00022382512066072342,
+  "post_episode_evaluation": {
+    "type_correct": true,
+    "axis_angular_error_deg": 6.515073981652916,
+    "axis_line_distance_m": 0.011553974927136945,
+    "joint_origin_error_in_observed_plane_m": 0.07701012314524562,
+    "raw_origin_point_distance_m": 0.028891089059819595,
+    "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+    "gt_constrained_reconstruction_rmse_m": 0.0002517288796806127,
+    "actual_door_displacement_deg": 1.642136812210083,
+    "actual_final_door_angle_deg": 2.642136812210083,
+    "gt_access_after_saved_fit": true,
+    "gt_access_after_world_pause": true,
+    "final_true_relative_translation_slip_m": 0.000342726392061477,
+    "final_true_relative_rotation_slip_deg": 0.10255884341329052
+  },
+  "refined_accepted": false,
+  "online_success": false,
+  "success": false,
+  "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_01/candidate_00/contact_baseline.mp4"
+}

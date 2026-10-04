@@ -1,0 +1,144 @@
+{
+  "schema": "cross-object-structure-v1",
+  "output": "results/cross_object_structure_20261004_v1",
+  "original_config": "configs/interactive_twin.yaml",
+  "runtime": {
+    "isaac_python": "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+    "analysis_python": "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+    "gpus": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+    "episode_wall_clock_s": 2200,
+    "ffmpeg_directory": "/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static"
+  },
+  "assets": {
+    "archive": "/data1/home/rangeryx/datasets/physx_mobility/PhysX-Mobility.zip",
+    "seed": 732061660,
+    "previously_prepared_ids": [
+      "100189",
+      "100243",
+      "10040",
+      "102379",
+      "103082",
+      "35059",
+      "41004",
+      "41529",
+      "45007",
+      "45091",
+      "45130",
+      "45166",
+      "45177",
+      "45621",
+      "46117",
+      "46744",
+      "47686",
+      "7138",
+      "7236",
+      "7306",
+      "7320",
+      "8919",
+      "8983",
+      "9041",
+      "9107"
+    ],
+    "opening_name_keywords": [
+      "cabinet",
+      "cupboard",
+      "microwave",
+      "dishwasher",
+      "refrigerator",
+      "door set"
+    ],
+    "source_pool_per_category": 8,
+    "maximum_source_preparations": 80,
+    "test_assets": 8,
+    "episodes_per_asset": 2
+  },
+  "policy": {
+    "dev_asset_id": "7320",
+    "test_asset_count": 8,
+    "episodes_per_asset": 3,
+    "seed": 732061660,
+    "budgets": {
+      "grasp_candidates": 12,
+      "probe_directions": 4,
+      "sysid_simulations": 48,
+      "wall_clock_seconds": 25200
+    }
+  },
+  "dev": {
+    "asset_root": "results/semantic_interaction/asset",
+    "source": "/data1/home/rangeryx/fr3_real2sim_r1a7/results/microwave_7320_table_edge_preflight_full_rgb",
+    "plan": "results/semantic_interaction/nominal_minimal/plan.json"
+  },
+  "mobile": {
+    "fixed_plan_wall_s": 600,
+    "episode_wall_s": 1500,
+    "configuration_execution_wall_s": 1800,
+    "search": {
+      "standoff_m": [
+        0.35,
+        0.45,
+        0.55
+      ],
+      "azimuth_offsets_deg": [
+        -45,
+        0,
+        45
+      ],
+      "yaw_offsets_deg": [
+        -30,
+        0,
+        30
+      ],
+      "search_wall_s": 180,
+      "full_plan_base_budget": 4,
+      "full_plan_wall_s": 90,
+      "probe_workspace_m": 0.01
+    }
+  },
+  "fitting": {
+    "position_noise_m": 2e-05,
+    "rotation_noise_rad": 2e-05,
+    "maximum_samples": 180,
+    "max_nfev": 160
+  },
+  "selection": {
+    "minimum_validation_improvement_fraction": 0.05,
+    "maximum_validation_rms_noise_units": 10.0,
+    "minimum_train_motion_m": 0.005,
+    "minimum_reverse_motion_m": 0.005
+  },
+  "refinement": {
+    "maximum_extra_trajectories": 1,
+    "opening_deg": 10.0,
+    "reverse_deg": 2.5,
+    "switch_exclusion_s": 0.5
+  },
+  "heldout": {
+    "schema": "frozen-forward-stop-segment-v1",
+    "active_s": 8.0,
+    "dwell_s": 2.0,
+    "fit_usage": "never",
+    "speed": "unchanged ConstrainedDrive .0005 m/s",
+    "prediction": "native same-command autonomous replay, physics unchanged"
+  },
+  "validation": {
+    "forward_travel_m": 0.002,
+    "maximum_s": 12.0,
+    "observability_m": 0.001
+  },
+  "physics": "unchanged prepared source; control runs retain recorded baseline plant values; no calibration",
+  "controls": {
+    "7320": {
+      "source_job": "results/interactive_twin_refinement_20261004/dev_7320_00/refinement_once/job_private.json"
+    },
+    "45621": {
+      "source_job": "results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_execution/candidate_00/job_private.json"
+    }
+  }
+}
