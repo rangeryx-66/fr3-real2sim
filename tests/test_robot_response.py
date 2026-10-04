@@ -15,8 +15,8 @@ def record():
             'initial_velocity_m_s': [0., 0, 0]}
 
 
-CFG = {'K_n_m': 150., 'D_ns_m': 100., 'train_window_s': [0., 2.],
-       'validation_window_s': [2., 4.]}
+CFG = {'K_n_m': 150., 'D_ns_m': 100., 'train_window_s': [0., 1.75],
+       'validation_window_s': [1.75, 4.]}
 
 
 class RobotResponseTests(unittest.TestCase):
@@ -27,7 +27,7 @@ class RobotResponseTests(unittest.TestCase):
         for i, point in enumerate([[0, 0, 0], [.001, 0, 0], [-.001, 0, 0], [0, .001, 0], [0, -.001, 0]]):
             key = f'observable_S{i}'
             structures.append({'structure_id': key, 'estimate_path': key})
-            estimates[key] = {'axis_world': [0., 0., 1.], 'point_on_axis_world_m': point}
+            estimates[key] = {'axis_world': [0., 0., 1.], 'point_on_axis_world_m': np.asarray(point, dtype=float).tolist()}
         with self.assertRaisesRegex(ValueError, 'INCOMPLETE_STRUCTURE_UNCERTAINTY_RESPONSE_SPAN'):
             propagate({'structures': structures}, {}, {'combined_covariance': np.eye(4).tolist()},
                       {}, {}, estimates.__getitem__, [])

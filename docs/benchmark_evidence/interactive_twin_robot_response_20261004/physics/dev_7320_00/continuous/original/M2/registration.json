@@ -1,0 +1,40 @@
+{
+  "anchors": [
+    {
+      "candidate_id": "observable_S4_phi_003",
+      "structure_id": "observable_S4",
+      "tau_c": 0.004,
+      "b": 0.0,
+      "tau_s": 0.004
+    },
+    {
+      "candidate_id": "observable_S2_phi_005",
+      "structure_id": "observable_S2",
+      "tau_c": 0.004,
+      "b": 1.0,
+      "tau_s": 0.004
+    }
+  ],
+  "budget": {
+    "tau_c_bounds": [
+      0.0,
+      0.012
+    ],
+    "b_bounds": [
+      0.0,
+      1.0
+    ],
+    "tau_s_excess_bounds": [
+      0.0,
+      0.012
+    ],
+    "maximum_starts_per_family": 2,
+    "maximum_native_parameter_evaluations_per_start": 12,
+    "require_robot_gate_pass": true,
+    "same_budget_all_conditions": true
+  },
+  "objective": "train actions only",
+  "test_read": false,
+  "method": "bounded normalized Nelder-Mead, initial simplex side 0.1",
+  "candidate_score": "unchanged complete-action batch policy"
+}
