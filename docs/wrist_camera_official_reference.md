@@ -40,3 +40,14 @@ Old cropped/occluded images and interrupted runs remain in their original
 output directories. The new run inherits the original total start time
 and elapsed capture budget, and reexecutes physical initial actions.
 It does not restore object joint states or copy contact impulses.
+
+## Paused capture verification
+
+A separate three-view render check using the installed Replicator standalone
+`step(rt_subframes=8, delta_time=0.0, pause_timeline=True)` returned valid
+RGB-D while `world.current_time` remained exactly 1.8833334315568209 s
+before and after every view. Plain paused `world.render()` had returned
+no RGB for a newly initialized sensor. ORACLE capture now uses the tested
+zero-time annotator scheduling call and records its implementation hash.
+This neither commands nor locks the object joint, and remains diagnostic.
+Evidence: `results/wrist_mobile_20261006/mount_paused_qa/mount_qa.json`.

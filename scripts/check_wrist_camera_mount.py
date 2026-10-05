@@ -22,16 +22,18 @@ def main():
     E=matrix(*scene['tcp'].get_world_pose())
     camera=Camera('/World/mount_diagnostic',resolution=(1280,720),frequency=30);camera.initialize();camera.set_horizontal_aperture(12.8);camera.set_vertical_aperture(7.2);camera.set_focal_length(9.25);camera.set_clipping_range(.05,5.)
     camera.add_distance_to_image_plane_to_frame();camera.add_instance_id_segmentation_to_frame()
-    rows=[];(out/'progress.txt').write_text('before play\n');scene['world'].play();(out/'progress.txt').write_text('after play\n')
+    import omni.replicator.core as rep
+    rows=[];scene['world'].pause()
     try:
         for index,y in enumerate([-.075,-.1,-.125]):
             X=np.eye(4);X[:3,3]=[0,y,-.1];T=E@X;camera.set_world_pose(T[:3,3],np.roll(Rotation.from_matrix(T[:3,:3]).as_quat(),1),camera_axes='ros')
-            for frame in range(24):
-                scene['world'].step(render=True)
-                (out/'progress.txt').write_text(f'mount {index} frame {frame}\n')
+            before=float(scene['world'].current_time)
+            rep.orchestrator.step(rt_subframes=8,delta_time=0.0,pause_timeline=True,wait_for_render=True)
+            after=float(scene['world'].current_time)
+            if abs(after-before)>1e-9:raise RuntimeError('DIAGNOSTIC_RENDER_ADVANCED_PHYSICS')
             rgb,depth,seg=snapshot(camera);ids=[int(k) for k,v in seg['info']['idToLabels'].items() if '/World/Piper/' in str(v)]
             fraction=float(np.isin(seg['data'],ids).mean());cv2.imwrite(str(out/f'mount_{index}.png'),cv2.cvtColor(rgb,cv2.COLOR_RGB2BGR))
-            rows.append({'T_tcp_camera_optical':X.tolist(),'robot_pixel_ratio':fraction,'image':f'mount_{index}.png'})
+            rows.append({'T_tcp_camera_optical':X.tolist(),'robot_pixel_ratio':fraction,'image':f'mount_{index}.png','physics_time_before':before,'physics_time_after':after})
         (out/'mount_qa.json').write_text(json.dumps({'diagnostic_only':True,'robot_posture_source':'observed robot q; initialization, not physical manipulation','counts_as_robot_capture':False,'GT_hinge_input':False,'sensor_K':camera.get_intrinsics_matrix().tolist(),'rows':rows},indent=2))
         print(json.dumps(rows),flush=True)
     except BaseException:
