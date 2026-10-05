@@ -41,23 +41,38 @@ def visibility(P,T,K,resolution):
     return float(valid.mean())
 
 
+def observed_volume(P):
+    """Camera framing bounds, not a collision or reconstructed object model.
+
+    A visible-surface median depends on sampling/viewpoint and is not the
+    object's framing center. Sparse edge samples still matter for cropping.
+    """
+    P=np.asarray(P,float);P=P[np.all(np.isfinite(P),axis=1)]
+    if len(P)<8:raise ValueError('INSUFFICIENT_SENSOR_VOLUME_POINTS')
+    lo,hi=np.quantile(P,[.001,.999],axis=0)
+    corners=np.array([[x,y,z] for x in [lo[0],hi[0]] for y in [lo[1],hi[1]] for z in [lo[2],hi[2]]])
+    return (lo+hi)/2,hi-lo,corners
+
+
 def coverage_views(P,center,normal,cal,policy):
     """Finite observed-cloud/FOV-driven pool; no joint/asset identifiers."""
-    center=np.asarray(center,float);normal=np.asarray(normal,float).copy();normal[2]=0;normal/=np.linalg.norm(normal)
+    center,_,corners=observed_volume(P)
+    normal=np.asarray(normal,float).copy();normal[2]=0;normal/=np.linalg.norm(normal)
     result=[]
     for elevation in policy['pool_elevations_deg']:
         for azimuth in policy['pool_azimuths_deg']:
             horizontal=Rotation.from_euler('z',azimuth,degrees=True).apply(normal)
             ray=np.cos(np.deg2rad(elevation))*horizontal+np.array([0,0,np.sin(np.deg2rad(elevation))])
-            # Find the smallest lens distance preserving observed object rays.
+            # Fit the observed volume, rather than permitting 3% of a dense
+            # front surface to hide the sparse edges that image QA rejects.
             lo=policy['minimum_standoff_m'];hi=policy['maximum_standoff_m']
             for _ in range(12):
                 middle=(lo+hi)/2;T=look_at(center+middle*ray,center)
-                if visibility(P,T,cal['K'],cal['resolution_wh'])>=policy['minimum_initial_cloud_in_frame']:hi=middle
+                if visibility(corners,T,cal['K'],cal['resolution_wh'])==1.:hi=middle
                 else:lo=middle
             for factor in policy['pool_distance_factors']:
                 T=look_at(center+hi*factor*ray,center)
-                result.append({'view_id':len(result),'T_camera':T,'azimuth_deg':azimuth,'elevation_deg':elevation,'lens_distance_m':hi*factor,'role':'sensor/FOV driven front/oblique/side/top/interior candidate'})
+                result.append({'view_id':len(result),'T_camera':T,'azimuth_deg':azimuth,'elevation_deg':elevation,'lens_distance_m':hi*factor,'observed_volume_in_frame':visibility(corners,T,cal['K'],cal['resolution_wh']),'role':'sensor/FOV driven front/oblique/side/top/interior candidate'})
     # Frontal and modest side baselines first; coverage continues to side/top.
     result.sort(key=lambda v:(abs(v['azimuth_deg'])+abs(v['elevation_deg']-20),v['lens_distance_m']))
     return result

@@ -4,6 +4,20 @@ from pathlib import Path
 import numpy as np
 
 class WristCaptureTests(unittest.TestCase):
+    def test_framing_covers_sparse_edges_despite_dense_front_surface(self):
+        from wrist_reconstruction.geometry import observed_volume,coverage_views,calibration,visibility
+        root=Path(__file__).resolve().parents[1]
+        corners=np.array([[x,y,z] for x in [.2,.8] for y in [-.2,.2] for z in [0.,.6]])
+        P=np.vstack([np.repeat(corners,10,axis=0),np.tile([.8,-.2,.6],(1000,1))])
+        center,_,bound=observed_volume(P)
+        np.testing.assert_allclose(center,[.5,0.,.3])
+        self.assertGreater(np.linalg.norm(np.median(P,axis=0)-center),.3)
+        cal=calibration(root/'configs/wrist_camera_d435_clear_mount_sim.json')
+        policy=json.loads((root/'configs/wrist_reconstruction_v2_low_views.json').read_text())['capture']
+        policy['maximum_standoff_m']=2.0
+        for view in coverage_views(P,np.median(P,axis=0),[0,-1,0],cal,policy):
+            self.assertEqual(visibility(bound,view['T_camera'],cal['K'],cal['resolution_wh']),1.)
+
     def test_deployed_script_chain_cannot_load_old_root_entry_copy(self):
         import importlib.util,sys
         root=Path(__file__).resolve().parents[1]

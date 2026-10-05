@@ -16,7 +16,13 @@ from piper_mobile_demo.model import Model
 def main():
  p=argparse.ArgumentParser();p.add_argument('--job',type=Path,required=True);p.add_argument('--capture',type=Path,required=True);p.add_argument('--output',type=Path,required=True);p.add_argument('--base-budget',type=int,default=20);a=p.parse_args()
  job=json.loads(a.job.read_text());c=job['wrist_experiment'];cal=calibration(job['camera_calibration']);folder=a.capture/'initial_sensor_observation';meta=json.loads((folder/'camera.json').read_text());mask=np.load(folder/'sensor_mask.npy');P,_=backproject(np.load(folder/'depth_m.npy'),np.array(meta['K']),np.array(meta['T_world_camera_optical']),mask,stride=4)
- visual=job['initial_visual'];visual=json.loads(Path(visual).read_text()) if isinstance(visual,str) else visual
+ if 'initial_visual' in job:
+  visual=job['initial_visual'];visual=json.loads(Path(visual).read_text()) if isinstance(visual,str) else visual
+ else:
+  # The preserved physical-contact entry derives its observed handle frame
+  # from the existing prechecked grasp, rather than a separate visual file.
+  plan=json.loads(Path(job['plan']).read_text());T=np.asarray(plan['trial_candidates'][0]['T'])
+  visual={'outward_normal_world':(-T[:3,2]).tolist()}
  source=json.loads((Path(job['source'])/'report.json').read_text());model=Model(ROOT/'config/piper.urdf',job['asset_root'],source)
  initial=json.loads((a.capture/'reposition_history.json').read_text())[0]['initial_base'];export=json.loads((a.capture/'cooked_initial.json').read_text())
  policy=dict(c['capture'],pool_elevations_deg=[0,6,12],pool_azimuths_deg=[0],pool_distance_factors=[1.2]);geometry=json.loads((folder/'observed_geometry.json').read_text());views=coverage_views(P,geometry['center_m'],visual['outward_normal_world'],cal,policy)

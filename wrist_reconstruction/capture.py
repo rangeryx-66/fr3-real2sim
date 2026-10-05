@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 from scipy.spatial.transform import Rotation
 from articulated_interaction_skill.capture import CaptureRecorder,backproject,matrix
-from wrist_reconstruction.geometry import calibration,proposed_views,optical_to_tcp,visibility,coverage_views,distinct_view
+from wrist_reconstruction.geometry import calibration,proposed_views,optical_to_tcp,visibility,coverage_views,distinct_view,observed_volume
 
 
 def snapshot(camera):
@@ -66,22 +66,29 @@ class WristRecorder(CaptureRecorder):
         mask=sam_mask(folder,self.config['sam3'],self.job['object_prompt'])
         P,_=backproject(depth,np.asarray(meta['K']),np.asarray(meta['T_world_camera_optical']),mask,stride=4)
         if len(P)<200:raise RuntimeError('INITIAL_RGBD_OBJECT_UNAVAILABLE')
-        self.observed_cloud=P;self.center=np.median(P,axis=0);self.extent=np.quantile(P,.99,axis=0)-np.quantile(P,.01,axis=0)
-        (folder/'observed_geometry.json').write_text(json.dumps({'center_m':self.center.tolist(),'extent_m':self.extent.tolist(),'source':'SAM3 + RGB-D, not GT mesh'},indent=2))
+        self.initial_framing_cloud=P.copy();self.observed_cloud=P;self.center,self.extent,_=observed_volume(P)
+        (folder/'observed_geometry.json').write_text(json.dumps({'center_m':self.center.tolist(),'extent_m':self.extent.tolist(),'center_method':'sensor bounds midpoint, not visible-surface median','source':'SAM3 + RGB-D, not GT mesh'},indent=2))
 
     def scan(self,label,value,articulation=None):
         r=self.runtime;p=self.config['capture'];start=time.monotonic()
         if self.observed_cloud is None:self.initialize_observation()
+        # Prior geometry is a conservative CAMERA framing envelope only.
+        # Current-state sensor samples update it; backend point clouds remain
+        # separate actual observations and never contain the old-state prior.
+        framing_clouds=[self.initial_framing_cloud]
+        self.observed_cloud=self.initial_framing_cloud.copy()
         state_dir=self.output/'states'/f'state_{len(self.states):03d}';state_dir.mkdir(parents=True,exist_ok=True)
         normal=np.asarray(r.initial_visual['outward_normal_world']);views=[];log={'label':label,'state_estimate':value,'proposals':[],'released':True,'camera_motion':'physical robot joints; no camera teleport view acquisition'}
         # Reobserve current shape from sensor data after release, not a door GT.
         proposals=coverage_views(self.observed_cloud,self.center,normal,self.cal,p)
-        for proposal in proposals[:p['maximum_pose_proposals']]:
+        proposals=proposals[:p['maximum_pose_proposals']]
+        for proposal_index,proposal in enumerate(proposals):
             if time.monotonic()-start>p['maximum_scan_wall_s']:break
             row={'view_id':proposal['view_id'],'requested_T_camera':proposal['T_camera'].tolist()};log['proposals'].append(row)
             if not distinct_view(proposal['T_camera'],[np.asarray(v['T_world_camera_optical']) for v in views],p['minimum_camera_baseline_m'],p['minimum_camera_angle_deg']):
                 row.update(status='SKIPPED_REDUNDANT_VIEW');continue
             try:
+                if proposal.get('observed_volume_in_frame',1.)<1.:raise RuntimeError('OBJECT_WOULD_BE_CROPPED')
                 if visibility(self.observed_cloud,proposal['T_camera'],self.cal['K'],self.cal['resolution_wh'])<p['minimum_initial_cloud_in_frame']:raise RuntimeError('OBJECT_WOULD_BE_CROPPED')
                 r.scan_to(optical_to_tcp(proposal['T_camera'],self.cal['X']));r.hold(p['settle_s'])
                 for _ in range(8):r.step()
@@ -97,6 +104,13 @@ class WristRecorder(CaptureRecorder):
                 views.append({'view_id':proposal['view_id'],'directory':str(folder.relative_to(self.output)),'K':meta['K'],'T_world_camera_optical':meta['T_world_camera_optical'],'qa':qa})
                 row.update(status='ACQUIRED',actual_T_camera=meta['T_world_camera_optical'],qa=qa,base=list(r.base))
                 (state_dir/'views_checkpoint.json').write_text(json.dumps({'label':label,'estimated_state':value,'views':views},indent=2))
+                framing_clouds.append(P[::max(1,int(np.ceil(len(P)/30000)))])
+                self.observed_cloud=np.concatenate(framing_clouds)
+                self.center,self.extent,_=observed_volume(self.observed_cloud)
+                updated={v['view_id']:v for v in coverage_views(self.observed_cloud,self.center,normal,self.cal,p)}
+                for future in range(proposal_index+1,len(proposals)):
+                    proposals[future]=updated[proposals[future]['view_id']]
+                log['framing_source']='initial sensor volume plus current-state SAM3 RGB-D; camera planning only; not merged reconstruction input'
             except (subprocess.SubprocessError,TimeoutError) as e:
                 row.update(status='REJECTED',reason='SAM3_SENSOR_INFERENCE_FAILED:'+str(e))
             except RuntimeError as e:
