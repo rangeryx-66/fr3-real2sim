@@ -35,3 +35,33 @@ Only a high-coverage, large-span oracle result under the official budget can tri
 ## Deployed source chain
 
 The server also retained older root-level copies of entry scripts. The independent wrist runner explicitly imports the checked-in `scripts/` chain and checks the preplanned retreat runtime API before starting Isaac. Old files and failed run outputs are retained. A zero process exit code is not physical success: the ledger separately reports the episode physical status.
+
+## Low-elevation recovery revision
+
+The original minimum 12-degree elevation did not cover the lower camera
+poses that are reachable for a taller object from the same fixed platform
+height. A finite saved-RGB-D diagnostic (20 SE2 bases per elevation, same
+five-start IK and >0.05 rad margin, same PhysicalScene and camera-housing
+checks) found for 45746: 12 degrees 0/20 goal-valid, 6 degrees 2/20, and
+0 degrees 2/20. These are **goal feasibility**, not executed scan or full
+route success. No object joint generates these targets.
+
+`configs/wrist_reconstruction_v2_low_views.json` uses a generic 48-view
+pool with elevations 0/6/20 degrees, retaining the previous eight azimuths
+and two distance factors. Both objects use the same pool. The total eight
+hour budget and original global start remain unchanged; capture is allocated
+up to six hours (all previous spent time subtracted), leaving up to two
+hours for backend work. All earlier runs, accepted images and failures
+remain archived. Actual initial approach/closure/release actions are
+reexecuted; no object state or contact impulses are restored.
+
+Finite diagnostic command:
+
+```sh
+OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 MKL_NUM_THREADS=1 \
+/data1/home/rangeryx/isaaclab-arena/.venv/bin/python \
+scripts/diagnose_wrist_elevation.py \
+  --job results/wrist_mobile_20261006/run_v2_clear_mount/45746_job.json \
+  --capture results/wrist_mobile_20261006/run_v2_clear_mount/capture_45746 \
+  --output results/wrist_mobile_20261006/45746_elevation_diagnostic.json
+```
