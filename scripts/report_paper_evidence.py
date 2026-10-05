@@ -42,7 +42,7 @@ def report(config):
                 ev=evaluate(model,truth,np.asarray(x[0]['T_ee'])[:3,3]);r['final_estimate_axis_line_error_m']=ev.get('axis_line_distance_m');r['final_estimate_axis_angular_error_deg']=ev.get('axis_angular_error_deg');r['joint_type_correct']=ev.get('type_correct')
             r['final_estimate_role']='post-episode diagnostic only' if m=='B0' else 'online estimate';
             if m=='B0':r['joint_type_correct']='N/A: no global online model'
-            status=rr.get('status','');r['dangerous_contact_event']=any(a in status for a in ['DANGEROUS','COLLISION','LOADED_CONTACT']);r['physical_hard_stop']=r['dangerous_contact_event'] or any(a in status for a in ['SUSTAINED_CONTACT_LOSS','SUSTAINED_CONTACT_PLANE_DRIFT','LIMIT','NO_SAFE_IK'])
+            status=rr.get('status','');r['dangerous_contact_event']=any(a in status for a in ['DANGEROUS','COLLISION','LOADED_CONTACT']);r['physical_hard_stop']=r['dangerous_contact_event'] or any(a in status for a in ['SUSTAINED_CONTACT_LOSS','SUSTAINED_CONTACT_PLANE_DRIFT','LOW_JOINT_MARGIN','LIMIT','NO_SAFE_IK'])
             r['model_confidence_stop']='MODEL_CONFIDENCE' in status
             trace[(eid,m)]=x
             s=read(folder/'structure_selection.json',{});discovery=read(folder/'discovery_articulation.json');refined=read(folder/'refined_articulation.json')

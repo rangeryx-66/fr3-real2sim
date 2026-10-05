@@ -97,3 +97,44 @@ The reporting layer also evaluates all frozen predictors on a common excluded
 response per episode (`COMMON_ACTION_PREDICTION.csv`). Dataset GT structure is
 an explicitly labeled diagnostic oracle, not a visual Real2Sim prior. No
 post-evaluation metric affects acceptance, control, budgets, or parameters.
+
+## Execution provenance
+
+The first diagnostic attempt copied `selected_job` from a summary. That summary
+omitted `active_structure` injected by the actual native runner. All three affected
+logging-only configurations were rerun from their **actual** `job_private.json`.
+The incomplete runs are retained under `paper_structure_20261005_v1` and excluded
+as infrastructure-invalid, not silently counted as method outcomes.
+
+Both valid regression controls are reused. A duplicate control initialization
+was terminated; its collided video/process log is not delivered as complete
+evidence. The original control completed with a complete independent object log.
+Five logging-only EE tapes were verified byte-identical to the original tapes.
+The effective design remains twenty valid native trials; the four infrastructure
+attempts make twenty-four attempted trials, below the original cap of thirty-eight.
+
+## Equal-phase prediction
+
+The original local-linear translation-phase result is retained as a diagnostic.
+The primary common-response comparison also provides a no-global-hinge local
+geometric model: the probe-only EE translation/rotation slope is frozen, and
+held-out **rotation only** supplies phase. It has no global hinge center and is
+never used by the controller. B1/B2 likewise receive measured EE rotation for
+phase. All use one initial held-out object pose for evaluation anchoring; none
+fits a reference to the remaining test positions.
+
+`frozen_prediction_protocol.json` timestamps this reporting protocol before any
+useful held-out comparison completed. It does not alter online validation,
+model selection, probing, control, or safety. B2's **proposed** refined predictor
+and **actually adopted** predictor are separate columns: a rejected proposal is
+not claimed to have guided the final manipulation.
+
+## Frozen outcome
+
+See [final report](../artifacts/paper_structure_20261005/FINAL_REPORT.md).
+All methods retain 0/12 strict task success and 2/12 actual >=5 degree progress.
+One-shot geometry improves common conditional object prediction over the local
+no-global-hinge predictor on three configurations across two assets. Refined
+proposals worsen position prediction on all three and are never adopted.
+The same-period object-pose oracle exposes an EE-as-object observation limit.
+This round stops and freezes evidence; no new test/perception/physics work follows.
