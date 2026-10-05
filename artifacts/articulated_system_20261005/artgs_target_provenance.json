@@ -1,0 +1,27 @@
+{
+  "official_repository": "https://github.com/YuLiu-LY/ArtGS",
+  "official_commit": "7c1f41be2cb8b96abca13c6a9668dcf7e06d8c2a",
+  "mode": "scene-specific optimization, not general pretrained inference",
+  "joint_type_prior_from_measured_interaction": false,
+  "official_code_hashes": {
+    "train_coarse.py": "4ed24f9ed83713923c277ff7fceb8c0361d82e23ded0ed3693bd29d7ebb327f4",
+    "train_predict.py": "8833e7458ff2195d0f6674844c2c53dc5426a73804bb37ad9c8cc19eab94a6c4",
+    "train.py": "762f6b5388c71600c862c1affcde939e8954a873af30a81f50cf0b0a3117b483",
+    "scene/artgs.py": "be048c41f7bffdc8d36846acfa8c9d5f4956d9b2c542e399c0ab31636a7fd306"
+  },
+  "input_provenance_sha256": "6bc2ce57b02e0cb17032c5797b23193b3af14e9580e1cf8f554917299754122a",
+  "runner_sha256": "716b8322c8039681cb3c68b5f1c34a215424174e6d2770181383e584d6812215",
+  "iterations": {
+    "coarse": 3000,
+    "predict": 3000,
+    "joint": 5000
+  },
+  "environment": {
+    "torch": "2.8.0+cu128",
+    "pytorch-lightning": "2.4.0",
+    "tinycudann": "2.0",
+    "pytorch3d": "0.7.9",
+    "diff-gaussian-rasterization": "0.0.0"
+  },
+  "GT_mesh_or_joint_input": false
+}

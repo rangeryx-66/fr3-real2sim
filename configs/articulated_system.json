@@ -1,0 +1,55 @@
+{
+  "basis_commit": "3af4cd3",
+  "deadline_shanghai": "2026-10-06T05:00:00+08:00",
+  "total_wall_budget_s": 28800,
+  "backend": {
+    "primary": "Ditto",
+    "fallback": "PARIS",
+    "maximum_switches": 1,
+    "iterations_per_pair": 3000,
+    "wall_s_per_pair": 10800,
+    "mesh_resolution": 96,
+    "selected_by_user": "ArtGS",
+    "user_override": "2026-10-05: explicitly requested ArtGS after Ditto/PARIS setup",
+    "coarse_iterations": 3000,
+    "predict_iterations": 3000,
+    "joint_iterations": 5000
+  },
+  "capture": {
+    "task_path_m": 0.24,
+    "maximum_sim_s": 900,
+    "maximum_segments": 240,
+    "wall_s": 7200,
+    "warning_margin_rad": 0.1,
+    "maximum_repositions": 3,
+    "regrasp_budget": 3,
+    "orbit_views": 12
+  },
+  "objects": [
+    {
+      "id": "7320",
+      "joint_type": "revolute",
+      "job": "results/paper_structure_20261005_v1/observation_upper_bound/control_7320/job_private.json",
+      "existing_capture": "results/multistate_skill_20261005/revolute_7320_v3",
+      "small_state": 2,
+      "large_state": 6,
+      "target": 20
+    },
+    {
+      "id": "45746",
+      "joint_type": "prismatic",
+      "job": "results/multistate_skill_20261005/drawer6/job_candidate_1.json",
+      "existing_capture": "results/multistate_skill_20261005/drawer6/candidate_1",
+      "small_state": 2,
+      "large_state": 6,
+      "target": 0.08
+    }
+  ],
+  "safety": {
+    "joint_margin_rad": 0.05,
+    "baseline_limits_unchanged": true,
+    "base_motion_while_gripping": false,
+    "execution_time_object_commands": false,
+    "attachment": false
+  }
+}
