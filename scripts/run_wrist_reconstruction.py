@@ -104,6 +104,26 @@ def report(out,ledger,c):
     for p in sorted(out.glob('capture_*/multistate_capture.json')):
         d=json.loads(p.read_text());lines.append(f"{d['object_id']}: {d['status']}")
         for s in d['states']:lines.append(f"- state {s['estimated_articulation_state']}: {len(s['views'])} views; clean={s.get('clean_wrist_capture',False)}")
+        def read(name,default):
+            file=p.parent/name
+            return json.loads(file.read_text()) if file.exists() else default
+        mobile=read('mobile_wrist_planning.json',[]);retreat=read('retreat_alternatives.json',[]);regrasp=read('reposition_history.json',[])
+        proposals=sum(e.get('operation')=='view' for e in mobile)
+        bases=sum(sum(c.get('kind')=='mobile' and c.get('status') is not None for c in e.get('candidates',[])) for e in mobile)
+        executed_retreat=sum(e.get('status')=='RETREAT_EXECUTED' for e in retreat)
+        actual_repositions=read('mobile_progress.json',{}).get('repositions',0)
+        attempts=sum(len(e.get('regrasp_attempts',[])) for e in regrasp)
+        physical_regrasp=sum(e.get('regrasp_completed',False) for e in regrasp)
+        partial=sum(len(json.loads(f.read_text()).get('views',[])) for f in p.parent.glob('states/*/views_checkpoint.json'))
+        lines+=['', '| Camera goals attempted | Base candidates checked | Base routes executed | Retreat alternatives / executed | Regrasp attempts / completed | Checkpointed wrist views |',
+                '|---|---|---|---|---|---|',
+                f'| {proposals} | {bases} | {actual_repositions} | {len(retreat)} / {executed_retreat} | {attempts} / {physical_regrasp} | {partial} |', '']
+        for failure in [e for e in regrasp if e.get('error')]:lines.append(f"- Recovery stop: {failure['error']}")
+        stops=[e for e in mobile if e.get('operation')=='physical_path_stop']
+        for stop in stops:lines.append(f"- Physical path stop: {stop['reason']}; recovery={stop.get('recovery','pending')}")
+    if ledger.get('resume_provenance'):
+        lines+=['','## Retained previous attempt','',json.dumps(ledger['resume_provenance'],ensure_ascii=False),
+                'Physical actions are reexecuted; no contact impulse, object joint state or attachment is restored. The original total cutoff and cumulative per-object capture budgets are retained.']
     lines+=['','Missing large-span clean captures block a valid A/B/C backend verdict; no fallback is triggered by missing capture. Existing contact baselines remain unchanged.']
     (out/'REPORT.md').write_text('\n'.join(lines)+'\n')
 if __name__=='__main__':main()
