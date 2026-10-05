@@ -38,10 +38,12 @@ class MobileWristPlanner:
             if robot.body not in ('link6','flange_link','gripper_base') and intersects(camera,robot):return False,'SCAN_CAMERA_SELF_COLLISION:'+robot.body,None
         return True,'SAFE',None
     def arm_path(self,scene,start,goal,base,fingers):
-        outer=self
+        outer=self;deadline=min(time.time()+self.policy.get('arm_path_wall_s',60),self.r.deadline)
         class View:
             def __getattr__(self,name):return getattr(outer.model,name)
-            def check(self,q,b):return outer.check(scene,q,b,fingers)
+            def check(self,q,b):
+                if time.time()>=deadline:raise PlanningExhausted('SCAN_ARM_PATH_BUDGET')
+                return outer.check(scene,q,b,fingers)
         return Model.joint_plan(View(),np.asarray(start),np.asarray(goal),base,iterations=self.policy['arm_rrt_iterations'])
     def arm_only(self,T_camera,base,start,row,path=True):
         goal=self.model.ik(optical_to_tcp(T_camera,self.r.capture.cal['X']),base,seed=start,starts=5)
@@ -60,15 +62,20 @@ class MobileWristPlanner:
         # Separate bounded seeds/planner attempts; a failed RRT draw is not a
         # proof that every home path is impossible.
         for attempt in range(self.policy['home_path_attempts']):
-            edge=self.arm_path(scene,start,self.model.home,r.base,r.finger_q());row['alternatives'].append({'attempt':attempt,'valid':edge is not None});self.save()
+            try:edge=self.arm_path(scene,start,self.model.home,r.base,r.finger_q())
+            except PlanningExhausted as error:row['alternatives'].append({'attempt':attempt,'valid':False,'reason':str(error)});self.save();continue
+            row['alternatives'].append({'attempt':attempt,'valid':edge is not None});self.save()
             if edge is not None:r.execute_arm_path(edge,'SYSTEM_SCAN_HOME');return
         raise PlanningExhausted('NO_SAFE_HOME_PATH_RECOVERY_EXHAUSTED')
     def plan(self,T_camera,require_coverage=True):
         r=self.r;T_camera=np.asarray(T_camera);entry={'operation':'view','requested_T_camera':T_camera.tolist(),'initial_base':list(r.base),'candidates':[]};self.rows.append(entry)
+        self.save()
         if require_coverage and visibility(r.capture.observed_cloud,T_camera,r.capture.cal['K'],r.capture.cal['resolution_wh'])<r.capture.config['capture']['minimum_initial_cloud_in_frame']:
             entry['status']='SCAN_VIEW_CROPPED';self.save();raise PlanningExhausted('SCAN_VIEW_CROPPED')
         fixed={'base':list(r.base),'kind':'arm-only'};entry['candidates'].append(fixed)
-        choice=self.arm_only(T_camera,r.base,r.arm_q(),fixed)
+        try:choice=self.arm_only(T_camera,r.base,r.arm_q(),fixed)
+        except PlanningExhausted as error:fixed['status']=str(error);choice=None
+        self.save()
         if choice is not None:choice['route']=None;entry['status']='ARM_ONLY';self.save();return choice
         # The camera target is a task-space goal, not an asset-specific offset.
         normal=-T_camera[:3,2];normal[2]=0
@@ -78,6 +85,7 @@ class MobileWristPlanner:
         for base in bases[:self.policy['maximum_base_candidates_per_view']]:
             if time.time()>=r.deadline or time.monotonic()-started>self.policy['search_wall_s']:break
             row={'base':base,'kind':'mobile'};entry['candidates'].append(row)
+            self.save()
             scene=self.scene(base);ok,why,gap=home_valid(scene,self.model,base)
             if not ok:row['status']=why;continue
             c=self.arm_only(T_camera,base,self.model.home,row,path=False)
@@ -86,7 +94,8 @@ class MobileWristPlanner:
         coarse.sort(key=lambda c:c['score'],reverse=True);self.save()
         for c in coarse[:self.policy['full_path_base_budget']]:
             base=c['base'];row=c['row'];scene=self.scene(base)
-            edge=self.arm_path(scene,self.model.home,c['q_goal'],base,r.finger_q())
+            try:edge=self.arm_path(scene,self.model.home,c['q_goal'],base,r.finger_q())
+            except PlanningExhausted as error:row['status']=str(error);self.save();continue
             if edge is None:row['status']='SCAN_NO_COLLISION_FREE_ARM_PATH';self.save();continue
             path=route(self.root,self.recovery.export_current(self.recovery.current_D),self.model,list(r.base),base)
             row['route']=path;self.save()
