@@ -25,6 +25,20 @@ def source():
     replace('from articulated_system.capture import MultiviewRecorder as CaptureRecorder','from wrist_reconstruction.capture import WristRecorder as CaptureRecorder')
     replace('from articulated_system.recovery import Recovery','from wrist_reconstruction.recovery import Recovery')
     replace('from articulated_system.session import run as run_skill','from wrist_reconstruction.session import run as run_skill')
+    replace("    route=choice['route'];runtime.phase('SYSTEM_BASE_ROUTE')",'''    from interactive_twin_recovery.mobile import MobileRuntimeScene
+    route_export=system_at_base();route_export['shapes']=[e for e in route_export['shapes'] if '/World/mobile_chassis' not in e['path']]
+    route_cache=MobileRuntimeScene(ROOT,route_export,model,list(base))
+    class RouteCollision:
+     def __getattr__(self,name):return getattr(route_cache.scene,name)
+     def check(self,P,moving_pose,allow_handle):
+      if reference is not None:raise RuntimeError('BASE_ROUTE_REQUIRES_RELEASED_GRASP')
+      route_cache.moving_reference=moving_pose
+      return route_cache.check(P,base)
+     def contact_guard(self,contacts,P):return route_cache.contact_guard(contacts,P)
+    collision=RouteCollision()
+    route=choice['route'];runtime.phase('SYSTEM_BASE_ROUTE')''')
+    replace("      if tick%8==0:\n       data=system_at_base();collision=PhysicalScene(data,model,allowed);collision.moving_reference=moving_initial", "      # The existing mobile cache updates transforms and repeats the same\n      # collision checks every physics step, without rebuilding cooked solids.")
+    replace("    runtime.phase('SYSTEM_BASE_LOCK');hold(1.)", "    collision=PhysicalScene(system_at_base(),model,allowed);collision.moving_reference=moving_initial\n    runtime.phase('SYSTEM_BASE_LOCK');hold(1.)")
     replace(" from isaacsim.core.utils.types import ArticulationAction", " from wrist_reconstruction.scene import normal_background\n normal_background(stage)\n from isaacsim.core.utils.types import ArticulationAction")
     replace("   recovery=Recovery(runtime,ROOT,job,export,model,allowed);runtime.recover=recovery.run",'''   def execute_arm_path(path,phase_name,minimum_duration=1.5):
     runtime.phase(phase_name)

@@ -22,6 +22,17 @@ class MobileWristPlanner:
         self.policy=self.r.capture.config['mobile_scan'];self.rows=[]
     def save(self):
         p=self.r.capture.output/'mobile_wrist_planning.json';p.write_text(json.dumps(self.rows,indent=2))
+    def execute_arm(self,path,phase):
+        try:self.r.execute_arm_path(path,phase)
+        except RuntimeError as error:
+            row={'operation':'physical_path_stop','phase':phase,'reason':str(error),'base':list(self.r.base)};self.rows.append(row);self.save()
+            self.r.halt_at_measured_state()
+            if not self.r.return_last_safe():
+                row['recovery']='UNSAFE_TO_RETURN';self.save();raise
+            row['recovery']='COLLISION_CHECKED_SAFE_RETURN';self.save()
+            # The failing path remains a recorded physical failure. Only after
+            # a checked return may the caller try a different view/path.
+            raise PlanningExhausted('SCAN_PHYSICAL_PATH_RECOVERED:'+str(error)) from error
     def scene(self,base):
         data=self.recovery.export_current(self.recovery.current_D)
         return scene_at(self.root,data,self.model,self.r.base,base)
@@ -65,7 +76,9 @@ class MobileWristPlanner:
             try:edge=self.arm_path(scene,start,self.model.home,r.base,r.finger_q())
             except PlanningExhausted as error:row['alternatives'].append({'attempt':attempt,'valid':False,'reason':str(error)});self.save();continue
             row['alternatives'].append({'attempt':attempt,'valid':edge is not None});self.save()
-            if edge is not None:r.execute_arm_path(edge,'SYSTEM_SCAN_HOME');return
+            if edge is not None:
+                try:self.execute_arm(edge,'SYSTEM_SCAN_HOME');return
+                except PlanningExhausted: start=r.arm_q();continue
         raise PlanningExhausted('NO_SAFE_HOME_PATH_RECOVERY_EXHAUSTED')
     def plan(self,T_camera,require_coverage=True):
         r=self.r;T_camera=np.asarray(T_camera);entry={'operation':'view','requested_T_camera':T_camera.tolist(),'initial_base':list(r.base),'candidates':[]};self.rows.append(entry)
@@ -113,7 +126,7 @@ class MobileWristPlanner:
         choice=self.plan(T_camera,require_coverage)
         if choice['route'] is not None:
             self.home();self.recovery.move_base(choice)
-        r.execute_arm_path(choice['arm_path'],'SYSTEM_WRIST_SCAN');return choice
+        self.execute_arm(choice['arm_path'],'SYSTEM_WRIST_SCAN');return choice
     def observe_handle(self,anchor):
         from wrist_reconstruction.geometry import look_at
         r=self.r;normal=np.asarray(self.recovery.visual_current(self.recovery.current_D)['outward_normal_world']);anchor=np.asarray(anchor);attempts=[]
