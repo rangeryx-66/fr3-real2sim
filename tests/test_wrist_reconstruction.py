@@ -4,6 +4,20 @@ from pathlib import Path
 import numpy as np
 
 class WristCaptureTests(unittest.TestCase):
+    def test_large_sensor_volume_has_bounded_framing_recovery(self):
+        from wrist_reconstruction.geometry import coverage_views,calibration
+        root=Path(__file__).resolve().parents[1]
+        cal=calibration(root/'configs/wrist_camera_d435_clear_mount_sim.json')
+        policy=json.loads((root/'configs/wrist_reconstruction_v2_sensor_bounds.json').read_text())['capture']
+        P=np.array([[x,y,z] for x in [0,.7] for y in [0,.7] for z in [0,.6]])
+        original=coverage_views(P,P.mean(0),[0,-1,0],cal,policy)
+        self.assertLess(sum(v['observed_volume_in_frame']==1. for v in original),8)
+        policy['volume_framing_recovery']={'maximum_standoff_m':1.6,'pool_elevations_deg':[0,9],'pool_azimuths_deg':[-80,-60,-40,-20,0,20,40,60,80,100,120,150]}
+        recovered=coverage_views(P,P.mean(0),[0,-1,0],cal,policy)
+        self.assertEqual(len(recovered),48)
+        self.assertGreaterEqual(sum(v['observed_volume_in_frame']==1. for v in recovered),8)
+        self.assertTrue(all(v.get('framing_recovery') for v in recovered))
+
     def test_framing_covers_sparse_edges_despite_dense_front_surface(self):
         from wrist_reconstruction.geometry import observed_volume,coverage_views,calibration,visibility
         root=Path(__file__).resolve().parents[1]

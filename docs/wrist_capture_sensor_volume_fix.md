@@ -35,3 +35,23 @@ Previously captured data are retained rather than relabelled as new success.
 
 Grasp/contact/proxy/controller/force/friction/joint safety files are unchanged.
 The correction does not establish multistate capture or reconstruction success.
+
+## Finite volume-framing recovery
+
+The live 45746 sensor volume exposed a separate range-cap issue: only four of
+48 original proposals frame all observed bounds. A complete eight-view state
+is therefore impossible with that pool. The generic recovery activates only
+when the complete-framing proposal count is below the requested image count.
+It replaces the pool with 48 proposals: twelve azimuths, two elevations (0/9°),
+two distances, and a 1.6 m framing-search bound. QA, actual robot motion, IK,
+collision, and margin requirements remain unchanged. No asset ID is queried.
+
+The same saved sensor data yielded complete framing and 2/20 goal-valid mobile
+placements each at 0/9°. 12° framed the object but had no valid IK in this finite
+diagnostic. Complete paths and physical capture are still separate checks.
+The 7320 original pool already frames all 48 proposals, so its active capture
+continues. Only the insufficient-framing process is reexecuted; its elapsed
+time and original start remain in the cumulative budget. The new independent
+backend uses GPU 5 so it does not compete with the primary GPU 4 backend.
+
+Six regression checks pass, including the bounded large-volume recovery.

@@ -75,6 +75,16 @@ def coverage_views(P,center,normal,cal,policy):
                 result.append({'view_id':len(result),'T_camera':T,'azimuth_deg':azimuth,'elevation_deg':elevation,'lens_distance_m':hi*factor,'observed_volume_in_frame':visibility(corners,T,cal['K'],cal['resolution_wh']),'role':'sensor/FOV driven front/oblique/side/top/interior candidate'})
     # Frontal and modest side baselines first; coverage continues to side/top.
     result.sort(key=lambda v:(abs(v['azimuth_deg'])+abs(v['elevation_deg']-20),v['lens_distance_m']))
+    recovery=policy.get('volume_framing_recovery')
+    framed=sum(v['observed_volume_in_frame']==1. for v in result)
+    if recovery and framed<policy['minimum_clean_views']:
+        # A range cap can make the requested image count impossible before IK.
+        # Use one finite generic fallback; never change QA or safety thresholds.
+        fallback=dict(policy,**recovery);fallback.pop('volume_framing_recovery',None)
+        result=coverage_views(P,center,normal,cal,fallback)
+        for v in result:
+            v.update(framing_recovery='bounded wider-distance/lower-elevation pool',original_framed_pose_count=framed)
+        result=result[:policy['maximum_pose_proposals']]
     return result
 
 
