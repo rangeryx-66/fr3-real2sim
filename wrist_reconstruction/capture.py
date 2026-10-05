@@ -78,13 +78,18 @@ class WristRecorder(CaptureRecorder):
         framing_clouds=[self.initial_framing_cloud]
         self.observed_cloud=self.initial_framing_cloud.copy()
         state_dir=self.output/'states'/f'state_{len(self.states):03d}';state_dir.mkdir(parents=True,exist_ok=True)
-        normal=np.asarray(r.initial_visual['outward_normal_world']);views=[];log={'label':label,'state_estimate':value,'proposals':[],'released':True,'camera_motion':'physical robot joints; no camera teleport view acquisition'}
+        from wrist_reconstruction.checkpoint import closed_views
+        normal=np.asarray(r.initial_visual['outward_normal_world']);views=closed_views(self,state_dir,value);log={'label':label,'state_estimate':value,'proposals':[],'released':True,'camera_motion':'physical robot joints; no camera teleport view acquisition','reused_actual_views':len(views)}
+        if views:(state_dir/'views_checkpoint.json').write_text(json.dumps({'label':label,'estimated_state':value,'views':views},indent=2))
         # Reobserve current shape from sensor data after release, not a door GT.
         proposals=coverage_views(self.observed_cloud,self.center,normal,self.cal,p)
         proposals=proposals[:p['maximum_pose_proposals']]
         for proposal_index,proposal in enumerate(proposals):
+            if len(views)>=p['maximum_clean_views']:break
             if time.monotonic()-start>p['maximum_scan_wall_s']:break
             row={'view_id':proposal['view_id'],'requested_T_camera':proposal['T_camera'].tolist()};log['proposals'].append(row)
+            if any(v['view_id']==proposal['view_id'] for v in views):
+                row.update(status='REUSED_ACTUAL_VIEW');continue
             if not distinct_view(proposal['T_camera'],[np.asarray(v['T_world_camera_optical']) for v in views],p['minimum_camera_baseline_m'],p['minimum_camera_angle_deg']):
                 row.update(status='SKIPPED_REDUNDANT_VIEW');continue
             try:

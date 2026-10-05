@@ -45,7 +45,16 @@ def main():
                                                  enabled=torch.cuda.is_available()):
         model = build_sam3_image_model(checkpoint_path=str(args.checkpoint), load_from_HF=False)
         processor = Sam3Processor(model,confidence_threshold=args.min_score)
-        output = processor.set_text_prompt(state=processor.set_image(image), prompt=args.prompt)
+        state=processor.set_image(image)
+        requested=args.prompt;prompts=[requested]
+        if ' with ' in requested:prompts.append('entire '+requested.split(' with ',1)[0])
+        attempts=[];used=requested
+        for description in prompts:
+            processor.reset_all_prompts(state)
+            output=processor.set_text_prompt(state=state,prompt=description)
+            trial=np.asarray(output['scores'].detach().float().cpu(),dtype=float).reshape(-1)
+            attempts.append({'prompt':description,'instances':len(trial),'maximum_score':float(max(trial)) if len(trial) else None})
+            if len(trial) and max(trial)>=args.min_score:used=description;break
     scores = np.asarray(output['scores'].detach().float().cpu(), dtype=float).reshape(-1)
     masks = np.asarray(output['masks'].detach().cpu())
     if len(scores) == 0 or max(scores) < args.min_score:
@@ -75,7 +84,7 @@ def main():
     rgb = np.asarray(full_image).copy()
     rgb[mask] = (0.45 * rgb[mask] + 0.55 * np.array([0, 255, 50])).astype(np.uint8)
     Image.fromarray(rgb).save(args.output.with_suffix('.overlay.png'))
-    metadata = {'source': 'facebookresearch/sam3', 'prompt': args.prompt,
+    metadata = {'source': 'facebookresearch/sam3', 'prompt': used,'requested_prompt':requested,'prompt_attempts':attempts,'threshold':args.min_score,
                 'checkpoint': str(args.checkpoint.resolve()), 'score': float(scores[best]),
                 'instance_index': best, 'num_instances': len(scores),
                 'complete_instances':complete,

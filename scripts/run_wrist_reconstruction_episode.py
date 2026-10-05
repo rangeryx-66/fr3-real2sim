@@ -79,6 +79,7 @@ def source():
     replace("    if np.linalg.norm(observed_correction[:3,3])>.001:raise RuntimeError('REGRASP_POSE_CHANGED_REPLAN_REQUIRED')", "    # Fresh wrist RGB-D targets have already been collision/IK replanned.\n    pass")
     replace("    saved_memory=memory;memory=None;", "    saved_memory=memory;runtime.saved_estimate=None if memory is None else memory.estimate;memory=None;")
     replace("drive=ConstrainedDrive(tcp(),memory.tangent(tcp()))", "drive=ConstrainedDrive(tcp(),memory.tangent(tcp()) if memory.estimate is not None else memory.directions[0])")
+    replace("memory.initial=tcp().copy();memory.monitor_anchor=tcp().copy();memory.save()", "memory.initial=tcp().copy();from wrist_reconstruction.recovery import reset_model_monitor;reset_model_monitor(memory,tcp());memory.save()")
     # Keep wrist extrinsics rigidly attached to MEASURED TCP, not proposed pose.
     replace('  world.step(render=False,update_fabric=True)', '  skill_capture.sync(tcp())\n  world.step(render=False,update_fabric=True)')
     replace('  return s\n def move', '  if skill_capture.runtime is not None:skill_capture.runtime.last_safe_arm=np.asarray(s["q"])[arm].copy()\n  return s\n def move')

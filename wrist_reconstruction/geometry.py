@@ -74,7 +74,9 @@ def coverage_views(P,center,normal,cal,policy):
                 T=look_at(center+hi*factor*ray,center)
                 result.append({'view_id':len(result),'T_camera':T,'azimuth_deg':azimuth,'elevation_deg':elevation,'lens_distance_m':hi*factor,'observed_volume_in_frame':visibility(corners,T,cal['K'],cal['resolution_wh']),'role':'sensor/FOV driven front/oblique/side/top/interior candidate'})
     # Frontal and modest side baselines first; coverage continues to side/top.
-    result.sort(key=lambda v:(abs(v['azimuth_deg'])+abs(v['elevation_deg']-20),v['lens_distance_m']))
+    if policy.get('view_order')=='azimuth_groups':
+        result.sort(key=lambda v:(abs(v['azimuth_deg']),v['azimuth_deg'],abs(v['elevation_deg']-20),v['lens_distance_m']))
+    else:result.sort(key=lambda v:(abs(v['azimuth_deg'])+abs(v['elevation_deg']-20),v['lens_distance_m']))
     recovery=policy.get('volume_framing_recovery')
     framed=sum(v['observed_volume_in_frame']==1. for v in result)
     if recovery and framed<policy['minimum_clean_views']:
@@ -93,5 +95,10 @@ def distinct_view(T,selected,minimum_baseline_m,minimum_angle_deg):
     for previous in selected:
         distance=np.linalg.norm(np.asarray(T)[:3,3]-np.asarray(previous)[:3,3])
         angle=np.rad2deg(Rotation.from_matrix(np.asarray(T)[:3,:3]@np.asarray(previous)[:3,:3].T).magnitude())
-        if distance<minimum_baseline_m or angle<minimum_angle_deg:return False
+        delta=np.asarray(T)[:3,3]-np.asarray(previous)[:3,3]
+        optical=np.asarray(previous)[:3,2]
+        transverse=np.linalg.norm(delta-np.dot(delta,optical)*optical)
+        # Stereo translation can provide parallax without a camera rotation.
+        # Retain the spatial bound and reject same-ray zoom-only duplicates.
+        if distance<minimum_baseline_m or (angle<minimum_angle_deg and transverse<minimum_baseline_m):return False
     return True

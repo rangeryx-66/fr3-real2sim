@@ -42,6 +42,9 @@ def main():
             capture_budget=max(0,c['capture']['wall_s']-ledger.get('resumed_capture_wall_s',{}).get(o['id'],0))
             output=out/('capture_'+o['id']);job.update(output=str(output),episode_id='wrist_'+o['id'],gpu=c.get('capture_gpus',{}).get(o['id'],a.gpu),deadline_shanghai=c['deadline_shanghai'],wall_clock_budget_s=c['capture']['wall_s'],wrist_experiment=c,camera_calibration=str(ROOT/c['camera_calibration']),object_prompt=o['prompt'],system_capture=c['capture'])
             job['wall_clock_budget_s']=capture_budget
+            if o.get('resume_closed_capture'):
+                sources=o['resume_closed_capture'];sources=[sources] if isinstance(sources,str) else sources
+                job['resume_closed_capture']=[str(ROOT/s) for s in sources]
             job['skill'].update(targets=o['targets'],capture_interval=o.get('capture_interval',30. if job['skill']['joint_type']=='revolute' else .05),minimum_capture_separation=.5 if job['skill']['joint_type']=='revolute' else .002,maximum_segments=c['capture']['maximum_segments'],maximum_sim_s=c['capture']['maximum_sim_s'],maximum_path_m=c['capture']['task_path_m'],warning_margin_rad=c['capture']['warning_margin_rad'])
             jp=out/(o['id']+'_job.json');jp.write_text(json.dumps(job,indent=2))
             capture_jobs.append((o,output,jp,capture_budget))

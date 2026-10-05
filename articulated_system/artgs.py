@@ -15,14 +15,17 @@ def prepare(capture_root, output, start, end, size=320):
     if abs(states[1]['estimated_articulation_state']-states[0]['estimated_articulation_state'])<1e-6:raise ValueError('NO_OBSERVED_STATE_CHANGE')
     maps=[{v.get('view_id',i):v for i,v in enumerate(s['views'])} for s in states]
     common_ids=sorted(set(maps[0])&set(maps[1]))
-    if len(common_ids)<2:raise ValueError('INSUFFICIENT_COMMON_CALIBRATED_VIEWS')
+    if min(map(len,maps))<2:raise ValueError('INSUFFICIENT_CALIBRATED_VIEWS')
     # Hold out the SAME physical camera IDs in both states. Occluded views
     # cannot silently shift list indices and leak a reserved camera into train.
-    held=common_ids[-2:] if len(common_ids)>=6 else [];train=[i for i in common_ids if i not in held]
+    held=common_ids[-2:] if len(common_ids)>=6 else []
+    held_by_state=[held if held else sorted(v)[-1:] for v in maps]
+    train_by_state=[[i for i in sorted(v) if i not in h] for v,h in zip(maps,held_by_state)]
+    train=[i for i in common_ids if i not in held]
     clouds=[];cloud_colors=[]
-    for views in maps:
+    for views,train_ids in zip(maps,train_by_state):
         P=[];C=[]
-        for i in train:
+        for i in train_ids:
             data=np.load(root/views[i]['directory']/'point_cloud.npz')
             if str(data['units'])!='m':raise ValueError('POINT_CLOUD_UNITS_NOT_METERS')
             P.append(data['points_world_m']);C.append(data['rgb'])
@@ -30,15 +33,15 @@ def prepare(capture_root, output, start, end, size=320):
     # Reserved camera geometry does not enter even the normalization prior.
     lo=np.minimum(clouds[0].min(0),clouds[1].min(0));hi=np.maximum(clouds[0].max(0),clouds[1].max(0));center=(lo+hi)/2;scale=float((hi-lo).max()*1.1)
     if not np.isfinite(scale) or scale<=0:raise ValueError('INVALID_METRIC_SCALE')
-    v0=maps[0][train[0]]
+    v0=maps[0][train_by_state[0][0]]
     with Image.open(root/v0['directory']/'rgb.png') as image:w,h=image.size
     # Preserve the full calibrated rectangular sensor FOV. A centered square
     # crop removed door/drawer extremities in the old wrist-like inputs.
     output_w=int(size);output_h=max(1,int(round(size*h/w)))
     common=np.asarray(v0['K'],float).copy();common[0]*=output_w/w;common[1]*=output_h/h
     audit=[];yy,xx=np.indices((output_h,output_w),dtype=np.float32)
-    for label,state,views,P,C in zip(['start','end'],states,maps,clouds,cloud_colors):
-        for split,ids in [('train',train),('test',held or train[:1])]:
+    for label,state,views,P,C,train_ids,held_ids in zip(['start','end'],states,maps,clouds,cloud_colors,train_by_state,held_by_state):
+        for split,ids in [('train',train_ids),('test',held_ids)]:
             frames=[];folder=out/label/split;(folder/'rgba').mkdir(parents=True,exist_ok=True);(folder/'depth').mkdir(exist_ok=True)
             for i in ids:
                 v=views[i];src=root/v['directory'];meta=json.loads((src/'camera.json').read_text())
@@ -64,4 +67,5 @@ def prepare(capture_root, output, start, end, size=320):
         PlyData([PlyElement.describe(array,'vertex')],text=False).write(str(out/f'point_cloud_{label}.ply'))
     (out/'transforms_train.json').write_text((out/'transforms_train_start.json').read_text());(out/'points3d.ply').write_bytes((out/'point_cloud_start.ply').read_bytes())
     provenance={'adapter_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'backend':'ArtGS official Scene/readInfo_2states','capture_root':str(root),'states':[start,end],'normalization':{'world_center_m':center.tolist(),'world_scale_m':scale,'world_to_normalized':'(point-center)/scale','computed_from_training_views_only':True},'train_views':train,'held_out_views':held,'view_selection':'shared physical camera IDs, not shifted list positions','independent_view_validation_available':bool(held),'camera_axes':'OpenGL from ROS optical','common_intrinsics':common.tolist(),'output_resolution_wh':[output_w,output_h],'intrinsics_adapter':'full rectangular sensor FOV; calibrated rays resampled to common K; no central crop','depth_storage':'normalized optical Z *1000 uint16; official loader /1000','initialization':'separate per-state training clouds','observations_from_distinct_states_merged':False,'GT_mesh_or_axis_input':False,'joint_family_input':'official train_predict; optional measured-EE family separately labelled','parts_assumption':2,'audit':audit}
+    provenance.update(train_views_by_state=dict(zip(['start','end'],train_by_state)),held_out_views_by_state=dict(zip(['start','end'],held_by_state)),independent_view_validation_available=True,view_selection='all calibrated per-state views; shared proposal groups reserved when available; official loader samples each state independently')
     (out/'input_provenance.json').write_text(json.dumps(provenance,indent=2));return provenance

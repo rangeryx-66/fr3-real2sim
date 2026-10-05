@@ -1,11 +1,17 @@
 """Bounded official ArtGS coarse -> type prediction -> joint reconstruction."""
-import argparse,json,os,sys,time,hashlib,traceback,importlib.metadata
+import argparse,json,os,sys,time,hashlib,traceback,importlib.metadata,shutil
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 
 def main():
  p=argparse.ArgumentParser();p.add_argument('--source',type=Path,required=True);p.add_argument('--backend',type=Path,default=ROOT/'third_party/artgs-official');p.add_argument('--stage',choices=['coarse','predict','joint','export','full'],default='full');p.add_argument('--coarse-iterations',type=int,default=3000);p.add_argument('--predict-iterations',type=int,default=3000);p.add_argument('--joint-iterations',type=int,default=5000);p.add_argument('--wall-s',type=int,default=10800);p.add_argument('--type-from-interaction',action='store_true');a=p.parse_args()
- source=a.source.resolve();backend=a.backend.resolve();os.chdir(backend);sys.path.insert(0,str(backend))
+ source=a.source.resolve();backend=a.backend.resolve();sys.path.insert(0,str(backend))
+ outputs=Path(str(source).replace('/data/','/outputs/'));outputs.mkdir(parents=True,exist_ok=True)
+ runtime=outputs/'official_runtime';runtime.mkdir(exist_ok=True)
+ if not (runtime/'arguments').exists():shutil.copytree(backend/'arguments',runtime/'arguments')
+ # Official stages read/write relative arguments/*.json. Isolate these per
+ # reconstruction, so parallel assets cannot overwrite each other's type.
+ os.chdir(runtime)
  import torch
  from argparse import ArgumentParser
  from arguments import ModelParams,OptimizationParams,PipelineParams
@@ -15,7 +21,7 @@ def main():
  status=outputs/('backend_status_interaction_prior.json' if a.type_from_interaction else 'backend_status.json');start=time.time();completed=[]
  joint_name='artgs_interaction_prior' if a.type_from_interaction else 'artgs';reconstruction_name='reconstruction_interaction_prior' if a.type_from_interaction else 'reconstruction'
  def selected_type():
-  if not a.type_from_interaction:return json.loads((backend/'arguments/joint_types_cgs.json').read_text())['capture']['sensor'][source.name]
+  if not a.type_from_interaction:return json.loads((runtime/'arguments/joint_types_cgs.json').read_text())['capture']['sensor'][source.name]
   audit=json.loads((source/'input_provenance.json').read_text());doc=json.loads((Path(audit['capture_root'])/'multistate_capture.json').read_text());estimate=doc['states'][audit['states'][1]].get('articulation_estimate') or {}
   if not estimate:
    memory=Path(audit['capture_root'])/'structured_memory.json'
@@ -32,7 +38,7 @@ def main():
  # Official scripts store scene metadata here; add only input schema fields,
  # not reference joints or reconstructed answers.
  for file,value in [('num_slots.json',2),('larger_motion_state.json',None),('joint_types_cgs.json',None)]:
-  path=backend/'arguments'/file;d=json.loads(path.read_text());d.setdefault('capture',{}).setdefault('sensor',{})
+  path=runtime/'arguments'/file;d=json.loads(path.read_text());d.setdefault('capture',{}).setdefault('sensor',{})
   if value is not None:d['capture']['sensor'][source.name]=value
   path.write_text(json.dumps(d,indent=2))
  def train(module,name,n,saving=False):

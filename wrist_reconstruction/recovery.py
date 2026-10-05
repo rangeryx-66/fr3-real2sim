@@ -7,6 +7,11 @@ from articulated_system.recovery import Recovery as LegacyRecovery,normalize_pla
 from wrist_reconstruction.capture import snapshot
 
 
+def reset_model_monitor(memory,T):
+    """Unknown discovery has no model to forecast; safety remains independent."""
+    memory.monitor_anchor=np.asarray(T).copy() if memory.estimate is not None else None
+
+
 def local_cloud(recorder,anchor,camera=None):
     P=[]
     # Pre-release stability uses existing sensor cameras, not instance masks.

@@ -4,6 +4,61 @@ from pathlib import Path
 import numpy as np
 
 class WristCaptureTests(unittest.TestCase):
+    def test_unknown_regrasp_does_not_forecast_a_missing_model(self):
+        from operational_structure.confidence import OperationalMemory
+        from wrist_reconstruction.recovery import reset_model_monitor
+        memory=OperationalMemory.__new__(OperationalMemory);memory.estimate=None;memory.initial=np.eye(4)
+        reset_model_monitor(memory,np.eye(4))
+        self.assertIsNone(memory.consistency_error(np.eye(4)))
+        memory.estimate={'joint_type':'revolute'};T=np.eye(4);T[0,3]=.4
+        reset_model_monitor(memory,T);np.testing.assert_array_equal(memory.monitor_anchor,T)
+
+    def test_stereo_baseline_counts_but_zoom_only_does_not(self):
+        from wrist_reconstruction.geometry import distinct_view
+        first=np.eye(4);stereo=np.eye(4);stereo[0,3]=.10;zoom=np.eye(4);zoom[2,3]=.10
+        self.assertTrue(distinct_view(stereo,[first],.04,8.))
+        self.assertFalse(distinct_view(zoom,[first],.04,8.))
+
+    def test_view_groups_preserve_coverage_with_less_backtracking(self):
+        from wrist_reconstruction.geometry import coverage_views,calibration,distinct_view
+        root=Path(__file__).resolve().parents[1];cal=calibration(root/'configs/wrist_camera_d435_clear_mount_sim.json')
+        policy=json.loads((root/'configs/wrist_reconstruction_v2_sensor_bounds.json').read_text())['capture']
+        P=np.array([[x,y,z] for x in [0,.5] for y in [0,.3] for z in [0,.3]])
+        def first_eight(p):
+            chosen=[]
+            for v in coverage_views(P,P.mean(0),[0,-1,0],cal,p):
+                if distinct_view(v['T_camera'],[x['T_camera'] for x in chosen],.04,8):chosen.append(v)
+                if len(chosen)==8:break
+            return chosen
+        original=first_eight(policy);grouped=first_eight(dict(policy,view_order='azimuth_groups'))
+        self.assertEqual(len(grouped),8)
+        self.assertEqual({v['azimuth_deg'] for v in grouped},{v['azimuth_deg'] for v in original})
+        travel=lambda views:sum(np.linalg.norm(a['T_camera'][:3,3]-b['T_camera'][:3,3]) for a,b in zip(views,views[1:]))
+        self.assertLess(travel(grouped),travel(original))
+
+    def test_closed_observation_reuse_never_restores_physics(self):
+        from types import SimpleNamespace
+        from PIL import Image
+        from articulated_interaction_skill.capture import backproject
+        from wrist_reconstruction.checkpoint import closed_views
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp);source=root/'previous';initial=source/'initial_sensor_observation';initial.mkdir(parents=True);folder=source/'states/state_000/view_00';folder.mkdir(parents=True)
+            K=np.array([[15.,0,6.],[0,15.,4.],[0,0,1.]]);T=np.eye(4);depth=np.ones((8,12))*.5;mask=np.ones((8,12),bool);P,_=backproject(depth,K,T,mask,stride=4)
+            np.save(initial/'depth_m.npy',depth);np.save(initial/'sensor_mask.npy',mask);(initial/'camera.json').write_text(json.dumps({'K':K.tolist(),'T_world_camera_optical':T.tolist()}))
+            qa={'robot_pixel_ratio':0.,'object_frame_clipped':False,'visible_moving_part_pixels':48,'object_coverage':.5}
+            meta={'K':K.tolist(),'resolution_wh':[12,8],'qa':qa};(folder/'camera.json').write_text(json.dumps(meta))
+            Image.fromarray(np.full((8,12,3),127,np.uint8)).save(folder/'rgb.png');Image.fromarray(mask.astype(np.uint8)*255).save(folder/'mask.png');np.save(folder/'depth_m.npy',depth);np.savez(folder/'point_cloud.npz',points_world_m=P)
+            view={'view_id':0,'directory':'states/state_000/view_00','K':K.tolist(),'T_world_camera_optical':T.tolist(),'qa':qa}
+            (source/'states/state_000/views_checkpoint.json').write_text(json.dumps({'estimated_state':0.,'views':[view]}));(source/'multistate_capture.json').write_text(json.dumps({'object_id':'test','capture_mode':'wrist_camera_capture'}))
+            output=root/'new';target=output/'states/state_000';target.mkdir(parents=True)
+            policy={'resume_observation_max_displacement_m':.001,'maximum_robot_pixel_ratio':.005,'minimum_moving_part_pixels':1,'minimum_object_coverage':.15,'maximum_object_coverage':.85}
+            r=SimpleNamespace(job={'resume_closed_capture':str(source)},states=[],metadata={'asset_id':'test'},initial_framing_cloud=P,config={'capture':policy},output=output,cal={'K':K,'resolution_wh':[12,8]})
+            reused=closed_views(r,target,0.);self.assertEqual(len(reused),1);self.assertFalse(reused[0]['acquired_in_current_execution']);self.assertEqual((target/'view_00/rgb.png').read_bytes(),(folder/'rgb.png').read_bytes())
+            self.assertEqual(closed_views(r,target,.05),[])
+            r.initial_framing_cloud=P+[.005,0,0]
+            self.assertEqual(closed_views(r,target,0.),[])
+            audit=json.loads((output/'observation_resume.json').read_text());self.assertFalse(audit['physical_state_restore']);self.assertEqual(audit['status'],'FRESH_CAPTURE_REQUIRED')
+
     def test_large_sensor_volume_has_bounded_framing_recovery(self):
         from wrist_reconstruction.geometry import coverage_views,calibration
         root=Path(__file__).resolve().parents[1]
@@ -64,6 +119,14 @@ class WristCaptureTests(unittest.TestCase):
             (root/'multistate_capture.json').write_text(json.dumps({'states':states,'mask_source':'SAM3'}))
             out=r/'input';meta=prepare(root,out,0,1,size=20);image=np.asarray(Image.open(out/'start/train/rgba/0000.png'))
             self.assertEqual(image.shape,(12,20,4));np.testing.assert_array_equal(image[5,0,:3],[255,0,0]);np.testing.assert_array_equal(image[5,-1,:3],[0,255,0]);self.assertFalse(meta['audit'][0]['masked_robot'])
+            import shutil
+            extra=root/'s0/v6';shutil.copytree(root/'s0/v0',extra)
+            states[0]['views'].append(dict(states[0]['views'][0],view_id=6,directory='s0/v6'))
+            (root/'multistate_capture.json').write_text(json.dumps({'states':states,'mask_source':'SAM3'}))
+            meta=prepare(root,r/'unpaired',0,1,size=20)
+            self.assertIn(6,meta['train_views_by_state']['start'])
+            self.assertNotIn(6,meta['train_views_by_state']['end'])
+            self.assertEqual(meta['held_out_views_by_state']['start'],[4,5])
 
     def test_frozen_physical_contact_sources_are_not_edited(self):
         import hashlib,subprocess
