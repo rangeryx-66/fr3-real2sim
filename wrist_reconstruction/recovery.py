@@ -75,6 +75,25 @@ class Recovery(LegacyRecovery):
         result=recover(self.root,self.export_current(D),self.plan,self.visual_current(D),list(self.r.base),policy,seed=61,deadline=min(time.time()+600,self.r.deadline))
         return result
 
+    def release_failed_closure(self,D):
+        """Same slow release and checked retreat, before another candidate."""
+        from wrist_reconstruction.planner import PlanningExhausted
+        r=self.r;D0,_,cloud=self.observe(D);plans=self.retreat.plans(D0)
+        if not plans:raise PlanningExhausted('FAILED_CLOSURE_NO_SAFE_RETREAT')
+        r.drive.active=False;r.hold(2.);r.configure_release(plans[0]['opening'],D0)
+        try:
+            for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
+                r.release_increment(.001);r.hold(1.);D1,_,_=self.observe(D0);delta=D1@np.linalg.inv(D0)
+                if np.max(np.linalg.norm(cloud@delta[:3,:3].T+delta[:3,3]-cloud,axis=1))>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
+                if r.released():break
+            else:raise RuntimeError('RELEASE_CONTACT_NOT_CLEARED')
+        except BaseException:
+            r.reclose_at_current_pose();raise
+        self.released=True
+        if not any(self.retreat.execute(candidate) for candidate in plans):raise PlanningExhausted('FAILED_CLOSURE_RETREAT_EXHAUSTED')
+        self.current_D=D1
+        return {'released':True,'retreat_completed':True,'object_commands':False,'retreat_alternatives':len(plans)}
+
     def run(self,value,capture_label=None):
         from wrist_reconstruction.planner import PlanningExhausted
         r=self.r;row={'index':len(self.history),'start_state_estimated':value,'initial_base':list(r.base),'object_reset':False,'regrasp_attempts':[]};self.history.append(row)
@@ -104,6 +123,7 @@ class Recovery(LegacyRecovery):
                 captured=r.capture.scan(capture_label,value,getattr(r,'saved_estimate',None));row['wrist_scan_completed']=captured['clean_wrist_capture'];save()
             # Reobserve after scan/base changes. Planning uncertainty is recoverable;
             # physical contact/safety errors continue to propagate unchanged.
+            physical_attempt=0
             for attempt in range(self.job['system_capture']['regrasp_budget']):
                 item={'attempt':attempt,'initial_base':list(r.base)};row['regrasp_attempts'].append(item);save()
                 try:
@@ -118,7 +138,14 @@ class Recovery(LegacyRecovery):
                     self.mobile.home();result=self.grasp_recovery(self.current_D);item['mobile_grasp_search']=result;save()
                     if result['selected'] is None:continue
                     self.move_base(result['selected']);D0=self.current_D;continue
-                r.regrasp(fresh,np.eye(4));self.released=False;item['physical_regrasp_completed']=True;row['regrasp_completed']=True;save()
+                choices=fresh['plan']['trial_candidates'];selected=min(physical_attempt,len(choices)-1)
+                fresh=copy.deepcopy(fresh);fresh['plan']['trial_candidates']=[choices[selected]];item['physical_candidate_index']=selected;save()
+                try:r.regrasp(fresh,np.eye(4))
+                except RuntimeError as error:
+                    if str(error)!='RECOVERY_BILATERAL_GRASP_FAIL':raise
+                    item['physical_regrasp_error']=str(error);save()
+                    item['safe_release_and_retreat']=self.release_failed_closure(Dnew);physical_attempt+=1;D0=self.current_D;save();continue
+                self.released=False;item['physical_regrasp_completed']=True;row['regrasp_completed']=True;save()
                 r.state_offset=value;r.reset_grasp_memory();self.grasp_reference_ee=r.tcp().copy();self.grasp_reference_D=Dnew.copy();row['status']='REOBSERVED_REPLANNED_REGRASPED';save()
                 checkpoint={'stage':'stable_regrasp','estimated_state':value,'base':list(r.base),'current_observed_D':Dnew.tolist(),'repositions':self.count,'physical_state_restore_requires_command_reexecution':True,'attachment':False,'object_state_replay':False}
                 (r.capture.output/'capture_checkpoint.json').write_text(json.dumps(checkpoint,indent=2));return True

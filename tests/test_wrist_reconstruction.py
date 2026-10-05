@@ -4,6 +4,25 @@ from pathlib import Path
 import numpy as np
 
 class WristCaptureTests(unittest.TestCase):
+    def test_failed_closure_release_precedes_retreat_and_preserves_motion_stop(self):
+        from types import SimpleNamespace
+        from wrist_reconstruction.recovery import Recovery
+        events=[];calls=[0]
+        r=SimpleNamespace(drive=SimpleNamespace(active=True),hold=lambda t:None,configure_release=lambda *a:events.append('configure'),release_increment=lambda d:events.append(('release',d)),released=lambda:True,reclose_at_current_pose=lambda:events.append('reclose'))
+        recovery=Recovery.__new__(Recovery);recovery.r=r;recovery.released=False;recovery.job={'wrist_experiment':{'retreat':{'maximum_release_increments':2}}}
+        recovery.observe=lambda D:(np.eye(4),{},np.array([[0.,0.,0.],[.1,0.,0.]]))
+        def execute(plan):
+            self.assertTrue(recovery.released);events.append('retreat');return True
+        recovery.retreat=SimpleNamespace(plans=lambda D:[{'opening':.04}],execute=execute)
+        recovery.release_failed_closure(np.eye(4));self.assertEqual(events,['configure',('release',.001),'retreat'])
+        events.clear();recovery.released=False
+        def moving(D):
+            T=np.eye(4);T[0,3]=.002 if calls[0] else 0.;calls[0]+=1
+            return T,{},np.array([[0.,0.,0.],[.1,0.,0.]])
+        recovery.observe=moving
+        with self.assertRaisesRegex(RuntimeError,'UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION'):recovery.release_failed_closure(np.eye(4))
+        self.assertIn('reclose',events);self.assertNotIn('retreat',events);self.assertFalse(recovery.released)
+
     def test_unknown_regrasp_does_not_forecast_a_missing_model(self):
         from operational_structure.confidence import OperationalMemory
         from wrist_reconstruction.recovery import reset_model_monitor
