@@ -88,8 +88,12 @@ if __name__=='__main__':
     import argparse
     p=argparse.ArgumentParser();p.add_argument('--job',type=Path,required=True);a=p.parse_args();job=json.loads(a.job.read_text());out=Path(job['output']);out.mkdir(parents=True,exist_ok=True)
     expanded=source();(out/'expanded_wrist_program.py').write_text(expanded)
-    paths=[Path(__file__),ROOT/'configs/wrist_camera_d435_nominal.json',*sorted((ROOT/'wrist_reconstruction').glob('*.py'))]
+    cal_path=Path(job['camera_calibration'])
+    if not cal_path.is_absolute():cal_path=ROOT/cal_path
+    paths=[Path(__file__),cal_path,*sorted((ROOT/'wrist_reconstruction').glob('*.py'))]
     (out/'wrist_orchestration_provenance.json').write_text(json.dumps({
+        'camera_calibration_path':str(cal_path),
+        'camera_calibration_sha256':hashlib.sha256(cal_path.read_bytes()).hexdigest(),
         'job_sha256':hashlib.sha256(a.job.read_bytes()).hexdigest(),
         'expanded_program_sha256':hashlib.sha256(expanded.encode()).hexdigest(),
         'sources':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
