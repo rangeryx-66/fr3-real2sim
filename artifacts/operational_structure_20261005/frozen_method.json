@@ -1,0 +1,430 @@
+{
+  "schema": "operational-structure-v1",
+  "frozen_unix_s": 1791170361.270785,
+  "active": {
+    "discovery": {
+      "minimum_model_score_gap": 0.8,
+      "minimum_rotation_deg": 0.5,
+      "maximum_axis_dispersion_deg": 12.0,
+      "radius_range_m": [
+        0.03,
+        3.0
+      ],
+      "maximum_radius_cv": 0.35,
+      "maximum_tangent_dispersion_deg": 15.0,
+      "maximum_provisional_rotation_residual_rad": 0.002,
+      "bootstrap_seed": 61
+    },
+    "refinement": {
+      "segment_m": 0.001,
+      "segment_timeout_s": 4.0,
+      "maximum_segments": 120,
+      "maximum_path_m": 0.12,
+      "maximum_sim_s": 270.0,
+      "target_angle_deg": 6.0,
+      "robust_every_segments": 5,
+      "reverse_required": false
+    },
+    "final": {
+      "minimum_angle_deg": 2.0,
+      "position_rmse_m": 0.0003,
+      "rotation_rmse_rad": 0.001
+    },
+    "continuation": {
+      "maximum_segments": 60,
+      "segment_m": 0.001,
+      "segment_timeout_s": 4.0,
+      "maximum_s": 60.0,
+      "target_angle_deg": 5.5,
+      "global_path_m": 0.12,
+      "global_sim_s": 270.0,
+      "fit_usage": "never"
+    },
+    "confidence": {
+      "soft_trigger_m": 0.001,
+      "soft_duration_s": 0.1,
+      "maximum_unexplained_refits": 3,
+      "recent_samples": 48,
+      "step_reduction": 0.5,
+      "minimum_step_scale": 0.25,
+      "pause_s": 0.5,
+      "hard_window_motion_m": 0.001,
+      "explanation_position_m": 0.00017329725494121152,
+      "explanation_rotation_rad": 0.0003439311916708028
+    },
+    "operational": {
+      "position_rmse_m": 9.791253471245057e-05,
+      "rotation_rmse_rad": 0.0003439311916708028,
+      "endpoint_error_m": 0.000172981101414107,
+      "tangent_error_deg": 0.7687535361081039,
+      "position_repeat_scale_m": 2e-05,
+      "rotation_repeat_scale_rad": 2e-05
+    }
+  },
+  "DEV_calibration_sha256": "7be234a13726dfc61d997add1927f40a5618656ef2c4728a773bf0a25b75a83e",
+  "dev_independent_validation_reached": {
+    "45600": true,
+    "38516": false,
+    "45403": false,
+    "45134": true,
+    "regression_7320": true,
+    "regression_45621": true
+  },
+  "soft_refits": 3,
+  "regression_controls_passed": true,
+  "code_sha256": {
+    "operational_structure/benchmark.py": "f37401f8a46f4362eb596411f73437ab49584fe3a83c0d3b7827fb31f310db94",
+    "operational_structure/refinement.py": "73a23da91c73d2ac86d3c0f63bc328cd0f6c69fb99bf80ca63fb675ebdd72623",
+    "operational_structure/prediction.py": "66ba432e66c34bd726e907d436bf9c6cee944e7e4602914a1b42a8afe46b9fb7",
+    "operational_structure/__init__.py": "d990a77529b79767e32b04ee1df90d2703bbcecce35a47731a2a5c6a169d4b52",
+    "operational_structure/calibration.py": "ba5ed5554a6029fc25db2543abf7345d17022e23ecf9d864261071128be54e82",
+    "operational_structure/confidence.py": "eddfefa070c07e463e809fe6ef0618aefbd5de366f68ce64ed6469605ffa1072",
+    "operational_structure/reporting.py": "9d6120f3491c93c0505d444380ed74c041e72916f8b7846280445a62498442a8",
+    "scripts/run_operational_structure_benchmark.py": "42e20cfa66bf3a230004637f51d2b2dcfb4c3f672fc3aa1b237b85d220c77cb1",
+    "scripts/run_operational_structure_episode.py": "d646b07dddae9f2f44ca57194d330ac503401e62c6b4c5040a109d6152ee11d0",
+    "configs/operational_structure.yaml": "e0dc9e7202e657676d3cf26e68031dd55884ba7e6759d46dd3d52d8956c79259",
+    "active_structure/discovery.py": "983014f52a3f73e5b2b3d536a07a1e9bac6edadc3f271c37f3b7e0ad2797012c",
+    "active_structure/benchmark.py": "f39b93cf82ffbbb4a7fd57ee837f5ee05a3627f4671a4fdbb990cd3d7d143727",
+    "active_structure/refinement.py": "db6359d92c8e4bc03200d7b0fb85ded2b01e29d83d958b9b9d96a4abd592c81a",
+    "active_structure/__init__.py": "a72f70d1ecd36740af50ef41753997f6739392ea11dbbdc4a4db616c65bb6c06",
+    "active_structure/reporting.py": "bda49b0c36e81afb4c45688c76aca619e4b9bbb060ccf31f3512eb4519237da8",
+    "scripts/run_active_structure_episode.py": "78c580ff0bd9366d0d3a2180e28056bbf5694ff3c6b92ece6cd49e8a911ba1f7",
+    "cross_object_structure/assets.py": "34f087e627d1db9eb5aac8b02e0b02121a3751e837fc4c9668da164fdc6470ee",
+    "cross_object_structure/benchmark.py": "61e1b2d524cb2af8babafef51588543e1c5cb779d6572aefc33e491f4fa104cb",
+    "cross_object_structure/refinement.py": "7e03ef72af999e16a1bd85f107814cd1c69ee0d5ce2791f55c8e3685579fbf91",
+    "cross_object_structure/scene.py": "f8133ebd814693bd28e24f128f5e6f50daea23df1c49898cccbf4b37e778e002",
+    "cross_object_structure/prediction.py": "ea8d47890662c0f808ebd63b5b669805089de0035a01ac188821d10e064a5e5b",
+    "cross_object_structure/__init__.py": "020c703dcde462e137ccb3a07005c66eec9f5fd9c841ee95307076b8a0a97c74",
+    "cross_object_structure/reporting.py": "7246cfaf320d1c294549d9c706b7515f89a419a2d9c0a29dd37bb86ec021c27a",
+    "scripts/run_interactive_twin_refinement_episode.py": "57b79ed6f7a1fed192f63fc1c7ca9a86ea775de9f5424ad10a3f9fe8d7019c3c",
+    "interactive_twin_refinement/fitting.py": "cea9094e7c2991ad30f57b386cc46dc0823e3b6fa32104305e1aeb8555d67cb8"
+  },
+  "config": {
+    "schema": "active-structure-v1",
+    "output": "results/operational_structure_20261005_v3",
+    "original_config": "configs/interactive_twin.yaml",
+    "runtime": {
+      "isaac_python": "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+      "analysis_python": "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+      "gpus": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "deadline_shanghai": "2026-10-06T05:00:00+08:00",
+      "episode_wall_clock_s": 2400,
+      "ffmpeg_directory": "/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static"
+    },
+    "assets": {
+      "archive": "/data1/home/rangeryx/datasets/physx_mobility/PhysX-Mobility.zip",
+      "seed": 732061662,
+      "previously_prepared_ids": [
+        "7130",
+        "7138",
+        "7221",
+        "7236",
+        "7273",
+        "7290",
+        "7292",
+        "7304",
+        "7306",
+        "7310",
+        "7320",
+        "8919",
+        "8983",
+        "8997",
+        "9041",
+        "9107",
+        "9128",
+        "9148",
+        "9386",
+        "9388",
+        "10040",
+        "10373",
+        "10797",
+        "11260",
+        "11661",
+        "12038",
+        "12042",
+        "12055",
+        "12250",
+        "12480",
+        "12530",
+        "12559",
+        "12565",
+        "12578",
+        "12579",
+        "12584",
+        "12592",
+        "12597",
+        "12606",
+        "12614",
+        "12654",
+        "35059",
+        "38516",
+        "41004",
+        "41086",
+        "41529",
+        "45007",
+        "45091",
+        "45130",
+        "45134",
+        "45164",
+        "45166",
+        "45173",
+        "45177",
+        "45203",
+        "45212",
+        "45244",
+        "45267",
+        "45323",
+        "45384",
+        "45403",
+        "45448",
+        "45516",
+        "45600",
+        "45606",
+        "45621",
+        "45623",
+        "45633",
+        "45645",
+        "45690",
+        "45779",
+        "45783",
+        "45850",
+        "45915",
+        "45937",
+        "45964",
+        "46029",
+        "46057",
+        "46092",
+        "46117",
+        "46179",
+        "46197",
+        "46408",
+        "46427",
+        "46744",
+        "46787",
+        "46906",
+        "46966",
+        "47281",
+        "47419",
+        "47632",
+        "47645",
+        "47686",
+        "47729",
+        "48271",
+        "48452",
+        "48467",
+        "48519",
+        "48721",
+        "100189",
+        "100243",
+        "102379",
+        "103082"
+      ],
+      "opening_name_keywords": [
+        "cabinet",
+        "cupboard",
+        "microwave",
+        "dishwasher",
+        "refrigerator",
+        "door set"
+      ],
+      "source_pool_per_category": 8,
+      "maximum_source_preparations": 80,
+      "test_assets": 6,
+      "episodes_per_asset": 2
+    },
+    "policy": {
+      "dev_asset_id": "7320",
+      "test_asset_count": 6,
+      "episodes_per_asset": 2,
+      "seed": 732061660,
+      "budgets": {
+        "grasp_candidates": 12,
+        "probe_directions": 4,
+        "sysid_simulations": 48,
+        "wall_clock_seconds": 25200
+      }
+    },
+    "dev": {
+      "asset_root": "results/semantic_interaction/asset",
+      "source": "/data1/home/rangeryx/fr3_real2sim_r1a7/results/microwave_7320_table_edge_preflight_full_rgb",
+      "plan": "results/semantic_interaction/nominal_minimal/plan.json"
+    },
+    "mobile": {
+      "fixed_plan_wall_s": 600,
+      "episode_wall_s": 1500,
+      "configuration_execution_wall_s": 1800,
+      "search": {
+        "standoff_m": [
+          0.35,
+          0.45,
+          0.55
+        ],
+        "azimuth_offsets_deg": [
+          -45,
+          0,
+          45
+        ],
+        "yaw_offsets_deg": [
+          -30,
+          0,
+          30
+        ],
+        "search_wall_s": 180,
+        "full_plan_base_budget": 4,
+        "full_plan_wall_s": 90,
+        "probe_workspace_m": 0.01
+      }
+    },
+    "fitting": {
+      "position_noise_m": 2e-05,
+      "rotation_noise_rad": 2e-05,
+      "maximum_samples": 180,
+      "max_nfev": 160
+    },
+    "selection": {
+      "minimum_validation_improvement_fraction": 0.05,
+      "maximum_validation_rms_noise_units": 10.0,
+      "minimum_train_motion_m": 0.005,
+      "minimum_reverse_motion_m": 0.005
+    },
+    "refinement": {
+      "maximum_extra_trajectories": 1,
+      "opening_deg": 10.0,
+      "reverse_deg": 2.5,
+      "switch_exclusion_s": 0.5
+    },
+    "heldout": {
+      "schema": "frozen-forward-stop-segment-v1",
+      "active_s": 8.0,
+      "dwell_s": 2.0,
+      "fit_usage": "never",
+      "speed": "unchanged ConstrainedDrive .0005 m/s",
+      "prediction": "native same-command autonomous replay, physics unchanged"
+    },
+    "validation": {
+      "forward_travel_m": 0.002,
+      "maximum_s": 12.0,
+      "observability_m": 0.001
+    },
+    "physics": "unchanged prepared source; control runs retain recorded baseline plant values; no calibration",
+    "controls": {
+      "7320": {
+        "source_job": "results/interactive_twin_refinement_20261004/dev_7320_00/refinement_once/job_private.json"
+      },
+      "45621": {
+        "source_job": "results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_execution/candidate_00/job_private.json"
+      }
+    },
+    "active": {
+      "discovery": {
+        "minimum_model_score_gap": 0.8,
+        "minimum_rotation_deg": 0.5,
+        "maximum_axis_dispersion_deg": 12.0,
+        "radius_range_m": [
+          0.03,
+          3.0
+        ],
+        "maximum_radius_cv": 0.35,
+        "maximum_tangent_dispersion_deg": 15.0,
+        "maximum_provisional_rotation_residual_rad": 0.002,
+        "bootstrap_seed": 61
+      },
+      "refinement": {
+        "segment_m": 0.001,
+        "segment_timeout_s": 4.0,
+        "maximum_segments": 120,
+        "maximum_path_m": 0.12,
+        "maximum_sim_s": 270.0,
+        "target_angle_deg": 6.0,
+        "robust_every_segments": 5,
+        "reverse_required": false
+      },
+      "final": {
+        "minimum_angle_deg": 2.0,
+        "position_rmse_m": 0.0003,
+        "rotation_rmse_rad": 0.001
+      },
+      "continuation": {
+        "maximum_segments": 60,
+        "segment_m": 0.001,
+        "segment_timeout_s": 4.0,
+        "maximum_s": 60.0,
+        "target_angle_deg": 5.5,
+        "global_path_m": 0.12,
+        "global_sim_s": 270.0,
+        "fit_usage": "never"
+      },
+      "confidence": {
+        "soft_trigger_m": 0.001,
+        "soft_duration_s": 0.1,
+        "maximum_unexplained_refits": 3,
+        "recent_samples": 48,
+        "step_reduction": 0.5,
+        "minimum_step_scale": 0.25,
+        "pause_s": 0.5,
+        "hard_window_motion_m": 0.001,
+        "explanation_position_m": 0.00017329725494121152,
+        "explanation_rotation_rad": 0.0003439311916708028
+      },
+      "operational": {
+        "position_rmse_m": 9.791253471245057e-05,
+        "rotation_rmse_rad": 0.0003439311916708028,
+        "endpoint_error_m": 0.000172981101414107,
+        "tangent_error_deg": 0.7687535361081039,
+        "position_repeat_scale_m": 2e-05,
+        "rotation_repeat_scale_rad": 2e-05
+      }
+    },
+    "diagnostic_dev": {
+      "45600": {
+        "summary": "results/cross_object_structure_20261004_v1/episodes/test_45600_00/episode_summary.json"
+      },
+      "38516": {
+        "summary": "results/cross_object_structure_20261004_v1/episodes/test_38516_00/episode_summary.json"
+      },
+      "45403": {
+        "summary": "results/cross_object_structure_20261004_v1/episodes/test_45403_00/episode_summary.json"
+      },
+      "45134": {
+        "summary": "results/active_structure_20261005_v1/episodes/test_45134_00/episode_summary.json"
+      }
+    },
+    "regression_gpus": [
+      0,
+      1
+    ],
+    "diagnostic_gpus": [
+      2,
+      3,
+      4,
+      5
+    ],
+    "calibration_logs": {
+      "45600": "results/active_structure_20261005_v1/dev/45600/observations.json",
+      "38516": "results/active_structure_20261005_v1/dev/38516/observations.json",
+      "45403": "results/active_structure_20261005_v1/dev/45403/observations.json",
+      "7320": "results/active_structure_20261005_v1/controls/7320/observations.json",
+      "45621": "results/active_structure_20261005_v1/controls/45621/observations.json",
+      "45134": "results/active_structure_20261005_v1/episodes/test_45134_00/candidate_01/observations.json"
+    },
+    "confidence_policy": {
+      "soft_trigger_m": 0.001,
+      "soft_duration_s": 0.1,
+      "maximum_unexplained_refits": 3,
+      "recent_samples": 48,
+      "step_reduction": 0.5,
+      "minimum_step_scale": 0.25,
+      "pause_s": 0.5,
+      "hard_window_motion_m": 0.001
+    },
+    "regression_reuse_root": "results/operational_structure_20261005_v1"
+  },
+  "GT_selection": false
+}

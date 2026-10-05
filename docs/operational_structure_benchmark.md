@@ -82,3 +82,10 @@ results. Incomplete episodes have no invented prediction metric.
 All legacy grasp/contact/proxy/mobile/fitter files remain byte-identical.
 No physics calibration, attachment, direct object force or runtime object-state
 command is introduced.
+
+## Completed 2026-10-05 experiment
+
+[Report and immutable evidence](../artifacts/operational_structure_20261005/REPORT.md).
+Fresh TEST: 6 assets × 2 configurations; 8/12 deployment-feasible, 5/12 bilateral grasp, 3/12 useful interaction, 0/12 end-to-end. All 3 useful interactions reached excluded-segment validation; 2/3 position RMSE improved, 0/3 operational acceptance, 1/3 original high-fidelity criterion. Both regression controls pass.
+
+The original high-fidelity criterion measures EE reconstruction/consistency, not GT hinge accuracy. Post-evaluation full relative drift exceeded the original 1 mm retention bound in all 3 useful TEST interactions, while the online contact-plane projection stayed small. The model-validation stop and the subsequently observed full relative drift remain separate fields. The 0.30 mm criterion and physical safety limits were not relaxed.

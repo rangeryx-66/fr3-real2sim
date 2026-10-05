@@ -1,0 +1,175 @@
+{
+  "episode_id": "test_47601_01",
+  "asset_id": "47601",
+  "included_in_denominator": true,
+  "fixed_base_feasible": true,
+  "mobile_recovered": false,
+  "attempts": [
+    {
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/episodes/test_47601_01/candidate_00",
+      "status": "UNOBSERVABLE",
+      "bilateral": true
+    }
+  ],
+  "failure_stage": "PROBE_HOLD",
+  "status": "UNOBSERVABLE",
+  "fixed_plan_statuses": [
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "NO_IK",
+    "PENDING_REAL_CLOSURE",
+    "PENDING_REAL_CLOSURE",
+    "PENDING_REAL_CLOSURE",
+    "NO_HOME_PLAN",
+    "NO_HOME_PLAN",
+    "PENDING_REAL_CLOSURE"
+  ],
+  "grasp_feasible": true,
+  "selected_job": {
+    "episode_id": "test_47601_01",
+    "mode": "kinematics",
+    "role": "reference",
+    "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/episodes/test_47601_01/source",
+    "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/episodes/test_47601_01/asset",
+    "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/episodes/test_47601_01/planning/plan.json",
+    "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/episodes/test_47601_01/candidate_00",
+    "gpu": 0,
+    "deadline_shanghai": "2026-10-06T05:00:00+08:00",
+    "wall_clock_budget_s": 2400,
+    "frozen_proxy_sha256": "0d46ab1afd2aca0645546e8284af19ffc5d1fdf8dfac6bea3a1c2dd374c1a6fd",
+    "continue_manipulation": true,
+    "robot_calibration_id": "PENDING_ROBOT_ONLY_CALIBRATION",
+    "candidate": 0,
+    "plant": {},
+    "initial_articulation_rad": 0.017453292519943295,
+    "mobile_platform": true,
+    "refinement_once": true,
+    "refinement_target_deg": 10.0,
+    "structure_protocol": {
+      "fitting": {
+        "position_noise_m": 2e-05,
+        "rotation_noise_rad": 2e-05,
+        "maximum_samples": 180,
+        "max_nfev": 160
+      },
+      "selection": {
+        "minimum_validation_improvement_fraction": 0.05,
+        "maximum_validation_rms_noise_units": 10.0,
+        "minimum_train_motion_m": 0.005,
+        "minimum_reverse_motion_m": 0.005
+      },
+      "refinement": {
+        "maximum_extra_trajectories": 1,
+        "opening_deg": 10.0,
+        "reverse_deg": 2.5,
+        "switch_exclusion_s": 0.5
+      },
+      "validation": {
+        "forward_travel_m": 0.002,
+        "maximum_s": 12.0,
+        "observability_m": 0.001
+      },
+      "heldout": {
+        "schema": "frozen-forward-stop-segment-v1",
+        "active_s": 8.0,
+        "dwell_s": 2.0,
+        "fit_usage": "never",
+        "speed": "unchanged ConstrainedDrive .0005 m/s",
+        "prediction": "native same-command autonomous replay, physics unchanged"
+      },
+      "active": {
+        "discovery": {
+          "minimum_model_score_gap": 0.8,
+          "minimum_rotation_deg": 0.5,
+          "maximum_axis_dispersion_deg": 12.0,
+          "radius_range_m": [
+            0.03,
+            3.0
+          ],
+          "maximum_radius_cv": 0.35,
+          "maximum_tangent_dispersion_deg": 15.0,
+          "maximum_provisional_rotation_residual_rad": 0.002,
+          "bootstrap_seed": 61
+        },
+        "refinement": {
+          "segment_m": 0.001,
+          "segment_timeout_s": 4.0,
+          "maximum_segments": 120,
+          "maximum_path_m": 0.12,
+          "maximum_sim_s": 270.0,
+          "target_angle_deg": 6.0,
+          "robust_every_segments": 5,
+          "reverse_required": false
+        },
+        "final": {
+          "minimum_angle_deg": 2.0,
+          "position_rmse_m": 0.0003,
+          "rotation_rmse_rad": 0.001
+        },
+        "continuation": {
+          "maximum_segments": 60,
+          "segment_m": 0.001,
+          "segment_timeout_s": 4.0,
+          "maximum_s": 60.0,
+          "target_angle_deg": 5.5,
+          "global_path_m": 0.12,
+          "global_sim_s": 270.0,
+          "fit_usage": "never"
+        },
+        "confidence": {
+          "soft_trigger_m": 0.001,
+          "soft_duration_s": 0.1,
+          "maximum_unexplained_refits": 3,
+          "recent_samples": 48,
+          "step_reduction": 0.5,
+          "minimum_step_scale": 0.25,
+          "pause_s": 0.5,
+          "hard_window_motion_m": 0.001,
+          "explanation_position_m": 0.00017329725494121152,
+          "explanation_rotation_rad": 0.0003439311916708028
+        },
+        "operational": {
+          "position_rmse_m": 9.791253471245057e-05,
+          "rotation_rmse_rad": 0.0003439311916708028,
+          "endpoint_error_m": 0.000172981101414107,
+          "tangent_error_deg": 0.7687535361081039,
+          "position_repeat_scale_m": 2e-05,
+          "rotation_repeat_scale_rad": 2e-05
+        }
+      }
+    }
+  },
+  "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/episodes/test_47601_01/candidate_00/report.json",
+  "structure_validation": "NOT_REACHED",
+  "grasp": true,
+  "probe": {
+    "duration_s": 52.01250000000002,
+    "distance_m": 0.00027744541234990387,
+    "observed_rotation_span_deg": 1.1245937873362823,
+    "sample_count": 1445,
+    "fit_input": "measured robot TCP SE(3) only",
+    "failure_phase": "PROBE_HOLD"
+  },
+  "minimum_joint_margin_rad": 0.10040156928100585,
+  "observed_slip_m": 5.9808015751666004e-05,
+  "post_episode_evaluation": {
+    "type_correct": false,
+    "actual_door_displacement_deg": -0.9999999967164153,
+    "actual_final_door_angle_deg": 3.2835847374457217e-09,
+    "gt_access_after_saved_fit": true,
+    "gt_access_after_world_pause": true,
+    "final_true_relative_translation_slip_m": 0.00027600263385081934,
+    "final_true_relative_rotation_slip_deg": 1.0738642947456611
+  },
+  "refined_accepted": false,
+  "online_success": false,
+  "success": false,
+  "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/episodes/test_47601_01/candidate_00/contact_baseline.mp4",
+  "operational_predictive_accepted": false,
+  "operational_structure": false,
+  "high_fidelity_structure": false,
+  "heldout_pending": false
+}

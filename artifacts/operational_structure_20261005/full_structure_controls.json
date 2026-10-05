@@ -1,0 +1,356 @@
+{
+  "7320": {
+    "asset_id": "7320",
+    "control_not_in_test_denominator": true,
+    "selected_job": {
+      "episode_id": "structure_control_7320",
+      "mode": "kinematics",
+      "role": "reference",
+      "source": "/data1/home/rangeryx/fr3_real2sim_r1a7/results/microwave_7320_table_edge_preflight_full_rgb",
+      "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/asset",
+      "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/nominal_minimal/plan.json",
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/controls_full_structure/7320",
+      "gpu": 0,
+      "deadline_shanghai": "2026-10-06T05:00:00+08:00",
+      "wall_clock_budget_s": 2400,
+      "frozen_proxy_sha256": "a1bc615255468175c665311a47c798d63826fc12e5bc87821f3ea04ebd7c0cb4",
+      "continue_manipulation": true,
+      "robot_calibration_id": "robot_ff3e736f75bd2ff04b1e",
+      "plant": {
+        "tau_c": 0.0005,
+        "b": 0.05
+      },
+      "refinement_once": true,
+      "refinement_target_deg": 10.0,
+      "structure_protocol": {
+        "fitting": {
+          "position_noise_m": 2e-05,
+          "rotation_noise_rad": 2e-05,
+          "maximum_samples": 180,
+          "max_nfev": 160
+        },
+        "selection": {
+          "minimum_validation_improvement_fraction": 0.05,
+          "maximum_validation_rms_noise_units": 10.0,
+          "minimum_train_motion_m": 0.005,
+          "minimum_reverse_motion_m": 0.005
+        },
+        "refinement": {
+          "maximum_extra_trajectories": 1,
+          "opening_deg": 10.0,
+          "reverse_deg": 2.5,
+          "switch_exclusion_s": 0.5
+        },
+        "validation": {
+          "forward_travel_m": 0.002,
+          "maximum_s": 12.0,
+          "observability_m": 0.001
+        },
+        "heldout": {
+          "schema": "frozen-forward-stop-segment-v1",
+          "active_s": 8.0,
+          "dwell_s": 2.0,
+          "fit_usage": "never",
+          "speed": "unchanged ConstrainedDrive .0005 m/s",
+          "prediction": "native same-command autonomous replay, physics unchanged"
+        },
+        "active": {
+          "discovery": {
+            "minimum_model_score_gap": 0.8,
+            "minimum_rotation_deg": 0.5,
+            "maximum_axis_dispersion_deg": 12.0,
+            "radius_range_m": [
+              0.03,
+              3.0
+            ],
+            "maximum_radius_cv": 0.35,
+            "maximum_tangent_dispersion_deg": 15.0,
+            "maximum_provisional_rotation_residual_rad": 0.002,
+            "bootstrap_seed": 61
+          },
+          "refinement": {
+            "segment_m": 0.001,
+            "segment_timeout_s": 4.0,
+            "maximum_segments": 120,
+            "maximum_path_m": 0.12,
+            "maximum_sim_s": 270.0,
+            "target_angle_deg": 6.0,
+            "robust_every_segments": 5,
+            "reverse_required": false
+          },
+          "final": {
+            "minimum_angle_deg": 2.0,
+            "position_rmse_m": 0.0003,
+            "rotation_rmse_rad": 0.001
+          },
+          "continuation": {
+            "maximum_segments": 60,
+            "segment_m": 0.001,
+            "segment_timeout_s": 4.0,
+            "maximum_s": 60.0,
+            "target_angle_deg": 5.5,
+            "global_path_m": 0.12,
+            "global_sim_s": 270.0,
+            "fit_usage": "never"
+          },
+          "confidence": {
+            "soft_trigger_m": 0.001,
+            "soft_duration_s": 0.1,
+            "maximum_unexplained_refits": 3,
+            "recent_samples": 48,
+            "step_reduction": 0.5,
+            "minimum_step_scale": 0.25,
+            "pause_s": 0.5,
+            "hard_window_motion_m": 0.001,
+            "explanation_position_m": 0.00017329725494121152,
+            "explanation_rotation_rad": 0.0003439311916708028
+          },
+          "operational": {
+            "position_rmse_m": 9.791253471245057e-05,
+            "rotation_rmse_rad": 0.0003439311916708028,
+            "endpoint_error_m": 0.000172981101414107,
+            "tangent_error_deg": 0.7687535361081039,
+            "position_repeat_scale_m": 2e-05,
+            "rotation_repeat_scale_rad": 2e-05
+          }
+        }
+      }
+    },
+    "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/controls_full_structure/7320/report.json",
+    "status": "SUCCESS",
+    "fixed_base_feasible": true,
+    "grasp_feasible": true,
+    "structure_validation": "OPERATIONAL_PREDICTION_ACCEPTED",
+    "discovery_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.2445273121349304,
+      "axis_line_distance_m": 0.047877723413862316,
+      "joint_origin_error_in_observed_plane_m": 0.04787898990674945,
+      "raw_origin_point_distance_m": 0.18393053238607343,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.00023676257838358314
+    },
+    "refined_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.6433629270799386,
+      "axis_line_distance_m": 0.003364536651949627,
+      "joint_origin_error_in_observed_plane_m": 0.005649952358622846,
+      "raw_origin_point_distance_m": 0.17344307291393812,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.00023676257838358314
+    },
+    "grasp": true,
+    "probe": {
+      "distance_m": 0.005159862646423098,
+      "duration_s": 12.004166666666663,
+      "fit_input": "measured robot TCP SE(3) only",
+      "fit_saved_before_follow": true
+    },
+    "minimum_joint_margin_rad": 0.06349032012023925,
+    "observed_slip_m": 0.00010119480785592973,
+    "post_episode_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.6433629270799386,
+      "axis_line_distance_m": 0.003312513506858103,
+      "joint_origin_error_in_observed_plane_m": 0.005643245137110017,
+      "raw_origin_point_distance_m": 0.17344307291393812,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.0006143669811504442,
+      "actual_door_displacement_deg": 6.87270450592041,
+      "actual_final_door_angle_deg": 6.87270450592041,
+      "gt_access_after_saved_fit": true,
+      "gt_access_after_world_pause": true,
+      "final_true_relative_translation_slip_m": 0.00014658419381370156,
+      "final_true_relative_rotation_slip_deg": 0.27535343072738605
+    },
+    "refined_accepted": true,
+    "online_success": true,
+    "success": true,
+    "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/controls_full_structure/7320/contact_baseline.mp4",
+    "heldout_pending": false,
+    "operational_predictive_accepted": true,
+    "operational_structure": true,
+    "high_fidelity_structure": true
+  },
+  "45621": {
+    "asset_id": "45621",
+    "control_not_in_test_denominator": true,
+    "selected_job": {
+      "episode_id": "structure_control_45621",
+      "mode": "kinematics",
+      "role": "reference",
+      "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_benchmark_20261003_v2/episodes/test_45621_00/source",
+      "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_benchmark_20261003_v2/episodes/test_45621_00/asset",
+      "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_plan.json",
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/controls_full_structure/45621",
+      "gpu": 1,
+      "deadline_shanghai": "2026-10-06T05:00:00+08:00",
+      "wall_clock_budget_s": 2400,
+      "frozen_proxy_sha256": "9c927e72302d399704a5ab926f7cc2a2070ce9229c403a434db0f28c14adace1",
+      "continue_manipulation": true,
+      "robot_calibration_id": "robot_ff3e736f75bd2ff04b1e",
+      "seed": 2154004428262263588,
+      "initial_articulation_rad": 0.0,
+      "plant": {
+        "tau_c": 0.00613791986530075,
+        "b": 0.17274290528961533
+      },
+      "mobile_platform": true,
+      "budget_asset_id": "45621",
+      "asset_wall_clock_budget_s": 25200,
+      "asset_sysid_simulation_budget": 48,
+      "episode_sysid_simulation_budget": 16,
+      "candidate": 0,
+      "refinement_once": true,
+      "refinement_target_deg": 10.0,
+      "structure_protocol": {
+        "fitting": {
+          "position_noise_m": 2e-05,
+          "rotation_noise_rad": 2e-05,
+          "maximum_samples": 180,
+          "max_nfev": 160
+        },
+        "selection": {
+          "minimum_validation_improvement_fraction": 0.05,
+          "maximum_validation_rms_noise_units": 10.0,
+          "minimum_train_motion_m": 0.005,
+          "minimum_reverse_motion_m": 0.005
+        },
+        "refinement": {
+          "maximum_extra_trajectories": 1,
+          "opening_deg": 10.0,
+          "reverse_deg": 2.5,
+          "switch_exclusion_s": 0.5
+        },
+        "validation": {
+          "forward_travel_m": 0.002,
+          "maximum_s": 12.0,
+          "observability_m": 0.001
+        },
+        "heldout": {
+          "schema": "frozen-forward-stop-segment-v1",
+          "active_s": 8.0,
+          "dwell_s": 2.0,
+          "fit_usage": "never",
+          "speed": "unchanged ConstrainedDrive .0005 m/s",
+          "prediction": "native same-command autonomous replay, physics unchanged"
+        },
+        "active": {
+          "discovery": {
+            "minimum_model_score_gap": 0.8,
+            "minimum_rotation_deg": 0.5,
+            "maximum_axis_dispersion_deg": 12.0,
+            "radius_range_m": [
+              0.03,
+              3.0
+            ],
+            "maximum_radius_cv": 0.35,
+            "maximum_tangent_dispersion_deg": 15.0,
+            "maximum_provisional_rotation_residual_rad": 0.002,
+            "bootstrap_seed": 61
+          },
+          "refinement": {
+            "segment_m": 0.001,
+            "segment_timeout_s": 4.0,
+            "maximum_segments": 120,
+            "maximum_path_m": 0.12,
+            "maximum_sim_s": 270.0,
+            "target_angle_deg": 6.0,
+            "robust_every_segments": 5,
+            "reverse_required": false
+          },
+          "final": {
+            "minimum_angle_deg": 2.0,
+            "position_rmse_m": 0.0003,
+            "rotation_rmse_rad": 0.001
+          },
+          "continuation": {
+            "maximum_segments": 60,
+            "segment_m": 0.001,
+            "segment_timeout_s": 4.0,
+            "maximum_s": 60.0,
+            "target_angle_deg": 5.5,
+            "global_path_m": 0.12,
+            "global_sim_s": 270.0,
+            "fit_usage": "never"
+          },
+          "confidence": {
+            "soft_trigger_m": 0.001,
+            "soft_duration_s": 0.1,
+            "maximum_unexplained_refits": 3,
+            "recent_samples": 48,
+            "step_reduction": 0.5,
+            "minimum_step_scale": 0.25,
+            "pause_s": 0.5,
+            "hard_window_motion_m": 0.001,
+            "explanation_position_m": 0.00017329725494121152,
+            "explanation_rotation_rad": 0.0003439311916708028
+          },
+          "operational": {
+            "position_rmse_m": 9.791253471245057e-05,
+            "rotation_rmse_rad": 0.0003439311916708028,
+            "endpoint_error_m": 0.000172981101414107,
+            "tangent_error_deg": 0.7687535361081039,
+            "position_repeat_scale_m": 2e-05,
+            "rotation_repeat_scale_rad": 2e-05
+          }
+        }
+      }
+    },
+    "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/controls_full_structure/45621/report.json",
+    "status": "SUCCESS",
+    "fixed_base_feasible": true,
+    "grasp_feasible": true,
+    "structure_validation": "OPERATIONAL_PREDICTION_ACCEPTED",
+    "discovery_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 1.2492927903659314,
+      "axis_line_distance_m": 0.021071255831816908,
+      "joint_origin_error_in_observed_plane_m": 0.02360449516005482,
+      "raw_origin_point_distance_m": 0.14895303074267202,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.00040180299568637806
+    },
+    "refined_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.973152484395887,
+      "axis_line_distance_m": 0.0036453346797560007,
+      "joint_origin_error_in_observed_plane_m": 0.00887597668717543,
+      "raw_origin_point_distance_m": 0.1445789672748517,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.00040180299568637806
+    },
+    "grasp": true,
+    "probe": {
+      "distance_m": 0.0050785353834416624,
+      "duration_s": 12.004166666666677,
+      "fit_input": "measured robot TCP SE(3) only",
+      "fit_saved_before_follow": true
+    },
+    "minimum_joint_margin_rad": 0.052934933576965326,
+    "observed_slip_m": 0.00010409965317024483,
+    "post_episode_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.973152484395887,
+      "axis_line_distance_m": 0.0035024499240802537,
+      "joint_origin_error_in_observed_plane_m": 0.008823115735253819,
+      "raw_origin_point_distance_m": 0.1445789672748517,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.0007262266805007408,
+      "actual_door_displacement_deg": 6.773244857788086,
+      "actual_final_door_angle_deg": 6.773244857788086,
+      "gt_access_after_saved_fit": true,
+      "gt_access_after_world_pause": true,
+      "final_true_relative_translation_slip_m": 0.0006253154969108925,
+      "final_true_relative_rotation_slip_deg": 0.2220397709539258
+    },
+    "refined_accepted": true,
+    "online_success": true,
+    "success": true,
+    "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/operational_structure_20261005_v3/controls_full_structure/45621/contact_baseline.mp4",
+    "heldout_pending": false,
+    "operational_predictive_accepted": true,
+    "operational_structure": true,
+    "high_fidelity_structure": true
+  }
+}
