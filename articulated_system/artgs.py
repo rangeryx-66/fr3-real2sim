@@ -32,9 +32,11 @@ def prepare(capture_root, output, start, end, size=320):
     if not np.isfinite(scale) or scale<=0:raise ValueError('INVALID_METRIC_SCALE')
     v0=maps[0][train[0]]
     with Image.open(root/v0['directory']/'rgb.png') as image:w,h=image.size
-    side=min(w,h)
-    common=np.asarray(v0['K'],float).copy();common[0,2]-=(w-side)//2;common[1,2]-=(h-side)//2;common[:2]*=size/side
-    audit=[];yy,xx=np.indices((size,size),dtype=np.float32)
+    # Preserve the full calibrated rectangular sensor FOV. A centered square
+    # crop removed door/drawer extremities in the old wrist-like inputs.
+    output_w=int(size);output_h=max(1,int(round(size*h/w)))
+    common=np.asarray(v0['K'],float).copy();common[0]*=output_w/w;common[1]*=output_h/h
+    audit=[];yy,xx=np.indices((output_h,output_w),dtype=np.float32)
     for label,state,views,P,C in zip(['start','end'],states,maps,clouds,cloud_colors):
         for split,ids in [('train',train),('test',held or train[:1])]:
             frames=[];folder=out/label/split;(folder/'rgba').mkdir(parents=True,exist_ok=True);(folder/'depth').mkdir(exist_ok=True)
@@ -50,8 +52,8 @@ def prepare(capture_root, output, start, end, size=320):
                 Image.fromarray(np.clip(np.rint(d*1000),0,65535).astype(np.uint16)).save(folder/'depth'/f'{key}.png')
                 T=np.asarray(v['T_world_camera_optical'])@np.diag([1,-1,-1,1]);T[:3,3]=(T[:3,3]-center)/scale
                 frames.append({'file_path':f'{label}/{split}/rgba/{key}.png','transform_matrix':T.tolist(),'time':0 if label=='start' else 1})
-                audit.append({'state':state['state_id'],'camera_id':i,'split':split,'visible_pixels':int(mask.sum()),'masked_robot':True,'depth_convention':meta['depth']})
-            camera={'camera_angle_x':float(2*np.arctan(size/(2*common[0,0]))),'camera_angle_y':float(2*np.arctan(size/(2*common[1,1]))),'frames':frames}
+                audit.append({'state':state['state_id'],'camera_id':i,'split':split,'visible_pixels':int(mask.sum()),'masked_robot':meta.get('mask_source','').startswith('instance') or doc.get('mask_source','').startswith('simulator'),'depth_convention':meta['depth']})
+            camera={'camera_angle_x':float(2*np.arctan(output_w/(2*common[0,0]))),'camera_angle_y':float(2*np.arctan(output_h/(2*common[1,1]))),'frames':frames}
             (out/f'transforms_{split}_{label}.json').write_text(json.dumps(camera,indent=2))
         P=(P-center)/scale;_,idx=np.unique(np.floor(P/.003).astype(np.int64),axis=0,return_index=True)
         if len(idx)>30000:idx=np.random.default_rng(61).choice(idx,30000,replace=False)
@@ -61,5 +63,5 @@ def prepare(capture_root, output, start, end, size=320):
         for j,x in enumerate(['red','green','blue']):array[x]=C[idx,j]
         PlyData([PlyElement.describe(array,'vertex')],text=False).write(str(out/f'point_cloud_{label}.ply'))
     (out/'transforms_train.json').write_text((out/'transforms_train_start.json').read_text());(out/'points3d.ply').write_bytes((out/'point_cloud_start.ply').read_bytes())
-    provenance={'adapter_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'backend':'ArtGS official Scene/readInfo_2states','capture_root':str(root),'states':[start,end],'normalization':{'world_center_m':center.tolist(),'world_scale_m':scale,'world_to_normalized':'(point-center)/scale','computed_from_training_views_only':True},'train_views':train,'held_out_views':held,'view_selection':'shared physical camera IDs, not shifted list positions','independent_view_validation_available':bool(held),'camera_axes':'OpenGL from ROS optical','common_intrinsics':common.tolist(),'intrinsics_adapter':'calibrated rays resampled to common K; outside image masked','depth_storage':'normalized optical Z *1000 uint16; official loader /1000','initialization':'separate per-state training clouds','observations_from_distinct_states_merged':False,'GT_mesh_or_axis_input':False,'joint_family_input':'official train_predict; optional measured-EE family separately labelled','parts_assumption':2,'audit':audit}
+    provenance={'adapter_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'backend':'ArtGS official Scene/readInfo_2states','capture_root':str(root),'states':[start,end],'normalization':{'world_center_m':center.tolist(),'world_scale_m':scale,'world_to_normalized':'(point-center)/scale','computed_from_training_views_only':True},'train_views':train,'held_out_views':held,'view_selection':'shared physical camera IDs, not shifted list positions','independent_view_validation_available':bool(held),'camera_axes':'OpenGL from ROS optical','common_intrinsics':common.tolist(),'output_resolution_wh':[output_w,output_h],'intrinsics_adapter':'full rectangular sensor FOV; calibrated rays resampled to common K; no central crop','depth_storage':'normalized optical Z *1000 uint16; official loader /1000','initialization':'separate per-state training clouds','observations_from_distinct_states_merged':False,'GT_mesh_or_axis_input':False,'joint_family_input':'official train_predict; optional measured-EE family separately labelled','parts_assumption':2,'audit':audit}
     (out/'input_provenance.json').write_text(json.dumps(provenance,indent=2));return provenance
