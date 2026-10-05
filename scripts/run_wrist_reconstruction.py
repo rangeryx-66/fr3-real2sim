@@ -36,6 +36,12 @@ def main():
     if a.stage in ('audit-old','full'):
         run('audit-old',[str(ROOT/'environments/artgs/bin/python'),str(ROOT/'scripts/audit_artgs_sensor_inputs.py'),'--root',str(ROOT/'results/articulated_system_20261005'),'--output',str(out/'old_input_audit.json')],600)
     if a.stage in ('capture','full'):
+        if a.stage=='full' and c.get('overlap_backend',False):
+            for o in objects:
+                key='snapshot-watch/'+o['id'];path=out/(key.replace('/','_')+'.log')
+                command=[str(ROOT/'environments/artgs/bin/python'),str(ROOT/'scripts/watch_wrist_backend_ready.py'),'--capture-output',str(out),'--config',str(a.config.resolve()),'--object',o['id'],'--gpu',str(c.get('backend_gpus',{}).get(o['id'],a.gpu))]
+                with path.open('a') as log:watch=subprocess.Popen(command,cwd=ROOT,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+                ledger['components'][key]={'status':'RUNNING','pid':watch.pid,'command':command,'log':str(path)};save()
         capture_jobs=[]
         for o in objects:
             job=json.loads((ROOT/o['job']).read_text());job=copy.deepcopy(job)
@@ -63,6 +69,8 @@ def main():
         with ThreadPoolExecutor(max_workers=min(2,max(1,len(capture_jobs)))) as pool:list(pool.map(capture_one,capture_jobs))
     if a.stage in ('coarse','backend','full'):
         for o in objects:
+            if a.stage=='full' and c.get('overlap_backend',False):
+                ledger['components'][f'backend/{o["id"]}']={'status':'VERIFIED_SNAPSHOT_WATCH','output':str(out/('early_backend_'+o['id']))};save();continue
             wrist_manifest=out/('capture_'+o['id'])/'multistate_capture.json'
             if not wrist_manifest.exists():
                 ledger['components'][f'backend/{o["id"]}']={'status':'WAITING_FOR_WRIST_CLEAN'};save();continue

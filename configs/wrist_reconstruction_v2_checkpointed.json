@@ -266,5 +266,10 @@
     "diagnostic": "results/wrist_mobile_20261006/45746_elevation_diagnostic.json"
   },
   "budget_note": "Original 02:38:34 start and all prior capture elapsed time retained; total maximum 9h capped at 11:00 Shanghai. Up to 8 cumulative capture hours; start reconstruction from frozen valid snapshots as soon as 3 clean states and required span exist.",
-  "resume_note": "Reuse only actual initial-state wrist observations after current RGB-D identity verification. Physical actions are reexecuted; no robot/object state or contact copy. A failed reuse check falls back to fresh capture, never aborts manipulation."
+  "resume_note": "Reuse only actual initial-state wrist observations after current RGB-D identity verification. Physical actions are reexecuted; no robot/object state or contact copy. A failed reuse check falls back to fresh capture, never aborts manipulation.",
+  "overlap_backend": true,
+  "backend_gpus": {
+    "7320": 4,
+    "45746": 5
+  }
 }
