@@ -50,6 +50,8 @@ Actual bounded schedule: 3,000 coarse + 3,000 type prediction + 5,000 joint iter
 
 The held-out renderer uses the measured estimated state label to supply phase. It is **conditional geometric prediction**, not autonomous motion or physics prediction. Larger opening does not automatically imply improved reconstruction. Native joint-type mistakes, incomplete meshes and empty meshes are reported, not patched with GT.
 
+Held-out RGB/silhouette metrics evaluate the learned Gaussian representation. Exported TSDF meshes receive a separate qualitative Isaac import/assembly check; good Gaussian rendering alone does not establish accurate URDF collision surfaces.
+
 A twin contains actual `reconstructed_parts/`, metric `reconstructed.urdf`, `state_observations/`, `effort_profile.json`, and `twin_update.json`. State folders link to durable source observations: archive with `tar --dereference` for portability. Initial assembly is preserved by moving-mesh recentering around the inferred parent-frame joint origin. The joint range is the inferred/observed preview range, not a recovered full limit. Mass/inertia are neutral preview priors. An independent Isaac scene imports the URDF and drives that reconstructed joint for an assembly video; this is **not physical robot manipulation success**.
 
 ## Segmented physical continuation

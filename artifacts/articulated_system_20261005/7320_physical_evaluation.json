@@ -1,0 +1,88 @@
+{
+  "evaluation_only": true,
+  "read_after_episode_report": true,
+  "controller_readback": false,
+  "GT_used_for_controller_or_grasp": false,
+  "source": "independent object SE(3) + measured EE SE(3)",
+  "metric": "gripper-part relative transform; normal object opening not counted as slip",
+  "capture_state_evaluation": [
+    {
+      "state_id": 0,
+      "estimated_state": 0.0,
+      "actual_rotation_from_first_capture_deg": 0.0,
+      "actual_translation_from_first_capture_m": 0.0,
+      "timestamp_alignment_error_s": 0.004166666666662877
+    },
+    {
+      "state_id": 1,
+      "estimated_state": 2.5857481755723426,
+      "actual_rotation_from_first_capture_deg": 2.678797230551581,
+      "actual_translation_from_first_capture_m": 0.013306390186311108,
+      "timestamp_alignment_error_s": 0.0
+    },
+    {
+      "state_id": 2,
+      "estimated_state": 5.09994298246071,
+      "actual_rotation_from_first_capture_deg": 5.205120622011953,
+      "actual_translation_from_first_capture_m": 0.025885584194282496,
+      "timestamp_alignment_error_s": 0.0
+    },
+    {
+      "state_id": 3,
+      "estimated_state": 7.623252401759858,
+      "actual_rotation_from_first_capture_deg": 7.729755143240328,
+      "actual_translation_from_first_capture_m": 0.03844318061243227,
+      "timestamp_alignment_error_s": 0.0
+    },
+    {
+      "state_id": 4,
+      "estimated_state": 10.124537995200273,
+      "actual_rotation_from_first_capture_deg": 10.228933908068942,
+      "actual_translation_from_first_capture_m": 0.05085613084207731,
+      "timestamp_alignment_error_s": 0.0
+    },
+    {
+      "state_id": 5,
+      "estimated_state": 12.664109567516535,
+      "actual_rotation_from_first_capture_deg": 12.759681035915179,
+      "actual_translation_from_first_capture_m": 0.06340096193508722,
+      "timestamp_alignment_error_s": 0.0
+    },
+    {
+      "state_id": 6,
+      "estimated_state": 15.184302027005884,
+      "actual_rotation_from_first_capture_deg": 15.288017211284847,
+      "actual_translation_from_first_capture_m": 0.0759030825222376,
+      "timestamp_alignment_error_s": 0.0
+    },
+    {
+      "state_id": 7,
+      "estimated_state": 17.71886913210554,
+      "actual_rotation_from_first_capture_deg": 17.819505628083117,
+      "actual_translation_from_first_capture_m": 0.08838360999208275,
+      "timestamp_alignment_error_s": 0.0
+    },
+    {
+      "state_id": 8,
+      "estimated_state": 18.580749375645535,
+      "actual_rotation_from_first_capture_deg": 18.672493751816862,
+      "actual_translation_from_first_capture_m": 0.09257953291694589,
+      "timestamp_alignment_error_s": 0.0
+    }
+  ],
+  "state_evaluation_reference": "first actual captured object pose; evaluation only, never replaces estimated input labels",
+  "grasp_epochs": [
+    {
+      "index": 0,
+      "start_s": 89.53333333333333,
+      "end_s": 391.3666666666667,
+      "max_translation_drift_m": 0.0001300767223556006,
+      "max_rotation_drift_deg": 0.1366508254017879
+    }
+  ],
+  "maximum_true_relative_translation_drift_m": 0.0001300767223556006,
+  "reported_final_object_displacement": 18.67370303986901,
+  "minimum_joint_margin_rad": 0.06349032012023925,
+  "physical_stop": "OBJECT_MOVED_DURING_REPOSITION",
+  "limitation": "relative motion includes gripper compliance as well as slip; independent simulation diagnostic, unavailable as exact online robot measurement"
+}

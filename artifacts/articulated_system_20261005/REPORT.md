@@ -27,6 +27,7 @@ Successful physical grasp/contact baseline remains unchanged. New capture/orches
 
 Type-prior results use only the existing measured-EE identification of joint family. ArtGS still estimates axes and geometry. They are explicitly not blind ArtGS type prediction.
 Held-out state is not used in reconstruction. Its measured articulation label supplies rendering phase: conditional geometric prediction, not autonomous physics prediction. Old two-view train-view render checks are not independent validation.
+RGB/silhouette metrics evaluate learned Gaussians; exported TSDF meshes are separately inspected in Isaac. These image metrics do not establish mesh collision accuracy.
 
 ## Physical collection and recovery
 
@@ -35,13 +36,13 @@ Held-out state is not used in reconstruction. Its measured articulation label su
 | 45746 | 45746 | [] meters | IMPLEMENTATION_ERROR:'NoneType' object has no attribute 'get' | 0 | 1.5384252037620172e-05 |
 | 45746_recovery_v2 | 45746 | [0.0, 0.0102, 0.02034, 0.03034] meters | ISAAC_NATIVE_PROCESS_CRASH | 0 | None |
 | 45746_recovery_v3_infrastructure_retry | 45746 | [0.0, 0.0102, 0.02034, 0.03034, 0.04119, 0.05141, 0.06166, 0.06166] meters | RELEASE_CONTACT_NOT_CLEARED | 0 | 0.06009930372238159 |
-| 45746_recovery_v4_mode_reset | 45746 | [0.0, 0.0102, 0.02034, 0.03034, 0.04119, 0.05141, 0.06166, 0.06166] meters | RUNNING_OR_REPORT_MISSING | 0 | None |
+| 45746_recovery_v4_mode_reset | 45746 | [0.0, 0.0102, 0.02034, 0.03034, 0.04119, 0.05141, 0.06166, 0.06166] meters | OBJECT_MOVED_DURING_REPOSITION | 0 | 0.06016267463564873 |
 | 45746_sensorfix | 45746 | [0.0] meters | CAPTURE_OBJECT_MASK_EMPTY | 0 | 0.010086823254823685 |
 | 45746_visibleviews | 45746 | [0.0, 0.0102, 0.02034, 0.03034, 0.04119, 0.05141, 0.06166, 0.06166] meters | NO_SAFE_RELEASE_RETREAT_IK | 0 | 0.06011628732085228 |
 | 7320 | 7320 | [] degrees | IMPLEMENTATION_ERROR:'NoneType' object has no attribute 'get' | 0 | 0.0075831825079469475 |
 | 7320_recovery_v2 | 7320 | [0.0, 2.58575, 5.09994, 7.62325, 10.12454, 12.66411, 15.1843, 17.71887, 18.58075] degrees | IMPLEMENTATION_ERROR:'candidate_grid' | 0 | 18.672504341669672 |
 | 7320_recovery_v3_legacy_adapter | 7320 | [0.0, 2.58575, 5.09994] degrees | SUPERVISED_INFRASTRUCTURE_REPLAY | 0 | None |
-| 7320_recovery_v4_mode_reset | 7320 | [0.0, 2.58575, 5.09994, 7.62325, 10.12454, 12.66411, 15.1843, 17.71887, 18.58075] degrees | RUNNING_OR_REPORT_MISSING | 0 | None |
+| 7320_recovery_v4_mode_reset | 7320 | [0.0, 2.58575, 5.09994, 7.62325, 10.12454, 12.66411, 15.1843, 17.71887, 18.58075] degrees | OBJECT_MOVED_DURING_REPOSITION | 0 | 18.67370303986901 |
 | 7320_sensorfix | 7320 | [0.0] degrees | CAPTURE_OBJECT_MASK_EMPTY | 0 | 2.6786612408180734 |
 | 7320_visibleviews | 7320 | [0.0, 2.58575, 5.09994, 7.62325, 10.12454, 12.66411, 15.1843, 17.71887, 18.58075] degrees | IMPLEMENTATION_ERROR:'candidate_index' | 0 | 18.672504341669672 |
 

@@ -40,7 +40,7 @@ def report(root):
     def table(name,data):
         if not data:return
         with (root/name).open('w',newline='') as f:
-            writer=csv.DictWriter(f,fieldnames=list(data[0]));writer.writeheader();writer.writerows(data)
+            writer=csv.DictWriter(f,fieldnames=list(data[0]),lineterminator='\n');writer.writeheader();writer.writerows(data)
     table('reconstruction_comparison.csv',rows);table('collection_status.csv',captures)
     lines=['# Articulated collection and ArtGS integration','',
            'Official ArtGS commit: `7c1f41be2cb8b96abca13c6a9668dcf7e06d8c2a`. Independent environment. Scene-specific optimization; official demonstration weights are never used as target meshes/axes.',
@@ -49,6 +49,7 @@ def report(root):
     for r in rows:lines.append(f"| {r['pair']} | {r['backend_status']} | {r['joint_types']} | {r['train_view_count']} | {r['independent_view_test']} | {r['heldout_state_RGB_RMSE']} | {r['heldout_state_silhouette_IoU']} |")
     lines+=['','Type-prior results use only the existing measured-EE identification of joint family. ArtGS still estimates axes and geometry. They are explicitly not blind ArtGS type prediction.',
             'Held-out state is not used in reconstruction. Its measured articulation label supplies rendering phase: conditional geometric prediction, not autonomous physics prediction. Old two-view train-view render checks are not independent validation.',
+            'RGB/silhouette metrics evaluate learned Gaussians; exported TSDF meshes are separately inspected in Isaac. These image metrics do not establish mesh collision accuracy.',
             '', '## Physical collection and recovery','', '| Run | Asset | Captured states | Physical stop | Completed release/reposition/regrasp | Actual final displacement |', '|---|---|---|---|---:|---:|']
     for r in captures:lines.append(f"| {r['run']} | {r['asset']} | {r['states']} {r['units']} | {r['physical_status']} | {r['repositions_completed']} | {r['actual_final_joint_displacement']} |")
     lines+=['','## Interpretation and provenance','',
