@@ -44,9 +44,9 @@ class MobileWristPlanner:
         for obstacle in scene.scene:
             if intersects(camera,obstacle):return False,'SCAN_CAMERA_ENVIRONMENT_COLLISION:'+obstacle.path,None
         for robot in scene.robot:
-            # Camera is mounted to this rigid wrist cluster; all other links,
-            # including the movable fingers, remain checked.
-            if robot.body not in ('link6','flange_link','gripper_base') and intersects(camera,robot):return False,'SCAN_CAMERA_SELF_COLLISION:'+robot.body,None
+            # A mount does not authorize camera housing penetration into the
+            # official wrist/gripper envelope. Check every robot collider.
+            if intersects(camera,robot):return False,'SCAN_CAMERA_SELF_COLLISION:'+robot.body,None
         return True,'SAFE',None
     def arm_path(self,scene,start,goal,base,fingers):
         outer=self;deadline=min(time.time()+self.policy.get('arm_path_wall_s',60),self.r.deadline)

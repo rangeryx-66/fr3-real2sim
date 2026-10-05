@@ -1,0 +1,84 @@
+{
+  "model": "Intel RealSense D435",
+  "resolution_wh": [
+    1280,
+    720
+  ],
+  "frequency_hz": 30,
+  "K": [
+    [
+      925.0,
+      0,
+      640
+    ],
+    [
+      0,
+      925.0,
+      360
+    ],
+    [
+      0,
+      0,
+      1
+    ]
+  ],
+  "T_tcp_camera_optical": [
+    [
+      1,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      1,
+      0,
+      -0.1
+    ],
+    [
+      0,
+      0,
+      1,
+      -0.1
+    ],
+    [
+      0,
+      0,
+      0,
+      1
+    ]
+  ],
+  "intrinsics_source": "nominal RGB FOV 69.4 x 42.5 deg, not per-unit CameraInfo",
+  "extrinsics_source": "simulation mount design, lateral offset selected by official robot envelope clearance and rendered self-occlusion QA, not factory calibration",
+  "real_hardware_calibrated": false,
+  "real_deployment_ready": false,
+  "requires_real_calibration": [
+    "aligned depth CameraInfo K/distortion",
+    "hand-eye T_tcp_camera_optical",
+    "mount clearance and camera body collision"
+  ],
+  "official_supported_example": "https://www.hackster.io/agilexrobotics/control-piper-arm-with-hand-gestures-7c2779",
+  "camera_body_size_m": [
+    0.09,
+    0.025,
+    0.025
+  ],
+  "official_sensor_spec": "https://www.realsenseai.com/products/stereo-depth-camera-d435/",
+  "default_camera_claim": "D435 is an official example option, not a mandatory PiPER default",
+  "mount_diagnostic": {
+    "original_translation_m": [
+      0,
+      -0.075,
+      -0.1
+    ],
+    "selected_translation_m": [
+      0,
+      -0.1,
+      -0.1
+    ],
+    "original_robot_pixel_ratio": 0.17707573784722222,
+    "selected_robot_pixel_ratio": 0.0,
+    "diagnostic_only": true,
+    "source": "results/wrist_mobile_20261006/mount_qa/mount_qa.json"
+  }
+}
