@@ -25,7 +25,10 @@ class Recovery(LegacyRecovery):
         self.r=runtime;self.root=Path(root);self.job=job;self.export=export;self.model=model;self.allowed=allowed
         self.initial_ee=runtime.tcp().copy();self.initial_base=list(runtime.base);self.count=0;self.history=[];self.plan=normalize_plan(json.loads(Path(job['plan']).read_text()))
         self.visual=copy.deepcopy(runtime.initial_visual);H=np.asarray(self.visual['T_world_handle']);H[:3,3]=self.visual['anchor_world_m'];self.visual['T_world_handle']=H.tolist()
-        self.initial_cloud=local_cloud(runtime.capture,self.visual['anchor_world_m']);self.current_D=np.eye(4)
+        self.initial_cloud=local_cloud(runtime.capture,self.visual['anchor_world_m']);self.current_D=np.eye(4);self.released=False;self.grasp_reference_ee=self.initial_ee.copy();self.grasp_reference_D=np.eye(4)
+        from wrist_reconstruction.planner import MobileWristPlanner
+        from wrist_reconstruction.retreat import RetreatPlanner
+        self.mobile=MobileWristPlanner(self);self.retreat=RetreatPlanner(self)
 
     def observe(self,initial,wrist=False):
         anchor=(np.asarray(initial)@np.r_[self.visual['anchor_world_m'],1])[:3]
@@ -54,42 +57,66 @@ class Recovery(LegacyRecovery):
         if not plan['trial_candidates']:raise RuntimeError('CURRENT_OBSERVATION_NO_SAFE_REGRASP')
         return {'base':list(r.base),'plan':plan,'route':{'waypoints':[list(r.base)],'translation_m':0.}}
 
+    def move_base(self,choice):
+        if not self.released:raise RuntimeError('MOBILE_REQUIRES_RELEASED_OBJECT')
+        if choice['route'].get('translation_m',0)<1e-6 and choice['route'].get('rotation_deg',0)<1e-6:return
+        if self.count>=self.job['system_capture']['maximum_repositions']:raise RuntimeError('REPOSITION_BUDGET_EXHAUSTED')
+        self.count+=1;self.r.base_route(choice)
+        (self.r.capture.output/'mobile_progress.json').write_text(json.dumps({'repositions':self.count,'base':list(self.r.base),'physical_release_verified':True,'route':choice['route']},indent=2))
+
+    def grasp_recovery(self,D):
+        from interactive_twin_recovery.mobile import recover
+        policy=json.loads((self.root/'configs/interactive_twin_recovery.yaml').read_text())['mobile']['search']
+        result=recover(self.root,self.export_current(D),self.plan,self.visual_current(D),list(self.r.base),policy,seed=61,deadline=min(time.time()+600,self.r.deadline))
+        return result
+
     def run(self,value,capture_label=None):
-        r=self.r;row={'index':len(self.history),'start_state_estimated':value,'initial_base':list(r.base),'object_reset':False};self.history.append(row)
+        from wrist_reconstruction.planner import PlanningExhausted
+        r=self.r;row={'index':len(self.history),'start_state_estimated':value,'initial_base':list(r.base),'object_reset':False,'regrasp_attempts':[]};self.history.append(row)
         def save():(r.capture.output/'reposition_history.json').write_text(json.dumps(self.history,indent=2))
         try:
-            guess=r.tcp()@np.linalg.inv(self.initial_ee)
-            D,audit,cloud=self.observe(guess);row['pre_release_observation']=audit;save()
-            # Keep the original finite recovery algorithm. Capture-only release
-            # first stays at the current base; subsequent reachability failures
-            # are eligible for the same SE2 search, never contact/fitting failures.
-            if capture_label is not None:choice={'base':list(r.base),'route':{'waypoints':[list(r.base)],'translation_m':0.}}
-            else:
-                if self.count>=self.job['system_capture']['maximum_repositions']:raise RuntimeError('REPOSITION_BUDGET_EXHAUSTED')
-                from interactive_twin_recovery.mobile import recover
-                policy=json.loads((self.root/'configs/interactive_twin_recovery.yaml').read_text())['mobile']['search']
-                result=recover(self.root,self.export_current(D),self.plan,self.visual_current(D),list(r.base),policy,seed=61,deadline=min(time.time()+600,r.deadline));row['planning']=result
-                if not result['selected']:raise RuntimeError('NO_SAFE_CONTINUATION_BASE_ROUTE')
-                choice=result['selected'];self.count+=1
-            r.plan_retreat(D);r.phase('RELEASE_CHECK_HOLD');r.drive.active=False;r.hold(2.);D0,_,_=self.observe(D)
-            r.release_begin(D)
+            guess=r.tcp()@np.linalg.inv(self.grasp_reference_ee)@self.grasp_reference_D
+            D,audit,cloud=self.observe(guess);self.current_D=D;row['pre_release_observation']=audit;save()
+            plans=self.retreat.plans(D);row['retreat_preflight_alternatives']=len(self.retreat.rows);save()
+            if not plans:raise PlanningExhausted('RETREAT_ALTERNATIVES_EXHAUSTED')
+            r.phase('RELEASE_CHECK_HOLD');r.drive.active=False;r.hold(2.);D0,_,_=self.observe(D)
+            r.configure_release(plans[0]['opening'],D)
             try:
-                for _ in range(20):
+                for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
                     r.release_increment(.001);r.hold(1.);D1,_,_=self.observe(D0);delta=D1@np.linalg.inv(D0)
                     if np.max(np.linalg.norm(cloud@delta[:3,:3].T+delta[:3,3]-cloud,axis=1))>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
                     if r.released():break
                 else:raise RuntimeError('RELEASE_CONTACT_NOT_CLEARED')
             except BaseException:
                 r.reclose_at_current_pose();raise
-            row['released']=True;r.retreat_home(choice);row['arm_retreat_completed']=True;save()
+            self.released=True;row['released']=True;save()
+            escaped=False
+            for candidate in plans:
+                if self.retreat.execute(candidate):escaped=True;break
+            if not escaped:raise PlanningExhausted('RETREAT_PHYSICAL_ALTERNATIVES_EXHAUSTED')
+            row['arm_retreat_completed']=True;save()
             if capture_label is not None:
-                r.capture.scan(capture_label,value,getattr(r,'saved_estimate',None));row['wrist_scan_completed']=True;save()
-            r.base_route(choice);row['base_reposition_completed']=len(choice['route']['waypoints'])>1;save()
-            Dnew,audit,_=self.observe(D0,wrist=True);row['post_move_observation']=audit
-            delta=Dnew@np.linalg.inv(D0);row['post_move_observed_displacement_m']=float(np.max(np.linalg.norm(cloud@delta[:3,:3].T+delta[:3,3]-cloud,axis=1)))
-            row['world_consistency_role']='diagnostic only; fresh target is replanned regardless of 1mm change';save()
-            r.scan_home();fresh=self.plan_current(Dnew);row['fresh_regrasp_plan']=fresh;save()
-            r.regrasp(fresh,Dnew@np.linalg.inv(D));row['regrasp_completed']=True;row['status']='REOBSERVED_REPLANNED_REGRASPED';save()
-            self.current_D=Dnew;r.state_offset=value;r.reset_grasp_memory();return True
+                captured=r.capture.scan(capture_label,value,getattr(r,'saved_estimate',None));row['wrist_scan_completed']=captured['clean_wrist_capture'];save()
+            # Reobserve after scan/base changes. Planning uncertainty is recoverable;
+            # physical contact/safety errors continue to propagate unchanged.
+            for attempt in range(self.job['system_capture']['regrasp_budget']):
+                item={'attempt':attempt,'initial_base':list(r.base)};row['regrasp_attempts'].append(item);save()
+                try:
+                    Dnew,audit,_=self.observe(D0,wrist=True);self.current_D=Dnew;r.set_observed_moving(Dnew)
+                    item['post_move_observation']=audit
+                    delta=Dnew@np.linalg.inv(D0);item['post_move_observed_displacement_m']=float(np.max(np.linalg.norm(cloud@delta[:3,:3].T+delta[:3,3]-cloud,axis=1)))
+                    item['world_consistency_role']='diagnostic only; fresh observation always replanned';save()
+                    self.mobile.home();fresh=self.plan_current(Dnew);item['fresh_regrasp_plan']=fresh;save()
+                except (PlanningExhausted,RuntimeError) as error:
+                    reason=str(error);item['planning_error']=reason;save()
+                    if not isinstance(error,PlanningExhausted) and not reason.startswith(('CURRENT_OBSERVATION_','CURRENT_HANDLE_REGISTRATION_','OBSERVED_HANDLE_REGION_','NO_SAFE_','SCAN_')):raise
+                    self.mobile.home();result=self.grasp_recovery(self.current_D);item['mobile_grasp_search']=result;save()
+                    if result['selected'] is None:continue
+                    self.move_base(result['selected']);D0=self.current_D;continue
+                r.regrasp(fresh,np.eye(4));self.released=False;item['physical_regrasp_completed']=True;row['regrasp_completed']=True;save()
+                r.state_offset=value;r.reset_grasp_memory();self.grasp_reference_ee=r.tcp().copy();self.grasp_reference_D=Dnew.copy();row['status']='REOBSERVED_REPLANNED_REGRASPED';save()
+                checkpoint={'stage':'stable_regrasp','estimated_state':value,'base':list(r.base),'current_observed_D':Dnew.tolist(),'repositions':self.count,'physical_state_restore_requires_command_reexecution':True,'attachment':False,'object_state_replay':False}
+                (r.capture.output/'capture_checkpoint.json').write_text(json.dumps(checkpoint,indent=2));return True
+            raise PlanningExhausted('REGRASP_RECOVERY_BUDGET_EXHAUSTED')
         except BaseException as e:
             row.update(status='FAILED',error=str(e));save();raise

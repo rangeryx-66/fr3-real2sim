@@ -1,17 +1,21 @@
 """Independent bounded OLD/WRIST-CLEAN/ORACLE capture/backend ledger."""
-import argparse,copy,json,os,sys,time,subprocess,hashlib,signal
+import argparse,copy,json,os,sys,time,subprocess,hashlib,signal,threading
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from datetime import datetime
 ROOT=Path(__file__).resolve().parents[1]
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction.json');p.add_argument('--output',type=Path,default=ROOT/'results/wrist_reconstruction_20261006');p.add_argument('--stage',choices=['capture','audit-old','coarse','backend','full','report'],default='full');p.add_argument('--object',choices=['7320','45746']);p.add_argument('--gpu',type=int,default=0);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_v2.json');p.add_argument('--output',type=Path,default=ROOT/'results/wrist_mobile_20261006/run_v2');p.add_argument('--stage',choices=['capture','audit-old','coarse','backend','full','report'],default='full');p.add_argument('--object',choices=['7320','45746']);p.add_argument('--gpu',type=int,default=0);a=p.parse_args()
     c=json.loads(a.config.read_text());out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);frozen=out/'frozen_config.json'
     if frozen.exists() and json.loads(frozen.read_text())!=c:raise RuntimeError('FROZEN_CONFIGURATION_CHANGED')
     frozen.write_text(json.dumps(c,indent=2));ledgerpath=out/'components.json';ledger=json.loads(ledgerpath.read_text()) if ledgerpath.exists() else {'start_wall_s':time.time(),'components':{}}
     cutoff=min(datetime.fromisoformat(c['deadline_shanghai']).timestamp(),ledger['start_wall_s']+c['total_wall_budget_s'])
-    def save():ledgerpath.write_text(json.dumps(ledger,indent=2))
+    ledger_lock=threading.RLock()
+    def save():
+        with ledger_lock:
+            temporary=ledgerpath.with_suffix('.tmp');temporary.write_text(json.dumps(ledger,indent=2));temporary.replace(ledgerpath)
     def run(key,cmd,budget,env=None):
         old=ledger['components'].get(key,{})
         if old.get('status')=='COMPLETE':return
@@ -32,19 +36,31 @@ def main():
     if a.stage in ('audit-old','full'):
         run('audit-old',[str(ROOT/'environments/artgs/bin/python'),str(ROOT/'scripts/audit_artgs_sensor_inputs.py'),'--root',str(ROOT/'results/articulated_system_20261005'),'--output',str(out/'old_input_audit.json')],600)
     if a.stage in ('capture','full'):
+        capture_jobs=[]
         for o in objects:
             job=json.loads((ROOT/o['job']).read_text());job=copy.deepcopy(job)
-            output=out/('capture_'+o['id']);job.update(output=str(output),episode_id='wrist_'+o['id'],gpu=a.gpu,deadline_shanghai=c['deadline_shanghai'],wall_clock_budget_s=c['capture']['wall_s'],wrist_experiment=c,camera_calibration=str(ROOT/c['camera_calibration']),object_prompt=o['prompt'],system_capture=c['capture'])
-            job['skill'].update(targets=o['targets'],capture_interval=30. if job['skill']['joint_type']=='revolute' else .05,minimum_capture_separation=.5 if job['skill']['joint_type']=='revolute' else .002,maximum_segments=c['capture']['maximum_segments'],maximum_sim_s=c['capture']['maximum_sim_s'],maximum_path_m=c['capture']['task_path_m'],warning_margin_rad=c['capture']['warning_margin_rad'])
+            output=out/('capture_'+o['id']);job.update(output=str(output),episode_id='wrist_'+o['id'],gpu=c.get('capture_gpus',{}).get(o['id'],a.gpu),deadline_shanghai=c['deadline_shanghai'],wall_clock_budget_s=c['capture']['wall_s'],wrist_experiment=c,camera_calibration=str(ROOT/c['camera_calibration']),object_prompt=o['prompt'],system_capture=c['capture'])
+            job['skill'].update(targets=o['targets'],capture_interval=o.get('capture_interval',30. if job['skill']['joint_type']=='revolute' else .05),minimum_capture_separation=.5 if job['skill']['joint_type']=='revolute' else .002,maximum_segments=c['capture']['maximum_segments'],maximum_sim_s=c['capture']['maximum_sim_s'],maximum_path_m=c['capture']['task_path_m'],warning_margin_rad=c['capture']['warning_margin_rad'])
             jp=out/(o['id']+'_job.json');jp.write_text(json.dumps(job,indent=2))
+            capture_jobs.append((o,output,jp))
+        def capture_one(item):
+            o,output,jp=item
             run('capture/'+o['id'],['/data1/home/rangeryx/isaaclab-arena/.venv/bin/python',str(ROOT/'scripts/run_wrist_reconstruction_episode.py'),'--job',str(jp)],c['capture']['wall_s'],{'PATH':'/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static:'+os.environ['PATH']})
             row=ledger['components']['capture/'+o['id']];row['actual_capture_directory']=str(output)
             result=output/'report.json'
             if result.exists():
                 actual=json.loads(result.read_text());row['physical_status']=actual.get('status');row['bilateral_hold_established']=actual.get('bilateral_hold_established',False);row['recorded_states']=actual.get('skill_capture_states',0)
             save()
+        with ThreadPoolExecutor(max_workers=min(2,max(1,len(capture_jobs)))) as pool:list(pool.map(capture_one,capture_jobs))
     if a.stage in ('coarse','backend','full'):
         for o in objects:
+            wrist_manifest=out/('capture_'+o['id'])/'multistate_capture.json'
+            if not wrist_manifest.exists():
+                ledger['components'][f'backend/{o["id"]}']={'status':'WAITING_FOR_WRIST_CLEAN'};save();continue
+            observed=json.loads(wrist_manifest.read_text());clean=[s for s in observed['states'] if s.get('clean_wrist_capture')]
+            family=observed['joint_family_requested'];required=c['backend']['minimum_pair_span'][family]
+            if len(clean)<c['backend']['minimum_clean_states'] or max([s['estimated_articulation_state'] for s in clean] or [0])-min([s['estimated_articulation_state'] for s in clean] or [0])<required:
+                ledger['components'][f'backend/{o["id"]}']={'status':'WAITING_FOR_THREE_CLEAN_STATES_AND_LARGE_SPAN'};save();continue
             old=ROOT/'results/articulated_system_20261005'/('7320_recovery_v2' if o['id']=='7320' else '45746_recovery_v3_infrastructure_retry')
             for variant,root in [('OLD',old),('WRIST_CLEAN',out/('capture_'+o['id'])),('ORACLE_CAPTURE',out/('capture_'+o['id'])/'oracle_capture')]:
                 manifest=root/'multistate_capture.json'

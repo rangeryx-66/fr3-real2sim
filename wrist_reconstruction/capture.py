@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 from scipy.spatial.transform import Rotation
 from articulated_interaction_skill.capture import CaptureRecorder,backproject,matrix
-from wrist_reconstruction.geometry import calibration,proposed_views,optical_to_tcp,visibility
+from wrist_reconstruction.geometry import calibration,proposed_views,optical_to_tcp,visibility,coverage_views,distinct_view
 
 
 def snapshot(camera):
@@ -47,7 +47,7 @@ class WristRecorder(CaptureRecorder):
         folder.mkdir(parents=True,exist_ok=True);rgb,depth,seg=snapshot(camera)
         cv2.imwrite(str(folder/'rgb.png'),cv2.cvtColor(rgb,cv2.COLOR_RGB2BGR));np.save(folder/'depth_m.npy',depth)
         K=np.asarray(camera.get_intrinsics_matrix());T=matrix(*camera.get_world_pose(camera_axes='ros'))
-        meta={'K':K.tolist(),'T_world_camera_optical':T.tolist(),'camera_axes':'ROS optical','depth':'optical Z in meters','resolution_wh':list(rgb.shape[1::-1]),'mask_source':'SAM3 on full-background sensor RGB; instance segmentation QA only','camera_calibration_real':self.cal['real_hardware_calibrated'],'sim_nominal_extrinsics':not self.cal['real_hardware_calibrated']}
+        meta={'T_world_ee':None if self.runtime is None else self.runtime.tcp().tolist(),'robot_q':None if self.runtime is None else self.runtime.arm_q().tolist(),'robot_base_pose':None if self.runtime is None else list(self.runtime.base),'K':K.tolist(),'T_world_camera_optical':T.tolist(),'camera_axes':'ROS optical','depth':'optical Z in meters','resolution_wh':list(rgb.shape[1::-1]),'mask_source':'SAM3 on full-background sensor RGB; instance segmentation QA only','camera_calibration_real':self.cal['real_hardware_calibrated'],'sim_nominal_extrinsics':not self.cal['real_hardware_calibrated']}
         if qa:
             ids=seg['data'];labels=seg['info']['idToLabels'];obj=[int(k) for k,v in labels.items() if self.asset_path in str(v)];robot=[int(k) for k,v in labels.items() if '/World/Piper/' in str(v)]
             om=np.isin(ids,obj);rm=np.isin(ids,robot);ys,xs=np.where(om)
@@ -75,10 +75,12 @@ class WristRecorder(CaptureRecorder):
         state_dir=self.output/'states'/f'state_{len(self.states):03d}';state_dir.mkdir(parents=True,exist_ok=True)
         normal=np.asarray(r.initial_visual['outward_normal_world']);views=[];log={'label':label,'state_estimate':value,'proposals':[],'released':True,'camera_motion':'physical robot joints; no camera teleport view acquisition'}
         # Reobserve current shape from sensor data after release, not a door GT.
-        proposals=proposed_views(self.center,normal,self.extent,p)
+        proposals=coverage_views(self.observed_cloud,self.center,normal,self.cal,p)
         for proposal in proposals[:p['maximum_pose_proposals']]:
             if time.monotonic()-start>p['maximum_scan_wall_s']:break
             row={'view_id':proposal['view_id'],'requested_T_camera':proposal['T_camera'].tolist()};log['proposals'].append(row)
+            if not distinct_view(proposal['T_camera'],[np.asarray(v['T_world_camera_optical']) for v in views],p['minimum_camera_baseline_m'],p['minimum_camera_angle_deg']):
+                row.update(status='SKIPPED_REDUNDANT_VIEW');continue
             try:
                 if visibility(self.observed_cloud,proposal['T_camera'],self.cal['K'],self.cal['resolution_wh'])<p['minimum_initial_cloud_in_frame']:raise RuntimeError('OBJECT_WOULD_BE_CROPPED')
                 r.scan_to(optical_to_tcp(proposal['T_camera'],self.cal['X']));r.hold(p['settle_s'])
@@ -87,22 +89,27 @@ class WristRecorder(CaptureRecorder):
                 qa=meta['qa']
                 if qa['robot_pixel_ratio']>p['maximum_robot_pixel_ratio']:raise RuntimeError('QA_ROBOT_OCCLUSION')
                 if qa['object_frame_clipped']:raise RuntimeError('QA_OBJECT_CROPPED')
+                if qa['visible_moving_part_pixels']<p['minimum_moving_part_pixels']:raise RuntimeError('QA_MOVING_PART_NOT_VISIBLE')
                 if not p['minimum_object_coverage']<=qa['object_coverage']<=p['maximum_object_coverage']:raise RuntimeError('QA_OBJECT_COVERAGE')
                 mask=sam_mask(folder,self.config['sam3'],self.job['object_prompt']);P,keep=backproject(depth,np.asarray(meta['K']),np.asarray(meta['T_world_camera_optical']),mask)
                 if len(P)<200:raise RuntimeError('SENSOR_SEGMENTATION_CLOUD_EMPTY')
                 np.savez_compressed(folder/'point_cloud.npz',points_world_m=P.astype(np.float32),rgb=rgb[keep],units='m')
                 views.append({'view_id':proposal['view_id'],'directory':str(folder.relative_to(self.output)),'K':meta['K'],'T_world_camera_optical':meta['T_world_camera_optical'],'qa':qa})
-                row.update(status='ACQUIRED',actual_T_camera=meta['T_world_camera_optical'],qa=qa)
+                row.update(status='ACQUIRED',actual_T_camera=meta['T_world_camera_optical'],qa=qa,base=list(r.base))
+                (state_dir/'views_checkpoint.json').write_text(json.dumps({'label':label,'estimated_state':value,'views':views},indent=2))
+            except (subprocess.SubprocessError,TimeoutError) as e:
+                row.update(status='REJECTED',reason='SAM3_SENSOR_INFERENCE_FAILED:'+str(e))
             except RuntimeError as e:
                 row.update(status='REJECTED',reason=str(e))
-                if str(e).startswith(('LOW_JOINT_MARGIN','DANGEROUS_','EXISTING_')):raise
+                if not str(e).startswith(('SCAN_','MOBILE_VIEW_RECOVERY_','NO_SAFE_HOME_PATH_','QA_','SENSOR_','OBJECT_WOULD_BE_')):raise
             (self.output/'camera_trajectory.json').write_text(json.dumps(self.scan_logs+[log],indent=2))
+            if len(views)>=p['maximum_clean_views']:break
         r.scan_home()
         from wrist_reconstruction.oracle import scan as oracle_scan
         try:log['oracle_capture']=oracle_scan(self,label,value)
         except Exception as error:log['oracle_error']=str(error)
         self.scan_logs.append(log)
-        state={'state_id':len(self.states),'label':label,'estimated_articulation_state':float(value),'articulation_estimate':articulation,'views':views,'timestamp_sim_s':r.time(),'robot_base_pose':list(r.base),'grasp_still_stable':False,'released_for_capture':True,'clean_wrist_capture':len(views)>=p['minimum_clean_views'],'stop_reason':None if len(views)>=p['minimum_clean_views'] else 'INSUFFICIENT_CLEAN_REACHABLE_WRIST_VIEWS'}
+        state={'state_id':len(self.states),'label':label,'estimated_articulation_state':float(value),'articulation_estimate':articulation,'views':views,'timestamp_sim_s':r.time(),'robot_base_pose':list(r.base),'T_world_ee':r.tcp().tolist(),'last_physical_grasp_pose':r.grasp.tolist(),'grasp_still_stable':False,'released_for_capture':True,'clean_wrist_capture':len(views)>=p['minimum_clean_views'],'stop_reason':None if len(views)>=p['minimum_clean_views'] else 'INSUFFICIENT_CLEAN_REACHABLE_WRIST_VIEWS'}
         self.states.append(state);(state_dir/'state.json').write_text(json.dumps(state,indent=2));self.flush('RUNNING');return state
 
     def capture(self,label,value,*args,**kwargs):

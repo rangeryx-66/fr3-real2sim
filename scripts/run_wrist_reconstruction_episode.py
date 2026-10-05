@@ -24,57 +24,60 @@ def source():
         text=text.replace(a,b)
     replace('from articulated_system.capture import MultiviewRecorder as CaptureRecorder','from wrist_reconstruction.capture import WristRecorder as CaptureRecorder')
     replace('from articulated_system.recovery import Recovery','from wrist_reconstruction.recovery import Recovery')
+    replace('from articulated_system.session import run as run_skill','from wrist_reconstruction.session import run as run_skill')
     replace(" from isaacsim.core.utils.types import ArticulationAction", " from wrist_reconstruction.scene import normal_background\n normal_background(stage)\n from isaacsim.core.utils.types import ArticulationAction")
-    replace("   recovery=Recovery(runtime,ROOT,job,export,model,allowed);runtime.recover=recovery.run",'''   def scan_to(target):
+    replace("   recovery=Recovery(runtime,ROOT,job,export,model,allowed);runtime.recover=recovery.run",'''   def execute_arm_path(path,phase_name,minimum_duration=1.5):
+    runtime.phase(phase_name)
+    for q in path[1:]:move(q,max(minimum_duration,float(np.max(abs(np.asarray(q)-np.asarray(robot.get_joint_positions())[arm])))/.2))
+   def configure_release(opening,D):
+    nonlocal release_opening
+    release_opening=opening;release_begin(D)
+   def set_observed_moving(D):
+    nonlocal moving_initial
+    moving_initial=D@original_moving_reference;collision.moving_reference=moving_initial
+   def open_clear_gripper():
+    for opening in np.linspace(float(qtarget[fingers[0]]-qtarget[fingers[1]]),.1,40):
+     qtarget[fingers]=[opening/2,-opening/2];hold(.05)
+   def halt_at_measured_state():
+    nonlocal mode,compliant
+    qtarget[:]=np.asarray(robot.get_joint_positions());qvelocity[:]=0.;mode='position';compliant=False;system_gains()
+   def return_last_safe():
     from piper_mobile_demo.model import Model
-    start=np.asarray(robot.get_joint_positions())[arm];goal=model.ik(target,base,seed=start,starts=5)
-    if goal is None:raise RuntimeError('SCAN_NO_IK')
-    if model.margin(goal)<=.05:raise RuntimeError('SCAN_UNSAFE_MARGIN')
-    def check(q,_base):
-     if model.margin(np.asarray(q))<=.05:return False,'LOW_JOINT_MARGIN',None
-     P=model.poses(q,base,finger_q=np.asarray(robot.get_joint_positions())[fingers]);ok,why=collision.check(P,moving_initial,False)
-     if not ok:return False,why,None
-     # Include the nominal physical camera housing in scan/environment tests.
-     from piper_mobile_demo.owned_scene import Shape,intersects
-     import trimesh
-     C=P['tcp_link']@skill_capture.cal['X'];body=Shape(trimesh.creation.box(skill_capture.cal['camera_body_size_m']),C,True,'/World/wrist_camera_housing','camera')
-     for obstacle in collision.scene:
-      if intersects(body,obstacle):return False,'SCAN_CAMERA_ENVIRONMENT_COLLISION',None
-     return True,'SAFE',None
-    class ScanView:
-     def __getattr__(self,name):return getattr(model,name)
-     def check(self,q,_base):return check(q,_base)
-    path=Model.joint_plan(ScanView(),start,goal,base,iterations=1500)
-    if path is None:raise RuntimeError('SCAN_NO_COLLISION_FREE_ARM_PATH')
-    runtime.phase('SYSTEM_WRIST_SCAN')
-    for q in path[1:]:move(q,max(1.5,float(np.max(abs(np.asarray(q)-np.asarray(robot.get_joint_positions())[arm])))/.2))
-   def scan_home():
-    from piper_mobile_demo.model import Model
-    def check(q,_base):
-     if model.margin(np.asarray(q))<=.05:return False,'LOW_JOINT_MARGIN',None
-     ok,why=collision.check(model.poses(q,base,finger_q=np.asarray(robot.get_joint_positions())[fingers]),moving_initial,False);return ok,why,None
+    target=np.asarray(runtime.last_safe_arm);start=np.asarray(robot.get_joint_positions())[arm]
+    def check(q,b):
+     if model.margin(q)<=.05:return False,'LOW_JOINT_MARGIN',None
+     ok,why=collision.check(model.poses(q,b,finger_q=np.asarray(robot.get_joint_positions())[fingers]),moving_initial,False);return ok,why,None
     class View:
      def __getattr__(self,name):return getattr(model,name)
-     def check(self,q,_base):return check(q,_base)
-    path=Model.joint_plan(View(),np.asarray(robot.get_joint_positions())[arm],model.home,base,iterations=1500)
-    if path is None:raise RuntimeError('SCAN_NO_SAFE_HOME_PATH')
-    runtime.phase('SYSTEM_SCAN_HOME')
-    for q in path[1:]:move(q,2.)
-   def observe_handle(anchor):
-    from wrist_reconstruction.geometry import look_at,optical_to_tcp
-    normal=np.asarray(runtime.initial_visual['outward_normal_world']);eye=np.asarray(anchor)+normal*.34+np.array([0,0,.1])
-    scan_to(optical_to_tcp(look_at(eye,np.asarray(anchor)),skill_capture.cal['X']))
-   runtime.scan_to=scan_to;runtime.scan_home=scan_home;runtime.observe_handle=observe_handle;skill_capture.runtime=runtime
-   recovery=Recovery(runtime,ROOT,job,export,model,allowed);runtime.recover=recovery.run''')
+     def check(self,q,b):return check(q,b)
+    path=Model.joint_plan(View(),start,target,base,iterations=1500)
+    if path is None:return False
+    try:execute_arm_path(path,'SYSTEM_SAFE_RETURN');hold(.3);return True
+    except RuntimeError:return False
+   runtime.arm_q=lambda:np.asarray(robot.get_joint_positions())[arm].copy();runtime.finger_q=lambda:np.asarray(robot.get_joint_positions())[fingers].copy()
+   runtime.execute_arm_path=execute_arm_path;runtime.configure_release=configure_release;runtime.open_clear_gripper=open_clear_gripper;runtime.set_observed_moving=set_observed_moving
+   runtime.halt_at_measured_state=halt_at_measured_state;runtime.return_last_safe=return_last_safe;runtime.last_safe_arm=runtime.arm_q()
+   skill_capture.runtime=runtime
+   recovery=Recovery(runtime,ROOT,job,export,model,allowed);runtime.recover=recovery.run
+   runtime.scan_to=lambda target:recovery.mobile.execute(target@skill_capture.cal['X'])
+   runtime.scan_home=recovery.mobile.home;runtime.observe_handle=recovery.mobile.observe_handle
+''')
     replace("    if np.linalg.norm(observed_correction[:3,3])>.001:raise RuntimeError('REGRASP_POSE_CHANGED_REPLAN_REQUIRED')", "    # Fresh wrist RGB-D targets have already been collision/IK replanned.\n    pass")
     replace("    saved_memory=memory;memory=None;", "    saved_memory=memory;runtime.saved_estimate=None if memory is None else memory.estimate;memory=None;")
     replace("drive=ConstrainedDrive(tcp(),memory.tangent(tcp()))", "drive=ConstrainedDrive(tcp(),memory.tangent(tcp()) if memory.estimate is not None else memory.directions[0])")
     # Keep wrist extrinsics rigidly attached to MEASURED TCP, not proposed pose.
     replace('  world.step(render=False,update_fabric=True)', '  skill_capture.sync(tcp())\n  world.step(render=False,update_fabric=True)')
+    replace('  return s\n def move', '  if skill_capture.runtime is not None:skill_capture.runtime.last_safe_arm=np.asarray(s["q"])[arm].copy()\n  return s\n def move')
     ast.parse(text);return text
 
 if __name__=='__main__':
     import argparse
     p=argparse.ArgumentParser();p.add_argument('--job',type=Path,required=True);a=p.parse_args();job=json.loads(a.job.read_text());out=Path(job['output']);out.mkdir(parents=True,exist_ok=True)
     expanded=source();(out/'expanded_wrist_program.py').write_text(expanded)
+    paths=[Path(__file__),ROOT/'configs/wrist_camera_d435_nominal.json',*sorted((ROOT/'wrist_reconstruction').glob('*.py'))]
+    (out/'wrist_orchestration_provenance.json').write_text(json.dumps({
+        'job_sha256':hashlib.sha256(a.job.read_bytes()).hexdigest(),
+        'expanded_program_sha256':hashlib.sha256(expanded.encode()).hexdigest(),
+        'sources':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+        'physical_contact_baseline_unchanged':True},indent=2))
     (out/'frozen_wrist_job.json').write_text(json.dumps(job,indent=2));exec(compile(expanded,str(ROOT/'scripts/run_interactive_twin_refinement_episode.py'),'exec'),globals())
