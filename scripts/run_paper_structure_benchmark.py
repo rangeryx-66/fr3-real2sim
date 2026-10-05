@@ -12,7 +12,9 @@ def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 
 def execute(item):
     job,out,c=item;folder=Path(job['output']);folder.mkdir(parents=True,exist_ok=True)
-    if (folder/'report.json').exists():return read(folder/'report.json')
+    if (folder/'report.json').exists():
+        if read(folder/'job_private.json')!=job:raise RuntimeError('REUSE_JOB_MISMATCH:'+str(folder))
+        return read(folder/'report.json')
     write(folder/'job_private.json',job)
     py='/data1/home/rangeryx/isaaclab-arena/.venv/bin/python'
     env=dict(os.environ);env.pop('PYTHONPATH',None);env.update(OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1')
@@ -45,14 +47,15 @@ def freeze(c):
             shared.append({'episode_id':s['episode_id'],'asset_id':s['asset_id'],'status':s['status'],'prior_summary':str(old/'episodes'/s['episode_id']/'episode_summary.json'),'shared_prefix_failure':True,'fixed_base_feasible':s.get('fixed_base_feasible')})
             continue
         for method in c['methods']:
-            j=copy.deepcopy(s['selected_job']);j.update(paper_method=method,output=str(out/'comparisons'/s['episode_id']/method),episode_id=s['episode_id']+'_'+method,deadline_shanghai=c['deadline_shanghai'])
+            j=read(Path(s['selected_report']).parent/'job_private.json');j.update(paper_method=method,output=str(out/'comparisons'/s['episode_id']/method),episode_id=s['episode_id']+'_'+method,deadline_shanghai=c['deadline_shanghai'])
+            assert j.get('active_structure') and j.get('structure_protocol'), 'INCOMPLETE_ACTUAL_JOB'
             jobs.append(j)
     obs=[]
     for eid in ['test_45385_01','test_45671_00','test_45671_01']:
-        s=next(s for s in summaries if s['episode_id']==eid);j=copy.deepcopy(s['selected_job'])
+        s=next(s for s in summaries if s['episode_id']==eid);j=read(Path(s['selected_report']).parent/'job_private.json')
         j.update(paper_method='LOG_ONLY',output=str(out/'observation_upper_bound'/eid),deadline_shanghai=c['deadline_shanghai']);obs.append(j)
     for aid in c['controls']:
-        j=read(old/'controls_full_structure'/aid/'job_private.json');j.update(paper_method='LOG_ONLY',output=str(out/'observation_upper_bound'/('control_'+aid)),deadline_shanghai=c['deadline_shanghai']);obs.append(j)
+        j=read(old/'controls_full_structure'/aid/'job_private.json');j.update(paper_method='LOG_ONLY',output=str(ROOT/c['reuse_logging_controls'][aid]) if aid in c.get('reuse_logging_controls',{}) else str(out/'observation_upper_bound'/('control_'+aid)),deadline_shanghai=c['deadline_shanghai']);obs.append(j)
     files=[]
     for pat in ['paper_structure/*.py','scripts/run_paper_structure*.py','configs/paper_structure.json']:files+=list(ROOT.glob(pat))
     inherited=read(old/'frozen_method.json')['code_sha256']

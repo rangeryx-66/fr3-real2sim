@@ -2,15 +2,39 @@
   "schema": "paper-structure-internal-ablation-v1",
   "source_commit": "2df0826",
   "source_run": "results/operational_structure_20261005_v3",
-  "output": "results/paper_structure_20261005_v1",
-  "methods": ["B0", "B1", "B2"],
-  "controls": ["7320", "45621"],
-  "gpus": [0,1,2,3,4,5],
+  "output": "results/paper_structure_20261005_v2",
+  "methods": [
+    "B0",
+    "B1",
+    "B2"
+  ],
+  "controls": [
+    "7320",
+    "45621"
+  ],
+  "gpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
   "maximum_native_trials": 38,
-  "heldout": {"active_s": 8.0,"dwell_s": 2.0,"fit_usage":"never", "interpretation":"conditional geometric prediction; measured orientation provides phase"},
+  "heldout": {
+    "active_s": 8.0,
+    "dwell_s": 2.0,
+    "fit_usage": "never",
+    "interpretation": "conditional geometric prediction; measured orientation provides phase"
+  },
   "deadline_shanghai": "2026-10-06T05:00:00+08:00",
   "freeze_physical_prefix": true,
   "test_set_status": "previously exposed diagnostic comparison; not unseen",
   "paired_start": "identical initial configuration and frozen physical approach/closure; measured established-grasp state matched post hoc, no copying contact impulses",
-  "scope": "no physics fitting, no new asset, no contact/grasp/base/fitter changes"
+  "scope": "no physics fitting, no new asset, no contact/grasp/base/fitter changes",
+  "reuse_logging_controls": {
+    "7320": "results/paper_structure_20261005_v1/observation_upper_bound/control_7320",
+    "45621": "results/paper_structure_20261005_v1/observation_upper_bound/control_45621"
+  },
+  "invalid_infrastructure_attempt": "results/paper_structure_20261005_v1: three TEST logging jobs lacked runtime active_structure; retained, excluded from method comparison"
 }
