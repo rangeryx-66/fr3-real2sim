@@ -41,6 +41,7 @@ def effort_validity(sample,threshold):
     if sample.get('articulation_consistency_error_m',0) or 0: # model residual alone is diagnostic
         pass
     if min(sample.get('forces_n',{'left':0,'right':0}).values(),default=0)<.05:reasons.append('CONTACT_UNSTABLE')
+    if sample.get('force_event',{}).get('status','NORMAL')!='NORMAL':reasons.append('FORCE_TRANSIENT')
     if sample.get('phase') not in ('ESTIMATED_FOLLOW','EXPLORATORY'):reasons.append('TRANSIENT_OR_HOLD')
     return ('INVALID_FOR_EFFORT' if reasons else 'VALID_EFFORT_SEGMENT'),reasons
 
@@ -108,7 +109,9 @@ def run(r):
         recovery.remember_success(np.eye(4))
         # Reuse verified closed wrist data where possible; a failed scan is not
         # allowed to erase an established grasp or manipulation progress.
-        if not r.capture.states:
+        if r.capture.job.get('continuation_replay'):
+            if not r.grip()[0]:recover('CONTINUATION_REESTABLISH_GRASP')
+        elif not r.capture.states:
             recover('INITIAL_CLEAN_CAPTURE','closed_after_real_grasp')
         from wrist_reconstruction.operation_memory import restore
         restore(r)
@@ -130,6 +133,11 @@ def run(r):
         while segment<p['maximum_segments'] and r.time()-started<p['maximum_sim_s'] and path<p['maximum_path_m'] and time.time()<r.deadline:
             value,source=checkpoint('CONTINUOUS_MANIPULATION')
             if source!='EE_PROXY_NOT_OBJECT_MEASUREMENT' and value>=p['targets'][-1]:status='OBSERVED_TARGET_REACHED';break
+            key_states=r.capture.config['capture'].get('key_states',{}).get(kind,[])
+            completed=[s['estimated_articulation_state'] for s in r.capture.states if s.get('clean_wrist_capture')]
+            pending=next((target for target in key_states[1:-1] if value>=target and not any(s>=target for s in completed)),None)
+            if pending is not None:
+                recover('REQUIRED_KEY_STATE_CAPTURE','key_state_capture');continue
             d=r.memory.tangent(r.tcp());safe,why=r.increment_safe(d,p['segment_m'])
             if r.margin()<=p['warning_margin_rad'] or not safe:
                 recover('JOINT_MARGIN_WARNING' if safe else why);continue
@@ -144,6 +152,8 @@ def run(r):
                 if r.tick()%8==0:
                     E=r.tcp();path+=float(np.linalg.norm(E[:3,3]-last));last=E[:3,3].copy()
                     r.memory.observe(E)
+                    if getattr(r,'force_guard',None) is not None and r.force_guard.pending:
+                        issue='SOFT_FORCE_WARNING';r.drive.active=False;break
                     if getattr(r.memory,'pending',False):
                         r.drive.active=False
                         try:r.memory.resolve(r.time())
@@ -153,7 +163,18 @@ def run(r):
                         break
                     if np.linalg.norm(E[:3,3]-P)>=p['segment_m']:break
             moved=float(np.linalg.norm(r.tcp()[:3,3]-P));r.effort.end(value,r.time(),issue or 'SEGMENT_COMPLETE')
-            if issue=='EXISTING_LOW_PRELOAD_FORCE_LIMIT':
+            if issue=='SOFT_FORCE_WARNING':
+                r.drive.active=False;r.phase('SYSTEM_FORCE_SETTLE')
+                try:
+                    r.hold(.25);ready,detail=r.grip()
+                    if not ready:recover('SUSTAINED_CONTACT_LOSS');continue
+                    if not r.force_guard.settled():recover('SAFE_RELEASE_AFTER_LOAD_STOP');continue
+                    r.force_guard.pending=False
+                    r.drive.speed_m_s=min(r.drive.speed_m_s,.5*type(r.drive).speed_m_s)
+                    r.drive.set_direction(r.memory.tangent(r.tcp()),r.tcp())
+                    checkpoint('TRANSIENT_FORCE_SETTLED_CONTINUE');continue
+                except RuntimeError:recover('SAFE_RELEASE_AFTER_LOAD_STOP');continue
+            if issue in ('EXISTING_LOW_PRELOAD_FORCE_LIMIT','PROBE_CARTESIAN_SPEED_LIMIT','HARD_FORCE_STOP_SUSTAINED','HARD_FORCE_STOP_EMERGENCY_SIM_ONLY'):
                 # Stop at the unchanged force limit. Only a physically safe
                 # hold, with the original bilateral window, permits resuming.
                 if recovery.cycles>=recovery.policy['operation_cycles']:raise RuntimeError('SAFETY_RECOVERY_BUDGET_EXHAUSTED')
@@ -162,7 +183,7 @@ def run(r):
                     r.phase('SYSTEM_SAFETY_HOLD');r.hold(.5);ready,detail=r.grip()
                     if not ready:raise RuntimeError('SUSTAINED_CONTACT_LOSS')
                     r.resume_safe_compliance();checkpoint('FORCE_STOP_SAFE_HOLD_RESTART')
-                    failures.append({'t':r.time(),'reason':'FORCE_LIMIT_STOP_AND_VERIFIED_HOLD_RESTART','bilateral':detail})
+                    failures.append({'t':r.time(),'reason':'SAFETY_LIMIT_STOP_AND_VERIFIED_HOLD_RESTART','trigger':issue,'bilateral':detail})
                     continue
                 except RuntimeError as error:
                     # Opening can relieve a loaded failed grasp, but no pull

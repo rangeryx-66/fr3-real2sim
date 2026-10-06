@@ -87,6 +87,11 @@ def source(maximum_range=False):
         replace('from wrist_reconstruction.recovery import Recovery','from wrist_reconstruction.max_recovery import MaximumRecovery as Recovery')
         replace('skill_effort=EffortRecorder(a.output);skill_effort.sensor=ForceSensor(scene,export,a.output)', 'skill_effort=EffortRecorder(a.output);skill_effort.sensor=ForceSensor(scene,export,a.output)\n from wrist_reconstruction.max_range import ValidEffort\n skill_effort=ValidEffort(skill_effort,a.output)')
         replace('runtime.recover=recovery.run','runtime.recover=recovery.run;runtime.recovery=recovery')
+        replace(" skill_effort=ValidEffort(skill_effort,a.output)", " skill_effort=ValidEffort(skill_effort,a.output)\n from wrist_reconstruction.force_policy import TemporalForceGuard\n force_guard=TemporalForceGuard(job['wrist_experiment']['force_policy'])")
+        replace(";rows.append(s);", ";s['force_event']=force_guard.update(s['forces_n'],dt,s['t']);rows.append(s);")
+        replace(" and max(s['forces_n'].values(),default=0)>policy['max_pad_load_n']:raise RuntimeError('EXISTING_LOW_PRELOAD_FORCE_LIMIT')", " and s['force_event']['status'].startswith('HARD_FORCE_STOP'):raise RuntimeError(s['force_event']['status'])")
+        replace("runtime.recovery=recovery", "runtime.recovery=recovery;runtime.force_guard=force_guard")
+
         replace("    collision=PhysicalScene(system_at_base(),model,allowed);collision.moving_reference=moving_initial\n    runtime.phase('SYSTEM_BASE_LOCK');hold(1.)", "    collision=PhysicalScene(system_at_base(),model,allowed);collision.moving_reference=moving_initial\n    runtime.phase('SYSTEM_BASE_LOCK');hold(1.);validate_robot_jacobian('after_base_lock_'+str(tick))")
         replace("   s['global_reconstruction_consistency_error_m']=ProvisionalMemory.consistency_error(memory,np.asarray(s['T_tcp']))", "   if isinstance(memory,ProvisionalMemory):s['global_reconstruction_consistency_error_m']=ProvisionalMemory.consistency_error(memory,np.asarray(s['T_tcp']))")
         replace("saved_memory=memory;runtime.saved_estimate=", "saved_memory=memory if memory is not None else saved_memory;runtime.saved_estimate=")
@@ -113,7 +118,11 @@ if __name__=='__main__':
     for folder in ['wrist_reconstruction']:
         for module in (ROOT/folder).glob('*.py'):
             dest=source_archive/folder/module.name;dest.parent.mkdir(exist_ok=True);shutil.copy2(module,dest)
-    expanded=source(job.get('wrist_experiment',{}).get('maximum_range',{}).get('enabled',False));(out/'expanded_wrist_program.py').write_text(expanded)
+    expanded=source(job.get('wrist_experiment',{}).get('maximum_range',{}).get('enabled',False))
+    if job.get('continuation_replay'):
+        from wrist_reconstruction.replay_source import augment
+        expanded=augment(expanded)
+    (out/'expanded_wrist_program.py').write_text(expanded)
     cal_path=Path(job['camera_calibration'])
     if not cal_path.is_absolute():cal_path=ROOT/cal_path
     paths=[Path(__file__),cal_path,*sorted((ROOT/'wrist_reconstruction').glob('*.py'))]

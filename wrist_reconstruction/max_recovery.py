@@ -41,6 +41,7 @@ class MaximumRecovery(Recovery):
             else:
                 axis=np.asarray(self.r.memory.estimate['prismatic']['axis']) if self.r.memory.estimate else -np.asarray(self.visual['T_world_handle'])[:3,2]
                 anchor=np.r_[self.visual['anchor_world_m'],1];value=float(((D@anchor-anchor)[:3])@axis)*getattr(self.r.memory,'follow_sign',1.)
+            value+=getattr(self,'observation_origin_state',0.)
             self.last_observed_state=value;self.progress_valid=True
             with (self.r.capture.output/'observed_progress.jsonl').open('a') as f:f.write(json.dumps({'t':self.r.time(),'state':value,'source':'fixed RGB-D current handle-region registration','audit':audit,'D':D.tolist()})+'\n')
             return value,'FIXED_RGBD_HANDLE_REGISTRATION'

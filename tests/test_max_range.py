@@ -19,7 +19,7 @@ class MaximumRangeTests(unittest.TestCase):
   from run_wrist_reconstruction_episode import source
   legacy=source(False);new=source(True);ast.parse(new)
   self.assertIn("raise RuntimeError('SUSTAINED_CONTACT_PLANE_DRIFT')",legacy);self.assertNotIn("raise RuntimeError('SUSTAINED_CONTACT_PLANE_DRIFT')",new)
-  for s in ["raise RuntimeError('SUSTAINED_CONTACT_LOSS')","if s['margin_rad']<=.05:raise RuntimeError('LOW_JOINT_MARGIN')","raise RuntimeError('EXISTING_LOW_PRELOAD_FORCE_LIMIT')"]:self.assertIn(s,new)
+  for s in ["raise RuntimeError('SUSTAINED_CONTACT_LOSS')","if s['margin_rad']<=.05:raise RuntimeError('LOW_JOINT_MARGIN')","raise RuntimeError(s['force_event']['status'])"]:self.assertIn(s,new)
   self.assertIn("runtime.recovery=recovery",new)
   self.assertIn("mode=mode if reference is not None else 'position'",new)
   self.assertIn("runtime.stop_failed_grasp_monitor=stop_failed_grasp_monitor",new)
@@ -53,6 +53,28 @@ class MaximumRangeTests(unittest.TestCase):
   A={'K':K,'T_world_camera':np.eye(4),'depth_m':depth,'robot_q_self_mask':robot}
   B=dict(A,depth_m=depth.copy(),robot_q_self_mask=np.zeros_like(robot));B['depth_m'][:,:4]=.3
   P,Q=common_release_points(A,B,[0,0,.5],1.);np.testing.assert_allclose(P,Q)
+ def test_speed_stop_routes_to_protected_recovery_without_raising_limits(self):
+  text=(ROOT/'wrist_reconstruction/max_range.py').read_text()
+  self.assertIn("if issue in ('EXISTING_LOW_PRELOAD_FORCE_LIMIT','PROBE_CARTESIAN_SPEED_LIMIT'",text)
+  self.assertIn("recover('SAFE_RELEASE_AFTER_LOAD_STOP')",text)
+ def test_force_spike_is_warning_sustained_and_emergency_stop(self):
+  from wrist_reconstruction.force_policy import TemporalForceGuard
+  policy={'soft_force_n':2.,'simulation_emergency_contact_n':10.,'window_s':.05,'sustained_windows':3}
+  guard=TemporalForceGuard(policy)
+  self.assertEqual(guard.update({'a':2.017,'b':0},1/240,0)['status'],'SOFT_FORCE_WARNING')
+  for i in range(48):self.assertFalse(guard.update({'a':.53,'b':.52},1/240,i/240)['status'].startswith('HARD'))
+  for i in range(48):status=guard.update({'a':2.2,'b':.5},1/240,i/240)['status']
+  self.assertEqual(status,'HARD_FORCE_STOP_SUSTAINED')
+  self.assertEqual(guard.update({'a':10.1},1/240,1)['status'],'HARD_FORCE_STOP_EMERGENCY_SIM_ONLY')
+ def test_replay_source_reuses_runtime_and_never_object_state(self):
+  import sys
+  sys.path.insert(0,str(ROOT/'scripts'))
+  from run_wrist_reconstruction_episode import source
+  from wrist_reconstruction.replay_source import augment
+  code=augment(source(True));ast.parse(code)
+  self.assertIn('REPLAY_BASE_MOVE_WITH_GRASP_FORBIDDEN',code)
+  self.assertIn("recovery.observation_origin_state=float(checkpoint['current_state'])",code)
+  self.assertNotIn("scene['articulation'].set_joint_positions",code)
  def test_original_baseline_hashes(self):
   for p,digest in json.loads((ROOT/'wrist_reconstruction/frozen_baseline_hashes.json').read_text()).items():self.assertEqual(hashlib.sha256((ROOT/p).read_bytes()).hexdigest(),digest,p)
 if __name__=='__main__':unittest.main()

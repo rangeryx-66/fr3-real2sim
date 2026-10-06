@@ -13,7 +13,7 @@ def both_ready(out,c):
         evaluation=Path(out)/('capture_'+o['id'])/'maximum_range_evaluation.json'
         actual=json.loads(evaluation.read_text()).get('maximum_actual_state') if evaluation.exists() else None
         # Label span alone cannot stand in for actual physical object motion.
-        ready=len(clean)>=2 and span>=required and actual is not None and actual>=required
+        ready=len(clean)>=c['backend']['minimum_clean_states'] and span>=required and actual is not None and actual>=required
         rows.append({'object':o['id'],'clean_states':len(clean),'label_span':span,'actual_maximum':actual,'ready':ready})
     return all(r['ready'] for r in rows),rows
 
