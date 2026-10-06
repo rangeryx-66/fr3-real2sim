@@ -21,6 +21,7 @@ class WristCaptureTests(unittest.TestCase):
         r=SimpleNamespace(drive=SimpleNamespace(active=True),hold=lambda t:None,configure_release=lambda *a:events.append('configure'),release_increment=lambda d:events.append(('release',d)),released=lambda:True,reclose_at_current_pose=lambda:events.append('reclose'))
         recovery=Recovery.__new__(Recovery);recovery.r=r;recovery.released=False;recovery.job={'wrist_experiment':{'retreat':{'maximum_release_increments':2}}}
         recovery.observe=lambda D:(np.eye(4),{},np.array([[0.,0.,0.],[.1,0.,0.]]))
+        recovery.release_observation=lambda D:recovery.observe(D)[2]
         def execute(plan):
             self.assertTrue(recovery.released);events.append('retreat');return True
         recovery.retreat=SimpleNamespace(plans=lambda D:[{'opening':.04}],execute=execute)
@@ -30,6 +31,13 @@ class WristCaptureTests(unittest.TestCase):
             T=np.eye(4);T[0,3]=.002 if calls[0] else 0.;calls[0]+=1
             return T,{},np.array([[0.,0.,0.],[.1,0.,0.]])+T[:3,3]
         recovery.observe=moving
+        release_calls=[0]
+        def release_points(D):
+            points=np.array([[0.,0.,0.],[.1,0.,0.]])
+            if release_calls[0]:points[:,0]+=.002
+            release_calls[0]+=1
+            return points
+        recovery.release_observation=release_points
         with self.assertRaisesRegex(RuntimeError,'UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION'):recovery.release_failed_closure(np.eye(4))
         self.assertIn('reclose',events);self.assertNotIn('retreat',events);self.assertFalse(recovery.released)
 
@@ -44,6 +52,22 @@ class WristCaptureTests(unittest.TestCase):
         self.assertGreater(motion,.001)
         self.assertEqual(audit['threshold_m'],.001)
         self.assertEqual(audit['reference'],'current stabilized pre-release cloud')
+
+    def test_release_self_mask_uses_robot_q_geometry_and_keeps_front_object(self):
+        from types import SimpleNamespace
+        from wrist_reconstruction.self_observation import robot_projection_mask
+        K=np.array([[50.,0,32],[0,50.,24],[0,0,1.]])
+        vertices=np.array([[x,y,z] for x in [-.12,.12] for y in [-.08,.08] for z in [.75,.85]])
+        geometries={'finger':SimpleNamespace(vertices=vertices)}
+        poses={'finger':np.eye(4)}
+        front=np.full((48,64),.5)
+        self.assertFalse(robot_projection_mask(front,K,np.eye(4),geometries,poses).any())
+        robot_depth=np.full((48,64),.8)
+        mask=robot_projection_mask(robot_depth,K,np.eye(4),geometries,poses)
+        self.assertTrue(mask[24,32]);self.assertFalse(mask[0,0])
+        shifted=np.eye(4);shifted[0,3]=.3
+        moved=robot_projection_mask(robot_depth,K,np.eye(4),geometries,{'finger':shifted})
+        self.assertFalse(moved[24,32]);self.assertTrue(moved[24,50])
 
     def test_unknown_regrasp_does_not_forecast_a_missing_model(self):
         from operational_structure.confidence import OperationalMemory

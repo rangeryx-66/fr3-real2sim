@@ -56,6 +56,27 @@ class Recovery(LegacyRecovery):
         D,audit=register(self.initial_cloud,P,initial);audit['source']='unmasked live RGB-D local handle-region ICP; no simulator segmentation or body pose'
         audit['wrist_camera']=wrist;return D,audit,P
 
+    def release_observation(self,D):
+        # Only the release-motion observer excludes known robot projections.
+        # Global localization and all reconstruction RGB-D remain unchanged.
+        from wrist_reconstruction.self_observation import robot_projection_mask
+        poses=self.model.poses(self.r.arm_q(),self.r.base,finger_q=self.r.finger_q())
+        anchor=(np.asarray(D)@np.r_[self.visual['anchor_world_m'],1])[:3]
+        folder=self.r.capture.output/'release_observer';folder.mkdir(exist_ok=True)
+        index=getattr(self,'release_observation_index',0);self.release_observation_index=index+1
+        clouds=[];audit=[]
+        for camera_index,camera in enumerate(self.r.capture.legacy_cameras[:2]):
+            rgb,depth,_=snapshot(camera);K=np.asarray(camera.get_intrinsics_matrix());T=matrix(*camera.get_world_pose(camera_axes='ros'))
+            excluded=robot_projection_mask(depth,K,T,self.model.robot_hulls,poses)
+            P,_=backproject(depth,K,T,np.isfinite(depth)&~excluded,stride=2)
+            P=P[np.linalg.norm(P-anchor,axis=1)<.10];clouds.append(P)
+            np.savez_compressed(folder/f'observation_{index:03d}_camera_{camera_index}.npz',rgb=rgb,depth_m=depth,K=K,T_world_camera=T,robot_q_self_mask=excluded,points_world_m=P)
+            audit.append({'camera':camera_index,'excluded_robot_pixels':int(excluded.sum()),'retained_region_points':len(P)})
+        result=np.concatenate(clouds)
+        (folder/f'observation_{index:03d}.json').write_text(json.dumps({'scope':'release observer only; not reconstruction input','source':'measured robot q + official envelopes + RGB-D','simulator_instance_mask':False,'GT_object_input':False,'base':list(self.r.base),'robot_q':self.r.arm_q().tolist(),'finger_q':self.r.finger_q().tolist(),'cameras':audit},indent=2))
+        if len(result)<80:raise RuntimeError('RELEASE_OBSERVATION_UNAVAILABLE')
+        return result
+
     def export_current(self,D):
         from interactive_twin_recovery.mobile import at_base
         data=copy.deepcopy(self.export);data['shapes']=[e for e in data['shapes'] if '/World/mobile_chassis' not in e['path']]
@@ -91,12 +112,13 @@ class Recovery(LegacyRecovery):
     def release_failed_closure(self,D):
         """Same slow release and checked retreat, before another candidate."""
         from wrist_reconstruction.planner import PlanningExhausted
-        r=self.r;D0,_,cloud=self.observe(D);plans=self.retreat.plans(D0)
+        r=self.r;D0,_,_=self.observe(D);plans=self.retreat.plans(D0)
         if not plans:raise PlanningExhausted('FAILED_CLOSURE_NO_SAFE_RETREAT')
-        r.drive.active=False;r.hold(2.);r.configure_release(plans[0]['opening'],D0)
+        r.drive.active=False;r.hold(2.);cloud=self.release_observation(D0);r.configure_release(plans[0]['opening'],D0)
         try:
             for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
-                r.release_increment(.001);r.hold(1.);D1,_,current_cloud=self.observe(D0)
+                r.release_increment(.001);r.hold(1.);D1,_,_=self.observe(D0)
+                current_cloud=self.release_observation(D0)
                 displacement,check=release_motion(cloud,current_cloud)
                 if displacement>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
                 if r.released():break
@@ -117,11 +139,12 @@ class Recovery(LegacyRecovery):
             D,audit,cloud=self.observe(guess);self.current_D=D;row['pre_release_observation']=audit;save()
             plans=self.retreat.plans(D);row['retreat_preflight_alternatives']=len(self.retreat.rows);save()
             if not plans:raise PlanningExhausted('RETREAT_ALTERNATIVES_EXHAUSTED')
-            r.phase('RELEASE_CHECK_HOLD');r.drive.active=False;r.hold(2.);D0,_,release_cloud=self.observe(D)
+            r.phase('RELEASE_CHECK_HOLD');r.drive.active=False;r.hold(2.);D0,_,_=self.observe(D);release_cloud=self.release_observation(D0)
             r.configure_release(plans[0]['opening'],D)
             try:
                 for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
-                    r.release_increment(.001);r.hold(1.);D1,_,current_cloud=self.observe(D0)
+                    r.release_increment(.001);r.hold(1.);D1,_,_=self.observe(D0)
+                    current_cloud=self.release_observation(D0)
                     displacement,check=release_motion(release_cloud,current_cloud)
                     row.setdefault('release_observations',[]).append(dict(check,displacement_m=displacement));save()
                     if displacement>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
