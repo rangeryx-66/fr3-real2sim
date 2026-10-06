@@ -25,6 +25,19 @@ def local_cloud(recorder,anchor,camera=None):
     return result
 
 
+def release_motion(before,after):
+    """Compare the current pre-release observation, not two closed-state fits.
+
+    Global localization still uses the original cloud for planning. A release
+    check is a local change measurement: subtracting two biased, partial-view
+    global ICP fits can report motion even with a stationary moving part.
+    """
+    delta,audit=register(before,after,np.eye(4))
+    displacement=float(np.max(np.linalg.norm(before@delta[:3,:3].T+delta[:3,3]-before,axis=1)))
+    audit.update(source='live pre-release to live post-release RGB-D; no GT',reference='current stabilized pre-release cloud',threshold_m=.001)
+    return displacement,audit
+
+
 class Recovery(LegacyRecovery):
     def __init__(self,runtime,root,job,export,model,allowed):
         self.r=runtime;self.root=Path(root);self.job=job;self.export=export;self.model=model;self.allowed=allowed
@@ -83,8 +96,9 @@ class Recovery(LegacyRecovery):
         r.drive.active=False;r.hold(2.);r.configure_release(plans[0]['opening'],D0)
         try:
             for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
-                r.release_increment(.001);r.hold(1.);D1,_,_=self.observe(D0);delta=D1@np.linalg.inv(D0)
-                if np.max(np.linalg.norm(cloud@delta[:3,:3].T+delta[:3,3]-cloud,axis=1))>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
+                r.release_increment(.001);r.hold(1.);D1,_,current_cloud=self.observe(D0)
+                displacement,check=release_motion(cloud,current_cloud)
+                if displacement>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
                 if r.released():break
             else:raise RuntimeError('RELEASE_CONTACT_NOT_CLEARED')
         except BaseException:
@@ -103,12 +117,14 @@ class Recovery(LegacyRecovery):
             D,audit,cloud=self.observe(guess);self.current_D=D;row['pre_release_observation']=audit;save()
             plans=self.retreat.plans(D);row['retreat_preflight_alternatives']=len(self.retreat.rows);save()
             if not plans:raise PlanningExhausted('RETREAT_ALTERNATIVES_EXHAUSTED')
-            r.phase('RELEASE_CHECK_HOLD');r.drive.active=False;r.hold(2.);D0,_,_=self.observe(D)
+            r.phase('RELEASE_CHECK_HOLD');r.drive.active=False;r.hold(2.);D0,_,release_cloud=self.observe(D)
             r.configure_release(plans[0]['opening'],D)
             try:
                 for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
-                    r.release_increment(.001);r.hold(1.);D1,_,_=self.observe(D0);delta=D1@np.linalg.inv(D0)
-                    if np.max(np.linalg.norm(cloud@delta[:3,:3].T+delta[:3,3]-cloud,axis=1))>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
+                    r.release_increment(.001);r.hold(1.);D1,_,current_cloud=self.observe(D0)
+                    displacement,check=release_motion(release_cloud,current_cloud)
+                    row.setdefault('release_observations',[]).append(dict(check,displacement_m=displacement));save()
+                    if displacement>.001:raise RuntimeError('UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION')
                     if r.released():break
                 else:raise RuntimeError('RELEASE_CONTACT_NOT_CLEARED')
             except BaseException:

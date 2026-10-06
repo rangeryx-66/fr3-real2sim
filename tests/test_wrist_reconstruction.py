@@ -33,6 +33,18 @@ class WristCaptureTests(unittest.TestCase):
         with self.assertRaisesRegex(RuntimeError,'UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION'):recovery.release_failed_closure(np.eye(4))
         self.assertIn('reclose',events);self.assertNotIn('retreat',events);self.assertFalse(recovery.released)
 
+    def test_release_motion_uses_current_observations_and_keeps_safety_limit(self):
+        from wrist_reconstruction.recovery import release_motion
+        rng=np.random.default_rng(17)
+        before=rng.uniform([-.02,-.02,-.03],[.02,.02,.03],size=(3000,3))
+        motion,audit=release_motion(before,before.copy())
+        self.assertLess(motion,1e-8)
+        moved=before+np.array([.002,0,0])
+        motion,_=release_motion(before,moved)
+        self.assertGreater(motion,.001)
+        self.assertEqual(audit['threshold_m'],.001)
+        self.assertEqual(audit['reference'],'current stabilized pre-release cloud')
+
     def test_unknown_regrasp_does_not_forecast_a_missing_model(self):
         from operational_structure.confidence import OperationalMemory
         from wrist_reconstruction.recovery import reset_model_monitor
