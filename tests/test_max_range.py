@@ -43,6 +43,13 @@ class MaximumRangeTests(unittest.TestCase):
    rec.candidates=lambda D,f:[{'candidate_index':i,'family':f} for i in range(12)]
    rec.plan_variant=lambda v,*args:v
    self.assertTrue(rec.run(0));self.assertEqual(attempts,[0,1,2,3]);self.assertTrue(rec.history[-1]['regrasp_completed'])
+ def test_release_ignores_newly_revealed_surface_pixels(self):
+  from wrist_reconstruction.self_observation import common_release_points
+  K=np.array([[20.,0,5],[0,20.,5],[0,0,1.]])
+  depth=np.full((12,12),.5);robot=np.zeros((12,12),bool);robot[:,:4]=True
+  A={'K':K,'T_world_camera':np.eye(4),'depth_m':depth,'robot_q_self_mask':robot}
+  B=dict(A,depth_m=depth.copy(),robot_q_self_mask=np.zeros_like(robot));B['depth_m'][:,:4]=.3
+  P,Q=common_release_points(A,B,[0,0,.5],1.);np.testing.assert_allclose(P,Q)
  def test_original_baseline_hashes(self):
   for p,digest in json.loads((ROOT/'wrist_reconstruction/frozen_baseline_hashes.json').read_text()).items():self.assertEqual(hashlib.sha256((ROOT/p).read_bytes()).hexdigest(),digest,p)
 if __name__=='__main__':unittest.main()

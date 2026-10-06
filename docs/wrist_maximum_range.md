@@ -93,3 +93,12 @@ recovery phase, then actual closure must re-establish bilateral validation.
 The original contact-loss threshold, force cap, gains and closure law remain.
 7320's corrected physical run reached incremental release; the full recovery
 cycle and maximum range were still pending at this note's creation.
+
+The next release run gave three identical ~1.20-mm ICP observations. Post-stop
+GT evaluation found only ~0.069-degree maximum part rotation. Paired reanalysis
+on exactly the same saved RGB-D retained pixels visible in both frames (union of
+known-q robot masks) and obtained 0.644 mm for all three observations, below the
+unchanged 1-mm guard. The original after-cloud had newly revealed surface
+pixels, changing its visibility distribution. This measurement implementation
+fix is generic; the raw images, rejected run and post-stop evaluation remain
+under `release_visibility_failure_7320`. It is not a threshold relaxation.

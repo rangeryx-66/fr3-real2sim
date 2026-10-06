@@ -48,13 +48,20 @@ class MaximumRecovery(Recovery):
             self.progress_valid=False
             with (self.r.capture.output/'observed_progress.jsonl').open('a') as f:f.write(json.dumps({'t':self.r.time(),'status':'PERCEPTION_UNCERTAIN','error':str(e)})+'\n')
             return fallback,'EE_PROXY_NOT_OBJECT_MEASUREMENT'
-    def confirm_release(self,baseline,D,row):
+    def confirm_release(self,baseline,D,row,baseline_index):
         monitor=ReleaseConsensus();attempts=0
         while attempts<self.policy['release_observation_attempts']:
             attempts+=1
             try:
-                current=self.release_observation(D);amount,audit=release_motion(baseline,current)
-                delta_center=np.asarray(current).mean(0)-np.asarray(baseline).mean(0)
+                current=self.release_observation(D)
+                from wrist_reconstruction.self_observation import common_release_points
+                folder=self.r.capture.output/'release_observer';pairs=[];anchor=(np.asarray(D)@np.r_[self.visual['anchor_world_m'],1])[:3]
+                for camera in range(2):
+                    with np.load(folder/f'observation_{baseline_index:03d}_camera_{camera}.npz') as A,np.load(folder/f'observation_{self.release_observation_index-1:03d}_camera_{camera}.npz') as B:pairs.append(common_release_points(A,B,anchor))
+                before=np.concatenate([x[0] for x in pairs]);current=np.concatenate([x[1] for x in pairs])
+                if len(before)<80:raise RuntimeError('RELEASE_COMMON_SURFACE_POINTS_INSUFFICIENT')
+                amount,audit=release_motion(before,current);audit.update(common_visibility=True,common_points=len(before),t=self.r.time())
+                delta_center=current.mean(0)-before.mean(0)
                 decision=monitor.observe(amount,delta_center)
                 row.setdefault('release_observations',[]).append(dict(audit,displacement_m=amount,decision=decision))
                 self.save()
@@ -72,10 +79,10 @@ class MaximumRecovery(Recovery):
         r=self.r;self.current_D=D;plans=self.retreat.plans(D);row['retreat_preflight_alternatives']=len(plans);self.save()
         if not plans:raise PlanningExhausted('RETREAT_ALTERNATIVES_EXHAUSTED')
         if not self.released:
-            r.drive.active=False;r.hold(2.);baseline=self.release_observation(D);r.configure_release(plans[0]['opening'],D)
+            r.drive.active=False;r.hold(2.);baseline=self.release_observation(D);baseline_index=self.release_observation_index-1;r.configure_release(plans[0]['opening'],D)
             try:
                 for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
-                    r.release_increment(.001);r.hold(1.);self.confirm_release(baseline,D,row)
+                    r.release_increment(.001);r.hold(1.);self.confirm_release(baseline,D,row,baseline_index)
                     if r.released():break
                 else:raise PlanningExhausted('RELEASE_CONTACT_NOT_CLEARED')
             except BaseException:
