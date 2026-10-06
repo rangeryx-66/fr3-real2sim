@@ -28,7 +28,7 @@ class WristCaptureTests(unittest.TestCase):
         events.clear();recovery.released=False
         def moving(D):
             T=np.eye(4);T[0,3]=.002 if calls[0] else 0.;calls[0]+=1
-            return T,{},np.array([[0.,0.,0.],[.1,0.,0.]])
+            return T,{},np.array([[0.,0.,0.],[.1,0.,0.]])+T[:3,3]
         recovery.observe=moving
         with self.assertRaisesRegex(RuntimeError,'UNSAFE_RELEASE_OBSERVED_OBJECT_MOTION'):recovery.release_failed_closure(np.eye(4))
         self.assertIn('reclose',events);self.assertNotIn('retreat',events);self.assertFalse(recovery.released)
