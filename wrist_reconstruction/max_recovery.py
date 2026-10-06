@@ -13,6 +13,14 @@ class MaximumRecovery(Recovery):
     def __init__(self,*args):
         super().__init__(*args);self.template=None;self.cycles=0;self.progress_last_wall=0.;self.last_observed_state=0.;self.progress_valid=False
         self.policy=self.job['wrist_experiment']['maximum_range'];self.tried={};self.cursor=[]
+        self.prior_failures=self.job.get('prior_failed_regrasp_candidates',[])
+        if self.job.get('continuation_replay'):
+            from pathlib import Path
+            checkpoint=json.loads(Path(self.job['continuation_checkpoint']).read_text())
+            # A cold restoration does not replenish the finite operation or
+            # mobile budget. Conservatively debit carried physical failures.
+            self.cycles=int(checkpoint.get('recovery_cycle',0))+len(self.prior_failures)
+            self.count=int(checkpoint.get('base_moves',0))
     def remember_success(self,D):
         ready,detail=self.r.grip()
         if not ready:return False
@@ -172,7 +180,8 @@ class MaximumRecovery(Recovery):
                 result=r.capture.scan(capture_label,value,getattr(r,'saved_estimate',None));row['wrist_scan_completed']=result['clean_wrist_capture']
             except RuntimeError as e:row['scan_error']=str(e)
             self.save()
-        excluded=set();physical={f:0 for f in ('template','generic')};consumed=set()
+        excluded=set();physical={f:0 for f in ('template','generic')}
+        consumed={(tuple(np.round(v['base'],4)),v['family'],v['candidate_index']) for v in self.prior_failures}
         for base_attempt in range(self.policy['actual_base_attempts']):
             for family in ('template','generic'):
                 if physical[family]>=self.policy[family+'_closures']:continue
@@ -188,16 +197,23 @@ class MaximumRecovery(Recovery):
                     physical[family]+=1;item['physical_closure_number']=physical[family];self.save()
                     choice={'base':list(r.base),'plan':{'trial_candidates':[trial]},'route':None}
                     self.released=False # approach/closure invalidates the prior release certificate
-                    try:r.regrasp(choice,np.eye(4))
+                    try:
+                        r.regrasp(choice,np.eye(4));item['physical_closure_completed']=True
+                        # A legal position hold is not yet a safe operational
+                        # regrasp. Validate the unchanged compliance transition
+                        # inside the same bounded candidate recovery scope.
+                        r.state_offset=value;r.reset_grasp_memory()
                     except RuntimeError as e:
                         item['physical_regrasp_error']=str(e);self.save()
+                        self.prior_failures.append({'base':list(r.base),'family':family,'candidate_index':v['candidate_index'],'reason':str(e),'t':r.time(),'source':'actual closure/compliance safety failure'})
+                        (r.capture.output/'failed_regrasp_candidates.json').write_text(json.dumps(self.prior_failures,indent=2))
                         if str(e)=='SUSTAINED_CONTACT_LOSS':r.stop_failed_grasp_monitor()
                         r.halt_at_measured_state()
                         # Force/speed and dangerous native contacts are never
                         # ignored; only a checked safe escape can resume.
-                        self.escape(Dnew,row);continue
+                        self.escape(Dnew,row,safety_release=True);continue
                     self.released=False;item['physical_regrasp_completed']=True;row['regrasp_completed']=True;row['status']='REGRASPED_FROM_CURRENT_WRIST_OBSERVATION';self.save()
-                    r.state_offset=value;r.reset_grasp_memory();self.grasp_reference_ee=r.tcp().copy();self.grasp_reference_D=Dnew.copy();self.remember_success(Dnew)
+                    self.grasp_reference_ee=r.tcp().copy();self.grasp_reference_D=Dnew.copy();self.remember_success(Dnew)
                     return True
             excluded.add(tuple(np.round(r.base,4)))
             choice=self.choose_base(self.current_D,row,excluded)

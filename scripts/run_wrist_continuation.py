@@ -19,6 +19,10 @@ def main():
   src=sources[obj].resolve();prepared=out/('inputs_'+obj);target=out/('capture_'+obj)
   if not (prepared/'issued_robot_commands.json').exists():prepare(src,prepared)
   job=make_job(src,prepared,target,c,deadline);path=prepared/'continuation_job.json'
+  prior=out/'preserved_failed_regrasp_candidates.json'
+  if prior.exists():
+   job['prior_failed_regrasp_candidates']=json.loads(prior.read_text()).get(obj,[])
+   path.write_text(json.dumps(job,indent=2))
   records[obj]={'status':'RUNNING','source':str(src),'actual_prior_progress':'reference only; never applied as object state','job':str(path)}
   (out/(obj+'_component.json')).write_text(json.dumps(records[obj],indent=2))
   env=dict(os.environ,OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1',PYTHONNOUSERSITE='1');env.pop('PYTHONPATH',None);env['PATH']='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static:'+env['PATH']

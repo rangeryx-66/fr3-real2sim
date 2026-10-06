@@ -32,7 +32,7 @@ class MaximumRangeTests(unittest.TestCase):
   import tempfile
   from wrist_reconstruction.max_recovery import MaximumRecovery
   with tempfile.TemporaryDirectory() as d:
-   rec=MaximumRecovery.__new__(MaximumRecovery);rec.cycles=0;rec.count=0;rec.history=[];rec.current_D=np.eye(4);rec.grasp_reference_ee=np.eye(4);rec.grasp_reference_D=np.eye(4);rec.released=False;rec.template={}
+   rec=MaximumRecovery.__new__(MaximumRecovery);rec.cycles=0;rec.count=0;rec.history=[];rec.current_D=np.eye(4);rec.grasp_reference_ee=np.eye(4);rec.grasp_reference_D=np.eye(4);rec.released=False;rec.template={};rec.prior_failures=[]
    rec.policy={'operation_cycles':12,'actual_base_attempts':4,'template_closures':12,'generic_closures':12}
    attempts=[]
    def close(choice,correction):
@@ -40,6 +40,7 @@ class MaximumRangeTests(unittest.TestCase):
     attempts.append(choice['plan']['trial_candidates'][0]['candidate_index'])
     if len(attempts)<=3:raise RuntimeError('RECOVERY_BILATERAL_GRASP_FAIL')
    r=SimpleNamespace(tcp=lambda:np.eye(4),base=[0,0,0,0],capture=SimpleNamespace(output=Path(d)),hold=lambda _:None,halt_at_measured_state=lambda:None,set_observed_moving=lambda _:None,regrasp=close,reset_grasp_memory=lambda:None,arm_q=lambda:np.zeros(6))
+   r.time=lambda:0.
    rec.r=r;rec.observe=lambda *a,**k:(np.eye(4),{'source':'wrist'},np.zeros((80,3)))
    def escape(D,row,**kwargs):rec.released=True
    rec.escape=escape;rec.remember_success=lambda _:None
