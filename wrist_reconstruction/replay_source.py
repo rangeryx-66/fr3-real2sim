@@ -38,6 +38,12 @@ def augment(text):
     replace("   replay_frame=tape[tick];phase=", "   replay_frame=tape[tick];replay_base_command(replay_frame)\n   if not replay_frame.get('retention_armed') and reference is not None:\n    moving_initial=moving();reference=None;grasp_tcp=None;retention.reference=None;loss_s=0.;slip_s=0.\n   phase=")
     replace(";replay_last_compliant=gain_state", ";replay_last_compliant=gain_state\n    if not compliant:controller.apply_action(ArticulationAction(joint_efforts=np.zeros(len(arm)),joint_indices=arm))\n    if mode=='position':controller.apply_action(ArticulationAction(joint_efforts=np.zeros(len(fingers)),joint_indices=fingers))")
     replace("   if replay_frame.get('retention_armed') and reference is None:", "   if replay_frame.get('cartesian_input') is not None and memory is None:\n    from wrist_reconstruction.operation_memory import load_observed_model\n    estimate,sign,_=load_observed_model(job['continuation_memory'],job['skill']['joint_type'])\n    memory=InteractionMemory(tcp(),a.output);memory.estimate=estimate;memory.follow_sign=sign;memory.observe(tcp());fit_poses=memory.poses\n   if replay_frame.get('retention_armed') and reference is None:")
+    # A cold checkpoint restoration repeats issued actuator commands. The
+    # input-response sysID replay instead recomputes servo torque; that branch
+    # is deliberately unsuitable here because its small feedback differences
+    # can change a later physical regrasp. This is not measured-state replay.
+    replace("  if compliant and (tape is None or replay_frame.get('cartesian_input') is not None):",
+            "  if compliant and tape is None:")
     # Reuse the exact existing runtime API, including native closure, release,
     # route, arm safety and collision guards. No alternative controller.
     begin=text.index('   from wrist_reconstruction.session import run as run_skill')

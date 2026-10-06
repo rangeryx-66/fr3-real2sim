@@ -33,6 +33,13 @@ contact impulses, attachment or external object force. Native contact establishe
 and validates grasps again. A failure to reproduce contact is recorded; restoration
 is not presumed successful from a JSON file.
 
+The restoration prefix uses the recorded actuator effort commands, including
+the compliant phases. It does not call the input-response system-identification
+replay's feedback-torque recomputation branch. That branch introduced small
+robot-response differences that changed subsequent closure contacts. After the
+prefix finishes, the original measured-state feedback controller resumes. This
+distinction is confined to checkpoint restoration, not physics identification.
+
 The old actual maxima (24.878 degrees and 5.88 mm) are provenance/evaluation only.
 Online continuation uses saved sensor-estimated state and fresh RGB-D/robot EE
 observations. Actual restored progress is independently evaluated after stopping.

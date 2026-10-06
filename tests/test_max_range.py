@@ -75,6 +75,9 @@ class MaximumRangeTests(unittest.TestCase):
   self.assertIn('REPLAY_BASE_MOVE_WITH_GRASP_FORBIDDEN',code)
   self.assertIn("recovery.observation_origin_state=float(checkpoint['current_state'])",code)
   self.assertNotIn("scene['articulation'].set_joint_positions",code)
+  self.assertIn('if compliant and tape is None:',code)
+  self.assertNotIn("if compliant and (tape is None or replay_frame.get('cartesian_input') is not None):",code)
+  self.assertIn("tau=np.asarray(replay_frame['arm_effort'])",code)
  def test_original_baseline_hashes(self):
   for p,digest in json.loads((ROOT/'wrist_reconstruction/frozen_baseline_hashes.json').read_text()).items():self.assertEqual(hashlib.sha256((ROOT/p).read_bytes()).hexdigest(),digest,p)
 if __name__=='__main__':unittest.main()
