@@ -4,6 +4,9 @@ from pathlib import Path
 
 
 def run(runtime):
+    if runtime.capture.config.get('maximum_range',{}).get('enabled'):
+        from wrist_reconstruction.max_range import run as continuous
+        return continuous(runtime)
     original=(Path(__file__).resolve().parents[1]/'articulated_interaction_skill/session.py').read_text()
     replacements={
         " snapshot('closed_after_real_grasp',0.)":

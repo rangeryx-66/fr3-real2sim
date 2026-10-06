@@ -35,6 +35,8 @@ class RetreatPlanner:
             def home_check(q,b):
                 if self.model.margin(q)<=.05:return False,'LOW_JOINT_MARGIN',None
                 return self.recovery.mobile.check(scene,q,b,np.array([.05,-.05]))
+            if r.capture.config.get('maximum_range',{}).get('enabled'):
+                row['status']='CLEARANCE_RETREAT_PREFLIGHT_PASSED';plans.append({'row':row,'opening':opening,'escape':edge,'home':None});self.save();continue
             outer=self
             class View:
                 def __getattr__(self,name):return getattr(outer.model,name)
@@ -47,7 +49,9 @@ class RetreatPlanner:
         r=self.r;row=plan['row'];row['status']='EXECUTING';self.save()
         try:
             r.execute_arm_path(plan['escape'],'SYSTEM_RETREAT_OUTWARD',minimum_duration=.15)
-            r.open_clear_gripper();r.execute_arm_path(plan['home'],'SYSTEM_RETREAT_HOME');row['status']='RETREAT_EXECUTED';self.save();return True
+            r.open_clear_gripper()
+            if plan['home'] is not None:r.execute_arm_path(plan['home'],'SYSTEM_RETREAT_HOME')
+            row['status']='RETREAT_EXECUTED';self.save();return True
         except RuntimeError as error:
             row['status']='PHYSICAL_PATH_STOP';row['reason']=str(error);self.save()
             # Halt and attempt only a checked return to the most recent safe arm

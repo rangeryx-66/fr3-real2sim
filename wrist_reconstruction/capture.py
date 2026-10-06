@@ -120,10 +120,10 @@ class WristRecorder(CaptureRecorder):
                 row.update(status='REJECTED',reason='SAM3_SENSOR_INFERENCE_FAILED:'+str(e))
             except RuntimeError as e:
                 row.update(status='REJECTED',reason=str(e))
-                if not str(e).startswith(('SCAN_','MOBILE_VIEW_RECOVERY_','NO_SAFE_HOME_PATH_','QA_','SENSOR_','OBJECT_WOULD_BE_')):raise
+                if not str(e).startswith(('SCAN_','MOBILE_VIEW_RECOVERY_','NO_SAFE_HOME_PATH_','HANDLE_REOBSERVE_','CAMERA_' ,'QA_','SENSOR_','OBJECT_WOULD_BE_')):raise
             (self.output/'camera_trajectory.json').write_text(json.dumps(self.scan_logs+[log],indent=2))
             if len(views)>=p['maximum_clean_views']:break
-        r.scan_home()
+        if not self.config.get('maximum_range',{}).get('enabled'):r.scan_home()
         from wrist_reconstruction.oracle import scan as oracle_scan
         try:log['oracle_capture']=oracle_scan(self,label,value)
         except Exception as error:log['oracle_error']=str(error)

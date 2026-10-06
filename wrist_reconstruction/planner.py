@@ -33,6 +33,29 @@ class MobileWristPlanner:
             # The failing path remains a recorded physical failure. Only after
             # a checked return may the caller try a different view/path.
             raise PlanningExhausted('SCAN_PHYSICAL_PATH_RECOVERED:'+str(error)) from error
+    def locked_valid(self,scene,q,base):
+        from interactive_twin_recovery.mobile import distance
+        ok,why,_=self.check(scene,q,base,self.r.finger_q())
+        if not ok:return False,why,0.
+        chassis=next(s for s in scene.scene if s.path=='/World/mobile_chassis')
+        env=[s for s in scene.scene if s is not chassis and 'pedestal' not in s.path]
+        for shape in env:
+            if intersects(chassis,shape):return False,'CHASSIS_ENVIRONMENT_COLLISION:'+shape.path,0.
+        return True,'SAFE',min([distance(chassis,s) for s in env] or [1.])
+    def locked_route(self,initial,target,q):
+        delta=(target[3]-initial[3]+180)%360-180
+        n=max(2,int(np.ceil(np.linalg.norm(np.subtract(target[:2],initial[:2]))/.025))+1)
+        m=max(2,int(np.ceil(abs(delta)/3))+1);alternatives=[]
+        for rotate_first in (False,True):
+            xy=[[*(np.asarray(initial[:2])*(1-f)+np.asarray(target[:2])*f),initial[2],initial[3]+(delta if rotate_first else 0)] for f in np.linspace(0,1,n)]
+            yaw=[[target[0] if not rotate_first else initial[0],target[1] if not rotate_first else initial[1],initial[2],initial[3]+f*delta] for f in np.linspace(0,1,m)]
+            waypoints=yaw+xy[1:] if rotate_first else xy+yaw[1:];failure=None;gap=1.
+            for b in waypoints:
+                ok,why,clearance=self.locked_valid(self.scene(b),q,b);gap=min(gap,clearance)
+                if not ok:failure=why;break
+            alternatives.append({'rotate_first':rotate_first,'failure':failure})
+            if failure is None:return {'valid':True,'waypoints':waypoints,'translation_m':float(np.linalg.norm(np.subtract(target[:2],initial[:2]))),'rotation_deg':abs(delta),'chassis_clearance_m':gap,'arm_locked_at_home':False,'arm_locked_q':np.asarray(q).tolist(),'alternatives':alternatives,'mode':'kinematic SE2 simulated platform; not wheel dynamics'}
+        return {'valid':False,'alternatives':alternatives,'reason':failure}
     def scene(self,base):
         data=self.recovery.export_current(self.recovery.current_D)
         return scene_at(self.root,data,self.model,self.r.base,base)
@@ -90,6 +113,7 @@ class MobileWristPlanner:
         except PlanningExhausted as error:fixed['status']=str(error);choice=None
         self.save()
         if choice is not None:choice['route']=None;entry['status']='ARM_ONLY';self.save();return choice
+        locked=r.arm_q().copy() if r.capture.config.get('maximum_range',{}).get('enabled') else self.model.home
         # The camera target is a task-space goal, not an asset-specific offset.
         normal=-T_camera[:3,2];normal[2]=0
         if np.linalg.norm(normal)<1e-8:normal=np.asarray(r.initial_visual['outward_normal_world']).copy();normal[2]=0
@@ -99,23 +123,23 @@ class MobileWristPlanner:
             if time.time()>=r.deadline or time.monotonic()-started>self.policy['search_wall_s']:break
             row={'base':base,'kind':'mobile'};entry['candidates'].append(row)
             self.save()
-            scene=self.scene(base);ok,why,gap=home_valid(scene,self.model,base)
+            scene=self.scene(base);ok,why,gap=self.locked_valid(scene,locked,base) if r.capture.config.get('maximum_range',{}).get('enabled') else home_valid(scene,self.model,base)
             if not ok:row['status']=why;continue
-            c=self.arm_only(T_camera,base,self.model.home,row,path=False)
+            c=self.arm_only(T_camera,base,locked,row,path=False)
             if c is None:continue
             row.update(clearance_m=gap,travel_m=float(np.linalg.norm(np.subtract(base[:2],r.base[:2]))));c['score']=[row['minimum_joint_margin_rad'],gap,-row['travel_m']];c['row']=row;coarse.append(c)
         coarse.sort(key=lambda c:c['score'],reverse=True);self.save()
         for c in coarse[:self.policy['full_path_base_budget']]:
             base=c['base'];row=c['row'];scene=self.scene(base)
-            try:edge=self.arm_path(scene,self.model.home,c['q_goal'],base,r.finger_q())
+            try:edge=self.arm_path(scene,locked,c['q_goal'],base,r.finger_q())
             except PlanningExhausted as error:row['status']=str(error);self.save();continue
             if edge is None:row['status']='SCAN_NO_COLLISION_FREE_ARM_PATH';self.save();continue
-            path=route(self.root,self.recovery.export_current(self.recovery.current_D),self.model,list(r.base),base)
+            path=self.locked_route(list(r.base),base,locked) if r.capture.config.get('maximum_range',{}).get('enabled') else route(self.root,self.recovery.export_current(self.recovery.current_D),self.model,list(r.base),base)
             row['route']=path;self.save()
             if not path['valid']:row['status']='NO_COLLISION_FREE_BASE_ROUTE';continue
             camera_route_ok=True
             for route_base in path['waypoints']:
-                route_scene=self.scene(route_base);safe,why,_=self.check(route_scene,self.model.home,route_base,r.finger_q())
+                route_scene=self.scene(route_base);safe,why,_=self.check(route_scene,locked,route_base,r.finger_q())
                 if not safe:row['status']='BASE_ROUTE_CAMERA_'+why;camera_route_ok=False;break
             if not camera_route_ok:self.save();continue
             c.update(arm_path=edge,route=path);c.pop('row');row['status']='MOBILE_VIEW_PREFLIGHT_PASSED';entry['status']='MOBILE_VIEW_PREFLIGHT_PASSED';self.save();return c
@@ -125,7 +149,8 @@ class MobileWristPlanner:
         if not self.recovery.released:raise RuntimeError('BASE_SCAN_REQUIRES_PHYSICAL_RELEASE')
         choice=self.plan(T_camera,require_coverage)
         if choice['route'] is not None:
-            self.home();self.recovery.move_base(choice)
+            if not r.capture.config.get('maximum_range',{}).get('enabled'):self.home()
+            self.recovery.move_base(choice)
         self.execute_arm(choice['arm_path'],'SYSTEM_WRIST_SCAN');return choice
     def observe_handle(self,anchor):
         from wrist_reconstruction.geometry import look_at

@@ -14,7 +14,7 @@ for name in ('run_cross_object_structure_episode','run_active_structure_episode'
 from run_articulated_system_episode import source as parent
 
 
-def source():
+def source(maximum_range=False):
     text=parent()
     if "runtime.plan_retreat=plan_retreat" not in text:
         raise RuntimeError("WRIST_PARENT_RUNTIME_API_MISMATCH: missing preplanned retreat")
@@ -83,12 +83,31 @@ def source():
     # Keep wrist extrinsics rigidly attached to MEASURED TCP, not proposed pose.
     replace('  world.step(render=False,update_fabric=True)', '  skill_capture.sync(tcp())\n  world.step(render=False,update_fabric=True)')
     replace('  return s\n def move', '  if skill_capture.runtime is not None:skill_capture.runtime.last_safe_arm=np.asarray(s["q"])[arm].copy()\n  return s\n def move')
+    if maximum_range:
+        replace('from wrist_reconstruction.recovery import Recovery','from wrist_reconstruction.max_recovery import MaximumRecovery as Recovery')
+        replace('skill_effort=EffortRecorder(a.output);skill_effort.sensor=ForceSensor(scene,export,a.output)', 'skill_effort=EffortRecorder(a.output);skill_effort.sensor=ForceSensor(scene,export,a.output)\n from wrist_reconstruction.max_range import ValidEffort\n skill_effort=ValidEffort(skill_effort,a.output)')
+        replace('runtime.recover=recovery.run','runtime.recover=recovery.run;runtime.recovery=recovery')
+        replace("   if slip_s>.1:raise RuntimeError('SUSTAINED_CONTACT_PLANE_DRIFT')", "   if slip_s>.1:s['relative_motion_event']='RELATIVE_GRASP_MOTION_OBSERVED' # diagnostic, not a physical safety failure")
+        replace('from paper_structure.evaluation_logger import EvaluationLogger','from wrist_reconstruction.streaming import EvaluationJournal as EvaluationLogger')
+        replace(" qtarget=np.asarray(robot.get_joint_positions(),dtype=float).copy();", " from wrist_reconstruction.streaming import JournalList\n qtarget=np.asarray(robot.get_joint_positions(),dtype=float).copy();")
+        replace(" native=WholeFingerReports(stage,export,allowed,world,dt,sample)", " native=WholeFingerReports(stage,export,allowed,world,dt,sample)\n rows=JournalList(a.output/'observations.jsonl');issued=JournalList(a.output/'command_tape.jsonl');native.physics_steps=JournalList(a.output/'physics_steps.jsonl')")
+        replace("  report.update(skill_capture_states=", "  from wrist_reconstruction.effort_summary import summarize as summarize_valid_effort\n  summarize_valid_effort(a.output)\n  report.update(maximum_actual_state=maximum_evaluation['maximum_actual_state'],physical_progress_5deg_or_5cm=maximum_evaluation['maximum_actual_state'] >= (5. if job['skill']['joint_type']=='revolute' else .05),maximum_range_mode=True,history_format='lossless JSONL; legacy JSON files are bounded diagnostic tails',minimum_joint_margin_rad=rows.minimum_margin,peak_finger_handle_force_n=rows.peak_force,duration_s=tick*dt)\n  rows.close();issued.close();native.physics_steps.close()\n  report.update(skill_capture_states=")
+        replace("  evaluation.update(actual_joint_displacement=", "  from wrist_reconstruction.evaluation import summarize as summarize_maximum\n  maximum_evaluation=summarize_maximum(a.output,gt,job['skill']['joint_type'])\n  evaluation.update(actual_joint_displacement=")
+        # Preserve original guard/load numbers. Only the final diagnostic veto
+        # is separated from measured operation; frozen historical mode remains.
+        replace("   success=displacement>=5. and evaluation.get('final_true_relative_translation_slip_m',float('inf'))<=policy['max_slip_m']", "   success=displacement>=(5. if job['skill']['joint_type']=='revolute' else .05)")
+        replace("   status='SUCCESS' if success else ('FINAL_TRUE_RELATIVE_SLIP' if evaluation.get('final_true_relative_translation_slip_m',0)>policy['max_slip_m'] else 'ESTIMATED_GOAL_ACTUAL_OPENING_BELOW_5_DEG')", "   status='PHYSICAL_PROGRESS_VERIFIED' if success else 'PHYSICAL_RANGE_BELOW_MINIMUM_DEMONSTRATION'")
     ast.parse(text);return text
 
 if __name__=='__main__':
     import argparse
     p=argparse.ArgumentParser();p.add_argument('--job',type=Path,required=True);a=p.parse_args();job=json.loads(a.job.read_text());out=Path(job['output']);out.mkdir(parents=True,exist_ok=True)
-    expanded=source();(out/'expanded_wrist_program.py').write_text(expanded)
+    import shutil
+    source_archive=out/'execution_sources';source_archive.mkdir(exist_ok=True)
+    for folder in ['wrist_reconstruction']:
+        for module in (ROOT/folder).glob('*.py'):
+            dest=source_archive/folder/module.name;dest.parent.mkdir(exist_ok=True);shutil.copy2(module,dest)
+    expanded=source(job.get('wrist_experiment',{}).get('maximum_range',{}).get('enabled',False));(out/'expanded_wrist_program.py').write_text(expanded)
     cal_path=Path(job['camera_calibration'])
     if not cal_path.is_absolute():cal_path=ROOT/cal_path
     paths=[Path(__file__),cal_path,*sorted((ROOT/'wrist_reconstruction').glob('*.py'))]

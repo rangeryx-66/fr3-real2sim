@@ -2,16 +2,22 @@
 import argparse,copy,json,os,sys,time,subprocess,hashlib,signal,threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
-from datetime import datetime
-ROOT=Path(__file__).resolve().parents[1]
+from datetime import datetime,timedelta
+from zoneinfo import ZoneInfo
+ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_v2.json');p.add_argument('--output',type=Path,default=ROOT/'results/wrist_mobile_20261006/run_v2');p.add_argument('--stage',choices=['capture','audit-old','coarse','backend','full','report'],default='full');p.add_argument('--object',choices=['7320','45746']);p.add_argument('--gpu',type=int,default=0);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_v2.json');p.add_argument('--output',type=Path,default=ROOT/'results/wrist_mobile_20261006/run_v2');p.add_argument('--stage',choices=['capture','audit-old','coarse','backend','full','report'],default='full');p.add_argument('--object',choices=['7320','45746']);p.add_argument('--gpu',type=int,default=0);p.add_argument('--mode',choices=['periodic','maximum-range'],default='periodic');p.add_argument('--resume',action='store_true');a=p.parse_args()
+    if a.mode=='maximum-range' and a.config==ROOT/'configs/wrist_reconstruction_v2.json':a.config=ROOT/'configs/wrist_reconstruction_max_range.json'
     c=json.loads(a.config.read_text());out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);frozen=out/'frozen_config.json'
     if frozen.exists() and json.loads(frozen.read_text())!=c:raise RuntimeError('FROZEN_CONFIGURATION_CHANGED')
     frozen.write_text(json.dumps(c,indent=2));ledgerpath=out/'components.json';ledger=json.loads(ledgerpath.read_text()) if ledgerpath.exists() else {'start_wall_s':time.time(),'components':{}}
-    cutoff=min(datetime.fromisoformat(c['deadline_shanghai']).timestamp(),ledger['start_wall_s']+c['total_wall_budget_s'])
+    maximum_mode=c.get('maximum_range',{}).get('enabled',False)
+    if maximum_mode and ledgerpath.exists() and not a.resume:raise RuntimeError('USE_RESUME_FOR_EXISTING_RUN; no automatic physical reset')
+    capture_cutoff=ledger.setdefault('capture_cutoff_wall_s',ledger['start_wall_s']+c['capture']['wall_s'])
+    cutoff=capture_cutoff if maximum_mode else min(datetime.fromisoformat(c['deadline_shanghai']).timestamp(),ledger['start_wall_s']+c['total_wall_budget_s'])
+    if maximum_mode:c['deadline_shanghai']=datetime.fromtimestamp(capture_cutoff,ZoneInfo('Asia/Shanghai')).isoformat()
     ledger_lock=threading.RLock()
     def save():
         with ledger_lock:
@@ -19,12 +25,20 @@ def main():
     def run(key,cmd,budget,env=None):
         old=ledger['components'].get(key,{})
         if old.get('status')=='COMPLETE':return
+        if maximum_mode and key.startswith('capture/') and old.get('status') in ('RUNNING','FAILED','INCOMPLETE_NO_EPISODE_REPORT'):
+            pid=old.get('pid')
+            if pid:
+                try:os.kill(pid,0);return
+                except ProcessLookupError:pass
+            if (out/('capture_'+key.split('/')[-1])/'max_range_checkpoint.json').exists():
+                row=dict(old,status='COLD_RESUME_REQUIRES_VERIFIED_ACTION_REPLAY');ledger['components'][key]=row;save();return
         remaining=min(cutoff-time.time(),budget)
         if remaining<=0:ledger['components'][key]={'status':'CUTOFF','command':cmd};save();return
         log=out/(key.replace('/','_')+'.log');row={'status':'RUNNING','command':cmd,'log':str(log),'started_wall_s':time.time()};ledger['components'][key]=row;save()
         e=dict(os.environ,PYTHONNOUSERSITE='1',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',MKL_NUM_THREADS='1');e.pop('PYTHONPATH',None);e.update(env or {})
         with log.open('a') as f:
             child=subprocess.Popen(cmd,cwd=ROOT,env=e,stdout=f,stderr=subprocess.STDOUT,start_new_session=True)
+            row['pid']=child.pid;save()
             try:code=child.wait(timeout=remaining)
             except BaseException:
                 os.killpg(child.pid,signal.SIGINT)
@@ -45,7 +59,7 @@ def main():
         capture_jobs=[]
         for o in objects:
             job=json.loads((ROOT/o['job']).read_text());job=copy.deepcopy(job)
-            capture_budget=max(0,c['capture']['wall_s']-ledger.get('resumed_capture_wall_s',{}).get(o['id'],0))
+            capture_budget=max(0,capture_cutoff-time.time()) if maximum_mode else max(0,c['capture']['wall_s']-ledger.get('resumed_capture_wall_s',{}).get(o['id'],0))
             output=out/('capture_'+o['id']);job.update(output=str(output),episode_id='wrist_'+o['id'],gpu=c.get('capture_gpus',{}).get(o['id'],a.gpu),deadline_shanghai=c['deadline_shanghai'],wall_clock_budget_s=c['capture']['wall_s'],wrist_experiment=c,camera_calibration=str(ROOT/c['camera_calibration']),object_prompt=o['prompt'],system_capture=c['capture'])
             job['wall_clock_budget_s']=capture_budget
             if o.get('resume_closed_capture'):
@@ -69,6 +83,12 @@ def main():
             save()
         with ThreadPoolExecutor(max_workers=min(2,max(1,len(capture_jobs)))) as pool:list(pool.map(capture_one,capture_jobs))
     if a.stage in ('coarse','backend','full'):
+        if maximum_mode:
+            from wrist_reconstruction.readiness import both_ready
+            ready,detail=both_ready(out,c)
+            ledger['both_object_backend_gate']={'ready':ready,'detail':detail};save()
+            if not ready:report(out,ledger,c);return
+            cutoff=ledger.setdefault('backend_started_wall_s',time.time())+c['maximum_range']['backend_budget_s'];save()
         for o in objects:
             if a.stage=='full' and c.get('overlap_backend',False):
                 ledger['components'][f'backend/{o["id"]}']={'status':'VERIFIED_SNAPSHOT_WATCH','output':str(out/('early_backend_'+o['id']))};save();continue
@@ -78,7 +98,7 @@ def main():
             observed=json.loads(wrist_manifest.read_text());clean=[s for s in observed['states'] if s.get('clean_wrist_capture')]
             family=observed['joint_family_requested'];required=c['backend']['minimum_pair_span'][family]
             if len(clean)<c['backend']['minimum_clean_states'] or max([s['estimated_articulation_state'] for s in clean] or [0])-min([s['estimated_articulation_state'] for s in clean] or [0])<required:
-                ledger['components'][f'backend/{o["id"]}']={'status':'WAITING_FOR_THREE_CLEAN_STATES_AND_LARGE_SPAN'};save();continue
+                ledger['components'][f'backend/{o["id"]}']={'status':'WAITING_FOR_REQUIRED_CLEAN_STATES_AND_LARGE_SPAN'};save();continue
             old=ROOT/'results/articulated_system_20261005'/('7320_recovery_v2' if o['id']=='7320' else '45746_recovery_v3_infrastructure_retry')
             for variant,root in [('OLD',old),('WRIST_CLEAN',out/('capture_'+o['id'])),('ORACLE_CAPTURE',out/('capture_'+o['id'])/'oracle_capture')]:
                 manifest=root/'multistate_capture.json'
@@ -137,5 +157,8 @@ def report(out,ledger,c):
         lines+=['','## Retained previous attempt','',json.dumps(ledger['resume_provenance'],ensure_ascii=False),
                 'Physical actions are reexecuted; no contact impulse, object joint state or attachment is restored. The original total cutoff and cumulative per-object capture budgets are retained.']
     lines+=['','Missing large-span clean captures block a valid A/B/C backend verdict; no fallback is triggered by missing capture. Existing contact baselines remain unchanged.']
+    if c.get('maximum_range',{}).get('enabled'):
+        from wrist_reconstruction.readiness import summarize
+        lines+=summarize(out)
     (out/'REPORT.md').write_text('\n'.join(lines)+'\n')
 if __name__=='__main__':main()
