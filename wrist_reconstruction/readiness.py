@@ -2,10 +2,55 @@
 import json,csv,subprocess,sys
 from pathlib import Path
 
+def reuse_closed_capture(root,sources):
+    """Merge existing real observations only, after the actor has stopped.
+
+    A matching scene initialization is required. No simulator state is restored
+    and acquisition timestamps/camera/robot poses are retained verbatim.
+    """
+    import copy,shutil
+    root=Path(root);manifest=root/'multistate_capture.json';jobfile=root/'frozen_wrist_job.json'
+    if not manifest.exists() or not jobfile.exists():return False
+    doc=json.loads(manifest.read_text());job=json.loads(jobfile.read_text())
+    if any(s.get('clean_wrist_capture') and abs(s['estimated_articulation_state'])<1e-8 and len(s.get('views',[]))>=8 for s in doc['states']):return True
+    checks=('asset_root','source','camera_calibration','frozen_proxy_sha256','initial_articulation_rad','plant','fixed_fixture')
+    audits=[]
+    for source in sources:
+        source=Path(source);audit={'source':str(source),'physical_state_restore':False};audits.append(audit)
+        try:
+            oldjob=json.loads((source/'frozen_wrist_job.json').read_text());old=json.loads((source/'multistate_capture.json').read_text())
+            if any(oldjob.get(k)!=job.get(k) for k in checks):raise ValueError('INITIAL_SCENE_OR_SENSOR_CONFIGURATION_DIFFERS')
+            if str(old['object_id'])!=str(doc['object_id']) or old.get('capture_mode')!='wrist_camera_capture':raise ValueError('NOT_SAME_WRIST_OBJECT')
+            state=next(s for s in old['states'] if s.get('clean_wrist_capture') and abs(s['estimated_articulation_state'])<1e-8 and len(s['views'])>=8)
+            policy=job['wrist_experiment']['capture']
+            for v in state['views']:
+                folder=source/v['directory'];meta=json.loads((folder/'camera.json').read_text());qa=meta['qa']
+                if qa['robot_pixel_ratio']>policy['maximum_robot_pixel_ratio'] or qa['object_frame_clipped'] or qa['visible_moving_part_pixels']<policy['minimum_moving_part_pixels']:raise ValueError('SOURCE_QA_INVALID')
+                if not policy['minimum_object_coverage']<=qa['object_coverage']<=policy['maximum_object_coverage']:raise ValueError('SOURCE_COVERAGE_INVALID')
+                if not all((folder/n).exists() for n in ('rgb.png','depth_m.npy','mask.png','point_cloud.npz')):raise ValueError('SOURCE_FILES_MISSING')
+            state=copy.deepcopy(state);state['state_id']=max([s['state_id'] for s in doc['states']] or [-1])+1
+            state['observation_reused_from']=str(source);state['acquired_in_current_execution']=False
+            for v in state['views']:
+                src=source/v['directory'];dst=root/'states'/f"state_{state['state_id']:03d}"/f"view_{v['view_id']:02d}"
+                dst.parent.mkdir(parents=True,exist_ok=True);shutil.copytree(src,dst,dirs_exist_ok=True)
+                v.update(directory=str(dst.relative_to(root)),acquisition_reused_from=str(src),acquired_in_current_execution=False)
+            doc['states'].append(state);doc['states'].sort(key=lambda s:s['estimated_articulation_state'])
+            # The existing ArtGS adapter addresses manifest positions using
+            # state_id. Preserve acquisition IDs separately when merging.
+            for index,s in enumerate(doc['states']):
+                s.setdefault('acquisition_state_id',s['state_id']);s['state_id']=index
+            manifest.write_text(json.dumps(doc,indent=2));audit['status']='REUSED_REAL_CLOSED_OBSERVATIONS';break
+        except (OSError,ValueError,KeyError,StopIteration) as error:audit.update(status='NOT_REUSED',reason=str(error))
+    (root/'closed_observation_reuse.json').write_text(json.dumps(audits,indent=2))
+    return any(a.get('status')=='REUSED_REAL_CLOSED_OBSERVATIONS' for a in audits)
+
 def both_ready(out,c):
     rows=[]
     for o in c['objects']:
-        p=Path(out)/('capture_'+o['id'])/'multistate_capture.json'
+        root=Path(out)/('capture_'+o['id']);p=root/'multistate_capture.json'
+        reuse=Path(out)/'supplemental_closed_sources.json'
+        if (root/'report.json').exists() and reuse.exists():
+            reuse_closed_capture(root,json.loads(reuse.read_text()).get(o['id'],[]))
         states=json.loads(p.read_text())['states'] if p.exists() else []
         clean=[s for s in states if s.get('clean_wrist_capture') and len(s.get('views',[]))>=8]
         span=max([s['estimated_articulation_state'] for s in clean] or [0])-min([s['estimated_articulation_state'] for s in clean] or [0])
