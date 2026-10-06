@@ -86,7 +86,9 @@ def run(r):
         return value,source
     def recover(reason,capture=None):
         nonlocal last
-        r.drive.active=False;r.halt_at_measured_state();checkpoint('RECOVERY_ENTRY')
+        r.drive.active=False
+        if reason=='SUSTAINED_CONTACT_LOSS':r.stop_failed_grasp_monitor()
+        r.halt_at_measured_state();checkpoint('RECOVERY_ENTRY')
         failures.append({'t':r.time(),'reason':reason});(out/'recovery_failures.json').write_text(json.dumps(failures,indent=2))
         while recovery.cycles<recovery.policy['operation_cycles'] and time.time()<r.deadline:
             try:
@@ -95,6 +97,7 @@ def run(r):
             except RuntimeError as error:
                 failures.append({'t':r.time(),'reason':'RECOVERY_ATTEMPT_FAILED','detail':str(error)})
                 (out/'recovery_failures.json').write_text(json.dumps(failures,indent=2))
+                if str(error)=='SUSTAINED_CONTACT_LOSS':r.stop_failed_grasp_monitor()
                 r.halt_at_measured_state()
                 # Confirmed uncontrolled release and unsafe loaded contact are
                 # not made harmless by having unused search budget.

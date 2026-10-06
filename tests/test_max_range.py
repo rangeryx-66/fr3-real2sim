@@ -21,6 +21,8 @@ class MaximumRangeTests(unittest.TestCase):
   self.assertIn("raise RuntimeError('SUSTAINED_CONTACT_PLANE_DRIFT')",legacy);self.assertNotIn("raise RuntimeError('SUSTAINED_CONTACT_PLANE_DRIFT')",new)
   for s in ["raise RuntimeError('SUSTAINED_CONTACT_LOSS')","if s['margin_rad']<=.05:raise RuntimeError('LOW_JOINT_MARGIN')","raise RuntimeError('EXISTING_LOW_PRELOAD_FORCE_LIMIT')"]:self.assertIn(s,new)
   self.assertIn("runtime.recovery=recovery",new)
+  self.assertIn("mode=mode if reference is not None else 'position'",new)
+  self.assertIn("runtime.stop_failed_grasp_monitor=stop_failed_grasp_monitor",new)
  def test_home_not_required_for_clearance_mode(self):
   text=(ROOT/'wrist_reconstruction/retreat.py').read_text();self.assertIn("'home':None",text);self.assertIn("if plan['home'] is not None",text)
  def test_three_failed_real_closures_continue_to_fourth_template(self):

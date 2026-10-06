@@ -1,5 +1,5 @@
 """Both-object backend gate and honest independent task result tables."""
-import json,csv
+import json,csv,subprocess,sys
 from pathlib import Path
 
 def both_ready(out,c):
@@ -24,8 +24,9 @@ def summarize(out):
         def read(name,default):
             p=root/name;return json.loads(p.read_text()) if p.exists() else default
         if (root/'effort_segments.json').exists() and (root/'effort_samples.jsonl').exists():
-            from wrist_reconstruction.effort_summary import summarize as summarize_effort
-            summarize_effort(root)
+            interpreter=Path(__file__).resolve().parents[1]/'environments/artgs/bin/python'
+            command=[str(interpreter) if interpreter.exists() else sys.executable,'-c','from wrist_reconstruction.effort_summary import summarize;import sys;summarize(sys.argv[1])',str(root)]
+            subprocess.run(command,cwd=Path(__file__).resolve().parents[1],check=True,timeout=300)
         actual=read('maximum_range_evaluation.json',{});history=read('reposition_history.json',[])
         capture=read('multistate_capture.json',{});effort=read('effort_segments.json',[]);moves=read('mobile_progress.json',{}).get('repositions',0)
         lines += [f'### {obj}','',f"Actual maximum: {actual.get('maximum_actual_state','PENDING independent post-run evaluation')}; units: {'degrees' if obj=='7320' else 'meters'}. Mobile moves: {moves}; regrasp successes: {sum(bool(x.get('regrasp_completed')) for x in history)}; effort-valid segments: {sum(x.get('effort_validity')=='VALID_EFFORT_SEGMENT' for x in effort)}.",'','| State | Release | Scan | Wrist reobserve | Regrasp | Subsequent pull |','|---|---|---|---|---|---|']

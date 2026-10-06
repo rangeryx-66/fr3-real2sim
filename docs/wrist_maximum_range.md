@@ -80,3 +80,16 @@ At implementation freeze: eight policy/integration regressions passed; all 15
 existing wrist regressions passed across Isaac and ArtGS environments. Physical
 results must be read from the experiment artifacts, not inferred from these
 software tests. No new 60-degree/10-cm result is claimed by this document.
+
+## First physical integration regression
+
+Both initial nominal grasps established bilateral hold (7320 approximately
+0.526/0.519 N; 45746 approximately 0.518/0.529 N), then the new recovery halt
+accidentally changed finger force-hold to position mode and removed preload.
+Failures are retained under `hold_transition_failure_<id>`; neither is claimed
+as opening success. Recovery now preserves finger hold mode while stopping the
+arm; a genuinely failed grasp monitor is explicitly disarmed for its release/
+recovery phase, then actual closure must re-establish bilateral validation.
+The original contact-loss threshold, force cap, gains and closure law remain.
+7320's corrected physical run reached incremental release; the full recovery
+cycle and maximum range were still pending at this note's creation.

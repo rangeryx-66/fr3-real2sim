@@ -177,7 +177,9 @@ class MaximumRecovery(Recovery):
                     choice={'base':list(r.base),'plan':{'trial_candidates':[trial]},'route':None}
                     try:r.regrasp(choice,np.eye(4))
                     except RuntimeError as e:
-                        item['physical_regrasp_error']=str(e);self.save();r.halt_at_measured_state()
+                        item['physical_regrasp_error']=str(e);self.save()
+                        if str(e)=='SUSTAINED_CONTACT_LOSS':r.stop_failed_grasp_monitor()
+                        r.halt_at_measured_state()
                         # Force/speed and dangerous native contacts are never
                         # ignored; only a checked safe escape can resume.
                         self.escape(Dnew,row);continue

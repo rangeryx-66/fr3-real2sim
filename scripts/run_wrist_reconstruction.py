@@ -1,5 +1,5 @@
 """Independent bounded OLD/WRIST-CLEAN/ORACLE capture/backend ledger."""
-import argparse,copy,json,os,sys,time,subprocess,hashlib,signal,threading
+import argparse,copy,json,os,sys,time,subprocess,hashlib,signal,threading,fcntl
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from datetime import datetime,timedelta
@@ -19,16 +19,38 @@ def main():
     cutoff=capture_cutoff if maximum_mode else min(datetime.fromisoformat(c['deadline_shanghai']).timestamp(),ledger['start_wall_s']+c['total_wall_budget_s'])
     if maximum_mode:c['deadline_shanghai']=datetime.fromtimestamp(capture_cutoff,ZoneInfo('Asia/Shanghai')).isoformat()
     ledger_lock=threading.RLock()
+    saved_component_fingerprints={k:json.dumps(v,sort_keys=True) for k,v in ledger['components'].items()}
     def save():
-        with ledger_lock:
-            temporary=ledgerpath.with_suffix('.tmp');temporary.write_text(json.dumps(ledger,indent=2));temporary.replace(ledgerpath)
+        with ledger_lock, (out/'components.lock').open('a') as lock:
+            fcntl.flock(lock,fcntl.LOCK_EX)
+            disk=json.loads(ledgerpath.read_text()) if ledgerpath.exists() else {'components':{}}
+            disk.update({k:v for k,v in ledger.items() if k!='components'})
+            for k,v in ledger['components'].items():
+                fingerprint=json.dumps(v,sort_keys=True)
+                if fingerprint!=saved_component_fingerprints.get(k):disk['components'][k]=v
+                saved_component_fingerprints[k]=fingerprint
+            temporary=ledgerpath.with_suffix('.tmp');temporary.write_text(json.dumps(disk,indent=2));temporary.replace(ledgerpath)
+            fcntl.flock(lock,fcntl.LOCK_UN)
     def run(key,cmd,budget,env=None):
         old=ledger['components'].get(key,{})
         if old.get('status')=='COMPLETE':return
         if maximum_mode and key.startswith('capture/') and old.get('status') in ('RUNNING','FAILED','INCOMPLETE_NO_EPISODE_REPORT'):
             pid=old.get('pid')
             if pid:
-                try:os.kill(pid,0);return
+                try:
+                    os.kill(pid,0)
+                    commandline=Path(f'/proc/{pid}/cmdline').read_bytes().decode().split('\0')
+                    if cmd[-1] not in commandline:raise RuntimeError('RESUME_PID_NOT_OWNED_BY_JOB')
+                    while time.time()<cutoff:
+                        try:
+                            os.kill(pid,0)
+                            stat=Path(f'/proc/{pid}/stat').read_text().split(') ',1)[1].split()[0]
+                            if stat=='Z':break
+                        except (ProcessLookupError,FileNotFoundError):break
+                        time.sleep(2)
+                    else:os.kill(pid,signal.SIGINT)
+                    reportpath=out/('capture_'+key.split('/')[-1])/'report.json'
+                    old.update(status='COMPLETE' if reportpath.exists() else 'INCOMPLETE_NO_EPISODE_REPORT',ended_wall_s=time.time(),resumed_live_actor=True);save();return
                 except ProcessLookupError:pass
             if (out/('capture_'+key.split('/')[-1])/'max_range_checkpoint.json').exists():
                 row=dict(old,status='COLD_RESUME_REQUIRES_VERIFIED_ACTION_REPLAY');ledger['components'][key]=row;save();return
@@ -130,6 +152,8 @@ def main():
 
 
 def report(out,ledger,c):
+    ledgerpath=out/'components.json'
+    if ledgerpath.exists():ledger=json.loads(ledgerpath.read_text())
     lines=['# Wrist reconstruction experiment','',f"Basis: {c['basis_commit']}. Simulation nominal camera is NOT real hand-eye calibration.",'','| Component | Status |','|---|---|']
     for k,v in ledger['components'].items():lines.append(f"| {k} | {v.get('physical_status',v['status'])} |")
     lines+=['','## Capture results','']
