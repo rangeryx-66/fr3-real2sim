@@ -4,6 +4,16 @@ from pathlib import Path
 import numpy as np
 
 class WristCaptureTests(unittest.TestCase):
+    def test_operation_memory_rejects_gt_driven_source(self):
+        from wrist_reconstruction.operation_memory import load_observed_model
+        with tempfile.TemporaryDirectory() as tmp:
+            p=Path(tmp);poses=[np.eye(4).tolist() for _ in range(12)];poses[-1][0][3]=.01
+            memory={'source':'measured EE only','GT_inputs':False,'estimated_articulation':{'joint_type':'prismatic','prismatic':{'axis':[1,0,0]}},'supporting_observations':poses}
+            (p/'structured_memory.json').write_text(json.dumps(memory));report={'status':'STAGE_RECORDED','gt_control_inputs':False,'gt_fit_inputs':False,'object_actuation':False,'attachments':False};(p/'report.json').write_text(json.dumps(report))
+            estimate,sign,audit=load_observed_model(p/'structured_memory.json','prismatic');self.assertEqual(sign,1.);self.assertIn('NOT new discovery',audit['source_kind'])
+            report['gt_control_inputs']=True;(p/'report.json').write_text(json.dumps(report))
+            with self.assertRaisesRegex(ValueError,'FORBIDDEN_PROVENANCE'):load_observed_model(p/'structured_memory.json','prismatic')
+
     def test_failed_closure_release_precedes_retreat_and_preserves_motion_stop(self):
         from types import SimpleNamespace
         from wrist_reconstruction.recovery import Recovery

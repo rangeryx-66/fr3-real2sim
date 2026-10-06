@@ -6,6 +6,10 @@ from pathlib import Path
 def run(runtime):
     original=(Path(__file__).resolve().parents[1]/'articulated_interaction_skill/session.py').read_text()
     replacements={
+        " snapshot('closed_after_real_grasp',0.)":
+        " snapshot('closed_after_real_grasp',0.)\n from wrist_reconstruction.operation_memory import restore\n restore(r)",
+        " for attempt in range(4):":
+        " for attempt in range(0 if r.memory.estimate is not None else 4):",
         "return r.memory.angle_deg(r.tcp()) if kind=='revolute' else r.memory.state(r.tcp())":
         "return r.state_offset+(r.memory.angle_deg(r.tcp()) if kind=='revolute' else r.memory.state(r.tcp()))",
         " def snapshot(label,value):":
