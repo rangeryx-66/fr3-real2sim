@@ -61,7 +61,7 @@
 - 随后回 home 时被几何碰撞检查停止；原报告保留。11:00 的 SIGINT 请求不能覆盖这个真实终止原因。
 - **不是 15° 条件验证，不是 multi-state capture，也不是完整任务成功。** 不将不同角度的 1.679 mm 与 0.0878 mm 直接当作公平的 before/after 改善比。
 
-13 项非 FCL 回归、1 项 FCL 释放安全回归通过。真实 2 mm 观察位移仍触发重闭合；新自过滤保留位于机器人前方的物体深度。单元测试不替代上述实际执行或后续 15° 验证。
+13 项非 FCL 回归、2 项 FCL 释放/相机安全回归通过。真实 2 mm 观察位移仍触发重闭合；新自过滤保留位于机器人前方的物体深度。单元测试不替代上述实际执行或后续 15° 验证。
 
 ## 4. Effort 与指标边界
 
@@ -69,7 +69,7 @@
 
 启动窗口的 `breakaway` 使用明确的 EE motion-onset 定义及事后 object-onset 评价。不是严格的最小摩擦证明。力矩关于 EE 估计轴计算，不能称真机精确 hinge torque。
 
-视频上的 `tactile drift` 是原控制器代理量，不能作完整真实相对滑移证明。原 final-slip 字段的参考涉及 estimated `moving_initial`；本报告独立按阶段用 `inv(T_object) @ T_ee` 评价，不把不同抓持周期及估计参考误差混成一次真实滑移。
+视频上的 `tactile drift` 是原控制器代理量，不能作完整真实相对滑移证明。释放后 memory 清空导致视频 EE-angle readout 回到 0，这不是门角归零，也不是物体 reset。原 final-slip 字段的参考涉及 estimated `moving_initial`；本报告独立按阶段用 `inv(T_object) @ T_ee` 评价，不把不同抓持周期及估计参考误差混成一次真实滑移。
 
 ## 5. 可复查命令与数据
 
@@ -101,7 +101,13 @@ PYTHONNOUSERSITE=1 environments/artgs/bin/python scripts/run_wrist_reconstructio
 
 连续视频均为真实物理执行。原生参考资产视频、诊断图及近景画面不计作新 reconstructed twin 或 clean wrist input。旧失败目录保留。
 
-## 6. 下一项必要工作（尚未执行）
+## 6. 数据交付与后续未验证修正
+
+实际数据包 `actual_capture_and_diagnostics.zip` 约 221.8 MB，SHA256：`488d58105f80e6d8bdaaabb1eed464669b93b8ab7d9be8caa57fcb85a6b76d96`。已下载并逐项校验观察文件。每对象仍只有一个闭门状态；QA 失败候选只作 provenance，不能把所有 PNG 都作为接受视角。初始外部传感器参考只用于 bootstrap/复用验证，不计作 wrist view。
+
+另补齐了退让、张开和回 home 预检中已有的 camera-housing collision check，几何和门槛未改。相机跨入环境面板的 FCL 用例会拒绝，**还没有实际物理回放验证**。
+
+## 7. 下一项必要工作（尚未执行）
 
 先在新的有限预算中验证最新 release self-observation + current-scene retreat，确认 15° 松手后可安全退让；再补上开门后 scan/reobserve/regrasp/continue，获得第三状态及较大跨度。仅数据门槛真正满足后启动新 ArtGS，并按 coarse review → type → full → meshes/URDF/Isaac import 验收。
 

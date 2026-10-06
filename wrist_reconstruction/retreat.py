@@ -17,7 +17,7 @@ class RetreatPlanner:
             direction=direction/np.linalg.norm(direction);row={'index':len(self.rows),'direction_world':direction.tolist(),'release_opening_m':opening,'base':list(r.base)};self.rows.append(row)
             def check(q,b):
                 if self.model.margin(q)<=.05:return False,'LOW_JOINT_MARGIN',None
-                ok,why=scene.check(self.model.poses(q,b,width=opening),scene.moving_reference,False);return ok,why,None
+                return self.recovery.mobile.check(scene,q,b,np.array([opening/2,-opening/2]))
             edge=[];seed=start;why='SAFE'
             for amount in np.linspace(0,self.policy['escape_distance_m'],self.policy['cartesian_waypoints']):
                 target=E.copy();target[:3,3]+=direction*amount;q=self.model.ik(target,r.base,seed=seed,starts=1)
@@ -29,12 +29,12 @@ class RetreatPlanner:
             # Open fully only once the fingers are physically away from handle.
             ok=True
             for width in np.linspace(opening,.1,9):
-                ok,why=scene.check(self.model.poses(seed,r.base,width=width),scene.moving_reference,False)
+                ok,why,_=self.recovery.mobile.check(scene,seed,r.base,np.array([width/2,-width/2]))
                 if not ok:break
             if not ok:row['status']='ESCAPE_OPENING_'+why;self.save();continue
             def home_check(q,b):
                 if self.model.margin(q)<=.05:return False,'LOW_JOINT_MARGIN',None
-                ok,why=scene.check(self.model.poses(q,b,width=.1),scene.moving_reference,False);return ok,why,None
+                return self.recovery.mobile.check(scene,q,b,np.array([.05,-.05]))
             outer=self
             class View:
                 def __getattr__(self,name):return getattr(outer.model,name)

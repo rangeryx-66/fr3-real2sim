@@ -72,6 +72,26 @@ class WristCaptureTests(unittest.TestCase):
         moved=robot_projection_mask(robot_depth,K,np.eye(4),geometries,{'finger':shifted})
         self.assertFalse(moved[24,32]);self.assertTrue(moved[24,50])
 
+    def test_retreat_rejects_camera_collision_even_when_arm_is_clear(self):
+        from types import SimpleNamespace
+        import trimesh
+        from piper_mobile_demo.owned_scene import Shape
+        from wrist_reconstruction.planner import MobileWristPlanner
+        from wrist_reconstruction.retreat import RetreatPlanner
+        with tempfile.TemporaryDirectory() as tmp:
+            panel=np.eye(4);panel[0,3]=.04
+            obstacle=Shape(trimesh.creation.box([.01,.1,.1]),panel,False,'panel','environment')
+            scene=SimpleNamespace(moving_reference=np.eye(4),scene=[obstacle],robot=[],check=lambda *args:(True,'SAFE'))
+            model=SimpleNamespace(home=np.zeros(6),margin=lambda q:.5,poses=lambda *args,**kwargs:{'tcp_link':np.eye(4)},ik=lambda *args,**kwargs:np.zeros(6))
+            policy={'extra_openings_m':[.02],'maximum_alternatives':1,'planning_wall_s':2,'escape_distance_m':.04,'cartesian_waypoints':2}
+            capture=SimpleNamespace(output=Path(tmp),config={'retreat':policy},cal={'X':np.eye(4),'camera_body_size_m':[.09,.025,.025]})
+            r=SimpleNamespace(capture=capture,base=[0,0,0,0],tcp=lambda:np.eye(4),arm_q=lambda:np.zeros(6),finger_q=lambda:np.array([.01,-.01]))
+            mobile=MobileWristPlanner.__new__(MobileWristPlanner);mobile.r=r;mobile.model=model;mobile.scene=lambda b:scene
+            recovery=SimpleNamespace(r=r,model=model,mobile=mobile,visual_current=lambda D:{'outward_normal_world':[0,-1,0]})
+            retreat=RetreatPlanner(recovery)
+            self.assertEqual(retreat.plans(np.eye(4)),[])
+            self.assertTrue(retreat.rows[0]['status'].startswith('SCAN_CAMERA_ENVIRONMENT_COLLISION'))
+
     def test_unknown_regrasp_does_not_forecast_a_missing_model(self):
         from operational_structure.confidence import OperationalMemory
         from wrist_reconstruction.recovery import reset_model_monitor
