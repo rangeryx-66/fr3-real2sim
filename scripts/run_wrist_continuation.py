@@ -7,11 +7,12 @@ from concurrent.futures import ThreadPoolExecutor
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_extended.json');p.add_argument('--output',type=Path,required=True);p.add_argument('--source-root',type=Path,required=True);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_extended.json');p.add_argument('--output',type=Path,required=True);p.add_argument('--source-root',type=Path,required=True);p.add_argument('--object',choices=['7320','45746']);a=p.parse_args()
  out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);c=json.loads(a.config.read_text());clock=out/'run_clock.json'
  d=json.loads(clock.read_text()) if clock.exists() else {'start_wall_s':time.time(),'finish_early':True}
  d.setdefault('capture_deadline_wall_s',d['start_wall_s']+c['capture']['wall_s']);clock.write_text(json.dumps(d,indent=2));deadline=datetime.fromtimestamp(d['capture_deadline_wall_s'],ZoneInfo('Asia/Shanghai')).isoformat()
  sources={'7320':a.source_root/'cartesian_retreat_stop_7320','45746':a.source_root/'load_stop_5mm_45746'}
+ if a.object:sources={a.object:sources[a.object]}
  (out/'frozen_config.json').write_text(json.dumps(c,indent=2));records={}
  def run(obj):
   from wrist_reconstruction.continuation import prepare,make_job
