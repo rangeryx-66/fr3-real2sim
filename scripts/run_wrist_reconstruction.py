@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_v2.json');p.add_argument('--output',type=Path,default=ROOT/'results/wrist_mobile_20261006/run_v2');p.add_argument('--stage',choices=['capture','audit-old','coarse','backend','full','report'],default='full');p.add_argument('--object',choices=['7320','45746']);p.add_argument('--gpu',type=int,default=0);p.add_argument('--mode',choices=['periodic','maximum-range'],default='periodic');p.add_argument('--resume',action='store_true');a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_v2.json');p.add_argument('--output',type=Path,default=ROOT/'results/wrist_mobile_20261006/run_v2');p.add_argument('--stage',choices=['capture','audit-old','coarse','backend','full','report'],default='full');p.add_argument('--object',choices=['7320','45746']);p.add_argument('--gpu',type=int,default=0);p.add_argument('--mode',choices=['periodic','maximum-range'],default='periodic');p.add_argument('--resume',action='store_true');p.add_argument('--observation-source',type=Path,action='append',default=[]);a=p.parse_args()
     if a.mode=='maximum-range' and a.config==ROOT/'configs/wrist_reconstruction_v2.json':a.config=ROOT/'configs/wrist_reconstruction_max_range.json'
     c=json.loads(a.config.read_text());out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);frozen=out/'frozen_config.json'
     if frozen.exists() and json.loads(frozen.read_text())!=c:raise RuntimeError('FROZEN_CONFIGURATION_CHANGED')
@@ -87,6 +87,15 @@ def main():
             if o.get('resume_closed_capture'):
                 sources=o['resume_closed_capture'];sources=[sources] if isinstance(sources,str) else sources
                 job['resume_closed_capture']=[str(ROOT/s) for s in sources]
+            for extra in a.observation_source:
+                extra=extra.resolve();manifest=extra/'multistate_capture.json'
+                if not manifest.exists():continue
+                observation=json.loads(manifest.read_text())
+                if str(observation.get('object_id'))!=o['id']:continue
+                if observation.get('capture_mode')!='wrist_camera_capture':raise RuntimeError('OBSERVATION_SOURCE_NOT_PHYSICAL_WRIST_CAPTURE')
+                sources=job.setdefault('resume_closed_capture',[])
+                if isinstance(sources,str):sources=[sources];job['resume_closed_capture']=sources
+                sources.append(str(extra))
             if o.get('operation_memory'):job['operation_memory']=str(ROOT/o['operation_memory'])
             job['skill'].update(targets=o['targets'],capture_interval=o.get('capture_interval',30. if job['skill']['joint_type']=='revolute' else .05),minimum_capture_separation=.5 if job['skill']['joint_type']=='revolute' else .002,maximum_segments=c['capture']['maximum_segments'],maximum_sim_s=c['capture']['maximum_sim_s'],maximum_path_m=c['capture']['task_path_m'],warning_margin_rad=c['capture']['warning_margin_rad'])
             jp=out/(o['id']+'_job.json');jp.write_text(json.dumps(job,indent=2))

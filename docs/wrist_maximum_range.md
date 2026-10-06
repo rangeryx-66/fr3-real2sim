@@ -133,3 +133,23 @@ increased. Each event consumes the frozen recovery budget. An existing robot
 Jacobian/FK check is also repeated after base lock, using its original tolerance.
 These recovery additions were software-tested but had not yet passed a physical
 load-event recovery at the time of this note.
+
+7320's completed corrected trial physically reached **24.878 degrees** according
+to the post-stop evaluator. It had an 8-view clean closed capture and stable
+estimated-model opening beyond the old periodic 15-degree release. At the
+0.10-rad warning (actual margin ~0.097 rad), all fixed-orientation Cartesian
+retreats returned NO_IK; the recovery budget exhausted. The run and its data are
+retained under `cartesian_retreat_stop_7320`, not overwritten or scored zero.
+
+The same twelve-alternative retreat budget now includes six Cartesian and six
+joint-space clearance goals. Home is an optional endpoint, not a required gate.
+Joint paths and final opening sweeps use the existing margin/camera/environment
+checks. `--observation-source` reuses actual wrist captures with the original
+sensor identity verification; it restores no physical state.
+
+The simulator had exited on these implementation/safety stops. Subsequent trials
+reexecute the verified physical approach/closure/mobile/manipulation procedure
+from one episode initialization. This is **not** a claim of seamless cold state
+restoration or continuous 24.9→60-degree continuation. Exact automatic command-
+tape cold continuation remains unfinished; no GT door state is used to recover.
+The common original capture cutoff is 2026-10-07 02:38:12 Shanghai.
