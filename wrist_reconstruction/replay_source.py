@@ -44,6 +44,19 @@ def augment(text):
     # can change a later physical regrasp. This is not measured-state replay.
     replace("  if compliant and (tape is None or replay_frame.get('cartesian_input') is not None):",
             "  if compliant and tape is None:")
+    replace('   for _ in range(len(tape)-tick):step()', '''   while tick<len(tape):
+    before_tick=tick
+    try:step()
+    except RuntimeError as error:
+     # The original episode handled a lost grasp outside step(), then issued
+     # its protected release/recovery commands. Reproduce that transition;
+     # never turn a lost grasp into a claimed hold or bypass a dangerous load.
+     next_frame=tape[tick] if tick<len(tape) else None
+     recorded_safe_release=next_frame is not None and not next_frame.get('retention_armed') and not next_frame.get('compliant') and next_frame['phase']=='SYSTEM_FAILED_GRASP_RECOVERY'
+     if str(error)!='SUSTAINED_CONTACT_LOSS' or tick!=before_tick+1 or not recorded_safe_release:raise
+     with (a.output/'replayed_recovery_events.jsonl').open('a') as stream:stream.write(json.dumps({'t':(tick-1)*dt,'trigger':str(error),'action':'stop failed grasp; execute recorded protected recovery','next_command_phase':next_frame['phase'],'grasp_success_claimed':False})+'\\n')
+     reference=None;retention.reference=None;loss_s=0.;slip_s=0.
+''')
     # Reuse the exact existing runtime API, including native closure, release,
     # route, arm safety and collision guards. No alternative controller.
     begin=text.index('   from wrist_reconstruction.session import run as run_skill')
