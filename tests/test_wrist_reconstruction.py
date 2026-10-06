@@ -24,7 +24,10 @@ class WristCaptureTests(unittest.TestCase):
         recovery.release_observation=lambda D:recovery.observe(D)[2]
         def execute(plan):
             self.assertTrue(recovery.released);events.append('retreat');return True
-        recovery.retreat=SimpleNamespace(plans=lambda D:[{'opening':.04}],execute=execute)
+        def plans(D):
+            np.testing.assert_array_equal(recovery.current_D,D)
+            return [{'opening':.04}]
+        recovery.retreat=SimpleNamespace(plans=plans,execute=execute)
         recovery.release_failed_closure(np.eye(4));self.assertEqual(events,['configure',('release',.001),'retreat'])
         events.clear();recovery.released=False
         def moving(D):

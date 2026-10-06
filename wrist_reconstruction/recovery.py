@@ -112,7 +112,7 @@ class Recovery(LegacyRecovery):
     def release_failed_closure(self,D):
         """Same slow release and checked retreat, before another candidate."""
         from wrist_reconstruction.planner import PlanningExhausted
-        r=self.r;D0,_,_=self.observe(D);plans=self.retreat.plans(D0)
+        r=self.r;D0,_,_=self.observe(D);self.current_D=D0;plans=self.retreat.plans(D0)
         if not plans:raise PlanningExhausted('FAILED_CLOSURE_NO_SAFE_RETREAT')
         r.drive.active=False;r.hold(2.);cloud=self.release_observation(D0);r.configure_release(plans[0]['opening'],D0)
         try:
