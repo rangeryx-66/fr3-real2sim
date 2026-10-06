@@ -116,3 +116,20 @@ A new regrasp attempt also invalidates the previous release certificate before
 approach/closure. A failed candidate must physically release again before
 retreat. Mobile execution separately checks actual release aperture and zero
 load. Repeated candidate releases retain the most recent non-null model memory.
+
+The corrected 45746 run continued with real contact: independent post-run
+measurement found 5.88 mm maximum drawer motion; EE moved 5.86 mm, tracked object
+grasp point 5.85 mm, relative translation about 0.203 mm and EE rotation about
+0.061 degrees. It stopped on an instantaneous 2.017-N one-sided load above the
+unchanged 2-N cap. This is not evidence of large slip or a wrong pull direction
+(EE motion differed from command by about 1.85 degrees). The event and video are
+retained under `load_stop_5mm_45746`.
+
+Load recovery now stops the drive, tries the original protected bilateral-hold
+window and resumes the existing compliance only if that is safe. Otherwise it
+tries a preflighted slow release, with the same force/geometry guards on every
+step. A persistent unsafe load still stops. No force cap or controller gain is
+increased. Each event consumes the frozen recovery budget. An existing robot
+Jacobian/FK check is also repeated after base lock, using its original tolerance.
+These recovery additions were software-tested but had not yet passed a physical
+load-event recovery at the time of this note.

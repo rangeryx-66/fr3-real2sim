@@ -75,18 +75,22 @@ class MaximumRecovery(Recovery):
         raise PlanningExhausted('RELEASE_PERCEPTION_RECOVERY_BUDGET_EXHAUSTED')
     def save(self):
         (self.r.capture.output/'reposition_history.json').write_text(json.dumps(self.history,indent=2))
-    def escape(self,D,row):
+    def escape(self,D,row,safety_release=False):
         r=self.r;self.current_D=D;plans=self.retreat.plans(D);row['retreat_preflight_alternatives']=len(plans);self.save()
         if not plans:raise PlanningExhausted('RETREAT_ALTERNATIVES_EXHAUSTED')
         if not self.released:
-            r.drive.active=False;r.hold(2.);baseline=self.release_observation(D);baseline_index=self.release_observation_index-1;r.configure_release(plans[0]['opening'],D)
+            r.drive.active=False
+            if not safety_release:r.hold(2.)
+            baseline=self.release_observation(D);baseline_index=self.release_observation_index-1;r.configure_release(plans[0]['opening'],D)
             try:
                 for _ in range(self.job['wrist_experiment']['retreat']['maximum_release_increments']):
                     r.release_increment(.001);r.hold(1.);self.confirm_release(baseline,D,row,baseline_index)
                     if r.released():break
                 else:raise PlanningExhausted('RELEASE_CONTACT_NOT_CLEARED')
-            except BaseException:
-                r.reclose_at_current_pose();raise
+            except BaseException as error:
+                if str(error).startswith(('EXISTING_','DANGEROUS_','LOW_JOINT_MARGIN')):r.halt_at_measured_state()
+                else:r.reclose_at_current_pose()
+                raise
             self.released=True;row['released']=True;self.save()
         for plan in plans:
             if self.retreat.execute(plan):row['clearance_retreat']=True;self.save();return
@@ -158,10 +162,10 @@ class MaximumRecovery(Recovery):
         for retry in range(3):
             try:
                 guess=self.current_D if self.released else r.tcp()@np.linalg.inv(self.grasp_reference_ee)@self.grasp_reference_D
-                D,audit,_=self.observe(guess);row['pre_release_observation']=audit;observed=True;break
+                D,audit,_=self.observe(guess,step_frames=reason!='SAFE_RELEASE_AFTER_LOAD_STOP');row['pre_release_observation']=audit;observed=True;break
             except RuntimeError as e:row.setdefault('observation_retries',[]).append(str(e));self.save();r.hold(.3)
         if not observed:raise PlanningExhausted('HANDLE_REOBSERVE_BUDGET_EXHAUSTED')
-        self.escape(D,row)
+        self.escape(D,row,safety_release=reason=='SAFE_RELEASE_AFTER_LOAD_STOP')
         if capture_label:
             try:
                 result=r.capture.scan(capture_label,value,getattr(r,'saved_estimate',None));row['wrist_scan_completed']=result['clean_wrist_capture']

@@ -41,7 +41,7 @@ class MaximumRangeTests(unittest.TestCase):
     if len(attempts)<=3:raise RuntimeError('RECOVERY_BILATERAL_GRASP_FAIL')
    r=SimpleNamespace(tcp=lambda:np.eye(4),base=[0,0,0,0],capture=SimpleNamespace(output=Path(d)),hold=lambda _:None,halt_at_measured_state=lambda:None,set_observed_moving=lambda _:None,regrasp=close,reset_grasp_memory=lambda:None,arm_q=lambda:np.zeros(6))
    rec.r=r;rec.observe=lambda *a,**k:(np.eye(4),{'source':'wrist'},np.zeros((80,3)))
-   def escape(D,row):rec.released=True
+   def escape(D,row,**kwargs):rec.released=True
    rec.escape=escape;rec.remember_success=lambda _:None
    rec.candidates=lambda D,f:[{'candidate_index':i,'family':f} for i in range(12)]
    rec.plan_variant=lambda v,*args:v

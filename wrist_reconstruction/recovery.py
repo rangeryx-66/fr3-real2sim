@@ -48,10 +48,12 @@ class Recovery(LegacyRecovery):
         from wrist_reconstruction.retreat import RetreatPlanner
         self.mobile=MobileWristPlanner(self);self.retreat=RetreatPlanner(self)
 
-    def observe(self,initial,wrist=False):
+    def observe(self,initial,wrist=False,step_frames=True):
         anchor=(np.asarray(initial)@np.r_[self.visual['anchor_world_m'],1])[:3]
         if wrist:self.r.observe_handle(anchor)
-        for _ in range(8):self.r.step()
+        if step_frames:
+            for _ in range(8):self.r.step()
+        else:self.r.capture.scene['world'].render()
         P=local_cloud(self.r.capture,anchor,self.r.capture.camera if wrist else None)
         D,audit=register(self.initial_cloud,P,initial);audit['source']='unmasked live RGB-D local handle-region ICP; no simulator segmentation or body pose'
         audit['wrist_camera']=wrist;return D,audit,P

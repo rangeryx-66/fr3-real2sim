@@ -88,11 +88,11 @@ def run(r):
         nonlocal last
         r.drive.active=False
         if reason=='SUSTAINED_CONTACT_LOSS':r.stop_failed_grasp_monitor()
-        r.halt_at_measured_state();checkpoint('RECOVERY_ENTRY')
+        r.halt_at_measured_state();frozen_state,state_source=checkpoint('RECOVERY_ENTRY')
         failures.append({'t':r.time(),'reason':reason});(out/'recovery_failures.json').write_text(json.dumps(failures,indent=2))
         while recovery.cycles<recovery.policy['operation_cycles'] and time.time()<r.deadline:
             try:
-                result=recovery.run(current(),capture_label=capture,reason=reason)
+                result=recovery.run(frozen_state,capture_label=capture,reason=reason)
                 last=r.tcp()[:3,3].copy();checkpoint('RECOVERY_EXIT');return result
             except RuntimeError as error:
                 failures.append({'t':r.time(),'reason':'RECOVERY_ATTEMPT_FAILED','detail':str(error)})
@@ -153,6 +153,21 @@ def run(r):
                         break
                     if np.linalg.norm(E[:3,3]-P)>=p['segment_m']:break
             moved=float(np.linalg.norm(r.tcp()[:3,3]-P));r.effort.end(value,r.time(),issue or 'SEGMENT_COMPLETE')
+            if issue=='EXISTING_LOW_PRELOAD_FORCE_LIMIT':
+                # Stop at the unchanged force limit. Only a physically safe
+                # hold, with the original bilateral window, permits resuming.
+                if recovery.cycles>=recovery.policy['operation_cycles']:raise RuntimeError('SAFETY_RECOVERY_BUDGET_EXHAUSTED')
+                recovery.cycles+=1;r.drive.active=False;r.halt_at_measured_state()
+                try:
+                    r.phase('SYSTEM_SAFETY_HOLD');r.hold(.5);ready,detail=r.grip()
+                    if not ready:raise RuntimeError('SUSTAINED_CONTACT_LOSS')
+                    r.resume_safe_compliance();checkpoint('FORCE_STOP_SAFE_HOLD_RESTART')
+                    failures.append({'t':r.time(),'reason':'FORCE_LIMIT_STOP_AND_VERIFIED_HOLD_RESTART','bilateral':detail})
+                    continue
+                except RuntimeError as error:
+                    # Opening can relieve a loaded failed grasp, but no pull
+                    # or force increase is allowed while the safety event lasts.
+                    recover('SAFE_RELEASE_AFTER_LOAD_STOP');continue
             if issue or moved<.0001:recover(issue or 'NO_USEFUL_MOTION');continue
         r.drive.active=False;r.hold(p['hold_s']);checkpoint('MAXIMUM_SAFE_STATE')
         try:recover('FINAL_CLEAN_CAPTURE','maximum_safe_state')
