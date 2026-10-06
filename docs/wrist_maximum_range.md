@@ -102,3 +102,17 @@ unchanged 1-mm guard. The original after-cloud had newly revealed surface
 pixels, changing its visibility distribution. This measurement implementation
 fix is generic; the raw images, rejected run and post-stop evaluation remain
 under `release_visibility_failure_7320`. It is not a threshold relaxation.
+
+45746 subsequently completed actual release, clearance retreat, SE(2) motion to
+`(0.63054, -0.75638, -0.1 m; yaw 57.66 deg)`, wrist reobservation and the **first
+successful-template candidate** physical regrasp. Bilateral loads were about
+0.529/0.521 N and minimum current margin about 0.522 rad. Its first continued
+pull stopped on a Python TypeError: the unbound revolute diagnostic method used
+`super()` on a prismatic memory instance. The diagnostic now checks its actual
+class; no fitter/probe/controller threshold changes. This run is retained under
+`prismatic_type_failure_45746`; it proves recovery, not >10-cm extraction.
+
+A new regrasp attempt also invalidates the previous release certificate before
+approach/closure. A failed candidate must physically release again before
+retreat. Mobile execution separately checks actual release aperture and zero
+load. Repeated candidate releases retain the most recent non-null model memory.

@@ -182,6 +182,7 @@ class MaximumRecovery(Recovery):
                     except RuntimeError as e:item['planning_error']=str(e);self.save();continue
                     physical[family]+=1;item['physical_closure_number']=physical[family];self.save()
                     choice={'base':list(r.base),'plan':{'trial_candidates':[trial]},'route':None}
+                    self.released=False # approach/closure invalidates the prior release certificate
                     try:r.regrasp(choice,np.eye(4))
                     except RuntimeError as e:
                         item['physical_regrasp_error']=str(e);self.save()

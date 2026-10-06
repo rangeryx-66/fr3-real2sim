@@ -23,6 +23,8 @@ class MaximumRangeTests(unittest.TestCase):
   self.assertIn("runtime.recovery=recovery",new)
   self.assertIn("mode=mode if reference is not None else 'position'",new)
   self.assertIn("runtime.stop_failed_grasp_monitor=stop_failed_grasp_monitor",new)
+  self.assertIn("if isinstance(memory,ProvisionalMemory):s['global_reconstruction_consistency_error_m']",new)
+  self.assertIn("BASE_ROUTE_REQUIRES_ACTUAL_ZERO_LOAD_AND_RELEASE_APERTURE",new)
  def test_home_not_required_for_clearance_mode(self):
   text=(ROOT/'wrist_reconstruction/retreat.py').read_text();self.assertIn("'home':None",text);self.assertIn("if plan['home'] is not None",text)
  def test_three_failed_real_closures_continue_to_fourth_template(self):
@@ -34,6 +36,7 @@ class MaximumRangeTests(unittest.TestCase):
    rec.policy={'operation_cycles':12,'actual_base_attempts':4,'template_closures':12,'generic_closures':12}
    attempts=[]
    def close(choice,correction):
+    self.assertFalse(rec.released)
     attempts.append(choice['plan']['trial_candidates'][0]['candidate_index'])
     if len(attempts)<=3:raise RuntimeError('RECOVERY_BILATERAL_GRASP_FAIL')
    r=SimpleNamespace(tcp=lambda:np.eye(4),base=[0,0,0,0],capture=SimpleNamespace(output=Path(d)),hold=lambda _:None,halt_at_measured_state=lambda:None,set_observed_moving=lambda _:None,regrasp=close,reset_grasp_memory=lambda:None,arm_q=lambda:np.zeros(6))
