@@ -47,7 +47,7 @@ class WristRecorder(CaptureRecorder):
         folder.mkdir(parents=True,exist_ok=True);rgb,depth,seg=snapshot(camera)
         cv2.imwrite(str(folder/'rgb.png'),cv2.cvtColor(rgb,cv2.COLOR_RGB2BGR));np.save(folder/'depth_m.npy',depth)
         K=np.asarray(camera.get_intrinsics_matrix());T=matrix(*camera.get_world_pose(camera_axes='ros'))
-        meta={'T_world_ee':None if self.runtime is None else self.runtime.tcp().tolist(),'robot_q':None if self.runtime is None else self.runtime.arm_q().tolist(),'robot_base_pose':None if self.runtime is None else list(self.runtime.base),'K':K.tolist(),'T_world_camera_optical':T.tolist(),'camera_axes':'ROS optical','depth':'optical Z in meters','resolution_wh':list(rgb.shape[1::-1]),'mask_source':'SAM3 on full-background sensor RGB; instance segmentation QA only','camera_calibration_real':self.cal['real_hardware_calibrated'],'sim_nominal_extrinsics':not self.cal['real_hardware_calibrated']}
+        meta={'timestamp_sim_s':None if self.runtime is None else self.runtime.time(),'T_world_ee':None if self.runtime is None else self.runtime.tcp().tolist(),'robot_q':None if self.runtime is None else self.runtime.arm_q().tolist(),'robot_base_pose':None if self.runtime is None else list(self.runtime.base),'K':K.tolist(),'T_world_camera_optical':T.tolist(),'camera_axes':'ROS optical','depth':'optical Z in meters','resolution_wh':list(rgb.shape[1::-1]),'mask_source':'SAM3 on full-background sensor RGB; instance segmentation QA only','camera_calibration_real':self.cal['real_hardware_calibrated'],'sim_nominal_extrinsics':not self.cal['real_hardware_calibrated']}
         if qa:
             ids=seg['data'];labels=seg['info']['idToLabels'];obj=[int(k) for k,v in labels.items() if self.asset_path in str(v)];robot=[int(k) for k,v in labels.items() if '/World/Piper/' in str(v)]
             om=np.isin(ids,obj);rm=np.isin(ids,robot);ys,xs=np.where(om)
@@ -71,15 +71,22 @@ class WristRecorder(CaptureRecorder):
 
     def scan(self,label,value,articulation=None):
         r=self.runtime;p=self.config['capture'];start=time.monotonic()
+        events=getattr(r,'constraints',None)
+        if events:
+            from wrist_reconstruction.constraint_policy import State
+            events.transition(State.WRIST_SCAN,'capture.scan')
         if self.observed_cloud is None:self.initialize_observation()
         # Prior geometry is a conservative CAMERA framing envelope only.
         # Current-state sensor samples update it; backend point clouds remain
         # separate actual observations and never contain the old-state prior.
         framing_clouds=[self.initial_framing_cloud]
         self.observed_cloud=self.initial_framing_cloud.copy()
-        state_dir=self.output/'states'/f'state_{len(self.states):03d}';state_dir.mkdir(parents=True,exist_ok=True)
+        separation=self.job['skill'].get('minimum_capture_separation',.5 if self.job['skill']['joint_type']=='revolute' else .002)
+        partial=next((s for s in reversed(self.states) if s['label']==label and not s.get('clean_wrist_capture') and abs(s['estimated_articulation_state']-value)<separation),None)
+        state_index=partial['state_id'] if partial else len(self.states)
+        state_dir=self.output/'states'/f'state_{state_index:03d}';state_dir.mkdir(parents=True,exist_ok=True)
         from wrist_reconstruction.checkpoint import closed_views
-        normal=np.asarray(r.initial_visual['outward_normal_world']);views=closed_views(self,state_dir,value);log={'label':label,'state_estimate':value,'proposals':[],'released':True,'camera_motion':'physical robot joints; no camera teleport view acquisition','reused_actual_views':len(views)}
+        normal=np.asarray(r.initial_visual['outward_normal_world']);views=copy.deepcopy(partial['views']) if partial else closed_views(self,state_dir,value);log={'label':label,'state_estimate':value,'proposals':[],'released':True,'camera_motion':'physical robot joints; no camera teleport view acquisition','reused_actual_views':len(views)}
         if views:(state_dir/'views_checkpoint.json').write_text(json.dumps({'label':label,'estimated_state':value,'views':views},indent=2))
         # Reobserve current shape from sensor data after release, not a door GT.
         proposals=coverage_views(self.observed_cloud,self.center,normal,self.cal,p)
@@ -106,7 +113,7 @@ class WristRecorder(CaptureRecorder):
                 mask=sam_mask(folder,self.config['sam3'],self.job['object_prompt']);P,keep=backproject(depth,np.asarray(meta['K']),np.asarray(meta['T_world_camera_optical']),mask)
                 if len(P)<200:raise RuntimeError('SENSOR_SEGMENTATION_CLOUD_EMPTY')
                 np.savez_compressed(folder/'point_cloud.npz',points_world_m=P.astype(np.float32),rgb=rgb[keep],units='m')
-                views.append({'view_id':proposal['view_id'],'directory':str(folder.relative_to(self.output)),'K':meta['K'],'T_world_camera_optical':meta['T_world_camera_optical'],'qa':qa})
+                views.append({'view_id':proposal['view_id'],'directory':str(folder.relative_to(self.output)),'K':meta['K'],'T_world_camera_optical':meta['T_world_camera_optical'],'qa':qa,'timestamp_sim_s':meta['timestamp_sim_s']})
                 row.update(status='ACQUIRED',actual_T_camera=meta['T_world_camera_optical'],qa=qa,base=list(r.base))
                 (state_dir/'views_checkpoint.json').write_text(json.dumps({'label':label,'estimated_state':value,'views':views},indent=2))
                 framing_clouds.append(P[::max(1,int(np.ceil(len(P)/30000)))])
@@ -120,7 +127,11 @@ class WristRecorder(CaptureRecorder):
                 row.update(status='REJECTED',reason='SAM3_SENSOR_INFERENCE_FAILED:'+str(e))
             except RuntimeError as e:
                 row.update(status='REJECTED',reason=str(e))
-                if not str(e).startswith(('SCAN_','MOBILE_VIEW_RECOVERY_','NO_SAFE_HOME_PATH_','HANDLE_REOBSERVE_','CAMERA_' ,'QA_','SENSOR_','OBJECT_WOULD_BE_')):raise
+                if events:
+                    from wrist_reconstruction.constraint_policy import Category
+                    decision=events.dispatch(str(e),'capture.view','scan',view_id=proposal['view_id'])
+                    if decision.category==Category.HARD:raise
+                elif not str(e).startswith(('SCAN_','MOBILE_VIEW_RECOVERY_','NO_SAFE_HOME_PATH_','HANDLE_REOBSERVE_','CAMERA_' ,'QA_','SENSOR_','OBJECT_WOULD_BE_')):raise
             (self.output/'camera_trajectory.json').write_text(json.dumps(self.scan_logs+[log],indent=2))
             if len(views)>=p['maximum_clean_views']:break
         if not self.config.get('maximum_range',{}).get('enabled'):r.scan_home()
@@ -128,8 +139,10 @@ class WristRecorder(CaptureRecorder):
         try:log['oracle_capture']=oracle_scan(self,label,value)
         except Exception as error:log['oracle_error']=str(error)
         self.scan_logs.append(log)
-        state={'state_id':len(self.states),'label':label,'estimated_articulation_state':float(value),'articulation_estimate':articulation,'views':views,'timestamp_sim_s':r.time(),'robot_base_pose':list(r.base),'T_world_ee':r.tcp().tolist(),'last_physical_grasp_pose':r.grasp.tolist(),'grasp_still_stable':False,'released_for_capture':True,'clean_wrist_capture':len(views)>=p['minimum_clean_views'],'stop_reason':None if len(views)>=p['minimum_clean_views'] else 'INSUFFICIENT_CLEAN_REACHABLE_WRIST_VIEWS'}
-        self.states.append(state);(state_dir/'state.json').write_text(json.dumps(state,indent=2));self.flush('RUNNING');return state
+        state={'state_id':state_index,'label':label,'estimated_articulation_state':float(value),'articulation_estimate':articulation,'views':views,'timestamp_sim_s':r.time(),'robot_base_pose':list(r.base),'T_world_ee':r.tcp().tolist(),'last_physical_grasp_pose':r.grasp.tolist(),'grasp_still_stable':False,'released_for_capture':True,'acquired_in_current_execution':any(v.get('acquired_in_current_execution') is not False for v in views),'clean_wrist_capture':len(views)>=p['minimum_clean_views'],'stop_reason':None if len(views)>=p['minimum_clean_views'] else 'INSUFFICIENT_CLEAN_REACHABLE_WRIST_VIEWS'}
+        if partial:self.states[self.states.index(partial)]=state
+        else:self.states.append(state)
+        (state_dir/'state.json').write_text(json.dumps(state,indent=2));self.flush('RUNNING');return state
 
     def capture(self,label,value,*args,**kwargs):
         # A held-grasp external view cannot be called clean wrist capture.

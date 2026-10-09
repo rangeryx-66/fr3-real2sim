@@ -13,6 +13,15 @@ from piper_mobile_demo.owned_scene import Shape,intersects
 from interactive_twin_recovery.mobile import candidate_bases,scene_at,home_valid,route
 from wrist_reconstruction.geometry import optical_to_tcp,visibility
 
+def camera_clearance(scene,poses,cal):
+    C=poses['tcp_link']@cal['X'];camera=Shape(trimesh.creation.box(cal['camera_body_size_m']),C,True,'/World/wrist_camera_housing','camera')
+    for obstacle in scene.scene:
+        if intersects(camera,obstacle):return False,'SCAN_CAMERA_ENVIRONMENT_COLLISION:'+obstacle.path
+    for robot in scene.robot:
+        if intersects(camera,robot):return False,'SCAN_CAMERA_SELF_COLLISION:'+robot.body
+    return True,'SAFE'
+
+
 class PlanningExhausted(RuntimeError):
     pass
 
@@ -25,6 +34,8 @@ class MobileWristPlanner:
     def execute_arm(self,path,phase):
         try:self.r.execute_arm_path(path,phase)
         except RuntimeError as error:
+            events=getattr(self.r,'constraints',None)
+            if events:events.dispatch(str(error),'planner.execute_arm','physical',phase=phase)
             row={'operation':'physical_path_stop','phase':phase,'reason':str(error),'base':list(self.r.base)};self.rows.append(row);self.save()
             self.r.halt_at_measured_state()
             if not self.r.return_last_safe():
@@ -33,16 +44,16 @@ class MobileWristPlanner:
             # The failing path remains a recorded physical failure. Only after
             # a checked return may the caller try a different view/path.
             raise PlanningExhausted('SCAN_PHYSICAL_PATH_RECOVERED:'+str(error)) from error
-    def locked_valid(self,scene,q,base):
+    def locked_valid(self,scene,q,base,fingers=None):
         from interactive_twin_recovery.mobile import distance
-        ok,why,_=self.check(scene,q,base,self.r.finger_q())
+        ok,why,_=self.check(scene,q,base,self.r.finger_q() if fingers is None else fingers)
         if not ok:return False,why,0.
         chassis=next(s for s in scene.scene if s.path=='/World/mobile_chassis')
         env=[s for s in scene.scene if s is not chassis and 'pedestal' not in s.path]
         for shape in env:
             if intersects(chassis,shape):return False,'CHASSIS_ENVIRONMENT_COLLISION:'+shape.path,0.
         return True,'SAFE',min([distance(chassis,s) for s in env] or [1.])
-    def locked_route(self,initial,target,q):
+    def locked_route(self,initial,target,q,fingers=None):
         delta=(target[3]-initial[3]+180)%360-180
         n=max(2,int(np.ceil(np.linalg.norm(np.subtract(target[:2],initial[:2]))/.025))+1)
         m=max(2,int(np.ceil(abs(delta)/3))+1);alternatives=[]
@@ -51,7 +62,7 @@ class MobileWristPlanner:
             yaw=[[target[0] if not rotate_first else initial[0],target[1] if not rotate_first else initial[1],initial[2],initial[3]+f*delta] for f in np.linspace(0,1,m)]
             waypoints=yaw+xy[1:] if rotate_first else xy+yaw[1:];failure=None;gap=1.
             for b in waypoints:
-                ok,why,clearance=self.locked_valid(self.scene(b),q,b);gap=min(gap,clearance)
+                ok,why,clearance=self.locked_valid(self.scene(b),q,b,fingers);gap=min(gap,clearance)
                 if not ok:failure=why;break
             alternatives.append({'rotate_first':rotate_first,'failure':failure})
             if failure is None:return {'valid':True,'waypoints':waypoints,'translation_m':float(np.linalg.norm(np.subtract(target[:2],initial[:2]))),'rotation_deg':abs(delta),'chassis_clearance_m':gap,'arm_locked_at_home':False,'arm_locked_q':np.asarray(q).tolist(),'alternatives':alternatives,'mode':'kinematic SE2 simulated platform; not wheel dynamics'}
@@ -63,14 +74,8 @@ class MobileWristPlanner:
         if self.model.margin(np.asarray(q))<=.05:return False,'LOW_JOINT_MARGIN',None
         P=self.model.poses(q,base,finger_q=fingers);ok,why=scene.check(P,scene.moving_reference,False)
         if not ok:return False,why,None
-        C=P['tcp_link']@self.r.capture.cal['X'];camera=Shape(trimesh.creation.box(self.r.capture.cal['camera_body_size_m']),C,True,'/World/wrist_camera_housing','camera')
-        for obstacle in scene.scene:
-            if intersects(camera,obstacle):return False,'SCAN_CAMERA_ENVIRONMENT_COLLISION:'+obstacle.path,None
-        for robot in scene.robot:
-            # A mount does not authorize camera housing penetration into the
-            # official wrist/gripper envelope. Check every robot collider.
-            if intersects(camera,robot):return False,'SCAN_CAMERA_SELF_COLLISION:'+robot.body,None
-        return True,'SAFE',None
+        ok,why=camera_clearance(scene,P,self.r.capture.cal)
+        return ok,why,None
     def arm_path(self,scene,start,goal,base,fingers):
         outer=self;deadline=min(time.time()+self.policy.get('arm_path_wall_s',60),self.r.deadline)
         class View:

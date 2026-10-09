@@ -11,9 +11,9 @@ def route_commands(route,dt):
         result.extend((a+f*delta).tolist() for f in np.linspace(0,1,max(2,int(duration/dt)))[1:])
     return result
 
-def prepare(source,output,dt=1/240):
+def prepare(source,output,dt=1/240,stop_t=None):
     source=Path(source);output=Path(output);output.mkdir(parents=True,exist_ok=True)
-    plans=json.loads((source/'mobile_wrist_planning.json').read_text());routes=[]
+    planfile=source/'mobile_wrist_planning.json';plans=json.loads(planfile.read_text()) if planfile.exists() else [];routes=[]
     for entry in plans:
         selected=[c['route'] for c in entry.get('candidates',[]) if c.get('status')=='MOBILE_VIEW_PREFLIGHT_PASSED' and c.get('route',{}).get('valid')]
         if len(selected)>1:raise RuntimeError('AMBIGUOUS_EXECUTED_BASE_ROUTE')
@@ -22,6 +22,7 @@ def prepare(source,output,dt=1/240):
     with (source/'command_tape.jsonl').open() as stream:
         for line in stream:
             row=json.loads(line)
+            if stop_t is not None and row['t']>=stop_t:break
             if row['phase']=='SYSTEM_BASE_ROUTE':
                 if old_phase!='SYSTEM_BASE_ROUTE':
                     if route_index>=len(routes):raise RuntimeError('BASE_ROUTE_COMMAND_PROVENANCE_MISSING')
@@ -40,15 +41,17 @@ def prepare(source,output,dt=1/240):
     return provenance
 
 
-def make_job(source,prepared,output,config,deadline):
+def make_job(source,prepared,output,config,deadline,checkpoint_path=None):
     import copy,shutil
     source=Path(source);prepared=Path(prepared);output=Path(output)
-    job=json.loads((source/'frozen_wrist_job.json').read_text());checkpoint=json.loads((source/'max_range_checkpoint.json').read_text())
+    job=json.loads((source/'frozen_wrist_job.json').read_text());checkpoint_path=Path(checkpoint_path) if checkpoint_path else source/'max_range_checkpoint.json';checkpoint=json.loads(checkpoint_path.read_text())
     template=json.loads((source/'successful_grasp_template.json').read_text())
     H0=np.asarray(template['T_world_handle_at_success']);H1=np.asarray(checkpoint['observed_handle']['T_world_handle'])
     observed=copy.deepcopy(checkpoint['observed_handle'])
     origin={'D_world_initial_to_checkpoint':(H1@np.linalg.inv(H0)).tolist(),'visual_checkpoint':observed,'source':'saved calibrated RGB-D handle registration; not object joint state'}
-    job.update(output=str(output.resolve()),deadline_shanghai=deadline,wall_clock_budget_s=config['capture']['wall_s'],wrist_experiment=config,system_capture=config['capture'],continuation_replay=True,replay_commands=str((prepared/'issued_robot_commands.json').resolve()),continuation_memory=str((source/'structured_memory.json').resolve()),continuation_checkpoint=str((source/'max_range_checkpoint.json').resolve()),continuation_template=str((source/'successful_grasp_template.json').resolve()),continuation_observed_origin=origin,continuation_source=str(source.resolve()),episode_id='continued_'+job['episode_id'])
+    job.update(output=str(output.resolve()),deadline_shanghai=deadline,wall_clock_budget_s=config['capture']['wall_s'],wrist_experiment=config,system_capture=config['capture'],continuation_replay=True,replay_commands=str((prepared/'issued_robot_commands.json').resolve()),continuation_memory=str((source/'structured_memory.json').resolve()),continuation_checkpoint=str(checkpoint_path.resolve()),continuation_template=str((source/'successful_grasp_template.json').resolve()),continuation_observed_origin=origin,continuation_source=str(source.resolve()),episode_id='continued_'+job['episode_id'])
+    memory=json.loads((source/'structured_memory.json').read_text())
+    if len(memory.get('supporting_observations',[]))<12:job['continuation_memory']=job['operation_memory']
     job['skill'].update(maximum_segments=config['capture']['maximum_segments'],maximum_sim_s=config['capture']['maximum_sim_s'],maximum_path_m=config['capture']['task_path_m'])
     job['resume_closed_capture']=[str(source.resolve()),*job.get('resume_closed_capture',[])]
     output.mkdir(parents=True,exist_ok=True)

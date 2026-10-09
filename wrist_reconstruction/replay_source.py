@@ -54,7 +54,10 @@ def augment(text):
      # never turn a lost grasp into a claimed hold or bypass a dangerous load.
      next_frame=tape[tick] if tick<len(tape) else None
      recorded_safe_release=next_frame is not None and not next_frame.get('retention_armed') and not next_frame.get('compliant') and next_frame['phase']=='SYSTEM_FAILED_GRASP_RECOVERY'
-     if str(error)!='SUSTAINED_CONTACT_LOSS' or tick!=before_tick+1 or not recorded_safe_release:raise
+     if str(error)!='SUSTAINED_CONTACT_LOSS' or tick!=before_tick+1 or not recorded_safe_release:
+      replay_interruption=str(error);runtime.halt_at_measured_state()
+      if str(error)=='SUSTAINED_CONTACT_LOSS':runtime.stop_failed_grasp_monitor()
+      break
      with (a.output/'replayed_recovery_events.jsonl').open('a') as stream:stream.write(json.dumps({'t':(tick-1)*dt,'trigger':str(error),'action':'stop failed grasp; execute recorded protected recovery','next_command_phase':next_frame['phase'],'grasp_success_claimed':False})+'\\n')
      reference=None;retention.reference=None;loss_s=0.;slip_s=0.
 ''')
@@ -63,7 +66,15 @@ def augment(text):
     begin=text.index('   from wrist_reconstruction.session import run as run_skill')
     end=text.index("   skill_result=run_skill(runtime);",begin)
     api=text[begin:end]
-    setup='''   tape=None;replay_last_compliant=None
+    early='''   replay_interruption=None;initial_grasp_issue=None
+   from wrist_reconstruction.operation_memory import load_observed_model
+   estimate,sign,audit=load_observed_model(job['continuation_memory'],job['skill']['joint_type'])
+   memory=InteractionMemory(tcp(),a.output);memory.estimate=estimate;memory.follow_sign=sign
+   drive=ConstrainedDrive(tcp(),memory.tangent(tcp()));drive.active=False
+   for _ in range(8):world.render()
+'''+api
+    replace('  if tape is not None:\n   while tick<len(tape):', '  if tape is not None:\n'+early+'   while tick<len(tape):')
+    setup='''   tape=None;replay_last_compliant=None;initial_grasp_issue=None
    if memory is None:memory=InteractionMemory(tcp(),a.output)
    from wrist_reconstruction.operation_memory import load_observed_model
    estimate,sign,audit=load_observed_model(job['continuation_memory'],job['skill']['joint_type'])
@@ -71,27 +82,35 @@ def augment(text):
    drive=ConstrainedDrive(tcp(),memory.tangent(tcp()));drive.active=False
 '''
     tail='''   checkpoint=json.loads(Path(job['continuation_checkpoint']).read_text());observation_origin=job['continuation_observed_origin']
-   D=np.asarray(observation_origin['D_world_initial_to_checkpoint']);set_observed_moving(D)
-   recovery.export=system_at_base()
-   for shape in recovery.export['shapes']:
-    if shape.get('rigid_body_path','')==runtime.capture.part_path:
-     for key in ('world_transform','rigid_body_world_transform'):shape[key]=(D@np.asarray(shape[key])).tolist()
-   recovery.visual=json.loads(json.dumps(observation_origin['visual_checkpoint']));runtime.initial_visual=json.loads(json.dumps(recovery.visual))
-   runtime.capture.states=json.loads(json.dumps(job.get('inherited_capture_states',[])));runtime.capture.flush('CONTINUING_FROM_ISSUED_COMMANDS')
-   recovery.initial_base=list(base);recovery.current_D=np.eye(4)
-   recovery.initial_cloud=__import__('wrist_reconstruction.recovery',fromlist=['local_cloud']).local_cloud(runtime.capture,recovery.visual['anchor_world_m'])
    recovery.template=json.loads(Path(job['continuation_template']).read_text())
-   recovery.observation_origin_state=float(checkpoint['current_state']);runtime.state_offset=float(checkpoint['current_state'])
-   recovery.grasp_reference_ee=tcp().copy();recovery.grasp_reference_D=np.eye(4)
-   saved_memory=memory
-   if reference is None:recovery.released=True;release_opening=float(runtime.finger_q()[0]-runtime.finger_q()[1])
+   if replay_interruption is None:
+    D=np.asarray(observation_origin['D_world_initial_to_checkpoint']);set_observed_moving(D)
+    # Eager runtime construction captured a clean CLOSED sensor reference.
+    # Keep it canonical; rebasing here would bias signed return/closed states.
+    recovery.initial_base=list(base);recovery.current_D=D
+    runtime.capture.states=json.loads(json.dumps(job.get('inherited_capture_states',[])));runtime.capture.flush('CONTINUING_FROM_ISSUED_COMMANDS')
+    recovery.observation_origin_state=0.;runtime.state_offset=float(checkpoint['current_state'])
+    recovery.grasp_reference_ee=tcp().copy();recovery.grasp_reference_D=D.copy();saved_memory=memory
+    if reference is None:recovery.released=True;release_opening=float(runtime.finger_q()[0]-runtime.finger_q()[1])
+    recovery.observed_progress(runtime.state_offset)
+    recovery.grasp_reference_D=recovery.current_D.copy()
+   else:
+    runtime.initial_grasp_issue=replay_interruption
+    recovery.grasp_reference_ee=np.asarray(recovery.template['T_world_handle_at_success'])@np.asarray(recovery.template['T_handle_TCP'])
+    recovery.grasp_reference_D=np.eye(4);recovery.current_D=recovery.motion_guess()
+    recovery.progress_valid=False;runtime.state_offset=0.;saved_memory=memory
+    with (a.output/'prefix_interruption.json').open('w') as stream:json.dump({'trigger':replay_interruption,'t':tick*dt,'checkpoint_arrival_claimed':False,'same_actor_retained':True},stream)
    try:
     runtime.phase('SYSTEM_CONTINUATION_SETTLE');runtime.hold(.25)
-    if runtime.grip()[0] and force_guard.settled():runtime.resume_safe_compliance()
-    else:recovery.run(runtime.state_offset,reason='SAFE_RELEASE_AFTER_LOAD_STOP')
-   except RuntimeError:recovery.run(runtime.state_offset,reason='SAFE_RELEASE_AFTER_LOAD_STOP')
-   skill_result=run_skill(runtime);fit=memory.final_fit();following=True;status=skill_result['status'];success=False
+    if runtime.grip()[0] and force_guard.settled():
+     runtime.resume_safe_compliance()
+     if replay_interruption is None:runtime.initial_grasp_issue='WORKSPACE_RECOVERY'
+    else:runtime.initial_grasp_issue='CONTINUATION_REESTABLISH_GRASP'
+   except RuntimeError as error:
+    runtime.initial_grasp_issue=str(error);runtime.halt_at_measured_state()
+    if str(error)=='SUSTAINED_CONTACT_LOSS':runtime.stop_failed_grasp_monitor()
+   skill_result=run_skill(runtime);fit=memory.estimate;following=True;status=skill_result['status'];success=False
 '''
     old="   ready,detail=grip_window();legal=bool(ready)\n   if not ready:raise RuntimeError('REPLAY_FINAL_HOLD_LOST')\n   status='REPLAY_COMPLETE';success=False"
-    replace(old,setup+api+tail)
+    replace(old,setup+"   runtime.memory=memory;runtime.drive=drive;runtime.grasp=tcp().copy()\n"+tail)
     ast.parse(text);return text

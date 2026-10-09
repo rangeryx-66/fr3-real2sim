@@ -15,7 +15,11 @@ def main():
     frozen.write_text(json.dumps(c,indent=2));ledgerpath=out/'components.json';ledger=json.loads(ledgerpath.read_text()) if ledgerpath.exists() else {'start_wall_s':time.time(),'components':{}}
     maximum_mode=c.get('maximum_range',{}).get('enabled',False)
     if maximum_mode and ledgerpath.exists() and not a.resume:raise RuntimeError('USE_RESUME_FOR_EXISTING_RUN; no automatic physical reset')
-    capture_cutoff=ledger.setdefault('capture_cutoff_wall_s',ledger['start_wall_s']+c['capture']['wall_s'])
+    inherited_clock=out/'run_clock.json'
+    inherited=json.loads(inherited_clock.read_text()) if inherited_clock.exists() else {}
+    absolute_capture_ceiling=inherited.get('capture_deadline_wall_s',datetime.fromisoformat(c['deadline_shanghai']).timestamp() if c.get('deadline_shanghai') else ledger['start_wall_s']+c['capture']['wall_s'])
+    capture_cutoff=ledger.setdefault('capture_cutoff_wall_s',absolute_capture_ceiling)
+    if capture_cutoff>absolute_capture_ceiling:raise RuntimeError('CAPTURE_CLOCK_CANNOT_EXTEND')
     cutoff=capture_cutoff if maximum_mode else min(datetime.fromisoformat(c['deadline_shanghai']).timestamp(),ledger['start_wall_s']+c['total_wall_budget_s'])
     if maximum_mode:c['deadline_shanghai']=datetime.fromtimestamp(capture_cutoff,ZoneInfo('Asia/Shanghai')).isoformat()
     ledger_lock=threading.RLock()
@@ -54,6 +58,10 @@ def main():
                 except ProcessLookupError:pass
             if (out/('capture_'+key.split('/')[-1])/'max_range_checkpoint.json').exists():
                 row=dict(old,status='COLD_RESUME_REQUIRES_VERIFIED_ACTION_REPLAY');ledger['components'][key]=row;save();return
+        actor_lock=None
+        if maximum_mode and key.startswith('capture/'):
+            from wrist_reconstruction.actor_owner import claim
+            actor_lock=claim(key.split('/')[-1],Path(cmd[-1]),ROOT)
         remaining=min(cutoff-time.time(),budget)
         if remaining<=0:ledger['components'][key]={'status':'CUTOFF','command':cmd};save();return
         log=out/(key.replace('/','_')+'.log');row={'status':'RUNNING','command':cmd,'log':str(log),'started_wall_s':time.time()};ledger['components'][key]=row;save()
@@ -67,6 +75,7 @@ def main():
                 try:child.wait(timeout=30)
                 except subprocess.TimeoutExpired:os.killpg(child.pid,signal.SIGKILL);child.wait()
                 code=child.returncode
+        if actor_lock is not None:actor_lock.close()
         row.update(status='COMPLETE' if code==0 else 'FAILED',returncode=code,ended_wall_s=time.time());save()
     objects=[o for o in c['objects'] if not a.object or o['id']==a.object]
     if a.stage in ('audit-old','full'):
@@ -82,7 +91,7 @@ def main():
         for o in objects:
             job=json.loads((ROOT/o['job']).read_text());job=copy.deepcopy(job)
             capture_budget=max(0,capture_cutoff-time.time()) if maximum_mode else max(0,c['capture']['wall_s']-ledger.get('resumed_capture_wall_s',{}).get(o['id'],0))
-            output=out/('capture_'+o['id']);job.update(output=str(output),episode_id='wrist_'+o['id'],gpu=c.get('capture_gpus',{}).get(o['id'],a.gpu),deadline_shanghai=c['deadline_shanghai'],wall_clock_budget_s=c['capture']['wall_s'],wrist_experiment=c,camera_calibration=str(ROOT/c['camera_calibration']),object_prompt=o['prompt'],system_capture=c['capture'])
+            output=out/('capture_'+o['id']);job.update(output=str(output),episode_id='wrist_'+o['id'],gpu=c.get('capture_gpus',{}).get(o['id'],a.gpu),deadline_shanghai=c['deadline_shanghai'],wall_clock_budget_s=c['capture']['wall_s'],wrist_experiment=c,camera_calibration=str((ROOT/c['camera_calibration']).resolve()),object_prompt=o['prompt'],system_capture=c['capture'])
             job['wall_clock_budget_s']=capture_budget
             if o.get('resume_closed_capture'):
                 sources=o['resume_closed_capture'];sources=[sources] if isinstance(sources,str) else sources
@@ -157,7 +166,7 @@ def main():
                 if (reconstruction/'motion_inferred.json').exists():
                     run(key+'/twin',[str(ROOT/'environments/artgs/bin/python'),'-c','from articulated_system.twin import write;import sys;write(*sys.argv[1:])',str(reconstruction),str(src),str(root),str(twin)],600)
                     if (twin/'reconstructed.urdf').exists():run(key+'/isaac_import',['/data1/home/rangeryx/isaaclab-arena/.venv/bin/python',str(ROOT/'scripts/preview_reconstructed_twin.py'),'--twin',str(twin),'--gpu',str(a.gpu)],600,{'PATH':'/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static:'+os.environ['PATH']})
-    report(out,ledger,c)
+    if a.stage not in ('capture',):report(out,ledger,c)
 
 
 def report(out,ledger,c):

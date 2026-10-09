@@ -44,7 +44,8 @@ class MaximumRangeTests(unittest.TestCase):
    rec.r=r;rec.observe=lambda *a,**k:(np.eye(4),{'source':'wrist'},np.zeros((80,3)))
    def escape(D,row,**kwargs):rec.released=True
    rec.escape=escape;rec.remember_success=lambda _:None
-   rec.candidates=lambda D,f:[{'candidate_index':i,'family':f} for i in range(12)]
+   rec.visual_current=lambda D:{'T_world_handle':np.eye(4).tolist()}
+   rec.candidates=lambda D,f:[{'candidate_index':i,'family':f,'T':np.eye(4).tolist()} for i in range(12)]
    rec.plan_variant=lambda v,*args:v
    self.assertTrue(rec.run(0));self.assertEqual(attempts,[0,1,2,3]);self.assertTrue(rec.history[-1]['regrasp_completed'])
  def test_release_ignores_newly_revealed_surface_pixels(self):
@@ -55,9 +56,14 @@ class MaximumRangeTests(unittest.TestCase):
   B=dict(A,depth_m=depth.copy(),robot_q_self_mask=np.zeros_like(robot));B['depth_m'][:,:4]=.3
   P,Q=common_release_points(A,B,[0,0,.5],1.);np.testing.assert_allclose(P,Q)
  def test_speed_stop_routes_to_protected_recovery_without_raising_limits(self):
-  text=(ROOT/'wrist_reconstruction/max_range.py').read_text()
-  self.assertIn("if issue in ('EXISTING_LOW_PRELOAD_FORCE_LIMIT','PROBE_CARTESIAN_SPEED_LIMIT'",text)
-  self.assertIn("recover('SAFE_RELEASE_AFTER_LOAD_STOP')",text)
+  from wrist_reconstruction.constraint_policy import ConstraintPolicy,Category,State
+  import tempfile
+  with tempfile.TemporaryDirectory() as d:
+   policy=ConstraintPolicy(d)
+   result=policy.dispatch('PROBE_CARTESIAN_SPEED_LIMIT','test','physical')
+   self.assertEqual(result.category,Category.HARD);self.assertEqual(policy.state,State.SAFE_HOLD)
+   policy.transition(State.RELEASE,'checked escape');policy.transition(State.CONTINUE,'safe verified regrasp')
+   self.assertEqual(policy.state,State.CONTINUE)
  def test_force_spike_is_warning_sustained_and_emergency_stop(self):
   from wrist_reconstruction.force_policy import TemporalForceGuard
   policy={'soft_force_n':2.,'simulation_emergency_contact_n':10.,'window_s':.05,'sustained_windows':3}
@@ -74,11 +80,38 @@ class MaximumRangeTests(unittest.TestCase):
   from wrist_reconstruction.replay_source import augment
   code=augment(source(True));ast.parse(code)
   self.assertIn('REPLAY_BASE_MOVE_WITH_GRASP_FORBIDDEN',code)
-  self.assertIn("recovery.observation_origin_state=float(checkpoint['current_state'])",code)
+  self.assertIn('recovery.observation_origin_state=0.',code)
+  self.assertIn("runtime.initial_grasp_issue='WORKSPACE_RECOVERY'",code)
   self.assertNotIn("scene['articulation'].set_joint_positions",code)
   self.assertIn('if compliant and tape is None:',code)
   self.assertNotIn("if compliant and (tape is None or replay_frame.get('cartesian_input') is not None):",code)
   self.assertIn("tau=np.asarray(replay_frame['arm_effort'])",code)
+ def test_empty_or_exhausted_centering_changes_candidate_without_touching_loads(self):
+  from types import SimpleNamespace
+  from wrist_reconstruction.closure_progress import ClosureProgress
+  closure=SimpleNamespace(command=np.eye(4),origin=np.eye(4),p={'max_centering_displacement_m':.004})
+  monitor=ClosureProgress()
+  for _ in range(4):monitor.update(closure,.0001,[0,0],.1)
+  with self.assertRaisesRegex(RuntimeError,'EMPTY_CLOSURE'):monitor.update(closure,.0001,[0,0],.1)
+  monitor=ClosureProgress();closure.command=closure.command.copy();closure.command[0,3]=.004
+  for _ in range(4):monitor.update(closure,.02,[.1,0],.1)
+  with self.assertRaisesRegex(RuntimeError,'CENTERING_EXHAUSTED'):monitor.update(closure,.02,[.1,0],.1)
+  monitor=ClosureProgress()
+  for _ in range(20):monitor.update(closure,.012,[.5,.5],.1)
+ def test_current_handle_frame_controls_direction_without_ee_model(self):
+  from types import SimpleNamespace
+  from wrist_reconstruction.max_range import operation_tangent
+  r=SimpleNamespace(recovery=SimpleNamespace(current_D=np.eye(4),visual_current=lambda D:{'outward_normal_world':[1.,-1.,0.]}))
+  np.testing.assert_allclose(operation_tangent(r),np.array([1.,-1.,0.])/np.sqrt(2))
+ def test_motion_guess_retains_observed_object_rotation_despite_gripper_rotation(self):
+  from types import SimpleNamespace
+  from scipy.spatial.transform import Rotation
+  from wrist_reconstruction.max_recovery import MaximumRecovery
+  rec=MaximumRecovery.__new__(MaximumRecovery);rec.released=False;rec.current_D=np.eye(4);rec.current_D[:3,:3]=Rotation.from_euler('z',30,degrees=True).as_matrix()
+  rec.grasp_reference_D=np.eye(4);rec.grasp_reference_ee=np.eye(4)
+  E=np.eye(4);E[:3,:3]=Rotation.from_euler('z',-20,degrees=True).as_matrix();E[:3,3]=[.1,.2,0]
+  rec.r=SimpleNamespace(tcp=lambda:E)
+  guess=rec.motion_guess();np.testing.assert_allclose(guess[:3,:3],rec.current_D[:3,:3]);np.testing.assert_allclose(guess[:3,3],E[:3,3])
  def test_original_baseline_hashes(self):
   for p,digest in json.loads((ROOT/'wrist_reconstruction/frozen_baseline_hashes.json').read_text()).items():self.assertEqual(hashlib.sha256((ROOT/p).read_bytes()).hexdigest(),digest,p)
 if __name__=='__main__':unittest.main()

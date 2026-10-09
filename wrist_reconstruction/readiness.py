@@ -58,8 +58,24 @@ def both_ready(out,c):
         evaluation=Path(out)/('capture_'+o['id'])/'maximum_range_evaluation.json'
         actual=json.loads(evaluation.read_text()).get('maximum_actual_state') if evaluation.exists() else None
         # Label span alone cannot stand in for actual physical object motion.
-        ready=len(clean)>=c['backend']['minimum_clean_states'] and span>=required and actual is not None and actual>=required
-        rows.append({'object':o['id'],'clean_states':len(clean),'label_span':span,'actual_maximum':actual,'ready':ready})
+        kind='revolute' if o['id']=='7320' else 'prismatic'
+        targets=c['capture']['key_states'][kind][:3];tolerance=.5 if kind=='revolute' else .002
+        matched=[];used=set()
+        for target_index,target in enumerate(targets):
+            candidates=[]
+            for s in clean:
+                if s['state_id'] in used:continue
+                # New runs use post-stop per-view object evaluation. Reused
+                # closed data retain their original checked acquisition.
+                value=s.get('post_stop_actual_state')
+                if value is None and s.get('acquired_in_current_execution') is False and abs(s['estimated_articulation_state'])<1e-8:value=0.
+                if value is None:continue
+                qualifies=abs(value)<=tolerance if target==0 else value>=target and (target_index==len(targets)-1 or value<targets[target_index+1])
+                if qualifies:candidates.append((value,s))
+            if candidates:
+                _,state=min(candidates,key=lambda a:abs(a[0]-target));used.add(state['state_id']);matched.append(state['state_id'])
+        ready=len(matched)==len(targets) and actual is not None and actual>=required
+        rows.append({'object':o['id'],'clean_states':len(clean),'label_span':span,'actual_maximum':actual,'required_key_states':targets,'matched_state_ids':matched,'ready':ready})
     return all(r['ready'] for r in rows),rows
 
 def summarize(out):

@@ -2,6 +2,10 @@
 from pathlib import Path
 import sys,ast,json,hashlib,importlib.util
 ROOT=Path(__file__).resolve().parents[1];sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+# Lock the local orchestration package before legacy loaders prepend their ROOT.
+# Its lazy submodules must never silently come from another deployment.
+import wrist_reconstruction
+wrist_reconstruction.__path__=[str(ROOT/'wrist_reconstruction')]
 # Some server deployments retained older root-level copies of entry scripts.
 # Load the checked-in source chain explicitly, so those copies cannot shadow
 # the current scripts/ release/retreat implementation through sys.path order.
@@ -84,13 +88,18 @@ def source(maximum_range=False):
     replace('  world.step(render=False,update_fabric=True)', '  skill_capture.sync(tcp())\n  world.step(render=False,update_fabric=True)')
     replace('  return s\n def move', '  if skill_capture.runtime is not None:skill_capture.runtime.last_safe_arm=np.asarray(s["q"])[arm].copy()\n  return s\n def move')
     if maximum_range:
+        replace("skill_result=run_skill(runtime);fit=memory.final_fit();following=True", "skill_result=run_skill(runtime);fit=memory.estimate;following=True")
+        replace("compliant=False;mode='position';system_gains();closure=JawCenteredClosure(tcp(),policy);legal=False", "compliant=False;mode='position';system_gains();closure=JawCenteredClosure(tcp(),policy);legal=False\n    from wrist_reconstruction.closure_progress import ClosureProgress\n    closure_progress=ClosureProgress()")
+        replace("cmd=closure.update(tcp(),state['aperture_m'],filtered(),centers,dt);phase_name=cmd['state'];runtime.phase(phase_name)", "cmd=closure.update(tcp(),state['aperture_m'],filtered(),centers,dt);closure_progress.update(closure,state['aperture_m'],filtered(),dt);phase_name=cmd['state'];runtime.phase(phase_name)")
         replace('from wrist_reconstruction.recovery import Recovery','from wrist_reconstruction.max_recovery import MaximumRecovery as Recovery')
         replace('skill_effort=EffortRecorder(a.output);skill_effort.sensor=ForceSensor(scene,export,a.output)', 'skill_effort=EffortRecorder(a.output);skill_effort.sensor=ForceSensor(scene,export,a.output)\n from wrist_reconstruction.max_range import ValidEffort\n skill_effort=ValidEffort(skill_effort,a.output)')
         replace('runtime.recover=recovery.run','runtime.recover=recovery.run;runtime.recovery=recovery')
-        replace(" skill_effort=ValidEffort(skill_effort,a.output)", " skill_effort=ValidEffort(skill_effort,a.output)\n from wrist_reconstruction.force_policy import TemporalForceGuard\n force_guard=TemporalForceGuard(job['wrist_experiment']['force_policy'])")
+        replace(" skill_effort=ValidEffort(skill_effort,a.output)", " skill_effort=ValidEffort(skill_effort,a.output)\n from wrist_reconstruction.force_policy import TemporalForceGuard\n force_guard=TemporalForceGuard(job['wrist_experiment']['force_policy'])\n from wrist_reconstruction.constraint_policy import ConstraintPolicy\n constraints=ConstraintPolicy(a.output)")
         replace(";rows.append(s);", ";s['force_event']=force_guard.update(s['forces_n'],dt,s['t']);rows.append(s);")
         replace(" and max(s['forces_n'].values(),default=0)>policy['max_pad_load_n']:raise RuntimeError('EXISTING_LOW_PRELOAD_FORCE_LIMIT')", " and s['force_event']['status'].startswith('HARD_FORCE_STOP'):raise RuntimeError(s['force_event']['status'])")
-        replace("runtime.recovery=recovery", "runtime.recovery=recovery;runtime.force_guard=force_guard")
+        replace(" and s['force_event']['status'].startswith('HARD_FORCE_STOP'):raise RuntimeError(s['force_event']['status'])", " and s['force_event']['status'].startswith('HARD_FORCE_STOP'):\n   if phase=='SYSTEM_RELEASE' and not compliant and reference is None and mode=='position':\n    # The grasp/task drive is stopped. Only the existing checked aperture\n    # opening may unload it; collision/speed/margin detectors above still run.\n    constraints.dispatch(s['force_event']['status'],'native.force_guard','protective_release',load=s['force_event'])\n   else:raise RuntimeError(s['force_event']['status'])")
+        replace("   skill_capture.runtime=runtime", "   skill_capture.runtime=runtime;runtime.constraints=constraints;constraints.runtime=runtime")
+        replace("runtime.recovery=recovery", "runtime.recovery=recovery;runtime.force_guard=force_guard;runtime.constraints=constraints;constraints.runtime=runtime")
 
         replace("    collision=PhysicalScene(system_at_base(),model,allowed);collision.moving_reference=moving_initial\n    runtime.phase('SYSTEM_BASE_LOCK');hold(1.)", "    collision=PhysicalScene(system_at_base(),model,allowed);collision.moving_reference=moving_initial\n    runtime.phase('SYSTEM_BASE_LOCK');hold(1.);validate_robot_jacobian('after_base_lock_'+str(tick))")
         replace("   s['global_reconstruction_consistency_error_m']=ProvisionalMemory.consistency_error(memory,np.asarray(s['T_tcp']))", "   if isinstance(memory,ProvisionalMemory):s['global_reconstruction_consistency_error_m']=ProvisionalMemory.consistency_error(memory,np.asarray(s['T_tcp']))")
@@ -98,7 +107,19 @@ def source(maximum_range=False):
         replace("    route=choice['route'];runtime.phase('SYSTEM_BASE_ROUTE')", "    if not runtime.released():raise RuntimeError('BASE_ROUTE_REQUIRES_ACTUAL_ZERO_LOAD_AND_RELEASE_APERTURE')\n    route=choice['route'];runtime.phase('SYSTEM_BASE_ROUTE')")
         replace("qtarget[:]=np.asarray(robot.get_joint_positions());qvelocity[:]=0.;mode='position';compliant=False;system_gains()", "qtarget[:]=np.asarray(robot.get_joint_positions());qvelocity[:]=0.;mode=mode if reference is not None else 'position';compliant=False;system_gains()")
         replace("   runtime.arm_q=lambda:", "   def stop_failed_grasp_monitor():\n    nonlocal reference,loss_s,slip_s\n    reference=None;retention.reference=None;loss_s=0.;slip_s=0.;runtime.phase('SYSTEM_FAILED_GRASP_RECOVERY')\n   runtime.stop_failed_grasp_monitor=stop_failed_grasp_monitor\n   def resume_safe_compliance():\n    nonlocal compliant\n    drive.active=False;drive.set_direction(memory.tangent(tcp()),tcp());compliant=True;system_gains(False);runtime.phase('COMPLIANT_SETTLE');hold(.5)\n   runtime.resume_safe_compliance=resume_safe_compliance\n   runtime.arm_q=lambda:")
-        replace("   if slip_s>.1:raise RuntimeError('SUSTAINED_CONTACT_PLANE_DRIFT')", "   if slip_s>.1:s['relative_motion_event']='RELATIVE_GRASP_MOTION_OBSERVED' # diagnostic, not a physical safety failure")
+        replace("     if phase=='ESTIMATED_FOLLOW':drive.active=False", "     if phase=='ESTIMATED_FOLLOW':s['model_consistency_event']='MODEL_INCONSISTENCY'")
+        replace("      if memory.failed_refits>=cp['maximum_unexplained_refits']:raise RuntimeError('MODEL_CONFIDENCE_UNRESOLVED')", "      if memory.failed_refits>=cp['maximum_unexplained_refits']:s['model_consistency_event']='MODEL_INCONSISTENCY'")
+        replace("    return collision.check(model.poses(solution,base,finger_q=q[fingers]),target@np.linalg.inv(grasp_tcp)@moving_initial,True)", "    P=model.poses(solution,base,finger_q=q[fingers]);ok,why=collision.check(P,target@np.linalg.inv(grasp_tcp)@moving_initial,True)\n    if not ok:return False,why\n    from wrist_reconstruction.planner import camera_clearance\n    return camera_clearance(collision,P,skill_capture.cal)")
+        replace("   if slip_s>.1:raise RuntimeError('SUSTAINED_CONTACT_PLANE_DRIFT')", "   if slip_s>.1:s['relative_motion_event']='GRASP_RELATIVE_MOTION' # diagnostic, not a physical safety failure")
+        replace(" except BaseException as error:\n  import traceback", " except BaseException as error:\n  import traceback\n  from wrist_reconstruction.constraint_policy import Event,classify\n  failure_decision=classify(Event(str(error),'episode.boundary','physical'))\n  constraints._write({'kind':'episode_boundary','code':str(error),'origin':'native/initial-prefix or orchestration','category':failure_decision.category.value,'state':constraints.state.value})")
+        # Unwind a failed initial candidate into the SAME recovery API below.
+        # Successful nominal contact prefix retains exactly its command order.
+        prefix_start=text.index("   phase='PREFLIGHT'")
+        prefix_end=text.index('   from wrist_reconstruction.session import run as run_skill',prefix_start)
+        prefix=text[prefix_start:prefix_end]
+        guarded="   initial_grasp_issue=None\n   try:\n"+''.join(' '+line+'\n' for line in prefix.splitlines())+"   except RuntimeError as initial_error:\n    constraints.dispatch(str(initial_error),'episode.initial_grasp','physical')\n    initial_grasp_issue=str(initial_error)\n    if memory is None:memory=InteractionMemory(tcp(),a.output)\n    if drive is None:drive=ConstrainedDrive(tcp(),memory.directions[0]);drive.active=False\n"
+        text=text[:prefix_start]+guarded+text[prefix_end:]
+        replace("   skill_result=run_skill(runtime);", "   runtime.initial_grasp_issue=initial_grasp_issue\n   if initial_grasp_issue:\n    runtime.halt_at_measured_state()\n    from wrist_reconstruction.operation_memory import restore\n    restore(runtime);saved_memory=runtime.memory\n   skill_result=run_skill(runtime);")
         replace('from paper_structure.evaluation_logger import EvaluationLogger','from wrist_reconstruction.streaming import EvaluationJournal as EvaluationLogger')
         replace(" qtarget=np.asarray(robot.get_joint_positions(),dtype=float).copy();", " from wrist_reconstruction.streaming import JournalList\n qtarget=np.asarray(robot.get_joint_positions(),dtype=float).copy();")
         replace(" native=WholeFingerReports(stage,export,allowed,world,dt,sample)", " native=WholeFingerReports(stage,export,allowed,world,dt,sample)\n rows=JournalList(a.output/'observations.jsonl');issued=JournalList(a.output/'command_tape.jsonl');native.physics_steps=JournalList(a.output/'physics_steps.jsonl')")
@@ -131,6 +152,6 @@ if __name__=='__main__':
         'camera_calibration_sha256':hashlib.sha256(cal_path.read_bytes()).hexdigest(),
         'job_sha256':hashlib.sha256(a.job.read_bytes()).hexdigest(),
         'expanded_program_sha256':hashlib.sha256(expanded.encode()).hexdigest(),
-        'sources':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
+        'sources':{(str(p.relative_to(ROOT)) if p.is_relative_to(ROOT) else str(p)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths},
         'physical_contact_baseline_unchanged':True},indent=2))
     (out/'frozen_wrist_job.json').write_text(json.dumps(job,indent=2));exec(compile(expanded,str(ROOT/'scripts/run_interactive_twin_refinement_episode.py'),'exec'),globals())

@@ -7,7 +7,7 @@ from concurrent.futures import ThreadPoolExecutor
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_extended.json');p.add_argument('--output',type=Path,required=True);p.add_argument('--source-root',type=Path,required=True);p.add_argument('--object',choices=['7320','45746']);a=p.parse_args()
+ p=argparse.ArgumentParser();p.add_argument('--config',type=Path,default=ROOT/'configs/wrist_reconstruction_extended.json');p.add_argument('--output',type=Path,required=True);p.add_argument('--source-root',type=Path,required=True);p.add_argument('--object',choices=['7320','45746']);p.add_argument('--checkpoint',type=Path);p.add_argument('--stop-t',type=float);a=p.parse_args()
  out=a.output.resolve();out.mkdir(parents=True,exist_ok=True);c=json.loads(a.config.read_text());clock=out/'run_clock.json'
  d=json.loads(clock.read_text()) if clock.exists() else {'start_wall_s':time.time(),'finish_early':True}
  d.setdefault('capture_deadline_wall_s',d['start_wall_s']+c['capture']['wall_s']);clock.write_text(json.dumps(d,indent=2));deadline=datetime.fromtimestamp(d['capture_deadline_wall_s'],ZoneInfo('Asia/Shanghai')).isoformat()
@@ -15,10 +15,12 @@ def main():
  if a.object:sources={a.object:sources[a.object]}
  (out/'frozen_config.json').write_text(json.dumps(c,indent=2));records={}
  def run(obj):
+  from wrist_reconstruction.actor_owner import claim
+  owner=claim(obj,out/('inputs_'+obj)/'continuation_job.json',ROOT)
   from wrist_reconstruction.continuation import prepare,make_job
   src=sources[obj].resolve();prepared=out/('inputs_'+obj);target=out/('capture_'+obj)
-  if not (prepared/'issued_robot_commands.json').exists():prepare(src,prepared)
-  job=make_job(src,prepared,target,c,deadline);path=prepared/'continuation_job.json'
+  if not (prepared/'issued_robot_commands.json').exists():prepare(src,prepared,stop_t=a.stop_t)
+  job=make_job(src,prepared,target,c,deadline,checkpoint_path=a.checkpoint);path=prepared/'continuation_job.json'
   prior=out/'preserved_failed_regrasp_candidates.json'
   if prior.exists():
    job['prior_failed_regrasp_candidates']=json.loads(prior.read_text()).get(obj,[])
@@ -34,6 +36,7 @@ def main():
     os.killpg(proc.pid,signal.SIGINT)
     try:code=proc.wait(timeout=30)
     except subprocess.TimeoutExpired:os.killpg(proc.pid,signal.SIGKILL);code=proc.wait()
+  owner.close()
   records[obj].update(status='STOPPED',returncode=code);report=target/'report.json'
   if report.exists():records[obj]['physical_status']=json.loads(report.read_text())['status']
   (out/(obj+'_component.json')).write_text(json.dumps(records[obj],indent=2))

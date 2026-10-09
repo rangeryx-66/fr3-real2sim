@@ -12,13 +12,18 @@ def reset_model_monitor(memory,T):
     memory.monitor_anchor=np.asarray(T).copy() if memory.estimate is not None else None
 
 
-def local_cloud(recorder,anchor,camera=None):
+def local_cloud(recorder,anchor,camera=None,robot_model=None):
     P=[]
     # Pre-release stability uses existing sensor cameras, not instance masks.
     # Post-route target localization explicitly passes the actual wrist camera.
     for camera in [camera] if camera is not None else recorder.legacy_cameras[:2]:
         rgb,depth,_=snapshot(camera);K=np.asarray(camera.get_intrinsics_matrix());T=matrix(*camera.get_world_pose(camera_axes='ros'))
-        points,_=backproject(depth,K,T,np.isfinite(depth),stride=2)
+        valid=np.isfinite(depth)
+        if robot_model is not None:
+            from wrist_reconstruction.self_observation import robot_projection_mask
+            r=recorder.runtime;poses=robot_model.poses(r.arm_q(),r.base,finger_q=r.finger_q())
+            valid &= ~robot_projection_mask(depth,K,T,robot_model.robot_hulls,poses)
+        points,_=backproject(depth,K,T,valid,stride=2)
         points=points[np.linalg.norm(points-np.asarray(anchor),axis=1)<.10];P.append(points)
     result=np.concatenate(P)
     if len(result)<80:raise RuntimeError('OBSERVED_HANDLE_REGION_UNAVAILABLE')
@@ -43,7 +48,7 @@ class Recovery(LegacyRecovery):
         self.r=runtime;self.root=Path(root);self.job=job;self.export=export;self.model=model;self.allowed=allowed
         self.initial_ee=runtime.tcp().copy();self.initial_base=list(runtime.base);self.count=0;self.history=[];self.plan=normalize_plan(json.loads(Path(job['plan']).read_text()))
         self.visual=copy.deepcopy(runtime.initial_visual);H=np.asarray(self.visual['T_world_handle']);H[:3,3]=self.visual['anchor_world_m'];self.visual['T_world_handle']=H.tolist()
-        self.initial_cloud=local_cloud(runtime.capture,self.visual['anchor_world_m']);self.current_D=np.eye(4);self.released=False;self.grasp_reference_ee=self.initial_ee.copy();self.grasp_reference_D=np.eye(4)
+        self.initial_cloud=local_cloud(runtime.capture,self.visual['anchor_world_m'],robot_model=self.model);self.current_D=np.eye(4);self.released=False;self.grasp_reference_ee=self.initial_ee.copy();self.grasp_reference_D=np.eye(4)
         from wrist_reconstruction.planner import MobileWristPlanner
         from wrist_reconstruction.retreat import RetreatPlanner
         self.mobile=MobileWristPlanner(self);self.retreat=RetreatPlanner(self)
@@ -54,9 +59,9 @@ class Recovery(LegacyRecovery):
         if step_frames:
             for _ in range(8):self.r.step()
         else:self.r.capture.scene['world'].render()
-        P=local_cloud(self.r.capture,anchor,self.r.capture.camera if wrist else None)
+        P=local_cloud(self.r.capture,anchor,self.r.capture.camera if wrist else None,robot_model=self.model)
         D,audit=register(self.initial_cloud,P,initial);audit['source']='unmasked live RGB-D local handle-region ICP; no simulator segmentation or body pose'
-        audit['wrist_camera']=wrist;return D,audit,P
+        audit['wrist_camera']=wrist;audit['robot_self_exclusion']='measured robot q + unchanged official robot envelopes; no simulator instance mask';return D,audit,P
 
     def release_observation(self,D):
         # Only the release-motion observer excludes known robot projections.
