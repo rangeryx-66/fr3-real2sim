@@ -13,7 +13,7 @@ from isaacsim.core.prims import RigidPrim
 from interactive_twin_recovery.mobile import scene_at
 base_indices=[names.index('mobile_x'),names.index('mobile_y')]
 base_view=RigidPrim(prim_paths_expr=scene['mobile_base_body_path'],name='continuous_base_feedback');base_view.initialize()
-base_goal=np.zeros(2);base_velocity=np.zeros(2);base_motion=False;compensate=False;comp_target=None;comp_relative=None;comp_bias=None;comp_seed=None;base_records=[];plans=[];adjustments=[]
+base_goal=np.zeros(2);base_command_previous=np.zeros(2);base_velocity=np.zeros(2);base_motion=False;compensate=False;comp_target=None;comp_relative=None;comp_bias=None;comp_seed=None;base_records=[];plans=[];adjustments=[];grasp_relative=None;coord_speed=0.;coord_twist=np.zeros(6);coord_scale=1.;coord_blocked=False;coord_mode="HOLD";coord_goal=0.;desired_tcp=None;coord_events=[];opening_index=0;coord_angle_ref=0.
 original_gains=controller.set_gains
 def stage_gains(*args,**kwargs):
  # Arm/jaw entries unchanged; supply gains solely for the new physical base DOFs.
@@ -43,20 +43,67 @@ def observe_step(s,contacts):
   s['telemetry']['base_pose_feedback']=feedback_base();s['telemetry']['base_actuation']='dynamic XY prismatic drive; no runtime root pose/state writes'
  except Exception as error:diagnostic_issue('mobile_telemetry',error)
 
+def bounded_reference(desired, speed):
+ global comp_target,coord_speed,coord_twist
+ dp=desired[:3,3]-comp_target[:3,3]
+ rotation=Rotation.from_matrix(desired[:3,:3]@comp_target[:3,:3].T).as_rotvec()
+ joint=next(j for j in model.asset.joints.values() if j.name==model.manifest['joint_name'])
+ hinge=model.asset_T@model.asset.root_to_link(joint.parent,{model.manifest['joint_name']:0.})@joint.origin
+ radius=max(1e-12,float(np.linalg.norm(comp_target[:3,3]-hinge[:3,3])))
+ error=np.r_[dp,rotation*radius];distance=float(np.linalg.norm(error));acceleration=.002
+ wanted=error/max(distance,1e-12)*min(speed,np.sqrt(2*acceleration*distance))
+ change=wanted-coord_twist;coord_twist+=change*min(1.,acceleration*dt/max(float(np.linalg.norm(change)),1e-12))
+ increment=coord_twist*dt
+ if np.dot(increment,error)>0 and np.linalg.norm(increment)>distance:
+  increment=error.copy();coord_twist=increment/dt
+ coord_speed=float(np.linalg.norm(coord_twist))
+ result=comp_target.copy();result[:3,3]+=increment[:3]
+ result[:3,:3]=Rotation.from_rotvec(increment[3:]/radius).as_matrix()@comp_target[:3,:3]
+ return result
+
 def step():
- global qvelocity,comp_seed,comp_target,planned_reference
+ global qvelocity,comp_seed,comp_target,planned_reference,base_goal,base_velocity,coord_scale,coord_blocked,desired_tcp,coord_angle_ref
+ if (a.output/"pause_requested").exists():
+  (a.output/"pause_requested").unlink();world.pause();raise RuntimeError("OPERATOR_PAUSE_SCENE_PRESERVED")
+ coord_scale=1.;coord_blocked=False
  if compensate:
-  comp_target=moving()@comp_relative;planned_reference=comp_target.copy()
-  current=feedback_base();seed=np.asarray(robot.get_joint_positions())[arm]
-  # Measured base pose, plus one physics-step motion lead, compensates the
-  # PhysX carriage before the same step. No commanded pose replaces feedback.
+  theta=actual();body=moving()
+  if coord_mode=='OPEN':
+   coord_angle_ref=max(coord_angle_ref,min(coord_goal+np.deg2rad(.05),theta+np.deg2rad(.05)))
+  else:coord_angle_ref=max(coord_angle_ref,theta)
+  # Hold reference when physical progress lags or rebounds. Never chase a
+  # backward pose update with the opening drive; no lag-triggered abort.
+  desired_tcp=body_at(coord_angle_ref)@np.linalg.inv(body_at(theta))@body@grasp_relative
+  previous_ref=comp_target.copy();next_ref=bounded_reference(desired_tcp,.0015 if coord_mode=='OPEN' else .001)
+  current=feedback_base();measured=np.asarray(robot.get_joint_positions());seed=measured[arm] if comp_seed is None else comp_seed
   measured_v=np.asarray(robot.get_joint_velocities())[base_indices]
   lead=list(current);lead[0]+=measured_v[0]*dt;lead[1]+=measured_v[1]*dt
-  q=model.ik(comp_target,lead,seed,starts=1)
-  if q is None:raise RuntimeError('LOCAL_BASE_COMPENSATION_NO_IK_SCENE_PRESERVED')
-  command=q+comp_bias;qvelocity=np.clip((command-qtarget[arm])/dt,-vel/3,vel/3);qtarget[arm]=command;comp_seed=q
+  q=model.ik(next_ref,lead,seed,starts=1)
+  if q is None:
+   # Stop advancement of both commands at the last safe configuration. The
+   # caller selects another local base direction; the original guard still runs.
+   coord_blocked=True;coord_scale=0.;base_goal=measured[base_indices].copy();base_velocity=np.zeros(2);qvelocity=np.zeros(6)
+   coord_events.append({'event':'NO_IK_COUPLED_HOLD','t':tick*dt,'base':current,'scene_preserved':True})
+  else:
+   command=q+comp_bias;delta=command-qtarget[arm]
+   tracking=command-(measured[arm]+comp_bias)
+   required=np.maximum(np.abs(delta),np.abs(tracking))/dt
+   coord_scale=min(1.,float(np.min((vel/3)/np.maximum(required,1e-12))))
+   # The same scalar clock slows arm, Cartesian reference and base together.
+   previous_base=base_command_previous.copy()
+   base_goal=previous_base+coord_scale*(base_goal-previous_base);base_velocity=base_velocity*coord_scale
+   comp_target=previous_ref.copy();comp_target[:3,3]+=coord_scale*(next_ref[:3,3]-previous_ref[:3,3])
+   rv=Rotation.from_matrix(next_ref[:3,:3]@previous_ref[:3,:3].T).as_rotvec()
+   comp_target[:3,:3]=Rotation.from_rotvec(coord_scale*rv).as_matrix()@previous_ref[:3,:3]
+   qtarget[arm]+=coord_scale*delta;qvelocity=coord_scale*delta/dt;comp_seed=qtarget[arm]-comp_bias
+  planned_reference=comp_target.copy()
  controller.apply_action(ArticulationAction(joint_positions=base_goal,joint_velocities=base_velocity,joint_indices=base_indices))
- return original_step()
+ state=original_step()
+ try:
+  state['coordination']={'mode':coord_mode,'clock_scale':coord_scale,'reference_speed_m_s':coord_speed,'desired_T_tcp':None if desired_tcp is None else desired_tcp.tolist(),'grasp_T_body_tcp':None if grasp_relative is None else grasp_relative.tolist(),'IK_hold':coord_blocked}
+ except Exception as error:diagnostic_issue('coordination_telemetry',error)
+ base_command_previous[:]=base_goal
+ return state
 
 def note(name,value):
  try:diagnostic_write(a.output/name,json.dumps(value,indent=2,default=lambda x:x.tolist() if hasattr(x,'tolist') else str(x)))
@@ -85,19 +132,20 @@ def available(goal,station=None,E=None,theta=None,seed=None,bias=None):
  return path,bias,reason
 
 def open_to(goal):
- global phase,command_state,planned_reference,qvelocity,arc,_arc_index,collision
- path,bias,reason=available(goal);arc=path
- note('opening_plan_%02d.json'%len(adjustments),{'base':base,'path':path,'blocker':reason})
+ global phase,command_state,planned_reference,qvelocity,collision,compensate,comp_target,comp_bias,comp_seed,coord_mode,coord_goal,coord_speed,coord_twist,opening_index,coord_angle_ref
+ coord_angle_ref=actual();coord_goal=min(float(goal),np.deg2rad(90.));coord_mode='OPEN';coord_speed=0.;coord_twist=np.zeros(6);comp_target=tcp().copy();comp_bias=qtarget[arm]-np.asarray(robot.get_joint_positions())[arm];comp_seed=np.asarray(robot.get_joint_positions())[arm].copy();compensate=True;opening_index+=1
  collision=refresh_same_base_collision(base_scene,export,initial_base,base)
- for _arc_index,w in enumerate(path):
-  phase='CONTINUOUS_OPEN';command_state=w['state'];planned_reference=np.asarray(w['T']);distance=np.linalg.norm(planned_reference[:3,3]-tcp()[:3,3])
-  move(np.asarray(w['q'])+bias,max(.5,1.5*distance/.002));qvelocity=np.zeros(6)
- phase='GRASP_HOLD';hold(.3)
+ begin=tick;reason=None
+ while actual()<coord_goal:
+  phase='CONTINUOUS_OPEN';command_state=min(coord_goal+np.deg2rad(.05),actual()+np.deg2rad(.05));step()
+  if coord_blocked:reason='NO_IK';break
+ coord_mode='HOLD';phase='GRASP_HOLD';hold(.3);compensate=False;qvelocity=np.zeros(6)
+ note('opening_execution_%02d.json'%opening_index,{'start_s':begin*dt,'end_s':tick*dt,'goal_rad':coord_goal,'actual_rad':actual(),'blocker':reason,'reference':'measured progress plus .05deg drive; fixed acquired body-relative grasp; smooth Cartesian clock'})
  return reason
 
 def plan_base_motion():
  global collision
- now=np.asarray(base);E=tcp();theta=actual();qmeas=np.asarray(robot.get_joint_positions())[arm];bias=qtarget[arm]-qmeas
+ now=np.asarray(base);E=moving()@grasp_relative;theta=actual();qmeas=np.asarray(robot.get_joint_positions())[arm];bias=qtarget[arm]-qmeas
  fixed,_,fixed_block=available(np.deg2rad(90),seed=qmeas,bias=bias);fixed_max=float(np.rad2deg(fixed[-1]['state'])) if fixed else float(np.rad2deg(theta))
  choices=[]
  for deg in (0,45,90,135,180,225,270,315):
@@ -120,31 +168,41 @@ def plan_base_motion():
  return choices[0] if choices else None
 
 def coordinated_motion(candidate):
- global phase,base_goal,base_velocity,base_motion,compensate,comp_target,comp_relative,comp_bias,qvelocity,planned_reference
- start=np.asarray(robot.get_joint_positions())[base_indices];delta=np.asarray(candidate['path'][-1]['base'])[:2]-np.asarray(base)[:2]
- origin=np.asarray(base);theta=actual();comp_target=tcp().copy();comp_relative=np.linalg.inv(moving())@comp_target;comp_bias=qtarget[arm]-np.asarray(robot.get_joint_positions())[arm]
+ global phase,base_goal,base_velocity,base_motion,compensate,comp_target,comp_relative,comp_bias,comp_seed,qvelocity,planned_reference,coord_mode,coord_speed,coord_twist,coord_angle_ref
+ coord_angle_ref=actual();start=np.asarray(robot.get_joint_positions())[base_indices];delta=np.asarray(candidate['path'][-1]['base'])[:2]-np.asarray(base)[:2]
+ origin=np.asarray(base);theta=actual();comp_target=tcp().copy();comp_relative=grasp_relative.copy();comp_seed=np.asarray(robot.get_joint_positions())[arm].copy();coord_mode="HOLD";coord_speed=0.;coord_twist=np.zeros(6);comp_bias=qtarget[arm]-np.asarray(robot.get_joint_positions())[arm]
  planned_reference=comp_target.copy();base_motion=True;compensate=True;begin=tick;previous=start.copy()
  # Start with 1 mm, then 5 mm, then the full 30 mm. Smooth starts/stops.
  for length in (.001,.005,.03):
   endpoint=start+delta*(length/.03);d=endpoint-previous;duration=max(4.,1.5*np.linalg.norm(d)/.0003)
   phase='BASE_COMPENSATED_%.0fMM'%(length*1000)
-  for f in np.linspace(0,1,max(2,int(duration/dt))):
-   scalar=f*f*(3-2*f);rate=6*f*(1-f)/duration;base_goal=previous+scalar*d;base_velocity=rate*d;step()
+  elapsed=0.
+  while elapsed<duration:
+   f=min(1.,(elapsed+dt)/duration);scalar=f*f*(3-2*f);rate=6*f*(1-f)/duration
+   base_goal=previous+scalar*d;base_velocity=rate*d;step();elapsed+=dt*coord_scale
+   if coord_blocked:
+    base_velocity=np.zeros(2);compensate=False;base_motion=False;return False
   base_velocity=np.zeros(2);phase='BASE_COMPENSATED_HOLD';hold(.5);previous=endpoint.copy()
  compen_end=feedback_base();compensate=False;base_motion=False;qvelocity=np.zeros(6)
  adjustments.append({'start_t_s':begin*dt,'end_t_s':tick*dt,'angle_before_deg':float(np.rad2deg(theta)),'angle_after_deg':float(np.rad2deg(actual())),'start_base':origin.tolist(),'end_base':compen_end,'command_delta_xy_m':delta.tolist(),'actual_delta_xy_m':(np.asarray(compen_end[:2])-origin[:2]).tolist(),'candidate':candidate,'release':False,'regrasp':False})
  note('coordinated_adjustments.json',adjustments)
+ return True
 
 milestone=False;initial_grasp=False;first_hold_angle=None;after_motion_angle=None;manual_continuations=0;continuation_stop_reason=None
 try:
  # Frozen known-model closed approach and first physical closure, no regrasp.
  initial="if True:\n phase='SETTLE';hold(.5)"+sequence.split("  profile_mark('OPEN_1')",1)[0]
  exec(compile(initial,str(baseline)+'::unchanged_initial_grasp','exec'),globals());initial_grasp=legal
+ grasp_relative=np.linalg.inv(moving())@tcp();reference=grasp_relative.copy();note('acquired_grasp_reference.json',{'T_body_tcp':grasp_relative,'source':'physically verified grasp; never replaced during episode','t':tick*dt})
  open_to(np.deg2rad(20.3));first_hold_angle=float(np.rad2deg(actual()));phase='GRASP_HOLD';hold(.5)
  note('held_20deg.json',{'angle_deg':first_hold_angle,'pad_loads_n':filtered(),'base_feedback':feedback_base(),'q':robot.get_joint_positions(),'T_tcp':tcp(),'relative':np.linalg.inv(moving())@tcp()})
  if not job.get('continuous_contact',{}).get('fixed_base_control',False):
   candidate=plan_base_motion()
-  if candidate is not None:coordinated_motion(candidate);base_moves+=1
+  if candidate is not None:
+   for retry in range(8):
+    if coordinated_motion(candidate):base_moves+=1;break
+    candidate=plan_base_motion()
+    if candidate is None:break
   else:status='LOCAL_BASE_DIRECTIONS_INFEASIBLE_SCENE_PRESERVED'
  after_motion_angle=float(np.rad2deg(actual()));open_to(np.deg2rad(after_motion_angle+10.5));milestone=bool(adjustments and np.rad2deg(actual())-after_motion_angle>=10.)
  note('milestone.json',{'continuous_contact_PASS':milestone,'angle_before_base_deg':first_hold_angle,'angle_after_base_deg':after_motion_angle,'angle_after_continuation_deg':float(np.rad2deg(actual())),'regrasps':0,'release_count':0})
@@ -155,7 +213,7 @@ try:
    if job.get('continuous_contact',{}).get('fixed_base_control',False):break
    candidate=plan_base_motion()
    if candidate is None:continuation_stop_reason='FINITE_LOCAL_BASE_CANDIDATES_EXHAUSTED';status='LOCAL_BASE_DIRECTIONS_INFEASIBLE_SCENE_PRESERVED';break
-   coordinated_motion(candidate);base_moves+=1
+   if coordinated_motion(candidate):base_moves+=1
  phase='FINAL_HOLD';qvelocity=np.zeros(6);base_velocity=np.zeros(2);hold(.5)
  success=milestone;status='CONTINUOUS_CONTACT_90_SUCCESS' if np.rad2deg(actual())>=90. else ('CONTINUOUS_CONTACT_MILESTONE_SUCCESS' if milestone else 'FIXED_BASE_CONTROL_COMPLETE')
 except BaseException as error:
@@ -165,8 +223,8 @@ except BaseException as error:
  base_goal=np.asarray(robot.get_joint_positions())[base_indices].copy();base_velocity=np.zeros(2);qvelocity=np.zeros(6);compensate=False;base_motion=False
 world.pause()
 try:
- export_raw_records('observations',rows);export_raw_records('physics_steps',native.physics_steps);note('events.json',telemetry_events)
- result={'classification':'KNOWN_MODEL_DIAGNOSTIC_CONTINUOUS_CONTACT','status':status,'continuous_contact_milestone_PASS':milestone,'final_angle_deg':float(np.rad2deg(actual())),'maximum_angle_deg':max_state,'initial_grasp':initial_grasp,'release_count':0,'regrasps':0,'physical_base_moves':len(adjustments),'angle_before_base_deg':first_hold_angle,'angle_after_base_deg':after_motion_angle,'adjustments':adjustments,'peak_pad_load_n':max((max(s['forces_n'].values()) for s in rows),default=0),'minimum_joint_margin_rad':min((s['margin_rad'] for s in rows),default=None),'max_relative_slip_m':max((s['relative_translation_slip_m'] for s in rows),default=None),'simulation_s':tick*dt,'wall_s':time.perf_counter()-_profile_entry,'physics_steps':len(native.physics_steps),'manual_continuations':manual_continuations,'continuation_stop_reason':continuation_stop_reason,'compensation_target':'native moving-body feedback times acquired handle-relative TCP transform','scene_preserved':True,'issues':telemetry_issues,'base_actuation':'physical driven XY carriage; not wheeled mobile dynamics','runtime_base_pose_teleport':False,'object_actuation':False,'attachments':False,'pid':os.getpid()}
+ export_raw_records('observations',rows);export_raw_records('physics_steps',native.physics_steps);note('events.json',telemetry_events);note('coordination_events.json',coord_events)
+ result={'classification':'KNOWN_MODEL_DIAGNOSTIC_CONTINUOUS_CONTACT','status':status,'continuous_contact_milestone_PASS':milestone,'final_angle_deg':float(np.rad2deg(actual())),'maximum_angle_deg':max_state,'initial_grasp':initial_grasp,'release_count':0,'regrasps':0,'physical_base_moves':len(adjustments),'angle_before_base_deg':first_hold_angle,'angle_after_base_deg':after_motion_angle,'adjustments':adjustments,'peak_pad_load_n':max((max(s['forces_n'].values()) for s in rows),default=0),'minimum_joint_margin_rad':min((s['margin_rad'] for s in rows),default=None),'max_relative_slip_m':max((s['relative_translation_slip_m'] for s in rows),default=None),'simulation_s':tick*dt,'wall_s':time.perf_counter()-_profile_entry,'physics_steps':len(native.physics_steps),'manual_continuations':manual_continuations,'continuation_stop_reason':continuation_stop_reason,'compensation_target':'smooth velocity-limited measured-body feedback with one fixed physical-grasp relative transform; synchronized base/arm clock','scene_preserved':True,'issues':telemetry_issues,'base_actuation':'physical driven XY carriage; not wheeled mobile dynamics','runtime_base_pose_teleport':False,'object_actuation':False,'attachments':False,'pid':os.getpid()}
  note('report.json',result);note('sensor_metadata_existing_mapping.json',sensor_metadata);print('CONTINUOUS_RESULT',json.dumps(result),flush=True)
 except Exception as error:diagnostic_issue('export',error)
 try:video.stdin.close();video.wait(timeout=30)
