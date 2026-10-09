@@ -13,7 +13,7 @@ from isaacsim.core.prims import RigidPrim
 from interactive_twin_recovery.mobile import scene_at
 base_indices=[names.index('mobile_x'),names.index('mobile_y')]
 base_view=RigidPrim(prim_paths_expr=scene['mobile_base_body_path'],name='continuous_base_feedback');base_view.initialize()
-base_goal=np.zeros(2);base_command_previous=np.zeros(2);base_velocity=np.zeros(2);base_motion=False;compensate=False;comp_target=None;comp_relative=None;comp_bias=None;comp_seed=None;base_records=[];plans=[];adjustments=[];grasp_relative=None;coord_speed=0.;coord_twist=np.zeros(6);coord_scale=1.;coord_blocked=False;coord_mode="HOLD";coord_goal=0.;desired_tcp=None;coord_events=[];opening_index=0;coord_angle_ref=0.
+base_goal=np.zeros(2);base_command_previous=np.zeros(2);base_velocity=np.zeros(2);base_motion=False;compensate=False;comp_target=None;comp_relative=None;comp_bias=None;comp_seed=None;base_records=[];plans=[];adjustments=[];grasp_relative=None;coord_speed=0.;coord_twist=np.zeros(6);coord_scale=1.;coord_blocked=False;coord_mode="HOLD";coord_goal=0.;desired_tcp=None;coord_events=[];opening_index=0;coord_angle_ref=0.;coord_station_boundary=False
 original_gains=controller.set_gains
 def stage_gains(*args,**kwargs):
  # Arm/jaw entries unchanged; supply gains solely for the new physical base DOFs.
@@ -74,7 +74,8 @@ def step():
    # Gentle forward drive survives static compliance; lag slows the clock
    # continuously rather than making progress a required execution gate.
    rate=.0015/max(radius,1e-12)/(1.+lag/np.deg2rad(.05))
-   coord_angle_ref=min(coord_goal+np.deg2rad(.5),max(coord_angle_ref+rate*dt,theta+np.deg2rad(.05)))
+   reference_end=coord_goal if coord_station_boundary else coord_goal+np.deg2rad(.5)
+   coord_angle_ref=min(reference_end,max(coord_angle_ref+rate*dt,theta+np.deg2rad(.05)))
   else:coord_angle_ref=max(coord_angle_ref,theta)
   # Hold reference when physical progress lags or rebounds. Never chase a
   # backward pose update with the opening drive; no lag-triggered abort.
@@ -136,14 +137,16 @@ def available(goal,station=None,E=None,theta=None,seed=None,bias=None):
   path.append(dict(state=float(state),q=q.tolist(),T=target.tolist(),margin=model.margin(q+bias)));seed=q
  return path,bias,reason
 
-def open_to(goal):
- global phase,command_state,planned_reference,qvelocity,collision,compensate,comp_target,comp_bias,comp_seed,coord_mode,coord_goal,coord_speed,coord_twist,opening_index,coord_angle_ref
+def open_to(goal,station_boundary=False):
+ global phase,command_state,planned_reference,qvelocity,collision,compensate,comp_target,comp_bias,comp_seed,coord_mode,coord_goal,coord_speed,coord_twist,opening_index,coord_angle_ref,coord_station_boundary
+ coord_station_boundary=station_boundary
  coord_angle_ref=actual();coord_goal=min(float(goal),np.deg2rad(90.));coord_mode='OPEN';coord_speed=0.;coord_twist=np.zeros(6);comp_target=tcp().copy();comp_bias=qtarget[arm]-np.asarray(robot.get_joint_positions())[arm];comp_seed=np.asarray(robot.get_joint_positions())[arm].copy();compensate=True;opening_index+=1
  collision=refresh_same_base_collision(base_scene,export,initial_base,base)
  begin=tick;reason=None
  while actual()<coord_goal:
   phase='CONTINUOUS_OPEN';command_state=min(coord_goal+np.deg2rad(.05),actual()+np.deg2rad(.05));step()
   if coord_blocked:reason='NO_IK';break
+  if coord_station_boundary and coord_angle_ref>=coord_goal:reason='PLANNED_STATION_REFERENCE_BOUNDARY';break
  coord_mode='HOLD';phase='GRASP_HOLD';compensate=False;qvelocity=np.zeros(6);hold(.3)
  note('opening_execution_%02d.json'%opening_index,{'start_s':begin*dt,'end_s':tick*dt,'goal_rad':coord_goal,'actual_rad':actual(),'blocker':reason,'reference':'monotonic lag-slowed measured-progress drive; fixed acquired body-relative grasp; smooth Cartesian clock'})
  return reason
@@ -179,7 +182,7 @@ def coordinated_motion(candidate):
  planned_reference=comp_target.copy();base_motion=True;compensate=True;begin=tick;previous=start.copy()
  # Start with 1 mm, then 5 mm, then the full 30 mm. Smooth starts/stops.
  for length in (.001,.005,.03):
-  endpoint=start+delta*(length/.03);d=endpoint-previous;duration=max(4.,1.5*np.linalg.norm(d)/.0003)
+  endpoint=start+delta*(length/.03);d=endpoint-previous;duration=max(4.,1.5*np.linalg.norm(d)/.0015)
   phase='BASE_COMPENSATED_%.0fMM'%(length*1000)
   elapsed=0.
   while elapsed<duration:
@@ -216,7 +219,7 @@ try:
    # The selected station already has a planned reachable interval. Use its
    # endpoint to relocate before the physical joint-margin stop, not as failure.
    station_goal=min(90.,adjustments[-1]['candidate']['reachable_deg']) if adjustments else 90.
-   blocker=open_to(np.deg2rad(station_goal))
+   blocker=open_to(np.deg2rad(station_goal),station_boundary=station_goal<90.)
    if np.rad2deg(actual())>=90.:break
    if job.get('continuous_contact',{}).get('fixed_base_control',False):break
    candidate=plan_base_motion()
