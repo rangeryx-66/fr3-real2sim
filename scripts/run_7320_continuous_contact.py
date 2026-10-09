@@ -213,7 +213,10 @@ try:
  note('milestone.json',{'continuous_contact_PASS':milestone,'angle_before_base_deg':first_hold_angle,'angle_after_base_deg':after_motion_angle,'angle_after_continuation_deg':float(np.rad2deg(actual())),'regrasps':0,'release_count':0})
  if job.get('continuous_contact',{}).get('extend',True):
   while True:
-   blocker=open_to(np.deg2rad(90.3))
+   # The selected station already has a planned reachable interval. Use its
+   # endpoint to relocate before the physical joint-margin stop, not as failure.
+   station_goal=min(90.,adjustments[-1]['candidate']['reachable_deg']) if adjustments else 90.
+   blocker=open_to(np.deg2rad(station_goal))
    if np.rad2deg(actual())>=90.:break
    if job.get('continuous_contact',{}).get('fixed_base_control',False):break
    candidate=plan_base_motion()
