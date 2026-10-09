@@ -69,7 +69,12 @@ def step():
  if compensate:
   theta=actual();body=moving()
   if coord_mode=='OPEN':
-   coord_angle_ref=max(coord_angle_ref,min(coord_goal+np.deg2rad(.05),theta+np.deg2rad(.05)))
+   lag=max(0.,coord_angle_ref-theta)
+   radius=float(np.linalg.norm(tcp()[:3,3]-body_at(theta)[:3,3]))
+   # Gentle forward drive survives static compliance; lag slows the clock
+   # continuously rather than making progress a required execution gate.
+   rate=.0015/max(radius,1e-12)/(1.+lag/np.deg2rad(.05))
+   coord_angle_ref=min(coord_goal+np.deg2rad(.5),max(coord_angle_ref+rate*dt,theta+np.deg2rad(.05)))
   else:coord_angle_ref=max(coord_angle_ref,theta)
   # Hold reference when physical progress lags or rebounds. Never chase a
   # backward pose update with the opening drive; no lag-triggered abort.
@@ -140,7 +145,7 @@ def open_to(goal):
   phase='CONTINUOUS_OPEN';command_state=min(coord_goal+np.deg2rad(.05),actual()+np.deg2rad(.05));step()
   if coord_blocked:reason='NO_IK';break
  coord_mode='HOLD';phase='GRASP_HOLD';hold(.3);compensate=False;qvelocity=np.zeros(6)
- note('opening_execution_%02d.json'%opening_index,{'start_s':begin*dt,'end_s':tick*dt,'goal_rad':coord_goal,'actual_rad':actual(),'blocker':reason,'reference':'measured progress plus .05deg drive; fixed acquired body-relative grasp; smooth Cartesian clock'})
+ note('opening_execution_%02d.json'%opening_index,{'start_s':begin*dt,'end_s':tick*dt,'goal_rad':coord_goal,'actual_rad':actual(),'blocker':reason,'reference':'monotonic lag-slowed measured-progress drive; fixed acquired body-relative grasp; smooth Cartesian clock'})
  return reason
 
 def plan_base_motion():
