@@ -190,7 +190,7 @@ def coordinated_motion(candidate):
    base_goal=previous+scalar*d;base_velocity=rate*d;step();elapsed+=dt*coord_scale
    if coord_blocked:
     base_velocity=np.zeros(2);compensate=False;base_motion=False;return False
-  base_velocity=np.zeros(2);phase='BASE_COMPENSATED_HOLD';hold(.5);previous=endpoint.copy()
+  base_velocity=np.zeros(2);phase='BASE_COMPENSATED_HOLD';compensate=False;qvelocity=np.zeros(6);hold(.5);compensate=True;comp_target=tcp().copy();comp_seed=np.asarray(robot.get_joint_positions())[arm].copy();comp_bias=qtarget[arm]-comp_seed;coord_angle_ref=actual();coord_twist=np.zeros(6);coord_speed=0.;previous=endpoint.copy()
  compen_end=feedback_base();compensate=False;base_motion=False;qvelocity=np.zeros(6)
  adjustments.append({'start_t_s':begin*dt,'end_t_s':tick*dt,'angle_before_deg':float(np.rad2deg(theta)),'angle_after_deg':float(np.rad2deg(actual())),'start_base':origin.tolist(),'end_base':compen_end,'command_delta_xy_m':delta.tolist(),'actual_delta_xy_m':(np.asarray(compen_end[:2])-origin[:2]).tolist(),'candidate':candidate,'release':False,'regrasp':False})
  note('coordinated_adjustments.json',adjustments)
