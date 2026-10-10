@@ -8,7 +8,7 @@ spec=json.loads(Path(sys.argv[sys.argv.index('--job')+1]).read_text());baseline=
 exec(compile(setup,str(baseline)+'::frozen_setup','exec'),globals())
 solver=PinkIK(ROOT/'config/piper.urdf',model.home);model.ik=solver.solve
 # Only the IK source changes. Contact, jaw, plant and guards remain frozen.
-original_step=step;grasp_relative=None;ref=None;twist=np.zeros(6);goal=np.deg2rad(90.);angle_reference=0.;bias=None;seed=None;opening=False
+original_step=step;grasp_relative=None;ref=None;twist=np.zeros(6);goal=np.deg2rad(90.);motion_scale=float(spec.get('pink_motion_scale',1.));angle_reference=0.;bias=None;seed=None;opening=False
 
 def body_at(theta):
  j=model.manifest['joint_name'];link=model.manifest['moving_link'];F=model.asset_T@model.asset.root_to_link(link,{j:float(theta)});F0=model.asset_T@model.asset.root_to_link(link,{j:0.})
@@ -20,14 +20,15 @@ def step():
  global ref,twist,angle_reference,qvelocity,seed,planned_reference,command_state
  if opening:
   theta=actual();lag=max(0.,angle_reference-theta);radius=max(1e-12,float(np.linalg.norm(tcp()[:3,3]-body_at(theta)[:3,3])))
-  rate=.0015/radius/(1+lag/np.deg2rad(.05));angle_reference=min(goal+np.deg2rad(.5),max(theta+np.deg2rad(.05),angle_reference+rate*dt))
+  rate=.0015*motion_scale/radius/(1+lag/np.deg2rad(.05));angle_reference=min(goal+np.deg2rad(.5),max(theta+np.deg2rad(.05),angle_reference+rate*dt))
   desired=body_at(angle_reference)@np.linalg.inv(body_at(theta))@moving()@grasp_relative
-  dp=desired[:3,3]-ref[:3,3];rv=Rotation.from_matrix(desired[:3,:3]@ref[:3,:3].T).as_rotvec();error=np.r_[dp,rv*radius];distance=np.linalg.norm(error);acc=.002
-  wanted=error/max(distance,1e-12)*min(.0015,np.sqrt(2*acc*distance));change=wanted-twist;twist+=change*min(1.,acc*dt/max(np.linalg.norm(change),1e-12));inc=twist*dt
+  dp=desired[:3,3]-ref[:3,3];rv=Rotation.from_matrix(desired[:3,:3]@ref[:3,:3].T).as_rotvec();error=np.r_[dp,rv*radius];distance=np.linalg.norm(error);acc=.002*motion_scale**2
+  wanted=error/max(distance,1e-12)*min(.0015*motion_scale,np.sqrt(2*acc*distance));change=wanted-twist;twist+=change*min(1.,acc*dt/max(np.linalg.norm(change),1e-12));inc=twist*dt
   if np.dot(inc,error)>0 and np.linalg.norm(inc)>distance:inc=error.copy();twist=inc/dt
   target=ref.copy();target[:3,3]+=inc[:3];target[:3,:3]=Rotation.from_rotvec(inc[3:]/radius).as_matrix()@ref[:3,:3]
   q=solver.velocity_step(target,base,seed,dt)
   if q is None:raise RuntimeError('FIXED_BASE_PINK_REACHABLE_INTERVAL_END')
+  q=seed+motion_scale*(q-seed)
   command=q+bias
   if model.margin(command)<=.05:raise RuntimeError('EXISTING_COMMAND_JOINT_MARGIN')
   delta=command-qtarget[arm];fraction=min(1.,float(np.min((vel/3)/np.maximum(np.abs(delta)/dt,1e-12))))
@@ -53,7 +54,7 @@ for label,data in [('observations',rows),('physics_steps',native.physics_steps)]
  except Exception as error:diagnostic_issue(label,error)
 try:video.stdin.close();video.wait(timeout=30)
 except Exception as error:diagnostic_issue('video',error)
-result={'classification':'KNOWN_MODEL_DIAGNOSTIC_PINOCCHIO_PINK_FIXED_BASE','success':success,'status':status,'max_actual_angle_deg':max_state,'final_actual_angle_deg':float(np.rad2deg(actual())),'base_fixed':list(base),'initial_grasp':initial_grasp,'base_moves_after_grasp':0,'regrasps':0,'intentional_releases':0,'simulation_s':tick*dt,'wall_s':time.perf_counter()-_profile_entry,'peak_pad_load_n':max((max(r['forces_n'].values()) for r in rows),default=0),'minimum_joint_margin_rad':min((r['margin_rad'] for r in rows),default=None),'physics_steps':len(native.physics_steps),'IK':'Pinocchio3.9.0/Pink3.3.0/DAQP','solver_calls':solver.calls,'last_solver_issue':solver.last_error,'scene_preserved':True,'pid':os.getpid(),'preposition':'normal closed setup initialized at selected station; no base actuation during grasp','GT_dependencies':['known first-grasp template','hinge geometry','actual moving-body and articulation feedback','collision model']}
+result={'classification':'KNOWN_MODEL_DIAGNOSTIC_PINOCCHIO_PINK_FIXED_BASE','success':success,'status':status,'max_actual_angle_deg':max_state,'final_actual_angle_deg':float(np.rad2deg(actual())),'base_fixed':list(base),'initial_grasp':initial_grasp,'base_moves_after_grasp':0,'regrasps':0,'intentional_releases':0,'simulation_s':tick*dt,'wall_s':time.perf_counter()-_profile_entry,'peak_pad_load_n':max((max(r['forces_n'].values()) for r in rows),default=0),'minimum_joint_margin_rad':min((r['margin_rad'] for r in rows),default=None),'physics_steps':len(native.physics_steps),'IK':'Pinocchio3.9.0/Pink3.3.0/DAQP','motion_scale':motion_scale,'solver_calls':solver.calls,'last_solver_issue':solver.last_error,'scene_preserved':True,'pid':os.getpid(),'preposition':'normal closed setup initialized at selected station; no base actuation during grasp','GT_dependencies':['known first-grasp template','hinge geometry','actual moving-body and articulation feedback','collision model']}
 diagnostic_write(a.output/'report.json',json.dumps(result,indent=2));diagnostic_write(a.output/'events.json',json.dumps(telemetry_events,indent=2));print('PHYSICAL_RESULT',json.dumps(result),flush=True)
 while app.is_running():
  if (a.output/'close_completed_scene').exists():app.close();break
