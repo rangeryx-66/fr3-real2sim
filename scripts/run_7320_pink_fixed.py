@@ -26,7 +26,7 @@ def step():
   wanted=error/max(distance,1e-12)*min(.0015,np.sqrt(2*acc*distance));change=wanted-twist;twist+=change*min(1.,acc*dt/max(np.linalg.norm(change),1e-12));inc=twist*dt
   if np.dot(inc,error)>0 and np.linalg.norm(inc)>distance:inc=error.copy();twist=inc/dt
   target=ref.copy();target[:3,3]+=inc[:3];target[:3,:3]=Rotation.from_rotvec(inc[3:]/radius).as_matrix()@ref[:3,:3]
-  q=solver.solve(target,base,seed)
+  q=solver.velocity_step(target,base,seed,dt)
   if q is None:raise RuntimeError('FIXED_BASE_PINK_REACHABLE_INTERVAL_END')
   command=q+bias
   if model.margin(command)<=.05:raise RuntimeError('EXISTING_COMMAND_JOINT_MARGIN')

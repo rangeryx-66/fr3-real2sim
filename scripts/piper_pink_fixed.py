@@ -42,6 +42,14 @@ class PinkIK:
    if pe<.0008 and re<.004:return conf.q.copy() # inherited IK feasibility tolerances
   return None
 
+ def velocity_step(self,target,base,q,dt):
+  self.calls+=1;B=transform(base[:3],[0,0,np.deg2rad(base[3])]);goal=np.linalg.inv(B)@target
+  self.task.set_target(pin.SE3(goal[:3,:3],goal[:3,3]));self.posture.set_target(q)
+  conf=pink.Configuration(self.robot,self.robot.createData(),np.asarray(q))
+  try:
+   v=pink.solve_ik(conf,[self.task,self.posture],dt,solver='daqp',safety_break=False);conf.integrate_inplace(v,dt);return conf.q.copy()
+  except Exception as error:self.last_error=repr(error);return None
+
 def search(job,output):
  from piper_mobile_demo.model import Model
  from interactive_twin_recovery.mobile import scene_at
