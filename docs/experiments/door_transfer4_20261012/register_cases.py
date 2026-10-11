@@ -1,0 +1,13 @@
+from pathlib import Path
+import json,hashlib,datetime
+from PIL import Image,ImageDraw
+ROOT=Path('/data1/home/rangeryx/fr3_real2sim_known_whole_20261007');prior=ROOT/'results/benchmarkA_30deg_20261011';out=ROOT/'results/door_transfer4_20261012';out.mkdir(exist_ok=True)
+ranking=json.loads((prior/'DISCOVERY_GEOMETRY_RANKING.json').read_text())['ranking'];chosen=[('45415','original-40','positive frozen regression / bottom horizontal bow'),('45176','original-46','known transmission failure / vertical curved bow'),('45134','original-32','unused wide door / long horizontal protruding bar'),('45443','original-38','unused side-hinged door / vertical cylindrical bar')];items=[];tiles=[]
+for i,mesh,why in chosen:
+ asset=prior/'discovery_assets'/i;manifest=json.loads((asset/'manifest.json').read_text());selection=next(x for x in ranking if x['asset_id']==i and x['mesh']==mesh);picture=prior/'visual_inspection'/i/'oblique_closed.png';items.append({'asset_id':i,'oracle_handle_mesh':mesh,'role_and_geometric_selection':why,'selection_before_new_planning_or_physics':True,'manifest_sha256':hashlib.sha256((asset/'manifest.json').read_bytes()).hexdigest(),'image_sha256':hashlib.sha256(picture.read_bytes()).hexdigest(),'asset_root':str(asset),'authored_range':manifest['source_joint_limits_rad'],'source_joint_axis':manifest['source_joint_axis'],'prepared_height_m_unchanged':manifest['prepared_height_m'],'selection':selection,'physical_attempt_cap':1});img=Image.open(picture).convert('RGB');img.thumbnail((640,480));tile=Image.new('RGB',(640,530),'white');tile.paste(img,(0,40));ImageDraw.Draw(tile).text((10,10),i+' / '+mesh+' / '+why,fill='black');tiles.append(tile)
+reg={'classification':'ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT','registered_shanghai':datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8))).isoformat(),'asset_ids':[x[0] for x in chosen],'objects':items,'maximum_physical_episodes':4,'one_attempt_each_no_replacement':True,'target_actual_deg':30.,'base_fixed_after_grasp':True,'intentional_releases':0,'regrasps':0,'shared_local_corrections_maximum':1,'no_tuning_between_cases':True,'planning_failures_retained':True,'no_new_physical_results_at_registration':True,'new_assets_not_in_previous_registered_benchmarks':all(i not in json.loads((prior/'REGISTERED_OBJECTS.json').read_text())['asset_ids'] for i in ['45134','45443'])}
+p=out/'REGISTERED_CASES.json'
+with p.open('x') as f:json.dump(reg,f,indent=2)
+sheet=Image.new('RGB',(1280,1060),'white')
+for index,tile in enumerate(tiles):sheet.paste(tile,((index%2)*640,(index//2)*530))
+sheet.save(out/'REGISTERED_CONTACT_SHEET.png');print(reg['asset_ids'])
