@@ -1,0 +1,15 @@
+# 45415 closure fix verification — one physical attempt
+
+Starting evidence and code: commit `93d6706`. Label: **ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT**. Exact copied whole plan SHA256 `97ab7f32022c2d119845b504afa7f78070701911903a0635135087727d02ee11`; grasp plan `0b9d7173369db4f7c61c68dc2724a7d741d6f4f596039286e3fa01fe47da2b22`. Intended handle: `original-40`. Base, grasp pose, approach, IK branch, gains, effort, collision geometry, physics and opening controller stay unchanged.
+
+The physical owner launches the explicit absolute `scripts/run_oracle_door_closure_continuity.py` path. It does not transform another owner's filename. Before Isaac starts, that actor imports the explicit `active_closure.py`, checks the pinned source hashes, and saves actual path/hash/argv. After the unchanged scene setup, its closure alias points directly at that loaded class. A passive update observer records command/measured aperture and actual unilateral repair calls.
+
+The only control change is `self.opening = min(self.opening, measured_opening)` in unilateral centering. The active class differs from the original at that one line only. The 24,000 saved-input replay produced 188 original versus 0 fixed reopenings; this is not a physical result.
+
+Owner requests use `STOP_AND_EXPORT` checked between existing steps. SIGINT/SIGTERM handlers are explicitly installed after Isaac bootstrap and set a flag; they do not asynchronously destroy the scene. Normal completion, physical protection exception, and owner stop all reach the same `finally` pause/export path. The scene remains paused until explicit cleanup after export/report. No sensor-quality stop condition is added.
+
+Export checks used archived fixture buffers: 2,048 observations, 2,048 native records and 2,048 command records. Pure cooperation-marker and empty-Isaac SIGINT tests restored all values/types/float bits, sealed video and closed their processes. Empty Isaac had no PiPER/object and executed no physics steps. The first comparator checked pickle object-reference identity; this was corrected to compare exact data values because cross-chunk string aliasing is not raw sensor information. Its diagnostic records are retained separately.
+
+The 100.785 mm/s old pre-contact transient is a real position/velocity-feedforward equilibrium reset. The archived 5.383–5.458 s window had zero pad loads, 0.557 mm TCP excursion, no original-model collisions in sampled/interpolated actual q, and minimum cooked gripper/object clearance 28.496 mm. It is retained to isolate the requested aperture change and will be measured separately in the new trial. Existing loaded 5 mm/s protection is unchanged, as are collision/contact and 0.05 rad protections. No broader trajectory certification or new tolerance is imposed.
+
+Exactly one new normal-closed contact episode will approach, close, acquire the original bilateral/FORCE_HOLD confirmation and attempt actual 30.0°. First physical/protection failure ends this attempt with complete evidence; no automatic retry, replan, release or regrasp. The exclusive reservation file prevents accidental duplicate launch.
