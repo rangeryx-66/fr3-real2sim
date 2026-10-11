@@ -29,8 +29,12 @@ def execute_case(case, gpu):
         return code
     (case/'setup_job.json').write_text(json.dumps(job,indent=2))
     setup=case/'setup'
-    print('SETUP_START',case.name,gpu,flush=True)
-    code=run('export_revolute_transfer_scene.py',case/'setup_job.json',setup,'setup')
+    if (setup/'cooked_initial.json').exists() and (setup/'setup_cleanup.json').exists():
+        code=json.loads((setup/'setup_cleanup.json').read_text())['returncode']
+        print('REUSE_READ_ONLY_SETUP_EXPORT',case.name,gpu,flush=True)
+    else:
+        print('SETUP_START',case.name,gpu,flush=True)
+        code=run('export_revolute_transfer_scene.py',case/'setup_job.json',setup,'setup')
     if code!=0 or not (setup/'cooked_initial.json').exists():
         write(case/'planning_failure.json',{'asset_id':case.name,'classification':'KNOWN_MODEL_DIAGNOSTIC',
               'failure_category':'other','failure_reason':'NORMAL_SCENE_SETUP_FAILED','official_physical_attempts':0,
