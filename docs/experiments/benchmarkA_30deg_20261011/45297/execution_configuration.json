@@ -1,0 +1,134 @@
+{
+  "benchmark_goal_rad": 0.5235987755982988,
+  "authored_target_rad": 3.12413936106985,
+  "initial_articulation_rad": 0.0,
+  "plant": {},
+  "timing_experiment": {
+    "speed_scale": 1.0,
+    "shorten_endpoint_holds": true,
+    "chunked_export": true,
+    "reuse_invariant_collision_solids": true,
+    "preserve_approach_timing": true,
+    "contact_phase_original_closure_rate": true,
+    "continuous_hinge_time_law": false
+  },
+  "pink_motion_scale": 1.0,
+  "wrist_experiment": {
+    "force_policy": {
+      "soft_force_n": 2.0,
+      "window_s": 0.05,
+      "sustained_windows": 3,
+      "simulation_emergency_contact_n": 10.0,
+      "emergency_scope": "SIMULATION_ONLY; existing actuator effort ceiling used as conservative reaction proxy, not certified hardware limit",
+      "commanded_gripper_effort_unchanged": true
+    },
+    "mobile_scan": {
+      "standoff_m": [
+        0.25,
+        0.35,
+        0.45,
+        0.55
+      ],
+      "azimuth_offsets_deg": [
+        -60,
+        -30,
+        0,
+        30,
+        60
+      ],
+      "yaw_offsets_deg": [
+        -30,
+        0,
+        30
+      ],
+      "maximum_base_candidates_per_view": 60,
+      "full_path_base_budget": 6,
+      "search_wall_s": 120,
+      "arm_rrt_iterations": 1500,
+      "home_path_attempts": 3,
+      "handle_observe_standoff_m": [
+        0.22,
+        0.3,
+        0.4
+      ]
+    }
+  },
+  "camera_calibration": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/configs/wrist_camera_d435_clear_mount_sim.json",
+  "grasp_geometry_candidates": [
+    {
+      "asset_id": "45297",
+      "asset_root": "results/benchmarkA_30deg_20261011/discovery_assets/45297",
+      "joint_name": "joint_revolute_l_0_abstract_0_1",
+      "joint_type": "revolute",
+      "moving_link": "abstract_0_1",
+      "handle_link": "l_1",
+      "mesh": "original-27",
+      "panel_mesh": "original-28",
+      "axis_root": [
+        -3.248419804549297e-10,
+        -0.9999999999999999,
+        1.530063479991781e-08
+      ],
+      "outward_normal_root": [
+        -0.021225838007521942,
+        1.5304082709941216e-08,
+        0.9997747065218636
+      ],
+      "dimensions_m": [
+        0.23083373283842082,
+        0.012421143527194256,
+        0.012421147040259373
+      ],
+      "sections": [
+        {
+          "opposing_patch_areas_m2": [
+            0.0,
+            0.0
+          ],
+          "fraction": -0.3,
+          "anchor_root_m": [
+            0.6852660687885203,
+            -0.08225941157448462,
+            0.19836236631456935
+          ],
+          "bar_depth_m": 0.012356446,
+          "visual_rear_gap_m": 0.024282733,
+          "collision_rear_gap_m": 0.024282733
+        },
+        {
+          "opposing_patch_areas_m2": [
+            0.0,
+            0.0
+          ],
+          "fraction": 0,
+          "anchor_root_m": [
+            0.6852660687872507,
+            -0.15150953142601087,
+            0.19836236637436544
+          ],
+          "bar_depth_m": 0.012356446,
+          "visual_rear_gap_m": 0.024282733,
+          "collision_rear_gap_m": 0.024282733
+        },
+        {
+          "opposing_patch_areas_m2": [
+            0.0,
+            0.0
+          ],
+          "fraction": 0.3,
+          "anchor_root_m": [
+            0.6852660687859812,
+            -0.22075965127753713,
+            0.19836236643416152
+          ],
+          "bar_depth_m": 0.012356446,
+          "visual_rear_gap_m": 0.024282733,
+          "collision_rear_gap_m": 0.024282733
+        }
+      ],
+      "minimum_collision_rear_gap_m": 0.024282733,
+      "screen_rejections": [],
+      "score": 2.5782732999999998
+    }
+  ]
+}
