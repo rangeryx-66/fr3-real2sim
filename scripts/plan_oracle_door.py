@@ -17,7 +17,7 @@ from piper_mobile_demo.owned_scene import intersects
 def closing_quality(model,sc,T,base,width):
     """Audit the native solids throughout closure using the existing pad region."""
     audit=[];first={};root_contacts=0;other=None
-    for w in np.linspace(.1,max(0.,width-.002),25):
+    for w in np.linspace(.1,0.,41):
         P=model.poses(model.home,base,width=float(w));D=T@np.linalg.inv(P['tcp_link'])
         P={n:D@X for n,X in P.items()}
         for r in sc.robot:
@@ -98,9 +98,9 @@ def plan(job,output,wall_s=600):
         if bi%5==0:print('SEARCH',model.manifest['asset_id'],bi,len(audit),time.time()-started,flush=True)
     # Contact quality first, then achieved interval and worst margin. No larger
     # safety margin is imposed; the original 0.05 rad bound remains the only one.
-    ranked.sort(key=lambda r:(r[0]['contact_rank'],r[0]['reached_rad'],r[0]['min_arc_margin_rad']),reverse=True)
+    ranked.sort(key=lambda r:(r[0]['contact_rank']>=0.,r[0]['reached_rad'],r[0]['contact_rank'],r[0]['min_arc_margin_rad']),reverse=True)
     best=None
-    for e,path,g in ranked[:18]:
+    for e,path,g in ranked[:24]:
         if time.time()-started>wall_s:break
         base=e['base'];T=g['T'];sc=physical_scene_class(ROOT)(at_base(export,initial,base),model,allowed)
         fine,reason=arc(T,base,sc,np.array(path[0]['q']),spacing=1)
@@ -122,7 +122,7 @@ def plan(job,output,wall_s=600):
         if len(approach)!=21:continue
         min_margin=min([p['margin_rad'] for p in fine]+[model.margin(np.array(q)) for q in approach+free])
         candidate={'classification':'ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT','asset_id':model.manifest['asset_id'],'base':base,'T_grasp':T.tolist(),'T':T.tolist(),'preplan':free,'approach':approach,'path':fine,'goal_state':goal,'planned_reached_state':fine[-1]['state'],'planned_blocker':reason,'end_retreat':None,'grasp_geometry_selection':selection,'allowed_authored_colliders':allowed,'contact_geometry_audit':g['contact'],'section_fraction':g['section'],'insertion_m':g['insertion_m'],'minimum_approach_arc_margin_rad':min_margin,'base_fixed_after_grasp':True,'saved_GT_grasp_template_used':False}
-        key=(g['contact']['rank'],fine[-1]['state'],min_margin)
+        key=(g['contact']['rank']>=0.,fine[-1]['state'],g['contact']['rank'],min_margin)
         if best is None or key>best[0]:best=(key,candidate)
         print('APPROACH_OK',model.manifest['asset_id'],key,base,flush=True)
     (output/'candidate_audit.json').write_text(json.dumps(audit,indent=2))

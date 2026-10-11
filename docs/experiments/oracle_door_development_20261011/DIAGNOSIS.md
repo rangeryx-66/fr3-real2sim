@@ -13,3 +13,9 @@ The contact impulse correlation in 45176 does not establish a unique causal dire
 A convex-hull approximation can fill a bow handle's rear gap. The offline audit must report visual-versus-cooked geometry and actual closing contacts; geometry will not be removed or silently replaced. Failures caused by this representation will remain explicit blockers.
 
 Scope: three initial development trials, at most one additional evidence-backed shared-fix retest, maximum four. No old benchmark reinterpretation as a new success, no individual pose tuning, no regrasp, fixed base after normal setup.
+
+## Native collider audit and planning implementation
+
+The blue visual/orange native hull comparison confirms that the 45176 and 45203 bow handles have their rear cavities filled by the existing per-mesh convex approximation. The supplied meshes were not edited. Native and visual world bounds agree within sub-micrometre import error. Closing width must be swept to zero: the full mesh width includes mounting/support geometry and cannot substitute for the local bar width. The new planner uses that sweep and the unchanged distal-contact definition only for candidate ranking.
+
+Candidate ordering considers original contact-region risk, achieved opening interval, pad contact estimate and minimum joint margin over both approach and opening. It no longer returns the first nominal 30-degree endpoint. Offline source-to-scene base transform is read from the immutable cooked export, rather than a source report subsequently updated to an executed station. Runtime still exports the actual new scene and uses the unchanged physical guards.
