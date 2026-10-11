@@ -7,6 +7,7 @@ from pathlib import Path
 
 shared=Path(__file__).with_name('run_revolute10_fixed.py')
 code=shared.read_text()
+code=code.replace('AUTHORED_TARGET_REACHED_SINGLE_GRASP','BENCHMARK_A_30_DEG_SUCCESS')
 code=code.replace('\napp.close()',"""
 diagnostic_write(a.output/'scene_preserved_after_result.json',json.dumps({
     'pid':os.getpid(),'world_paused':True,'status':status,
