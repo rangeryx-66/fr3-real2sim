@@ -1,0 +1,19 @@
+"""Audit frozen inputs, close-process evidence and preserve all new artifacts."""
+from pathlib import Path
+import json,hashlib,zipfile,psutil,xml.etree.ElementTree as ET
+R=Path('/data1/home/rangeryx/fr3_real2sim_known_whole_20261007');O=R/'results/nero_feasibility_20261012';sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest();expected={}
+for p in [R/'results/oracle_door_development_20261011/FROZEN_BEFORE.json',R/'results/benchmarkA_30deg_20261011/FROZEN_BASELINES_AND_OLD_BENCHMARK_BEFORE.json',R/'results/door_transfer4_20261012/FROZEN_INPUT_HASHES.json']:expected.update(json.loads(p.read_text()))
+expected.update(json.loads((R/'results/cross_robot_20261012/STUDY_SOURCE_FREEZE.json').read_text())['hashes']);changes=[p for p,h in expected.items() if not Path(p).is_file() or sha(p)!=h];oldaudits=[]
+for name in ['door_transfer4_20261012','cross_robot_20261012']:
+ old=R/'results'/name;m=json.loads((old/'EVIDENCE_SHA256.json').read_text());oldaudits.append({'old_results':name,'files':len(m),'changes':[p for p,h in m.items() if sha(old/p)!=h]})
+owned=[]
+for p in psutil.process_iter(['pid','cmdline']):
+ cmd=p.info['cmdline'] or []
+ if any(x in [str(R/'scripts/probe_nero_integration.py'),str(R/'scripts/plan_nero_doors.py'),'/tmp/nero_plan_owner.py','/tmp/nero_collision_audit.py'] for x in cmd):owned.append(p.info)
+sourcefiles=[R/'scripts'/n for n in ['nero_actuator.py','nero_door_adapter.py','plan_nero_doors.py','probe_nero_integration.py']];sourcefiles += [O/n for n in ['NERO_MODEL.json','nero_kinematic.urdf','nero_sim.urdf','nero_dynamics_coordinates.urdf','VERIFIED_COLLISION_SEMANTICS.json','GRIPPER_COMPATIBILITY.json']];(O/'SOURCE_CONFIG_HASHES.json').write_text(json.dumps({str(p):sha(p) for p in sourcefiles},indent=2))
+# Reconstruct the pre-TCP-convention audit input and verify its recorded hash;
+# arm meshes/transforms are unchanged by the TCP convention change.
+p=O/'WRIST_AUDIT_INPUT.urdf';root=ET.parse(O/'nero_kinematic.urdf').getroot();root.find("joint[@name='tcp_joint']/origin").set('rpy','0 0 0');ET.indent(root);ET.ElementTree(root).write(p,encoding='utf-8',xml_declaration=True);recorded=json.loads((O/'WRIST_COLLISION_AUDIT.json').read_text())['URDF_sha256'];home={'home_q':json.loads((O/'NERO_MODEL.json').read_text())['home_q'],'source':'4b73580 simulation start configuration; not manufacturer calibrated servo ready posture','legacy_audit_label_official_home':'means official model at this chosen simulation posture, not a manufacturer-prescribed home'};(O/'HOME_CONTEXT.json').write_text(json.dumps(home,indent=2));audit={'reference_commit':'4b73580','frozen_files_checked':len(expected),'frozen_changes':changes,'old_evidence_audits':oldaudits,'owned_processes_still_running':owned,'closed_start_door_contact_episodes':0,'one_physical_door_episode_not_consumed':True,'robot_only_valid_probe_physics_steps':json.loads((O/'integration_probe/PROBE_REPORT.json').read_text())['physics_steps'],'initial_API_failure_physics_steps':0,'no_gain_tuning_or_additional_simulation_after_failed_valid_probe':True,'wrist_audit_input_reconstruction_matches_recorded_hash':sha(p)==recorded,'readiness':'NOT_READY','purchase_recommendation':'INCONCLUSIVE'};(O/'FINAL_AUDIT.json').write_text(json.dumps(audit,indent=2));files=[p for p in O.rglob('*') if p.is_file() and not p.is_symlink() and p.name not in ['EVIDENCE_SHA256.json','archive_summary.log']];m={str(p.relative_to(O)):sha(p) for p in files};(O/'EVIDENCE_SHA256.json').write_text(json.dumps(m,indent=2));archive=Path('/tmp/nero_feasibility_20261012.zip')
+with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED,compresslevel=1,allowZip64=True) as z:
+ for p in files+[O/'EVIDENCE_SHA256.json']:z.write(p,str(p.relative_to(O)))
+print(json.dumps({'audit':audit,'archive_bytes':archive.stat().st_size,'archive_sha256':sha(archive),'files':len(files)},indent=2))
