@@ -1,0 +1,801 @@
+{
+  "piper": {
+    "usd": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_robot_20261012/models/piper/isaac_model_only/robot_piper_tool/robot_piper_tool.usda",
+    "arm_joint_name_to_usd_path": {
+      "joint1": "/piper/Physics/joint1",
+      "joint2": "/piper/Physics/joint2",
+      "joint3": "/piper/Physics/joint3",
+      "joint4": "/piper/Physics/joint4",
+      "joint5": "/piper/Physics/joint5",
+      "joint6": "/piper/Physics/joint6"
+    },
+    "joints": [
+      {
+        "name": "joint1",
+        "path": "/piper/Physics/joint1",
+        "body0": [
+          "/piper/Geometry/world/base_link"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1"
+        ],
+        "axis": "Z",
+        "lower_native": -150.0,
+        "upper_native": 150.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint2",
+        "path": "/piper/Physics/joint2",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 180.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint3",
+        "path": "/piper/Physics/joint3",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1/link2"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2/link3"
+        ],
+        "axis": "Z",
+        "lower_native": -170.0,
+        "upper_native": 0.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint4",
+        "path": "/piper/Physics/joint4",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1/link2/link3"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4"
+        ],
+        "axis": "Z",
+        "lower_native": -100.0,
+        "upper_native": 100.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint5",
+        "path": "/piper/Physics/joint5",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5"
+        ],
+        "axis": "Z",
+        "lower_native": -69.99999237060547,
+        "upper_native": 69.99999237060547,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint6",
+        "path": "/piper/Physics/joint6",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6"
+        ],
+        "axis": "Z",
+        "lower_native": -120.0,
+        "upper_native": 120.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "gripper",
+        "path": "/piper/Physics/gripper",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.10000000149011612,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint1",
+        "path": "/piper/Physics/gripper_joint1",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.05000000074505806,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint2",
+        "path": "/piper/Physics/gripper_joint2",
+        "body0": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base"
+        ],
+        "body1": [
+          "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2"
+        ],
+        "axis": "Z",
+        "lower_native": -0.05000000074505806,
+        "upper_native": 0.0,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      }
+    ],
+    "rigid_bodies": [
+      "/piper/Geometry/world/base_link",
+      "/piper/Geometry/world/base_link/link1",
+      "/piper/Geometry/world/base_link/link1/link2",
+      "/piper/Geometry/world/base_link/link1/link2/link3",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2",
+      "/piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link"
+    ],
+    "all_arm_joints_found": true,
+    "dynamic_tensor_order": "not asserted without runtime physics model",
+    "physics_steps_executed": 0,
+    "physical_episodes_consumed": 0,
+    "no_object_scene": true,
+    "import_defaults_not_actuator_validation": true
+  },
+  "nero": {
+    "usd": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_robot_20261012/models/nero/isaac_model_only/robot_piper_tool/robot_piper_tool.usda",
+    "arm_joint_name_to_usd_path": {
+      "joint1": "/nero/Physics/joint1",
+      "joint2": "/nero/Physics/joint2",
+      "joint3": "/nero/Physics/joint3",
+      "joint4": "/nero/Physics/joint4",
+      "joint5": "/nero/Physics/joint5",
+      "joint6": "/nero/Physics/joint6",
+      "joint7": "/nero/Physics/joint7"
+    },
+    "joints": [
+      {
+        "name": "joint1",
+        "path": "/nero/Physics/joint1",
+        "body0": [
+          "/nero/Geometry/world/base_link"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1"
+        ],
+        "axis": "Z",
+        "lower_native": -154.99998474121094,
+        "upper_native": 154.99998474121094,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint2",
+        "path": "/nero/Physics/joint2",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2"
+        ],
+        "axis": "Z",
+        "lower_native": -99.69465637207031,
+        "upper_native": 99.69465637207031,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint3",
+        "path": "/nero/Physics/joint3",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3"
+        ],
+        "axis": "Z",
+        "lower_native": -157.5634002685547,
+        "upper_native": 157.5634002685547,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint4",
+        "path": "/nero/Physics/joint4",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2/link3"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4"
+        ],
+        "axis": "Z",
+        "lower_native": -57.868736267089844,
+        "upper_native": 122.61296844482422,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint5",
+        "path": "/nero/Physics/joint5",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5"
+        ],
+        "axis": "Z",
+        "lower_native": -157.5634002685547,
+        "upper_native": 157.5634002685547,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint6",
+        "path": "/nero/Physics/joint6",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6"
+        ],
+        "axis": "Z",
+        "lower_native": -41.82592010498047,
+        "upper_native": 54.430992126464844,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "joint7",
+        "path": "/nero/Physics/joint7",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7"
+        ],
+        "axis": "Z",
+        "lower_native": -90.0,
+        "upper_native": 90.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 100.0
+      },
+      {
+        "name": "gripper",
+        "path": "/nero/Physics/gripper",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base/gripper_link"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.10000000149011612,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint1",
+        "path": "/nero/Physics/gripper_joint1",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base/gripper_link1"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.05000000074505806,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint2",
+        "path": "/nero/Physics/gripper_joint2",
+        "body0": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base"
+        ],
+        "body1": [
+          "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base/gripper_link2"
+        ],
+        "axis": "Z",
+        "lower_native": -0.05000000074505806,
+        "upper_native": 0.0,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      }
+    ],
+    "rigid_bodies": [
+      "/nero/Geometry/world/base_link",
+      "/nero/Geometry/world/base_link/link1",
+      "/nero/Geometry/world/base_link/link1/link2",
+      "/nero/Geometry/world/base_link/link1/link2/link3",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base/gripper_link1",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base/gripper_link2",
+      "/nero/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/link7/flange_link/gripper_base/gripper_link"
+    ],
+    "all_arm_joints_found": true,
+    "dynamic_tensor_order": "not asserted without runtime physics model",
+    "physics_steps_executed": 0,
+    "physical_episodes_consumed": 0,
+    "no_object_scene": true,
+    "import_defaults_not_actuator_validation": true
+  },
+  "xarm7": {
+    "usd": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_robot_20261012/models/xarm7/isaac_model_only/robot_piper_tool/robot_piper_tool.usda",
+    "arm_joint_name_to_usd_path": {
+      "joint1": "/UF_ROBOT/Physics/joint1",
+      "joint2": "/UF_ROBOT/Physics/joint2",
+      "joint3": "/UF_ROBOT/Physics/joint3",
+      "joint4": "/UF_ROBOT/Physics/joint4",
+      "joint5": "/UF_ROBOT/Physics/joint5",
+      "joint6": "/UF_ROBOT/Physics/joint6",
+      "joint7": "/UF_ROBOT/Physics/joint7"
+    },
+    "joints": [
+      {
+        "name": "gripper",
+        "path": "/UF_ROBOT/Physics/gripper",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base/gripper_link"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.10000000149011612,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint1",
+        "path": "/UF_ROBOT/Physics/gripper_joint1",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base/gripper_link1"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.05000000074505806,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint2",
+        "path": "/UF_ROBOT/Physics/gripper_joint2",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base/gripper_link2"
+        ],
+        "axis": "Z",
+        "lower_native": -0.05000000074505806,
+        "upper_native": 0.0,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "joint1",
+        "path": "/UF_ROBOT/Physics/joint1",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1"
+        ],
+        "axis": "Z",
+        "lower_native": -360.0,
+        "upper_native": 360.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 10.0,
+        "max_force": 50.0
+      },
+      {
+        "name": "joint2",
+        "path": "/UF_ROBOT/Physics/joint2",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2"
+        ],
+        "axis": "Z",
+        "lower_native": -117.97200775146484,
+        "upper_native": 120.00028228759766,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 10.0,
+        "max_force": 50.0
+      },
+      {
+        "name": "joint3",
+        "path": "/UF_ROBOT/Physics/joint3",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3"
+        ],
+        "axis": "Z",
+        "lower_native": -360.0,
+        "upper_native": 360.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 5.0,
+        "max_force": 30.0
+      },
+      {
+        "name": "joint4",
+        "path": "/UF_ROBOT/Physics/joint4",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4"
+        ],
+        "axis": "Z",
+        "lower_native": -10.999643325805664,
+        "upper_native": 225.00051879882812,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 5.0,
+        "max_force": 30.0
+      },
+      {
+        "name": "joint5",
+        "path": "/UF_ROBOT/Physics/joint5",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5"
+        ],
+        "axis": "Z",
+        "lower_native": -360.0,
+        "upper_native": 360.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 5.0,
+        "max_force": 30.0
+      },
+      {
+        "name": "joint6",
+        "path": "/UF_ROBOT/Physics/joint6",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6"
+        ],
+        "axis": "Z",
+        "lower_native": -97.00003814697266,
+        "upper_native": 180.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 2.0,
+        "max_force": 20.0
+      },
+      {
+        "name": "joint7",
+        "path": "/UF_ROBOT/Physics/joint7",
+        "body0": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6"
+        ],
+        "body1": [
+          "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7"
+        ],
+        "axis": "Z",
+        "lower_native": -360.0,
+        "upper_native": 360.0,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 2.0,
+        "max_force": 20.0
+      }
+    ],
+    "rigid_bodies": [
+      "/UF_ROBOT/Geometry/world/link_base",
+      "/UF_ROBOT/Geometry/world/link_base/link1",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base/gripper_link1",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base/gripper_link2",
+      "/UF_ROBOT/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/gripper_base/gripper_link"
+    ],
+    "all_arm_joints_found": true,
+    "dynamic_tensor_order": "not asserted without runtime physics model",
+    "physics_steps_executed": 0,
+    "physical_episodes_consumed": 0,
+    "no_object_scene": true,
+    "import_defaults_not_actuator_validation": true
+  },
+  "fr3": {
+    "usd": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_robot_20261012/models/fr3/isaac_model_only/robot_piper_tool/robot_piper_tool.usda",
+    "arm_joint_name_to_usd_path": {
+      "joint1": "/fr3/Physics/joint1",
+      "joint2": "/fr3/Physics/joint2",
+      "joint3": "/fr3/Physics/joint3",
+      "joint4": "/fr3/Physics/joint4",
+      "joint5": "/fr3/Physics/joint5",
+      "joint6": "/fr3/Physics/joint6",
+      "joint7": "/fr3/Physics/joint7"
+    },
+    "joints": [
+      {
+        "name": "gripper",
+        "path": "/fr3/Physics/gripper",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base/gripper_link"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.10000000149011612,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint1",
+        "path": "/fr3/Physics/gripper_joint1",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base/gripper_link1"
+        ],
+        "axis": "Z",
+        "lower_native": 0.0,
+        "upper_native": 0.05000000074505806,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "gripper_joint2",
+        "path": "/fr3/Physics/gripper_joint2",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base/gripper_link2"
+        ],
+        "axis": "Z",
+        "lower_native": -0.05000000074505806,
+        "upper_native": 0.0,
+        "limit_unit": "m",
+        "stiffness": 0.0,
+        "damping": 0.0,
+        "max_force": 10.0
+      },
+      {
+        "name": "joint1",
+        "path": "/fr3/Physics/joint1",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1"
+        ],
+        "axis": "Z",
+        "lower_native": -166.19786071777344,
+        "upper_native": 166.19786071777344,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.003000000026077032,
+        "max_force": 87.0
+      },
+      {
+        "name": "joint2",
+        "path": "/fr3/Physics/joint2",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2"
+        ],
+        "axis": "Z",
+        "lower_native": -105.2007827758789,
+        "upper_native": 105.2007827758789,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.003000000026077032,
+        "max_force": 87.0
+      },
+      {
+        "name": "joint3",
+        "path": "/fr3/Physics/joint3",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3"
+        ],
+        "axis": "Z",
+        "lower_native": -166.19786071777344,
+        "upper_native": 166.19786071777344,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.003000000026077032,
+        "max_force": 87.0
+      },
+      {
+        "name": "joint4",
+        "path": "/fr3/Physics/joint4",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4"
+        ],
+        "axis": "Z",
+        "lower_native": -176.2991180419922,
+        "upper_native": -6.697876453399658,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.003000000026077032,
+        "max_force": 87.0
+      },
+      {
+        "name": "joint5",
+        "path": "/fr3/Physics/joint5",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5"
+        ],
+        "axis": "Z",
+        "lower_native": -164.7998504638672,
+        "upper_native": 164.7998504638672,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.003000000026077032,
+        "max_force": 12.0
+      },
+      {
+        "name": "joint6",
+        "path": "/fr3/Physics/joint6",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6"
+        ],
+        "axis": "Z",
+        "lower_native": 25.198684692382812,
+        "upper_native": 264.7981872558594,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.003000000026077032,
+        "max_force": 12.0
+      },
+      {
+        "name": "joint7",
+        "path": "/fr3/Physics/joint7",
+        "body0": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6"
+        ],
+        "body1": [
+          "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7"
+        ],
+        "axis": "Z",
+        "lower_native": -174.79795837402344,
+        "upper_native": 174.79795837402344,
+        "limit_unit": "degrees",
+        "stiffness": 0.0,
+        "damping": 0.003000000026077032,
+        "max_force": 12.0
+      }
+    ],
+    "rigid_bodies": [
+      "/fr3/Geometry/base/fr3_link0",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base/gripper_link1",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base/gripper_link2",
+      "/fr3/Geometry/base/fr3_link0/fr3_link1/fr3_link2/fr3_link3/fr3_link4/fr3_link5/fr3_link6/fr3_link7/fr3_link8/gripper_base/gripper_link"
+    ],
+    "all_arm_joints_found": true,
+    "dynamic_tensor_order": "not asserted without runtime physics model",
+    "physics_steps_executed": 0,
+    "physical_episodes_consumed": 0,
+    "no_object_scene": true,
+    "import_defaults_not_actuator_validation": true
+  }
+}
