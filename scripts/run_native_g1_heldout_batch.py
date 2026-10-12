@@ -2,8 +2,8 @@
 from pathlib import Path
 import argparse,json,os,fcntl,subprocess,time,hashlib
 R=Path('/data1/home/rangeryx/fr3_real2sim_known_whole_20261007');O=R/'results/native_g1_heldout_20261013'
-parser=argparse.ArgumentParser();parser.add_argument('--gpu-ownership',choices=['exclusive','shared-authorized'],default='exclusive');a=parser.parse_args()
-freeze=json.loads((O/'PHYSICAL_BATCH_FREEZE.json').read_text());lock=open('/tmp/xarm7-native-isaac-owner.lock','a+');fcntl.flock(lock,fcntl.LOCK_EX)
+parser=argparse.ArgumentParser();parser.add_argument('--gpu-ownership',choices=['exclusive','shared-authorized'],default='exclusive');parser.add_argument('--freeze',type=Path,default=O/'PHYSICAL_BATCH_FREEZE.json');parser.add_argument('--resume-completed',action='store_true');a=parser.parse_args()
+freeze=json.loads(a.freeze.read_text());lock=open('/tmp/xarm7-native-isaac-owner.lock','a+');fcntl.flock(lock,fcntl.LOCK_EX)
 env=dict(os.environ,PYTHONPATH='.:scripts',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1');env['PATH']='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static:'+env.get('PATH','')
 ff='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static/ffmpeg';probe=str(Path(ff).with_name('ffprobe'));test=O/'ENCODER_PREFLIGHT.mp4'
 subprocess.run([ff,'-y','-f','lavfi','-i','color=c=black:s=64x64:r=30','-frames:v','10','-c:v','libx264',str(test)],stdout=subprocess.DEVNULL,stderr=(O/'encoder_preflight.log').open('w'),check=True)
@@ -11,6 +11,9 @@ subprocess.run([ff,'-y','-f','lavfi','-i','color=c=black:s=64x64:r=30','-frames:
 results=[]
 for asset in freeze['physical_cases']:
  d=O/asset
+ if a.resume_completed and (d/'SINGLE_ATTEMPT_RESERVED.json').exists():
+  if not (d/'PROCESS_EXIT.json').exists():raise RuntimeError('RESUME_REQUIRES_PREVIOUS_ACTOR_EXIT')
+  results.append(json.loads((d/'PROCESS_EXIT.json').read_text()));print('PRESERVE_ALREADY_ATTEMPTED_CASE_NO_RETRY',asset,flush=True);continue
  if asset not in freeze['case_input_hashes']:
   results.append({'asset_id':asset,'status':'PLANNING_FAILURE','physical_attempts':0,'physical_grasp':None,'actual_angle_deg':None});print('SKIP_REGISTERED_PLANNING_FAILURE',asset,flush=True);continue
  job=json.loads((d/'job.json').read_text());gpu=job['gpu'];allhashes=freeze['source_hashes']|freeze['case_input_hashes'][asset]

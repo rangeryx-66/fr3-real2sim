@@ -13,7 +13,7 @@ protocol={'nominal_initial_base':[0.,-.6,-.1,0.],'nominal_base_rule':'same canon
 with (O/'EXECUTION_PROTOCOL.json').open('x') as f:json.dump(protocol,f,indent=2)
 for row in reg['objects']:
  a=row['asset_id'];d=O/a;d.mkdir(exist_ok=True);asset=Path(row['asset_root']);src=d/'source';src.mkdir(exist_ok=True)
- m=json.loads((asset/'manifest.json').read_text());m['interaction_geometry']={'method':'frozen oracle handle candidate generator','selection':row['selection'],'pieces':[]};(d/'asset').mkdir(exist_ok=True)
+ m=json.loads((asset/'manifest.json').read_text());m['door_link']=row['handle_link'];m['interaction_geometry']={'method':'frozen oracle handle candidate generator','selection':row['selection'],'pieces':[]};(d/'asset').mkdir(exist_ok=True)
  # Isolate metadata; geometry and collision files remain the untouched prepared input.
  for folder in ['urdf','meshes','collision']:(d/'asset'/folder).symlink_to(asset/folder,target_is_directory=True)
  (d/'asset/manifest.json').write_text(json.dumps(m,indent=2))
