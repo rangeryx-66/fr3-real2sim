@@ -65,6 +65,7 @@ The poststep drive-law effort estimate peaks at 10.588 N·m on joint2 and has es
 ## Evidence and disposition
 
 - Full raw archive, including all failed/startup evidence, native asset exports, original videos, 159,434 physics records and sensor/interface metadata: **[GitHub evidence release](https://github.com/rangeryx-66/fr3-real2sim/releases/tag/nero-actuator-diagnostics-20261012)**.
+- Large-request upload restarted through the proxy. The release therefore contains seven lossless volumes; concatenate using [REASSEMBLE.txt](REASSEMBLE.txt) and verify [PARTS_SHA256.json](PARTS_SHA256.json). The reconstructed ZIP has the unchanged original SHA256; no raw information is reduced.
 - [Archive digest](ARCHIVE_SUMMARY.json), [263-file manifest](EVIDENCE_SHA256.json), [local independent verification](LOCAL_ARCHIVE_VERIFICATION.json), [exact loaded source snapshots](loaded_source_snapshots/), [baseline preservation](BASELINE_PRESERVATION_AUDIT.json).
 - Server: `/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/nero_actuator_stability_20261012`.
 - Local full copy: `engineering_artifacts_20261012/nero_actuator_stability/full_archive/nero_actuator_stability_20261012` under this repository.
