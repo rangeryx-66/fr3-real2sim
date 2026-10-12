@@ -1,0 +1,184 @@
+{
+  "robot": "xarm7",
+  "urdf": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_robot_20261012/models/xarm7/robot_piper_tool.urdf",
+  "urdf_sha256": "422ad1a8ba7cce78e0b602890886a8f26b49f5c09a908f837f5f69c72db6d74a",
+  "official_sources": [
+    {
+      "repository": "https://github.com/xArm-Developer/xarm_ros",
+      "commit": "aad7e1611c9c46eb719045414394bfdd42dcb0f8",
+      "file": "xarm_description/urdf/xarm7/xarm7.urdf.xacro",
+      "sha256": "68a65a345e9b99a61b7d821285c524b4aeede245794acdb32fa6fa9e0b5c2b3f"
+    }
+  ],
+  "arm_joint_names": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6",
+    "joint7"
+  ],
+  "official_to_adapter_joint_names": {},
+  "dof": 7,
+  "home_q": [
+    0,
+    -0.5,
+    0,
+    1.0,
+    0,
+    0.5,
+    0
+  ],
+  "flange_frame": "link_eef",
+  "tcp_frame": "tcp_link",
+  "mount_status": "VIRTUAL_COAXIAL_ADAPTER_NOT_VERIFIED_HARDWARE",
+  "mount_transform": {
+    "xyz": "0 0 0.0045",
+    "rpy": "0 0 0"
+  },
+  "continuous_joint_finite_workspace": null,
+  "joint_parameters": [
+    {
+      "joint": "joint1",
+      "limit": {
+        "effort": "50",
+        "lower": "-6.283185307179586",
+        "upper": "6.283185307179586",
+        "velocity": "3.14"
+      },
+      "dynamics": {
+        "damping": "10",
+        "friction": "1"
+      }
+    },
+    {
+      "joint": "joint2",
+      "limit": {
+        "effort": "50",
+        "lower": "-2.059",
+        "upper": "2.0944",
+        "velocity": "3.14"
+      },
+      "dynamics": {
+        "damping": "10",
+        "friction": "1"
+      }
+    },
+    {
+      "joint": "joint3",
+      "limit": {
+        "effort": "30",
+        "lower": "-6.283185307179586",
+        "upper": "6.283185307179586",
+        "velocity": "3.14"
+      },
+      "dynamics": {
+        "damping": "5",
+        "friction": "1"
+      }
+    },
+    {
+      "joint": "joint4",
+      "limit": {
+        "effort": "30",
+        "lower": "-0.19198",
+        "upper": "3.927",
+        "velocity": "3.14"
+      },
+      "dynamics": {
+        "damping": "5",
+        "friction": "1"
+      }
+    },
+    {
+      "joint": "joint5",
+      "limit": {
+        "effort": "30",
+        "lower": "-6.283185307179586",
+        "upper": "6.283185307179586",
+        "velocity": "3.14"
+      },
+      "dynamics": {
+        "damping": "5",
+        "friction": "1"
+      }
+    },
+    {
+      "joint": "joint6",
+      "limit": {
+        "effort": "20",
+        "lower": "-1.69297",
+        "upper": "3.141592653589793",
+        "velocity": "3.14"
+      },
+      "dynamics": {
+        "damping": "2",
+        "friction": "1"
+      }
+    },
+    {
+      "joint": "joint7",
+      "limit": {
+        "effort": "20",
+        "lower": "-6.283185307179586",
+        "upper": "6.283185307179586",
+        "velocity": "3.14"
+      },
+      "dynamics": {
+        "damping": "2",
+        "friction": "1"
+      }
+    }
+  ],
+  "mesh_missing": [],
+  "same_hand_geometry": true,
+  "hand_source_urdf_sha256": "9382d1fee7875bf84a5666d3362fd05323aad1bc2994682ceb4e116dcfc8622d",
+  "arm_base_height_m": -0.1,
+  "physics_launch_eligibility": "pending model/tool audit",
+  "actuator_model_not_substituted": true,
+  "sim_urdf": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/xarm7_shared_doors_20261012/xarm7_piper_sim.urdf",
+  "dynamics_urdf": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/xarm7_shared_doors_20261012/xarm7_dynamics_coordinates.urdf",
+  "arm_kp": [
+    1200.0,
+    1400.0,
+    1200.0,
+    850.0,
+    500.0,
+    500.0,
+    300.0
+  ],
+  "arm_kd": [
+    10.0,
+    10.0,
+    5.0,
+    5.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "arm_effort_limits": [
+    50.0,
+    50.0,
+    30.0,
+    30.0,
+    30.0,
+    20.0,
+    20.0
+  ],
+  "arm_speed_limits": [
+    3.14,
+    3.14,
+    3.14,
+    3.14,
+    3.14,
+    3.14,
+    3.14
+  ],
+  "classification": "XARM7 / APPROXIMATE_ACTUATOR_SIMULATION / VIRTUAL_PIPER_TOOL_ADAPTER",
+  "gain_reference": "/data1/home/rangeryx/cross_robot_sources_20261012/xarm_ros/xarm_controller/config/xarm7/xarm7_controllers.yaml",
+  "gain_reference_sha256": "4ca5a2de10eb16e7b73d5dc606e02ee5092a387191f6896af36a2f98a43b9e20",
+  "gravity_bias": true,
+  "integral_control": false,
+  "manufacturer_servo_identification": false
+}

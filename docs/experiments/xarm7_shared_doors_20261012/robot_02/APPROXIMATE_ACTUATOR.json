@@ -1,0 +1,70 @@
+{
+  "classification": "XARM7 / APPROXIMATE_ACTUATOR_SIMULATION / VIRTUAL_PIPER_TOOL_ADAPTER",
+  "equation": "finite implicit PhysX force drive; q_drive=q_ref+g_URDF(q_ref)/Kp; no external arm torque servo",
+  "kp": [
+    1200.0,
+    1400.0,
+    1200.0,
+    850.0,
+    500.0,
+    500.0,
+    300.0
+  ],
+  "kd": [
+    10.0,
+    10.0,
+    5.0,
+    5.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "effort_limits": [
+    50.0,
+    50.0,
+    30.0,
+    30.0,
+    30.0,
+    20.0,
+    20.0
+  ],
+  "speed_limits": [
+    3.14,
+    3.14,
+    3.14,
+    3.14,
+    3.14,
+    3.14,
+    3.14
+  ],
+  "source": "/data1/home/rangeryx/cross_robot_sources_20261012/xarm_ros/xarm_controller/config/xarm7/xarm7_controllers.yaml",
+  "source_sha256": "4ca5a2de10eb16e7b73d5dc606e02ee5092a387191f6896af36a2f98a43b9e20",
+  "integral_term_not_implemented": true,
+  "gravity_compensation_inside_same_drive": true,
+  "jaw_control_unchanged": true,
+  "actual_native_order": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6",
+    "joint7",
+    "gripper_joint1",
+    "gripper_joint2"
+  ],
+  "native_arm_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "native_finger_indices": [
+    7,
+    8
+  ],
+  "virtual_mount": true
+}

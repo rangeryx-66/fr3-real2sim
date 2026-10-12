@@ -1,0 +1,84 @@
+{
+  "classification": "SIMULATED_VIRTUAL_TOOL_ADAPTER_ONLY",
+  "virtual_flange_to_gripper_transform": {
+    "xyz": "0 0 0.0045",
+    "rpy": "0 0 0"
+  },
+  "flange_to_tcp_at_home": [
+    [
+      1.0,
+      -1.4694555019974024e-22,
+      2.556744161033032e-17,
+      1.1102230246251565e-16
+    ],
+    [
+      -4.99346170496278e-22,
+      1.0,
+      -1.3348684636647685e-21,
+      -1.0587911840678754e-21
+    ],
+    [
+      -2.999733098513414e-17,
+      -7.242000752067296e-23,
+      0.9999999999999999,
+      0.14249999999999993
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "same_piper_contact_hand": [
+    {
+      "link": "gripper_base",
+      "source_mass_kg": 0.45,
+      "adapter_mass_kg": 0.45,
+      "inertia_identical": true,
+      "collision_origin_identical": true,
+      "source_mesh": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/third_party/agilex_piper/description/meshes/gripper_base.stl",
+      "adapter_mesh": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/third_party/agilex_piper/description/meshes/gripper_base.stl"
+    },
+    {
+      "link": "gripper_link1",
+      "source_mass_kg": 0.025,
+      "adapter_mass_kg": 0.025,
+      "inertia_identical": true,
+      "collision_origin_identical": true,
+      "source_mesh": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/third_party/agilex_piper/description/meshes/gripper_link1.stl",
+      "adapter_mesh": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/third_party/agilex_piper/description/meshes/gripper_link1.stl"
+    },
+    {
+      "link": "gripper_link2",
+      "source_mass_kg": 0.025,
+      "adapter_mass_kg": 0.025,
+      "inertia_identical": true,
+      "collision_origin_identical": true,
+      "source_mesh": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/third_party/agilex_piper/description/meshes/gripper_link2.stl",
+      "adapter_mesh": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/third_party/agilex_piper/description/meshes/gripper_link2.stl"
+    }
+  ],
+  "hand_mass_kg": 0.5,
+  "runtime_tool_FK_max_error_m": 4.931433401065394e-07,
+  "hardware_adapter_verified": false,
+  "future_gripper_assumption": "standard UFACTORY xArm Gripper unless another unit is selected; not used in either physical comparison",
+  "future_gripper_official_manual": "https://www.ufactory.cc/wp-content/uploads/2023/08/xArm-Gripper-User-Manual-V1.11.0.pdf",
+  "future_gripper_manual_specs": {
+    "travel_mm": [
+      0,
+      84
+    ],
+    "mass_g": 802,
+    "maximum_clamp_force_n": 30,
+    "interface": "RS-485 / Modbus RTU",
+    "programmable": "position and speed"
+  },
+  "future_requirements": [
+    "replace tool URDF/contact geometry and mass with actual selected gripper",
+    "map native gripper command/feedback to aperture; current two-slider effort hold is not a validated UFACTORY interface",
+    "replan/revalidate native contact geometry and TCP",
+    "verify mechanical adapter and electrical/control interface on hardware"
+  ],
+  "no_silent_gripper_substitution": true
+}

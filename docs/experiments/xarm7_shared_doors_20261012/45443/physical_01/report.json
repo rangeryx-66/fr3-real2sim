@@ -1,0 +1,85 @@
+{
+  "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_APPROXIMATE_ACTUATOR_SIMULATION",
+  "asset_id": "45443",
+  "success": true,
+  "status": "SHARED_DOOR_30_DEG_SUCCESS",
+  "initial_grasp": true,
+  "target_deg": 30.0,
+  "max_actual_angle_deg": 30.00001335144043,
+  "max_actual_angle_after_valid_grasp_deg": 30.00001335144043,
+  "final_actual_angle_deg": 30.000014495204397,
+  "initial_actual_angle_deg": 1.0601848841383538e-16,
+  "grasp_acquisition": {
+    "event": "GRASP_VERIFIED",
+    "t": 251.9625,
+    "step": 60471,
+    "angle_deg": -2.3134749937980814e-07,
+    "grasp_index": 0,
+    "pad_loads_n": [
+      0.5286729900510642,
+      0.5223480577329962
+    ],
+    "base": [
+      0.9788435430402108,
+      -0.794156706951846,
+      -0.1,
+      119.44064037305306
+    ]
+  },
+  "base_fixed": [
+    0.9788435430402108,
+    -0.794156706951846,
+    -0.1,
+    119.44064037305306
+  ],
+  "base_moves_after_grasp": 0,
+  "regrasps": 0,
+  "intentional_releases": 0,
+  "simulation_s": 651.75,
+  "wall_s": 2939.203117693076,
+  "physics_steps": 156420,
+  "observation_records": 156420,
+  "closure_update_calls": 22009,
+  "unilateral_fix_branch_calls": 821,
+  "aperture_command_reopenings": 0,
+  "minimum_joint_margin_rad": 0.5251115185928346,
+  "peak_pad_load_n": 1.0728352918854358,
+  "motion_scale": 1.0,
+  "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+  "telemetry_issues": {
+    "video_start": {
+      "count": 1,
+      "first_error": "TypeError('expected str, bytes or os.PathLike object, not NoneType')"
+    },
+    "video": {
+      "count": 19552,
+      "first_error": "AttributeError(\"'NoneType' object has no attribute 'stdin'\")"
+    }
+  },
+  "first_divergence": null,
+  "active_sources": {
+    "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_shared_door.py",
+    "runner_sha256": "95ea8ac5f06326ecc7bb58956e9b4c74447383ddf698bf497e794b5b1424b49f",
+    "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+    "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+    "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+    "argv": [
+      "scripts/run_xarm7_shared_door.py",
+      "--job",
+      "results/xarm7_shared_doors_20261012/45443/job.json"
+    ],
+    "pid": 386335,
+    "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+    "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+    "initial_sequence_sha256": "2a2c675d212a76fca25f69552c2583a08d3a5e5ff290251f3f3a72815bd4e782",
+    "active_closure_alias": true
+  },
+  "GT_dependencies": [
+    "oracle handle mesh geometry",
+    "known articulation geometry",
+    "actual moving-body/articulation feedback",
+    "collision model"
+  ],
+  "scene_restart_or_stitching": false,
+  "object_physics_or_geometry_changed": false
+}
