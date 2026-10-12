@@ -1,0 +1,67 @@
+{
+  "classification": "XARM7 / NATIVE_XARM_GRIPPER / APPROXIMATE_ACTUATOR_SIMULATION",
+  "active_joint_order": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6",
+    "joint7",
+    "drive_joint",
+    "left_inner_knuckle_joint",
+    "right_outer_knuckle_joint",
+    "right_inner_knuckle_joint",
+    "left_finger_joint",
+    "right_finger_joint"
+  ],
+  "arm_kp": [
+    1200.0,
+    1400.0,
+    1200.0,
+    850.0,
+    500.0,
+    500.0,
+    300.0
+  ],
+  "arm_kd": [
+    10.0,
+    10.0,
+    5.0,
+    5.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "effort_limits": [
+    50.0,
+    50.0,
+    30.0,
+    30.0,
+    30.0,
+    20.0,
+    20.0,
+    2.522350639480586,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "gripper_drive": "finite implicit position drive; one motor, five mimic constraints",
+  "hand_kp": 10.0,
+  "hand_kd": 0.1,
+  "cap_formula": "30 N * absolute aperture Jacobian; master cap updated at measured angle",
+  "feedback": {
+    "hardware": [
+      "position",
+      "status/error"
+    ],
+    "simulation_only": [
+      "raw contact impulses",
+      "pad loads",
+      "joint efforts"
+    ]
+  },
+  "not_hardware_servo_identification": true
+}
