@@ -1,0 +1,148 @@
+{
+  "classification": "APPROXIMATE_SIMULATION_ACTUATOR_NOT_HARDWARE_CALIBRATED",
+  "equation": "PhysX implicit force drive: Kp*(q_des + g_URDF(q_des)/Kp - q) + Kd*(dq_des-dq), finite maxForce",
+  "kp_nm_rad": [
+    22.124011789232927,
+    205.23562802832714,
+    21.663084010031298,
+    41.43451792695111,
+    0.35622190454736646,
+    1.468047274955416,
+    1.2875396564301125
+  ],
+  "kd_nm_s_rad": [
+    2.212401178923293,
+    5.0,
+    2.1663084010031297,
+    4.143451792695111,
+    0.03562219045473665,
+    0.1468047274955416,
+    0.12875396564301125
+  ],
+  "reference_diagonal_inertia_kg_m2": [
+    0.05531002947308232,
+    0.5130890700708178,
+    0.05415771002507824,
+    0.10358629481737777,
+    0.0008905547613684161,
+    0.00367011818738854,
+    0.003218849141075281
+  ],
+  "design_bandwidth_rad_s": 20.0,
+  "design_damping_ratio": 1.0,
+  "damping_cap_nm_s_rad": 5.0,
+  "effective_reference_damping_ratio": [
+    1.0,
+    0.243622418194851,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "stiffness_cap": 500.0,
+  "maximum_arm_effort_nm": [
+    16.0,
+    16.0,
+    16.0,
+    16.0,
+    8.0,
+    8.0,
+    8.0
+  ],
+  "arm_implicit_drive_gains": {
+    "kp": [
+      22.124011789232927,
+      205.23562802832714,
+      21.663084010031298,
+      41.43451792695111,
+      0.35622190454736646,
+      1.468047274955416,
+      1.2875396564301125
+    ],
+    "kd": [
+      2.212401178923293,
+      5.0,
+      2.1663084010031297,
+      4.143451792695111,
+      0.03562219045473665,
+      0.1468047274955416,
+      0.12875396564301125
+    ]
+  },
+  "gravity_feedforward": "Pinocchio from unmodified official native URDF",
+  "unmodelled": [
+    "motor electrical lag",
+    "gear friction/backlash",
+    "rotor inertia beyond CAD link inertia",
+    "hardware internal gain scaling",
+    "temperature/continuous torque limits"
+  ],
+  "finger_position_gains": {
+    "kp": 1000.0,
+    "kd": 40.0
+  },
+  "finger_effort_ceiling_n": 10.0,
+  "source_torque_interface": "https://github.com/agilexrobotics/pyAgxArm/blob/master/docs/nero/firmware_reference.md",
+  "source_CAD_commit": "983788b58d7eae76511177f768d85877534917fe",
+  "joint_names_native_order": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6",
+    "joint7",
+    "gripper_joint1",
+    "gripper_joint2"
+  ],
+  "arm_native_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "finger_native_indices": [
+    7,
+    8
+  ],
+  "pinocchio_to_native_indices": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "same_gripper_logic_not_PiPER_arm_gains": true,
+  "external_arm_effort_command_nm": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "gravity_compensation": "equilibrium position bias inside the same finite-force drive; no external gravity torque",
+  "gain_change": false,
+  "effort_limit_change": false,
+  "command_timing": "apply before world.step; no explicit torque physics callback",
+  "native_speed_limits": [
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    5.0,
+    0.15,
+    0.15
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "reference_commit": "b9c8166cba4f10c54f428513e175301922d013cf",
+  "classification": "KNOWN_MODEL / NERO_ROBOT_ONLY / APPROXIMATE_SIMULATION_ACTUATOR",
+  "maximum_physical_runs": 3,
+  "door_contact_episodes": 0,
+  "run_1": "Normal initial pose, 3 s gravity hold, slow +0.08/-0.06/+0.06 rad joint motion, native gripper 80/20/80 mm, final hold",
+  "run_2": "Independent initial-pose hold, small slow motion and gripper check after raw-mesh-verified link6/flange proxy correction",
+  "run_3": "Same implicit actuator/gains/finite limits; TGS external forces every substep; all four saved home/approach/opening joint paths without objects; cooperative SIGTERM after completed tests",
+  "unchanged": [
+    "official geometry/inertias",
+    "verified wrist exclusions",
+    "four existing IK plans",
+    "finite 16/16/16/16/8/8/8 Nm arm ceilings",
+    "native gripper 10 N ceilings",
+    "PiPER baselines",
+    "Pink solver and door planner/controller"
+  ],
+  "new_checks": "DIAGNOSTIC_ONLY",
+  "first_controller_change": "Explicit torque PD replaced by implicit PhysX force drives using existing gains; gravity equilibrium bias inside drive; zero external effort command",
+  "run_accounting": "Three sessions with recorded physics steps; zero-step syntax and metadata startup failures separately preserved, not counted as contact or physics trials",
+  "native_camera_note": "Original captured videos preserved; view/focal-unit problem identified during run, no extra physical run to conceal it",
+  "inertia_fidelity_note": "Mass and eigenvalues match; offline tensor reconstruction reveals a principal-axis conjugation discrepancy. Preserve official URDF; do not claim full official-inertia fidelity without native-backend confirmation.",
+  "third_run_duration_note": "The third session replays existing complete paths/returns rather than a few static representative poses, so its duration exceeds a short pose-only check. No gain sweep or extra physics session is authorized."
+}
