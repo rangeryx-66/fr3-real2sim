@@ -13,4 +13,3 @@ for a in cases:
  integrity.append(item);out[a]={'report':r,'analysis':{k:v for k,v in analysis.items() if k!='contact_pairs'},'nonhandle_contact_audit':audit,'integrity':item,'gpu':json.loads((d/'GPU_OWNERSHIP.json').read_text()),'initialization_failures_preserved':len(list(d.glob('initialization_*/ATTEMPT_CLASSIFICATION_AMENDMENT.json'))),'contact_adaptation':json.loads((p/'CONTACT_ADAPTATION.json').read_text()) if (p/'CONTACT_ADAPTATION.json').exists() else None}
 (O/'TEN_CASE_METRICS.json').write_text(json.dumps(out,indent=2));(O/'TEN_CASE_EVIDENCE_INTEGRITY.json').write_text(json.dumps(integrity,indent=2));print(json.dumps(integrity,indent=2),flush=True)
 subprocess.run(['python3',str(Path(__file__).with_name('summarize_native_g1_heldout_ten.py'))],check=True)
-
