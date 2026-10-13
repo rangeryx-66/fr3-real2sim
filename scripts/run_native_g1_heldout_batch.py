@@ -2,7 +2,7 @@
 from pathlib import Path
 import argparse,json,os,fcntl,subprocess,time,hashlib
 R=Path('/data1/home/rangeryx/fr3_real2sim_known_whole_20261007');O=R/'results/native_g1_heldout_20261013'
-parser=argparse.ArgumentParser();parser.add_argument('--gpu-ownership',choices=['exclusive','shared-authorized'],default='exclusive');parser.add_argument('--freeze',type=Path,default=O/'PHYSICAL_BATCH_FREEZE.json');parser.add_argument('--resume-completed',action='store_true');a=parser.parse_args()
+parser=argparse.ArgumentParser();parser.add_argument('--gpu-ownership',choices=['exclusive','shared-authorized'],default='shared-authorized');parser.add_argument('--freeze',type=Path,default=O/'PHYSICAL_BATCH_FREEZE.json');parser.add_argument('--resume-completed',action='store_true');parser.add_argument('--gpu',type=int,help='optional GPU override; otherwise select by free VRAM, not idleness');a=parser.parse_args()
 freeze=json.loads(a.freeze.read_text());lock=open('/tmp/xarm7-native-isaac-owner.lock','a+');fcntl.flock(lock,fcntl.LOCK_EX)
 env=dict(os.environ,PYTHONPATH='.:scripts',OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1');env['PATH']='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static:'+env.get('PATH','')
 ff='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static/ffmpeg';probe=str(Path(ff).with_name('ffprobe'));test=O/'ENCODER_PREFLIGHT.mp4'
@@ -19,12 +19,19 @@ for asset in freeze['physical_cases']:
  job=json.loads((d/'job.json').read_text());gpu=job['gpu'];allhashes=freeze['source_hashes']|freeze['case_input_hashes'][asset]
  changed=[p for p,h in allhashes.items() if hashlib.sha256(Path(p).read_bytes()).hexdigest()!=h]
  if changed:raise RuntimeError('PRELAUNCH_FROZEN_INPUT_CHANGED:'+str(changed))
+ # Operational GPU selection does not change manipulation timing or parameters.
+ resources=subprocess.check_output(['nvidia-smi','--query-gpu=index,memory.free,memory.used,memory.total,utilization.gpu','--format=csv,noheader,nounits'],text=True)
+ rows=[[int(v.strip()) for v in line.split(',')] for line in resources.splitlines()]
+ gpu=a.gpu if a.gpu is not None else max(rows,key=lambda row:row[1])[0]
+ if job['gpu']!=gpu:
+  history=d/'GPU_JOB_HISTORY';history.mkdir(exist_ok=True)
+  (history/('%d.json'%time.time_ns())).write_text(json.dumps(job,indent=2))
+  job['gpu']=gpu;(d/'job.json').write_text(json.dumps(job,indent=2))
  uuid=subprocess.check_output(['nvidia-smi','--id='+str(gpu),'--query-gpu=uuid','--format=csv,noheader'],text=True).strip()
- while True:
-  apps=subprocess.check_output(['nvidia-smi','--query-compute-apps=gpu_uuid,pid,used_gpu_memory','--format=csv,noheader'],text=True);busy=[line for line in apps.splitlines() if line.startswith(uuid)]
-  if a.gpu_ownership=='shared-authorized' or not busy:break
-  (O/'RESOURCE_WAIT.json').write_text(json.dumps({'asset_id':asset,'gpu':gpu,'gpu_exclusive':False,'other_compute_process_count':len(busy),'physical_attempt_not_reserved':True,'last_check_time':time.time()}));print('WAIT_FOR_EXCLUSIVE_GPU',asset,gpu,len(busy),flush=True);time.sleep(30)
- inventory=subprocess.check_output(['nvidia-smi','--query-gpu=index,memory.used,memory.total,utilization.gpu','--format=csv,noheader'],text=True);(d/'GPU_PRELAUNCH.csv').write_text(inventory);(d/'GPU_OWNERSHIP.json').write_text(json.dumps({'mode':a.gpu_ownership,'gpu':gpu,'other_compute_process_count':len(busy),'hardware_exclusive':not busy,'one_owned_actor':True}))
+ apps=subprocess.check_output(['nvidia-smi','--query-compute-apps=gpu_uuid,pid,used_gpu_memory','--format=csv,noheader'],text=True)
+ busy=[line for line in apps.splitlines() if line.startswith(uuid)]
+ (d/'GPU_PRELAUNCH.csv').write_text(resources)
+ (d/'GPU_OWNERSHIP.json').write_text(json.dumps({'mode':'capacity-based/shared-authorized','gpu':gpu,'other_compute_process_count':len(busy),'hardware_exclusive':not busy,'one_owned_actor':True,'selection':'largest free VRAM, utilization and other processes are not blockers','resources_csv':resources}))
  actors=subprocess.check_output(['ps','-u','rangeryx','-o','pid,args'],text=True);owned=[line for line in actors.splitlines() if 'scripts/run_xarm' in line or 'scripts/probe_xarm' in line]
  if owned:raise RuntimeError('PRELAUNCH_OWNED_ACTOR_ACTIVE:'+str(owned))
  with (d/'SINGLE_ATTEMPT_RESERVED.json').open('x') as f:json.dump({'time':time.time(),'maximum_attempts':1,'registered_asset':asset,'sequential':True},f)
