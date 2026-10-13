@@ -1,0 +1,184 @@
+{
+  "classification": "B_CONTACT_GEOMETRY_FAILURE_AT_FIXED_ORIGINAL_TCP_POSE",
+  "state_machine_freeze_exists": true,
+  "safe_continuation_to_bilateral_supported": false,
+  "new_shared_policy_physical_validation": false,
+  "physical_episodes_executed": 1,
+  "old_benchmark_unchanged": true,
+  "first_unilateral_contact": {
+    "t": 128.48333333333332,
+    "command_aperture_m": 0.03591499444004081,
+    "measured_aperture_m": 0.03591276911495458,
+    "filtered_pad_loads_n": [
+      0.05590939630519555,
+      0.0
+    ]
+  },
+  "last": {
+    "t": 132.21666666666667,
+    "phase": "DIAGNOSTIC_EXISTING_FORCE_SETTLE",
+    "command_aperture_m": 0.034398465514420974,
+    "measured_aperture_m": 0.03540702581272842,
+    "pad_loads_n": {
+      "gripper_link1": 2.0259757463614005,
+      "gripper_link2": 0.0
+    },
+    "filtered_pad_loads_n": [
+      2.0204244768484743,
+      0.0
+    ],
+    "driver_position_rad": 0.5418077707290649,
+    "driver_target_rad": 0.5510867411054314,
+    "coupled_joint_positions_rad": {
+      "drive_joint": 0.5418077707290649,
+      "left_finger_joint": 0.5417477488517761,
+      "left_inner_knuckle_joint": 0.5418623685836792,
+      "right_outer_knuckle_joint": 0.5418387651443481,
+      "right_finger_joint": 0.5418505072593689,
+      "right_inner_knuckle_joint": 0.5418530106544495
+    }
+  },
+  "maximum_left_pad_load_n": 2.0274000526457527,
+  "maximum_right_pad_load_n": 0.0,
+  "minimum_command_aperture_m": 0.034398465514420974,
+  "minimum_measured_aperture_m": 0.035401866107385424,
+  "maximum_arm_command_difference_rad": 0.0,
+  "maximum_TCP_translation_from_locked_mm": 0.42366419034988284,
+  "maximum_TCP_rotation_from_locked_deg": 0.05327445933917498,
+  "maximum_handle_body_relative_translation_change_mm": 0.3863009631613548,
+  "maximum_TCP_speed_after_unilateral_mm_s": 1.1394887623102916,
+  "maximum_mimic_joint_error_rad": 0.00011068582534790039,
+  "maximum_unbounded_PD_request_to_effort_cap_ratio": 0.028487287406608115,
+  "PD_ratio_note": "Approximate diagnostic K*(target-position)-D*velocity over existing finite cap; not a manufacturer torque measurement or exact implicit solver force.",
+  "force_window_events": [
+    {
+      "t": 132.0375,
+      "phase": "DIAGNOSTIC_ADDITIONAL_CLOSE_FIXED_TCP",
+      "measured_aperture_m": 0.03540323210597403,
+      "command_aperture_m": 0.034398465514420974,
+      "loads_n": {
+        "gripper_link1": 2.003970225847417,
+        "gripper_link2": 0.0
+      },
+      "force_window": {
+        "status": "SOFT_FORCE_WARNING",
+        "raw_peak_n": 2.003970225847417,
+        "window_mean_n": 1.9878345304077847,
+        "consecutive_overload_windows": 0,
+        "t": 132.0375,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      }
+    },
+    {
+      "t": 132.10833333333332,
+      "phase": "DIAGNOSTIC_EXISTING_FORCE_SETTLE",
+      "measured_aperture_m": 0.035403225632053545,
+      "command_aperture_m": 0.034398465514420974,
+      "loads_n": {
+        "gripper_link1": 2.0090630418035578,
+        "gripper_link2": 0.0
+      },
+      "force_window": {
+        "status": "SOFT_FORCE_WARNING",
+        "raw_peak_n": 2.0090630418035578,
+        "window_mean_n": 2.007177207443187,
+        "consecutive_overload_windows": 1,
+        "t": 132.10833333333332,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      }
+    },
+    {
+      "t": 132.1625,
+      "phase": "DIAGNOSTIC_EXISTING_FORCE_SETTLE",
+      "measured_aperture_m": 0.0354047793711914,
+      "command_aperture_m": 0.034398465514420974,
+      "loads_n": {
+        "gripper_link1": 2.0150508109871375,
+        "gripper_link2": 0.0
+      },
+      "force_window": {
+        "status": "SOFT_FORCE_WARNING",
+        "raw_peak_n": 2.0150508109871375,
+        "window_mean_n": 2.0146035074664406,
+        "consecutive_overload_windows": 2,
+        "t": 132.1625,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      }
+    },
+    {
+      "t": 132.21666666666667,
+      "phase": "DIAGNOSTIC_EXISTING_FORCE_SETTLE",
+      "measured_aperture_m": 0.03540702581272842,
+      "command_aperture_m": 0.034398465514420974,
+      "loads_n": {
+        "gripper_link1": 2.0259757463614005,
+        "gripper_link2": 0.0
+      },
+      "force_window": {
+        "status": "HARD_FORCE_STOP_SUSTAINED",
+        "raw_peak_n": 2.0259757463614005,
+        "window_mean_n": 2.0222349049642663,
+        "consecutive_overload_windows": 3,
+        "t": 132.21666666666667,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      }
+    }
+  ],
+  "positive_contact_pairs": [
+    {
+      "body": "gripper_link1",
+      "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/tn__l_1_original35_aL/tn__l_1_original35_aL",
+      "records": 898
+    }
+  ],
+  "holding_grasp_established": false,
+  "maximum_door_angle_deg": 0.0021379634272307158,
+  "simulation_s": 132.22083333333333,
+  "wall_s": 693.3013090218883,
+  "streams": {
+    "observations_chunks": {
+      "decoded_records": 31733,
+      "indexed_records": 31733,
+      "chunk_errors": []
+    },
+    "physics_steps_chunks": {
+      "decoded_records": 31733,
+      "indexed_records": 31733,
+      "chunk_errors": []
+    }
+  },
+  "video_decode_returncode": 0,
+  "video_decode_errors_bytes": 0,
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1280,
+        "height": 960,
+        "duration": "132.200000",
+        "nb_frames": "3966"
+      }
+    ]
+  },
+  "active_sources": {
+    "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_closure_diagnostic.py",
+    "runner_sha256": "d6593c9d0d6dba0bbb4f392c3f12f5cbf8abacce0acfac8ca24be9e9446ddeb8",
+    "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+    "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+    "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+    "argv": [
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_closure_diagnostic.py",
+      "--job",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_center_closure_20261013/fixed_tcp_job.json"
+    ],
+    "pid": 1070462,
+    "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+    "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+    "initial_sequence_sha256": "3b3201e55d436c98e24d0636f4d5b803c063ec7a745cbc030ac3c00035814191",
+    "active_closure_alias": true
+  },
+  "new_shared_closure_sha256": "17d15c31925921d5a0275edc51af3fb71d466e5d38f8ea77c9e4eafeef86f349",
+  "diagnostic_generated_source_sha256": "ab4972d9dabc3a278f17063f137b80ed4d946d7d40d2fce28d0f552e5cb441cc",
+  "interpretation": "Additional closure at the original fixed TCP loads the already-contacting finger and reaches the unchanged sustained-force protection before opposing contact. This differs from the old benchmark which performed bounded centering before its 32 mm plateau. It does not prove all centered poses unsafe or demonstrate an actuator saturation/constraint integration bug."
+}

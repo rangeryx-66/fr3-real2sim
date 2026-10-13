@@ -1,0 +1,129 @@
+{
+  "old_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+  "new_sha256": "17d15c31925921d5a0275edc51af3fb71d466e5d38f8ea77c9e4eafeef86f349",
+  "change": "Allow existing slow-closure decrement in CENTER as well as SLOW_CLOSE; other controller code identical",
+  "cases": [
+    {
+      "asset_id": "45717",
+      "replayed_updates": 24000,
+      "maximum_old_command_reproduction_error_m": 0.0,
+      "new_position_commands_nonreopening": true,
+      "same_centering_targets_all_updates": true,
+      "new_CENTER_updates": 12492,
+      "center_command_checkpoints": [
+        {
+          "t": 128.47916666666666,
+          "old_state": "CENTER",
+          "new_state": "CENTER",
+          "old_command_m": 0.03591610575841121,
+          "new_command_m": 0.035911939091744546,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 129.47916666666666,
+          "old_state": "CENTER",
+          "new_state": "CENTER",
+          "old_command_m": 0.03572748447230783,
+          "new_command_m": 0.034911939091744656,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 133.47916666666666,
+          "old_state": "CENTER",
+          "new_state": "CENTER",
+          "old_command_m": 0.03345931749062965,
+          "new_command_m": 0.030911939091745097,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 138.47916666666666,
+          "old_state": "CENTER",
+          "new_state": "CENTER",
+          "old_command_m": 0.03209679405042534,
+          "new_command_m": 0.025911939091745648,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 148.47916666666666,
+          "old_state": "CENTER",
+          "new_state": "CENTER",
+          "old_command_m": 0.03209679405042534,
+          "new_command_m": 0.01591193909174675,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        }
+      ],
+      "interpretation": "Recorded old measured aperture and forces are held fixed. Counterfactual command replay is NOT physical validation or a prediction of safe aperture reachability."
+    },
+    {
+      "asset_id": "45638",
+      "replayed_updates": 16965,
+      "maximum_old_command_reproduction_error_m": 0.0,
+      "new_position_commands_nonreopening": true,
+      "same_centering_targets_all_updates": true,
+      "new_CENTER_updates": 886,
+      "center_command_checkpoints": [
+        {
+          "t": 128.4875,
+          "old_state": "CENTER",
+          "new_state": "CENTER",
+          "old_command_m": 0.01945602474318367,
+          "new_command_m": 0.019451858076517003,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 129.4875,
+          "old_state": "CENTER",
+          "new_state": "CENTER",
+          "old_command_m": 0.01945602474318367,
+          "new_command_m": 0.018451858076517114,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 133.4875,
+          "old_state": "SLOW_CLOSE",
+          "new_state": "SLOW_CLOSE",
+          "old_command_m": 0.01759769140985054,
+          "new_command_m": 0.014451858076517554,
+          "old_mode": "position",
+          "new_mode": "position",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 134.61666666666667,
+          "old_state": "FORCE_HOLD",
+          "new_state": "FORCE_HOLD",
+          "old_command_m": null,
+          "new_command_m": null,
+          "old_mode": "effort",
+          "new_mode": "effort",
+          "same_TCP_centering_target": true
+        },
+        {
+          "t": 134.61666666666667,
+          "old_state": "FORCE_HOLD",
+          "new_state": "FORCE_HOLD",
+          "old_command_m": null,
+          "new_command_m": null,
+          "old_mode": "effort",
+          "new_mode": "effort",
+          "same_TCP_centering_target": true
+        }
+      ],
+      "interpretation": "Recorded old measured aperture and forces are held fixed. Counterfactual command replay is NOT physical validation or a prediction of safe aperture reachability."
+    }
+  ]
+}
