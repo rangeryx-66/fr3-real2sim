@@ -1,4 +1,4 @@
-"""Six pre-registered independent attempts; frozen skill, sequential ownership."""
+"""Pre-registered independent attempts; frozen skill, sequential ownership."""
 from pathlib import Path
 import argparse,json,os,fcntl,subprocess,time,hashlib
 R=Path('/data1/home/rangeryx/fr3_real2sim_known_whole_20261007');O=R/'results/native_g1_heldout_20261013'
@@ -51,4 +51,4 @@ for asset in freeze['physical_cases']:
       (d/'FINISHED_ACTOR_CLEANUP.json').write_text(json.dumps({'pid':child.pid,'after_completed_export':True}))
    time.sleep(2)
   item={'asset_id':asset,'pid':child.pid,'returncode':child.returncode,'physical_attempts':1,'retry':False};(d/'PROCESS_EXIT.json').write_text(json.dumps(item));results.append(item);print('PHYSICAL_EXIT',json.dumps(item),flush=True)
-(O/'BATCH_COMPLETE.json').write_text(json.dumps({'results':results,'registered_first_six_only':True,'retries':0,'reserved_four_not_executed':freeze['reserved_cases']},indent=2));print('BATCH_COMPLETE',flush=True)
+(O/freeze.get('batch_completion_file','BATCH_COMPLETE.json')).write_text(json.dumps({'results':results,'scope':freeze.get('scope','registered_first_six_only'),'retries':0,'reserved_cases_not_executed':freeze['reserved_cases']},indent=2));print('BATCH_COMPLETE',flush=True)
