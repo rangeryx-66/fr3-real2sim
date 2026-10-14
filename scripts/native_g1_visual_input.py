@@ -44,8 +44,13 @@ def reobserve_camera(g,folder):
     """One generic alternate full-frame view from observed panel and robot q."""
     sam=g['job']['wrist_experiment']['sam3'];env=dict(os.environ,PYTHONPATH=sam['pythonpath'],CUDA_VISIBLE_DEVICES=str(g['job']['visual_gpu']),PYTHONNOUSERSITE='1',OMP_NUM_THREADS='1')
     cmd=[sam['python'],str(g['ROOT']/'scripts/infer_sam3_part.py'),'--rgb',str(folder/'rgb.png'),'--prompt','cabinet','--checkpoint',sam['checkpoint'],'--output',str(folder/'observed_panel_mask.npy')]
-    with (folder/'panel_sam3.log').open('w') as log:subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=180)
-    meta=json.loads((folder/'camera.json').read_text());K=np.asarray(meta['K']);C=np.asarray(meta['T_world_camera_optical']);d=np.load(folder/'depth_m.npy');yy,xx=np.indices(d.shape);valid=np.isfinite(d)&(d>.02)&(d<3.)&~np.load(folder/'robot_self_exclusion.npy')&np.load(folder/'observed_panel_mask.npy');z=d[valid]
+    panel_mask=None
+    try:
+        with (folder/'panel_sam3.log').open('w') as log:subprocess.run(cmd,env=env,stdout=log,stderr=subprocess.STDOUT,check=True,timeout=180)
+        panel_mask=np.load(folder/'observed_panel_mask.npy')
+    except Exception as error:
+        g['diagnostic_issue']('optional_panel_sam3_for_reobservation',error)
+    meta=json.loads((folder/'camera.json').read_text());K=np.asarray(meta['K']);C=np.asarray(meta['T_world_camera_optical']);d=np.load(folder/'depth_m.npy');yy,xx=np.indices(d.shape);valid=np.isfinite(d)&(d>.02)&(d<3.)&~np.load(folder/'robot_self_exclusion.npy');valid=valid if panel_mask is None else valid&panel_mask;z=d[valid]
     Q=np.c_[(xx[valid]-K[0,2])*z/K[0,0],(yy[valid]-K[1,2])*z/K[1,1],z]@C[:3,:3].T+C[:3,3];rng=np.random.default_rng(61)
     if len(Q)>6000:Q=Q[rng.choice(len(Q),6000,replace=False)]
     best=None

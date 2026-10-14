@@ -34,6 +34,6 @@ Pre-physical observation repair: the original overview could hide the handle
 behind the home arm. One bounded alternate view fits a visible vertical depth
 plane after measured-q robot exclusion, then observes from camera-FOV-fitted standoff,
 300 mm on the side opposite the robot centroid, and 100 mm above its observed
-center. A full-RGB SAM3 cabinet mask restricts the depth volume before fitting; the same auxiliary prompt is used on all cases. This fixed rule uses no GT handle or per-asset offsets. Camera pose is
+center. An optional full-RGB SAM3 cabinet mask restricts the depth volume before fitting; absence is logged and uses the same raw-depth plane/FOV framing rather than preventing re-observation. the same auxiliary prompt is used on all cases. This fixed rule uses no GT handle or per-asset offsets. Camera pose is
 then held constant for common-visible pregrasp correction. The initial failed
 observation is preserved and consumed no contact episode.
