@@ -21,7 +21,7 @@ robot/camera calibration remain known-model dependencies.
 Shadow captures/plans occur before physical outcomes. Each physical run acquires
 fresh RGB-D again, regenerates its grasp/approach/IK, reobserves at pregrasp and
 uses measured-q robot exclusion/common-visible RGB-D correction. Initial
-perception gets one bounded recapture; no GT fallback. Planning budget 450 s.
+perception gets one bounded recapture; no GT fallback. Planning budget 450 s. The planning-range target remains the original 30 degrees; only the already-frozen physical short runner stops at approximately +3 degrees.
 No changes between physical cases; one valid closed-start episode each:
 visual grasp, original one-second hold, approximately +3° opening. ≥2° gained
 AFTER acquisition is the paired short outcome, not a 30° or held-out score.
