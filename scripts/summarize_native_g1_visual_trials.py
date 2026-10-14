@@ -25,6 +25,7 @@ for asset in ['45671','45638','45600','45606']:
   row['actual_gain_after_acquisition_deg']=max(v['door_angle_deg'] for v in valid)-event['angle_deg'];row['short_transmission_ge2deg']=row['actual_gain_after_acquisition_deg']>=2.;row['max_relative_shift_mm']=max(v['relative_translation_slip_m'] for v in valid)*1000;row['max_relative_rotation_deg']=max(v['relative_rotation_slip_deg'] for v in valid)
  if len(obs)>1:
   velocity=np.linalg.norm(np.diff(np.asarray([v['T_tcp'] for v in obs])[:,:3,3],axis=0),axis=1)/np.diff([v['t'] for v in obs])*1000;row['max_all_phase_TCP_mm_s']=float(velocity.max());row['max_postgrasp_TCP_mm_s']=float(velocity[np.asarray([v['t'] for v in obs[1:]])>=event['t']].max()) if event else None;row['TCP_speed_definition']='unfiltered measured post-step TCP position differences / recorded dt'
+  peak=int(np.argmax(velocity))+1;row['all_phase_TCP_peak_context']=dict(t=obs[peak]['t'],phase=obs[peak]['phase'],raw_loads_n=obs[peak]['forces_n'],after_grasp=bool(event and obs[peak]['t']>=event['t']))
  phase=collections.Counter(v['phase'] for v in obs);row['phase_simulation_s']={k:v/240 for k,v in phase.items()};row['physical_motion_started']=bool(obs);row['closure_attempt_started']=bool(close);row['hold_s']=sum(v for k,v in row['phase_simulation_s'].items() if k in ['FORCE_HOLD','VALIDATED_PREFIX_EXTRA_HOLD']) if event else None
  force_events=[]
  for v in obs:
@@ -35,13 +36,25 @@ for asset in ['45671','45638','45600','45606']:
  for v in phy:
   labels={c['finger'] for c in v.get('contacts',[]) if c.get('allowed_pad_target') and c.get('force_n',0)>0};contacts[v.get('phase','UNKNOWN')].append(['gripper_link1' in labels,'gripper_link2' in labels])
  row['phase_native_positive_contact_fraction']={k:dict(left=float(np.asarray(v)[:,0].mean()),right=float(np.asarray(v)[:,1].mean()),bilateral=float(np.asarray(v).all(1).mean())) for k,v in contacts.items() if v}
+ row['postgrasp_native_zero_load_intervals']={}
+ if event:
+  post=[v for v in phy if v['t']>=event['t']]
+  for finger in ['gripper_link1','gripper_link2']:
+   intervals=[];start=None;end=None
+   for v in post:
+    positive=any(c['finger']==finger and c.get('allowed_pad_target') and c.get('force_n',0)>0 for c in v.get('contacts',[]))
+    if not positive and start is None:start=v['t']
+    if positive and start is not None:intervals.append([start,v['t']]);start=None
+    end=v['t']
+   if start is not None and end is not None:intervals.append([start,end+1/240])
+   row['postgrasp_native_zero_load_intervals'][finger]=dict(intervals_s=intervals,total_s=sum(b-a for a,b in intervals),longest_s=max((b-a for a,b in intervals),default=0),definition='no positive allowed pad normal contact; not an added grasp-loss gate')
  for name in ['visual_plan.json','visual_correction.json','visual_adapter_provenance.json','VISUAL_EXECUTABLE_HASH.json']:
   if (p/name).exists():
    data=json.loads((p/name).read_text());row[name]=data if name!='visual_plan.json' else dict(planned_range_deg=float(np.rad2deg(data['planned_reached_state'])),base=data['base'],T=data['T'],selected_parameters={k:data[k] for k in ['section_fraction','insertion_m','roll_deg','pitch_deg']},scores={k:data['contact_geometry_audit']['robust_contact'][k] for k in ['acquisition_score','retention_score','task_score','robust_combined_score','chosen_expected_aperture_m']})
  row['raw_telemetry_is_normal_only_not_full_wrench']=True;row['telemetry_issues']=r.get('telemetry_issues')
  if obs:
   ffmpeg='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static/ffmpeg';log=(p/'VIDEO_DECODE.log').open('w');check=subprocess.run([ffmpeg,'-v','error','-i',str(p/'contact_baseline.mp4'),'-f','null','-'],stdout=subprocess.DEVNULL,stderr=log);log.close();row['video_decode_rc']=check.returncode;row['video_decode_error_bytes']=(p/'VIDEO_DECODE.log').stat().st_size
- hashes={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest() for f in p.rglob('*') if f.is_file()};(p/'PRIVATE_EVIDENCE_HASHES.json').write_text(json.dumps(hashes,indent=2));row['evidence_hash_index_sha256']=hashlib.sha256((p/'PRIVATE_EVIDENCE_HASHES.json').read_bytes()).hexdigest();cases.append(row)
+ hashes={str(f.relative_to(p)):hashlib.sha256(f.read_bytes()).hexdigest() for f in p.rglob('*') if f.is_file() and f.name!='PRIVATE_EVIDENCE_HASHES.json'};(p/'PRIVATE_EVIDENCE_HASHES.json').write_text(json.dumps(hashes,indent=2));row['evidence_hash_index_sha256']=hashlib.sha256((p/'PRIVATE_EVIDENCE_HASHES.json').read_bytes()).hexdigest();cases.append(row)
  print(asset,row['visual_grasp'],row['actual_gain_after_acquisition_deg'],row['status'],flush=True)
 summary=dict(reference='30f5b30',classification='RGBD_SAM3_HANDLE / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION',cases=cases,physical_episode_entries=len([r for r in cases if r['status']!='NOT_EXECUTED']),motion_episodes=sum(r.get('physical_motion_started',False) for r in cases),grasp_successes=sum(r['visual_grasp'] is True for r in cases),short_transmission_successes=sum(r['short_transmission_ge2deg'] for r in cases),paired_development_not_held_out=True,original_30deg_benchmark_unchanged='4/10',between_case_tuning=False)
 (B/'PAIRED_RESULTS.json').write_text(json.dumps(summary,indent=2))

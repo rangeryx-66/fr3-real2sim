@@ -1,0 +1,563 @@
+{
+  "reference": "30f5b30",
+  "execution_freeze_commit": "e81f333",
+  "classification": "RGBD_SAM3_HANDLE / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION",
+  "registered_cases": [
+    "45671",
+    "45638",
+    "45600",
+    "45606"
+  ],
+  "paired_development_not_held_out": true,
+  "scene_entries": 4,
+  "physical_attempts": 3,
+  "visual_planning_succeeded": 3,
+  "first_grasp_successes": 2,
+  "short_transmission_ge2deg": 2,
+  "end_to_end_outcome": "2/4",
+  "physical_grasp_conditional_on_attempt": "2/3",
+  "short_transmission_conditional_on_acquisition": "2/2",
+  "archived_oracle_short_outcome": "4/4",
+  "original_ten_case_30deg_benchmark_unchanged": "4/10",
+  "between_case_tuning": false,
+  "new_control_or_safety_gates": false,
+  "all_owned_actors_closed": true,
+  "raw_data_and_video_public": false,
+  "results": [
+    {
+      "asset_id": "45671",
+      "oracle_gain_deg": 3.00012074079703,
+      "oracle_grasp": true,
+      "actual_gain_after_acquisition_deg": 2.998820014297962,
+      "short_transmission_ge2deg": true,
+      "simulation_s": 245.92499999999998,
+      "wall_s": 1928.052415576065,
+      "minimum_joint_margin_rad": 1.1435667233276368,
+      "peak_raw_pad_load_n": 0.8070786035675658,
+      "max_relative_shift_mm": 1.0348852034575002,
+      "max_relative_rotation_deg": 0.19744850658153876,
+      "max_all_phase_TCP_mm_s": 21.991787538346053,
+      "max_postgrasp_TCP_mm_s": 1.6812592620519367,
+      "all_phase_TCP_peak_context": {
+        "t": 20.416666666666668,
+        "phase": "PREGRASP",
+        "raw_loads_n": {
+          "gripper_link1": 0.0,
+          "gripper_link2": 0.0
+        },
+        "after_grasp": false
+      },
+      "hold_s": 1.0041666666666667,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 52.18333333333333,
+        "APPROACH": 25.183333333333334,
+        "SLOW_CLOSE": 69.9,
+        "CENTER": 28.983333333333334,
+        "LOW_PRELOAD": 0.375,
+        "FORCE_HOLD": 0.5041666666666667,
+        "VALIDATED_PREFIX_EXTRA_HOLD": 0.5,
+        "TRANSMISSION_PROBE": 22.033333333333335,
+        "OPEN_CONTINUE": 45.7625
+      },
+      "phase_native_positive_contact_fraction": {
+        "SETTLE": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "PREGRASP": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "APPROACH": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "SLOW_CLOSE": {
+          "left": 0.06789461134954697,
+          "right": 0.0004768717215069146,
+          "bilateral": 0.0004768717215069146
+        },
+        "CENTER": {
+          "left": 1.0,
+          "right": 0.017826336975273145,
+          "bilateral": 0.017826336975273145
+        },
+        "LOW_PRELOAD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "FORCE_HOLD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "VALIDATED_PREFIX_EXTRA_HOLD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "TRANSMISSION_PROBE": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "OPEN_CONTINUE": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        }
+      },
+      "force_event_levels": {},
+      "video_decode_rc": 0,
+      "video_decode_error_bytes": 0,
+      "streams": {
+        "observations": {
+          "records": 59022,
+          "indexed": 59022,
+          "errors": []
+        },
+        "physics_steps": {
+          "records": 59022,
+          "indexed": 59022,
+          "errors": []
+        },
+        "closure_commands": {
+          "records": 23823,
+          "indexed": 23823,
+          "errors": []
+        }
+      },
+      "telemetry_issues": {},
+      "evidence_hash_index_sha256": "9de777840fc4d24e4e9c5a74717a75c9d9fd3b55b503d81145118b29b83a77b4",
+      "status": "SHORT_OPENING_TARGET_REACHED",
+      "physical_attempt": true,
+      "closure_attempt": true,
+      "visual_grasp": true,
+      "GT_grasp_fallback": false,
+      "base_moves": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "process_wall_s": 1931.504950761795,
+      "process_returncode": 0,
+      "max_actual_after_valid_grasp_deg": 3.0001771450042725,
+      "max_unverified_closure_angle_deg": null,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 177.125,
+        "step": 42510,
+        "angle_deg": 0.0013571307063102722,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.4286505345606634,
+          0.5216211591944675
+        ],
+        "base": [
+          0.42216849296720765,
+          -0.5448881490332267,
+          -0.1,
+          -0.1796316306386032
+        ]
+      },
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+        "runner_sha256": "30292efe0fcb5d1dcb34872d18898caae47d41f069578a44fa5993c69d0a11e1",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_visual_input_20261014/45671/job.json"
+        ],
+        "pid": 592309,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "visual_adapter_sha256": "ff8d88196589a8a058c3e40932e7cf03223fd7e15c01d90cf1274a76346e81fc",
+      "generated_executable_sha256": "75a4c7488a57595d3934a8da384c8ad60ab53431787db317f6dff942e64348b0",
+      "normal_contact_unloading": {
+        "gripper_link1": {
+          "total_s": 0,
+          "longest_s": 0,
+          "definition": "no positive allowed pad normal contact; not an added grasp-loss gate"
+        },
+        "gripper_link2": {
+          "total_s": 0,
+          "longest_s": 0,
+          "definition": "no positive allowed pad normal contact; not an added grasp-loss gate"
+        }
+      }
+    },
+    {
+      "asset_id": "45638",
+      "oracle_gain_deg": 2.9995813114510383,
+      "oracle_grasp": true,
+      "actual_gain_after_acquisition_deg": 2.998241698369384,
+      "short_transmission_ge2deg": true,
+      "simulation_s": 193.27916666666667,
+      "wall_s": 1560.6046736009885,
+      "minimum_joint_margin_rad": 1.19198,
+      "peak_raw_pad_load_n": 1.1883095685570781,
+      "max_relative_shift_mm": 0.17852485698367354,
+      "max_relative_rotation_deg": 0.2793372332106385,
+      "max_all_phase_TCP_mm_s": 23.93277346685224,
+      "max_postgrasp_TCP_mm_s": 0.7071372700530996,
+      "all_phase_TCP_peak_context": {
+        "t": 21.97083333333333,
+        "phase": "PREGRASP",
+        "raw_loads_n": {
+          "gripper_link1": 0.0,
+          "gripper_link2": 0.0
+        },
+        "after_grasp": false
+      },
+      "hold_s": 1.0041666666666667,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 37.358333333333334,
+        "APPROACH": 25.158333333333335,
+        "SLOW_CLOSE": 68.00416666666666,
+        "CENTER": 5.95,
+        "LOW_PRELOAD": 0.26666666666666666,
+        "FORCE_HOLD": 0.5041666666666667,
+        "VALIDATED_PREFIX_EXTRA_HOLD": 0.5,
+        "TRANSMISSION_PROBE": 18.679166666666667,
+        "OPEN_CONTINUE": 36.358333333333334
+      },
+      "phase_native_positive_contact_fraction": {
+        "SETTLE": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "PREGRASP": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "APPROACH": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "SLOW_CLOSE": {
+          "left": 0.052509037436431594,
+          "right": 0.00036762453281048957,
+          "bilateral": 0.00036762453281048957
+        },
+        "CENTER": {
+          "left": 1.0,
+          "right": 0.023809523809523808,
+          "bilateral": 0.023809523809523808
+        },
+        "LOW_PRELOAD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "FORCE_HOLD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "VALIDATED_PREFIX_EXTRA_HOLD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "TRANSMISSION_PROBE": {
+          "left": 0.03569038590229757,
+          "right": 1.0,
+          "bilateral": 0.03569038590229757
+        },
+        "OPEN_CONTINUE": {
+          "left": 0.0,
+          "right": 1.0,
+          "bilateral": 0.0
+        }
+      },
+      "force_event_levels": {},
+      "video_decode_rc": 0,
+      "video_decode_error_bytes": 0,
+      "streams": {
+        "observations": {
+          "records": 46387,
+          "indexed": 46387,
+          "errors": []
+        },
+        "physics_steps": {
+          "records": 46387,
+          "indexed": 46387,
+          "errors": []
+        },
+        "closure_commands": {
+          "records": 17814,
+          "indexed": 17814,
+          "errors": []
+        }
+      },
+      "telemetry_issues": {},
+      "evidence_hash_index_sha256": "8d9224d89190ce4dc5cac96a2ba2d3ef7325ddea7c3836f4d44a06eeec2361f1",
+      "status": "SHORT_OPENING_TARGET_REACHED",
+      "physical_attempt": true,
+      "closure_attempt": true,
+      "visual_grasp": true,
+      "GT_grasp_fallback": false,
+      "base_moves": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "process_wall_s": 1566.1491329669952,
+      "process_returncode": 0,
+      "max_actual_after_valid_grasp_deg": 3.018270492553711,
+      "max_unverified_closure_angle_deg": null,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 137.2375,
+        "step": 32937,
+        "angle_deg": 0.020028794184327126,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.4712933497397965,
+          0.5273739359926795
+        ],
+        "base": [
+          0.5911043635099881,
+          -0.5667553562465651,
+          -0.1,
+          181.98100250244687
+        ]
+      },
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+        "runner_sha256": "30292efe0fcb5d1dcb34872d18898caae47d41f069578a44fa5993c69d0a11e1",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_visual_input_20261014/45638/job.json"
+        ],
+        "pid": 669582,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "visual_adapter_sha256": "ff8d88196589a8a058c3e40932e7cf03223fd7e15c01d90cf1274a76346e81fc",
+      "generated_executable_sha256": "75a4c7488a57595d3934a8da384c8ad60ab53431787db317f6dff942e64348b0",
+      "normal_contact_unloading": {
+        "gripper_link1": {
+          "total_s": 54.37083616877595,
+          "longest_s": 54.37083616877595,
+          "definition": "no positive allowed pad normal contact; not an added grasp-loss gate"
+        },
+        "gripper_link2": {
+          "total_s": 0,
+          "longest_s": 0,
+          "definition": "no positive allowed pad normal contact; not an added grasp-loss gate"
+        }
+      }
+    },
+    {
+      "asset_id": "45600",
+      "oracle_gain_deg": 3.000204605745239,
+      "oracle_grasp": true,
+      "actual_gain_after_acquisition_deg": null,
+      "short_transmission_ge2deg": false,
+      "simulation_s": 0.0,
+      "wall_s": 75.55786264291964,
+      "minimum_joint_margin_rad": null,
+      "peak_raw_pad_load_n": 0,
+      "max_relative_shift_mm": null,
+      "max_relative_rotation_deg": null,
+      "max_all_phase_TCP_mm_s": null,
+      "max_postgrasp_TCP_mm_s": null,
+      "all_phase_TCP_peak_context": null,
+      "hold_s": null,
+      "phase_simulation_s": {},
+      "phase_native_positive_contact_fraction": {},
+      "force_event_levels": {},
+      "video_decode_rc": null,
+      "video_decode_error_bytes": null,
+      "streams": {
+        "observations": {
+          "records": 0,
+          "indexed": 0,
+          "errors": []
+        },
+        "physics_steps": {
+          "records": 0,
+          "indexed": 0,
+          "errors": []
+        },
+        "closure_commands": {
+          "records": 0,
+          "indexed": 0,
+          "errors": []
+        }
+      },
+      "telemetry_issues": {
+        "optional_panel_sam3_for_reobservation": {
+          "count": 1,
+          "first_error": "CalledProcessError(1, ['/data1/home/rangeryx/isaaclab-arena/.venv/bin/python', '/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/infer_sam3_part.py', '--rgb', '/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_visual_input_20261014/45600/physical_01/rgbd/initial/rgb.png', '--prompt', 'cabinet', '--checkpoint', '/data1/home/rangeryx/sam3_1_weights/sam3.1_multiplex.pt', '--output', '/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_visual_input_20261014/45600/physical_01/rgbd/initial/observed_panel_mask.npy'])"
+        }
+      },
+      "evidence_hash_index_sha256": "38012602967d0549837e2972ea967860d0c03da51a7a43382216de7709fe99ad",
+      "status": "VISUAL_INPUT_UNAVAILABLE_NO_PHYSICAL_ATTEMPT",
+      "physical_attempt": false,
+      "closure_attempt": false,
+      "visual_grasp": null,
+      "GT_grasp_fallback": false,
+      "base_moves": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "process_wall_s": 78.24258613586426,
+      "process_returncode": 0,
+      "max_actual_after_valid_grasp_deg": null,
+      "max_unverified_closure_angle_deg": 0.0,
+      "grasp_acquisition": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+        "runner_sha256": "30292efe0fcb5d1dcb34872d18898caae47d41f069578a44fa5993c69d0a11e1",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_visual_input_20261014/45600/job.json"
+        ],
+        "pid": 727878,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "visual_adapter_sha256": "ff8d88196589a8a058c3e40932e7cf03223fd7e15c01d90cf1274a76346e81fc",
+      "generated_executable_sha256": "75a4c7488a57595d3934a8da384c8ad60ab53431787db317f6dff942e64348b0",
+      "normal_contact_unloading": {}
+    },
+    {
+      "asset_id": "45606",
+      "oracle_gain_deg": 3.001786768436432,
+      "oracle_grasp": true,
+      "actual_gain_after_acquisition_deg": null,
+      "short_transmission_ge2deg": false,
+      "simulation_s": 196.09166666666667,
+      "wall_s": 1540.7300092841033,
+      "minimum_joint_margin_rad": 1.191820497970581,
+      "peak_raw_pad_load_n": 0.1186175504536474,
+      "max_relative_shift_mm": null,
+      "max_relative_rotation_deg": null,
+      "max_all_phase_TCP_mm_s": 30.52303270896902,
+      "max_postgrasp_TCP_mm_s": null,
+      "all_phase_TCP_peak_context": {
+        "t": 2.9,
+        "phase": "PREGRASP",
+        "raw_loads_n": {
+          "gripper_link1": 0.0,
+          "gripper_link2": 0.0
+        },
+        "after_grasp": false
+      },
+      "hold_s": null,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 70.2625,
+        "APPROACH": 25.329166666666666,
+        "SLOW_CLOSE": 65.3375,
+        "CENTER": 34.6625
+      },
+      "phase_native_positive_contact_fraction": {
+        "SETTLE": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "PREGRASP": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "APPROACH": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "SLOW_CLOSE": {
+          "left": 0.04202538103437281,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "CENTER": {
+          "left": 1.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        }
+      },
+      "force_event_levels": {},
+      "video_decode_rc": 0,
+      "video_decode_error_bytes": 0,
+      "streams": {
+        "observations": {
+          "records": 47062,
+          "indexed": 47062,
+          "errors": []
+        },
+        "physics_steps": {
+          "records": 47062,
+          "indexed": 47062,
+          "errors": []
+        },
+        "closure_commands": {
+          "records": 24000,
+          "indexed": 24000,
+          "errors": []
+        }
+      },
+      "telemetry_issues": {},
+      "evidence_hash_index_sha256": "345e0b02c421d4992430e53c98965c75b15a05cdd207007a36c552e6e7153acf",
+      "status": "BILATERAL_HOLD_NOT_ESTABLISHED",
+      "physical_attempt": true,
+      "closure_attempt": true,
+      "visual_grasp": false,
+      "GT_grasp_fallback": false,
+      "base_moves": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "process_wall_s": 1545.74458193779,
+      "process_returncode": 0,
+      "max_actual_after_valid_grasp_deg": null,
+      "max_unverified_closure_angle_deg": 7.428824028465897e-05,
+      "grasp_acquisition": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+        "runner_sha256": "30292efe0fcb5d1dcb34872d18898caae47d41f069578a44fa5993c69d0a11e1",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_visual_input_20261014/45606/job.json"
+        ],
+        "pid": 730782,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "visual_adapter_sha256": "ff8d88196589a8a058c3e40932e7cf03223fd7e15c01d90cf1274a76346e81fc",
+      "generated_executable_sha256": "75a4c7488a57595d3934a8da384c8ad60ab53431787db317f6dff942e64348b0",
+      "normal_contact_unloading": {}
+    }
+  ]
+}
