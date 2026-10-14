@@ -1,0 +1,62 @@
+{
+  "reference": "9ae41fb",
+  "cases": [
+    "45600",
+    "45606",
+    "45671"
+  ],
+  "mode": "RGBD_SAM3_HANDLE / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION / INPUT_RELIABILITY_DEVELOPMENT",
+  "registered_by_user": true,
+  "paired_development_not_held_out": true,
+  "physical_attempt_limit_per_case": 1,
+  "no_between_case_tuning": true,
+  "short_target_deg": 3.0,
+  "outcome_post_acquisition_deg": 2.0,
+  "hold_s": 1.0,
+  "sam3_prompt": "cabinet door handle",
+  "sam3_threshold": 0.25,
+  "one_observed_depth_crop_recovery": true,
+  "camera_reobservations": 1,
+  "hidden_depth_scales": [
+    0.75,
+    1.0,
+    1.25
+  ],
+  "hypotheses_are_not_calibrated_confidence_bounds": true,
+  "scoring_weights_unchanged": true,
+  "controls_unchanged": true,
+  "stations": {
+    "45600": [
+      0.19605376022549204,
+      -0.5328198023693291,
+      -0.1,
+      -0.7953990037810357
+    ],
+    "45606": [
+      0.4128851129283281,
+      -0.5993918952781288,
+      -0.1,
+      19.701736997525124
+    ],
+    "45671": [
+      0.42216849296720765,
+      -0.5448881490332267,
+      -0.1,
+      -0.1796316306386032
+    ]
+  },
+  "sources": {
+    "native_g1_visual_input.py": "37406ab96de216247ba9f2ca9a8a9167d73971e6294c3bf7fa0c11d3f6edbac6",
+    "native_g1_observed_regions.py": "0f01a694832f5cb2054faf9714a887e480d41119788c5b9571405123cddcda80",
+    "infer_sam3_observed.py": "38dc9f9f280a81982782b056751cb2d406133acda087a68e1d849ec09e07eebb",
+    "native_g1_visual_hypothesis_rank.py": "f149377f0a1d696a66500577b5602e1263cb4b505a18c2d84d7e8535b649d125",
+    "run_native_g1_rgbd_short.py": "30292efe0fcb5d1dcb34872d18898caae47d41f069578a44fa5993c69d0a11e1",
+    "run_native_g1_short_open.py": "468013ac5beb6ffe97d71266d8d72a9bf44c15dec1cc779a73d1f87396fb9b7c",
+    "native_g1_robust_contact_ranking.py": "0fb72aad215afa3eb93240872a52c0fe687b92f68ee2861968cb6afbe4263ef3",
+    "xarm7_native_gripper.py": "13901deefbcb8a4ad8a24511ae2a1174a2349bd0e967592551f352e0d9ffe2e5",
+    "xarm7_native_execution.py": "9998fead6af71cbf288f4ceef9b531e1936fc0d4bdc8306965fbccd6ff3e5897",
+    "shared_door_execution.py": "13e3c388f83eb8efdb2c727fbcc14815498a1a7dfc77107db5393c03d9cda622",
+    "precontact_trajectory.py": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a"
+  },
+  "freeze_commit": "4e91cc2"
+}
