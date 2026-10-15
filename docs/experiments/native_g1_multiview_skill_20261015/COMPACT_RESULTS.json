@@ -1,0 +1,427 @@
+{
+  "classification": "MULTIVIEW_RGBD_SAM3 / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION",
+  "cases": [
+    {
+      "asset": "45600",
+      "initial_grasp": true,
+      "status": "SHORT_OPENING_TARGET_REACHED",
+      "transmission_ge2deg": true,
+      "max_actual_deg": 3.016256093978882,
+      "final_actual_deg": 3.0162561471506475,
+      "post_acquisition_gain_deg": 2.999297922477126,
+      "post_opening_start_gain_deg": 3.000160209586058,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 148.23333333333332,
+        "step": 35576,
+        "angle_deg": 0.016958171501755714,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.47460109166234443,
+          0.5401778062577097
+        ],
+        "base": [
+          0.19605376022549204,
+          -0.5328198023693291,
+          -0.1,
+          -0.7953990037810357
+        ]
+      },
+      "first_contacts": {
+        "gripper_link1": {
+          "t_s": 136.2583404397592,
+          "phase": "SLOW_CLOSE",
+          "measured_aperture_mm": 21.871621022512873,
+          "commanded_aperture_mm": 21.857504820909423,
+          "normal_load_n": 0.0007965615304556054
+        },
+        "gripper_link2": {
+          "t_s": 146.42500763665885,
+          "phase": "SLOW_CLOSE",
+          "measured_aperture_mm": 18.893744069655728,
+          "commanded_aperture_mm": 18.845004820909754,
+          "normal_load_n": 0.07294644925134243
+        }
+      },
+      "hold_measured_s": 1.0041666666666913,
+      "simulation_s": 208.67499999999998,
+      "reported_wall_s": 1569.2718954409938,
+      "actor_wall_s": 1572.0491836071014,
+      "planning_s": 226.11845016479492,
+      "minimum_joint_margin_rad": 1.19198,
+      "peak_filtered_pad_load_n": 0.9702425066898642,
+      "peak_raw_allowed_normal_load_n": 0.9702425572919542,
+      "max_all_phase_TCP_mm_s": 23.47584388031676,
+      "max_post_acquisition_TCP_mm_s": 1.205805892368708,
+      "relative_translation_mm": 0.10092184993734424,
+      "relative_rotation_deg": 0.1277774058223256,
+      "joint_command_tracking_rad": 0.004504517424173682,
+      "planned_TCP_tracking_mm": 1.170777237555572,
+      "closure_relative_motion": {
+        "start_s": 136.25833333333333,
+        "max_translation_mm": 1.5454235428291354,
+        "definition": "Measured moving-body-relative TCP change during closure, including original centering. Not the post-acquisition slip metric or a new gate."
+      },
+      "normal_contact_absence": {
+        "left": {
+          "interval_count": 249,
+          "total_s": 20.087500993534924,
+          "longest_s": 18.21666761652256
+        },
+        "right": {
+          "interval_count": 0,
+          "total_s": 0,
+          "longest_s": 0
+        }
+      },
+      "force_status_counts": {
+        "NORMAL": 50082
+      },
+      "local_opening_correction": 0,
+      "base_moves": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "fresh_candidate": {
+        "section_fraction": 0.0,
+        "insertion_m": -0.009374999906867743,
+        "roll_deg": 0.0,
+        "pitch_deg": 0.0
+      },
+      "fresh_views": 4,
+      "fresh_points": 38774,
+      "pregrasp_visual_correction": {
+        "translation_mm": 0.00019589678536500123,
+        "rotation_deg": 1.2851901190969286e-05,
+        "fitness": 1.0,
+        "rmse_mm": 0.00016529298096050306
+      },
+      "perception_recovery": {
+        "crop_recovery_attempted": true,
+        "crop_inferences": 1,
+        "handle_inferences": 2,
+        "camera_reobservations": 0,
+        "initial_captures": 1,
+        "auxiliary_panel_calls": 0,
+        "pregrasp_capture_count": 1,
+        "GT_fallback": false
+      },
+      "telemetry_streams": {
+        "physics_steps": {
+          "records": 50082,
+          "chunks": 49,
+          "lossless": true
+        },
+        "observations": {
+          "records": 50082,
+          "chunks": 49,
+          "lossless": true
+        },
+        "closure_commands": {
+          "records": 17788,
+          "chunks": 18,
+          "lossless": true
+        }
+      },
+      "telemetry_fields_present_records": {
+        "raw_contact_records": 50082,
+        "pad_load_raw_n": 50082,
+        "pad_load_filtered_n": 50082,
+        "joint_velocities": 50082,
+        "applied_joint_efforts": 50082,
+        "measured_joint_efforts": 50082,
+        "measured_joint_forces": 50082,
+        "native_gripper_feedback": 50082
+      },
+      "physics_timestamps_uniform": true,
+      "telemetry_issues": {},
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "r_frame_rate": "30/1",
+            "duration": "208.666667",
+            "nb_frames": "6260"
+          }
+        ],
+        "full_decode_returncode": 0,
+        "bytes": 13221033,
+        "sha256": "1bbb1efd36a55be38d42a1832fd42a64127175b4a9744430f04a3d0dda299ee0",
+        "raw_video_public": false
+      },
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_multiview_short.py",
+        "runner_sha256": "7704cbe047caee01b53e384c8a49c2a9dbe92dcf9ee8ceb648d067451396cbc7",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_multiview_short.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45600/job.json"
+        ],
+        "pid": 1998048,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "capture": {
+        "spec": {
+          "reference": "3103651",
+          "azimuths_deg": [
+            -55,
+            0,
+            55
+          ],
+          "standoff_m": 0.7,
+          "height_m": 0.1,
+          "voxel_m": 0.0005,
+          "rear_scales": [
+            0.75,
+            1.0,
+            1.25
+          ],
+          "sensing": "SIMULATION_SCENE_CAMERA_REPOSITION_NOT_ACTIVE_WRIST",
+          "observed_surfaces": "open per-view measured-neighbor triangles",
+          "unknown_space": "neither confirmed empty nor confirmed solid",
+          "controller_changes": false,
+          "scoring_weights_changed": false
+        },
+        "physics_time_before": 1.8833334315568209,
+        "physics_time_after": 1.8833334315568209,
+        "views": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45600/physical_01/rgbd/multi_00",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45600/physical_01/rgbd/multi_01",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45600/physical_01/rgbd/multi_02"
+        ],
+        "camera_restored": true
+      },
+      "GT_grasp_fallback": false,
+      "first_divergence": null,
+      "warning_events": []
+    },
+    {
+      "asset": "45606",
+      "initial_grasp": true,
+      "status": "SHORT_OPENING_TARGET_REACHED",
+      "transmission_ge2deg": true,
+      "max_actual_deg": 3.0080392360687256,
+      "final_actual_deg": 3.008039429579122,
+      "post_acquisition_gain_deg": 3.0078810788545525,
+      "post_opening_start_gain_deg": 3.0001392526784563,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 170.22916666666666,
+        "step": 40855,
+        "angle_deg": 0.0001581572141731158,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.5250295514580424,
+          0.48200254783900165
+        ],
+        "base": [
+          0.4128851129283281,
+          -0.5993918952781288,
+          -0.1,
+          19.701736997525124
+        ]
+      },
+      "first_contacts": {
+        "gripper_link1": {
+          "t_s": 169.12084215367213,
+          "phase": "CENTER",
+          "measured_aperture_mm": 14.5645946127351,
+          "commanded_aperture_mm": 14.536968158572291,
+          "normal_load_n": 2.1728875416507236
+        },
+        "gripper_link2": {
+          "t_s": 164.32084190333262,
+          "phase": "SLOW_CLOSE",
+          "measured_aperture_mm": 15.396943483970798,
+          "commanded_aperture_mm": 15.382801491905532,
+          "normal_load_n": 0.007429550142458303
+        }
+      },
+      "hold_measured_s": 1.0041666666666629,
+      "simulation_s": 187.52083333333334,
+      "reported_wall_s": 1453.238307459047,
+      "actor_wall_s": 1456.1774508953094,
+      "planning_s": 326.6770668029785,
+      "minimum_joint_margin_rad": 1.19198,
+      "peak_filtered_pad_load_n": 2.1728874283258133,
+      "peak_raw_allowed_normal_load_n": 2.1728875416507236,
+      "max_all_phase_TCP_mm_s": 30.52433349698528,
+      "max_post_acquisition_TCP_mm_s": 1.2935862611549807,
+      "relative_translation_mm": 0.70955615025608,
+      "relative_rotation_deg": 0.4887776659295144,
+      "joint_command_tracking_rad": 0.0047943963561527525,
+      "planned_TCP_tracking_mm": 0.3176869190108583,
+      "closure_relative_motion": {
+        "start_s": 164.32083333333333,
+        "max_translation_mm": 0.7236428738080862,
+        "definition": "Measured moving-body-relative TCP change during closure, including original centering. Not the post-acquisition slip metric or a new gate."
+      },
+      "normal_contact_absence": {
+        "left": {
+          "interval_count": 1,
+          "total_s": 15.829167492004732,
+          "longest_s": 15.829167492004732
+        },
+        "right": {
+          "interval_count": 0,
+          "total_s": 0,
+          "longest_s": 0
+        }
+      },
+      "force_status_counts": {
+        "NORMAL": 45004,
+        "SOFT_FORCE_WARNING": 1
+      },
+      "local_opening_correction": 0,
+      "base_moves": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "fresh_candidate": {
+        "section_fraction": 0.3,
+        "insertion_m": 0.0,
+        "roll_deg": 180.0,
+        "pitch_deg": 0.0
+      },
+      "fresh_views": 4,
+      "fresh_points": 33244,
+      "pregrasp_visual_correction": {
+        "translation_mm": 0.00012058027603406402,
+        "rotation_deg": 9.472688567625266e-06,
+        "fitness": 1.0,
+        "rmse_mm": 0.00010380587051383269
+      },
+      "perception_recovery": {
+        "crop_recovery_attempted": false,
+        "crop_inferences": 0,
+        "handle_inferences": 1,
+        "camera_reobservations": 0,
+        "initial_captures": 1,
+        "auxiliary_panel_calls": 0,
+        "pregrasp_capture_count": 1,
+        "GT_fallback": false
+      },
+      "telemetry_streams": {
+        "physics_steps": {
+          "records": 45005,
+          "chunks": 44,
+          "lossless": true
+        },
+        "observations": {
+          "records": 45005,
+          "chunks": 44,
+          "lossless": true
+        },
+        "closure_commands": {
+          "records": 17886,
+          "chunks": 18,
+          "lossless": true
+        }
+      },
+      "telemetry_fields_present_records": {
+        "raw_contact_records": 45005,
+        "pad_load_raw_n": 45005,
+        "pad_load_filtered_n": 45005,
+        "joint_velocities": 45005,
+        "applied_joint_efforts": 45005,
+        "measured_joint_efforts": 45005,
+        "measured_joint_forces": 45005,
+        "native_gripper_feedback": 45005
+      },
+      "physics_timestamps_uniform": true,
+      "telemetry_issues": {},
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "r_frame_rate": "30/1",
+            "duration": "187.500000",
+            "nb_frames": "5625"
+          }
+        ],
+        "full_decode_returncode": 0,
+        "bytes": 9084636,
+        "sha256": "1788f97c93db1244946e416fb068db7cf5b26b402cd8976d129733609363a04e",
+        "raw_video_public": false
+      },
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_multiview_short.py",
+        "runner_sha256": "7704cbe047caee01b53e384c8a49c2a9dbe92dcf9ee8ceb648d067451396cbc7",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_multiview_short.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45606/job.json"
+        ],
+        "pid": 2041225,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "capture": {
+        "spec": {
+          "reference": "3103651",
+          "azimuths_deg": [
+            -55,
+            0,
+            55
+          ],
+          "standoff_m": 0.7,
+          "height_m": 0.1,
+          "voxel_m": 0.0005,
+          "rear_scales": [
+            0.75,
+            1.0,
+            1.25
+          ],
+          "sensing": "SIMULATION_SCENE_CAMERA_REPOSITION_NOT_ACTIVE_WRIST",
+          "observed_surfaces": "open per-view measured-neighbor triangles",
+          "unknown_space": "neither confirmed empty nor confirmed solid",
+          "controller_changes": false,
+          "scoring_weights_changed": false
+        },
+        "physics_time_before": 1.8833334315568209,
+        "physics_time_after": 1.8833334315568209,
+        "views": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45606/physical_01/rgbd/multi_00",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45606/physical_01/rgbd/multi_01",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_multiview_skill_20261015/45606/physical_01/rgbd/multi_02"
+        ],
+        "camera_restored": true
+      },
+      "GT_grasp_fallback": false,
+      "first_divergence": null,
+      "warning_events": [
+        {
+          "t": 169.12083333333334,
+          "phase": "CENTER",
+          "forces_n": {
+            "gripper_link1": 2.1728874283258133,
+            "gripper_link2": 0.0
+          },
+          "force_event": {
+            "status": "SOFT_FORCE_WARNING",
+            "raw_peak_n": 2.1728874283258133,
+            "window_mean_n": 0.5758056612120759,
+            "consecutive_overload_windows": 0,
+            "t": 169.12083333333334,
+            "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+          }
+        }
+      ]
+    }
+  ]
+}

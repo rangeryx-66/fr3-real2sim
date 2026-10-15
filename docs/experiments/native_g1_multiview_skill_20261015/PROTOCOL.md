@@ -20,7 +20,7 @@ The new adapter reuses `3103651` preservation and metric fusion: original view
 plus −55/0/+55° observed-panel-relative views, 0.7 m standoff, +0.1 m height,
 0.5 mm point voxels. Open adjacent-depth-pixel triangle patches stay separate
 from rear hypotheses at 0.75/1/1.25 times observed transverse width. Positive
-front-facing convex caps are omitted from uncertain completion so that they do
+front-facing convex caps (normal dot observed outward normal ≥0.1) are omitted from uncertain completion so that they do
 not replace the measured front. Hypothetical lateral/rear faces are labeled
 assumed. Missing depth does not certify empty space or a solid obstacle.
 
