@@ -1,0 +1,9 @@
+# Identical Agent instructions for both registered cases
+
+Inspect actual fresh wrist RGB, SAM3 overlays (including clipped candidates), metric depth and local point cloud before each observation decision. Use measured camera pose/intrinsics, robot q and the current episode history. Do not use GT handle geometry, saved views/grasps, scene-camera depth, or asset-specific framing rules. Partial masks are incomplete cues, not accepted complete geometry.
+
+Explain what is seen and missing; request the first useful viewpoint based on observed surfaces. The existing deterministic IK/collision/motion interface validates and executes it through actuators. At most four Agent-selected adjustments; stop earlier when evidence suffices or useful safe observation is unavailable. Preserve identical prompt, thresholds, camera, fusion, ranking, timing and controls. No between-case tuning.
+
+Build geometry from accepted actual wrist views, distinguish measured patches from rear hypotheses, inspect the fused cloud and automatic gripper plan, then explicitly decide whether to execute. Validate the current measured observation-to-home-to-approach transition. Use frozen approach/refinement/closure, original one-second hold and +3 degree opening. No manual pose corrections or GT grasp fallback. Existing physical protections decide physical stops; diagnostic imperfections alone add no gate.
+
+One valid closed-start episode per case, no physical retries or replacement assets. Record inspected-file hashes, interpretation, missing information, chosen action, expected benefit and actual response. If detection/geometry/planning fails, report its stage and export safely; do not relabel it a failed physical grasp. Keep raw video, RGB-D and 240 Hz streams private. This is Codex-in-the-loop development with simulated wrist mounting, known station/hinge/state/collision and approximate actuators.
