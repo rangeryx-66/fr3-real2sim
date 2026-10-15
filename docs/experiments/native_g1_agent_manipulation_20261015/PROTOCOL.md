@@ -1,0 +1,13 @@
+# One Agent wrist perception-to-manipulation episode
+
+Reference `2c126cd`; physical scene-camera baseline `dba947d`. Registered case: **45600**, one fresh normal-closed scene, at most one valid manipulation attempt. No retries, held-out objects, manual grasp corrections, release/regrasp or 30-degree task. Scope: **CODEX_AGENT_WRIST / RGBD_SAM3 / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION**.
+
+Codex must view every fresh RGB/mask/depth/cloud packet before choosing a view. Initial generic coarse survey is unchanged. Up to four Agent-selected adjustments; no archived successful view or grasp input. Partial masks are cues only. Accepted fresh wrist frames feed frozen measured-patch fusion, explicit rear hypotheses and original robust grasp scoring. Codex also inspects fused geometry and the native gripper plan before explicitly requesting `execute`.
+
+First check the archived observation→home→approach integration **offline only**. Live approval checks the current measured state/command, reverse current-episode collision-checked routes and fresh grasp plan. Robot returns through normal actuators, then approach/IK is revalidated from measured state. Original wrist pregrasp common-visible RGB-D correction remains. Any invalid return/refinement/approach stops and exports; no fallback to GT grasp geometry or saved success poses.
+
+Native G1 closure, preloads, actuator gains/limits, one-second post-acquisition hold, Pink opening, +3° task, progress/contact policy and original collision/force/joint/loaded-5-mm/s protections remain byte-identical. First-contact prediction error (~3.32mm in the prior pose) is diagnostic only. No extra symmetry or bilateral-continuity condition. Known station, coarse cabinet envelope, hinge/dynamic state, ideal simulation calibration and collision safety models remain explicit dependencies. Simulated sensor housing/mount are not hardware validated.
+
+Physics pauses during Codex inspection; command waits are bounded to 900s each, then cooperative stop/export. This is interactive development, not a deployed autonomous Agent. Our actors run sequentially on sufficient shared GPU capacity. No GPU exclusivity requirement.
+
+Record all fresh RGB-D, inspected-image hashes, actual requested views/reasoning, measured camera/q, private continuous video and 240Hz native contact/robot data. Report active perception, plan, bilateral acquisition, one-second hold and ≥2° post-acquisition opening separately. Raw normal contacts are partial wrenches, not hardware-force evidence. Raw inputs/video/telemetry stay private; code, compact results and trace are public. Preserve any physical failure and close the actor after export.
