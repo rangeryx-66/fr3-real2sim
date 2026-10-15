@@ -1,0 +1,348 @@
+{
+  "asset": "45600",
+  "run": "results/native_g1_agent_wrist_20261015/episode",
+  "views": [
+    {
+      "view": "agent_00",
+      "sim_s": 42.9,
+      "position_world_m": [
+        0.4977671504020691,
+        -0.8432965278625488,
+        0.2889810800552368
+      ],
+      "robot_q": [
+        0.6046780943870544,
+        -0.5426484942436218,
+        -1.6703022718429565,
+        1.1026428937911987,
+        0.7966681122779846,
+        1.9000189304351807,
+        -0.4703451991081238,
+        0.05722331255674362,
+        0.05722331255674362,
+        0.05722332373261452,
+        0.05722332000732422,
+        0.05722331255674362,
+        0.05722331628203392
+      ],
+      "GT_surface_depth_visible_fraction": 0.41386666666666666,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.08835611979166667,
+      "FK_camera_translation_error_mm": 0.001308985753232243,
+      "FK_camera_rotation_error_deg": 0.00015686486328793172,
+      "rigid_camera_translation_error_mm": 4.755346885054862e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.244140625,
+          "confidence_retained_scores": [],
+          "mask_filter": [],
+          "accepted": false,
+          "wall_s": 0.5762864178977907
+        },
+        {
+          "kind": "observed_depth_crop",
+          "raw_max": 0.326171875,
+          "confidence_retained_scores": [
+            0.326171875
+          ],
+          "mask_filter": [
+            {
+              "index": 0,
+              "score": 0.326171875,
+              "pixels": 21585,
+              "rejection": "ROI_border"
+            }
+          ],
+          "accepted": false,
+          "wall_s": 0.9776165771763772
+        }
+      ]
+    },
+    {
+      "view": "agent_01",
+      "sim_s": 60.295833333333334,
+      "position_world_m": [
+        0.7144611477851868,
+        -0.7702218890190125,
+        0.1994965523481369
+      ],
+      "robot_q": [
+        1.4729617834091187,
+        -0.6005144119262695,
+        -2.0342495441436768,
+        1.1983776092529297,
+        0.8467085957527161,
+        1.3252264261245728,
+        -0.627977728843689,
+        0.05828496441245079,
+        0.05828496441245079,
+        0.058285001665353775,
+        0.05828498303890228,
+        0.05828496441245079,
+        0.058284979313611984
+      ],
+      "GT_surface_depth_visible_fraction": 0.43093333333333333,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.08862548828125,
+      "FK_camera_translation_error_mm": 0.0015743877155972956,
+      "FK_camera_rotation_error_deg": 0.00013011661672674048,
+      "rigid_camera_translation_error_mm": 6.319213568021576e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.5703125,
+          "confidence_retained_scores": [
+            0.5703125
+          ],
+          "mask_filter": [
+            {
+              "index": 0,
+              "score": 0.5703125,
+              "pixels": 28189,
+              "rejection": null
+            }
+          ],
+          "accepted": true,
+          "wall_s": 0.5709782028570771
+        }
+      ]
+    },
+    {
+      "view": "agent_02",
+      "sim_s": 74.08333333333333,
+      "position_world_m": [
+        0.5114263892173767,
+        -0.7289770841598511,
+        0.06429412215948105
+      ],
+      "robot_q": [
+        0.8957793116569519,
+        -0.47822949290275574,
+        -2.0056395530700684,
+        0.4198872745037079,
+        1.1927613019943237,
+        1.3010189533233643,
+        -1.203151822090149,
+        0.056826092302799225,
+        0.056826088577508926,
+        0.05682610720396042,
+        0.05682609975337982,
+        0.056826088577508926,
+        0.05682609975337982
+      ],
+      "GT_surface_depth_visible_fraction": 0.4744,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.08837320963541667,
+      "FK_camera_translation_error_mm": 0.0011546977306238185,
+      "FK_camera_rotation_error_deg": 0.00014404626306513215,
+      "rigid_camera_translation_error_mm": 3.461364418848943e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.39453125,
+          "confidence_retained_scores": [
+            0.39453125
+          ],
+          "mask_filter": [
+            {
+              "index": 0,
+              "score": 0.39453125,
+              "pixels": 27001,
+              "rejection": null
+            }
+          ],
+          "accepted": true,
+          "wall_s": 0.5547085287980735
+        }
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "views": [
+        "agent_00",
+        "agent_01"
+      ],
+      "baseline_mm": 245.56805989979767,
+      "optical_axis_angle_deg": 12.466436517859735
+    },
+    {
+      "views": [
+        "agent_00",
+        "agent_02"
+      ],
+      "baseline_mm": 252.4673029561591,
+      "optical_axis_angle_deg": 25.23897616488987
+    },
+    {
+      "views": [
+        "agent_01",
+        "agent_02"
+      ],
+      "baseline_mm": 247.39430923826356,
+      "optical_axis_angle_deg": 30.172323085159874
+    }
+  ],
+  "clouds": {
+    "wrist_single": {
+      "points": 27110,
+      "observed_to_GT": {
+        "n": 27110,
+        "mean_mm": 0.12239608055026577,
+        "median_mm": 0.11552649030777422,
+        "p90_mm": 0.2243916947776658,
+        "p95_mm": 0.22525169259721176
+      },
+      "full_GT_coverage_2mm": 0.47383333333333333,
+      "wrist_visible_GT_coverage_2mm": 0.8824708683122415,
+      "principal_axis_error_deg": 0.018979464383427545,
+      "extent_along_GT_axis_mm": 378.06464229260183
+    },
+    "wrist_multi": {
+      "points": 28761,
+      "observed_to_GT": {
+        "n": 28761,
+        "mean_mm": 0.12962994373512174,
+        "median_mm": 0.1310176711702884,
+        "p90_mm": 0.2247667475033745,
+        "p95_mm": 0.22567519153189558
+      },
+      "full_GT_coverage_2mm": 0.4776666666666667,
+      "wrist_visible_GT_coverage_2mm": 0.8835985465480516,
+      "principal_axis_error_deg": 0.024608663687575,
+      "extent_along_GT_axis_mm": 378.05757279998176
+    },
+    "scene_multi_baseline": {
+      "points": 38774,
+      "observed_to_GT": {
+        "n": 38774,
+        "mean_mm": 0.31450012863228094,
+        "median_mm": 0.1736289466414221,
+        "p90_mm": 0.37744195678204173,
+        "p95_mm": 0.6111465813398751
+      },
+      "full_GT_coverage_2mm": 0.5579,
+      "wrist_visible_GT_coverage_2mm": 0.9083448189449944,
+      "principal_axis_error_deg": 0.26539038070451854,
+      "extent_along_GT_axis_mm": 378.62524079373014
+    }
+  },
+  "predicted_first_contacts": {
+    "observed_only": {
+      "gripper_link1": {
+        "first_aperture_mm": 17.123526855468743,
+        "bracket_mm": [
+          17.123526855468743,
+          17.131569726562496
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 17.284384277343747,
+        "bracket_mm": [
+          17.284384277343747,
+          17.292427148437497
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      }
+    },
+    "0.75": {
+      "gripper_link1": {
+        "first_aperture_mm": 17.2602556640625,
+        "bracket_mm": [
+          17.2602556640625,
+          17.268298535156248
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 17.308512890625,
+        "bracket_mm": [
+          17.308512890625,
+          17.31655576171875
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      }
+    },
+    "1.0": {
+      "gripper_link1": {
+        "first_aperture_mm": 17.2602556640625,
+        "bracket_mm": [
+          17.2602556640625,
+          17.268298535156248
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 17.308512890625,
+        "bracket_mm": [
+          17.308512890625,
+          17.31655576171875
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      }
+    },
+    "1.25": {
+      "gripper_link1": {
+        "first_aperture_mm": 17.2602556640625,
+        "bracket_mm": [
+          17.2602556640625,
+          17.268298535156248
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 17.308512890625,
+        "bracket_mm": [
+          17.308512890625,
+          17.31655576171875
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      }
+    },
+    "GT_visual_offline_only": {
+      "gripper_link1": {
+        "first_aperture_mm": 20.58196142578125,
+        "bracket_mm": [
+          20.58196142578125,
+          20.590004296875
+        ],
+        "coarse_aperture_mm": 20.171775000000004
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 16.914412207031244,
+        "bracket_mm": [
+          16.914412207031244,
+          16.922455078124994
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      }
+    },
+    "GT_native_offline_only": {
+      "gripper_link1": {
+        "first_aperture_mm": 20.58196142578125,
+        "bracket_mm": [
+          20.58196142578125,
+          20.590004296875
+        ],
+        "coarse_aperture_mm": 20.171775000000004
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 16.914412207031244,
+        "bracket_mm": [
+          16.914412207031244,
+          16.922455078124994
+        ],
+        "coarse_aperture_mm": 16.053824999999993
+      }
+    }
+  },
+  "wrist_union_GT_depth_visible_fraction": 0.5320666666666667,
+  "scene_baseline_union_GT_depth_visible_fraction": 0.5179666666666667,
+  "scene_baseline_views_evaluated": 4,
+  "observation_wall_s": null,
+  "evaluation_wall_s": 7.746301730163395,
+  "GT_is_offline_evaluation_only": true,
+  "missing_backside_is_not_sensor_error": true
+}

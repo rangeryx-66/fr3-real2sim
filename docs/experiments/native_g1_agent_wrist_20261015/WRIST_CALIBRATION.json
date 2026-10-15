@@ -1,0 +1,128 @@
+{
+  "configuration": {
+    "schema": "xarm7-rigid-wrist-rgbd-simulation-v1",
+    "parent_body": "link7",
+    "resolution_wh": [
+      1280,
+      960
+    ],
+    "K": [
+      [
+        920.0,
+        0.0,
+        640.0
+      ],
+      [
+        0.0,
+        920.0,
+        480.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "frequency_hz": 30,
+    "clipping_range_m": [
+      0.025,
+      3.0
+    ],
+    "T_tcp_camera_translation_m": [
+      0.075,
+      0.0,
+      -0.1
+    ],
+    "T_tcp_camera_rotation_xyz_deg": [
+      0.0,
+      -25.0,
+      0.0
+    ],
+    "extrinsics_source": "Explicit simulated design: lateral sensor beside native G1, optical axis tilted toward grasp region. Fixed USD child of link7; not independently moved.",
+    "real_hardware_calibrated": false,
+    "hardware_mount_verified": false,
+    "housing_collision_model_added": false,
+    "housing_limitation": "Optical sensor only. No mass/collider change to frozen robot. Physical camera housing/cable/mount clearance remains unvalidated.",
+    "survey_height_fractions": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "survey_standoffs_m": [
+      0.6,
+      0.45
+    ],
+    "view_azimuths_deg": [
+      -30.0,
+      30.0,
+      -15.0,
+      15.0
+    ],
+    "view_standoffs_m": [
+      0.35,
+      0.45
+    ],
+    "maximum_total_views": 3,
+    "ik_starts": 4,
+    "route_iterations": 600,
+    "settle_s": 0.5,
+    "survey_dependency": "Known closed cabinet coarse collision envelope and registered station; no handle vertex, grasp pose or scene-camera image/depth. Subsequent views use current wrist-observed points and panel normal."
+  },
+  "prim_path": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/wrist_rgbd",
+  "parent_body_path": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7",
+  "T_parent_camera_optical": [
+    [
+      0.90630778703665,
+      0.0,
+      -0.42261826174069944,
+      0.075
+    ],
+    [
+      -1.9556983565075491e-22,
+      1.0000000000000002,
+      -4.1940086599596095e-22,
+      4.6275765473369025e-23
+    ],
+    [
+      0.4226182617406994,
+      -6.198455110128172e-22,
+      0.9063077870366499,
+      0.07199999999999997
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "T_tcp_camera_optical": [
+    [
+      0.90630778703665,
+      -0.0,
+      -0.42261826174069944,
+      0.075
+    ],
+    [
+      0.0,
+      1.0,
+      -0.0,
+      0.0
+    ],
+    [
+      0.42261826174069944,
+      0.0,
+      0.90630778703665,
+      -0.1
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "set_local_pose_calls": 1,
+  "independent_world_pose_commands": 0,
+  "rigid_USD_child": true
+}

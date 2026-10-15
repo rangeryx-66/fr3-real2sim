@@ -1,0 +1,217 @@
+[
+  {
+    "sequence": 0,
+    "command": {
+      "operation": "evaluate_view",
+      "observation_index": 0,
+      "interpretation": "Actual RGB/overlay show the left handle support and a rod clipped at the right frame; metric depth separates rod from panel. Robot fingers lie away from the handle.",
+      "missing_information": [
+        "complete right endpoint/support",
+        "unclipped handle extent",
+        "rear/side contact surfaces remain unknown"
+      ],
+      "chosen_viewpoint": "Reframe toward observed rod, shifted slightly toward the missing end, with lower camera height and frontal standoff; do not reconstruct the missing endpoint.",
+      "expected_benefit": "Bring both handle endpoints inside the frame with margin, enabling the unchanged valid-mask pipeline.",
+      "inspected_files": [
+        {
+          "path": "rgbd/agent_00/rgb.png",
+          "sha256": "2642c7c9965895c996b53dbcc788114d96ff1b9c89141feee491a599146142a8"
+        },
+        {
+          "path": "rgbd/agent_00/agent_inspection.png",
+          "sha256": "a3ee69991254d6b372911bbd360104168c1716d58e6a53dccce2b3c771402d8c"
+        }
+      ],
+      "target": {
+        "eye_world_m": [
+          0.7148871522103845,
+          -0.7710321112426679,
+          0.19990244026755388
+        ],
+        "look_at_world_m": [
+          0.714880455702959,
+          -0.32103211376445906,
+          0.09985527281282318
+        ]
+      },
+      "coordinate_source": "fresh observation 0 cue median, measured panel normal and observed-axis PCA only; Agent chose 10% visible-span look shift, 0.45m standoff and 0.10m height; no GT or saved pose"
+    },
+    "agent_wait_wall_s": 94.68534281407483,
+    "operation_wall_s": 0.22521277703344822,
+    "actual_result": {
+      "feasible": true,
+      "minimum_planned_margin_rad": 1.2415737231546125
+    }
+  },
+  {
+    "sequence": 1,
+    "command": {
+      "operation": "move_and_observe",
+      "evaluated_command": 0,
+      "observation_index": 0,
+      "interpretation": "The requested reframing has a direct collision-free joint route with the original margin limits; all currently observed cue points project inside its image. Unseen right-end coverage remains a hypothesis until the next real observation.",
+      "missing_information": [
+        "right endpoint and complete handle extent"
+      ],
+      "chosen_viewpoint": "Execute evaluated camera request 0 using native arm actuators.",
+      "expected_benefit": "Recover an unclipped full-frame handle mask and inspect it before choosing another view."
+    },
+    "agent_wait_wall_s": 25.439355628099293,
+    "operation_wall_s": 105.07715380494483,
+    "actual_result": {
+      "observation": {
+        "index": 1,
+        "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_wrist_20261015/episode/rgbd/agent_01",
+        "t_sim": 60.295833333333334,
+        "world_sim_s": 62.179169909562916,
+        "accepted_for_geometry": true,
+        "SAM_returncode": 0,
+        "geometry_issue": null,
+        "sensing_and_segmentation_wall_s": 18.765762286959216,
+        "inspection_wall_s": 1.3191296570003033
+      }
+    }
+  },
+  {
+    "sequence": 2,
+    "command": {
+      "operation": "evaluate_view",
+      "observation_index": 1,
+      "interpretation": "Fresh RGB and green mask show both handle ends inside the image. The measured middle-section close-up contains a front/top arc but no measured lower/back surface; the distant panel points are distinct from the preserved handle surface.",
+      "missing_information": [
+        "lower-side cross section",
+        "handle-to-panel gap from an oblique direction",
+        "unseen rear remains uncertain"
+      ],
+      "chosen_viewpoint": "Left oblique and slightly below the observed rod; test collision/IK first.",
+      "expected_benefit": "Add lower-side measurements while retaining the whole handle in frame, rather than completing the missing rear by assumption.",
+      "inspected_files": [
+        {
+          "path": "rgbd/agent_01/rgb.png",
+          "sha256": "10246a071c657a1512b2e62346c2746853c89d0fa4df949ce63c020512ee427c"
+        },
+        {
+          "path": "rgbd/agent_01/agent_inspection.png",
+          "sha256": "483b9c22998e0eff77e57a78b3626cdabeabd0c403a6b8627d1f10fa255539c6"
+        },
+        {
+          "path": "rgbd/agent_01/agent_local_geometry.png",
+          "sha256": "b1468f5e35f7d4b819480d032d0a9d7d78d80afbfcc3154c43d1729766848b10"
+        }
+      ],
+      "target": {
+        "eye_world_m": [
+          0.5112569540861859,
+          -0.7290716791982617,
+          0.06417689545345533
+        ],
+        "look_at_world_m": [
+          0.7014261956679074,
+          -0.3212292283590507,
+          0.09873547762569988
+        ]
+      },
+      "coordinate_source": "fresh observation 1 cue median and measured panel normal; Agent-selected -25deg azimuth, 0.45m standoff, -0.035m height; no GT or saved view"
+    },
+    "agent_wait_wall_s": 230.22788659087382,
+    "operation_wall_s": 0.21336958813481033,
+    "actual_result": {
+      "feasible": true,
+      "minimum_planned_margin_rad": 0.6106916725884508
+    }
+  },
+  {
+    "sequence": 3,
+    "command": {
+      "operation": "move_and_observe",
+      "evaluated_command": 2,
+      "observation_index": 1,
+      "interpretation": "The low left-oblique request has a direct route under the original collision checks and joint limits; minimum planned margin is 0.611rad. It is worth one observation to test whether lower-side geometry is gained.",
+      "missing_information": [
+        "lower/rear-side surface support"
+      ],
+      "chosen_viewpoint": "Execute evaluated request 2; no gripper action.",
+      "expected_benefit": "Get a genuinely different camera direction while keeping all currently observed cue points in frame."
+    },
+    "agent_wait_wall_s": 36.37855706596747,
+    "operation_wall_s": 91.50387949496508,
+    "actual_result": {
+      "observation": {
+        "index": 2,
+        "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_wrist_20261015/episode/rgbd/agent_02",
+        "t_sim": 74.08333333333333,
+        "world_sim_s": 75.96667062863708,
+        "accepted_for_geometry": true,
+        "SAM_returncode": 0,
+        "geometry_issue": null,
+        "sensing_and_segmentation_wall_s": 17.99536389997229,
+        "inspection_wall_s": 1.3104416211135685
+      }
+    }
+  },
+  {
+    "sequence": 4,
+    "command": {
+      "operation": "build_geometry",
+      "observation_index": 2,
+      "interpretation": "Fresh oblique RGB/overlay retain the complete rod inside the frame. The local cloud adds side measurements, while the frozen preserved patches remain open and do not establish the hidden rear.",
+      "missing_information": [
+        "backside remains unknown and must stay a declared hypothesis",
+        "physical grasp/contact validity is not tested in this round"
+      ],
+      "chosen_viewpoint": "No additional movement now. Fuse the two accepted wrist observations and request the unchanged robust grasp/IK planner.",
+      "expected_benefit": "Determine whether current measured geometry already supports an automatic plan before spending more observation motions.",
+      "inspected_files": [
+        {
+          "path": "rgbd/agent_02/rgb.png",
+          "sha256": "1fb9943ff2eac4610f1e51386cff9d467529c09638006a49589b923763007b89"
+        },
+        {
+          "path": "rgbd/agent_02/agent_inspection.png",
+          "sha256": "7626c60bc93bcee36b605f3cb372ab0d34b1bad7b14e8cc19e2e99c8dd572a7c"
+        },
+        {
+          "path": "rgbd/agent_02/agent_local_geometry.png",
+          "sha256": "d43642293813dd7e5e5dbc46b13ab766e55579eaa18fd0d46d0c6d6e91086f57"
+        }
+      ],
+      "partial_frame_policy": "Observation 0 remains a view cue only; only accepted observations 1 and 2 enter this build"
+    },
+    "agent_wait_wall_s": 174.153699740069,
+    "operation_wall_s": 150.16608369303867,
+    "actual_result": {
+      "geometry": true,
+      "plan": true,
+      "planning_wall_s": 148.66629789210856,
+      "geometry_wall_s": 1.498894619056955
+    }
+  },
+  {
+    "sequence": 5,
+    "command": {
+      "operation": "finish",
+      "observation_index": 2,
+      "interpretation": "Actual fused inspection shows a continuous observed handle front/side patch with a still-open rear; orange closures are explicitly assumed. Two accepted wrist frames have produced an automatic grasp/approach/IK plan with no GT handle template.",
+      "missing_information": [
+        "rear surface remains uncertain",
+        "physical grasp/contact has not been tested",
+        "real hardware wrist mount is not calibrated"
+      ],
+      "chosen_viewpoint": "Stop sensing with two of four adjustment opportunities used.",
+      "expected_benefit": "Preserve a bounded successful observation/planning episode without unnecessary scanning or manipulation.",
+      "inspected_files": [
+        {
+          "path": "agent_geometry/AGENT_FUSED_INSPECTION.png",
+          "sha256": "410135c7f66b37020f4975aa4657c3fcced099f81a1776ba87bf4e5ffc282334"
+        }
+      ],
+      "reason": "Clipped handle recovered; two accepted measured wrist views fused; frozen grasp/IK planner returned a plan. No grasp/opening execution requested. GT evaluation may start only after this episode ends."
+    },
+    "agent_wait_wall_s": 248.73885181196965,
+    "operation_wall_s": 3.113807179033756e-05,
+    "actual_result": {
+      "reason": "Clipped handle recovered; two accepted measured wrist views fused; frozen grasp/IK planner returned a plan. No grasp/opening execution requested. GT evaluation may start only after this episode ends.",
+      "completed": true
+    }
+  }
+]

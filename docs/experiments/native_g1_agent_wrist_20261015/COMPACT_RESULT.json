@@ -1,0 +1,490 @@
+{
+  "reference": "d2ad962",
+  "classification": "CODEX_AGENT_ACTIVE_WRIST / RGBD_SAM3 / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION",
+  "outcome": "CLIPPED_HANDLE_RECOVERED_AND_AUTOMATIC_PLAN_OBTAINED",
+  "one_development_case_not_generalization_rate": true,
+  "observations": [
+    {
+      "index": 0,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_wrist_20261015/episode/rgbd/agent_00",
+      "t_sim": 42.9,
+      "world_sim_s": 44.783335668966174,
+      "accepted_for_geometry": false,
+      "SAM_returncode": 0,
+      "geometry_issue": null,
+      "sensing_and_segmentation_wall_s": 20.712398291099817,
+      "inspection_wall_s": 1.4323764969594777,
+      "cue": {
+        "name": "candidate_01_000",
+        "score": 0.326171875,
+        "kind": "observed_depth_crop",
+        "pixels": 21585,
+        "bbox_xyxy": [
+          668,
+          778,
+          1280,
+          831
+        ],
+        "borders": {
+          "left": false,
+          "right": true,
+          "top": false,
+          "bottom": false
+        },
+        "partial": true,
+        "eligible_for_grasp": false,
+        "role": "partial cue for viewpoint reasoning; existing border filter still applies to grasp input"
+      },
+      "robot_q": [
+        0.6046780943870544,
+        -0.5426484942436218,
+        -1.6703022718429565,
+        1.1026428937911987,
+        0.7966681122779846,
+        1.9000189304351807,
+        -0.4703451991081238,
+        0.05722331255674362,
+        0.05722331255674362,
+        0.05722332373261452,
+        0.05722332000732422,
+        0.05722331255674362,
+        0.05722331628203392
+      ],
+      "T_world_camera_optical": [
+        [
+          0.9999832921189566,
+          -0.005765418329516662,
+          0.00041884892137823053,
+          0.4977671504020691
+        ],
+        [
+          -0.0004213123686822671,
+          -0.0004260719897100085,
+          0.9999998204792576,
+          -0.8432965278625488
+        ],
+        [
+          -0.005765238834711164,
+          -0.999983289067445,
+          -0.00042849391300281425,
+          0.2889810800552368
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "robot_self_mask_fraction": 0.08835611979166667,
+      "image_files": {
+        "rgb.png": {
+          "path": "rgbd/agent_00/rgb.png",
+          "sha256": "2642c7c9965895c996b53dbcc788114d96ff1b9c89141feee491a599146142a8"
+        },
+        "agent_inspection.png": {
+          "path": "rgbd/agent_00/agent_inspection.png",
+          "sha256": "a3ee69991254d6b372911bbd360104168c1716d58e6a53dccce2b3c771402d8c"
+        },
+        "agent_mask_overlay.png": {
+          "path": "rgbd/agent_00/agent_mask_overlay.png",
+          "sha256": "4b02496dd6faa20dee1b7e6643802335715bd04775bc333c78109c6c434c7cf5"
+        },
+        "depth_m.npy": {
+          "path": "rgbd/agent_00/depth_m.npy",
+          "sha256": "320c638e949992d886c97c7c482fd95f7c38363ee142619ecee7958ae1da87f2"
+        },
+        "camera.json": {
+          "path": "rgbd/agent_00/camera.json",
+          "sha256": "faa685f2218c207456b1255fbdc4352421f0ec40cd1ca8f788262772c52106b9"
+        }
+      }
+    },
+    {
+      "index": 1,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_wrist_20261015/episode/rgbd/agent_01",
+      "t_sim": 60.295833333333334,
+      "world_sim_s": 62.179169909562916,
+      "accepted_for_geometry": true,
+      "SAM_returncode": 0,
+      "geometry_issue": null,
+      "sensing_and_segmentation_wall_s": 18.765762286959216,
+      "inspection_wall_s": 1.3191296570003033,
+      "cue": {
+        "name": "candidate_00_000",
+        "score": 0.5703125,
+        "kind": "full_frame",
+        "pixels": 28189,
+        "bbox_xyxy": [
+          241,
+          457,
+          997,
+          503
+        ],
+        "borders": {
+          "left": false,
+          "right": false,
+          "top": false,
+          "bottom": false
+        },
+        "partial": false,
+        "eligible_for_grasp": true,
+        "role": "partial cue for viewpoint reasoning; existing border filter still applies to grasp input"
+      },
+      "robot_q": [
+        1.4729617834091187,
+        -0.6005144119262695,
+        -2.0342495441436768,
+        1.1983776092529297,
+        0.8467085957527161,
+        1.3252264261245728,
+        -0.627977728843689,
+        0.05828496441245079,
+        0.05828496441245079,
+        0.058285001665353775,
+        0.05828498303890228,
+        0.05828496441245079,
+        0.058284979313611984
+      ],
+      "T_world_camera_optical": [
+        [
+          0.9999891461780315,
+          -0.003281361652360521,
+          -0.0033075960814642332,
+          0.7144611477851868
+        ],
+        [
+          0.0025196951135645486,
+          -0.21626466027699798,
+          0.9763315255853463,
+          -0.7702218890190125
+        ],
+        [
+          -0.003919012970937792,
+          -0.9763292627904695,
+          -0.21625404494795597,
+          0.1994965523481369
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "robot_self_mask_fraction": 0.08862548828125,
+      "image_files": {
+        "rgb.png": {
+          "path": "rgbd/agent_01/rgb.png",
+          "sha256": "10246a071c657a1512b2e62346c2746853c89d0fa4df949ce63c020512ee427c"
+        },
+        "agent_inspection.png": {
+          "path": "rgbd/agent_01/agent_inspection.png",
+          "sha256": "483b9c22998e0eff77e57a78b3626cdabeabd0c403a6b8627d1f10fa255539c6"
+        },
+        "agent_mask_overlay.png": {
+          "path": "rgbd/agent_01/agent_mask_overlay.png",
+          "sha256": "5cd122bebf47c9cf5fed5fc43321469ce13e0456b4ab805b807d935be0cc635e"
+        },
+        "depth_m.npy": {
+          "path": "rgbd/agent_01/depth_m.npy",
+          "sha256": "866389e9954dc6a5300f67df139b663a9eb953c4cb69908652d6b3cc11850d9f"
+        },
+        "camera.json": {
+          "path": "rgbd/agent_01/camera.json",
+          "sha256": "3d76c802790701d89d2eee12efcc64404a9df185e2e00ee4eb90f8ff5775e206"
+        }
+      },
+      "preserved_geometry_audit": {
+        "GT_inputs": false,
+        "seed_pixels": 28189,
+        "preserved_pixels": 27110,
+        "panel_center_world_m": [
+          0.6771262803031346,
+          -0.2684016257316509,
+          0.14414603211490468
+        ],
+        "panel_normal_world": [
+          2.2009092913651584e-05,
+          -0.9999994140332604,
+          0.0010823348537372347
+        ],
+        "axis_world": [
+          0.9999999944219451,
+          2.212088938877787e-05,
+          0.00010328008508899691
+        ],
+        "frame_world": [
+          [
+            0.9999999944219451,
+            -0.00010330396677988335,
+            2.2009092913651584e-05
+          ],
+          [
+            2.212088938877787e-05,
+            0.0010823325745989228,
+            -0.9999994140332604
+          ],
+          [
+            0.00010328008508899691,
+            0.9999994089420695,
+            0.0010823348537372347
+          ]
+        ],
+        "origin_world_m": [
+          0.7024503381656153,
+          -0.32133820702488924,
+          0.09853782868952873
+        ],
+        "filter": "preserve inherited trusted body; extend only missing longitudinal ends with 32 local depth layers and metric-neighbor continuity in two-pixel seed neighborhood; no 10% height/5-95% length deletion",
+        "observed_triangle_edge_limit_m": 0.0040013992371766465,
+        "mesh_role": "open observed-neighbor interpolation, not a completed solid"
+      }
+    },
+    {
+      "index": 2,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_wrist_20261015/episode/rgbd/agent_02",
+      "t_sim": 74.08333333333333,
+      "world_sim_s": 75.96667062863708,
+      "accepted_for_geometry": true,
+      "SAM_returncode": 0,
+      "geometry_issue": null,
+      "sensing_and_segmentation_wall_s": 17.99536389997229,
+      "inspection_wall_s": 1.3104416211135685,
+      "cue": {
+        "name": "candidate_00_000",
+        "score": 0.39453125,
+        "kind": "full_frame",
+        "pixels": 27001,
+        "bbox_xyxy": [
+          220,
+          454,
+          941,
+          512
+        ],
+        "borders": {
+          "left": false,
+          "right": false,
+          "top": false,
+          "bottom": false
+        },
+        "partial": false,
+        "eligible_for_grasp": true,
+        "role": "partial cue for viewpoint reasoning; existing border filter still applies to grasp input"
+      },
+      "robot_q": [
+        0.8957793116569519,
+        -0.47822949290275574,
+        -2.0056395530700684,
+        0.4198872745037079,
+        1.1927613019943237,
+        1.3010189533233643,
+        -1.203151822090149,
+        0.056826092302799225,
+        0.056826088577508926,
+        0.05682610720396042,
+        0.05682609975337982,
+        0.056826088577508926,
+        0.05682609975337982
+      ],
+      "T_world_camera_optical": [
+        [
+          0.9072793582934353,
+          0.031897436458934086,
+          0.4193169678918327,
+          0.5114263892173767
+        ],
+        [
+          -0.4205258787462772,
+          0.07229528192984941,
+          0.904395586850884,
+          -0.7289770841598511
+        ],
+        [
+          -0.0014667376463931847,
+          -0.9968730840774225,
+          0.07900571449360366,
+          0.06429412215948105
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "robot_self_mask_fraction": 0.08837320963541667,
+      "image_files": {
+        "rgb.png": {
+          "path": "rgbd/agent_02/rgb.png",
+          "sha256": "1fb9943ff2eac4610f1e51386cff9d467529c09638006a49589b923763007b89"
+        },
+        "agent_inspection.png": {
+          "path": "rgbd/agent_02/agent_inspection.png",
+          "sha256": "7626c60bc93bcee36b605f3cb372ab0d34b1bad7b14e8cc19e2e99c8dd572a7c"
+        },
+        "agent_mask_overlay.png": {
+          "path": "rgbd/agent_02/agent_mask_overlay.png",
+          "sha256": "8c04c45e3f0f8f5ee5ac9dc8fb41f2444e9b1f36b77aa1d14cf16ed4fbdf1dbd"
+        },
+        "depth_m.npy": {
+          "path": "rgbd/agent_02/depth_m.npy",
+          "sha256": "3c1c233ebb8a396264fd2eb020a8f2e0d0f45729f177049b7a7ababad445acd1"
+        },
+        "camera.json": {
+          "path": "rgbd/agent_02/camera.json",
+          "sha256": "fd0b847cfa5f9327de7f75430a31617aecd4cf75adc9fb022d79061ef5769d0d"
+        }
+      },
+      "preserved_geometry_audit": {
+        "GT_inputs": false,
+        "seed_pixels": 27001,
+        "preserved_pixels": 19878,
+        "panel_center_world_m": [
+          0.6386350544456803,
+          -0.2683697464637189,
+          0.14265794933382875
+        ],
+        "panel_normal_world": [
+          7.939162508920007e-05,
+          -0.9999999932512482,
+          -8.482024206356462e-05
+        ],
+        "axis_world": [
+          0.9999999335746229,
+          7.936144621193096e-05,
+          0.0003557421967571864
+        ],
+        "frame_world": [
+          [
+            0.9999999335746229,
+            -0.0003557354628992924,
+            7.939162508920007e-05
+          ],
+          [
+            7.936144621193096e-05,
+            -8.48484793804614e-05,
+            -0.9999999932512482
+          ],
+          [
+            0.0003557421967571864,
+            0.9999999331265058,
+            -8.482024206356462e-05
+          ]
+        ],
+        "origin_world_m": [
+          0.6531883559703853,
+          -0.3216653126170519,
+          0.09623588343197156
+        ],
+        "filter": "preserve inherited trusted body; extend only missing longitudinal ends with 32 local depth layers and metric-neighbor continuity in two-pixel seed neighborhood; no 10% height/5-95% length deletion",
+        "observed_triangle_edge_limit_m": 0.0039359241827674534,
+        "mesh_role": "open observed-neighbor interpolation, not a completed solid"
+      }
+    }
+  ],
+  "Agent_adjustments": 2,
+  "robot_motion_segments": 3,
+  "accepted_geometry_views": 2,
+  "fused_observed_points": 28761,
+  "observed_triangles": 88022,
+  "no_grasp_or_opening_attempt": true,
+  "actual_door_angle_deg": 0.0,
+  "plan": {
+    "found": true,
+    "planned_range_deg": 29.999999999999996,
+    "minimum_approach_arc_margin_rad": 1.1248478002299045,
+    "section_fraction": 0.3,
+    "insertion_m": 0.0,
+    "roll_deg": 0.0,
+    "pitch_deg": 0.0,
+    "expected_aperture_m": 0.016653824999999994,
+    "saved_GT_grasp_template_used": false,
+    "station_source": "registered oracle station only; no saved grasp transform",
+    "contact_score_surface_source": "open measured multi-view patches plus separate uncertain rear faces; no GT handle surface",
+    "not_physical_execution": true
+  },
+  "time": {
+    "simulation_s": 74.08333333333333,
+    "actor_wall_s": 1427.680869102478,
+    "motion_and_settling_wall_s": 380.8240394850727,
+    "sensing_segmentation_processing_wall_s": 57.47352447803132,
+    "inspection_board_wall_s": 4.0619477750733495,
+    "Agent_turn_wait_wall_s": 809.623693651054,
+    "view_evaluation_wall_s": 0.43858236516825855,
+    "geometry_fusion_wall_s": 1.498894619056955,
+    "grasp_planning_wall_s": 148.66629789210856,
+    "Agent_wait_includes_image_transfer_tools_visualizations_and_scheduling": true,
+    "physics_paused_during_Agent_wait": true
+  },
+  "telemetry": {
+    "records": {
+      "physics_steps": 17780,
+      "observations": 17780,
+      "closure_commands": 0
+    },
+    "fields_present_records": {
+      "raw_contact_records": 17780,
+      "pad_load_raw_n": 17780,
+      "pad_load_filtered_n": 17780,
+      "joint_velocities": 17780,
+      "applied_joint_efforts": 17780,
+      "measured_joint_efforts": 17780,
+      "measured_joint_forces": 17780,
+      "native_gripper_feedback": 17780
+    },
+    "timestamps_uniform": true,
+    "peak_pad_load_n": 0.0,
+    "minimum_actual_joint_margin_rad": 0.6118672745037079,
+    "max_unloaded_TCP_mm_s": 29.018660837445907,
+    "max_joint_command_tracking_rad": 0.003882062674349429,
+    "loaded_velocity_not_applicable": true
+  },
+  "geometry_comparison": {
+    "wrist_single": {
+      "points": 27110,
+      "observed_to_GT": {
+        "n": 27110,
+        "mean_mm": 0.12239608055026577,
+        "median_mm": 0.11552649030777422,
+        "p90_mm": 0.2243916947776658,
+        "p95_mm": 0.22525169259721176
+      },
+      "full_GT_coverage_2mm": 0.47383333333333333,
+      "wrist_visible_GT_coverage_2mm": 0.8824708683122415,
+      "principal_axis_error_deg": 0.018979464383427545,
+      "extent_along_GT_axis_mm": 378.06464229260183
+    },
+    "wrist_multi": {
+      "points": 28761,
+      "observed_to_GT": {
+        "n": 28761,
+        "mean_mm": 0.12962994373512174,
+        "median_mm": 0.1310176711702884,
+        "p90_mm": 0.2247667475033745,
+        "p95_mm": 0.22567519153189558
+      },
+      "full_GT_coverage_2mm": 0.4776666666666667,
+      "wrist_visible_GT_coverage_2mm": 0.8835985465480516,
+      "principal_axis_error_deg": 0.024608663687575,
+      "extent_along_GT_axis_mm": 378.05757279998176
+    },
+    "scene_multi_baseline": {
+      "points": 38774,
+      "observed_to_GT": {
+        "n": 38774,
+        "mean_mm": 0.31450012863228094,
+        "median_mm": 0.1736289466414221,
+        "p90_mm": 0.37744195678204173,
+        "p95_mm": 0.6111465813398751
+      },
+      "full_GT_coverage_2mm": 0.5579,
+      "wrist_visible_GT_coverage_2mm": 0.9083448189449944,
+      "principal_axis_error_deg": 0.26539038070451854,
+      "extent_along_GT_axis_mm": 378.62524079373014
+    }
+  },
+  "source_and_inspection_checks_all_pass": true,
+  "GT_handle_or_scene_depth_execution_input": false,
+  "raw_private": true
+}
