@@ -1,0 +1,291 @@
+{
+  "reference": "dba947d",
+  "classification": "XARM7_NATIVE_G1 / WRIST_RGBD_SAM3 / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION / OBSERVATION_ONLY",
+  "outcome": "WRIST_SURVEY_PERCEPTION_FAILURE_NO_GRASP_ATTEMPT",
+  "asset": "45600",
+  "observation_scenes": 1,
+  "manipulation_scenes": 0,
+  "physical_grasp_attempts": 0,
+  "actual_views": 5,
+  "proposed_survey_views": 6,
+  "unreachable_views": 1,
+  "accepted_handle_masks": 0,
+  "fused_geometry_available": false,
+  "grasp_plan_available": false,
+  "first_contact_prediction_available": false,
+  "short_opening_not_attempted": true,
+  "reason": "first mask confident but clipped ROI border; later survey views miss handle; bounded survey exhausted; no scene-camera fallback",
+  "simulation_s": 102.90833333333333,
+  "actor_wall_s": 751.7599074840546,
+  "report_wall_s": 748.7130996310152,
+  "arm_motion_and_settle_wall_s": 519.7172258987557,
+  "camera_FK_max_translation_error_mm": 0.001308985753232243,
+  "camera_FK_max_rotation_error_deg": 0.00017189009903296126,
+  "camera_rigid_TCP_max_translation_error_mm": 6.078934089884225e-05,
+  "minimum_joint_margin_rad": 0.7719604329872132,
+  "max_unloaded_TCP_mm_s": 29.11745514487934,
+  "max_joint_command_tracking_rad": 0.003781053152181524,
+  "peak_pad_load_n": 0.0,
+  "actual_door_angle_deg": 0.0,
+  "native_240hz_records": {
+    "physics_steps": 24698,
+    "observations": 24698,
+    "closure_commands": 0
+  },
+  "telemetry_fields_present_records": {
+    "raw_contact_records": 24698,
+    "pad_load_raw_n": 24698,
+    "pad_load_filtered_n": 24698,
+    "joint_velocities": 24698,
+    "applied_joint_efforts": 24698,
+    "measured_joint_efforts": 24698,
+    "measured_joint_forces": 24698,
+    "native_gripper_feedback": 24698
+  },
+  "physics_timestamps_uniform": true,
+  "loaded_velocity_metric_applicable": false,
+  "views": [
+    {
+      "view": "initial",
+      "sim_s": 42.9,
+      "position_world_m": [
+        0.4977671504020691,
+        -0.8432965278625488,
+        0.2889810800552368
+      ],
+      "robot_q": [
+        0.6046780943870544,
+        -0.5426484942436218,
+        -1.6703022718429565,
+        1.1026428937911987,
+        0.7966681122779846,
+        1.9000189304351807,
+        -0.4703451991081238,
+        0.05722331255674362,
+        0.05722331255674362,
+        0.05722332373261452,
+        0.05722332000732422,
+        0.05722331255674362,
+        0.05722331628203392
+      ],
+      "GT_surface_depth_visible_fraction": 0.41386666666666666,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.08835611979166667,
+      "FK_camera_translation_error_mm": 0.001308985753232243,
+      "FK_camera_rotation_error_deg": 0.00015686486328793172,
+      "rigid_camera_translation_error_mm": 4.755346885054862e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.265625,
+          "confidence_retained_scores": [
+            0.265625
+          ],
+          "mask_filter": [
+            {
+              "index": 0,
+              "score": 0.265625,
+              "pixels": 21487,
+              "rejection": "ROI_border"
+            }
+          ],
+          "accepted": false,
+          "wall_s": 4.820925552165136
+        },
+        {
+          "kind": "observed_depth_crop",
+          "raw_max": 0.298828125,
+          "confidence_retained_scores": [
+            0.298828125
+          ],
+          "mask_filter": [
+            {
+              "index": 0,
+              "score": 0.298828125,
+              "pixels": 21616,
+              "rejection": "ROI_border"
+            }
+          ],
+          "accepted": false,
+          "wall_s": 0.9075869310181588
+        }
+      ]
+    },
+    {
+      "view": "initial_retry_1",
+      "sim_s": 53.75,
+      "position_world_m": [
+        0.49756601452827454,
+        -0.6933762431144714,
+        0.29014596343040466
+      ],
+      "robot_q": [
+        0.13531085848808289,
+        -0.8477229475975037,
+        -1.0347318649291992,
+        0.5799804329872131,
+        0.8234184980392456,
+        1.542057752609253,
+        -0.3544618487358093,
+        0.05721469596028328,
+        0.05721469596028328,
+        0.05721471086144447,
+        0.057214703410863876,
+        0.05721469596028328,
+        0.057214703410863876
+      ],
+      "GT_surface_depth_visible_fraction": 0.22036666666666666,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.08835611979166667,
+      "FK_camera_translation_error_mm": 0.001081653055599425,
+      "FK_camera_rotation_error_deg": 0.0001594290877391396,
+      "rigid_camera_translation_error_mm": 1.7829625313013404e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.0184326171875,
+          "confidence_retained_scores": [],
+          "mask_filter": [],
+          "accepted": false,
+          "wall_s": 0.5568456391338259
+        }
+      ]
+    },
+    {
+      "view": "initial_retry_2",
+      "sim_s": 73.55833333333334,
+      "position_world_m": [
+        0.49791985750198364,
+        -0.8431209325790405,
+        0.5406731963157654
+      ],
+      "robot_q": [
+        0.7756369709968567,
+        -0.9684683680534363,
+        -1.1299803256988525,
+        1.5591695308685303,
+        0.6896991729736328,
+        1.6651023626327515,
+        0.35060471296310425,
+        0.05720331147313118,
+        0.05720331147313118,
+        0.057203348726034164,
+        0.05720333009958267,
+        0.05720331147313118,
+        0.057203326374292374
+      ],
+      "GT_surface_depth_visible_fraction": 0.0,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.0883544921875,
+      "FK_camera_translation_error_mm": 0.0010055511529702536,
+      "FK_camera_rotation_error_deg": 0.00015938881619144882,
+      "rigid_camera_translation_error_mm": 5.7386322250089625e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.002593994140625,
+          "confidence_retained_scores": [],
+          "mask_filter": [],
+          "accepted": false,
+          "wall_s": 0.513954043854028
+        }
+      ]
+    },
+    {
+      "view": "initial_retry_3",
+      "sim_s": 84.22083333333333,
+      "position_world_m": [
+        0.4978061318397522,
+        -0.6934826374053955,
+        0.5394931435585022
+      ],
+      "robot_q": [
+        0.4840022027492523,
+        -1.031981110572815,
+        -0.755615770816803,
+        1.0876017808914185,
+        0.8323637247085571,
+        1.371100664138794,
+        0.33080992102622986,
+        0.05722680687904358,
+        0.05722680687904358,
+        0.057226818054914474,
+        0.05722681060433388,
+        0.05722680315375328,
+        0.05722681060433388
+      ],
+      "GT_surface_depth_visible_fraction": 0.0,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.08835611979166667,
+      "FK_camera_translation_error_mm": 0.0009364001248496825,
+      "FK_camera_rotation_error_deg": 0.00015359756472163791,
+      "rigid_camera_translation_error_mm": 6.078934089884225e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.0028228759765625,
+          "confidence_retained_scores": [],
+          "mask_filter": [],
+          "accepted": false,
+          "wall_s": 0.430013467092067
+        }
+      ]
+    },
+    {
+      "view": "initial_retry_5",
+      "sim_s": 102.90833333333333,
+      "position_world_m": [
+        0.49744436144828796,
+        -0.6935656666755676,
+        0.7905704975128174
+      ],
+      "robot_q": [
+        1.2578260898590088,
+        -0.6445261240005493,
+        -0.8709824681282043,
+        2.2795746326446533,
+        0.570974588394165,
+        1.505768060684204,
+        0.9505993723869324,
+        0.05719425529241562,
+        0.05719425156712532,
+        0.0571942962706089,
+        0.05719427764415741,
+        0.05719425156712532,
+        0.05719427391886711
+      ],
+      "GT_surface_depth_visible_fraction": 0.0,
+      "GT_surface_robot_silhouette_fraction": 0.0,
+      "self_mask_image_fraction": 0.08835286458333333,
+      "FK_camera_translation_error_mm": 0.001121827400889443,
+      "FK_camera_rotation_error_deg": 0.00017189009903296126,
+      "rigid_camera_translation_error_mm": 2.0225070834592895e-05,
+      "detection_attempts": [
+        {
+          "kind": "full_frame",
+          "raw_max": 0.002288818359375,
+          "confidence_retained_scores": [],
+          "mask_filter": [],
+          "accepted": false,
+          "wall_s": 0.48144164704717696
+        }
+      ]
+    }
+  ],
+  "first_divergence": "Initial handle confident masks rejected by existing ROI_border filter; no grasp/control divergence",
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1280,
+        "height": 960,
+        "r_frame_rate": "30/1",
+        "duration": "102.900000",
+        "nb_read_frames": "3087"
+      }
+    ]
+  },
+  "video_full_decode_errors_bytes": 0,
+  "raw_private": true
+}
