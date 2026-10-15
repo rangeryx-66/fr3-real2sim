@@ -1,0 +1,371 @@
+{
+  "reference": "8425f1329e95abe7c38da4171d3f90c8709442f8",
+  "classification": "OBSERVED_RGBD_GEOMETRY_STUDY / OFFLINE_GT_EVALUATION",
+  "new_manipulation_episodes": 0,
+  "VGGT_installed_or_executed": false,
+  "controllers_physics_IK_grasp_poses_changed": false,
+  "frozen_source_checks": {
+    "native_g1_visual_input.py": true,
+    "native_g1_observed_regions.py": true,
+    "infer_sam3_observed.py": true,
+    "native_g1_visual_hypothesis_rank.py": true,
+    "run_native_g1_rgbd_short.py": true,
+    "run_native_g1_short_open.py": true,
+    "native_g1_robust_contact_ranking.py": true,
+    "xarm7_native_gripper.py": true,
+    "xarm7_native_execution.py": true,
+    "shared_door_execution.py": true,
+    "precontact_trajectory.py": true
+  },
+  "original_input_checks": {
+    "45671/physical_01/rgbd/initial_retry_1/rgb.png": true,
+    "45671/physical_01/rgbd/initial_retry_1/depth_m.npy": true,
+    "45671/physical_01/rgbd/initial_retry_1/camera.json": true,
+    "45671/physical_01/rgbd/initial_retry_1/sam3_mask_raw.npy": true,
+    "45671/physical_01/rgbd/initial_retry_1/sam3_seed_mask.npy": true,
+    "45671/physical_01/rgbd/initial_retry_1/handle_mask.npy": true,
+    "45671/physical_01/rgbd/initial_retry_1/handle_points_world.npy": true,
+    "45671/physical_01/rgbd/initial_retry_1/observed_geometry.json": true,
+    "45671/physical_01/visual_plan.json": true,
+    "45671/physical_01/visual_correction.json": true,
+    "45671/physical_01/cooked_initial.json": true,
+    "45600/physical_01/rgbd/initial/rgb.png": true,
+    "45600/physical_01/rgbd/initial/depth_m.npy": true,
+    "45600/physical_01/rgbd/initial/camera.json": true,
+    "45600/physical_01/rgbd/initial/sam3_mask_raw.npy": true,
+    "45600/physical_01/rgbd/initial/sam3_seed_mask.npy": true,
+    "45600/physical_01/rgbd/initial/handle_mask.npy": true,
+    "45600/physical_01/rgbd/initial/handle_points_world.npy": true,
+    "45600/physical_01/rgbd/initial/observed_geometry.json": true,
+    "45600/physical_01/visual_plan.json": true,
+    "45600/physical_01/visual_correction.json": true,
+    "45600/physical_01/cooked_initial.json": true,
+    "45606/physical_01/rgbd/initial/rgb.png": true,
+    "45606/physical_01/rgbd/initial/depth_m.npy": true,
+    "45606/physical_01/rgbd/initial/camera.json": true,
+    "45606/physical_01/rgbd/initial/sam3_mask_raw.npy": true,
+    "45606/physical_01/rgbd/initial/sam3_seed_mask.npy": true,
+    "45606/physical_01/rgbd/initial/handle_mask.npy": true,
+    "45606/physical_01/rgbd/initial/handle_points_world.npy": true,
+    "45606/physical_01/rgbd/initial/observed_geometry.json": true,
+    "45606/physical_01/visual_plan.json": true,
+    "45606/physical_01/visual_correction.json": true,
+    "45606/physical_01/cooked_initial.json": true
+  },
+  "study_sources": {
+    "scripts/native_g1_metric_rgbd_geometry.py": "db76529d2593858a280f14ab9514ef56ade1e3c737a998861b3c9c912d2fc110",
+    "scripts/capture_native_g1_geometry_views.py": "5aa5464c4ed13d05918ed5f0641f5272f3c8309a5968c6eca5e53167f035d6f8",
+    "scripts/evaluate_native_g1_metric_geometry.py": "625c1a86ce2612c3d3362b65935e832f79203f002ef25d30f10a2cbafbf084d9",
+    "results/native_g1_contact_geometry_study_20261015/capture_geometry_source_snapshot.py": "efe1c3dce193e78a7e29f2ca6612383e2d9d45f42b2d2b5b3e1a48ea20362c1e",
+    "results/native_g1_contact_geometry_study_20261015/capture_source_snapshot.py": "36f7a012fee640bb118eb29b8d992a9398e2e14adb11148b48c7c9105eb6683c"
+  },
+  "capture_source_snapshot_matches_recorded": {
+    "45671": true,
+    "45600": true,
+    "45606": true
+  },
+  "successful_capture": {
+    "45671": {
+      "CAPTURE_SPEC.json": {
+        "source": "observed SAM seeds + depth panel only",
+        "GT_handle_framing": false,
+        "target_world_m": [
+          0.7813829325135945,
+          -0.26870688289778677,
+          0.10458204258363193
+        ],
+        "normal_world": [
+          -0.0018696755921828072,
+          -0.9961898724331165,
+          -0.08719083882422117
+        ],
+        "side_world": [
+          0.9999982387657209,
+          -0.0018768232351926385,
+          0.0
+        ],
+        "seed_folder": "results/native_g1_visual_reliability_20261015/45671/physical_01/rgbd/initial_retry_1",
+        "new_views_max": 3,
+        "azimuths_deg": [
+          -55,
+          0,
+          55
+        ],
+        "standoff_m": 0.7,
+        "height_offset_m": 0.1,
+        "sensing_mode": "SIMULATION_ONLY_CAMERA_REPOSITION_NOT_ROBOT_WRIST_EXECUTION",
+        "manipulation_episodes": 0,
+        "source_sha256": "36f7a012fee640bb118eb29b8d992a9398e2e14adb11148b48c7c9105eb6683c",
+        "gpu": 0
+      },
+      "CAPTURE_COMPLETE.json": {
+        "views": [
+          {
+            "view": "view_00",
+            "azimuth_deg": -55,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 1008785,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          },
+          {
+            "view": "view_01",
+            "azimuth_deg": 0,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 1083273,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          },
+          {
+            "view": "view_02",
+            "azimuth_deg": 55,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 1155874,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          }
+        ],
+        "wall_s": 56.78793942509219,
+        "world_paused": true,
+        "post_bootstrap_physics_steps": 0,
+        "robot_motion_commands": 0,
+        "gripper_commands": 0,
+        "object_state_commands": 0,
+        "manipulation_episodes": 0
+      }
+    },
+    "45600": {
+      "CAPTURE_SPEC.json": {
+        "source": "observed SAM seeds + depth panel only",
+        "GT_handle_framing": false,
+        "target_world_m": [
+          0.7278193968826605,
+          -0.3180983113776734,
+          0.10394922413616747
+        ],
+        "normal_world": [
+          0.00011825962668243573,
+          -0.999999992740631,
+          2.3095429637500298e-05
+        ],
+        "side_world": [
+          0.9999999930073303,
+          0.0001182596267139755,
+          -0.0
+        ],
+        "seed_folder": "results/native_g1_visual_reliability_20261015/45600/physical_01/rgbd/initial",
+        "new_views_max": 3,
+        "azimuths_deg": [
+          -55,
+          0,
+          55
+        ],
+        "standoff_m": 0.7,
+        "height_offset_m": 0.1,
+        "sensing_mode": "SIMULATION_ONLY_CAMERA_REPOSITION_NOT_ROBOT_WRIST_EXECUTION",
+        "manipulation_episodes": 0,
+        "source_sha256": "36f7a012fee640bb118eb29b8d992a9398e2e14adb11148b48c7c9105eb6683c",
+        "gpu": 0
+      },
+      "CAPTURE_COMPLETE.json": {
+        "views": [
+          {
+            "view": "view_00",
+            "azimuth_deg": -55,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 900024,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          },
+          {
+            "view": "view_01",
+            "azimuth_deg": 0,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 1079326,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          },
+          {
+            "view": "view_02",
+            "azimuth_deg": 55,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 1138371,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          }
+        ],
+        "wall_s": 20.691039068857208,
+        "world_paused": true,
+        "post_bootstrap_physics_steps": 0,
+        "robot_motion_commands": 0,
+        "gripper_commands": 0,
+        "object_state_commands": 0,
+        "manipulation_episodes": 0
+      }
+    },
+    "45606": {
+      "CAPTURE_SPEC.json": {
+        "source": "observed SAM seeds + depth panel only",
+        "GT_handle_framing": false,
+        "target_world_m": [
+          0.5794239091077673,
+          -0.41148328201169937,
+          0.7441717521907936
+        ],
+        "normal_world": [
+          0.000664387911167994,
+          -0.999999777642911,
+          5.747027122507664e-05
+        ],
+        "side_world": [
+          0.9999997792943267,
+          0.0006643879122651749,
+          -0.0
+        ],
+        "seed_folder": "results/native_g1_visual_reliability_20261015/45606/physical_01/rgbd/initial",
+        "new_views_max": 3,
+        "azimuths_deg": [
+          -55,
+          0,
+          55
+        ],
+        "standoff_m": 0.7,
+        "height_offset_m": 0.1,
+        "sensing_mode": "SIMULATION_ONLY_CAMERA_REPOSITION_NOT_ROBOT_WRIST_EXECUTION",
+        "manipulation_episodes": 0,
+        "source_sha256": "36f7a012fee640bb118eb29b8d992a9398e2e14adb11148b48c7c9105eb6683c",
+        "gpu": 0
+      },
+      "CAPTURE_COMPLETE.json": {
+        "views": [
+          {
+            "view": "view_00",
+            "azimuth_deg": -55,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 586084,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          },
+          {
+            "view": "view_01",
+            "azimuth_deg": 0,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 361945,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          },
+          {
+            "view": "view_02",
+            "azimuth_deg": 55,
+            "depth_shape": [
+              960,
+              1280
+            ],
+            "valid_depth_pixels": 664542,
+            "physics_time_before": 1.8833334315568209,
+            "physics_time_after": 1.8833334315568209
+          }
+        ],
+        "wall_s": 18.79589687893167,
+        "world_paused": true,
+        "post_bootstrap_physics_steps": 0,
+        "robot_motion_commands": 0,
+        "gripper_commands": 0,
+        "object_state_commands": 0,
+        "manipulation_episodes": 0
+      }
+    }
+  },
+  "new_observation_hashes": {
+    "45600/view_00/camera.json": "e0534db618eb0d85c35b34eac8ea846b887016167f7c0f1a13b6d12b4e809da1",
+    "45600/view_00/depth_m.npy": "d2a1d54e033fea97096620d48a2acc9cc42904e63e8306834755c15beaa8dde4",
+    "45600/view_00/rgb.png": "4bc02c7c55b0fdf5994233418799e72b5b75411447e30f672507eafb0d14a4b5",
+    "45600/view_00/robot_self_exclusion.npy": "880a4e0812e837bf1e0b781b55a30fc3b9549bd8bad2b5c8c2ba180c6c8b0086",
+    "45600/view_01/camera.json": "93f031db5917464fc2ed557ba7561d51aa9ef012a1efbf8cd57370957ebe1d72",
+    "45600/view_01/depth_m.npy": "163452483d1c6b8da1f397c20cd5035c922af41946fd17f5b974cbdee7323bcb",
+    "45600/view_01/rgb.png": "076429d1483dfcc3abbe849b39fd65db8c2432ebdea526192fc5963085848e2c",
+    "45600/view_01/robot_self_exclusion.npy": "968d322af4aedbba638eaf39b62a25bb01dff5def7d42ea41a5159f16272dc55",
+    "45600/view_02/camera.json": "8bfce3b2af7adf36e03767317731f3aa4429d2fec3100c64ff21da716a72b4ec",
+    "45600/view_02/depth_m.npy": "1fcfc6eabaeb01622f2eeb02390108c53373b571fc9d9480993c68bf971975c1",
+    "45600/view_02/rgb.png": "2d86fbf415feadb65b62397e6b3c6ef833217c8f97c2f54e23f8c5368a1746a2",
+    "45600/view_02/robot_self_exclusion.npy": "2b9f95825ff831bdc48bf03a8bcb92ced62402314ec978159dca5882654aced3",
+    "45606/view_00/camera.json": "982cdd5f1feb1d7d36687a93b5af497f7e1f2c308fd0f5592882460546054d01",
+    "45606/view_00/depth_m.npy": "764549b22ea84b96afee6b06f6c53adf8517d0d83886fa93552c071522f3fc16",
+    "45606/view_00/rgb.png": "3c13e6b3aa90df25015203e95dd6823967840435cb94c746bcdcb38a161f4239",
+    "45606/view_00/robot_self_exclusion.npy": "89acd3d3f88d48274124d384d3e6139e34e13afaf1469f077162657a7f2e552e",
+    "45606/view_01/camera.json": "86d36968ab98cee56d8d39c7d50568b906d91fb78a00559dd33e28a5022a79c6",
+    "45606/view_01/depth_m.npy": "bf3ee2d4e2f0eadeb2af59c4b22759bd81d942470a70b6e3f5ef10d359d44a6a",
+    "45606/view_01/rgb.png": "c3cbd6cf04b54a50f577cd250d177fee9ae154d5ef5aad09bc929477e10ff1ab",
+    "45606/view_01/robot_self_exclusion.npy": "3fa77a4d071269406b63974e2d2ea32e7f0bf5069272739c7f9777b32503c682",
+    "45606/view_02/camera.json": "8b686b9c3f92a4694356675a8805c326726a71362b156e33df277d8f03d9e130",
+    "45606/view_02/depth_m.npy": "67ff7a2fd5a00f6aafc69a9521895f053e2c278859a1b585bf346a9a2dbf1bae",
+    "45606/view_02/rgb.png": "7fe0005812b0c9ff82f0080003b778e1ed1eaaa54203c299a05bc7b94d178a30",
+    "45606/view_02/robot_self_exclusion.npy": "83861a45b39793c94001f330eac58d6f0deac77d1f56e029d4b2188e3ac3113d",
+    "45671/view_00/camera.json": "6d5b03dabda62f8a7cb815da507b566fa14e6908a9d4f82636ab66bf985ce4b7",
+    "45671/view_00/depth_m.npy": "41c617b7da60278e51319a6bc65ae1a268490395703bb5c3ba5f4b538b23d2c8",
+    "45671/view_00/rgb.png": "1e6939d83f86b1f466f09e9d0b42e8f97b8676befee978a66606a47041d194e3",
+    "45671/view_00/robot_self_exclusion.npy": "1639f6cdf3cad417a8c0f23ab69006e6c853c519231046d42c0e246c9a225c25",
+    "45671/view_01/camera.json": "262ccadb81ae1d525c47dd831910ad7cde58d6059c166a8bcd5f64c3c4a72ee4",
+    "45671/view_01/depth_m.npy": "f9a7da010d0ffec8d3942fbfa7faf1a17308ae850db19344ccdeb4b1985e1531",
+    "45671/view_01/rgb.png": "7ab364c5157ec637327a05121ce8262a9fcd3bfcacc0ff060c441e8c1e6bcf78",
+    "45671/view_01/robot_self_exclusion.npy": "968d322af4aedbba638eaf39b62a25bb01dff5def7d42ea41a5159f16272dc55",
+    "45671/view_02/camera.json": "c9c67f5a54c457799640b0b0932f450fe11662915e24c3ad77eec7704b1a5925",
+    "45671/view_02/depth_m.npy": "6f388690fbee0ba3f5ef51f329ea3c6d69b34ae9112a8dc33d6a6d5ac135185b",
+    "45671/view_02/rgb.png": "4e30897763054e1a4ee715e155c6b7ae17c3b319c0791c7fd3bd9b0d0f3dcb98",
+    "45671/view_02/robot_self_exclusion.npy": "4c4141262827bf47a8eaa8a77a2f97c92ee54cfefe3eb640eb3551e68c830aa0"
+  },
+  "reference_metrics_sha256": "779aefbcfb63d5d3bda5d4891605d5b3b229ce4b5672224937f81589ab7a10b3",
+  "reference_private_archive_sha256": "50174cab70134033449e40498af25d480a452bf777fcd0dba3a721ef2bf5b1f8",
+  "active_owned_collectors": [],
+  "all_collectors_exited": true,
+  "cleanup_evidence": "all three successful launcher exits were 0, each log ends Simulation App Shutting Down, exact collector argv absent from /proc; marker after app.close was not written because close exits interpreter. Published bookkeeping fix writes request before close and was not rerun.",
+  "all_frozen_sources_match": true,
+  "all_original_inputs_match": true,
+  "derived_figure_sha256": {
+    "45600_contact.png": "e65fa234d1d65c19fe8ed8fb10adcca17ef0d876df1dd005371e4fc4ea06114f",
+    "45600_extent.png": "f10f9449b67211d7fec51a067c0f61a803178c0afe9d2edfcb64b11c90fdb4c4",
+    "45671_metrics.png": "a54996f7744b17f60175f34a29ed968c54c07e0d4c52bedafaf6f79ed1f809e4",
+    "45671_extent.png": "2cbbcf617a7a0dd801136ab2af4aea81fad15d7e0997e562bd64795b47634278",
+    "45600_metrics.png": "92d338233f159b1dffa8881e151834c1344831b8e0f3ecdd3cf539588de17066",
+    "45606_metrics.png": "085a0ca3a1144034437e627c2c9c900ca1e6b42030dbd11ef7f394595ce2e90e",
+    "45671_contact.png": "da2f4e192375f6a2052e9227cd75bbac66e6a7ca121f80f72805060a2e762ccb",
+    "45606_extent.png": "1e41f509b17a322d7cd06ae6078b09e44c47079a92742b01f32c05ffb5709371",
+    "45606_contact.png": "c7905376b29005df05111540b50c4747df0859c3f500b1de6a56b5ddab6fdea3"
+  },
+  "libraries": {
+    "numpy": "2.3.1",
+    "scipy": "1.17.0",
+    "trimesh": "4.11.1",
+    "matplotlib": "3.10.8",
+    "python-fcl": "0.7.0.11"
+  },
+  "infrastructure_repairs": [
+    "pre-Init scripts module shadowed package; root import path corrected",
+    "paused render did not populate new depth annotator; explicit Replicator zero-time capture",
+    "overview default 1m near clipping removed 0.7m target; new analysis camera .05..3m as primary loader camera; no frozen camera modified"
+  ]
+}
