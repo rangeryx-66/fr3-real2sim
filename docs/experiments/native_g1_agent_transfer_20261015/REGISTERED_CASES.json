@@ -11,7 +11,7 @@
       "asset_id": "45936",
       "handle_mesh": "original-39",
       "handle_link": "l_2",
-      "moving_link": "l_2",
+      "moving_link": "abstract_3_2",
       "joint": "joint_revolute_l_3_abstract_3_2",
       "authored_deg": 100,
       "authored_height_m": 0.9,
@@ -22,7 +22,7 @@
       "asset_id": "46427",
       "handle_mesh": "original-42",
       "handle_link": "l_0",
-      "moving_link": "l_0",
+      "moving_link": "abstract_1_0",
       "joint": "joint_revolute_l_1_abstract_1_0",
       "authored_deg": 90,
       "authored_height_m": 0.25,
@@ -76,5 +76,6 @@
     "scripts/shared_door_execution.py": "13e3c388f83eb8efdb2c727fbcc14815498a1a7dfc77107db5393c03d9cda622",
     "scripts/xarm7_native_execution.py": "9998fead6af71cbf288f4ceef9b531e1936fc0d4bdc8306965fbccd6ff3e5897",
     "configs/xarm7_wrist_rgbd_sim.json": "b7fd4bbf07ec42f557f2aedbf8af5d13619e631d5227861210a5eab24551576a"
-  }
+  },
+  "metadata_amendment_before_grasp_planning": "Separate active joint child (moving_link) from visual descendant (door_link / handle_link). Initial preparation incorrectly conflated them. Corrected before any new grasp planning or contact outcome. No scene restart, controller or geometry change; current runtime visual-frame motion is rigidly equivalent for articulation delta."
 }

@@ -21,7 +21,7 @@ if __name__ == '__main__':
         prepared=out/'geometry_assets'/aid;m=json.loads((prepared/'manifest.json').read_text())
         # Generic input normalization: active joint's visual descendant, not importer l_1 default.
         selection=dict(asset_id=aid,mesh=row['handle_mesh'],handle_link=row['handle_link'],moving_link=row['moving_link'],joint_name=row['joint'])
-        m.update(door_link=row['moving_link'],moving_link=row['moving_link'],object_name='Registered hinged cabinet',interaction_geometry=dict(method='registered collider identity only; no grasp geometry',selection=selection,pieces=[]))
+        m.update(door_link=row['handle_link'],moving_link=row['moving_link'],object_name='Registered hinged cabinet',interaction_geometry=dict(method='registered collider identity only; no grasp geometry',selection=selection,pieces=[]))
         for directory in ['urdf','meshes','collision']:
             p=asset/directory
             if not p.exists():p.symlink_to(prepared/directory,target_is_directory=True)
