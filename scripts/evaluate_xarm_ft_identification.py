@@ -70,18 +70,32 @@ def strict_evaluation(models):
     return updates
 
 
+def authoritative_models(episode):
+    """Choose by documented kinematic input provenance, never fit quality/truth."""
+    paths=[]
+    for packet in sorted((episode/'identification').glob('attempt_*/*')):
+        settings=packet/'INPUT.json'
+        if not settings.exists():continue
+        original=json.loads(settings.read_text())
+        if original.get('prior',{}).get('native_joint_path'):
+            model=packet/'IDENTIFIED_MODEL.json'  # repaired online V0.1
+        else:model=packet/'native_joint_prior/IDENTIFIED_MODEL.json'
+        if model.exists():paths.append(model)
+    return paths
+
+
 def evaluate(case):
     case=Path(case);episode=case/'episode'
     if not (episode/'EXPORT_COMPLETE.json').exists():raise ValueError('Only completed/exported episodes may be evaluated')
     pid=json.loads((case/'PROCESS.json').read_text())['pid']
     if Path('/proc/%d'%pid).exists():raise ValueError('Actor still alive; no hidden-truth evaluation while actions remain')
     job=json.loads((case/'job.json').read_text());truth=json.loads((episode/'HIDDEN_AUTHORED_PHYSICS.json').read_text())
-    models=sorted((episode/'identification').glob('attempt_*/*/native_joint_prior/IDENTIFIED_MODEL.json')) if (episode/'identification').exists() else []
+    models=authoritative_models(episode) if (episode/'identification').exists() else []
     result=dict(case=job['identification_case'],seed=truth['configuration']['seed'],robot='xArm7/native G1',reference='136b6e0',
         hidden_truth_opened_only_after_actor_exit=True,explicit_known_prior_repair=True,original_body_origin_models_preserved_but_invalid=True,grasp_outcome=json.loads((episode/'RECOVERY_EPISODE_RESULT.json').read_text()) if (episode/'RECOVERY_EPISODE_RESULT.json').exists() else None,
         update_count=len(models),updates=[])
     for path in models:
-        model=json.loads(path.read_text());entry=dict(path=str(path.relative_to(episode)),estimated=model)
+        model=json.loads(path.read_text());entry=dict(path=str(path.relative_to(episode)),estimated=model,numeric_update_mode='external corrected known-prior reprocessing' if path.parent.name=='native_joint_prior' else 'original online worker with corrected known-prior wiring')
         if model.get('parameters'):
             gt=dict(I_eff_kg_m2=effective_inertia(truth,job['asset_root'],model['kinematic_prior']),b_nm_s_rad=truth['configuration']['b'],tau_c_nm=truth['configuration']['tau_c'])
             entry['authored_truth']=gt;entry['absolute_error']={k:abs(model['parameters'][k]-v) for k,v in gt.items()}
@@ -103,7 +117,11 @@ def evaluate(case):
         exported=dict(schema='articulated_physical_model_v0',geometry_reference=job['asset_root'],
             observed_geometry_reference=str(episode/'agent_geometry/observed_geometry.json'),joint=latest['kinematic_prior'],
             current_motion_state=dict(angle_deg=pose.get('door_angle_deg'),source='known actual state V0; not visual dynamic estimation'),
-            effective_parameters=latest.get('parameters'),uncertainties=latest.get('conditional_std'),observability=latest.get('observability'),
+            identified_parameters={k:(latest.get('parameters',{}).get(k) if latest.get('observability',{}).get(flag,False) else None) for k,flag in [('I_eff_kg_m2','I_eff'),('b_nm_s_rad','b'),('tau_c_nm','tau_c')]},
+            provisional_fit_parameters=latest.get('parameters'),uncertainties=latest.get('conditional_std'),observability=latest.get('observability'),
+            all_terms_conditionally_supported=bool(all(latest.get('observability',{}).get(k,False) for k in ['I_eff','b','tau_c'])),
+            model_status='provisional; interpret held-out prediction and uncertainty before simulation use',
+            unsupported_parameters_are_unknown_not_GT_filled=True,
             valid_operating_range_rad=latest.get('valid_range_rad'),unidentified=latest['terms_not_identified'],
             sensor_configuration=str(episode/'WRIST_FT_MAPPING.json'),calibration_provenance=str(case.parent/'sensor_smoke_00/SENSOR_ANALYSIS.json'),
             interaction_records=[str(v.relative_to(episode)) for v in models],RGBD_references=[str(v.relative_to(episode)) for v in (episode/'rgbd').glob('*') if v.is_dir()],
