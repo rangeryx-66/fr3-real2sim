@@ -1,0 +1,322 @@
+{
+  "episode": "one continuous 45936 scene",
+  "GT_grasp_fallback": false,
+  "trace": [
+    {
+      "sequence": 0,
+      "operation": "evaluate_view",
+      "Agent_reason": {
+        "target": {
+          "eye_world_m": [
+            0.36,
+            -0.78,
+            0.59
+          ],
+          "look_at_world_m": [
+            0.314,
+            -0.335,
+            0.52
+          ]
+        },
+        "interpretation": "Fresh RGB and depth show the wrist housing occluding the upper continuation of a vertical handle. The mask captures only the lower visible strip; accumulated measured extent is 92.75 mm, not a complete handle.",
+        "missing_information": "Handle continuation above the housing and a second contact-surface perspective.",
+        "expected_benefit": "Raise the optical viewpoint and aim above the currently observed strip, with slight lateral parallax, to remove self-occlusion and retain independently detected new surfaces. Coordinates are derived from this fresh cue/panel, not GT or archived views."
+      },
+      "agent_wait_wall_s": 83.69023694097996,
+      "operation_wall_s": 0.2622114180121571,
+      "requested_view": {
+        "eye_world_m": [
+          0.36,
+          -0.78,
+          0.59
+        ],
+        "look_at_world_m": [
+          0.314,
+          -0.335,
+          0.52
+        ]
+      },
+      "feasible": true,
+      "inspected_image_hash_count": 20,
+      "inspection_provenance_note": "incorrect cached-image hash attachment; preserved, explicitly corrected in sequence 1"
+    },
+    {
+      "sequence": 1,
+      "operation": "move_and_observe",
+      "Agent_reason": {
+        "evaluated_command": 0,
+        "interpretation": "I inspected the current episode initial wrist RGB/mask/depth/cloud and semantic board. The upper handle is self-occluded; the checked higher lateral view is useful.",
+        "expected_benefit": "Execute the validated actuator route and obtain a fresh independent handle observation.",
+        "inspection_provenance_correction": "Command 000 helper attached unrelated cached-image hashes due to a local evidence-directory typo. That metadata is invalid; its decision was based on the fresh initial boards actually inspected. This command carries the corrected current-episode image hashes. No archived camera or grasp pose was used."
+      },
+      "agent_wait_wall_s": 37.97561048110947,
+      "operation_wall_s": 157.9153328789398,
+      "observation": {
+        "index": 1,
+        "t_sim": 65.6875,
+        "world_sim_s": 67.57083685742691,
+        "accepted_for_geometry": true,
+        "SAM_returncode": 0,
+        "geometry_issue": null,
+        "sensing_and_segmentation_wall_s": 25.556527364999056,
+        "inspection_wall_s": 1.3235638898331672
+      },
+      "incremental_views": [
+        {
+          "index": 0,
+          "observed_points": 3786,
+          "view_extent_mm": 92.75025242447904,
+          "accumulated_extent_mm": 92.75025242447904,
+          "newly_observed_voxels": 3786
+        },
+        {
+          "index": 1,
+          "observed_points": 17395,
+          "view_extent_mm": 295.8430444705715,
+          "accumulated_extent_mm": 295.8485307560694,
+          "newly_observed_voxels": 13987
+        }
+      ],
+      "inspected_image_hash_count": 2,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 2,
+      "operation": "build_geometry",
+      "Agent_reason": {
+        "interpretation": "The fresh higher image shows both visible ends of the long protruding handle without the previous self-occlusion. Its independently segmented depth contributes new surfaces over the previously missing upper region; accumulated extent is 295.85 mm. Semantic boards keep supported measured surfaces distinct from unknown rear geometry.",
+        "decision": "Stop observing for now and run the frozen automatic grasp ranking on these actual incremental surfaces.",
+        "remaining_uncertainty": "Backside and contact-model uncertainty remain; no GT completion or saved pose correction is permitted. These uncertainties remain diagnostics handled by the existing physical controller."
+      },
+      "agent_wait_wall_s": 40.89220241783187,
+      "operation_wall_s": 193.53904910711572,
+      "candidate_family": [
+        -0.3,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "plan": true,
+      "inspected_image_hash_count": 5,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 3,
+      "operation": "validate_execution",
+      "Agent_reason": {
+        "interpretation": "I inspected fresh fused measured surfaces and separate hypothetical rear sections, plus the automatically selected native-G1 finger geometry. The selected lower handle section has observable front support; rear contact uncertainty remains explicit. No manual candidate substitution is made.",
+        "decision": "Validate the complete current wrist-observation pose to execution-start and approach transition before one physical attempt. Default terminal region is native robot rest, with shared alternatives only if needed."
+      },
+      "agent_wait_wall_s": 147.90338952792808,
+      "operation_wall_s": 1.1431457321159542,
+      "valid": true,
+      "inspected_image_hash_count": 7,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 4,
+      "operation": "attempt_grasp_and_probe",
+      "Agent_reason": {
+        "approval": "Approve exactly the first physical attempt from the current fresh visual plan after inspecting measured/uncertain surfaces and native finger plan. The existing return and approach checks passed. Revalidate from measured state, use unchanged visual refinement, closure, one-second hold and short probe.",
+        "terminal_region": "Prefer the shared native_rest region with jointly checked clearance and current-state return; planner owns every waypoint. Only after verified unloading/parking may feedback return to Agent.",
+        "uncertainty": "Contact prediction and rear-surface assumptions may be wrong. Preserve original protections; no hand correction, force increase or GT grasp fallback. Do not force a recovery if this first attempt succeeds."
+      },
+      "agent_wait_wall_s": 27.678532372927293,
+      "operation_wall_s": 1803.8442751059774,
+      "opening_gain_deg": 0.008696108930053015,
+      "short_success": false,
+      "termination_reason": "TrialFeedback('EXISTING_SOFT_FORCE_WARNING_RETURN_FOR_UNLOAD')",
+      "physical_grasp_started": true,
+      "safe_exit": {
+        "safe": true,
+        "terminal_state": "SAFE_PARK_REACHED",
+        "released": true,
+        "clearance_reached": true,
+        "safe_park_reached": true,
+        "reason": null,
+        "end_sim_s": 394.675
+      },
+      "inspected_image_hash_count": 7,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 5,
+      "operation": "reobserve_and_replan",
+      "Agent_reason": {
+        "interpretation": "I inspected the actual first-attempt contact plot, stopped wrist view and local diagnostic image after verified SAFE_PARK_REACHED. Bilateral acquisition occurred, but left positive-normal reporting disappeared during hold while right load rose, measured aperture drifted wider, and probe gain was only 0.00870deg before the original soft-force return. Normal-only reports do not identify a unique physical cause.",
+        "decision": "Use the single permitted recovery. Acquire fresh wrist geometry and request a complementary perspective if useful, then let the unchanged planner rank another existing candidate family. The failed family remains episode-local memory only.",
+        "expected_benefit": "Try different automatically generated contact support rather than reapplying force at the observed ineffective grasp. Do not change clamp, CENTER, weights, physics or thresholds. Same scene; door remains at its physically reached state."
+      },
+      "agent_wait_wall_s": 77.81640111887828,
+      "operation_wall_s": 234.58792374818586,
+      "observation": {
+        "index": 0,
+        "t_sim": 435.15,
+        "world_sim_s": 437.03335612639785,
+        "accepted_for_geometry": true,
+        "SAM_returncode": 0,
+        "geometry_issue": null,
+        "sensing_and_segmentation_wall_s": 21.56425255094655,
+        "inspection_wall_s": 1.2862920241896063
+      },
+      "incremental_views": [
+        {
+          "index": 0,
+          "observed_points": 3781,
+          "view_extent_mm": 92.7443009801866,
+          "accumulated_extent_mm": 92.7443009801866,
+          "newly_observed_voxels": 3781
+        }
+      ],
+      "inspected_image_hash_count": 11,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 6,
+      "operation": "evaluate_view",
+      "Agent_reason": {
+        "target": {
+          "eye_world_m": [
+            0.455,
+            -0.765,
+            0.59
+          ],
+          "look_at_world_m": [
+            0.314,
+            -0.335,
+            0.525
+          ]
+        },
+        "interpretation": "The fresh recovery RGB/depth still show the wrist occluding the upper handle; visible cue center is about (0.314,-0.335,0.406)m. The first attempt transmitted almost no opening and developed one-sided normal loading.",
+        "missing_information": "A full-length, more oblique surface observation to support a different existing grasp candidate rather than repeat the failed family.",
+        "expected_benefit": "A higher viewpoint with greater lateral parallax, derived from the current cue/panel, should expose upper continuation and a complementary side surface. The original planner must validate every robot waypoint; no GT or historical successful grasp is used."
+      },
+      "agent_wait_wall_s": 104.63560723909177,
+      "operation_wall_s": 0.22855883999727666,
+      "requested_view": {
+        "eye_world_m": [
+          0.455,
+          -0.765,
+          0.59
+        ],
+        "look_at_world_m": [
+          0.314,
+          -0.335,
+          0.525
+        ]
+      },
+      "feasible": true,
+      "inspected_image_hash_count": 12,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 7,
+      "operation": "move_and_observe",
+      "Agent_reason": {
+        "evaluated_command": 6,
+        "decision": "Execute the checked higher-oblique recovery observation through normal actuators. Inspect the resulting new geometry before planning; do not manually correct the grasp or repeat the failed contact family."
+      },
+      "agent_wait_wall_s": 34.35860811104067,
+      "operation_wall_s": 150.06879740208387,
+      "observation": {
+        "index": 1,
+        "t_sim": 459.3375,
+        "world_sim_s": 461.2208573878743,
+        "accepted_for_geometry": true,
+        "SAM_returncode": 0,
+        "geometry_issue": null,
+        "sensing_and_segmentation_wall_s": 22.64247307111509,
+        "inspection_wall_s": 1.2932900809682906
+      },
+      "incremental_views": [
+        {
+          "index": 0,
+          "observed_points": 3781,
+          "view_extent_mm": 92.7443009801866,
+          "accumulated_extent_mm": 92.7443009801866,
+          "newly_observed_voxels": 3781
+        },
+        {
+          "index": 1,
+          "observed_points": 16782,
+          "view_extent_mm": 295.86036276198416,
+          "accumulated_extent_mm": 295.86036276198416,
+          "newly_observed_voxels": 13343
+        }
+      ],
+      "inspected_image_hash_count": 12,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 8,
+      "operation": "build_geometry",
+      "Agent_reason": {
+        "interpretation": "The new higher-oblique recovery RGB/mask/depth show the full visible handle span and a complementary side profile. Incremental surfaces retain about 295.86mm, with measured support and hypothetical rear kept separate. I inspected all three fresh boards.",
+        "decision": "Stop observation and use the unchanged automatic candidate scorer. Exclude only the first failed episode family through existing memory; do not handpick a pose or change scores. The additional view is useful information, not a proof of stable holding."
+      },
+      "agent_wait_wall_s": 72.83654629602097,
+      "operation_wall_s": 220.40446600900032,
+      "candidate_family": [
+        0.0,
+        -0.009374999906867743,
+        180.0,
+        0.0
+      ],
+      "plan": true,
+      "inspected_image_hash_count": 15,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 9,
+      "operation": "validate_execution",
+      "Agent_reason": {
+        "interpretation": "I inspected the newly fused measured/uncertain surfaces and the automatically selected recovery grasp. The frozen planner selected a different, more central handle contact region with its existing insertion choice. This differs from the failed lower-section family and was not copied from a successful historical grasp.",
+        "decision": "Validate the current measured observation-to-execution route and approach for the single allowed recovery attempt. Contact-model uncertainty remains diagnostic; no hand-tuned pose or stronger closure."
+      },
+      "agent_wait_wall_s": 58.80445913900621,
+      "operation_wall_s": 1.2536719308700413,
+      "valid": true,
+      "inspected_image_hash_count": 17,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 10,
+      "operation": "attempt_grasp_and_probe",
+      "Agent_reason": {
+        "approval": "Approve the single permitted recovery physical attempt, after inspecting fresh recovery RGB-D, incremental measured/uncertain surfaces and the automatically selected native-G1 plan; original transition validation passed.",
+        "reason": "The first grasp lost effective load balance and opening transmission. The unchanged planner selected a different central section, existing wrist flip and insertion family. Test that actual alternative rather than increasing force or repeating the same family.",
+        "terminal_region": "Use the shared joint clearance/parking planner, preferring native_rest. Planner owns collision avoidance and all joint waypoints. Preserve original protections and current door state.",
+        "budget": "Second and final physical grasp attempt in this scene. Original one-second hold and approx+3deg probe; release, retreat, park and export afterward. No further tuning or physical retry."
+      },
+      "agent_wait_wall_s": 38.30204179114662,
+      "operation_wall_s": 1984.2505876219366,
+      "opening_gain_deg": 2.998738421825692,
+      "short_success": true,
+      "termination_reason": "SHARED_DOOR_30_DEG_SUCCESS",
+      "physical_grasp_started": true,
+      "safe_exit": {
+        "safe": true,
+        "terminal_state": "SAFE_PARK_REACHED",
+        "released": true,
+        "clearance_reached": true,
+        "safe_park_reached": true,
+        "reason": null,
+        "end_sim_s": 820.7125
+      },
+      "inspected_image_hash_count": 17,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    },
+    {
+      "sequence": 11,
+      "operation": "finish",
+      "Agent_reason": {
+        "reason": "I inspected the actual recovery contact/progress plot and wrist image. Recovery acquired bilateral contact, completed the original hold, gained 2.998738deg post acquisition, then actually released, retreated and reached verified native_rest parking. Measured terminal joint-cell error is 0.003725rad, current door angle 3.018578deg, loads zero, and current measured collision check passes. Both attempts reached safe park; preserve the first soft-force transmission failure separately. The one-episode/two-grasp budget is complete. Export all private evidence and close this owned actor now; no further experiments."
+      },
+      "agent_wait_wall_s": 65.16484324401245,
+      "operation_wall_s": 1.0990072041749954e-05,
+      "inspected_image_hash_count": 20,
+      "inspection_provenance_note": "fresh current-episode images; private trace retains per-image SHA256"
+    }
+  ],
+  "raw_images_public": false
+}
