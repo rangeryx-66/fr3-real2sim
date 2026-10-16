@@ -32,6 +32,8 @@ controller_source=controller_source.replace('angle_reference=min(goal+np.deg2rad
 """
 if text.count(anchor)!=1:raise ValueError('Frozen directional reference boundary changed before initialization')
 text=text.replace(anchor,anchor+addition)
+report_anchor="diagnostic_write(a.output/'report.json',json.dumps(result,indent=2))"
+text=text.replace(report_anchor,"result.update(classification='XARM7_NATIVE_G1 / WRIST_FT_IDENTIFICATION_V0 / AGENT_WRIST_RGBD / KNOWN_HINGE_STATE / IDEALIZED_LOAD_CELL / APPROXIMATE_ACTUATOR_SIMULATION',object_physics_or_geometry_changed=True,object_geometry_changed=False,object_physics_version='seeded density/resistance V0',sensor_model='idealized fixed-interface load cell; hardware sensor mass/geometry not modeled')\n"+report_anchor)
 compile(text,__file__+'::ft_id_v0_owner','exec')
 (out/'ACTUAL_FT_ID_EXECUTABLE.py').write_text(text)
 files=job['activation_source_files']+['scripts/xarm_wrist_ft.py','scripts/xarm_ft_id_scene.py','scripts/xarm_ft_id_estimator.py','scripts/native_g1_ft_identification.py','scripts/run_xarm_ft_estimation.py','scripts/run_native_g1_ft_identification.py']

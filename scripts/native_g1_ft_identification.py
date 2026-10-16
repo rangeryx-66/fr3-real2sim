@@ -105,5 +105,6 @@ def run(g):
     anchor="ok,status,_=namespace['open_with_contact_feedback'](g)"
     if source.count(anchor)!=1:raise ValueError('Frozen attempt boundary changed before contact')
     source=source.replace(anchor,"g['_id_frozen_step']=g['step'];ok,status,_=bidirectional(g,namespace['open_with_contact_feedback'])")
-    ns=dict(recovery.__dict__,bidirectional=bidirectional);exec(compile(source,__file__+'::explicit_id_attempt','exec'),ns)
+    ns=dict(recovery.__dict__,bidirectional=bidirectional,safe_release_retreat=termination.safe_release_park)
+    exec(compile(source,__file__+'::explicit_id_attempt','exec'),ns)
     with patch.object(recovery,'attempt_grasp_and_probe',ns['attempt_identification']):return termination.run(g)
