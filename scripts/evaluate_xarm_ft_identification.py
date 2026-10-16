@@ -86,7 +86,16 @@ def evaluate(case):
             gt=dict(I_eff_kg_m2=effective_inertia(truth,job['asset_root'],model['kinematic_prior']),b_nm_s_rad=truth['configuration']['b'],tau_c_nm=truth['configuration']['tau_c'])
             entry['authored_truth']=gt;entry['absolute_error']={k:abs(model['parameters'][k]-v) for k,v in gt.items()}
             entry['relative_error']={k:abs(model['parameters'][k]-v)/abs(v) if abs(v)>1e-12 else None for k,v in gt.items()}
-            data=np.load(path.parent/'measured_effort.npz',allow_pickle=True);entry['heldout_motion_predictions']={s:predict_segment(data,s,model['parameters']) for s in np.unique(data['segments'].astype(str)) if s.startswith('VALIDATION')}
+            data=np.load(path.parent/'measured_effort.npz',allow_pickle=True)
+            entry['heldout_motion_predictions']={s:dict(predict_segment(data,s,model['parameters']),parameter_observability=model.get('observability')) for s in np.unique(data['segments'].astype(str)) if s.startswith('VALIDATION')}
+            # Post-hoc authored inverse dynamics is a reference, NOT an
+            # independently measured complete simulator generalized effort.
+            reference=gt['I_eff_kg_m2']*data['qdd']+gt['b_nm_s_rad']*data['qd']+gt['tau_c_nm']*np.sign(data['qd'])
+            entry['authored_inverse_dynamics_reference']={}
+            for label in np.unique(data['segments'].astype(str)):
+                ix=(data['segments'].astype(str)==label)&data['valid']
+                if ix.any():entry['authored_inverse_dynamics_reference'][label]=dict(samples=int(ix.sum()),sensor_vs_reference_rmse_nm=float(np.sqrt(np.mean((data['torque'][ix]-reference[ix])**2))),independent_GT_effort_measurement=False)
+
         result['updates'].append(entry)
     result['strict_posthoc_boundary_evaluation']=strict_evaluation(models)
     if models:
