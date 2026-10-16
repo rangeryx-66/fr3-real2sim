@@ -1,14 +1,18 @@
 """One fresh registered 45936 actor; shared GPU capacity, no auto-retry."""
-import datetime,hashlib,json,os,subprocess,time
+import argparse,datetime,hashlib,json,os,subprocess,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 BASE=ROOT/'results/native_g1_incremental_activation_20261016/live/45936'
 PYTHON='/data1/home/rangeryx/isaaclab-arena/.venv/bin/python'
 
 if __name__=='__main__':
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--base',type=Path,default=BASE)
+    parser.add_argument('--frozen',type=Path,default=ROOT/'docs/experiments/native_g1_incremental_activation_20261016/FROZEN.json')
+    args=parser.parse_args();BASE=args.base.resolve()
     BASE.mkdir(parents=True,exist_ok=True)
     if (BASE/'PROCESS.json').exists():raise SystemExit('Existing actor record; inspect it instead of duplicate launch')
-    frozen=json.loads((ROOT/'docs/experiments/native_g1_incremental_activation_20261016/FROZEN.json').read_text())
+    frozen=json.loads(args.frozen.read_text())
     for p,h in frozen['source_sha256'].items():
         if hashlib.sha256((ROOT/p).read_bytes()).hexdigest()!=h:raise SystemExit('Active source mismatch: '+p)
     capacity=sorted([(int(r.split(',')[1]),int(r.split(',')[0])) for r in subprocess.check_output(

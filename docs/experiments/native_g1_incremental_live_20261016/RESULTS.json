@@ -1,0 +1,381 @@
+{
+  "classification": "CODEX_IN_LOOP / WRIST_RGBD / KNOWN_HINGE_STATE_COLLISIONS / APPROXIMATE_ACTUATOR_SIMULATION / OBSERVATION_PLANNING_ONLY",
+  "reference": "276dda4",
+  "physical_baseline": "a47fe09",
+  "asset": "45936",
+  "valid_live_episodes": 1,
+  "live_retries": 0,
+  "success": true,
+  "success_scope": "real wrist motions + new measured surfaces + automatic grasp/IK plan, not physical grasp/opening",
+  "agent_selected_adjustments": 2,
+  "maximum_adjustments": 4,
+  "observations": 3,
+  "actual_robot_routes": 3,
+  "grasp_attempts": 0,
+  "opening_attempts": 0,
+  "views": [
+    {
+      "index": 0,
+      "observed_points": 3786,
+      "view_extent_mm": 92.75048433717897,
+      "accumulated_extent_mm": 92.75048433717897,
+      "newly_observed_voxels": 3786,
+      "accumulated_voxels": 3786,
+      "per_view_triangle_area_m2": 0.0017994557485102331,
+      "camera_eye_world_m": [
+        0.5019488334655762,
+        -0.8943731188774109,
+        0.26417049765586853
+      ]
+    },
+    {
+      "index": 1,
+      "observed_points": 6364,
+      "view_extent_mm": 295.7478284129233,
+      "accumulated_extent_mm": 295.81129147461485,
+      "newly_observed_voxels": 5191,
+      "accumulated_voxels": 8977,
+      "per_view_triangle_area_m2": 0.0030527802454600912,
+      "camera_eye_world_m": [
+        0.3108159601688385,
+        -0.9603092670440674,
+        0.4694899916648865
+      ]
+    },
+    {
+      "index": 2,
+      "observed_points": 10109,
+      "view_extent_mm": 295.7966201490085,
+      "accumulated_extent_mm": 295.90972857348476,
+      "newly_observed_voxels": 6307,
+      "accumulated_voxels": 15284,
+      "per_view_triangle_area_m2": 0.0052560103980942565,
+      "camera_eye_world_m": [
+        0.17025214433670044,
+        -0.9104054570198059,
+        0.5202454924583435
+      ]
+    }
+  ],
+  "semantic_association": [
+    {
+      "index": 0,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/native_g1_incremental_live_20261016/live/45936/episode/rgbd/agent_00",
+      "all_measured_points": 3786,
+      "trusted_body_points": 3786,
+      "extension_points": 0,
+      "contact_supported_points": 3786,
+      "uncertain_association_points": 0,
+      "extension_with_other_positive": 0,
+      "extension_with_other_negative": 0,
+      "measured_triangles": 7121,
+      "contact_supported_triangles": 7121
+    },
+    {
+      "index": 1,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/native_g1_incremental_live_20261016/live/45936/episode/rgbd/agent_01",
+      "all_measured_points": 6364,
+      "trusted_body_points": 6364,
+      "extension_points": 0,
+      "contact_supported_points": 6364,
+      "uncertain_association_points": 0,
+      "extension_with_other_positive": 0,
+      "extension_with_other_negative": 0,
+      "measured_triangles": 11834,
+      "contact_supported_triangles": 11834
+    },
+    {
+      "index": 2,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/native_g1_incremental_live_20261016/live/45936/episode/rgbd/agent_02",
+      "all_measured_points": 10109,
+      "trusted_body_points": 10109,
+      "extension_points": 0,
+      "contact_supported_points": 10109,
+      "uncertain_association_points": 0,
+      "extension_with_other_positive": 0,
+      "extension_with_other_negative": 0,
+      "measured_triangles": 19247,
+      "contact_supported_triangles": 19247
+    }
+  ],
+  "selected_plan": {
+    "section_fraction": -0.3,
+    "insertion_m": 0.0,
+    "roll_deg": 0.0,
+    "pitch_deg": 0.0,
+    "planned_opening_range_rad": 0.5235987755982988,
+    "minimum_approach_arc_margin_rad": 0.420628085967673,
+    "coarse_first_contacts": {
+      "gripper_link1": {
+        "finger": "gripper_link1",
+        "width_m": 0.013994850000000003,
+        "local_contact_m": [
+          0.014387090804407254,
+          0.04014800605933851,
+          -0.02590894167809643
+        ],
+        "existing_pad_region": true
+      },
+      "gripper_link2": {
+        "finger": "gripper_link2",
+        "width_m": 0.013994850000000003,
+        "local_contact_m": [
+          -0.014715839592636115,
+          0.039777162168792964,
+          -0.02597185156409304
+        ],
+        "existing_pad_region": true
+      }
+    },
+    "scores": {
+      "acquisition_score": 1.0,
+      "retention_score": 0.7712180719629775,
+      "task_score": 0.527275133695372,
+      "robust_combined_score": 0.07019293229777597,
+      "chosen_expected_aperture_m": 0.014294850000000003
+    }
+  },
+  "minimum_measured_joint_margin_rad": 0.4928938468270978,
+  "peak_pad_load_n": 0.0,
+  "simulation_s": 70.43333333333334,
+  "owner_wall_s": 950.5474325839896,
+  "actor_wall_s": 953.270515203476,
+  "geometry_wall_s": 3.3440910580102354,
+  "planning_wall_s": 200.51598617597483,
+  "post_exit_evaluation": {
+    "GT_use": "post-exit diagnostic only; no poses corrected; no execution admission thresholds",
+    "same_fresh_capture_replay": [
+      {
+        "mode": "first_seed_same_fresh_RGBD",
+        "points": 6463,
+        "extent_GT_axis_mm": 105.84030392288585,
+        "point_error": {
+          "n": 6463,
+          "mean_mm": 0.17967167719442834,
+          "median_mm": 0.1646642025207256,
+          "p90_mm": 0.30791984624993773,
+          "p95_mm": 0.3307793866281371
+        },
+        "GT_visible_samples": 15518,
+        "visible_surface_coverage_within_2mm": 0.38671220518108,
+        "all_surface_coverage_within_2mm": 0.22666666666666666,
+        "over3mm_points": 0,
+        "at_identical_selected_grasp": {
+          "gripper_link1": {
+            "first_aperture_mm": 14.179836035156255,
+            "bracket_mm": [
+              14.179836035156255,
+              14.187878906250003
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.79109423828125,
+            "bracket_mm": [
+              14.79109423828125,
+              14.799137109375
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        },
+        "at_identical_archived_grasp": {
+          "gripper_link1": {
+            "first_aperture_mm": 13.962678515625004,
+            "bracket_mm": [
+              13.962678515625004,
+              13.970721386718752
+            ],
+            "coarse_aperture_mm": 11.935875
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.968037402343748,
+            "bracket_mm": [
+              14.968037402343748,
+              14.9760802734375
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        }
+      },
+      {
+        "mode": "incremental_fresh_live",
+        "points": 15284,
+        "extent_GT_axis_mm": 295.8905792353796,
+        "point_error": {
+          "n": 15284,
+          "mean_mm": 0.1583325495639366,
+          "median_mm": 0.15768447104308198,
+          "p90_mm": 0.28210607937669335,
+          "p95_mm": 0.28481844540226725
+        },
+        "GT_visible_samples": 15518,
+        "visible_surface_coverage_within_2mm": 0.9454182239979378,
+        "all_surface_coverage_within_2mm": 0.5236333333333333,
+        "over3mm_points": 0,
+        "at_identical_selected_grasp": {
+          "gripper_link1": {
+            "first_aperture_mm": 14.179836035156255,
+            "bracket_mm": [
+              14.179836035156255,
+              14.187878906250003
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.51763662109375,
+            "bracket_mm": [
+              14.51763662109375,
+              14.5256794921875
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        },
+        "at_identical_archived_grasp": {
+          "gripper_link1": {
+            "first_aperture_mm": 13.962678515625004,
+            "bracket_mm": [
+              13.962678515625004,
+              13.970721386718752
+            ],
+            "coarse_aperture_mm": 11.935875
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.6865369140625,
+            "bracket_mm": [
+              14.6865369140625,
+              14.694579785156252
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        }
+      }
+    ],
+    "selected_prediction": {
+      "measured_only": {
+        "gripper_link1": {
+          "first_aperture_mm": 14.179836035156255,
+          "bracket_mm": [
+            14.179836035156255,
+            14.187878906250003
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        },
+        "gripper_link2": {
+          "first_aperture_mm": 14.51763662109375,
+          "bracket_mm": [
+            14.51763662109375,
+            14.5256794921875
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        }
+      },
+      "with_assumed_rear_0.75": {
+        "gripper_link1": {
+          "first_aperture_mm": 14.203964648437502,
+          "bracket_mm": [
+            14.203964648437502,
+            14.212007519531253
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        },
+        "gripper_link2": {
+          "first_aperture_mm": 14.887608691406248,
+          "bracket_mm": [
+            14.887608691406248,
+            14.8956515625
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        }
+      },
+      "with_assumed_rear_1.0": {
+        "gripper_link1": {
+          "first_aperture_mm": 14.203964648437502,
+          "bracket_mm": [
+            14.203964648437502,
+            14.212007519531253
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        },
+        "gripper_link2": {
+          "first_aperture_mm": 14.887608691406248,
+          "bracket_mm": [
+            14.887608691406248,
+            14.8956515625
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        }
+      },
+      "with_assumed_rear_1.25": {
+        "gripper_link1": {
+          "first_aperture_mm": 14.203964648437502,
+          "bracket_mm": [
+            14.203964648437502,
+            14.212007519531253
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        },
+        "gripper_link2": {
+          "first_aperture_mm": 14.887608691406248,
+          "bracket_mm": [
+            14.887608691406248,
+            14.8956515625
+          ],
+          "coarse_aperture_mm": 13.994850000000003
+        }
+      }
+    },
+    "selected_GT_visual_evaluation": {
+      "gripper_link1": {
+        "first_aperture_mm": 15.233452148437499,
+        "bracket_mm": [
+          15.233452148437499,
+          15.241495019531248
+        ],
+        "coarse_aperture_mm": 13.994850000000003
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 14.324607714843749,
+        "bracket_mm": [
+          14.324607714843749,
+          14.3326505859375
+        ],
+        "coarse_aperture_mm": 13.994850000000003
+      }
+    },
+    "selected_GT_cooked_evaluation": {
+      "gripper_link1": {
+        "first_aperture_mm": 15.233452148437499,
+        "bracket_mm": [
+          15.233452148437499,
+          15.241495019531248
+        ],
+        "coarse_aperture_mm": 13.994850000000003
+      },
+      "gripper_link2": {
+        "first_aperture_mm": 14.324607714843749,
+        "bracket_mm": [
+          14.324607714843749,
+          14.3326505859375
+        ],
+        "coarse_aperture_mm": 13.994850000000003
+      }
+    },
+    "archived_plan": "results/native_g1_agent_transfer_20261015/45936/episode/visual_plan.json",
+    "candidate_change": {
+      "translation_mm": 6.6127301705488835,
+      "rotation_deg": 0.03094571568533546,
+      "fresh_section_fraction": -0.3,
+      "archived_section_fraction": 0.0
+    },
+    "wall_s": 7.950378286885098,
+    "physical_grasp_validation": false
+  },
+  "legacy_report_note": "Outer legacy short-opening report success=false with expected observation-complete sentinel; no manipulation was attempted. Agent trace and explicit observation-only result are authoritative here.",
+  "remaining_limitations": [
+    "rear is not observed and remains separate declared hypotheses",
+    "candidate near lower first-visible region despite full-length retention; more coverage does not prove better grasp",
+    "planned approach from registered home, not executed observation-to-home-to-grasp",
+    "known station/hinge/dynamic state and scene collision geometry remain",
+    "no physical grasp/contact-prediction validation in this round"
+  ]
+}
