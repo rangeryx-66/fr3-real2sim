@@ -10,15 +10,10 @@ from native_g1_wrist_input import save_rgbd
 
 
 def kinematic_prior(g):
-    import xml.etree.ElementTree as ET
-    manifest=g['model'].manifest
-    # Explicit known-axis prior from the already allowed asset kinematic model.
-    path=g['job']['asset_root']+'/urdf/'+g['job']['identification_asset']+'.urdf'
-    j=ET.parse(path).getroot().find("joint[@name='%s']"%manifest['joint_name'])
-    local=np.array(list(map(float,j.find('axis').get('xyz').split())))
-    T=g['body_at'](0.)
-    return dict(joint_type='revolute',axis_world=(T[:3,:3]@local).tolist(),origin_world_m=T[:3,3].tolist(),
-        source='explicit KNOWN_HINGE_STATE prior; no hidden dynamics',angle_source='allowed actual articulation state V0',geometry_reference=g['job']['asset_root'])
+    # Same explicit known-geometry prior as the audited external input repair.
+    # Match the actual recorded door-contact body; a body origin is not a hinge.
+    from xarm_ft_known_joint_prior import native_joint_prior
+    return native_joint_prior(g['job']['asset_root'],g['rows'][-1]['T_moving_link'])
 
 
 def held_step(g,wall_start):
