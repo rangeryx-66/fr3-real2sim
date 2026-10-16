@@ -1,0 +1,112 @@
+{
+  "first_retention_divergence": {
+    "threshold_event": {
+      "event": "PAD_CONTACT_LOST",
+      "finger": "gripper_link1",
+      "t": 279.26666666666665,
+      "step": 67024,
+      "phase": "FORCE_HOLD",
+      "grasp_index": 0,
+      "raw_load_n": 0.0452086408332938
+    },
+    "first_zero_positive_normal_report_t": 279.2916812328622,
+    "interpretation": "Left unload starts during stationary post-verification hold, before opening; not automatically true grasp loss."
+  },
+  "first_force_policy_status": {
+    "NORMAL": {
+      "t": 278.0375,
+      "phase": "SLOW_CLOSE",
+      "force_event": {
+        "status": "NORMAL",
+        "raw_peak_n": 0.059223606078648246,
+        "window_mean_n": 0.059223606078648246,
+        "consecutive_overload_windows": 0,
+        "t": 278.0375,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      },
+      "filtered_pad_loads_n": {
+        "gripper_link1": 0.059223606078648246,
+        "gripper_link2": 0.0
+      },
+      "aperture_mm": 14.940489121477743,
+      "commanded_aperture_mm": 14.89952159205303,
+      "door_angle_deg": -2.9375464283276642e-09
+    },
+    "SOFT_FORCE_WARNING": {
+      "t": 280.1958333333333,
+      "phase": "TRANSMISSION_PROBE",
+      "force_event": {
+        "status": "SOFT_FORCE_WARNING",
+        "raw_peak_n": 2.005090631721584,
+        "window_mean_n": 1.9589473639054251,
+        "consecutive_overload_windows": 0,
+        "t": 280.1958333333333,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      },
+      "filtered_pad_loads_n": {
+        "gripper_link1": 0.0,
+        "gripper_link2": 2.005090631721584
+      },
+      "aperture_mm": 15.300668597772255,
+      "commanded_aperture_mm": 14.105962323517334,
+      "door_angle_deg": 0.010092299431562424
+    },
+    "HARD_FORCE_STOP_SUSTAINED": {
+      "t": 280.3625,
+      "phase": "TRANSMISSION_PROBE",
+      "force_event": {
+        "status": "HARD_FORCE_STOP_SUSTAINED",
+        "raw_peak_n": 2.4042048928406157,
+        "window_mean_n": 2.361241572462621,
+        "consecutive_overload_windows": 3,
+        "t": 280.3625,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      },
+      "filtered_pad_loads_n": {
+        "gripper_link1": 0.0,
+        "gripper_link2": 2.4042048928406157
+      },
+      "aperture_mm": 15.550549540745557,
+      "commanded_aperture_mm": 14.105962323517334,
+      "door_angle_deg": 0.018916258588433266
+    }
+  },
+  "last_force_policy": {
+    "t": 280.3625,
+    "phase": "TRANSMISSION_PROBE",
+    "force_event": {
+      "status": "HARD_FORCE_STOP_SUSTAINED",
+      "raw_peak_n": 2.4042048928406157,
+      "window_mean_n": 2.361241572462621,
+      "consecutive_overload_windows": 3,
+      "t": 280.3625,
+      "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+    },
+    "filtered_pad_loads_n": {
+      "gripper_link1": 0.0,
+      "gripper_link2": 2.4042048928406157
+    },
+    "aperture_mm": 15.550549540745557,
+    "commanded_aperture_mm": 14.105962323517334,
+    "door_angle_deg": 0.018916258588433266
+  },
+  "hold_aperture": {
+    "command_min_mm": 14.105962323517334,
+    "command_max_mm": 14.105962323517334,
+    "measured_min_mm": 14.688095044761887,
+    "measured_max_mm": 15.140549349188566,
+    "maximum_coupled_joint_change_from_hold_first_rad": 0.004989564418792725
+  },
+  "opening_start": {
+    "event": "SHORT_OPENING_START",
+    "t": 280.0416666666667,
+    "angle_deg": 0.006184841347625675,
+    "target_deg": 3.006184841347626,
+    "filtered_pad_loads_n": [
+      0.0,
+      1.6838119221213128
+    ],
+    "hold_prefix_extra_s": 0.5
+  },
+  "root_cause_limit": "Observed retention/load-distribution failure. Exact material contact/settling cause is not identified by one episode; no new controller or geometry fix is inferred here."
+}

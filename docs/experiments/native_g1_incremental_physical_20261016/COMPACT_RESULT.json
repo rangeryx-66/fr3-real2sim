@@ -1,0 +1,334 @@
+{
+  "reference": "3da07ab",
+  "frozen_physical_baseline": "a47fe09",
+  "classification": "INCREMENTAL_CODEX_WRIST / RGBD_SAM3 / KNOWN_HINGE_STATE_COLLISIONS / APPROXIMATE_ACTUATOR_SIMULATION",
+  "valid_physical_attempts": 1,
+  "physical_retries": 0,
+  "stages": {
+    "active_perception": true,
+    "automatic_plan": true,
+    "execution_approved": true,
+    "bilateral_acquisition": true,
+    "hold_duration_s": 1.0041666666666629,
+    "post_acquisition_max_gain_deg": 0.018916312758086917,
+    "post_acquisition_net_gain_deg": 0.01891631310180355,
+    "short_outcome_at_least2deg": false
+  },
+  "report": {
+    "classification": "XARM7_NATIVE_G1 / RGBD_SAM3_HANDLE / KNOWN_HINGE_STATE_COLLISION / SHORT_FORCE_TRANSMISSION",
+    "asset_id": "45936",
+    "success": false,
+    "status": "RuntimeError('HARD_FORCE_STOP_SUSTAINED')",
+    "initial_grasp": true,
+    "target_deg": 3.006184841347626,
+    "max_actual_angle_deg": 0.018916258588433266,
+    "max_actual_angle_after_valid_grasp_deg": 0.018916258588433266,
+    "final_actual_angle_deg": 0.018916258932149897,
+    "initial_actual_angle_deg": 2.1203697682767075e-16,
+    "grasp_acquisition": {
+      "event": "GRASP_VERIFIED",
+      "t": 279.0375,
+      "step": 66969,
+      "angle_deg": -5.4169653651570115e-08,
+      "grasp_index": 0,
+      "pad_loads_n": [
+        0.44559265059238373,
+        0.5656150407574959
+      ],
+      "base": [
+        0.19605376022549204,
+        -0.5328198023693291,
+        -0.1,
+        -0.7953990037810357
+      ]
+    },
+    "base_fixed": [
+      0.19605376022549204,
+      -0.5328198023693291,
+      -0.1,
+      -0.7953990037810357
+    ],
+    "base_moves_after_grasp": 0,
+    "regrasps": 0,
+    "intentional_releases": 0,
+    "simulation_s": 280.3666666666667,
+    "wall_s": 2257.3081588139758,
+    "physics_steps": 67288,
+    "observation_records": 67288,
+    "closure_update_calls": 17972,
+    "unilateral_fix_branch_calls": 1268,
+    "aperture_command_reopenings": 0,
+    "minimum_joint_margin_rad": 0.4187357273101808,
+    "peak_pad_load_n": 2.4156556592534932,
+    "motion_scale": 1.0,
+    "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+    "telemetry_issues": {},
+    "first_divergence": null,
+    "active_sources": {
+      "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_incremental_physical.py",
+      "runner_sha256": "f9774f787957c3d535efe73ffcdbd8203db5135a68aba1dee7f9e92d230921aa",
+      "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+      "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+      "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+      "argv": [
+        "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_incremental_physical.py",
+        "--job",
+        "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_incremental_physical_20261016/job.json"
+      ],
+      "pid": 4167960,
+      "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+      "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+      "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+      "active_closure_alias": true
+    },
+    "GT_dependencies": [
+      "registered station",
+      "known hinge/dynamic state",
+      "robot calibration",
+      "unchanged scene collisions and native contact IDs"
+    ],
+    "scene_restart_or_stitching": false,
+    "object_physics_or_geometry_changed": false,
+    "requested_increment_deg": 3.0,
+    "full_30_degree_task_success_claim": false,
+    "original_shared_return_status": null,
+    "opening_start_angle_deg": 0.006184841347625675,
+    "selected_plan_unchanged": false,
+    "GT_grasp_fallback": false,
+    "hold_s": 1.0,
+    "capture_shadow_only": false
+  },
+  "metrics": {
+    "first_contacts": {
+      "gripper_link1": {
+        "t_s": 272.6625142204575,
+        "phase": "SLOW_CLOSE",
+        "measured_aperture_mm": 15.505327209880397,
+        "commanded_aperture_mm": 15.491188258719632,
+        "normal_load_n": 0.0021158155054394013
+      },
+      "gripper_link2": {
+        "t_s": 278.62501453142613,
+        "phase": "CENTER",
+        "measured_aperture_mm": 14.75641693154449,
+        "commanded_aperture_mm": 14.707854925386386,
+        "normal_load_n": 0.01451454031588882
+      }
+    },
+    "actual_gain_after_acquisition_deg": 0.018916312758086917,
+    "physics_pre_step_gain_after_acquisition_deg": 0.01861604690945029,
+    "angle_sampling_note": "Primary gain uses post-step observation/report maximum minus acquisition event angle; native contact geometry snapshots precede integration by one step.",
+    "closure_relative_motion_from_first_contact": {
+      "start_s": 272.6625,
+      "max_translation_mm": 0.6934722993214887,
+      "definition": "Measured moving-body-relative TCP change during closure, including original centering. Not the post-acquisition slip metric or a new gate."
+    },
+    "closure_state_first_records": {
+      "SLOW_CLOSE": {
+        "t_s": 204.15833333333333,
+        "commanded_aperture_mm": 83.99535492537875,
+        "measured_aperture_mm": 83.99952159204543,
+        "filtered_pad_loads_n": [
+          0.0,
+          0.0
+        ]
+      },
+      "CENTER": {
+        "t_s": 272.7416666666667,
+        "commanded_aperture_mm": 15.41618825871964,
+        "measured_aperture_mm": 15.475286284968623,
+        "filtered_pad_loads_n": [
+          0.05384726949849697,
+          0.0
+        ]
+      },
+      "LOW_PRELOAD": {
+        "t_s": 278.7708333333333,
+        "commanded_aperture_mm": null,
+        "measured_aperture_mm": 14.751567182950135,
+        "filtered_pad_loads_n": [
+          0.05673840182440902,
+          0.05019846813268608
+        ]
+      },
+      "FORCE_HOLD": {
+        "t_s": 279.0375,
+        "commanded_aperture_mm": null,
+        "measured_aperture_mm": 14.713883541266355,
+        "filtered_pad_loads_n": [
+          0.4511638499292918,
+          0.5610985407040928
+        ]
+      }
+    },
+    "final_closure": {
+      "t": 279.0375,
+      "state": "FORCE_HOLD",
+      "aperture_command_m": null,
+      "measured_aperture_m": 0.014713883541266355,
+      "filtered_pad_loads_n": [
+        0.4511638499292918,
+        0.5610985407040928
+      ]
+    },
+    "actual_gain_after_opening_start_deg": 0.012731417240807591,
+    "peak_raw_allowed_normal_load_n": 2.4156557852397538,
+    "max_all_phase_TCP_mm_s": 28.58184773505692,
+    "max_post_acquisition_TCP_mm_s": 1.391292098981248,
+    "max_post_acquisition_relative_translation_mm": 0.3556419135905219,
+    "max_post_acquisition_relative_rotation_deg": 0.10938129557748438,
+    "max_joint_command_tracking_rad": 0.0037809395308390226,
+    "max_planned_TCP_tracking_mm": 0.2813167801351442,
+    "positive_normal_absence_after_acquisition": {
+      "left": [
+        {
+          "start_s": 279.2916812328622,
+          "duration_s": 1.0750000558483104
+        }
+      ],
+      "right": []
+    },
+    "telemetry_records": {
+      "physics_steps": 67288,
+      "observations": 67288,
+      "closure_commands": 17972
+    },
+    "telemetry_fields_present_records": {
+      "raw_contact_records": 67288,
+      "pad_load_raw_n": 67288,
+      "pad_load_filtered_n": 67288,
+      "joint_velocities": 67288,
+      "applied_joint_efforts": 67288,
+      "measured_joint_efforts": 67288,
+      "measured_joint_forces": 67288,
+      "native_gripper_feedback": 67288
+    },
+    "expected_native_rate_hz": 240.0,
+    "physics_timestamps_uniform": true,
+    "positive_normal_absence_is_not_true_grasp_loss": true,
+    "normal_loads_are_partial_not_complete_wrenches": true
+  },
+  "peak_allowed_normal_load_per_pad_n": [
+    0.6400262822363548,
+    2.4156557852397538
+  ],
+  "peak_filtered_load_per_pad_n": [
+    0.6400262488563848,
+    2.4156556592534932
+  ],
+  "max_TCP_with_positive_allowed_normal_contact_mm_s": 2.0242302598763797,
+  "hold_normal_report_absence": {
+    "left": [
+      {
+        "start_s": 279.2916812328622,
+        "duration_s": 0.7500000388982395
+      }
+    ],
+    "right": []
+  },
+  "warning_or_stop_events": [
+    {
+      "event": "SOFT_FORCE_WARNING",
+      "t": 280.1958333333333,
+      "source": "original observation.force_event",
+      "force_policy": {
+        "status": "SOFT_FORCE_WARNING",
+        "raw_peak_n": 2.005090631721584,
+        "window_mean_n": 1.9589473639054251,
+        "consecutive_overload_windows": 0,
+        "t": 280.1958333333333,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      }
+    },
+    {
+      "event": "HARD_FORCE_STOP_SUSTAINED",
+      "t": 280.3625,
+      "source": "original observation.force_event",
+      "force_policy": {
+        "status": "HARD_FORCE_STOP_SUSTAINED",
+        "raw_peak_n": 2.4042048928406157,
+        "window_mean_n": 2.361241572462621,
+        "consecutive_overload_windows": 3,
+        "t": 280.3625,
+        "emergency_scope": "SIMULATION_ONLY_NOT_HARDWARE_SAFE"
+      }
+    }
+  ],
+  "first_divergence": null,
+  "observations": [
+    {
+      "index": 0,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_incremental_physical_20261016/episode/rgbd/agent_00",
+      "t_sim": 40.545833333333334,
+      "world_sim_s": 42.42916887952015,
+      "accepted_for_geometry": true,
+      "SAM_returncode": 0,
+      "geometry_issue": null,
+      "sensing_and_segmentation_wall_s": 48.701123266946524,
+      "inspection_wall_s": 1.449611083837226
+    },
+    {
+      "index": 1,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_incremental_physical_20261016/episode/rgbd/agent_01",
+      "t_sim": 63.0625,
+      "world_sim_s": 64.9458367205225,
+      "accepted_for_geometry": true,
+      "SAM_returncode": 0,
+      "geometry_issue": null,
+      "sensing_and_segmentation_wall_s": 28.242329846136272,
+      "inspection_wall_s": 1.8012126160319895
+    },
+    {
+      "index": 2,
+      "folder": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_incremental_physical_20261016/episode/rgbd/agent_02",
+      "t_sim": 71.4875,
+      "world_sim_s": 73.37083715992048,
+      "accepted_for_geometry": true,
+      "SAM_returncode": 0,
+      "geometry_issue": null,
+      "sensing_and_segmentation_wall_s": 34.74099891493097,
+      "inspection_wall_s": 1.3762058541178703
+    }
+  ],
+  "plan_geometry_wall_s": 3.3157085538841784,
+  "planning_wall_s": 226.97537199407816,
+  "actor_wall_s": 2260.3949644565582,
+  "agent_wait_wall_s": 264.959601509152,
+  "sensing_wall_s": 111.68445202801377,
+  "execution_handoff_wall_s": 387.04399171308614,
+  "raw_evidence_private": true,
+  "normal_forces_are_partial_simulator_measurements": true,
+  "execution_input_consistency": {
+    "plan_hash_unchanged": true,
+    "geometry_hashes_unchanged": true,
+    "assigned_T_matches_selected": true,
+    "assigned_whole_T_matches_selected": true,
+    "contact_supported_mesh": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_incremental_physical_20261016/episode/agent_geometry/observed_patches.ply",
+    "geometry_sha256": {
+      "observed_geometry.json": "568433424cbc049937ab14f4e153f470df4094882c504dc9763e273f3b568bd8",
+      "observed_patches.ply": "673b979ac6e2e6e6205a1e9ed85f1a7c079398bc87f1f947f33e843769825791",
+      "all_measured_patches.ply": "673b979ac6e2e6e6205a1e9ed85f1a7c079398bc87f1f947f33e843769825791",
+      "uncertain_association_patches.ply": "cf850eae8fb7ec914bfc8d8753f0140d469a844397bfedb844cc06f04552b509",
+      "points_world.npy": "7596a43f8c74c226d1a8467447c07a555c87d17ffe0b1cb6a93d204280f7b7f1",
+      "contact_supported_points_world.npy": "f6e8128fa5da64ce3aef467a5ecb67d26c4943f1801f91adb917fd4aa1ef3f65",
+      "semantic_pixel_provenance.npz": "87c56c5d8d82e0a9d2421645fbbfd1feb3693a5cd385294b8d7b25ae62040dcc",
+      "measured_provenance.npz": "9810bd62fabb4d8386102b1d0fde348beab96213eea1ea3f1466269048ab5230",
+      "uncertain_rear_0.ply": "d2b7c13e507f2b9ac8e5e610e9a9ce6bedea21f3887861f0d0f30ab6bc339062",
+      "uncertain_rear_1.ply": "ac259134604813fb06d8895fe8bf1ae8425b3c5e016e7e2be58f738fcc6c238b",
+      "uncertain_rear_2.ply": "19dc5525df71bcb83e34ac5c02d816788e8044b6f6682ed8daf5a3fa32e2652c"
+    }
+  },
+  "normal_load_asymmetry": {
+    "post_acquisition_mean_left_right_n": [
+      0.03956462389655185,
+      1.3944345562897487
+    ],
+    "post_acquisition_max_abs_left_minus_right_n": 2.4156557852397538,
+    "hold_mean_left_right_n": [
+      0.05236977187966821,
+      1.1847278398742431
+    ],
+    "diagnostic_only": true,
+    "no_symmetry_requirement": true
+  }
+}
