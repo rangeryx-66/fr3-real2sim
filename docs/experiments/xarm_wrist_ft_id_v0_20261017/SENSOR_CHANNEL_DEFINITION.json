@@ -1,0 +1,106 @@
+{
+  "sensor_type": "native incoming fixed-joint spatial reaction; idealized load cell",
+  "parent": "link_eef",
+  "child": "xarm_gripper_base_link",
+  "URDF_parent_to_sensor_origin": {
+    "rpy": "0 0 0",
+    "xyz": "0 0 0"
+  },
+  "sensor_to_child_body": "identity (child joint origin, unchanged fixed URDF interface)",
+  "components": [
+    "Fx",
+    "Fy",
+    "Fz",
+    "Tx",
+    "Ty",
+    "Tz"
+  ],
+  "units": [
+    "N",
+    "N",
+    "N",
+    "N m",
+    "N m",
+    "N m"
+  ],
+  "raw_scaling": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "raw_gain": [
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "raw_bias_sensor": [
+    5.833455111588689e-07,
+    -5.522413018160399e-07,
+    1.0546951808632076e-06,
+    3.133440652315778e-08,
+    -1.9498489869697786e-08,
+    -9.350890273634022e-09
+  ],
+  "clipping": null,
+  "saturation": null,
+  "noise_model": null,
+  "raw_filter": "none",
+  "native_sampling_hz": 240,
+  "derivative_filter": {
+    "type": "Savitzky-Golay",
+    "window": 121,
+    "order": 3,
+    "dt_s": 0.004166666666666667,
+    "centered": true,
+    "nominal_latency_s": 0.25,
+    "applied_to": "measured body/motion derivatives, not raw wrench"
+  },
+  "compensation": "rotate(raw-bias) to world; add tool gravity; subtract tool inertial wrench at sensor origin",
+  "hinge_projection": "axis dot (moment_at_sensor + cross(sensor_position-hinge_origin,force))",
+  "T_world_sensor": "recorded every physics step",
+  "hardware_mechanical_CAD_verified": false,
+  "hardware_noise_precision_or_sampling_reproduced": false,
+  "raw_wrench_source": "robot articulation API, never object torque/contact sum",
+  "sensor_definition": {
+    "version": "virtual_cut_v0",
+    "joint": "wrist_ft_interface",
+    "child_body": "xarm_gripper_base_link",
+    "parent_body": "link_eef",
+    "order": [
+      "Fx",
+      "Fy",
+      "Fz",
+      "Tx",
+      "Ty",
+      "Tz"
+    ],
+    "units": [
+      "N",
+      "N",
+      "N",
+      "N m",
+      "N m",
+      "N m"
+    ],
+    "frame": "child joint frame, coincident G1 base origin; URDF gripper_fix origin unchanged",
+    "hardware_sensor": "UFACTORY AI1500 reference only; not mechanical/dynamic replica",
+    "hardware_spec_url": "https://docs.accessories.ufactory.cc/6_Axis_Force_Torque_Sensor/5.Technical_Specifications.html",
+    "simulation_rate_hz": 240,
+    "noise": "none modeled; not a precision claim",
+    "filtering": "none",
+    "hardware_rate_hz": 200,
+    "idealized_zero_thickness": true,
+    "hardware_mass_not_modeled": true,
+    "baseline_tool_and_camera_transforms_unchanged": true,
+    "source_urdf_hashes": {
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/xarm7_native_gripper_20261012/xarm7_native_gripper.urdf": "92eace2ac002b68bc5025523623ddd964586cb9b01efb51a3952a06a9037fc98",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/xarm7_native_gripper_20261012/xarm7_native_dynamics.urdf": "6b48ade925d8b8e939af14840da500796dc0425842b0fe908334095bedaebf6d"
+    }
+  }
+}

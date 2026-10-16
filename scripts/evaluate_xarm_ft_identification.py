@@ -29,10 +29,11 @@ def predict_segment(data,segment,parameters):
         # Independent forward dynamics. Only initial state and measured wrist
         # effort enter; NO following q(t), object position drive or state reset.
         dt=float(t[j]-t[j-1]);u=float(tau[j-1]);previous=vp[-1]
-        direction=np.sign(previous) if abs(previous)>1e-8 else np.sign(u)
-        vn=previous+dt*(u-b*previous-c*direction)/I
-        if previous*vn<0 and abs(u)<=c:vn=0.
-        if abs(previous)<=1e-8 and abs(u)<=c:vn=0.
+        # Backward Euler of the passive Coulomb+viscous joint. The soft
+        # threshold solves the static-friction inclusion at zero velocity.
+        # Stable even when an unsupported fitted inertia is extremely small.
+        momentum=I*previous+dt*u
+        vn=float(np.sign(momentum)*max(abs(momentum)-dt*c,0.)/(I+dt*b))
         qn=qp[-1]+dt*vn
         if not np.isfinite(qn) or abs(qn)>100:return dict(status='independent model diverged',time_after_start_s=float(t[j]-t[0]),GT_trajectory_forcing=False)
         qp.append(qn);vp.append(vn)
@@ -40,7 +41,7 @@ def predict_segment(data,segment,parameters):
     return dict(status='predicted',duration_s=float(t[-1]-t[0]),samples=len(ix),theta_rmse_deg=float(np.rad2deg(np.sqrt(np.mean((qp-theta)**2)))),
         velocity_rmse_rad_s=float(np.sqrt(np.mean((vp-v)**2))),final_angle_error_deg=float(np.rad2deg(qp[-1]-theta[-1])),
         measured_initial_angle_rad=float(theta[0]),measured_initial_velocity_rad_s=float(v[0]),GT_trajectory_forcing=False,
-        model='constant Coulomb+viscous+inertia; semi-implicit native-step forward integration, static-stick handling; no fitted per-angle terms')
+        model='constant Coulomb+viscous+inertia; passive backward-Euler native-step integration with Coulomb inclusion; no fitted per-angle terms')
 
 
 def strict_evaluation(models):
