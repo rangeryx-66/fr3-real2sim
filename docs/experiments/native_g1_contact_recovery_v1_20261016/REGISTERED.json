@@ -1,0 +1,24 @@
+{
+  "reference": "414b345",
+  "registration_before_new_planning_or_physical_outcomes": true,
+  "execution_order": ["45936", "46427"],
+  "cases": {
+    "45936": "Known hold/transmission degradation development case",
+    "46427": "Different-handle successful physical transfer regression control"
+  },
+  "normal_closed_scene_per_case": true,
+  "maximum_physical_grasps_per_case": 2,
+  "maximum_total_physical_grasps": 4,
+  "maximum_Agent_view_adjustments_per_episode": 4,
+  "hold_s": 1.0,
+  "short_target_deg": 3.0,
+  "post_acquisition_transmission_outcome_deg": 2.0,
+  "recovery_only_after_verified_unloaded_release_and_checked_retreat": true,
+  "existing_soft_force_warning": "End current probe and automatically unload; return feedback only after safe exit. Same original 2 N warning, no new threshold.",
+  "original_hard_stop": "Immediately ends current operation. Never caught to resume pulling or reset force history under load. If guarded unloading cannot run without an original stop, terminate episode.",
+  "failed_candidate_memory": "Episode-local existing section/depth/roll/pitch family; unchanged scoring, no permanent object blacklist",
+  "first_success": "No recovery grasp and no manufactured failure",
+  "raw_evidence": "private",
+  "between_case_tuning": false,
+  "known_dependencies": ["known hinge and dynamic state", "registered station", "original scene collision checks", "simulated wrist mount", "approximate finite-effort actuator"]
+}
