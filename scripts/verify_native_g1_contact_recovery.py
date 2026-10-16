@@ -41,6 +41,10 @@ def verify(job,archived):
     assert recovery.attempt_grasp_and_probe({'physical_grasps_started':2},{})['executed']==False
     assert recovery.attempt_grasp_and_probe({'physical_grasps_started':1,'contact_attempts':[{'short_success':True}]},{})['executed']==False
     results['budget_and_success_no_retry']=True
+    assert recovery.short_outcome(True,2.5,False,'EXISTING_SOFT_FORCE_WARNING_RETURN_FOR_UNLOAD')
+    assert not recovery.short_outcome(True,1.9,False,'EXISTING_SOFT_FORCE_WARNING_RETURN_FOR_UNLOAD')
+    assert not recovery.short_outcome(True,2.5,False,'HARD_FORCE_STOP_SUSTAINED')
+    results['registered_2deg_outcome_not_stricter_3deg_command_completion']=True
     with tempfile.TemporaryDirectory() as temp:
         out=Path(temp);g=dict(a=SimpleNamespace(output=out),agent_observations=[],observation_generations=[[]])
         def save(state,label):return label

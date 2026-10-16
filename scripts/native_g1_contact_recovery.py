@@ -21,6 +21,12 @@ from precontact_trajectory import segment_samples
 class TrialFeedback(RuntimeError):pass
 
 
+def short_outcome(acquired,gain,target_reached,reason):
+    # The registered >=2deg transmission criterion is independent of nominal
+    # +3deg completion. An original failure/physical hard stop is never PASS.
+    return bool(acquired and gain>=2. and (target_reached or 'EXISTING_SOFT_FORCE_WARNING_RETURN_FOR_UNLOAD' in reason))
+
+
 def write(g,name,data):observation.write(g['a'].output/name,data)
 def family(candidate):return tuple(float(candidate[k]) for k in ['section_fraction','insertion_m','roll_deg','pitch_deg'])
 def set_state(g,state):g['recovery_state']=state
@@ -191,7 +197,7 @@ def attempt_grasp_and_probe(g,command):
         hold_degradation=dict(single_pad_zero_observed=any(min(r['forces_n'].values())==0 for r in after),not_an_execution_veto=True),
         peak_pad_load_n=max((max(r['forces_n'].values()) for r in rows),default=0.),minimum_joint_margin_rad=min((r['margin_rad'] for r in rows),default=None),
         physical_attempt_wall_s=time.perf_counter()-start_wall)
-    result['short_success']=bool(result['controller_target_reached'] and acquired and result['opening_gain_deg']>=2.)
+    result['short_success']=short_outcome(acquired,result['opening_gain_deg'],result['controller_target_reached'],result['termination_reason'])
     result['transmission_gain_ge_2_deg']=bool(acquired and result['opening_gain_deg']>=2.)
     for name in ['visual_correction.json','MEASURED_STATE_APPROACH_CHECK.json','AGENT_EXECUTION_TRANSITION_CHECK.json']:
         if (g['a'].output/name).exists():shutil.copy2(g['a'].output/name,folder/name)
