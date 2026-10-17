@@ -63,7 +63,17 @@ def evaluate(root):
                 relative_translation_proxy_m=np.array([r.get('relative_translation_slip_m',np.nan) for r in aligned]),
                 measured_aperture_m=np.array([r['aperture_m'] for r in aligned]),
                 command_aperture_m=np.array([r.get('telemetry',{}).get('command_aperture_m',np.nan) for r in aligned],dtype=float))
-            data['samples']=data['samples'];summary=analyze(data);quant=resolution_sensitivity(data)
+            summary=analyze(data);quant=resolution_sensitivity(data)
+            summary['data_quality_audit']=dict(
+                native_records=len(selected),local_processed_records=len(data['t']),retained_valid_native_records=int(data['valid'].sum()),
+                excluded_native_records=int((~data['valid']).sum()),
+                low_velocity_or_reversal_records=int(np.sum(abs(data['qd'])<1e-4)),
+                original_force_event_records=sum(r.get('force_event',{}).get('status') not in [None,'NORMAL'] for r in aligned),
+                relative_translation_above_original_effort_validity_5mm_records=int(np.sum(contact['relative_translation_proxy_m']>.005)),
+                zero_positive_normal_both_pads_records=int(np.sum(np.nanmax(contact['pad_loads'],axis=1)==0)),
+                zero_positive_normal_is_not_proven_contact_separation=True,
+                derivatives_and_tool_compensation_segment_local=True,raw_native_records_unchanged=True,
+                definition='posthoc quality counts only; no new sample filtering, fit weights or execution rules')
             native={round(r['t']*240):r.get('telemetry',{}).get('hinge_velocity_rad_s') for r in selected}
             velocity=np.array([native.get(round(t*240),np.nan) for t in data['t']],dtype=float)
             if np.isfinite(velocity).all():
