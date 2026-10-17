@@ -1,0 +1,27 @@
+# Multi-state active physical identification V1 — preregistered development
+
+Reference `d6e690f`; frozen physical grasp/recovery `136b6e0`. No change to original V0 sources, gripper actuation, preload, robot drive gains, Pink IK costs, collision geometry or force/joint/loaded-TCP safety limits. This is known hinge/state supervision with fresh simulated wrist RGB-D, registered station, approximate actuators and an ideal fixed-interface six-axis load cell, not real sensor fidelity or unknown-structure autonomy.
+
+## Frozen evaluation
+
+Two normally closed continuous 46427 episodes only, sequentially, at most one recovery regrasp each. Seed 17146427 is constant resistance; 17146428 has a smooth localized positive Coulomb profile. Hidden draws are accessed only by the private scene generator and, after **both episodes end**, independent evaluation. No replacement cases or physical retries; precontact infrastructure-invalid starts may be repaired and are preserved separately.
+
+The native passive law is `c(q)=c0+A*exp(-0.5*((q-center)/width)^2)`, static=dynamic friction, with constant positive viscous damping. It is applied through installed PhysX articulation friction-property tensors; readback is logged privately. Existing native viscous values remain verbatim, avoiding another USD-degree/native-radian conversion. No object drive, object effort command or external force. `c(q)*abs(qd)+b*qd²>=0` for every state; inertia remains constant. Positive affine-density geometry-box mass/COM/full-inertia randomization follows V0. These are authored native laws, not automatically exact effective solver dynamics.
+
+Initial block: physical grasp, original one-second hold, open near3°, close near1° (whole validation), reopen near6° with smooth speed variation. Then Codex inspects actual F/T/motion/coverage, uncertainty and information surrogates and chooses a registered finite block or stops. Optional blocks revisit6–10° under different speeds/directions and expand through15° toward20°. At most3 blocks,4 segments/block. This menu is a bounded experimental action family, not an asset-ID-specific permanent policy. No30° attempt in this registered budget.
+
+Reference generation uses smooth start/stop and optional smooth2.5s modulation. Only three reference speed/acceleration constants in a versioned generated owner are rebound. The Pink update factor stays1; actuator/IK gains and safety limits remain unchanged. Familiar first block is <=1.5mm/s; optional reference cap is3–3.5mm/s, acceleration cap0.006m/s². The original measured5mm/s protection remains authoritative. Requested profiles do not establish actual excitation; all information is recomputed from executed motion.
+
+Original collision/contact/force/joint checks govern physical continuation. A nominal archived30° plan is only evidence that meaningful extension might exist; it is not loaded trajectory certification or a new admission gate. Native failures are preserved, followed only by original guarded safe release/clearance/parking. No unbounded load-bearing Agent wait: model work continues live under original protections, and the existing120wall-second decision deadline safely ends a block if interaction fails. Agent decisions are recorded after actual image/plot inspection in separate completed tool calls.
+
+## Estimation and holdout discipline
+
+Every measurement is partitioned **before smoothing**, by contiguous interaction segment, role, timestamp gaps and the fixed interior7–9° holdout region. No angle or downstream-tool derivative window crosses a partition. Two cascaded SG operations require a full121-native-step edge exclusion; raw data remain intact. Complete validation segments and the interior region never fit the model. No held-out outcome selects model complexity or regularization.
+
+M0: nonnegative constant `I_eff,b,c`. M1: constant `I_eff,b` and three nonnegative quadratic Bernstein Coulomb controls on0–20°. Fixed small regularization and control-difference penalty; no arbitrary angle-bin parameters. Compare both models; choose M1 only with at least3 observed regions and >10% improvement in FIT-only leave-segment-out error. This is a conditional model-choice heuristic, not calibrated probability or an execution restriction. Unsupported quantities remain unknown.
+
+Report scaled regressor singular values/Fisher information, conditional uncertainty, residuals versus angle/velocity/acceleration/direction, actual per-region excitation and parameter sensitivity. Conservative native effort floor remains0.004644N·m. Archived unloaded100ms projected bins have RMS~0.00021057N·m, absoluteP95~0.00049417N·m; these do not establish independent noise or hardware confidence. Quantization-only sensitivity uses0.4N /0.01N·m local component rounding with four ADC offsets; no real precision claim.
+
+Held-out forward prediction uses measured wrist-derived effort and initial state only, passive stable integration, no following-state forcing or GT inertia substitution. Report out-of-domain predictions, full-segment angle/velocity/final errors and conditional torque fit separately. Captured wrist RGB-D is associated with measured articulation and sensor/robot metadata.
+
+Raw RGB-D, continuous video, F/T/contact/joint240Hz streams and hidden setup stay private. Publish source hashes, compact results, derived figures and estimated models. Stop after the two registered configurations, preserve failures and close all owned actors/encoders. No next-round experiments automatically.
