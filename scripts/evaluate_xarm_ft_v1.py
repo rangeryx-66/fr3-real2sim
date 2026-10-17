@@ -18,7 +18,10 @@ def evaluate(root):
         c=root/('case_%02d'%i);pid=json.loads((c/'PROCESS.json').read_text())['pid']
         checks.append(dict(case=i,pid=pid,alive=Path('/proc/%d'%pid).exists(),exported=(c/'episode/EXPORT_COMPLETE.json').exists()))
     if not all(not c['alive'] and c['exported'] for c in checks):raise RuntimeError('Both registered actions must end before hidden truth is opened')
-    (root/'TRUTH_ACCESS_BOUNDARY.json').write_text(json.dumps(dict(UTC=datetime.datetime.now(datetime.timezone.utc).isoformat(),checks=checks,all_actions_finished=True),indent=2))
+    boundary=dict(UTC=datetime.datetime.now(datetime.timezone.utc).isoformat(),checks=checks,all_actions_finished=True)
+    if not (root/'TRUTH_ACCESS_BOUNDARY.json').exists():
+        (root/'TRUTH_ACCESS_BOUNDARY.json').write_text(json.dumps(boundary,indent=2))
+    with (root/'INDEPENDENT_EVALUATION_RUNS.jsonl').open('a') as log:log.write(json.dumps(boundary)+'\n')
     cases=[]
     for i in range(2):
         case=root/('case_%02d'%i);episode=case/'episode';job=json.loads((case/'job.json').read_text());truth=json.loads((episode/'HIDDEN_AUTHORED_PHYSICS.json').read_text())
@@ -43,9 +46,9 @@ def evaluate(root):
             with gzip.open(f,'rb') as stream:rows.extend(pickle.load(stream))
         measured_by_tick={round(r['t']*240):r for r in rows}
         rgbd=[]
-        for f in sorted((episode/'rgbd').glob('identification_v1*/camera.json')):
+        for f in sorted((episode/'rgbd').rglob('camera.json')):
             camera=json.loads(f.read_text());tick=round(camera['t_sim']*240);row=measured_by_tick.get(tick)
-            rgbd.append(dict(folder=str(f.parent.relative_to(episode)),camera_timestamp_s=camera['t_sim'],
+            rgbd.append(dict(folder=str(f.parent.relative_to(episode)),camera_timestamp_s=camera['t_sim'],capture_role='information-block endpoint' if f.parent.name.startswith('identification_v1') else 'actual wrist observation/pregrasp refinement',physics_step_index=row.get('telemetry',{}).get('physics_step_index') if row else None,
                 actual_angle_deg=row['door_angle_deg'] if row else None,hinge_velocity_rad_s=row.get('telemetry',{}).get('hinge_velocity_rad_s') if row else None,
                 wrist_wrench_valid=row.get('wrist_ft',{}).get('valid') if row else None,
                 source='same physics tick association to measured robot-side sensor and allowed known articulation state',GT_dynamics_used=False))
@@ -64,6 +67,11 @@ def evaluate(root):
                 measured_aperture_m=np.array([r['aperture_m'] for r in aligned]),
                 command_aperture_m=np.array([r.get('telemetry',{}).get('command_aperture_m',np.nan) for r in aligned],dtype=float))
             summary=analyze(data);quant=resolution_sensitivity(data)
+            outcomes_path=episode/('MULTISTATE_SEGMENTS_%02d.json'%j)
+            outcomes=json.loads(outcomes_path.read_text()) if outcomes_path.exists() else []
+            summary['executed_segment_outcomes']=outcomes
+            summary['poor_transmission_or_protected_segments']=[r['label'] for r in outcomes if not r['ok']]
+            summary['segment_status_semantics']='ok means its configured local target, never an automatic30deg claim; failed-segment tags do not retrospectively alter frozen weights'
             summary['data_quality_audit']=dict(
                 native_records=len(selected),local_processed_records=len(data['t']),retained_valid_native_records=int(data['valid'].sum()),
                 excluded_native_records=int((~data['valid']).sum()),
@@ -97,14 +105,16 @@ def evaluate(root):
             out=episode/'posthoc_v1'/('attempt_%02d'%j);out.mkdir(parents=True,exist_ok=True)
             np.savez_compressed(out/'MEASUREMENTS.npz',**{k:data[k] for k in KEYS},native_hinge_velocity=velocity,**contact);(out/'MODEL.json').write_text(json.dumps(summary,indent=2));(out/'RESOLUTION_SENSITIVITY.json').write_text(json.dumps(quant,indent=2))
             posthoc.append(dict(attempt=j,classification='post-hoc frozen estimator on complete measured attempt including partial last segment',model=summary,provenance=provenance))
-        audit=[];log=episode/'PRIVATE_NATIVE_RESISTANCE.jsonl'
+        audit=[];native_b=[];log=episode/'PRIVATE_NATIVE_RESISTANCE.jsonl'
         if log.exists():
             for line in log.read_text().splitlines():
                 d=json.loads(line);expected=law['base_nm']+law['amplitude_nm']*np.exp(-.5*((d['q']-law['center_rad'])/law['width_rad'])**2)
-                audit.append(abs(d['native_properties'][0]-expected))
+                audit.append(max(abs(d['native_properties'][k]-expected) for k in [0,1]));native_b.append(d['native_properties'][2])
         result=dict(case=i,seed=truth['configuration']['seed'],authored_truth=gt,truth_semantics='authored native passive friction and coherent mass model; effective solver dynamics may differ',
             hidden_truth_not_used_online=True,updates=updates,posthoc=posthoc,physical_result=end,
             native_property_readback_count=len(audit),max_native_Coulomb_readback_error_nm=float(max(audit)) if audit else None,
+            native_viscous_readback_range=[float(min(native_b)),float(max(native_b))] if native_b else None,
+            native_viscous_vs_authored_b_max_error=float(max(abs(np.asarray(native_b)-gt['b_nm_s_rad']))) if native_b else None,
             complete_GT_joint_effort_channel='not available; no contact-sum substitute',
             physical_twin_success_not_inferred_from_torque_fit=True)
         (case/'INDEPENDENT_EVALUATION_V1.json').write_text(json.dumps(result,indent=2));cases.append(result)
@@ -119,7 +129,37 @@ def evaluate(root):
                 model_status='provisional; independent held-out motion and calibration limitations govern interpretation',
                 sensor=dict(type='ideal native fixed-interface load cell',native_hz=240,calibration=str(case.parent.parent/'xarm_wrist_ft_id_v0_20261017/sensor_smoke_00/SENSOR_ANALYSIS.json'),raw_mapping=str(episode/'WRIST_FT_MAPPING.json')),
                 source_freeze=str(root/'FROZEN.json'),supported_segments=[u['path'] for u in updates],wrist_RGBD_index=str(case/'MULTISTATE_RGBD_INDEX.json'),wrist_RGBD=[str(p.relative_to(episode)) for p in (episode/'rgbd').glob('identification_v1*')],
+                executed_grasp_geometry=[str(Path(a['folder'])/'geometry/observed_geometry.json') for a in end['attempts'] if a.get('physical_grasp_started')],
                 remaining_known_dependencies=['hinge geometry','actual dynamic articulation state','registered station','native safety collision model','simulated wrist mounting','approximate actuators'],hidden_dynamics_excluded=True)
+            (case/'ESTIMATED_PHYSICS_MODEL_V1.json').write_text(json.dumps(model,indent=2))
+        if not updates:
+            # A failed/incomplete block must not masquerade as an online
+            # parameter update. Still export a usable explicit unknown model
+            # with references to the separately labelled partial-data analysis.
+            candidates=[p for p in posthoc if p['model'].get('models')]
+            provisional=candidates[-1]['model'] if candidates else None
+            selected=provisional['models'][provisional['selected_model']] if provisional else None
+            support=[bool(v and selected['algebraic_rank']==len(selected['parameters'])) for v in selected['supported']] if selected else []
+            regions=[c['measured_angle_extent_deg'] for c in provisional.get('coverage',[])] if provisional else []
+            model=dict(schema='articulated_physics_model_v1',estimation_stage='posthoc incomplete-block diagnosis, not an in-episode model update',
+                kinematic_prior=native_joint_prior(job['asset_root'],rows[-1]['T_moving_link']) if rows else None,
+                current_motion_state=json.loads((episode/'progress.json').read_text()),
+                valid_observed_range_deg=[min(r[0] for r in regions),max(r[1] for r in regions)] if regions else None,
+                Coulomb_function=dict(basis=selected['kind'],provisional_coefficients_nm=selected['parameters'][2:],conditional_supported_controls=support[2:],function_domain_deg=[0,20],no_unobserved_range_validation_claim=True) if selected else None,
+                conditional_covariance=selected['conditional_covariance'] if selected else None,
+                physical_identification_validated=False,
+                geometry_reference=job['asset_root'],observed_geometry_reference=str(episode/'agent_geometry/observed_geometry.json'),
+                I_eff_kg_m2=selected['parameters'][0] if selected and support[0] else None,
+                b_nm_s_rad=selected['parameters'][1] if selected and support[1] else None,
+                provisional_fitted_model=selected,conditional_supported_parameters=support,
+                model_status='multi-state identification incomplete; no physical-twin success claim',
+                supported_measured_segments=[p['provenance'] for p in posthoc],
+                executed_grasp_geometry=[str(Path(a['folder'])/'geometry/observed_geometry.json') for a in end['attempts'] if a.get('physical_grasp_started')],
+                unknown_terms=['mass','full COM','full inertia tensor','unvisited resistance profile','gravity vs spring'],
+                sensor=dict(type='ideal native fixed-interface load cell',native_hz=240,raw_mapping=str(episode/'WRIST_FT_MAPPING.json')),
+                wrist_RGBD_index=str(case/'MULTISTATE_RGBD_INDEX.json'),source_freeze=str(root/'FROZEN.json'),
+                known_dependencies=['hinge geometry','actual dynamic articulation state','registered station','native safety collision model','simulated wrist mounting','approximate actuators'],
+                hidden_dynamics_excluded_from_fitting=True)
             (case/'ESTIMATED_PHYSICS_MODEL_V1.json').write_text(json.dumps(model,indent=2))
     (root/'INDEPENDENT_EVALUATION_ALL.json').write_text(json.dumps(cases,indent=2));return cases
 

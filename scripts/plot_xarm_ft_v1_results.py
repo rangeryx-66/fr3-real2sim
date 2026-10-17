@@ -40,6 +40,21 @@ for post in e['posthoc']:
  for axis in ax:axis.grid(alpha=.25)
  fig.suptitle('Contact/holding diagnostics; single-pad zero is not proof of physical separation')
  fig.tight_layout();fig.savefig(out/('CONTACT_%02d.png'%post['attempt']),dpi=140);plt.close(fig)
+ # Same frozen models evaluated only over the actually observed range.
+ if model.get('models'):
+  from evaluate_xarm_ft_v1 import curve
+  angle=np.linspace(float(data['q'].min()),float(data['q'].max()),101);law=e['authored_truth']['Coulomb']
+  authored=law['base_nm']+law['amplitude_nm']*np.exp(-.5*((angle-law['center_rad'])/law['width_rad'])**2)
+  fig,axs=plt.subplots(1,3,figsize=(13,4))
+  for n,(kind,m) in enumerate(model['models'].items()):
+   for k in [0,1]:axs[k].errorbar([n],[m['parameters'][k]],yerr=[m['conditional_std'][k]],fmt='o',capsize=3,label=kind)
+   axs[2].plot(np.rad2deg(angle),curve(angle,m),label=kind)
+  axs[0].axhline(e['authored_truth']['I_eff_kg_m2'],color='black',ls='--');axs[1].axhline(e['authored_truth']['b_nm_s_rad'],color='black',ls='--');axs[2].plot(np.rad2deg(angle),authored,'k--',label='authored native law, post hoc only')
+  for ax,title in zip(axs,['I kgm2 (conditional std)','b Nms/rad (conditional std)','Coulomb Nm / observed angles only']):ax.set_title(title);ax.grid(alpha=.2);ax.legend(fontsize=6)
+  for ax in axs[:2]:ax.set_xticks([])
+  axs[2].set_xlabel('actual observed angle deg')
+  fig.suptitle('Post-episode frozen-estimator diagnosis, not an online update or full twin validation')
+  fig.tight_layout();fig.savefig(out/('MODEL_COMPARISON_POSTHOC_%02d.png'%post['attempt']),dpi=150);plt.close(fig)
  # Independent native-initial-state simulation, no following measured states.
  for label in dict.fromkeys(data['segments']):
   if not str(label).startswith('VALIDATION'):continue
