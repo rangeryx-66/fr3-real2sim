@@ -33,6 +33,13 @@ for post in e['posthoc']:
  for ax in axes.flat:ax.grid(alpha=.25)
  fig.colorbar(scatter,ax=axes[0,:],label='simulation time s');fig.suptitle('Actual executed motion/excitation; display subsampled, full 240Hz private')
  fig.savefig(out/('COVERAGE_%02d.png'%post['attempt']),dpi=150,bbox_inches='tight');plt.close(fig)
+ fig,ax=plt.subplots(3,1,figsize=(12,8),sharex=True)
+ ax[0].plot(t[ids],data['pad_loads'][ids,0],label='left normal load');ax[0].plot(t[ids],data['pad_loads'][ids,1],label='right normal load');ax[0].set_ylabel('normal N');ax[0].legend()
+ ax[1].plot(t[ids],data['relative_translation_proxy_m'][ids]*1000,label='TCP/body relative translation proxy');ax[1].set_ylabel('mm');ax[1].legend()
+ ax[2].plot(t[ids],data['command_aperture_m'][ids]*1000,label='command aperture');ax[2].plot(t[ids],data['measured_aperture_m'][ids]*1000,label='measured aperture');ax[2].set_ylabel('mm');ax[2].legend();ax[2].set_xlabel('simulation s')
+ for axis in ax:axis.grid(alpha=.25)
+ fig.suptitle('Contact/holding diagnostics; single-pad zero is not proof of physical separation')
+ fig.tight_layout();fig.savefig(out/('CONTACT_%02d.png'%post['attempt']),dpi=140);plt.close(fig)
  # Independent native-initial-state simulation, no following measured states.
  for label in dict.fromkeys(data['segments']):
   if not str(label).startswith('VALIDATION'):continue

@@ -41,6 +41,15 @@ def evaluate(root):
         rows=[]
         for f in sorted((episode/'observations_chunks').glob('*.gz')):
             with gzip.open(f,'rb') as stream:rows.extend(pickle.load(stream))
+        measured_by_tick={round(r['t']*240):r for r in rows}
+        rgbd=[]
+        for f in sorted((episode/'rgbd').glob('identification_v1*/camera.json')):
+            camera=json.loads(f.read_text());tick=round(camera['t_sim']*240);row=measured_by_tick.get(tick)
+            rgbd.append(dict(folder=str(f.parent.relative_to(episode)),camera_timestamp_s=camera['t_sim'],
+                actual_angle_deg=row['door_angle_deg'] if row else None,hinge_velocity_rad_s=row.get('telemetry',{}).get('hinge_velocity_rad_s') if row else None,
+                wrist_wrench_valid=row.get('wrist_ft',{}).get('valid') if row else None,
+                source='same physics tick association to measured robot-side sensor and allowed known articulation state',GT_dynamics_used=False))
+        (case/'MULTISTATE_RGBD_INDEX.json').write_text(json.dumps(rgbd,indent=2))
         end=json.loads((episode/'RECOVERY_EPISODE_RESULT.json').read_text())
         posthoc=[]
         from xarm_ft_known_joint_prior import native_joint_prior
@@ -49,6 +58,11 @@ def evaluate(root):
             if not selected or not any(r.get('identification_segment') for r in selected):continue
             prior=native_joint_prior(job['asset_root'],selected[0]['T_moving_link']);data,provenance=local_process(selected,prior,job['ft_calibration']['bias_sensor'])
             if data is None:continue
+            aligned=[measured_by_tick[round(t*240)] for t in data['t']]
+            contact=dict(pad_loads=np.array([[r['forces_n'].get(n,np.nan) for n in ['gripper_link1','gripper_link2']] for r in aligned]),
+                relative_translation_proxy_m=np.array([r.get('relative_translation_slip_m',np.nan) for r in aligned]),
+                measured_aperture_m=np.array([r['aperture_m'] for r in aligned]),
+                command_aperture_m=np.array([r.get('telemetry',{}).get('command_aperture_m',np.nan) for r in aligned],dtype=float))
             data['samples']=data['samples'];summary=analyze(data);quant=resolution_sensitivity(data)
             native={round(r['t']*240):r.get('telemetry',{}).get('hinge_velocity_rad_s') for r in selected}
             velocity=np.array([native.get(round(t*240),np.nan) for t in data['t']],dtype=float)
@@ -71,7 +85,7 @@ def evaluate(root):
                 ix=(data['segments']==label)&data['valid']
                 if ix.any():summary['authored_inverse_dynamics_reference'][str(label)]=dict(sensor_vs_authored_reference_rmse_nm=float(np.sqrt(np.mean((data['torque'][ix]-reference[ix])**2))),independently_measured_GT_torque=False)
             out=episode/'posthoc_v1'/('attempt_%02d'%j);out.mkdir(parents=True,exist_ok=True)
-            np.savez_compressed(out/'MEASUREMENTS.npz',**{k:data[k] for k in KEYS},native_hinge_velocity=velocity);(out/'MODEL.json').write_text(json.dumps(summary,indent=2));(out/'RESOLUTION_SENSITIVITY.json').write_text(json.dumps(quant,indent=2))
+            np.savez_compressed(out/'MEASUREMENTS.npz',**{k:data[k] for k in KEYS},native_hinge_velocity=velocity,**contact);(out/'MODEL.json').write_text(json.dumps(summary,indent=2));(out/'RESOLUTION_SENSITIVITY.json').write_text(json.dumps(quant,indent=2))
             posthoc.append(dict(attempt=j,classification='post-hoc frozen estimator on complete measured attempt including partial last segment',model=summary,provenance=provenance))
         audit=[];log=episode/'PRIVATE_NATIVE_RESISTANCE.jsonl'
         if log.exists():
@@ -94,7 +108,7 @@ def evaluate(root):
                 parameters_not_individually_identified=['mass','full COM','full inertia tensor','spring vs gravity'],
                 model_status='provisional; independent held-out motion and calibration limitations govern interpretation',
                 sensor=dict(type='ideal native fixed-interface load cell',native_hz=240,calibration=str(case.parent.parent/'xarm_wrist_ft_id_v0_20261017/sensor_smoke_00/SENSOR_ANALYSIS.json'),raw_mapping=str(episode/'WRIST_FT_MAPPING.json')),
-                source_freeze=str(root/'FROZEN.json'),supported_segments=[u['path'] for u in updates],wrist_RGBD=[str(p.relative_to(episode)) for p in (episode/'rgbd').glob('identification_v1*')],
+                source_freeze=str(root/'FROZEN.json'),supported_segments=[u['path'] for u in updates],wrist_RGBD_index=str(case/'MULTISTATE_RGBD_INDEX.json'),wrist_RGBD=[str(p.relative_to(episode)) for p in (episode/'rgbd').glob('identification_v1*')],
                 remaining_known_dependencies=['hinge geometry','actual dynamic articulation state','registered station','native safety collision model','simulated wrist mounting','approximate actuators'],hidden_dynamics_excluded=True)
             (case/'ESTIMATED_PHYSICS_MODEL_V1.json').write_text(json.dumps(model,indent=2))
     (root/'INDEPENDENT_EVALUATION_ALL.json').write_text(json.dumps(cases,indent=2));return cases
