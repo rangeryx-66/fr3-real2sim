@@ -61,6 +61,9 @@ for post in e['posthoc']:
   ix=np.flatnonzero(data['segments']==label);runs=np.split(ix,np.flatnonzero(np.diff(t[ix])>.01)+1)
   for n,run in enumerate(runs):
    if len(run)<2:continue
+   if not any(m['parameters'][0]>1e-8 for m in model.get('models',{}).values()):
+    (out/'FORWARD_PREDICTION_UNAVAILABLE.json').write_text(json.dumps(dict(reason='All frozen fits have degenerate inertia; no GT/prior inertia substitution, and no actual-only plot presented as a prediction'),indent=2))
+    continue
    tt=t[run]-t[run[0]];fig,axes=plt.subplots(2,1,figsize=(10,7),sharex=True)
    axes[0].plot(tt,np.rad2deg(data['q'][run]),color='black',label='actual measured state')
    native=data['native_hinge_velocity'][run];axes[1].plot(tt,native,color='black',label='native measured hinge velocity')

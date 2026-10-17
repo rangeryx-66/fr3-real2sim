@@ -2,7 +2,7 @@
 import argparse,json,pickle,gzip,hashlib,datetime
 from pathlib import Path
 import numpy as np
-from xarm_ft_v1_estimator import local_process,analyze,resolution_sensitivity,forward,KEYS
+from xarm_ft_v1_estimator import local_process,analyze,resolution_sensitivity,forward,coverage,KEYS
 from evaluate_xarm_ft_identification import effective_inertia
 
 
@@ -22,6 +22,7 @@ def evaluate(root):
     if not (root/'TRUTH_ACCESS_BOUNDARY.json').exists():
         (root/'TRUTH_ACCESS_BOUNDARY.json').write_text(json.dumps(boundary,indent=2))
     with (root/'INDEPENDENT_EVALUATION_RUNS.jsonl').open('a') as log:log.write(json.dumps(boundary)+'\n')
+    b_prior=json.loads((root/'FROZEN.json').read_text())['registration']['parameter_priors']['viscous_nm_s_rad']
     cases=[]
     for i in range(2):
         case=root/('case_%02d'%i);episode=case/'episode';job=json.loads((case/'job.json').read_text());truth=json.loads((episode/'HIDDEN_AUTHORED_PHYSICS.json').read_text())
@@ -67,6 +68,9 @@ def evaluate(root):
                 measured_aperture_m=np.array([r['aperture_m'] for r in aligned]),
                 command_aperture_m=np.array([r.get('telemetry',{}).get('command_aperture_m',np.nan) for r in aligned],dtype=float))
             summary=analyze(data);quant=resolution_sensitivity(data)
+            held=np.char.startswith(data['segments'],'VALIDATION')
+            summary['training_coverage']=coverage(dict(data,valid=data['valid']&~held))
+            summary['validation_coverage']=coverage(dict(data,valid=data['valid']&held))
             outcomes_path=episode/('MULTISTATE_SEGMENTS_%02d.json'%j)
             outcomes=json.loads(outcomes_path.read_text()) if outcomes_path.exists() else []
             summary['executed_segment_outcomes']=outcomes
@@ -122,7 +126,8 @@ def evaluate(root):
             last=updates[-1];selected_model=last['models'][last['selected_model']]['model'];supported=last['models'][last['selected_model']]['supported_after_rank_audit'];prior=json.loads((packets[-1].parent/'INPUT.json').read_text())['prior']
             model=dict(schema='articulated_physics_model_v1',geometry_reference=job['asset_root'],observed_geometry_reference=str(episode/'agent_geometry/observed_geometry.json'),kinematic_prior=prior,
                 current_motion_state=json.loads((episode/'progress.json').read_text()),selected_family=last['selected_model'],
-                I_eff_kg_m2=selected_model['parameters'][0] if supported[0] else None,b_nm_s_rad=selected_model['parameters'][1] if supported[1] else None,
+                I_eff_kg_m2=selected_model['parameters'][0] if supported[0] else None,b_nm_s_rad=selected_model['parameters'][1] if supported[1] and b_prior[0]<=selected_model['parameters'][1]<=b_prior[1] else None,
+                damping_prior_consistent=bool(b_prior[0]<=selected_model['parameters'][1]<=b_prior[1]),provisional_fit_not_clipped_or_refitted=True,
                 Coulomb_function=dict(basis='constant' if last['selected_model']=='constant' else 'three nonnegative quadratic Bernstein controls, domain0..20deg',provisional_coefficients_nm=selected_model['parameters'][2:],conditional_supported_controls=supported[2:]),
                 conditional_covariance=selected_model['conditional_covariance'],valid_observed_range_deg=last['observed_range_deg'],training_range_deg=last['training_range_deg'],unfitted_interior_region_deg=[7,9],
                 parameters_not_individually_identified=['mass','full COM','full inertia tensor','spring vs gravity'],
@@ -150,7 +155,8 @@ def evaluate(root):
                 physical_identification_validated=False,
                 geometry_reference=job['asset_root'],observed_geometry_reference=str(episode/'agent_geometry/observed_geometry.json'),
                 I_eff_kg_m2=selected['parameters'][0] if selected and support[0] else None,
-                b_nm_s_rad=selected['parameters'][1] if selected and support[1] else None,
+                b_nm_s_rad=selected['parameters'][1] if selected and support[1] and b_prior[0]<=selected['parameters'][1]<=b_prior[1] else None,
+                damping_prior_consistent=bool(b_prior[0]<=selected['parameters'][1]<=b_prior[1]) if selected else None,provisional_fit_not_clipped_or_refitted=True,
                 provisional_fitted_model=selected,conditional_supported_parameters=support,
                 model_status='multi-state identification incomplete; no physical-twin success claim',
                 supported_measured_segments=[p['provenance'] for p in posthoc],
