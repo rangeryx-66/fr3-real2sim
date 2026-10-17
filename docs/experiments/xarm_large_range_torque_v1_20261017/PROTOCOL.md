@@ -1,0 +1,17 @@
+# Large-range articulated interaction and torque identification V1
+
+References: eeda9fa, d6e690f, 136b6e0. One normally closed continuous scene, one valid physical episode, no physical retry. Raw evidence and randomized truth stay private.
+
+Registered object: 47686, existing horizontal upper-hinge cabinet. Source metadata dimensions80x35x70cm; prepared height0.70m. The earlier0.25m import was only a geometry-inspection draft, replaced before grasp planning or physics to match source height. Known world hinge axis(-1,0,0); authored range120deg. Coarse mounting and initial station inherit the existing observation setup; a valid live visual plan remains necessary. No saved successful grasp or view.
+
+An isolated controller version repairs the virtual Cartesian-reference/IK-seed inconsistency at local-centering resumption and segment/direction entry. Joint position targets, original slip reference, measured-state equilibrium bias and physical protections remain. Original loaded5mm/s TCP protection, .05rad joint margins, actuators, closure, force limits and collision rules are unchanged. The optional compact-hand panel mode uses the existing narrow physical fingertip/panel collision authorization and wrist envelope. It has not previously been physically validated.
+
+Fresh Codex-inspected wrist RGB-D/SAM3 and incremental measured geometry feed unchanged grasp ranking. At most four selected viewpoint adjustments. Agent approves finite opening/closing segments based on current geometry, reachability and feedback; exploratory targets5/15/20deg,30deg only when feasible. Commands are robot motion only. One initial handle acquisition and at most one planned post-panel acquisition; no unexpected recovery acquisition. Slow Agent decisions occur unloaded. Existing immediate protections remain authoritative.
+
+One independently seeded constant-resistance configuration: seed171947686; coherent positive-density gradient mass/COM/inertia; baseline mass scale0.75..1.25, Coulomb0.018..0.026Nm, damping0.10..0.35Nm s/rad, no spring. Scene-generator truth is inaccessible to Agent/estimator until post-hoc evaluation. No robot parameter randomization.
+
+Primary effort source: native fixed-interface six-axis wrist load cell, raw minus sensor bias plus downstream-tool gravity minus downstream-tool inertia, full moment shifted to known hinge and projected on axis. Sensor remains idealized simulation, not manufacturer accuracy.
+
+Measurement-only model: I*qdd+b*qd+C*sign(qd)+Gs*sin(q)+Gc*cos(q). Gravity coefficients are effective projected first moments. Segment-local derivatives; entire designated VALIDATION segments held out; existing7..9deg interior split retained. Local centering/unloaded/protected intervals are split before filtering. One-pad zero alone is not discarded or an execution veto. Per-segment data/updates survive later failures; estimator workers do not block contact execution. Report excitation, rank, conditioning and uncertainty; no claim of identified inertia/gravity from mere nonzero regularized estimates.
+
+Full PASS requires meaningful large-range bidirectional real contact plus credible component identification and independent held-out dynamics prediction.3deg or a low torque residual alone is insufficient. Initialization failures are recorded/repaired before a valid attempt. Own actors sequential, sufficient shared GPU memory accepted. Preserve video/RGB-D/240Hz streams privately and clean owned processes after export.
