@@ -1,0 +1,38 @@
+{
+  "schema": "effective_hinge_model_v3",
+  "candidate_parameters": [
+    0.16529843428468682,
+    0.30264456266437145,
+    0.0177257334753941
+  ],
+  "conditional_std": [
+    0.007923544829856716,
+    0.0247533044570337,
+    0.00038363062282253306
+  ],
+  "identified_parameters": {
+    "I_eff_kg_m2": null,
+    "b_Nm_s_rad": 0.30264456266437145,
+    "C_Nm": 0.0177257334753941
+  },
+  "inertia_status": "structurally excited; physical accuracy not validated, retain as unknown",
+  "operating_range_deg": [
+    0.12851152334799068,
+    11.456437580465742
+  ],
+  "conditional_prediction_model": "candidateI retained only to reproduce held-out predictions, not replaced by hidden truth",
+  "limitations": [
+    "one constant-resistance development configuration",
+    "ideal load cell and approximate actuators",
+    "known hinge/state and registered station",
+    "conditional uncertainty excludes unknown systematic contact/compensation bias"
+  ],
+  "source_freeze": "c278e2e",
+  "parameter_names": [
+    "I_eff_kg_m2",
+    "b_Nm_s_rad",
+    "C_Nm"
+  ],
+  "measurement": "native fixed-interface wrist six-axis transmitted wrench; bias + tool gravity/inertia compensation",
+  "known_hinge_prior_reference": "private episode_01/identification_input.json"
+}
