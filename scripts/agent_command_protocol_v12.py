@@ -83,9 +83,17 @@ def validate(command, sequence):
             require(isinstance(action.get('role'), str) and action['role'].startswith(('FIT', 'VALIDATION')), 'segment role required')
             require(action.get('profile') in ('constant', 'smooth_variation'), 'known segment profile required')
             require(type(action.get('hold')) is bool, 'boolean segment hold required')
-            from interaction_runtime.progress import validate_action
-            try:validate_action(action)
-            except (ValueError,TypeError,KeyError) as error:raise ProtocolError(str(error)) from error
+            # Transport remains standard-library-only; numerical runtime imports
+            # must not become a requirement for publishing an Agent command.
+            budget=action.get('max_sim_s',45.)
+            require(number(budget) and budget>=1/240,'positive finite segment budget required')
+            require('allow_target_truncation' not in action or type(action['allow_target_truncation']) is bool,'boolean truncation declaration required')
+            windows=action.get('fit_intervals_s',[]);require(isinstance(windows,list),'FIT intervals must be a list')
+            require(not windows or action['role'].startswith('FIT'),'incomplete VALIDATION cannot be admitted by FIT intervals')
+            previous=0.
+            for window in windows:
+                require(vector(window,2) and previous<=window[0]<window[1]<=budget,'ordered non-overlapping FIT intervals inside budget required')
+                previous=window[1]
             for key in ('reference_speed_m_s', 'reference_acceleration_m_s2', 'speed_scale'):
                 if key in action: require(number(action[key]) and action[key] > 0, 'positive finite ' + key + ' required')
     if op == 'plan_panel_push':

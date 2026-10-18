@@ -16,18 +16,23 @@ def replay(folder):
         ix=np.flatnonzero(a['segment']==seg['id'])
         if not len(ix):continue
         action=seg.get('declared_action',{});target=np.deg2rad(seg['target_deg']);q=a['door_q'][ix];t=a['t'][ix];ref=a['reference_q'][ix];direction=1 if target>=q[0] else -1
-        clock=ProgressClock(q[0],target);new=[];old_error=[];radius=[]
+        clock=ProgressClock(q[0],target);new=[];old_error=[];radius=[];checkpoint=t[0];last_q=q[0];last_slip=a['relative_slip_m'][max(0,ix[0]-1)];streak=0;stall_at=None
         for j,i in enumerate(ix):
             if not np.isfinite(ref[j]):continue
             nominal=min(m['speed_m_s'],action.get('reference_speed_m_s',m['speed_m_s']))*speed_fraction(t[j]-seg['first_step']/240,action)
             r=hinge_radius(a['tcp_pose'][i,:3],origin,axis);radius.append(r)
+            if t[j]+1/240-checkpoint>=.5-1e-9:
+                progress=direction*(q[j]-last_q)*r;slip=a['relative_slip_m'][i]
+                streak=streak+1 if slip-last_slip>max(0.,progress) else 0
+                checkpoint=t[j]+1/240;last_q=q[j];last_slip=slip
+                if streak>=3 and stall_at is None:stall_at=float(t[j]+1/240-t[0])
             x,state=clock.advance(q[j],nominal,r,1/240,m['angular_speed_rad_s'],m['acceleration_m_s2'],m['angular_acceleration_rad_s2']);new.append([x,state['tracking_limited']])
-            if j+1<len(ix):
+            if j+1<len(ix) and ref[j+1]!=ref[j]:
                 old=progress_reference(q[j],ref[j],target,direction,nominal,np.linalg.norm(a['tcp_pose'][i,:3]-origin),1/240,np.deg2rad(.5))
                 old_error.append(old-ref[j+1])
         new=np.array(new);lag=direction*(ref-q);duration=t[-1]-t[0]
-        results.append(dict(id=seg['id'],role=seg['role'],original_result=seg['result'],duration_s=float(duration),actual_gain_deg=float(np.rad2deg(q[-1]-q[0])),median_old_lag_deg=float(np.rad2deg(np.nanmedian(lag))),median_old_divisor=float(np.nanmedian(1+np.maximum(0,lag)/np.deg2rad(.05))),legacy_one_step_RMS_error_deg=float(np.rad2deg(np.sqrt(np.mean(np.array(old_error)**2)))),perpendicular_radius_m=float(np.median(radius)),new_reference_end_on_frozen_measured_states_deg=float(np.rad2deg(new[-1,0])),new_limited_fraction_on_frozen_slow_states=float(new[:,1].mean()),
-            warning='Recorded slow states are unchanged; replay cannot establish physical speedup or new target completion'))
+        results.append(dict(id=seg['id'],role=seg['role'],original_result=seg['result'],duration_s=float(duration),actual_gain_deg=float(np.rad2deg(q[-1]-q[0])),median_old_lag_deg=float(np.rad2deg(np.nanmedian(lag))),median_old_divisor=float(np.nanmedian(1+np.maximum(0,lag)/np.deg2rad(.05))),legacy_clock_update_samples=len(old_error),legacy_one_step_RMS_error_deg=float(np.rad2deg(np.sqrt(np.mean(np.array(old_error)**2)))),perpendicular_radius_m=float(np.median(radius)),new_reference_end_on_frozen_measured_states_deg=float(np.rad2deg(new[-1,0])),new_limited_fraction_on_frozen_slow_states=float(new[:,1].mean()),
+            archived_slip_stall_detection_s=stall_at,warning='Recorded slow states are unchanged; replay cannot establish physical speedup or new target completion'))
     return dict(source=str(folder),kind='RECORDED_STATE_REFERENCE_REPLAY_ONLY',segments=results)
 
 if __name__=='__main__':

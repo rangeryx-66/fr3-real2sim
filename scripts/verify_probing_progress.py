@@ -33,12 +33,17 @@ def verify():
     clipped=segment_plan(0,np.deg2rad(170),dict(a,max_sim_s=2,allow_target_truncation=True),m,.424);assert clipped['valid'] and clipped['target_truncated'] and clipped['selected_target_rad']<np.deg2rad(170)
     # Signed changes start at the measured state with zero reference velocity.
     forward=ProgressClock(.2,.1);assert forward.reference==.2 and forward.velocity==0
-    arrays=dict(t=np.arange(2400)/240,safety_stop=np.zeros(2400,dtype=int));indices=np.arange(2400)
+    arrays=dict(step=np.arange(2400),t=np.arange(2400)/240,safety_stop=np.zeros(2400,dtype=int));indices=np.arange(2400)
     s=dict(id=1,first_step=0,completed=True,role='FIT_CLOCK',declared_action=dict(fit_intervals_s=[[1,8]]),result=dict(ok=False,status='TIMEOUT',safely_stopped=True,physical_transmission_valid=True,fit_valid_until_s=9))
     selected,label=selection(s,arrays,indices,True);assert len(selected)==1681 and not s['result']['ok'];assert label['action_remains_failed']
     assert len(selection(s,arrays,indices,False)[0])==0
+    complete=dict(s,result=dict(ok=True,status='TARGET_REACHED'))
+    assert len(selection(complete,arrays,indices,True)[0])==1681
+    assert len(selection(complete,arrays,indices,False)[0])==2400
     for change in [dict(role='VALIDATION_CLOCK'),dict(result=dict(s['result'],physical_transmission_valid=False)),dict(result=dict(s['result'],safely_stopped=False))]:
         assert not len(selection(dict(s,**change),arrays,indices,True)[0])
+    validation=dict(s,role='VALIDATION_CLIPPED',result=dict(ok=True,requested_target_reached=False))
+    assert not len(selection(validation,arrays,indices,True)[0])
     arrays['safety_stop'][1000]=1;selected,_=selection(s,arrays,indices,True);assert 1000 not in selected
     for a in [dict(role='VALIDATION',fit_intervals_s=[[0,1]]),dict(role='FIT',max_sim_s=-1),dict(role='FIT',fit_intervals_s=[[2,1]])]:
         try:validate_action(a);raise AssertionError('Invalid protocol accepted')

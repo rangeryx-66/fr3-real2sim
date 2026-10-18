@@ -138,7 +138,7 @@ class Operations:
         # Safety exceptions bypass this continuation and remain authoritative.
         valid_until=self.r.tick*self.r.dt-began;self.r.stop_command();self.r.reference_drive=None
         reached=clock.direction*(target-measure())<=0;ok=reached and reason!='CONTACT_TRANSMISSION_STALL'
-        return dict(ok=bool(ok),status='TARGET_REACHED' if ok else ('TRANSMISSION_FAILURE' if reason=='CONTACT_TRANSMISSION_STALL' else 'TIMEOUT'),reason=None if ok else reason,
+        return dict(ok=bool(ok),status=('SELECTED_INTERVAL_REACHED' if planning['target_truncated'] else 'TARGET_REACHED') if ok else ('TRANSMISSION_FAILURE' if reason=='CONTACT_TRANSMISSION_STALL' else 'TIMEOUT'),reason=None if ok else reason,
             angle_deg=math.degrees(measure()),gain_deg=math.degrees(measure()-start),requested_target_reached=bool(clock.direction*(requested-measure())<=0),planning=planning,
             panel_contacts=panel_contacts,safely_stopped=True,physical_transmission_valid=reason!='CONTACT_TRANSMISSION_STALL',fit_valid_until_s=valid_until,elapsed_sim_s=self.r.tick*self.r.dt-began,
             reference_deg=math.degrees(clock.reference),tracking_limited_fraction=clock.limited_steps/max(1,round(valid_until/self.r.dt)),final_tracking_lag_deg=math.degrees(clock.direction*(clock.reference-measure())))

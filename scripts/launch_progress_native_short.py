@@ -8,8 +8,10 @@ def main():
     parser=argparse.ArgumentParser();parser.add_argument('--gpu',type=int,default=3);parser.add_argument('--label',default='native_short_00');parser.add_argument('--contact',action='store_true');a=parser.parse_args()
     lock=(ROOT/'results/fast_runtime_v1_20261018/owned_actor.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     out=ROOT/'results/probing_progress_20261018'/a.label;out.mkdir(parents=True,exist_ok=False)
-    old=json.loads((ROOT/'results/agent_pull_push_v12_20261018/job.json').read_text());keep={'source','asset_root','skill','camera_calibration','wrist_calibration','robust_uncertainty_config','robot_start_q','active_closure_source','expected_active_closure_sha256','ft_calibration','shared_execution','private_physics_configuration','identification_case'}
+    old=json.loads((ROOT/'results/agent_pull_push_v12_20261018/job.json').read_text());keep={'source','asset_root','skill','camera_calibration','wrist_calibration','robust_uncertainty_config','robot_start_q','active_closure_source','expected_active_closure_sha256','ft_calibration','shared_execution','visual_prompt','visual_reobservations','visual_planning_wall_s','benchmark_goal_rad','authored_target_rad','private_physics_configuration','identification_case'}
     job={k:v for k,v in old.items() if k in keep};job.update(output=str(out),gpu=a.gpu,visual_gpu=a.gpu,wrist_experiment={'sam3':old['wrist_experiment']['sam3']},research_reference='7548aeb',allow_interrupted_fit=True)
+    if a.contact:
+        for key in ['visual_reobservations','visual_prompt','visual_planning_wall_s']:assert key in job,key
     for key in ['source','asset_root','active_closure_source','private_physics_configuration']:
         if not Path(job[key]).exists():raise FileNotFoundError('Engineering job dependency: '+key)
     job['deadline_shanghai']=(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))+datetime.timedelta(minutes=10 if a.contact else 5)).isoformat();(out/'job.json').write_text(json.dumps(job,indent=2))
