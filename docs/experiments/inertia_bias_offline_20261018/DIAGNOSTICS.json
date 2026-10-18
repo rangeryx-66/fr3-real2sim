@@ -1,0 +1,5101 @@
+{
+  "reference": "b75d5b8",
+  "protocol": {
+    "windows": [
+      61,
+      121,
+      181
+    ],
+    "shifts_samples": [
+      -8,
+      -4,
+      -2,
+      -1,
+      0,
+      1,
+      2,
+      4,
+      8
+    ],
+    "common_edge_samples": 211,
+    "original_edge_samples": 121,
+    "differentiation": [
+      "position_SG2",
+      "native_velocity_SG1",
+      "position_gradient_SG0"
+    ],
+    "torque_filters": [
+      "none",
+      "SG0",
+      "SG2_equivalent"
+    ],
+    "selection": "minimum sample-weighted FIT-only leave-complete-segment-out torque RMSE; no validation/truth selection",
+    "synthetic_parameters": [
+      0.3,
+      0.4,
+      0.02
+    ],
+    "synthetic_frequencies_hz": [
+      0.1,
+      0.31831,
+      0.5,
+      1.0,
+      1.5,
+      2.0
+    ],
+    "weak_windows_s": [
+      0.5,
+      1.0
+    ],
+    "nuisance_models": [
+      "bias",
+      "direction_offset",
+      "slip_rate",
+      "aperture_rate"
+    ],
+    "comparison_target": "common original unfiltered compensated torque for CV and forward prediction; own-filter errors reported separately",
+    "matched_compensation": "filter raw+bias+gravity once; subtract already smoothed tool inertia once (no second smoothing)",
+    "truth_inputs": false,
+    "diagnostic_only": true
+  },
+  "archived_parameters": [
+    0.16529843428468682,
+    0.30264456266437145,
+    0.0177257334753941
+  ],
+  "original": {
+    "parameters": [
+      0.16529843428468682,
+      0.30264456266437145,
+      0.0177257334753941
+    ],
+    "training_bins": 304,
+    "training_rmse_nm": 0.003058939905817493,
+    "FIT_LOSO_rmse_nm": 0.003063686636876967,
+    "FIT_LOSO": [
+      {
+        "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+        "parameters": [
+          0.170257160865209,
+          0.3068558351129044,
+          0.01764369494268186
+        ],
+        "rmse_nm": 0.0032838247743328997
+      },
+      {
+        "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+        "parameters": [
+          0.16288387772184326,
+          0.2967963448827543,
+          0.017796754354199612
+        ],
+        "rmse_nm": 0.003776890864880638
+      },
+      {
+        "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+        "parameters": [
+          0.16527957594283924,
+          0.306537979752765,
+          0.017709972441152397
+        ],
+        "rmse_nm": 0.0007809221420121568
+      }
+    ],
+    "FIT_LOSO_residual_acceleration_correlation": -0.01808424032806658,
+    "residual_acceleration_correlation": 0.0001431725563290312,
+    "acceleration_rms": 0.022177770178364833,
+    "heldout": {
+      "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+        "status": "predicted",
+        "samples": 1961,
+        "duration_s": 8.166666666666686,
+        "angle_rmse_deg": 0.05785515882249244,
+        "final_error_deg": 0.12665692957259445,
+        "velocity_rmse_rad_s": 0.0010656281224071522,
+        "state_trajectory_forcing": false,
+        "supported_inertia": true,
+        "prediction_outside_observed_domain": false
+      }
+    },
+    "common_unfiltered_training_rmse_nm": 0.003058939905817493,
+    "common_unfiltered_FIT_LOSO_rmse_nm": 0.003063686636876967,
+    "common_unfiltered_residual_acceleration_correlation": 0.0001431725563290312,
+    "common_unfiltered_heldout": {
+      "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+        "status": "predicted",
+        "samples": 1961,
+        "duration_s": 8.166666666666686,
+        "angle_rmse_deg": 0.05785515882249244,
+        "final_error_deg": 0.12665692957259445,
+        "velocity_rmse_rad_s": 0.0010656281224071522,
+        "state_trajectory_forcing": false,
+        "supported_inertia": true,
+        "prediction_outside_observed_domain": false
+      }
+    },
+    "heldout_torque_rmse_nm": 0.0011605915502849097,
+    "full_reserved_heldout_including_derivative_edges": {
+      "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+        "status": "predicted",
+        "samples": 2203,
+        "duration_s": 9.175000000000011,
+        "angle_rmse_deg": 0.1225317607420011,
+        "final_error_deg": 0.16042130773046132,
+        "velocity_rmse_rad_s": 0.001523003723412017,
+        "state_trajectory_forcing": false,
+        "supported_inertia": true,
+        "prediction_outside_observed_domain": false
+      }
+    }
+  },
+  "variants": {
+    "baseline_common_edges": {
+      "parameters": [
+        0.16682371199192772,
+        0.29124670761207494,
+        0.017931909551796684
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0030448447229448465,
+      "FIT_LOSO_rmse_nm": 0.0030469758947572955,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17006823071021215,
+            0.2879433141805219,
+            0.017955079046955445
+          ],
+          "rmse_nm": 0.003264559578935422
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.16525810658173418,
+            0.29023201317930325,
+            0.01793647638801225
+          ],
+          "rmse_nm": 0.0037585922281309033
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.16688882331973776,
+            0.29449939961876825,
+            0.017921258709522676
+          ],
+          "rmse_nm": 0.0006450822258178911
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.012080396533318096,
+      "residual_acceleration_correlation": 4.869834256937326e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049303525163063286,
+          "final_error_deg": 0.1414550148535755,
+          "velocity_rmse_rad_s": 0.0011175068676915075,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030448447229448465,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030469758947572955,
+      "common_unfiltered_residual_acceleration_correlation": 4.869834256937326e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049303525163063286,
+          "final_error_deg": 0.1414550148535755,
+          "velocity_rmse_rad_s": 0.0011175068676915075,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010493885389334407,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16154970615240202,
+          "final_error_deg": 0.21934589646240207,
+          "velocity_rmse_rad_s": 0.0015767345839993977,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_position_SG2_61": {
+      "parameters": [
+        0.16513838038623277,
+        0.29084602262747067,
+        0.017947269665897964
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0019704817729620672,
+      "FIT_LOSO_rmse_nm": 0.0020147051311496943,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.1774361155114934,
+            0.28731759454452216,
+            0.01797685599495822
+          ],
+          "rmse_nm": 0.002117291621146239
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.159233767733695,
+            0.28990631515621645,
+            0.01795027880430102
+          ],
+          "rmse_nm": 0.002529986056409548
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1650269454490695,
+            0.29393810172939044,
+            0.017937969482245013
+          ],
+          "rmse_nm": 0.00041520192816913397
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.08001800763167022,
+      "residual_acceleration_correlation": 4.77370897426247e-05,
+      "acceleration_rms": 0.025725972693635184,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.054470390327337366,
+          "final_error_deg": 0.15283754886407763,
+          "velocity_rmse_rad_s": 0.0010860962275189606,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030450802513138256,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030555501185331895,
+      "common_unfiltered_residual_acceleration_correlation": 0.011974614169375028,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.054470390327337366,
+          "final_error_deg": 0.15283754886407763,
+          "velocity_rmse_rad_s": 0.0011027193098859995,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.000837486432362043,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16524407955215994,
+          "final_error_deg": 0.2297945837658004,
+          "velocity_rmse_rad_s": 0.001563195280140899,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_native_velocity_SG1_61": {
+      "parameters": [
+        0.15821272931250216,
+        0.288074692153941,
+        0.017987514023295223
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0014092110316379011,
+      "FIT_LOSO_rmse_nm": 0.0014844438746430128,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17040753986451607,
+            0.2851307634190412,
+            0.018012275171333407
+          ],
+          "rmse_nm": 0.0016197746668266794
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.15182899437214695,
+            0.2872439661388499,
+            0.017993266642691734
+          ],
+          "rmse_nm": 0.0017967793410962902
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.15817986658484665,
+            0.2905673945882997,
+            0.017978719057157148
+          ],
+          "rmse_nm": 0.00033249819090266626
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.1100873926403613,
+      "residual_acceleration_correlation": 3.65465303136369e-05,
+      "acceleration_rms": 0.028330030325668304,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.053043815578106494,
+          "final_error_deg": 0.14533153591801604,
+          "velocity_rmse_rad_s": 0.0009658586750289354,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030505669093746027,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030544919523263865,
+      "common_unfiltered_residual_acceleration_correlation": 0.06061150471579056,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.053043815578106494,
+          "final_error_deg": 0.14533153591801604,
+          "velocity_rmse_rad_s": 0.000998600403156514,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0006237324639039847,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.14542412280441247,
+          "final_error_deg": 0.20615475253962698,
+          "velocity_rmse_rad_s": 0.0014810153044117955,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_position_gradient_SG0_61": {
+      "parameters": [
+        0.15716187944561089,
+        0.29191633532066025,
+        0.017930873551956248
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0015587887814415156,
+      "FIT_LOSO_rmse_nm": 0.0016247627747207121,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.16929215427407476,
+            0.2892821349096304,
+            0.017948683279885837
+          ],
+          "rmse_nm": 0.0017276982208961757
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.15095968801806786,
+            0.2905195054527158,
+            0.01794257219120169
+          ],
+          "rmse_nm": 0.0020144116381459543
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.15713178569866296,
+            0.2948661027554161,
+            0.017920865933166892
+          ],
+          "rmse_nm": 0.0003723397388704195
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.10180281792038906,
+      "residual_acceleration_correlation": 4.242409848140244e-05,
+      "acceleration_rms": 0.028094068196438636,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05391335861654629,
+          "final_error_deg": 0.14781396553717283,
+          "velocity_rmse_rad_s": 0.0009726195587194775,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030518427919572987,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003054653630760916,
+      "common_unfiltered_residual_acceleration_correlation": 0.06767522715580053,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05391335861654629,
+          "final_error_deg": 0.14781396553717283,
+          "velocity_rmse_rad_s": 0.0009875183218628063,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.000730390836009825,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.141729745685702,
+          "final_error_deg": 0.20559538888684847,
+          "velocity_rmse_rad_s": 0.0014663078264559402,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "torque_SG0_61": {
+      "parameters": [
+        0.15979086561985728,
+        0.29158458605624715,
+        0.01793454422248084
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0014829963854098038,
+      "FIT_LOSO_rmse_nm": 0.001513274100162462,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.16845184921324585,
+            0.2885258504001361,
+            0.017954218796562765
+          ],
+          "rmse_nm": 0.0016969817411471204
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.15554017129640127,
+            0.29026722294433566,
+            0.017945543908460832
+          ],
+          "rmse_nm": 0.001790212747915803
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.15977985459112493,
+            0.29479858904685396,
+            0.017923613131771744
+          ],
+          "rmse_nm": 0.0002503516177493016
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.07457251720905744,
+      "residual_acceleration_correlation": 5.45216157378773e-05,
+      "acceleration_rms": 0.025725972693635184,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.059235097081725405,
+          "final_error_deg": 0.1573062648208427,
+          "velocity_rmse_rad_s": 0.0009946904558344734,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003048559830408577,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030507784998219573,
+      "common_unfiltered_residual_acceleration_correlation": 0.04934745458443427,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.053189344775663575,
+          "final_error_deg": 0.14759989897136047,
+          "velocity_rmse_rad_s": 0.001024098935934098,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.00046211004532080847,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.14822126099218763,
+          "final_error_deg": 0.21119293165219297,
+          "velocity_rmse_rad_s": 0.0014953349048815376,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "torque_SG2_equivalent_61": {
+      "parameters": [
+        0.14394805381982503,
+        0.2876796334086661,
+        0.017977643132618494
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0008677202397571386,
+      "FIT_LOSO_rmse_nm": 0.0008870006935571496,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.1491848392879215,
+            0.2856639747595689,
+            0.017988936192114703
+          ],
+          "rmse_nm": 0.001018376597191054
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.1412971082533262,
+            0.2867668841278743,
+            0.017988926265605762
+          ],
+          "rmse_nm": 0.001021365504335729
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.14399614285613233,
+            0.2896164681726949,
+            0.017970972825089502
+          ],
+          "rmse_nm": 0.00014276646882577037
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.07615465855934299,
+      "residual_acceleration_correlation": 3.898358429472646e-05,
+      "acceleration_rms": 0.025725972693635184,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.054285487125372074,
+          "final_error_deg": 0.13204100537791097,
+          "velocity_rmse_rad_s": 0.0007345034485858998,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030840024714502414,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030779666348860076,
+      "common_unfiltered_residual_acceleration_correlation": 0.15860539590434888,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.0419723245857023,
+          "final_error_deg": 0.11334525400747059,
+          "velocity_rmse_rad_s": 0.0007667763097320045,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0002928789790495993,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.08751216158218442,
+          "final_error_deg": 0.13371396367147187,
+          "velocity_rmse_rad_s": 0.0013429069561492477,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "joint_tool_window_61": {
+      "parameters": [
+        0.13765240012261423,
+        0.2928212669049124,
+        0.017905689978110127
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0013367927539557306,
+      "FIT_LOSO_rmse_nm": 0.0013589450359557066,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.14472627349975958,
+            0.28958863916850536,
+            0.017931709593353315
+          ],
+          "rmse_nm": 0.0013920937096784738
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.13434949692829506,
+            0.29207274852679954,
+            0.017908474432996285
+          ],
+          "rmse_nm": 0.00173107507422939
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.13753185495479314,
+            0.2955468587755705,
+            0.017897087682058648
+          ],
+          "rmse_nm": 0.0003657109443809027
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.06886292875597394,
+      "residual_acceleration_correlation": 5.6974752759298675e-05,
+      "acceleration_rms": 0.025725972693635184,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04403401691883882,
+          "final_error_deg": 0.11734703958184954,
+          "velocity_rmse_rad_s": 0.0006860749735830425,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003107835954741933,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003096574854790998,
+      "common_unfiltered_residual_acceleration_correlation": 0.20032822424173727,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04592840968380067,
+          "final_error_deg": 0.11870578988896364,
+          "velocity_rmse_rad_s": 0.0006917357909445097,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0007175949915090149,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.07277803310239968,
+          "final_error_deg": 0.12553621442534865,
+          "velocity_rmse_rad_s": 0.0013228896847773282,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "matched_all_61": {
+      "parameters": [
+        0.1452318079133826,
+        0.2881450246407856,
+        0.01797516702278356
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0008759806108898286,
+      "FIT_LOSO_rmse_nm": 0.0008979029783738203,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.1508462752321497,
+            0.284338173415594,
+            0.01801221995032731
+          ],
+          "rmse_nm": 0.0010381930149911613
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.14243094391660124,
+            0.2879540155416344,
+            0.017972673451611174
+          ],
+          "rmse_nm": 0.0010246505928134244
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1452597201027682,
+            0.2905445325519753,
+            0.017965427546944142
+          ],
+          "rmse_nm": 0.00014675627087589645
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.08064498060359764,
+      "residual_acceleration_correlation": 6.548130563651769e-05,
+      "acceleration_rms": 0.025610644857110555,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.057485360347639805,
+          "final_error_deg": 0.13943642434245446,
+          "velocity_rmse_rad_s": 0.000718868290816971,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030797433113317306,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030740134750670105,
+      "common_unfiltered_residual_acceleration_correlation": 0.14993045208594827,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.045078092206287196,
+          "final_error_deg": 0.12077856390769537,
+          "velocity_rmse_rad_s": 0.0007918202437543156,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.00029525101110804516,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.09546825601862417,
+          "final_error_deg": 0.1457007406667969,
+          "velocity_rmse_rad_s": 0.0013537022242249275,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "single_pass_61": {
+      "parameters": [
+        0.11223058049076037,
+        0.29104646110398597,
+        0.017921219727226434
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.00015805292866935444,
+      "FIT_LOSO_rmse_nm": 0.00016454767114859335,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.11197710151916586,
+            0.2883028637428427,
+            0.017942421823346735
+          ],
+          "rmse_nm": 0.00019242437603934033
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.11234847543470511,
+            0.2905865127490024,
+            0.01792609373469969
+          ],
+          "rmse_nm": 0.00017196459550740514
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.11224861790768902,
+            0.29309060708473955,
+            0.017912368859912226
+          ],
+          "rmse_nm": 8.399961195526507e-05
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.01975709872756096,
+      "residual_acceleration_correlation": 0.0002104248285451279,
+      "acceleration_rms": 0.025610644857110555,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05061129179991871,
+          "final_error_deg": 0.09799464826102643,
+          "velocity_rmse_rad_s": 0.00024044098880002542,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0032602902771373897,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003261649051348985,
+      "common_unfiltered_residual_acceleration_correlation": 0.3574727140032104,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.040017177208863275,
+          "final_error_deg": 0.08119752711294735,
+          "velocity_rmse_rad_s": 0.0004804240872719892,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 8.045401484804617e-05,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.047202612517035995,
+          "final_error_deg": 0.0270200732752225,
+          "velocity_rmse_rad_s": 0.0015204539857657832,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_position_SG2_121": {
+      "parameters": [
+        0.16682371199192772,
+        0.29124670761207494,
+        0.017931909551796684
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0030448447229448465,
+      "FIT_LOSO_rmse_nm": 0.0030469758947572955,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17006823071021215,
+            0.2879433141805219,
+            0.017955079046955445
+          ],
+          "rmse_nm": 0.003264559578935422
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.16525810658173418,
+            0.29023201317930325,
+            0.01793647638801225
+          ],
+          "rmse_nm": 0.0037585922281309033
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.16688882331973776,
+            0.29449939961876825,
+            0.017921258709522676
+          ],
+          "rmse_nm": 0.0006450822258178911
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.012080396533318096,
+      "residual_acceleration_correlation": 4.869834256937326e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049303525163063286,
+          "final_error_deg": 0.1414550148535755,
+          "velocity_rmse_rad_s": 0.0011175068676915075,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030448447229448465,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030469758947572955,
+      "common_unfiltered_residual_acceleration_correlation": 4.869834256937326e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049303525163063286,
+          "final_error_deg": 0.1414550148535755,
+          "velocity_rmse_rad_s": 0.0011175068676915075,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010493885389334407,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16154970615240202,
+          "final_error_deg": 0.21934589646240207,
+          "velocity_rmse_rad_s": 0.0015767345839993977,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_native_velocity_SG1_121": {
+      "parameters": [
+        0.15832299849181808,
+        0.2878191830094209,
+        0.017993892337294183
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.002351589722268402,
+      "FIT_LOSO_rmse_nm": 0.0023646681043469338,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.16546262768364248,
+            0.2850772025379731,
+            0.01800687511101542
+          ],
+          "rmse_nm": 0.0024031773987024836
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.1549483788936999,
+            0.2864002993668015,
+            0.018010354553876
+          ],
+          "rmse_nm": 0.0030408285189987027
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.15826766562094902,
+            0.29089584962323944,
+            0.017982417253983748
+          ],
+          "rmse_nm": 0.0005695932460323843
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.0402394884932178,
+      "residual_acceleration_correlation": 2.29115607817524e-05,
+      "acceleration_rms": 0.025723239435064132,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05464796728848562,
+          "final_error_deg": 0.14876137622027064,
+          "velocity_rmse_rad_s": 0.0009861685644334463,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003050458788428559,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030508794106968544,
+      "common_unfiltered_residual_acceleration_correlation": 0.05988177484995408,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05464796728848562,
+          "final_error_deg": 0.14876137622027064,
+          "velocity_rmse_rad_s": 0.001003022717279944,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.001019038838283353,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.14816300181245484,
+          "final_error_deg": 0.21072694322702318,
+          "velocity_rmse_rad_s": 0.0014847473205512722,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_position_gradient_SG0_121": {
+      "parameters": [
+        0.15294090381769082,
+        0.2910586812789809,
+        0.017943411751245038
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0027598336679509378,
+      "FIT_LOSO_rmse_nm": 0.002761682203655748,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.15499185627996842,
+            0.2892418535711163,
+            0.017937616563233266
+          ],
+          "rmse_nm": 0.002843042826711753
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.15177492271440507,
+            0.2889690333744699,
+            0.01796989381631056
+          ],
+          "rmse_nm": 0.0035119022233658886
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.15308610312429496,
+            0.2944701742518436,
+            0.017931466370975088
+          ],
+          "rmse_nm": 0.0006908144550408627
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.009187965390020878,
+      "residual_acceleration_correlation": 2.2224399766423292e-05,
+      "acceleration_rms": 0.024795883243741147,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05350858488466233,
+          "final_error_deg": 0.14413583936283386,
+          "velocity_rmse_rad_s": 0.000925190353862035,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030592802495769083,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030586760477043663,
+      "common_unfiltered_residual_acceleration_correlation": 0.09702745622194783,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05350858488466233,
+          "final_error_deg": 0.14413583936283386,
+          "velocity_rmse_rad_s": 0.0009241914275961113,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010543398246487085,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.12899990790076685,
+          "final_error_deg": 0.19149159604907542,
+          "velocity_rmse_rad_s": 0.0014236983683743086,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "torque_SG0_121": {
+      "parameters": [
+        0.15260975545881725,
+        0.2906103616943983,
+        0.017920034073535193
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0012294088466037248,
+      "FIT_LOSO_rmse_nm": 0.0012353686255663118,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.1562508368654052,
+            0.28477085998740037,
+            0.017996569141477976
+          ],
+          "rmse_nm": 0.0014967210755037113
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.15087126472406195,
+            0.2919146136370679,
+            0.017883312311141108
+          ],
+          "rmse_nm": 0.0013256149308459098
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1526660944745059,
+            0.2929967480943649,
+            0.017912537970857387
+          ],
+          "rmse_nm": 0.000137875492407093
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.033223618832934475,
+      "residual_acceleration_correlation": 0.00017099720760916954,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05208157420747659,
+          "final_error_deg": 0.1307540598052922,
+          "velocity_rmse_rad_s": 0.0008584490939742735,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003059978122018723,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003058145393802764,
+      "common_unfiltered_residual_acceleration_correlation": 0.09908948268229806,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.035438569648518145,
+          "final_error_deg": 0.10278842859634434,
+          "velocity_rmse_rad_s": 0.0008866358552259216,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.00034341742120282587,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.1009617605840185,
+          "final_error_deg": 0.13973362781448828,
+          "velocity_rmse_rad_s": 0.0013987974394690857,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "torque_SG2_equivalent_121": {
+      "parameters": [
+        0.12992382456114385,
+        0.27631127611616124,
+        0.018121021318156166
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.00046616611983588797,
+      "FIT_LOSO_rmse_nm": 0.0004685335330608718,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.13144926868150875,
+            0.2758135385044913,
+            0.018121802319234312
+          ],
+          "rmse_nm": 0.0005741643402592622
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.12919603863121554,
+            0.27654598843682987,
+            0.018128967474601618
+          ],
+          "rmse_nm": 0.0004943651588920679
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1299335164950112,
+            0.27563691083000774,
+            0.01812448223616542
+          ],
+          "rmse_nm": 4.0918075770532945e-05
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.03693119164366009,
+      "residual_acceleration_correlation": -0.00024015604274487434,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.045083450894024754,
+          "final_error_deg": 0.09200159476240104,
+          "velocity_rmse_rad_s": 0.00048365705216772405,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0031477069939109255,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0031439987409868264,
+      "common_unfiltered_residual_acceleration_correlation": 0.2510861429105442,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.021494589650590232,
+          "final_error_deg": 0.05548173215582818,
+          "velocity_rmse_rad_s": 0.0005349749292868115,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0001431053041795594,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.025506288977102765,
+          "final_error_deg": 0.03243135348142075,
+          "velocity_rmse_rad_s": 0.0013132177916318946,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "joint_tool_window_121": {
+      "parameters": [
+        0.16682371199192778,
+        0.2912467076120745,
+        0.01793190955179671
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0030448447229448456,
+      "FIT_LOSO_rmse_nm": 0.0030469758947572947,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17006823071021215,
+            0.28794331418052105,
+            0.017955079046955445
+          ],
+          "rmse_nm": 0.003264559578935421
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.1652581065817342,
+            0.2902320131793028,
+            0.017936476388012258
+          ],
+          "rmse_nm": 0.0037585922281309033
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1668888233197378,
+            0.29449939961876886,
+            0.01792125870952268
+          ],
+          "rmse_nm": 0.0006450822258178935
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.01208039653331781,
+      "residual_acceleration_correlation": 4.869834256956747e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.0493035251631028,
+          "final_error_deg": 0.1414550148536725,
+          "velocity_rmse_rad_s": 0.0011175068676915637,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030448447229448465,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030469758947572955,
+      "common_unfiltered_residual_acceleration_correlation": 4.869834256915787e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049303525163107535,
+          "final_error_deg": 0.14145501485368284,
+          "velocity_rmse_rad_s": 0.0011175068676915739,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010493885389334407,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16154970615246753,
+          "final_error_deg": 0.21934589646253963,
+          "velocity_rmse_rad_s": 0.0015767345839994488,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "matched_all_121": {
+      "parameters": [
+        0.13092484185441536,
+        0.2877737184140676,
+        0.017966335043217756
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.000473342938094004,
+      "FIT_LOSO_rmse_nm": 0.00047845864940485435,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.13276061190863475,
+            0.28342878345107375,
+            0.018016378722655865
+          ],
+          "rmse_nm": 0.0005834199163205664
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.13005375449083453,
+            0.28842981315566396,
+            0.017950862636176654
+          ],
+          "rmse_nm": 0.0005058947227427881
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.13095697245972682,
+            0.2897365317968589,
+            0.017957397416047183
+          ],
+          "rmse_nm": 7.73282778994968e-05
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.04336513301395587,
+      "residual_acceleration_correlation": 0.00017102551376076258,
+      "acceleration_rms": 0.02128981926390569,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.059689371982348916,
+          "final_error_deg": 0.12456133339969734,
+          "velocity_rmse_rad_s": 0.0004725904153217734,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003140090745119509,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0031361311730824454,
+      "common_unfiltered_residual_acceleration_correlation": 0.24423575915289297,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03461698098450835,
+          "final_error_deg": 0.08939088047015406,
+          "velocity_rmse_rad_s": 0.000572577337732424,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0001597105499478312,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.041628519418581936,
+          "final_error_deg": 0.07553105416955794,
+          "velocity_rmse_rad_s": 0.0013148701232945186,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "single_pass_121": {
+      "parameters": [
+        0.11223093018392988,
+        0.2884494647860986,
+        0.01795743217008818
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 8.609583530070153e-05,
+      "FIT_LOSO_rmse_nm": 9.439678843988132e-05,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.11215752091160516,
+            0.2856310113983789,
+            0.01798223873804564
+          ],
+          "rmse_nm": 0.00011490826905766819
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.1122663860553272,
+            0.28828710071913083,
+            0.017959806440466516
+          ],
+          "rmse_nm": 8.479029601581401e-05
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1122456637687845,
+            0.29017676147901517,
+            0.017948760427491977
+          ],
+          "rmse_nm": 6.380579587541172e-05
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.008151894271144343,
+      "residual_acceleration_correlation": 0.00023004191987067616,
+      "acceleration_rms": 0.02128981926390569,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05909532421579249,
+          "final_error_deg": 0.10758028842791063,
+          "velocity_rmse_rad_s": 0.00025911703853226034,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003260550243893347,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0032612045289864932,
+      "common_unfiltered_residual_acceleration_correlation": 0.3575924321968725,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03748667148226726,
+          "final_error_deg": 0.07532717165041194,
+          "velocity_rmse_rad_s": 0.0004702524560503107,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 6.806716313049121e-05,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.04811887328344957,
+          "final_error_deg": 0.01977029568178365,
+          "velocity_rmse_rad_s": 0.0015168807583063129,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_position_SG2_181": {
+      "parameters": [
+        0.1600729510215929,
+        0.2933000021200718,
+        0.01788307764390312
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0036709424673698,
+      "FIT_LOSO_rmse_nm": 0.0036721633433519888,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.15707379366721078,
+            0.2891363393588032,
+            0.017924615680251603
+          ],
+          "rmse_nm": 0.004101747119144802
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.161389725399612,
+            0.2934004583736495,
+            0.017870340950864396
+          ],
+          "rmse_nm": 0.00435855870574244
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1601420749704047,
+            0.29610658893033853,
+            0.0178725830761777
+          ],
+          "rmse_nm": 0.0006496615436207909
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.008203791549712144,
+      "residual_acceleration_correlation": 5.8749996583624634e-05,
+      "acceleration_rms": 0.018308567723675236,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03900880564693319,
+          "final_error_deg": 0.11404941710193725,
+          "velocity_rmse_rad_s": 0.0010049849734127653,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030483036467566964,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030504029314894253,
+      "common_unfiltered_residual_acceleration_correlation": 0.04703314810002774,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03900880564693319,
+          "final_error_deg": 0.11404941710193725,
+          "velocity_rmse_rad_s": 0.0010042484055911712,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010303655902919448,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.12551381127764946,
+          "final_error_deg": 0.16969891566996126,
+          "velocity_rmse_rad_s": 0.0014776276792041302,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_native_velocity_SG1_181": {
+      "parameters": [
+        0.15106595663471967,
+        0.2882163516145573,
+        0.017980343973702077
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003201786312548688,
+      "FIT_LOSO_rmse_nm": 0.003202418338607432,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.15039247916373621,
+            0.286294052574133,
+            0.01797986145098869
+          ],
+          "rmse_nm": 0.003431029377958065
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.15122982751259717,
+            0.2867551720844485,
+            0.017999587366616537
+          ],
+          "rmse_nm": 0.003950754861389003
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.15118976356328043,
+            0.2910612844164097,
+            0.01797000045024596
+          ],
+          "rmse_nm": 0.0006753048606751748
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.002810304788561151,
+      "residual_acceleration_correlation": 1.663292109821333e-05,
+      "acceleration_rms": 0.02292147894248714,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049470557487853076,
+          "final_error_deg": 0.13361670224975603,
+          "velocity_rmse_rad_s": 0.0008787440517497679,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030635612964027233,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003065048359353448,
+      "common_unfiltered_residual_acceleration_correlation": 0.11011023192624061,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049470557487853076,
+          "final_error_deg": 0.13361670224975603,
+          "velocity_rmse_rad_s": 0.0008865221165961091,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010308412054302442,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.11902460418778647,
+          "final_error_deg": 0.17493073103146922,
+          "velocity_rmse_rad_s": 0.0014036165244035725,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "derivative_position_gradient_SG0_181": {
+      "parameters": [
+        0.13878928069317625,
+        0.291534554463747,
+        0.017919852725842036
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003609553525285339,
+      "FIT_LOSO_rmse_nm": 0.003613958162636444,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.13272274203477066,
+            0.28981276568521785,
+            0.01791816367952928
+          ],
+          "rmse_nm": 0.003981185791836355
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.14149552462872728,
+            0.2903088653239744,
+            0.017935735532919172
+          ],
+          "rmse_nm": 0.004350547378515265
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.13888675714543997,
+            0.2941467175741798,
+            0.017909842722201197
+          ],
+          "rmse_nm": 0.0006611066759472424
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.01968519287222649,
+      "residual_acceleration_correlation": 1.7291899519741737e-05,
+      "acceleration_rms": 0.02176692737069792,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04220739594090199,
+          "final_error_deg": 0.11180177368973418,
+          "velocity_rmse_rad_s": 0.0007150228656412016,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0031030935512282865,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003117725578321135,
+      "common_unfiltered_residual_acceleration_correlation": 0.19285760962614681,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04220739594090199,
+          "final_error_deg": 0.11180177368973418,
+          "velocity_rmse_rad_s": 0.0006980519400291754,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010597287396404704,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.07153811932351296,
+          "final_error_deg": 0.11967565672918216,
+          "velocity_rmse_rad_s": 0.001321279741856425,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "torque_SG0_181": {
+      "parameters": [
+        0.14483961137480125,
+        0.28954607962841916,
+        0.017924081379174832
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0009493367330267698,
+      "FIT_LOSO_rmse_nm": 0.000951989594348164,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.14649875138157498,
+            0.2836546817342233,
+            0.018004368809892736
+          ],
+          "rmse_nm": 0.001179232565951339
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.14408079996639514,
+            0.29144708321968055,
+            0.01788421876666035
+          ],
+          "rmse_nm": 0.000986126924003207
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.14487516863690683,
+            0.2911658371578998,
+            0.017918164693118566
+          ],
+          "rmse_nm": 8.373226492831402e-05
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.0171104671076747,
+      "residual_acceleration_correlation": 0.00021117187493961903,
+      "acceleration_rms": 0.018308567723675236,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05665944717062157,
+          "final_error_deg": 0.12360785039921149,
+          "velocity_rmse_rad_s": 0.0007451726323491835,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030809554661767125,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030791578046489784,
+      "common_unfiltered_residual_acceleration_correlation": 0.152235993202381,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.027501389089059646,
+          "final_error_deg": 0.08013671106314767,
+          "velocity_rmse_rad_s": 0.0007568313029865813,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.00025984686059398013,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.06666680402931693,
+          "final_error_deg": 0.09430419395283536,
+          "velocity_rmse_rad_s": 0.0013323307537992653,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "torque_SG2_equivalent_181": {
+      "parameters": [
+        0.12210374970831415,
+        0.26339058497343115,
+        0.01829687666751151
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0002708965885801834,
+      "FIT_LOSO_rmse_nm": 0.0002811881644168105,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.12257197570200704,
+            0.2667157434936552,
+            0.0182482131728647
+          ],
+          "rmse_nm": 0.0003396688551809519
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.12189101607114977,
+            0.26336111347340185,
+            0.018330230184243766
+          ],
+          "rmse_nm": 0.00027871270981603854
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.12206632510743663,
+            0.25984776080231925,
+            0.01831195000556084
+          ],
+          "rmse_nm": 0.00014234226847362013
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.017906069803912492,
+      "residual_acceleration_correlation": -0.0019196242533805986,
+      "acceleration_rms": 0.018308567723675236,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.033879973979484515,
+          "final_error_deg": 0.056718121338646794,
+          "velocity_rmse_rad_s": 0.0003762116197786542,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003198928697347681,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0031972911943773438,
+      "common_unfiltered_residual_acceleration_correlation": 0.30001674863964645,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.012804129662391393,
+          "final_error_deg": 0.009717036410706079,
+          "velocity_rmse_rad_s": 0.0004944069149069546,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 7.584941819919885e-05,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.03839352404167019,
+          "final_error_deg": -0.04117088531965659,
+          "velocity_rmse_rad_s": 0.001380429177250768,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "joint_tool_window_181": {
+      "parameters": [
+        0.1788424103164057,
+        0.2935116985439824,
+        0.017875744171591955
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.004270333985581939,
+      "FIT_LOSO_rmse_nm": 0.004271201212295438,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.1771851479614302,
+            0.2875607628024278,
+            0.017948099121054224
+          ],
+          "rmse_nm": 0.004865296302886663
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.17953257126856323,
+            0.2945927676233288,
+            0.01784102549678145
+          ],
+          "rmse_nm": 0.00496858522974687
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.17893119740297428,
+            0.2965470546179424,
+            0.01786510829749772
+          ],
+          "rmse_nm": 0.0006524863480444331
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.003980785654116639,
+      "residual_acceleration_correlation": 7.753156859169785e-05,
+      "acceleration_rms": 0.018308567723675236,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04290659270703684,
+          "final_error_deg": 0.1242362174652898,
+          "velocity_rmse_rad_s": 0.0012073042481455891,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003055852101597247,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030548062079413046,
+      "common_unfiltered_residual_acceleration_correlation": -0.0842767232150387,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04259462738739853,
+          "final_error_deg": 0.1199339031417035,
+          "velocity_rmse_rad_s": 0.001268035948172509,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010903329624942096,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.17611122160681014,
+          "final_error_deg": 0.22028316815814608,
+          "velocity_rmse_rad_s": 0.001720356235368206,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "matched_all_181": {
+      "parameters": [
+        0.12296975178733316,
+        0.28737937066578817,
+        0.01796826551738056
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.00023614406603934056,
+      "FIT_LOSO_rmse_nm": 0.00024020500155182806,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.12377168333873818,
+            0.2836680135109332,
+            0.018009343727551377
+          ],
+          "rmse_nm": 0.0003018177151307276
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.12260114058176713,
+            0.2877953142464134,
+            0.017959902905090634
+          ],
+          "rmse_nm": 0.0002374236913563972
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.12299453254998916,
+            0.28916060485488143,
+            0.017958179557067116
+          ],
+          "rmse_nm": 6.068887932183515e-05
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.03317785965659357,
+      "residual_acceleration_correlation": 0.00023345932960145677,
+      "acceleration_rms": 0.01826380832004176,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.06207837549975521,
+          "final_error_deg": 0.12031241920632992,
+          "velocity_rmse_rad_s": 0.0003583615963417037,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0031858788920762745,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003183842339270256,
+      "common_unfiltered_residual_acceleration_correlation": 0.294033804673395,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03179142742466424,
+          "final_error_deg": 0.07677845384064101,
+          "velocity_rmse_rad_s": 0.0004844729139283045,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 9.982002608657493e-05,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.02910983006156085,
+          "final_error_deg": 0.04328598606324849,
+          "velocity_rmse_rad_s": 0.0013617548137811464,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "single_pass_181": {
+      "parameters": [
+        0.11223083351162506,
+        0.2870044079342757,
+        0.017977270512115114
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 4.8485757457436584e-05,
+      "FIT_LOSO_rmse_nm": 5.927435799165381e-05,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.11222771503477501,
+            0.2843703650930618,
+            0.018000483485942083
+          ],
+          "rmse_nm": 7.340899413667359e-05
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.11223893739346653,
+            0.28682320902315994,
+            0.017981810898560848
+          ],
+          "rmse_nm": 4.165706869803734e-05
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.11224283828922839,
+            0.2885959537891275,
+            0.017967776278775383
+          ],
+          "rmse_nm": 5.283926756464484e-05
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.0013943152613600874,
+      "residual_acceleration_correlation": -0.0001482391928719246,
+      "acceleration_rms": 0.01826380832004176,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.060178259799716007,
+          "final_error_deg": 0.1107828452053449,
+          "velocity_rmse_rad_s": 0.0002611532581405141,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0032607407585345406,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0032611036564607772,
+      "common_unfiltered_residual_acceleration_correlation": 0.35765375442173925,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.0358262117894566,
+          "final_error_deg": 0.07158836613613288,
+          "velocity_rmse_rad_s": 0.00046512265232239504,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 6.126803112817248e-05,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.04885003847389074,
+          "final_error_deg": 0.015143587420787528,
+          "velocity_rmse_rad_s": 0.0015150930140036684,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_-8": {
+      "parameters": [
+        0.14671588733167062,
+        0.35761161474349934,
+        0.01701442387298073
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0029430319690649355,
+      "FIT_LOSO_rmse_nm": 0.0029598843819752347,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.14694019454375348,
+            0.34148359542501555,
+            0.01716364296648726
+          ],
+          "rmse_nm": 0.003600874628654452
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.14660303803339197,
+            0.3547046591089303,
+            0.016984884091462864
+          ],
+          "rmse_nm": 0.0030809903174027417
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.14685045172874378,
+            0.3734283609592618,
+            0.016950609134990226
+          ],
+          "rmse_nm": 0.0008596816920935949
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.0010306688378511895,
+      "residual_acceleration_correlation": 0.0002945745680647879,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.09550592832026938,
+          "final_error_deg": 0.24423555883763542,
+          "velocity_rmse_rad_s": 0.0012275970774819605,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003108508156597595,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0031115328940740927,
+      "common_unfiltered_residual_acceleration_correlation": 0.13432419638978324,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.10260329389326063,
+          "final_error_deg": 0.2496073085492054,
+          "velocity_rmse_rad_s": 0.0011873707783038696,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010111997922213538,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.15004604139266245,
+          "final_error_deg": 0.2918586031446084,
+          "velocity_rmse_rad_s": 0.001559446441799206,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_-4": {
+      "parameters": [
+        0.1579773594980589,
+        0.32574273284545574,
+        0.017454976767416506
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0029795130813235608,
+      "FIT_LOSO_rmse_nm": 0.002986310688067071,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.1584616589830831,
+            0.3155544413689512,
+            0.017545357624482165
+          ],
+          "rmse_nm": 0.003536591571635682
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.1577381886515824,
+            0.3237547317012785,
+            0.017440876223055984
+          ],
+          "rmse_nm": 0.003272038008012701
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1580689089408132,
+            0.3357334978572648,
+            0.017415772617520562
+          ],
+          "rmse_nm": 0.0007012567062528066
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.0019494297854086484,
+      "residual_acceleration_correlation": 0.00017867895225013106,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.0713922561379983,
+          "final_error_deg": 0.1962440997407801,
+          "velocity_rmse_rad_s": 0.0011630594771781181,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003059859741940638,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030618837272856315,
+      "common_unfiltered_residual_acceleration_correlation": 0.059705861633469075,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.07667810036646747,
+          "final_error_deg": 0.2022783216104379,
+          "velocity_rmse_rad_s": 0.001115859002411309,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0011547497077590639,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.1585359509683904,
+          "final_error_deg": 0.26398249702271576,
+          "velocity_rmse_rad_s": 0.001513391884238801,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_-2": {
+      "parameters": [
+        0.163166902085354,
+        0.30816763633194766,
+        0.01769816819147328
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.002993173654581487,
+      "FIT_LOSO_rmse_nm": 0.002996561062921589,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.16452898242405553,
+            0.3015038020000788,
+            0.017751275594343953
+          ],
+          "rmse_nm": 0.003372344450051423
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.1625017183286868,
+            0.3064992649201518,
+            0.017696750164623486
+          ],
+          "rmse_nm": 0.00350763257939255
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1632437684479771,
+            0.31493440294748454,
+            0.017672583872808713
+          ],
+          "rmse_nm": 0.0006839666275207446
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.005224016063484049,
+      "residual_acceleration_correlation": 0.00011096651507160354,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05937824613627933,
+          "final_error_deg": 0.16886103793569524,
+          "velocity_rmse_rad_s": 0.0011417905501838281,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003048027504922681,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003049639194562447,
+      "common_unfiltered_residual_acceleration_correlation": 0.024640016843951274,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.06229682070109268,
+          "final_error_deg": 0.17316784849167388,
+          "velocity_rmse_rad_s": 0.0011104593890189994,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010510334718896999,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16157381391275094,
+          "final_error_deg": 0.24404986522314598,
+          "velocity_rmse_rad_s": 0.0015367595155814393,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_-1": {
+      "parameters": [
+        0.16500174103204496,
+        0.2994871456946189,
+        0.017823863969512795
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003017502066166653,
+      "FIT_LOSO_rmse_nm": 0.0030200848252590327,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.16766255602681968,
+            0.294911725491454,
+            0.01785481119792311
+          ],
+          "rmse_nm": 0.003306885001774114
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.16375680828195327,
+            0.2977196895592399,
+            0.017835204701724675
+          ],
+          "rmse_nm": 0.003638384330604977
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.16504548857593118,
+            0.30452131884973543,
+            0.017803593427540742
+          ],
+          "rmse_nm": 0.000707614580453322
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.010121994144660638,
+      "residual_acceleration_correlation": 6.732652957999174e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05741699613678542,
+          "final_error_deg": 0.162472672443796,
+          "velocity_rmse_rad_s": 0.0011334748313333032,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030455989483598473,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030473704051421054,
+      "common_unfiltered_residual_acceleration_correlation": 0.012371422828445182,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.05885162287203033,
+          "final_error_deg": 0.1648047936561267,
+          "velocity_rmse_rad_s": 0.0011160665255207582,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010448362283722598,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16638996903119405,
+          "final_error_deg": 0.24084779917534857,
+          "velocity_rmse_rad_s": 0.0015579990914234732,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_+0": {
+      "parameters": [
+        0.16682371199192772,
+        0.29124670761207494,
+        0.017931909551796684
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0030448447229448465,
+      "FIT_LOSO_rmse_nm": 0.0030469758947572955,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17006823071021215,
+            0.2879433141805219,
+            0.017955079046955445
+          ],
+          "rmse_nm": 0.003264559578935422
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.16525810658173418,
+            0.29023201317930325,
+            0.01793647638801225
+          ],
+          "rmse_nm": 0.0037585922281309033
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.16688882331973776,
+            0.29449939961876825,
+            0.017921258709522676
+          ],
+          "rmse_nm": 0.0006450822258178911
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.012080396533318096,
+      "residual_acceleration_correlation": 4.869834256937326e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049303525163063286,
+          "final_error_deg": 0.1414550148535755,
+          "velocity_rmse_rad_s": 0.0011175068676915075,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030448447229448465,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030469758947572955,
+      "common_unfiltered_residual_acceleration_correlation": 4.869834256937326e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049303525163063286,
+          "final_error_deg": 0.1414550148535755,
+          "velocity_rmse_rad_s": 0.0011175068676915075,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010493885389334407,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16154970615240202,
+          "final_error_deg": 0.21934589646240207,
+          "velocity_rmse_rad_s": 0.0015767345839993977,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_+1": {
+      "parameters": [
+        0.16819742040988905,
+        0.28307952135011116,
+        0.018052207362626235
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003094079896303666,
+      "FIT_LOSO_rmse_nm": 0.0030970361415184017,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17289856000416265,
+            0.2811247963644455,
+            0.018064022843508786
+          ],
+          "rmse_nm": 0.003265377852484197
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.16600015358408343,
+            0.2824291387606626,
+            0.01806253283465721
+          ],
+          "rmse_nm": 0.003869806014061683
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.168215794492814,
+            0.2845795040192773,
+            0.018047041132486792
+          ],
+          "rmse_nm": 0.0007034869940150587
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.017317699720895773,
+      "residual_acceleration_correlation": 5.7600104010498545e-06,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04919643025029184,
+          "final_error_deg": 0.13856128587243902,
+          "velocity_rmse_rad_s": 0.0011122905472032937,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030455656123830883,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003048828980010584,
+      "common_unfiltered_residual_acceleration_correlation": -0.009021582547172233,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04785747445524163,
+          "final_error_deg": 0.13522914657685497,
+          "velocity_rmse_rad_s": 0.001132962839639691,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010638333440325786,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.1674488432899921,
+          "final_error_deg": 0.218433375603439,
+          "velocity_rmse_rad_s": 0.001607151450217428,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_+2": {
+      "parameters": [
+        0.1690571138040571,
+        0.2726606128212085,
+        0.018191744340127443
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003102782249494682,
+      "FIT_LOSO_rmse_nm": 0.003107116911912905,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17491151750804837,
+            0.27224836309445377,
+            0.018188314022636917
+          ],
+          "rmse_nm": 0.0032126176953174365
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.16626462078174348,
+            0.2724050532150075,
+            0.018202851668057456
+          ],
+          "rmse_nm": 0.003953374440157987
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.16910323127504093,
+            0.2725372119635049,
+            0.018195248913063913
+          ],
+          "rmse_nm": 0.0006563931284904237
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.021359905352489408,
+      "residual_acceleration_correlation": -1.9785308156298565e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04127587485262311,
+          "final_error_deg": 0.11324713618731201,
+          "velocity_rmse_rad_s": 0.0010901527909311167,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030480982672254613,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030525450456913347,
+      "common_unfiltered_residual_acceleration_correlation": -0.014441612881685268,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.0406262053246233,
+          "final_error_deg": 0.10653236609873416,
+          "velocity_rmse_rad_s": 0.001136467685508068,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010255148237721951,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.15992551886127962,
+          "final_error_deg": 0.18996996445184755,
+          "velocity_rmse_rad_s": 0.0016322731779882952,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_+4": {
+      "parameters": [
+        0.17075239875050724,
+        0.2546339216800922,
+        0.0184394672329327
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003152876043577829,
+      "FIT_LOSO_rmse_nm": 0.003160603634569864,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17835190589179273,
+            0.2563936153267518,
+            0.018420438308869008
+          ],
+          "rmse_nm": 0.0032646824627702853
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.1671108441804044,
+            0.25551201141113394,
+            0.018450000161070863
+          ],
+          "rmse_nm": 0.004025352495122512
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1707986322299277,
+            0.25125237173199017,
+            0.018456350322865436
+          ],
+          "rmse_nm": 0.0006620577424350831
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.027167561184529763,
+      "residual_acceleration_correlation": -8.075334108622829e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.034522655923739334,
+          "final_error_deg": 0.07774183799108697,
+          "velocity_rmse_rad_s": 0.0010724643130744364,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030570056675584788,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030640845902597954,
+      "common_unfiltered_residual_acceleration_correlation": -0.02516349910082637,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.04162684811609487,
+          "final_error_deg": 0.06220048941931218,
+          "velocity_rmse_rad_s": 0.0011798981592932795,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0009365138767411993,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.153394333217399,
+          "final_error_deg": 0.14928414052453184,
+          "velocity_rmse_rad_s": 0.0017080293821455808,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "FT_shift_+8": {
+      "parameters": [
+        0.17509668695079306,
+        0.22134178619383993,
+        0.01889707382059758
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003231078873327798,
+      "FIT_LOSO_rmse_nm": 0.003241710371591762,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.18198286883349107,
+            0.22633395498206849,
+            0.018857361071838323
+          ],
+          "rmse_nm": 0.0035987198166747255
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.17178959126015322,
+            0.2249915287449168,
+            0.018901155013898344
+          ],
+          "rmse_nm": 0.0038516367276866634
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1750960974829426,
+            0.21173511988272065,
+            0.0189386794555759
+          ],
+          "rmse_nm": 0.000745200869141801
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.02390768888595711,
+      "residual_acceleration_correlation": -0.00020527256031788136,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.040847945150980086,
+          "final_error_deg": 0.0055327080602047525,
+          "velocity_rmse_rad_s": 0.0011150976853812281,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030894622058410706,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003098212895662966,
+      "common_unfiltered_residual_acceleration_correlation": -0.05297935081916741,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.08030231592351116,
+          "final_error_deg": -0.03316835732430598,
+          "velocity_rmse_rad_s": 0.0013705667876639715,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0008575289451458445,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.14740167863656026,
+          "final_error_deg": 0.0686959807244178,
+          "velocity_rmse_rad_s": 0.0019493122433925716,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "centered_tool_angular_velocity": {
+      "parameters": [
+        0.16682103919772667,
+        0.2912587369998785,
+        0.017931742310558656
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.0030448053605090933,
+      "FIT_LOSO_rmse_nm": 0.003046937418107768,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.17006542827697543,
+            0.28795311837378856,
+            0.017954936654168686
+          ],
+          "rmse_nm": 0.003264506481203717
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.16525548339888047,
+            0.29024372030191786,
+            0.017936299061437424
+          ],
+          "rmse_nm": 0.003758553968432838
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.1668861764025228,
+            0.29451369140194716,
+            0.017921082569199998
+          ],
+          "rmse_nm": 0.0006451017386740223
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.012080049234674737,
+      "residual_acceleration_correlation": 4.875497109581324e-05,
+      "acceleration_rms": 0.021352026312301053,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.049312069922201746,
+          "final_error_deg": 0.1414777806333482,
+          "velocity_rmse_rad_s": 0.0011174945483017112,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.0030448446615850455,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0030469755446830508,
+      "common_unfiltered_residual_acceleration_correlation": 6.670084810368325e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.0493112125000155,
+          "final_error_deg": 0.14147704050049692,
+          "velocity_rmse_rad_s": 0.0011174890947835794,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0010493837664271753,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.16154827569704058,
+          "final_error_deg": 0.21936199293159267,
+          "velocity_rmse_rad_s": 0.0015766936007179325,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    }
+  },
+  "FIT_only_selected_variant": "centered_tool_angular_velocity",
+  "weak_momentum": {
+    "0.5": {
+      "parameters": [
+        0.11123734300814869,
+        0.29145364384219485,
+        0.017911385713723065
+      ],
+      "training_bins": 283,
+      "training_rmse_nm": 0.0001357239401547127,
+      "FIT_LOSO_rmse_nm": 0.0001430096114887789,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0032696266479714875,
+      "heldout_torque_rmse_nm": 8.168455494768588e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03741517109831218,
+          "final_error_deg": 0.0754840018854749,
+          "velocity_rmse_rad_s": 0.00048096993193047163,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "FIT_only_conditional_HAC_std": [
+        0.00035909911853191035,
+        0.001223956850017442,
+        1.5893218548679264e-05
+      ],
+      "full_residual_acceleration_correlation": 0.0003180963496451395,
+      "residual_without_I_acceleration_correlation": 0.9985747059815924,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.051417686418620386,
+          "final_error_deg": 0.01807042192378866,
+          "velocity_rmse_rad_s": 0.0015385176793094118,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "1.0": {
+      "parameters": [
+        0.11132209549705517,
+        0.2883563477756842,
+        0.01795271620313967
+      ],
+      "training_bins": 271,
+      "training_rmse_nm": 4.599016670915047e-05,
+      "FIT_LOSO_rmse_nm": 5.7529648042004916e-05,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.0032693048259622294,
+      "heldout_torque_rmse_nm": 6.406166683734708e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03289585321314206,
+          "final_error_deg": 0.06588901144506912,
+          "velocity_rmse_rad_s": 0.0004666381132498457,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "FIT_only_conditional_HAC_std": [
+        0.00018094487771182024,
+        0.0006806024310544769,
+        7.87798471767747e-06
+      ],
+      "full_residual_acceleration_correlation": 6.996325036596382e-05,
+      "residual_without_I_acceleration_correlation": 0.9997233462740787,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.05362053238350723,
+          "final_error_deg": 0.006366480741050296,
+          "velocity_rmse_rad_s": 0.001532275354035983,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    }
+  },
+  "weak_ablation": {
+    "original_compensation": {
+      "parameters": [
+        0.13425127471906184,
+        0.29078483886835216,
+        0.017922950211816373
+      ],
+      "training_bins": 283,
+      "training_rmse_nm": 0.0006015670997375794,
+      "FIT_LOSO_rmse_nm": 0.0006086918850726087,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003118309982786847,
+      "heldout_torque_rmse_nm": 0.00020111373995569407,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.036369357930928964,
+          "final_error_deg": 0.09662527853360803,
+          "velocity_rmse_rad_s": 0.0006239383181442067,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "FIT_only_conditional_HAC_std": [
+        0.0009557318800481817,
+        0.006395792563168691,
+        9.958363386239444e-05
+      ],
+      "full_residual_acceleration_correlation": 0.0001643084279729087,
+      "residual_without_I_acceleration_correlation": 0.9812702777430661,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.05153549716011123,
+          "final_error_deg": 0.09123772105354438,
+          "velocity_rmse_rad_s": 0.0013113537624006174,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "no_tool_compensation": {
+      "parameters": [
+        0.2563588746857746,
+        0.29513292969044463,
+        0.017892905195630738
+      ],
+      "training_bins": 283,
+      "training_rmse_nm": 0.00032060283225833627,
+      "FIT_LOSO_rmse_nm": 0.0003478044487995425,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003621804944542595,
+      "heldout_torque_rmse_nm": 0.000299709757178398,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.07120715244835027,
+          "final_error_deg": 0.20191783801351043,
+          "velocity_rmse_rad_s": 0.002143711515994171,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "FIT_only_conditional_HAC_std": [
+        0.0008249646675335024,
+        0.0021270669024765695,
+        3.451421297243194e-05
+      ],
+      "full_residual_acceleration_correlation": 0.0005901075051996283,
+      "residual_without_I_acceleration_correlation": 0.998506846765039,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.42548265387214146,
+          "final_error_deg": 0.5350513907519743,
+          "velocity_rmse_rad_s": 0.0028025621813010286,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "native_velocity": {
+      "parameters": [
+        0.11167903575676547,
+        0.2889036961568306,
+        0.017943908108449383
+      ],
+      "training_bins": 283,
+      "training_rmse_nm": 0.00010686652740325956,
+      "FIT_LOSO_rmse_nm": 0.00011335851679937796,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003266009851956715,
+      "heldout_torque_rmse_nm": 7.015148370364562e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.032443266062524026,
+          "final_error_deg": 0.06583696789256693,
+          "velocity_rmse_rad_s": 0.0004652964140608798,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "FIT_only_conditional_HAC_std": [
+        0.0002843342032013582,
+        0.0009918453627899358,
+        1.282749939317755e-05
+      ],
+      "full_residual_acceleration_correlation": -2.586296370298127e-05,
+      "residual_without_I_acceleration_correlation": 0.9991168881199682,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.05285547866628197,
+          "final_error_deg": 0.006989314387523956,
+          "velocity_rmse_rad_s": 0.0015256948763516123,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    }
+  },
+  "motion_synthetic": {
+    "unmatched_object_only": {
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "parameters": [
+        0.3651414653966932,
+        0.39208349146964655,
+        0.02012349714200835
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.003916127638088885,
+      "FIT_LOSO_rmse_nm": 0.003917361961507614,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.36844124265432715,
+            0.3890790621096853,
+            0.02016653651864097
+          ],
+          "rmse_nm": 0.0043510308166783565
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.3634629164981135,
+            0.3929788956480822,
+            0.020099725508146253
+          ],
+          "rmse_nm": 0.004602687491120645
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.3652507895261655,
+            0.3927334099318835,
+            0.020125491917925013
+          ],
+          "rmse_nm": 0.0011950070529335643
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.00930474804105176,
+      "residual_acceleration_correlation": 4.3370635695940996e-05,
+      "acceleration_rms": 0.021347819140821,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.023939414363797793,
+          "final_error_deg": 0.030870441811726188,
+          "velocity_rmse_rad_s": 0.0007185670199015013,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.003916127638088885,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003917361961507614,
+      "common_unfiltered_residual_acceleration_correlation": 4.3370635695940996e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.023939414363797793,
+          "final_error_deg": 0.030870441811726188,
+          "velocity_rmse_rad_s": 0.0007185670199015013,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.0018127421419196189,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.26777562411050043,
+          "final_error_deg": 0.28828860743218165,
+          "velocity_rmse_rad_s": 0.0015413063306102931,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "matched_object_only": {
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "parameters": [
+        0.2999581805777721,
+        0.3995125770722865,
+        0.020006810142499217
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 3.5478058440328142e-06,
+      "FIT_LOSO_rmse_nm": 6.981794287628522e-06,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.2999649500802987,
+            0.3988519054522601,
+            0.02001670793895751
+          ],
+          "rmse_nm": 9.295560554918709e-06
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.29996006541989323,
+            0.39928214717833205,
+            0.02001098026731349
+          ],
+          "rmse_nm": 5.185513143752717e-06
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.2999571068313897,
+            0.3994068800354571,
+            0.020007322877196452
+          ],
+          "rmse_nm": 3.931628537117025e-06
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.005722143772782458,
+      "residual_acceleration_correlation": 0.012307745558726933,
+      "acceleration_rms": 0.021347819140821,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.033061629945816004,
+          "final_error_deg": 0.040062148415461275,
+          "velocity_rmse_rad_s": 0.0001808976546256273,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 3.5478058440328142e-06,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 6.981794287628522e-06,
+      "common_unfiltered_residual_acceleration_correlation": 0.012307745558726933,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.033061629945816004,
+          "final_error_deg": 0.040062148415461275,
+          "velocity_rmse_rad_s": 0.0001808976546256273,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 2.449226546610139e-06,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.2723349895489531,
+          "final_error_deg": 0.29436379209544195,
+          "velocity_rmse_rad_s": 0.0013403295607186168,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "unmatched_object_plus_tool": {
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "parameters": [
+        0.3936059260994286,
+        0.39027438469785625,
+        0.020164020898018935
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 0.005263954318443599,
+      "FIT_LOSO_rmse_nm": 0.005267211561499223,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.4000885429117663,
+            0.3865508094607015,
+            0.020215274825070607
+          ],
+          "rmse_nm": 0.005756104994750826
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.39045617722761977,
+            0.39109924210000163,
+            0.02013933602792812
+          ],
+          "rmse_nm": 0.006346271328337879
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.3937109538555537,
+            0.39142613232175155,
+            0.02016384776990873
+          ],
+          "rmse_nm": 0.001314755072840029
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": -0.013820036749431506,
+      "residual_acceleration_correlation": 3.6719581316873075e-05,
+      "acceleration_rms": 0.021347819140821,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.030634183459517583,
+          "final_error_deg": 0.050116737688173534,
+          "velocity_rmse_rad_s": 0.0009279647012051406,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 0.005263954318443599,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.005267211561499223,
+      "common_unfiltered_residual_acceleration_correlation": 3.6719581316873075e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.030634183459517583,
+          "final_error_deg": 0.050116737688173534,
+          "velocity_rmse_rad_s": 0.0009279647012051406,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 0.002038073951685268,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.3460920921977469,
+          "final_error_deg": 0.385027420266637,
+          "velocity_rmse_rad_s": 0.0018781011219580852,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "single_pass_object_plus_tool": {
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "parameters": [
+        0.29851613971879065,
+        0.3995239085058219,
+        0.020006649068483307
+      ],
+      "training_bins": 282,
+      "training_rmse_nm": 4.1763392966015264e-05,
+      "FIT_LOSO_rmse_nm": 4.2410198163992196e-05,
+      "FIT_LOSO": [
+        {
+          "excluded": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.2983530800432455,
+            0.39898250073401853,
+            0.020014581357238468
+          ],
+          "rmse_nm": 5.086513375157182e-05
+        },
+        {
+          "excluded": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.2985987630273113,
+            0.3992378115335028,
+            0.020012161910541552
+          ],
+          "rmse_nm": 4.6146380904410405e-05
+        },
+        {
+          "excluded": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.29851356645351285,
+            0.39938968126321417,
+            0.020007230248027395
+          ],
+          "rmse_nm": 5.607628917574131e-06
+        }
+      ],
+      "FIT_LOSO_residual_acceleration_correlation": 0.04618531422718289,
+      "residual_acceleration_correlation": 0.0008801039852240865,
+      "acceleration_rms": 0.021347819140821,
+      "heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.033147005494480235,
+          "final_error_deg": 0.03921324015724603,
+          "velocity_rmse_rad_s": 0.00017927918491433164,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "common_unfiltered_training_rmse_nm": 4.1763392966015264e-05,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 4.2410198163992196e-05,
+      "common_unfiltered_residual_acceleration_correlation": 0.0008801039852240865,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.033147005494480235,
+          "final_error_deg": 0.03921324015724603,
+          "velocity_rmse_rad_s": 0.00017927918491433164,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "heldout_torque_rmse_nm": 1.1852412726948525e-05,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.27222605504718866,
+          "final_error_deg": 0.2937726720455694,
+          "velocity_rmse_rad_s": 0.0013501626286170144,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    }
+  },
+  "tool_mass_tensor_audit": [
+    {
+      "name": "xarm_gripper_base_link",
+      "native_row": 8,
+      "mass_error_kg": -5.779266398775462e-09,
+      "COM_error_m": 3.0213085129215433e-10,
+      "tensor_max_abs_error_kg_m2": 2.423457056235402e-10
+    },
+    {
+      "name": "left_outer_knuckle",
+      "native_row": 9,
+      "mass_error_kg": -5.953311940642969e-10,
+      "COM_error_m": 3.447930937803177e-10,
+      "tensor_max_abs_error_kg_m2": 6.534056641290063e-13
+    },
+    {
+      "name": "left_finger",
+      "native_row": 13,
+      "mass_error_kg": -9.93251800252004e-10,
+      "COM_error_m": 5.836440100030742e-10,
+      "tensor_max_abs_error_kg_m2": 1.6265781581890904e-12
+    },
+    {
+      "name": "left_inner_knuckle",
+      "native_row": 10,
+      "mass_error_kg": 3.617256390253676e-10,
+      "COM_error_m": 1.1288038708939758e-09,
+      "tensor_max_abs_error_kg_m2": 4.1265599669145536e-13
+    },
+    {
+      "name": "right_outer_knuckle",
+      "native_row": 11,
+      "mass_error_kg": -5.953311940642969e-10,
+      "COM_error_m": 3.447930832727165e-10,
+      "tensor_max_abs_error_kg_m2": 6.534057047865877e-13
+    },
+    {
+      "name": "right_finger",
+      "native_row": 14,
+      "mass_error_kg": -9.93251800252004e-10,
+      "COM_error_m": 5.836440941874315e-10,
+      "tensor_max_abs_error_kg_m2": 1.1427092809452666e-12
+    },
+    {
+      "name": "right_inner_knuckle",
+      "native_row": 12,
+      "mass_error_kg": -5.548000323041258e-10,
+      "COM_error_m": 8.506975462337222e-10,
+      "tensor_max_abs_error_kg_m2": 1.04202916860653e-12
+    }
+  ],
+  "torque_processing_changes_FWL": {
+    "single_pass_61": {
+      "delta_torque_rms_nm": 0.00244367029567562,
+      "delta_I_FWL_kg_m2": -0.03747163190196194,
+      "correlation_with_acceleration": -0.3392270969739301
+    },
+    "single_pass_121": {
+      "delta_torque_rms_nm": 0.0033004871851945354,
+      "delta_I_FWL_kg_m2": -0.05415834089220343,
+      "correlation_with_acceleration": -0.36223085282871365
+    },
+    "single_pass_181": {
+      "delta_torque_rms_nm": 0.003822574075540348,
+      "delta_I_FWL_kg_m2": -0.07295744773943243,
+      "correlation_with_acceleration": -0.42068291050680695
+    },
+    "centered_tool_angular_velocity": {
+      "delta_torque_rms_nm": 1.6251053383331918e-07,
+      "delta_I_FWL_kg_m2": -2.6075996872677108e-06,
+      "correlation_with_acceleration": -0.3675184747909211
+    }
+  },
+  "contact_and_model_nuisance": {
+    "per_segment": [
+      {
+        "segment": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+        "relative_angular_extent_deg": [
+          -0.26175363548243086,
+          0.0009884165736268624
+        ],
+        "relative_translation_extent_mm": [
+          0.008162501268088818,
+          2.0687437057495117
+        ]
+      },
+      {
+        "segment": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+        "relative_angular_extent_deg": [
+          -0.0032070044014292968,
+          0.11634806222247795
+        ],
+        "relative_translation_extent_mm": [
+          1.0904322862625122,
+          2.0938940048217773
+        ]
+      },
+      {
+        "segment": "FIT_RECOVERY_FAST_REOPEN_04",
+        "relative_angular_extent_deg": [
+          -0.11660020390222568,
+          0.012473835199251646
+        ],
+        "relative_translation_extent_mm": [
+          1.0155811309814453,
+          2.149229049682617
+        ]
+      },
+      {
+        "segment": "VALIDATION_RECOVERY_CLOSE_SINE_05",
+        "relative_angular_extent_deg": [
+          -0.00061602972721749,
+          0.23763881249579188
+        ],
+        "relative_translation_extent_mm": [
+          0.336654931306839,
+          2.159937620162964
+        ]
+      }
+    ],
+    "unconstrained_diagnostic_nuisance_regressions": {
+      "bias": {
+        "parameters": [
+          0.11222892696944714,
+          0.2888374486545202,
+          0.017952329561458782,
+          -9.175524764455048e-07
+        ],
+        "training_rmse_nm": 8.605919675438264e-05,
+        "FIT_LOSO_rmse_nm": 0.010421015885834288,
+        "heldout_torque_rmse_nm": 7.066262913961116e-05,
+        "extra_residual_correlation": null,
+        "residual_acceleration_correlation": 1.4350255079605996e-13,
+        "forward_prediction": "not supplied: measured nuisance trajectory would be conditional input, not independent object dynamics"
+      },
+      "angle_direction": {
+        "parameters": [
+          0.11219476131177844,
+          0.289212244148221,
+          0.017988905787550254,
+          -0.0004063589976758454
+        ],
+        "training_rmse_nm": 8.417014268530375e-05,
+        "FIT_LOSO_rmse_nm": 9.304560718384568e-05,
+        "heldout_torque_rmse_nm": 6.166770249734051e-05,
+        "extra_residual_correlation": -0.08114559163901833,
+        "residual_acceleration_correlation": 0.0005473158774529669,
+        "forward_prediction": "not supplied: measured nuisance trajectory would be conditional input, not independent object dynamics"
+      },
+      "slip_rate": {
+        "parameters": [
+          0.11246220759001699,
+          0.28773931105715117,
+          0.017952620924590816,
+          0.17551572506261376
+        ],
+        "training_rmse_nm": 8.148665956641152e-05,
+        "FIT_LOSO_rmse_nm": 9.245226372028576e-05,
+        "heldout_torque_rmse_nm": 7.228906731677073e-05,
+        "extra_residual_correlation": 0.2912977705677995,
+        "residual_acceleration_correlation": 0.0003330238842234758,
+        "forward_prediction": "not supplied: measured nuisance trajectory would be conditional input, not independent object dynamics"
+      },
+      "aperture_rate": {
+        "parameters": [
+          0.11246843088362123,
+          0.2887533982967401,
+          0.01795355939379022,
+          0.13490859902664903
+        ],
+        "training_rmse_nm": 8.57125913949027e-05,
+        "FIT_LOSO_rmse_nm": 9.624571531547842e-05,
+        "heldout_torque_rmse_nm": 7.148160644711794e-05,
+        "extra_residual_correlation": 0.07725051805550721,
+        "residual_acceleration_correlation": -9.455095893895051e-05,
+        "forward_prediction": "not supplied: measured nuisance trajectory would be conditional input, not independent object dynamics"
+      },
+      "relative_angular_acceleration": {
+        "parameters": [
+          0.11211885445259404,
+          0.28864804554021867,
+          0.017956002293081204,
+          -0.004819105962668287
+        ],
+        "training_rmse_nm": 8.491846995283814e-05,
+        "FIT_LOSO_rmse_nm": 9.683628643060728e-05,
+        "heldout_torque_rmse_nm": 7.039600002633684e-05,
+        "extra_residual_correlation": -0.16108241473270574,
+        "residual_acceleration_correlation": 4.7678730150192925e-05,
+        "forward_prediction": "not supplied: measured nuisance trajectory would be conditional input, not independent object dynamics"
+      },
+      "pad_imbalance": {
+        "parameters": [
+          0.11223343912017561,
+          0.288923818196993,
+          0.0179124866359226,
+          3.973713536270013e-05
+        ],
+        "training_rmse_nm": 8.472362515940648e-05,
+        "FIT_LOSO_rmse_nm": 0.0001222485811061935,
+        "heldout_torque_rmse_nm": 6.356504931413343e-05,
+        "extra_residual_correlation": 0.07946509519887798,
+        "residual_acceleration_correlation": 0.0012348226790597423,
+        "forward_prediction": "not supplied: measured nuisance trajectory would be conditional input, not independent object dynamics"
+      }
+    },
+    "not_causal_identification": true
+  },
+  "unloaded_processing_comparison": [
+    {
+      "phase": "APPROACH",
+      "records": 917,
+      "interior_records": 495,
+      "angle_deg": 0.0,
+      "original_rms_nm": 0.0034704496225838976,
+      "single_pass_rms_nm": 2.7885057754410278e-05,
+      "original_bin_rms_nm": 0.0031984104537654766,
+      "single_pass_bin_rms_nm": 2.473844384719471e-05,
+      "original_residual_tool_inertia_correlation": -0.13896895572348686,
+      "single_pass_residual_tool_inertia_correlation": -0.141406162346852,
+      "not_a_calibrated_loaded_noise_floor": true
+    },
+    {
+      "phase": "RELEASE",
+      "records": 1452,
+      "interior_records": 1030,
+      "angle_deg": 0.09287104931012202,
+      "original_rms_nm": 0.00043377564620474457,
+      "single_pass_rms_nm": 2.18161121725174e-05,
+      "original_bin_rms_nm": 0.00010879135319057204,
+      "single_pass_bin_rms_nm": 2.067991123215431e-05,
+      "original_residual_tool_inertia_correlation": 0.019568179647159283,
+      "single_pass_residual_tool_inertia_correlation": -0.03319154070795689,
+      "not_a_calibrated_loaded_noise_floor": true
+    },
+    {
+      "phase": "APPROACH",
+      "records": 925,
+      "interior_records": 503,
+      "angle_deg": 0.09287104931012202,
+      "original_rms_nm": 0.002951845492444923,
+      "single_pass_rms_nm": 7.165808580161745e-05,
+      "original_bin_rms_nm": 0.0037604011533273985,
+      "single_pass_bin_rms_nm": 8.194949300218295e-05,
+      "original_residual_tool_inertia_correlation": 0.032266353931738205,
+      "single_pass_residual_tool_inertia_correlation": -0.01979482244557672,
+      "not_a_calibrated_loaded_noise_floor": true
+    },
+    {
+      "phase": "RELEASE",
+      "records": 1451,
+      "interior_records": 1029,
+      "angle_deg": 3.9843754844013057,
+      "original_rms_nm": 5.9651937378625915e-05,
+      "single_pass_rms_nm": 3.2930825028007453e-06,
+      "original_bin_rms_nm": 1.4878450542856533e-05,
+      "single_pass_bin_rms_nm": 3.192846866808002e-06,
+      "original_residual_tool_inertia_correlation": 0.016272457892692056,
+      "single_pass_residual_tool_inertia_correlation": 0.3072383129102292,
+      "not_a_calibrated_loaded_noise_floor": true
+    }
+  ],
+  "stage_audit": [
+    {
+      "segment": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+      "n": 3207,
+      "dt": 0.004166666666662877,
+      "step_time_max_error": 5.305391542753668e-14,
+      "raw_hinge_rms_nm": 0.02529284988260266,
+      "bias_hinge_rms_nm": 3.64346751659214e-07,
+      "gravity_hinge_rms_nm": 8.019603333837492e-08,
+      "tool_hinge_rms_nm": 0.004154928533262929,
+      "compensated_hinge_rms_nm": 0.023954806434421754,
+      "total_tool_mass_kg": 0.7514295781256707,
+      "tool_parts_rms_nm": {
+        "translation": 0.004139933079749698,
+        "rotation": 1.6537423575579452e-05,
+        "gyro": 1.1163561490849941e-10
+      },
+      "native_vs_SG_velocity_rms": 0.0007106528181415856
+    },
+    {
+      "segment": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+      "n": 2704,
+      "dt": 0.004166666666662877,
+      "step_time_max_error": 5.305391542753668e-14,
+      "raw_hinge_rms_nm": 0.023223046276234262,
+      "bias_hinge_rms_nm": 3.625220890562451e-07,
+      "gravity_hinge_rms_nm": 8.985665508220542e-08,
+      "tool_hinge_rms_nm": 0.0032725267815566614,
+      "compensated_hinge_rms_nm": 0.022290156139909374,
+      "total_tool_mass_kg": 0.7514295781256707,
+      "tool_parts_rms_nm": {
+        "translation": 0.003260439739248585,
+        "rotation": 1.3042980415160865e-05,
+        "gyro": 7.902129390222483e-10
+      },
+      "native_vs_SG_velocity_rms": 0.0006066793286256505
+    },
+    {
+      "segment": "FIT_RECOVERY_FAST_REOPEN_04",
+      "n": 2081,
+      "dt": 0.004166666666662877,
+      "step_time_max_error": 5.305391542753668e-14,
+      "raw_hinge_rms_nm": 0.023916913471119336,
+      "bias_hinge_rms_nm": 3.6435337747714554e-07,
+      "gravity_hinge_rms_nm": 9.196253848379358e-08,
+      "tool_hinge_rms_nm": 0.00033273157035657193,
+      "compensated_hinge_rms_nm": 0.02377155146011072,
+      "total_tool_mass_kg": 0.7514295781256707,
+      "tool_parts_rms_nm": {
+        "translation": 0.00033148388911681623,
+        "rotation": 1.3664663403786689e-06,
+        "gyro": 2.554269093904526e-10
+      },
+      "native_vs_SG_velocity_rms": 0.0002536466741182872
+    },
+    {
+      "segment": "VALIDATION_RECOVERY_CLOSE_SINE_05",
+      "n": 2203,
+      "dt": 0.004166666666662877,
+      "step_time_max_error": 5.305391542753668e-14,
+      "raw_hinge_rms_nm": 0.023161983671991192,
+      "bias_hinge_rms_nm": 3.624416976481295e-07,
+      "gravity_hinge_rms_nm": 9.665457243465769e-08,
+      "tool_hinge_rms_nm": 0.0015785854949607755,
+      "compensated_hinge_rms_nm": 0.022924009543015964,
+      "total_tool_mass_kg": 0.7514295781256707,
+      "tool_parts_rms_nm": {
+        "translation": 0.0015729442617069538,
+        "rotation": 5.98308269993815e-06,
+        "gyro": 7.911192119473141e-10
+      },
+      "native_vs_SG_velocity_rms": 0.0004011219209861472
+    }
+  ],
+  "stage_FWL": {
+    "raw": {
+      "rms_nm": 0.023588750434825344,
+      "acceleration_partial_coefficient_kg_m2": 0.30999486487825395,
+      "correlation_qdd": 0.35260667522601385
+    },
+    "bias": {
+      "rms_nm": 3.6373149505518214e-07,
+      "acceleration_partial_coefficient_kg_m2": -6.557815475309897e-08,
+      "correlation_qdd": -0.035997248378988426
+    },
+    "gravity": {
+      "rms_nm": 8.661406958712135e-08,
+      "acceleration_partial_coefficient_kg_m2": -1.53752876118512e-08,
+      "correlation_qdd": -0.07191272241611349
+    },
+    "tool": {
+      "rms_nm": 0.0032206724361704764,
+      "acceleration_partial_coefficient_kg_m2": 0.14469329320368784,
+      "correlation_qdd": 0.9962648148723079
+    },
+    "translation": {
+      "rms_nm": 0.003208929803063856,
+      "acceleration_partial_coefficient_kg_m2": 0.1441620085150598,
+      "correlation_qdd": 0.9962587635120377
+    },
+    "rotation": {
+      "rms_nm": 1.2798963093912252e-05,
+      "acceleration_partial_coefficient_kg_m2": 0.000531283519775565,
+      "correlation_qdd": 0.9155466560692693
+    },
+    "gyro": {
+      "rms_nm": 4.72989221627827e-10,
+      "acceleration_partial_coefficient_kg_m2": 1.1688524830418943e-09,
+      "correlation_qdd": 0.06394174104219784
+    }
+  },
+  "contact_proxy_correlations": [
+    {
+      "segment": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+      "residual_rms_nm": 0.00800931827816884,
+      "correlations": {
+        "slip": -0.003265457745849526,
+        "slip_rate": -0.10704057163579488,
+        "aperture": -0.012063460992161691,
+        "aperture_rate": -0.08116223386477528,
+        "pad_imbalance": -0.04046987270505881,
+        "load_sum": -0.040376486537303344,
+        "reference_lag": -0.014815512355870022,
+        "native_velocity_delta": 0.18404475765817674
+      },
+      "positive_normal_absence_fraction": [
+        0.0,
+        1.0
+      ],
+      "qdd_correlation": {
+        "slip": -0.08842248579486069,
+        "slip_rate": -0.13015174776647181,
+        "aperture": -0.036260409083038944,
+        "aperture_rate": -0.12585776062964812,
+        "pad_imbalance": -0.042929874717699136,
+        "load_sum": -0.04293341980100782,
+        "reference_lag": 0.02208858106317917,
+        "native_velocity_delta": -0.10027979738356747
+      },
+      "aperture_extent_mm": [
+        14.894893646240234,
+        15.223652839660645
+      ]
+    },
+    {
+      "segment": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+      "residual_rms_nm": 0.005099778388730513,
+      "correlations": {
+        "slip": 0.02281242243941553,
+        "slip_rate": 0.05659853276004375,
+        "aperture": 0.03515336990482465,
+        "aperture_rate": 0.0949861068312917,
+        "pad_imbalance": -0.09287601186474895,
+        "load_sum": 0.015212890253037728,
+        "reference_lag": -0.033837287270967076,
+        "native_velocity_delta": 0.1366379036947993
+      },
+      "positive_normal_absence_fraction": [
+        0.3172217709179529,
+        0.0
+      ],
+      "qdd_correlation": {
+        "slip": -0.14277636293621712,
+        "slip_rate": 0.22523417182993652,
+        "aperture": -0.2359333196379516,
+        "aperture_rate": -0.05783727706105326,
+        "pad_imbalance": 0.07813285518994516,
+        "load_sum": -0.23909915928343312,
+        "reference_lag": 0.04706929203888143,
+        "native_velocity_delta": -0.16181984446533895
+      },
+      "aperture_extent_mm": [
+        14.624787330627441,
+        14.915190696716309
+      ]
+    },
+    {
+      "segment": "FIT_RECOVERY_FAST_REOPEN_04",
+      "residual_rms_nm": 0.004063305161663724,
+      "correlations": {
+        "slip": -0.011110355695801865,
+        "slip_rate": 0.08441838689695706,
+        "aperture": 0.08024327038228277,
+        "aperture_rate": -0.1379133810207048,
+        "pad_imbalance": -0.035254869089937836,
+        "load_sum": -0.329702424305765,
+        "reference_lag": -0.04721357238010936,
+        "native_velocity_delta": 0.33269500498084764
+      },
+      "positive_normal_absence_fraction": [
+        0.0,
+        0.17781402936378465
+      ],
+      "qdd_correlation": {
+        "slip": -0.8073484015818065,
+        "slip_rate": 0.7238784941435987,
+        "aperture": -0.49347451181422675,
+        "aperture_rate": 0.20418557795241604,
+        "pad_imbalance": 0.5817017293539398,
+        "load_sum": -0.3762894584400024,
+        "reference_lag": 0.7889413004172423,
+        "native_velocity_delta": -0.13883562451500867
+      },
+      "aperture_extent_mm": [
+        14.826306343078613,
+        14.890128135681152
+      ]
+    },
+    {
+      "segment": "VALIDATION_RECOVERY_CLOSE_SINE_05",
+      "residual_rms_nm": 0.0034462792892373394,
+      "correlations": {
+        "slip": -0.003604844923208934,
+        "slip_rate": -0.013139807835633545,
+        "aperture": -0.0071704034478853405,
+        "aperture_rate": -0.026411259884085415,
+        "pad_imbalance": 0.03525537672274572,
+        "load_sum": -0.03525537672274572,
+        "reference_lag": -0.003817203515170392,
+        "native_velocity_delta": 0.4169953452305634
+      },
+      "positive_normal_absence_fraction": [
+        1.0,
+        0.0
+      ],
+      "qdd_correlation": {
+        "slip": -0.22492687454171822,
+        "slip_rate": 0.3252882311629958,
+        "aperture": -0.4085157216524755,
+        "aperture_rate": 0.4789259351738065,
+        "pad_imbalance": 0.40103387780916855,
+        "load_sum": -0.40103387780916855,
+        "reference_lag": -0.003283937670040598,
+        "native_velocity_delta": -0.01724838817556142
+      },
+      "aperture_extent_mm": [
+        14.669417381286621,
+        14.96015739440918
+      ]
+    }
+  ],
+  "synthetic": [
+    {
+      "frequency_hz": 0.1,
+      "window": 61,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30013650384050794,
+        0.4000000321265685,
+        0.019999999357166936
+      ],
+      "relative_I_error": 0.0004550128016931332
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 61,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30013646039311,
+        0.3999999742230424,
+        0.020000000515237912
+      ],
+      "relative_I_error": 0.00045486797703331305
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 61,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30000017135070445,
+        0.4000000000027368,
+        0.01999999999964437
+      ],
+      "relative_I_error": 5.711690149734494e-07
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 121,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3005380074509662,
+        0.4000004985817959,
+        0.0199999900289537
+      ],
+      "relative_I_error": 0.00179335816988746
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 121,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30053733302016855,
+        0.39999960094938347,
+        0.02000000798159092
+      ],
+      "relative_I_error": 0.0017911100672285407
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 121,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000001713408054,
+        0.39999999999468216,
+        0.02000000000069523
+      ],
+      "relative_I_error": 5.711360180349345e-07
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 181,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3012056883402042,
+        0.400002495503895,
+        0.019999950090471185
+      ],
+      "relative_I_error": 0.004018961134014232
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 181,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3012023066127943,
+        0.3999980045548411,
+        0.02000003990943047
+      ],
+      "relative_I_error": 0.004007688709314339
+    },
+    {
+      "frequency_hz": 0.1,
+      "window": 181,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30000017134122164,
+        0.3999999999950409,
+        0.020000000000646122
+      ],
+      "relative_I_error": 5.711374055916707e-07
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 61,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3013865938115877,
+        0.4000032920580372,
+        0.01999993415853625
+      ],
+      "relative_I_error": 0.004621979371959073
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 61,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3013821245557681,
+        0.39999736041715683,
+        0.020000052791354264
+      ],
+      "relative_I_error": 0.004607081852560535
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 61,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000017361179387,
+        0.39999999999947367,
+        0.019999999999709642
+      ],
+      "relative_I_error": 5.787059795592242e-06
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 121,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3055061455363431,
+        0.40005083738364433,
+        0.019998983252926553
+      ],
+      "relative_I_error": 0.018353818454476922
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 121,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3054363585861688,
+        0.3999594535333902,
+        0.020000810929920388
+      ],
+      "relative_I_error": 0.01812119528722933
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 121,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30000173611925773,
+        0.4000000000009942,
+        0.02000000000056902
+      ],
+      "relative_I_error": 5.787064192519509e-06
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 181,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3124950297136569,
+        0.4002523968545543,
+        0.019994952063478625
+      ],
+      "relative_I_error": 0.04165009904552308
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 181,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.31214162842850635,
+        0.3997997505786669,
+        0.020004004988974
+      ],
+      "relative_I_error": 0.04047209476168789
+    },
+    {
+      "frequency_hz": 0.31831,
+      "window": 181,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30000173611923375,
+        0.40000000000077873,
+        0.0200000000005313
+      ],
+      "relative_I_error": 5.787064112583451e-06
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 61,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30343549749794596,
+        0.4000199857318467,
+        0.01999960028505801
+      ],
+      "relative_I_error": 0.011451658326486536
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 61,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3034081992895461,
+        0.3999839984165041,
+        0.020000320031365353
+      ],
+      "relative_I_error": 0.011360664298487144
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 61,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30000428371978716,
+        0.4000000000000016,
+        0.019999999999699144
+      ],
+      "relative_I_error": 1.4279065957190085e-05
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 121,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.31381157736551435,
+        0.40030621792486454,
+        0.019993875642118436
+      ],
+      "relative_I_error": 0.046038591218381164
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 121,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3133811521957143,
+        0.3997571563724872,
+        0.020004856873154057
+      ],
+      "relative_I_error": 0.04460384065238099
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 121,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30000428371791815,
+        0.3999999999998275,
+        0.02000000000059238
+      ],
+      "relative_I_error": 1.4279059727284604e-05
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 181,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3320065709846883,
+        0.4015028694732302,
+        0.019969942611140618
+      ],
+      "relative_I_error": 0.10668856994896103
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 181,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.32979046902978304,
+        0.39882288849785097,
+        0.020023542230622384
+      ],
+      "relative_I_error": 0.09930156343261021
+    },
+    {
+      "frequency_hz": 0.5,
+      "window": 181,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30000428371798804,
+        0.39999999999944025,
+        0.020000000000558068
+      ],
+      "relative_I_error": 1.4279059960209395e-05
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 61,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.31403481213719703,
+        0.40013707708672047,
+        0.020000086346190854
+      ],
+      "relative_I_error": 0.04678270712399013
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 61,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.31359847939784974,
+        0.5550777966576839,
+        0.014762245157577203
+      ],
+      "relative_I_error": 0.04532826465949924
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 61,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000171353171242,
+        0.39999999999106944,
+        0.020000000000008157
+      ],
+      "relative_I_error": 5.711772374739077e-05
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 121,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3601973677179806,
+        0.4019870747553333,
+        0.020002003892260735
+      ],
+      "relative_I_error": 0.2006578923932687
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 121,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3528534824433384,
+        0.7275772537625482,
+        0.008838311438619902
+      ],
+      "relative_I_error": 0.17617827481112802
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 121,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000171353170201,
+        0.4000000000204055,
+        0.019999999999940392
+      ],
+      "relative_I_error": 5.71177234005571e-05
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 181,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.4569365726334607,
+        0.49304257354575237,
+        0.017227055986015163
+      ],
+      "relative_I_error": 0.5231219087782024
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 181,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.4152583707096136,
+        0.9375045658330636,
+        0.0014093864125595446
+      ],
+      "relative_I_error": 0.3841945690320454
+    },
+    {
+      "frequency_hz": 1.0,
+      "window": 181,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30001713531719715,
+        0.40000000003953656,
+        0.019999999999333537
+      ],
+      "relative_I_error": 5.711772399052961e-05
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 61,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3327286037065942,
+        0.4006732772149031,
+        0.020013006394116052
+      ],
+      "relative_I_error": 0.10909534568864743
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 61,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.33041727569437296,
+        0.6142708399008721,
+        0.011285664849295223
+      ],
+      "relative_I_error": 0.1013909189812432
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 61,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000385561150655,
+        0.39999999998449565,
+        0.02000000000038617
+      ],
+      "relative_I_error": 0.00012852038355171125
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 121,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.45802172647541006,
+        0.4484910972718716,
+        0.018644366465443547
+      ],
+      "relative_I_error": 0.526739088251367
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 121,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.4158332306488707,
+        0.7682073014518921,
+        0.0038086536284855175
+      ],
+      "relative_I_error": 0.3861107688295691
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 121,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000385561151679,
+        0.40000000007622305,
+        0.019999999997341932
+      ],
+      "relative_I_error": 0.0001285203838929938
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 181,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.8319472404151451,
+        0.5860598478135489,
+        0.015213527106813065
+      ],
+      "relative_I_error": 1.773157468050484
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 181,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.5376828900883898,
+        0.8417642097156899,
+        -0.0022148069711719755
+      ],
+      "relative_I_error": 0.7922763002946327
+    },
+    {
+      "frequency_hz": 1.5,
+      "window": 181,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000385561156339,
+        0.4000000000785107,
+        0.01999999999716549
+      ],
+      "relative_I_error": 0.00012852038544641786
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 61,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.36125795095526314,
+        0.40243398208754366,
+        0.02005736086392743
+      ],
+      "relative_I_error": 0.2041931698508772
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 61,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.35364379812387525,
+        0.6530379521811129,
+        0.007420792786436831
+      ],
+      "relative_I_error": 0.17881266041291766
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 61,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000685483156599,
+        0.39999999997833896,
+        0.020000000000853724
+      ],
+      "relative_I_error": 0.00022849438553307344
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 121,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.6586187916200366,
+        0.5291094138570693,
+        0.016402788319633474
+      ],
+      "relative_I_error": 1.1953959720667888
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 121,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.4962615888474378,
+        0.7448143390313545,
+        -0.0005849559203811907
+      ],
+      "relative_I_error": 0.6542052961581262
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 121,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.30006854831577356,
+        0.40000000006525976,
+        0.019999999997129984
+      ],
+      "relative_I_error": 0.00022849438591188154
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 181,
+      "torque_filter": "none",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        2.5041531718237313,
+        0.994548355778841,
+        0.004517542586480172
+      ],
+      "relative_I_error": 7.347177239412439
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 181,
+      "torque_filter": "SG0",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.5943264316394701,
+        0.5234477674769143,
+        0.0007506746853588789
+      ],
+      "relative_I_error": 0.9810881054649003
+    },
+    {
+      "frequency_hz": 2.0,
+      "window": 181,
+      "torque_filter": "SG2_equivalent",
+      "known_parameters": [
+        0.3,
+        0.4,
+        0.02
+      ],
+      "recovered": [
+        0.3000685483165922,
+        0.4000000000556511,
+        0.01999999999773575
+      ],
+      "relative_I_error": 0.0002284943886405877
+    }
+  ],
+  "source_sha256": {
+    "scripts/diagnose_inertia_bias_v3.py": "b0ac446cefd410d913bc27cbc0f1aeac4edcbe30b4ab548507b0b521834a2749",
+    "scripts/xarm_ft_id_estimator.py": "b3a812a33b9f6a650724355a091e8739a1903068fb3cc5e6f9322d91f8fa1933",
+    "scripts/xarm_wrist_ft.py": "0c85ccc6b5499b8a5a74e5adb1d4d09630c95cef1e1961be648d9a4f27b032d0",
+    "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b",
+    "scripts/update_probing_v3_model.py": "a9b53c874cd2887d1636751d394807dd36b75d2f51f01c891b6e45bae04d5ad0"
+  },
+  "input_index_sha256": "acb59da7f47bcc87f05244f6913315df064ec9fecee13039e70e802a4a65758f",
+  "original_estimate_sha256": "899cfecd73105c11ed297d4c37a4a6760d5fc9fbcf13c21ef0b71914c0949985",
+  "raw_copied": false,
+  "simulator_started": false,
+  "wall_s": 13.564910829998553
+}
