@@ -1,0 +1,331 @@
+[
+  {
+    "sequence": 0,
+    "operation": "evaluate_view",
+    "reason": "Inspected actual fresh RGB/mask/depth/cloud: narrow vertical bar is upper-left and upper part is occluded by robot; no accepted detection. Center camera laterally on image-derived bar and raise it to observe entire protruding handle with less self-occlusion.",
+    "wall_s": 0.2170369210653007,
+    "unloaded_wait_s": 95.25145674310625,
+    "target": {
+      "eye_world_m": [
+        0.31,
+        -0.85,
+        0.53
+      ],
+      "look_at_world_m": [
+        0.315,
+        -0.3,
+        0.53
+      ]
+    },
+    "inspected_image_sha256": "e33672b5b40c5b3c3dd4bee73d966617404f9138c8d0c1275db6c3630f9246bc",
+    "outcome": {
+      "feasible": true
+    }
+  },
+  {
+    "sequence": 1,
+    "operation": "move_and_observe",
+    "reason": "Validated collision-free direct wrist route; execute actual actuators, then inspect newly centered higher view.",
+    "wall_s": 49.058974742889404,
+    "unloaded_wait_s": 17.76425645290874,
+    "outcome": {
+      "observation": {
+        "index": 1,
+        "t_sim": 18.604166666666668,
+        "accepted_for_geometry": true,
+        "sensing_and_segmentation_wall_s": 25.97011753101833
+      }
+    }
+  },
+  {
+    "sequence": 2,
+    "operation": "evaluate_view",
+    "reason": "Fresh accepted mask covers full long bar; front-on measured cloud is mainly one face. Request an oblique lateral view to observe side/handle-panel clearance and reduce unobserved contact-surface uncertainty before ranking.",
+    "wall_s": 0.20210741786286235,
+    "unloaded_wait_s": 80.44962872704491,
+    "target": {
+      "eye_world_m": [
+        0.10065904021547398,
+        -0.76,
+        0.539787961361019
+      ],
+      "look_at_world_m": [
+        0.31065904021547397,
+        -0.33596407799001504,
+        0.519787961361019
+      ]
+    },
+    "inspected_image_sha256": "842f77a69d3e12068d82aaf25c8cba9b0f470ad11707e0fbb8e19607a2b10a83",
+    "outcome": {
+      "feasible": true
+    }
+  },
+  {
+    "sequence": 3,
+    "operation": "move_and_observe",
+    "reason": "Original checker accepted oblique view; acquire a second independent measured side patch before geometry fusion.",
+    "wall_s": 38.71105193020776,
+    "unloaded_wait_s": 15.84071608982049,
+    "outcome": {
+      "observation": {
+        "index": 2,
+        "t_sim": 23.445833333333333,
+        "accepted_for_geometry": true,
+        "sensing_and_segmentation_wall_s": 23.264603161020204
+      }
+    }
+  },
+  {
+    "sequence": 4,
+    "operation": "build_geometry",
+    "reason": "Inspected oblique RGB/mask/depth/cloud and semantic board: both bar ends/supports visible, second measured face retained, cumulative extent ~295.9 mm. Two complementary views are sufficient to attempt unchanged automatic ranking; do not scan further merely to maximize coverage.",
+    "wall_s": 189.556180764921,
+    "unloaded_wait_s": 33.56872461200692,
+    "inspected_images_sha256": {
+      "view02.png": "2e3dd7dd4b59a4354ae4b6b6749c5b9a887df7670cf6301c4313a32254f7f976",
+      "semantic02.png": "1a0ac101a2fbc92054cc8862ce0fedb0a00689fafa44aa116ab3f92b3b15d7bf"
+    },
+    "outcome": {
+      "geometry": true,
+      "plan": true,
+      "candidate_family": [
+        -0.3,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "failed_episode_families": []
+    }
+  },
+  {
+    "sequence": 5,
+    "operation": "validate_execution",
+    "reason": "Fresh automatic ranking produced a new candidate with predicted pad contact on both native fingers and no predicted root contact. Validate complete measured-state wrist return and approach before any physical attempt.",
+    "wall_s": 2.3252591469790787,
+    "unloaded_wait_s": 136.69729061517864,
+    "outcome": {
+      "valid": true
+    }
+  },
+  {
+    "sequence": 6,
+    "operation": "attempt_grasp_and_probe",
+    "reason": "Inspected fresh measured geometry and selected native-finger plot: handle lies between pad surfaces away from ends; hidden rear remains uncertain. Complete wrist-return/approach checks passed. Approve one initial physical acquisition, original 1-second hold, and bounded informative sequence 12->4->15->5 deg. Existing transmission/force/motion protections own any interruption and safe exit. Distinct plateaus and steady FIT profiles train I/b/C; complete sine closing remains independent VALIDATION.",
+    "wall_s": 508.3027313838247,
+    "unloaded_wait_s": 31.87239910918288,
+    "inspected_image_sha256": "56e6172f6eaa95284e8ebaa965e3afe6a61ef40864ac0fec7401ddd0e3ec74b0",
+    "outcome": {
+      "acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "angle_deg": 0.017794988997883756
+      },
+      "segments": [
+        {
+          "ok": false,
+          "status": "TIMEOUT",
+          "reason": "SEGMENT_TIMEOUT",
+          "angle_deg": 8.891899700227672,
+          "gain_deg": 8.874104711229787,
+          "elapsed_sim_s": 44.708333333333314,
+          "final_tracking_lag_deg": 0.4998280654087571
+        }
+      ],
+      "safe_exit": {
+        "safe": true,
+        "reason": null
+      }
+    }
+  },
+  {
+    "sequence": 7,
+    "operation": "inspect_contact_result",
+    "reason": "Initial grasp/hold succeeded but opening timed out at 8.89deg with lead near 0.5deg. Verified unloaded native_rest park; inspect real force/motion and online uncertainty before choosing the sole recovery.",
+    "wall_s": 0.02152671804651618,
+    "unloaded_wait_s": 69.59948171209544,
+    "outcome": {}
+  },
+  {
+    "sequence": 8,
+    "operation": "reobserve_and_replan",
+    "reason": "Inspected actual first-attempt contact/motion/F-T plots. After ~10s the opposite pad unloads, relative drift reaches ~3.27mm, and actual motion nearly stops after ~20s while reference sits at its finite lead cap. Verified released native_rest park permits the sole recovery. Reobserve current nonzero door state and choose an alternative from unchanged candidate families, excluding this failed family; do not tune clock, scores, force or pose offsets.",
+    "wall_s": 48.73075996898115,
+    "unloaded_wait_s": 33.53087619505823,
+    "inspected_images_sha256": {
+      "first_feedback.png": "7e48017656103936aeb6684a1f5a9c357ffb005afa801471657af3e82e6f7f62",
+      "first_model.png": "543d3f8b55b800ba65d42f48426d509e8b6a4fa67a389fab1af4d42920bd575d"
+    },
+    "outcome": {
+      "observation": {
+        "index": 0,
+        "t_sim": 215.62083333333334,
+        "accepted_for_geometry": true,
+        "sensing_and_segmentation_wall_s": 21.810653377091512
+      }
+    }
+  },
+  {
+    "sequence": 9,
+    "operation": "evaluate_view",
+    "reason": "Inspected fresh opened-door RGB/mask/depth/cloud: accepted mask only covers lower ~69mm; upper bar remains robot-occluded. Seek one raised oblique view centered above observed lower portion, with side parallax, to recover full handle and opposing contact support at current state. Coordinates derive from current measured cue, not prior successful pose.",
+    "wall_s": 0.24883838999085128,
+    "unloaded_wait_s": 72.14092697692104,
+    "target": {
+      "eye_world_m": [
+        0.15599494765024105,
+        -0.82,
+        0.5198425512994956
+      ],
+      "look_at_world_m": [
+        0.32599494765024106,
+        -0.40004162288646195,
+        0.5198425512994956
+      ]
+    },
+    "inspected_image_sha256": "d75f4e0d0f4112246657b211e9a275dcc7f1c18337eafc7b690f1dd2f6423c8a",
+    "outcome": {
+      "feasible": true
+    }
+  },
+  {
+    "sequence": 10,
+    "operation": "move_and_observe",
+    "reason": "Raised oblique recovery view passed original checker. Execute real arm motion to replace the lower-only view with more complete observed contact geometry.",
+    "wall_s": 53.425154173979536,
+    "unloaded_wait_s": 14.138079969910905,
+    "outcome": {
+      "observation": {
+        "index": 1,
+        "t_sim": 226.42499999999998,
+        "accepted_for_geometry": true,
+        "sensing_and_segmentation_wall_s": 22.649773955112323
+      }
+    }
+  },
+  {
+    "sequence": 11,
+    "operation": "build_geometry",
+    "reason": "Inspected fresh recovery RGB/mask/depth/cloud and semantic geometry: complete long bar and support gap now visible at current opened state; incremental geometry retains lower and full-length observations. Build alternative automatic plan using unchanged scores and per-episode failed-family exclusion. No further view is needed.",
+    "wall_s": 181.55347475898452,
+    "unloaded_wait_s": 27.69059279584326,
+    "inspected_images_sha256": {
+      "recovery01.png": "ee31e6468bb310c3fb0eeb62fd7488fbf77c451f7e3242bd7f475f05fbbf396b",
+      "recovery_semantic01.png": "f9edbaef764521c0f97dfbfbd1fbc76b64f9b9352a00e8d5a308d96634ccfbb0"
+    },
+    "outcome": {
+      "geometry": true,
+      "plan": true,
+      "candidate_family": [
+        -0.3,
+        -0.009374999906867743,
+        0.0,
+        0.0
+      ],
+      "failed_episode_families": [
+        [
+          -0.3,
+          0.0,
+          0.0,
+          0.0
+        ]
+      ]
+    }
+  },
+  {
+    "sequence": 12,
+    "operation": "validate_execution",
+    "reason": "Unchanged automatic ranking selected a different insertion candidate at current door state and excluded prior failed family. Predicted pad contacts move inward from prior near-end support. Validate full return/approach before the single recovery acquisition.",
+    "wall_s": 2.154758556978777,
+    "unloaded_wait_s": 32.712087981868535,
+    "outcome": {
+      "valid": true
+    }
+  },
+  {
+    "sequence": 13,
+    "operation": "attempt_grasp_and_probe",
+    "reason": "Inspected fresh recovery geometry and native-finger plan. Automatic unchanged ranking selected a distinct insertion candidate; prior failed family excluded. Full measured-state return/approach and nominal timing passed. Approve the sole recovery acquisition: close from current ~8.89deg toward4, acceleration-rich open13, slower close5, independent sine reopen10. This prioritizes reverse-direction excitation and complete interior-range validation; preserve first failed outcome and all protections. No further acquisitions are allowed.",
+    "wall_s": 545.7163853910752,
+    "unloaded_wait_s": 53.52122380398214,
+    "inspected_image_sha256": "e0dd27c7d3351d81dfbfac98a9d8f0d53386bb4b44a959500087c8f80f4070e3",
+    "outcome": {
+      "acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "angle_deg": 8.861910900903084
+      },
+      "segments": [
+        {
+          "ok": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "angle_deg": 3.9514027461830694,
+          "gain_deg": -4.910508154720015,
+          "elapsed_sim_s": 5.862500000000011,
+          "final_tracking_lag_deg": -0.04112300878813358
+        },
+        {
+          "ok": false,
+          "status": "TIMEOUT",
+          "reason": "SEGMENT_TIMEOUT",
+          "angle_deg": 12.396461225624751,
+          "gain_deg": 8.445058479441682,
+          "elapsed_sim_s": 44.87916666666666,
+          "final_tracking_lag_deg": 0.49987600349256095
+        }
+      ],
+      "safe_exit": {
+        "safe": true,
+        "reason": null
+      }
+    }
+  },
+  {
+    "sequence": 14,
+    "operation": "fresh_mode_observation",
+    "reason": "Recovery safely parked after actual close to3.95 and reopen to12.40; both handle acquisitions consumed and no complete validation yet. Inspect fresh opened-panel RGB-D for one existing closed-G1 panel-push validation opportunity within remaining time. Do not acquire another handle or modify controller. Stop if no complete validated push/separation/park route fits remaining budget.",
+    "wall_s": 47.94345943303779,
+    "unloaded_wait_s": 59.78447964088991,
+    "outcome": {
+      "observation": {
+        "index": 0,
+        "t_sim": 434.81666666666666,
+        "accepted_for_geometry": false,
+        "sensing_and_segmentation_wall_s": 21.696895783068612
+      }
+    }
+  },
+  {
+    "sequence": 15,
+    "operation": "plan_panel_push",
+    "reason": "Inspected actual fresh current-panel RGB/depth/cloud: broad interior panel is visible clear of left handle, borders and robot occluders. Select central image ROI only from observation for existing compact-G1 pusher. Validate entry, native intended contact, closing to6deg, separation and parking; no GT snapping or extra acquisition.",
+    "wall_s": 0.040586146991699934,
+    "unloaded_wait_s": 32.9369739620015,
+    "rectangle": [
+      550,
+      260,
+      760,
+      430
+    ],
+    "target_deg": 6.0,
+    "inspected_image_sha256": "701545db666e59866f3b8299bd7837eb91d006b3b541c02d6eeb79750e3572ee",
+    "outcome": {
+      "valid": false,
+      "reason": "observed patch has no corresponding current native moving surface"
+    }
+  },
+  {
+    "sequence": 16,
+    "operation": "finish",
+    "reason": "No complete safe panel-contact route was established and remaining time is for exit. This episode cannot establish independent V3.1 accuracy without a complete held-out trajectory; do not relabel partial actions or invent validation.",
+    "wall_s": 38.08899897499941,
+    "unloaded_wait_s": 37.89773881691508,
+    "outcome": {
+      "completed": true,
+      "safe_exit": {
+        "safe": true,
+        "reason": null
+      }
+    }
+  }
+]
