@@ -33,7 +33,7 @@ The completed closing segment took **5.863 s versus 5.800 s nominal**, with no l
 
 Both opening segments eventually reached the existing approximately 0.5° lead cap and braked: limiting fractions were 84.60% and 85.29%; final lags 0.49983° and 0.49988°. Their maximum handle-relative translations were **3.275 and 4.305 mm**. The close segment peaked at 1.218 mm. These are actual contact/tracking limitations, not evidence that the old 5.4× divisor was still active. The recordings do not uniquely isolate pad geometry, compliance and arm tracking; single-pad unloading alone was not used as a veto.
 
-All original phase-aware protections remained active. Maximum measured loaded TCP speed was **11.240 mm/s**, minimum interaction joint margin **0.4460 rad**, peak pad normal loads **2.478/1.146 N**, and HARD-stop sample count **0**. Loads above the historical 2 N number did not automatically terminate the scene. Final parking had zero reported pad loads, verified current-state collision clearance and joint-cell error **0.003713 rad**. A safe timeout/parking is not a successful interaction target.
+All original phase-aware protections remained active. Maximum measured loaded TCP speed was **11.240 mm/s**, minimum interaction joint margin **0.4460 rad**, peak pad normal loads **2.478/1.146 N**, and HARD-stop sample count **0**. There were **300 recorded informational load-warning samples** (samples, not 300 distinct events). Loads above the historical 2 N number did not automatically terminate the scene. Final parking had zero reported pad loads, verified current-state collision clearance and joint-cell error **0.003713 rad**. A safe timeout/parking is not a successful interaction target.
 
 ## Blind online dynamics result
 
