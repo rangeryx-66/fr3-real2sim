@@ -4,7 +4,6 @@ from pathlib import Path
 import numpy as np
 from scipy.spatial.transform import Rotation
 from .policy import SafetyStop
-from .motion import progress_reference
 
 class Operations:
     def __init__(self,runtime):
@@ -103,23 +102,39 @@ class Operations:
         self.r.event('GRASP_VERIFIED',angle_deg=math.degrees(self.r.actual()),pad_loads_n=self.r.filtered().tolist())
         self.g['phase']='FORCE_HOLD';self.r.hold(1.);self.r.reference_drive=None
         return dict(acquired=True,hold_s=1.,angle_deg=math.degrees(self.r.actual()))
-    def interact(self,target_deg,max_sim_s=45):
+    def interact(self,target_deg,max_sim_s=45,action=None):
+        return self.rotate_segment(target_deg,max_sim_s,action,phase='OPEN_CONTINUE')
+    def rotate_segment(self,target_deg,max_sim_s=45,action=None,phase='OPEN_CONTINUE',contact_pose=None,prior=None,measure=None):
         from native_g1_ft_identification import kinematic_prior
-        prior=kinematic_prior(self.g);axis=np.asarray(prior['axis_world']);origin=np.asarray(prior['origin_world_m']);start=self.r.actual();target=math.radians(target_deg);direction=1 if target>=start else -1
-        T=self.r.tcp();angle0=self.r.actual();reference=angle0;self.r.reference_drive=None;began=self.r.tick*self.r.dt;checkpoint=began;last_angle=angle0;last_relative=0.;stalls=0
-        while direction*(target-self.r.actual())>0:
-            theta=self.r.actual();radius=max(.001,float(np.linalg.norm(self.r.tcp()[:3,3]-origin)));motion=self.r.motion_limits('LOADED')
-            reference=progress_reference(theta,reference,target,direction,motion['speed_m_s'],radius,self.r.dt,math.radians(.5))
-            R=Rotation.from_rotvec(axis*(reference-angle0)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
-            self.g['current_articulation_reference']=reference
-            self.r.cartesian_step(D@T,'OPEN_CONTINUE');now=self.r.tick*self.r.dt
-            if now-checkpoint>=.5:
-                drift=self.r.rows[-1]['relative_translation_slip_m'];progress=direction*(self.r.actual()-last_angle)*radius
+        from .progress import ProgressClock,hinge_radius,segment_plan
+        action=dict(action or {},max_sim_s=(action or {}).get('max_sim_s',max_sim_s))
+        prior=prior or kinematic_prior(self.g);measure=measure or self.r.actual
+        axis=np.asarray(prior['axis_world']);axis/=np.linalg.norm(axis);origin=np.asarray(prior['origin_world_m'])
+        start=measure();requested=math.radians(target_deg);T=self.r.tcp().copy() if contact_pose is None else np.asarray(contact_pose).copy()
+        radius=hinge_radius(T[:3,3],origin,axis);planning=segment_plan(start,requested,action,self.r.policy.motion('LOADED'),radius,self.r.dt)
+        if not planning['valid']:return dict(ok=False,status='NOT_STARTED_BUDGET_INFEASIBLE',reason=planning['reason'],planning=planning,angle_deg=math.degrees(start))
+        target=planning['selected_target_rad'];clock=ProgressClock(start,target);began=self.r.tick*self.r.dt;checkpoint=began
+        self.r.reference_drive=None;last_angle=start;last_relative=self.r.rows[-1]['relative_translation_slip_m'];stalls=0;reason=None;panel_contacts=0
+        while clock.direction*(target-measure())>0:
+            motion=self.r.motion_limits('LOADED');reference,state=clock.advance(measure(),motion['speed_m_s'],hinge_radius(self.r.tcp()[:3,3],origin,axis),self.r.dt,motion['angular_speed_rad_s'],motion['acceleration_m_s2'],motion['angular_acceleration_rad_s2'])
+            R=Rotation.from_rotvec(axis*(reference-start)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
+            self.g['current_articulation_reference']=reference;self.r.cartesian_step(D@T,phase);now=self.r.tick*self.r.dt
+            if phase=='PANEL_PUSH':panel_contacts+=sum(c['force_n']>0 and c['target'] in self.r.collision.paths for c in self.r.rows[-1]['contacts'])
+            # Preserve the original measured slip-vs-progress stall criterion.
+            if phase=='OPEN_CONTINUE' and now-checkpoint>=.5:
+                drift=self.r.rows[-1]['relative_translation_slip_m'];progress=clock.direction*(measure()-last_angle)*radius
                 stalls=stalls+1 if drift-last_relative>max(0.,progress) else 0
-                checkpoint=now;last_angle=self.r.actual();last_relative=drift
-                if stalls>=3:return dict(ok=False,reason='CONTACT_TRANSMISSION_STALL',angle_deg=math.degrees(self.r.actual()))
-            if now-began>=max_sim_s:return dict(ok=False,reason='BOUNDED_SEGMENT_COMPLETE_BEFORE_TARGET',angle_deg=math.degrees(self.r.actual()))
-        self.r.stop_command();self.g['qvelocity']=np.zeros(7);self.r.reference_drive=None;return dict(ok=True,angle_deg=math.degrees(self.r.actual()),gain_deg=math.degrees(self.r.actual()-start))
+                checkpoint=now;last_angle=measure();last_relative=drift
+                if stalls>=3:reason='CONTACT_TRANSMISSION_STALL';break
+            if now-began>=planning['max_sim_s']-planning['stop_reserve_s']:reason='SEGMENT_TIMEOUT';break
+        # Same checked low-level deceleration on success AND recoverable timeout.
+        # Safety exceptions bypass this continuation and remain authoritative.
+        valid_until=self.r.tick*self.r.dt-began;self.r.stop_command();self.r.reference_drive=None
+        reached=clock.direction*(target-measure())<=0;ok=reached and reason!='CONTACT_TRANSMISSION_STALL'
+        return dict(ok=bool(ok),status='TARGET_REACHED' if ok else ('TRANSMISSION_FAILURE' if reason=='CONTACT_TRANSMISSION_STALL' else 'TIMEOUT'),reason=None if ok else reason,
+            angle_deg=math.degrees(measure()),gain_deg=math.degrees(measure()-start),requested_target_reached=bool(clock.direction*(requested-measure())<=0),planning=planning,
+            panel_contacts=panel_contacts,safely_stopped=True,physical_transmission_valid=reason!='CONTACT_TRANSMISSION_STALL',fit_valid_until_s=valid_until,elapsed_sim_s=self.r.tick*self.r.dt-began,
+            reference_deg=math.degrees(clock.reference),tracking_limited_fraction=clock.limited_steps/max(1,round(valid_until/self.r.dt)),final_tracking_lag_deg=math.degrees(clock.direction*(clock.reference-measure())))
     def release_park(self):
         if self.g.get('at_safe_park') and self.g.get('last_exit_plan'):
             from native_g1_safe_park import verify_park
@@ -168,18 +183,12 @@ class Operations:
             # execute it with one continuous bounded joint-space time law.
             self.r.move_path(p['entry_path'],'PANEL_APPROACH')
             self.r.reference_drive=None
-            while self.r.actual()>math.radians(p['target_deg']):
-                theta=self.r.actual();reference=progress_reference(theta,reference,math.radians(p['target_deg']),-1,self.r.motion_limits('LOADED')['speed_m_s'],radius,self.r.dt);R=Rotation.from_rotvec(axis*(reference-start)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
-                self.g['current_articulation_reference']=reference
-                self.r.cartesian_step(D@T,'PANEL_PUSH');contact_count+=sum(c['force_n']>0 and c['target'] in self.r.collision.paths for c in self.r.rows[-1]['contacts'])
-                if self.r.tick*self.r.dt-began>30:break
-            # Normal completion must decelerate under the still-authorized
-            # panel contact mode before the separation trajectory starts.
-            # Exceptions bypass this continuation and remain authoritative.
-            self.r.stop_command()
+            segment=self.rotate_segment(p['target_deg'],30,getattr(self.r,'probe_profile',None),phase='PANEL_PUSH',contact_pose=self.r.tcp().copy())
+            if hasattr(self.r.record,'end'):self.r.record.end(segment)
+            contact_count=segment.get('panel_contacts',0)
         finally:
-            self.g['qvelocity']=np.zeros(7);self.r.reference_drive=None
-        result=dict(panel_contacts=contact_count,closing_deg=math.degrees(start-self.r.actual()),angle_deg=math.degrees(self.r.actual()))
+            self.r.reference_drive=None
+        result=dict(segment,panel_contacts=contact_count,closing_deg=math.degrees(start-self.r.actual()),angle_deg=math.degrees(self.r.actual()))
         # Full current-state separation is validated, never replayed blindly.
         retreat=self.r.tcp().copy();retreat[:3,3]+=.04*N;q=np.asarray(self.r.robot.get_joint_positions())[self.r.arm];path=[]
         for f in np.linspace(0,1,21):

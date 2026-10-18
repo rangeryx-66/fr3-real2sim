@@ -46,7 +46,11 @@ def verify(out):
     import inspect
     from interaction_runtime.operations import Operations
     push=inspect.getsource(Operations.push)
-    assert push.index('self.r.stop_command()')<push.index('finally:')
+    rotation=inspect.getsource(Operations.rotate_segment)
+    assert push.index('self.rotate_segment(')<push.index('finally:')
+    import ast,textwrap
+    assert 'self.r.stop_command()' in rotation and not any(isinstance(n,ast.ExceptHandler) for n in ast.walk(ast.parse(textwrap.dedent(rotation))))
+    assert "self.g['qvelocity']=np.zeros(7)" not in push[push.index('finally:'):]
     checks['normal_panel_stop_precedes_separation_and_exceptions_do_not_continue']=True
     from types import SimpleNamespace
     trial=Operations.__new__(Operations)

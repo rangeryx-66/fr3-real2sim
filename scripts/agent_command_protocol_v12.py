@@ -83,6 +83,9 @@ def validate(command, sequence):
             require(isinstance(action.get('role'), str) and action['role'].startswith(('FIT', 'VALIDATION')), 'segment role required')
             require(action.get('profile') in ('constant', 'smooth_variation'), 'known segment profile required')
             require(type(action.get('hold')) is bool, 'boolean segment hold required')
+            from interaction_runtime.progress import validate_action
+            try:validate_action(action)
+            except (ValueError,TypeError,KeyError) as error:raise ProtocolError(str(error)) from error
             for key in ('reference_speed_m_s', 'reference_acceleration_m_s2', 'speed_scale'):
                 if key in action: require(number(action[key]) and action[key] > 0, 'positive finite ' + key + ' required')
     if op == 'plan_panel_push':

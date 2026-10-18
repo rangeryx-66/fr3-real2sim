@@ -62,7 +62,7 @@ class ProbingOperations(Operations):
         a=self.actions.pop(0) if self.actions else dict(target_deg=target_deg,role='FIT_INTERACTION',profile='constant')
         self.inputs();self.r.record.begin(a,'HANDLE');self.r.probe_profile=a;self.r.profile_started=self.r.tick
         result={}
-        try:result=super().interact(target_deg,max_sim_s);return result
+        try:result=super().interact(target_deg,max_sim_s,action=a);return result
         finally:self.r.probe_profile=None;self.r.record.end(result)
     def push(self,command=None):
         command=command or {};self.inputs();self.r.world.play();self.r.record.router=list(command.get('segments',[]));self.r.probe_profile=command.get('motion_profile',dict(profile='constant'));self.r.profile_started=self.r.tick
@@ -78,6 +78,8 @@ class ProbingOperations(Operations):
         self.worker.shutdown(wait=True)
 
 def action_check(a):
+    from .progress import validate_action
+    validate_action(a)
     if not np.isfinite(a['target_deg']):raise ValueError('finite target required')
     if not a['role'].startswith(('FIT','VALIDATION')):raise ValueError('declare FIT/VALIDATION before motion')
     for k in ['reference_speed_m_s','reference_acceleration_m_s2']:

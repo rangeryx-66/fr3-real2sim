@@ -19,7 +19,10 @@ class OperationsV31(OperationsV3):
         status=dict(estimator_version=ESTIMATOR_VERSION,worker_script=WORKER_SCRIPT,worker_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),timeout_s=WORKER_TIMEOUT_S)
         try:
             with (folder/'worker.log').open('w') as log:
-                child=subprocess.run([sys.executable,str(source),str(self.r.output)],stdout=log,stderr=subprocess.STDOUT,timeout=WORKER_TIMEOUT_S)
+                command=[sys.executable,str(source),str(self.r.output)]
+                if getattr(self.r,'job',{}).get('allow_interrupted_fit',False):command.append('--allow-interrupted-fit')
+                status['command']=command
+                child=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=WORKER_TIMEOUT_S)
             status['returncode']=child.returncode
             result=json.loads((folder/'estimate.json').read_text()) if child.returncode==0 else {}
             status['estimator_ready']=child.returncode==0 and result.get('estimator_version')==ESTIMATOR_VERSION

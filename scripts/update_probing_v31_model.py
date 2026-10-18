@@ -51,14 +51,16 @@ def conditional_model(samples,window=121):
     return m
 
 
-def load_segments(folder,window=121):
+def load_segments(folder,window=121,allow_interrupted_fit=False):
     a,idx=columns(folder);settings=json.loads((folder/'identification_input.json').read_text());meta=idx['metadata'];phase=np.array(meta['phases'])[a['phase']]
     pieces=[];provenance=[];train=[];test=[]
     for s in idx['segments']:
         ix=np.flatnonzero((a['segment']==s['id'])&np.isin(phase,['OPEN_CONTINUE','PANEL_PUSH']))
         record=dict(id=s['id'],role=s['role'],records=len(ix),blocks=[]);provenance.append(record)
-        if not s.get('completed') or not s.get('result',{}).get('ok'):
-            record['status']='incomplete/failed segment retained, not fit';continue
+        from interaction_runtime.segment_quality import selection
+        ix,quality=selection(s,a,ix,allow_interrupted_fit);record['quality']=quality
+        if not len(ix):
+            record['status']='not eligible for fit/validation; original action status retained';continue
         if not s['role'].startswith(('FIT','VALIDATION')):
             record['status']='undeclared role, not fit';continue
         finite=np.isfinite(a['door_dq'][ix])&np.isfinite(a['door_q'][ix])&np.isfinite(a['raw_ft'][ix]).all(axis=1)&np.isfinite(a['sensor_pose'][ix]).all(axis=1)&np.isfinite(a['tool_poses'][ix]).all(axis=(1,2))&(a['ft_valid'][ix]>0)
@@ -75,15 +77,15 @@ def load_segments(folder,window=121):
     return pieces,train,test,provenance
 
 
-def update(folder,output=None,window=121,plot=True):
+def update(folder,output=None,window=121,plot=True,allow_interrupted_fit=False):
     began=time.perf_counter();folder=Path(folder);out=Path(output) if output is not None else folder/'model';out.mkdir(parents=True,exist_ok=True)
     if (out/'estimate.json').exists() and json.loads((out/'estimate.json').read_text()).get('estimator_version')!=VERSION:
         raise ValueError('Preserve legacy result: specify a NEW --output directory')
-    pieces,train,test,provenance=load_segments(folder,window)
-    sources=[Path(__file__),ROOT/'scripts/xarm_ft_v31_estimator.py',ROOT/'scripts/xarm_ft_v1_estimator.py']
+    pieces,train,test,provenance=load_segments(folder,window,allow_interrupted_fit)
+    sources=[Path(__file__),ROOT/'scripts/xarm_ft_v31_estimator.py',ROOT/'scripts/xarm_ft_v1_estimator.py',ROOT/'interaction_runtime/segment_quality.py']
     result=dict(estimator_version=VERSION,status='insufficient informative data',model='tau=I_eff*qdd+b*qd+C*sign(qd)',window=window,
         training_bins=len(train),validation_bins=len(test),segments=provenance,hidden_dynamics_used=False,segment_local_processing=True,
-        complete_validation_excluded_from_fit_uncertainty_and_selection=True,tool_compensation_count=1,
+        complete_validation_excluded_from_fit_uncertainty_and_selection=True,tool_compensation_count=1,interrupted_fit_selection_enabled=allow_interrupted_fit,
         source_sha256={str(f.relative_to(ROOT)):hashlib.sha256(f.read_bytes()).hexdigest() for f in sources},
         input_index_sha256=hashlib.sha256((folder/'telemetry/index.json').read_bytes()).hexdigest(),
         limitations=['ideal virtual load cell and approximate actuators','conditional uncertainty excludes compensation/solver/model bias','authored inertia is not an independent effective PhysX measurement','finite-difference and centered-filter latency remain'])
@@ -122,5 +124,5 @@ def update(folder,output=None,window=121,plot=True):
 
 
 if __name__=='__main__':
-    parser=argparse.ArgumentParser();parser.add_argument('folder',type=Path);parser.add_argument('--output',type=Path);parser.add_argument('--window',type=int,default=121);parser.add_argument('--no-plot',action='store_true');args=parser.parse_args()
-    r=update(args.folder,args.output,args.window,not args.no_plot);print(json.dumps(dict(estimator_version=r['estimator_version'],status=r['status'],worker_wall_s=r['worker_wall_s'])))
+    parser=argparse.ArgumentParser();parser.add_argument('folder',type=Path);parser.add_argument('--output',type=Path);parser.add_argument('--window',type=int,default=121);parser.add_argument('--no-plot',action='store_true');parser.add_argument('--allow-interrupted-fit',action='store_true');args=parser.parse_args()
+    r=update(args.folder,args.output,args.window,not args.no_plot,args.allow_interrupted_fit);print(json.dumps(dict(estimator_version=r['estimator_version'],status=r['status'],worker_wall_s=r['worker_wall_s'])))
