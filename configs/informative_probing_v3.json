@@ -1,0 +1,59 @@
+{
+  "reference": "1c98f9b",
+  "label": "AGENT_WRIST_RGBD / KNOWN_HINGE_STATE / IDEAL_LOAD_CELL / APPROXIMATE_ACTUATOR_SIMULATION",
+  "storage_budget_bytes": 1000000000,
+  "optional_clip_budget_bytes": 12000000,
+  "optional_event_clip_seconds_total": 4.0,
+  "unloaded_record_hz": 10,
+  "contact_record_hz": 240,
+  "array_chunk_records": 8192,
+  "agent_adjustments": 4,
+  "max_handle_acquisitions": 2,
+  "max_agent_commands": 22,
+  "episode_wall_limit_s": 2100,
+  "agent_wait_limit_s": 120,
+  "identification": {
+    "model": "tau = I_eff*qdd + b*qd + C*sign(qd)",
+    "derivative_window_samples": 121,
+    "segment_edge_exclusion_samples": 121,
+    "effort_floor_nm": null,
+    "regularization": 0.001,
+    "scales": [
+      1.0,
+      0.25,
+      0.045
+    ],
+    "hidden_dynamics_input": false,
+    "validation": "complete predeclared segments; segment-local preprocessing only",
+    "uncertainty": "FIT residual + phase-matched unloaded sensitivity; historical worst case only a sensitivity comparison",
+    "failed_segments": "retained, excluded from fit"
+  },
+  "motion_menu": {
+    "plateaus": {
+      "profile": "constant",
+      "velocity_program": "plateaus",
+      "reference_speed_m_s": 0.012,
+      "reference_acceleration_m_s2": 0.04,
+      "low_speed_fraction": 0.125,
+      "ramp_s": 0.45,
+      "plateau_s": 0.55
+    },
+    "steady": {
+      "profile": "constant",
+      "velocity_program": "constant",
+      "reference_speed_m_s": 0.012,
+      "reference_acceleration_m_s2": 0.04
+    },
+    "validation_sine": {
+      "profile": "constant",
+      "velocity_program": "sine",
+      "reference_speed_m_s": 0.01,
+      "reference_acceleration_m_s2": 0.04,
+      "low_speed_fraction": 0.35,
+      "period_s": 3.1
+    }
+  },
+  "geometry_policy": "unchanged observed wrist RGB-D/SAM3, incremental semantic fusion and native G1 scoring",
+  "physics_and_grip": "unchanged from 1c98f9b; constant resistance scene; no new grip authority",
+  "schema": "informative-probing-v3"
+}

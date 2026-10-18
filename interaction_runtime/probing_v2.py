@@ -9,9 +9,9 @@ from .compact_v2 import CompactRecorder,storage,prune_optional
 from .serialization import result_packet
 
 class ProbingRuntime(Runtime):
-    def __init__(self,job):
+    def __init__(self,job,record_factory=CompactRecorder):
         self.probe_profile=None;self.profile_started=0;self.clip_events=set();self.panel_contact_seen=False
-        super().__init__(job,'FAST_DEV',record_factory=CompactRecorder)
+        super().__init__(job,'FAST_DEV',record_factory=record_factory)
         self.record.context=lambda:self.g
     def event(self,name,**data):
         previous=self.render.until;super().event(name,**data)
@@ -83,8 +83,8 @@ def action_check(a):
     for k in ['reference_speed_m_s','reference_acceleration_m_s2']:
         if k in a and (not np.isfinite(a[k]) or a[k]<=0):raise ValueError('positive finite profile required')
 
-def serve(r):
-    ops=ProbingOperations(r);g=r.g;commands=r.output/'agent_commands';responses=r.output/'agent_responses'
+def serve(r,operations_factory=ProbingOperations):
+    ops=operations_factory(r);g=r.g;commands=r.output/'agent_commands';responses=r.output/'agent_responses'
     commands.mkdir(exist_ok=True);responses.mkdir(exist_ok=True);trace=[]
     try:
         from native_g1_wrist_views import survey_candidates,select_route
