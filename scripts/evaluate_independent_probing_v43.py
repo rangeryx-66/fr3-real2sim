@@ -48,9 +48,14 @@ def evaluate(root):
         result['prevalidation_frozen_model']=row
     capture=p/'ONLINE_ESTIMATE_CAPTURE.json'
     result['online_updates']=json.loads(capture.read_text()) if capture.exists() else dict(updates=[])
-    result['assessment']=dict(status='REQUIRES_REVIEW',
-        complete_validation=any(q['role'].startswith('VALIDATION') and q.get('blocks') for q in result['quality']),
-        note='Numerical fit and safe lifecycle alone are not PASS; assess physical coverage, complete validation, identifiability and held-out prediction.')
+    trace=result['episode_result'].get('trace',[])
+    acquisitions=sum(bool(e.get('result',{}).get('physical_grasp_started')) for e in trace)
+    result['actual']['physical_handle_acquisitions']=acquisitions
+    result['actual']['scope']='one research episode; actual acquisitions counted from physical_grasp_started; no population success-rate claim'
+    complete=any(q['role'].startswith('VALIDATION') and q.get('blocks') for q in result['quality'])
+    result['assessment']=dict(status='REQUIRES_REVIEW' if complete else 'FAIL',
+        complete_validation=complete,
+        note='Numerical fit and safe lifecycle alone are not PASS; incomplete or unexecuted validation has N/A held-out metrics.')
     atomic_json(root/'RESULT.json',result_packet(result))
     print(json.dumps(result_packet({k:result[k] for k in ['experiment','assessment','comparison','prevalidation_frozen_model','storage','completion']}),indent=2))
     return result
