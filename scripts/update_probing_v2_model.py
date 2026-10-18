@@ -16,7 +16,10 @@ def decode(folder):
     index=json.loads((folder/'telemetry/index.json').read_text());settings=json.loads((folder/'identification_input.json').read_text());meta=index['metadata']
     complete={s['id']:s for s in index['segments'] if s['completed']};groups={sid:[] for sid in complete}
     for c in index['chunks']:
-        with np.load(folder/'telemetry'/c['file'],allow_pickle=False) as a:
+        with np.load(folder/'telemetry'/c['file'],allow_pickle=False) as packed:
+            # NpzFile re-inflates a member on every __getitem__. Materialize
+            # each compact column once; measurement values/math are unchanged.
+            a={key:packed[key] for key in packed.files}
             ids=np.flatnonzero(np.isin(a['segment'],list(complete)))
             for i in ids:
                 sid=int(a['segment'][i]);phase=meta['phases'][int(a['phase'][i])]
