@@ -1,0 +1,613 @@
+{
+  "status": "NOT_VALIDATED_NO_COMPLETED_FIT_OR_VALIDATION",
+  "scientific_result": "Independent parameter accuracy remains untested; physical/protocol evidence retained. SESSION_COMPLETE means safe lifecycle only.",
+  "references": [
+    "0305095",
+    "b75d5b8",
+    "1c98f9b"
+  ],
+  "registration_commit": "8590cd0",
+  "communication_repair_commit": "11b7e66",
+  "posthoc_tools_commit": "6a32d50",
+  "scope": "AGENT_WRIST_RGBD / KNOWN_HINGE_STATE / IDEAL_LOAD_CELL / APPROXIMATE_ACTUATOR_SIMULATION",
+  "configuration_revealed_post_exit": {
+    "case": 0,
+    "asset": "45936",
+    "seed": 698914900,
+    "mass_scale": 1.006509585163148,
+    "density_gradient": [
+      0.011830268417348577,
+      0.0026513949690736838,
+      -0.0568055679667388
+    ],
+    "tau_c": 0.028027950907390995,
+    "b": 0.3111818264785692,
+    "spring": false,
+    "law": {
+      "family": "constant",
+      "base_nm": 0.028027950907390995,
+      "amplitude_nm": 0.0,
+      "center_rad": 0.0,
+      "width_rad": 1.0
+    }
+  },
+  "authored_parameters_I_b_C": [
+    0.14517699788465693,
+    0.3111818264785692,
+    0.028027950907390995
+  ],
+  "authored_inertia_not_independently_verified_effective_PhysX": true,
+  "attempts": [
+    {
+      "attempt": 1,
+      "kind": "initial",
+      "family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "acquired": true,
+      "hold_s": 1.0,
+      "acquisition_angle_deg": 0.011920070818900714,
+      "probe_end_deg": 0.04682873077485284,
+      "net_post_acquisition_deg": 0.034908659955952125,
+      "stop": "CONTACT_TRANSMISSION_STALL",
+      "safe_park": true
+    },
+    {
+      "attempt": 2,
+      "kind": "one permitted recovery",
+      "family": [
+        -0.3,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "acquired": true,
+      "hold_s": 1.0,
+      "acquisition_angle_deg": 0.07313272975360414,
+      "probe_end_deg": 5.810549075522452,
+      "net_post_acquisition_deg": 5.737416345768848,
+      "stop": "BOUNDED_SEGMENT_COMPLETE_BEFORE_TARGET",
+      "safe_park": true
+    }
+  ],
+  "actual": {
+    "physics_steps": 85940,
+    "stored_records": 22837,
+    "unique_stored_steps": true,
+    "all_FT_samples_valid": true,
+    "recording_issues": [],
+    "segments": [
+      {
+        "id": 1,
+        "role": "FIT_V4_ACCEL_OPEN",
+        "result": {
+          "ok": false,
+          "reason": "CONTACT_TRANSMISSION_STALL",
+          "angle_deg": 0.04682873077485284
+        },
+        "records": 360,
+        "continuous_240Hz": true,
+        "duration_s": 1.4958333333333087,
+        "start_deg": 0.011911288789783559,
+        "end_deg": 0.04682873077485284,
+        "maximum_deg": 0.04682873077485284,
+        "minimum_deg": 0.008355281532506002,
+        "max_TCP_mm_s": 2.160952259655754,
+        "minimum_joint_margin_rad": 0.6328904476165773,
+        "max_handle_relative_slip_mm": 1.465012550354004,
+        "pad_peaks_n": [
+          1.0497609376907349,
+          0.42709019780158997
+        ],
+        "positive_normal_unreported_fraction_at_0p05N": [
+          0.0,
+          0.06111111111111111
+        ]
+      },
+      {
+        "id": 2,
+        "role": "FIT_V4_RECOVERY_ACCEL_OPEN",
+        "result": {
+          "ok": false,
+          "reason": "BOUNDED_SEGMENT_COMPLETE_BEFORE_TARGET",
+          "angle_deg": 5.810549075522452
+        },
+        "records": 10800,
+        "continuous_240Hz": true,
+        "duration_s": 44.99583333333334,
+        "start_deg": 0.07310057983973749,
+        "end_deg": 5.810549075522452,
+        "maximum_deg": 5.810549075522452,
+        "minimum_deg": 0.07264803311647786,
+        "max_TCP_mm_s": 2.1782547602016042,
+        "minimum_joint_margin_rad": 0.44216810131073014,
+        "max_handle_relative_slip_mm": 1.561609148979187,
+        "pad_peaks_n": [
+          1.1479582786560059,
+          0.7850775122642517
+        ],
+        "positive_normal_unreported_fraction_at_0p05N": [
+          0.0,
+          0.008888888888888889
+        ]
+      }
+    ],
+    "maximum_actual_deg": 5.812891830407766,
+    "final_deg": 5.812891830407766,
+    "peak_pads_n": [
+      1.1479582786560059,
+      1.2373040914535522
+    ],
+    "raw_sensor_peak_abs": [
+      7.748671531677246,
+      7.465436935424805,
+      5.229813098907471,
+      0.48253747820854187,
+      0.5559958815574646,
+      0.03255996108055115
+    ],
+    "interaction_minimum_joint_margin_rad": 0.44216810131073014,
+    "sampled_all_phase_minimum_joint_margin_rad": 0.4176219549179079,
+    "measured_loaded_TCP_max_mm_s": 2.1782547602016042,
+    "load_warning_samples": 0,
+    "hard_stop_samples": 0,
+    "Agent_wait_s": 494.10661922814324,
+    "key_events": [
+      {
+        "event": "GRASP_VERIFIED",
+        "t": 135.76666666666665,
+        "phase": "FORCE_HOLD",
+        "angle_deg": 0.012848837307546938,
+        "pad_loads_n": [
+          0.39655101359235284,
+          0.5953001483857152
+        ]
+      },
+      {
+        "event": "RELEASED",
+        "t": 144.34166666666667,
+        "phase": "RELEASE"
+      },
+      {
+        "event": "SAFE_PARK_REACHED",
+        "t": 159.5,
+        "phase": "SAFE_PARK_MOTION"
+      },
+      {
+        "event": "GRASP_VERIFIED",
+        "t": 291.9875,
+        "phase": "FORCE_HOLD",
+        "angle_deg": 0.07558884977088487,
+        "pad_loads_n": [
+          0.4363022730655132,
+          0.5575277823667231
+        ]
+      },
+      {
+        "event": "RELEASED",
+        "t": 344.0708333333333,
+        "phase": "RELEASE"
+      },
+      {
+        "event": "SAFE_PARK_REACHED",
+        "t": 358.0833333333333,
+        "phase": "SAFE_PARK_MOTION"
+      }
+    ],
+    "positive_normal_report_loss_events": 153
+  },
+  "meaningful_closing_travel_deg": 0.0,
+  "completed_FIT_segments": 0,
+  "completed_VALIDATION_segments": 0,
+  "comparison": {
+    "V31_online": {
+      "parameters": null,
+      "conditional_std": null,
+      "absolute_error": null,
+      "relative_error_percent": null,
+      "training_bins": 0,
+      "validation_bins": 0,
+      "heldout_torque_rmse_nm": null,
+      "heldout_motion": null,
+      "full_segment_boundary_sensitivity": null,
+      "information": null,
+      "supported": null
+    },
+    "V3_offline_same_data": {
+      "parameters": null,
+      "conditional_std": null,
+      "absolute_error": null,
+      "relative_error_percent": null,
+      "training_bins": 0,
+      "validation_bins": 0,
+      "heldout_torque_rmse_nm": null,
+      "heldout_motion": null,
+      "full_segment_boundary_sensitivity": null,
+      "information": null,
+      "supported": null
+    }
+  },
+  "online_worker": {
+    "estimator_version": "V3.1-common-SG2",
+    "worker_script": "scripts/update_probing_v31_model.py",
+    "worker_sha256": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+    "timeout_s": 60,
+    "returncode": 0,
+    "estimator_ready": true,
+    "loaded_sources": {
+      "scripts/update_probing_v31_model.py": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+      "scripts/xarm_ft_v31_estimator.py": "b58507fc80954116d36c066146a45e6acafe77cf95937fb661e565eb146523dc",
+      "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b"
+    },
+    "wall_s": 2.586717454949394
+  },
+  "online_updates": [
+    {
+      "estimator_version": "V3.1-common-SG2",
+      "training_bins": 0,
+      "validation_bins": 0,
+      "parameters": null,
+      "conditional_std": null,
+      "worker_wall_s": 0.023261578055098653
+    },
+    {
+      "estimator_version": "V3.1-common-SG2",
+      "training_bins": 0,
+      "validation_bins": 0,
+      "parameters": null,
+      "conditional_std": null,
+      "worker_wall_s": 0.10730720707215369
+    }
+  ],
+  "limiter_diagnostic": {
+    "scope": "post-exit diagnostic only; no parameter fitting, model update or truth-driven processing selection",
+    "segment": 2,
+    "actual_gain_deg": 5.737448495682715,
+    "duration_s": 44.99583333333334,
+    "mean_actual_deg_s": 0.1275106620023939,
+    "final_reference_deg": 6.114743751457105,
+    "reference_lead_P10_P50_P90_deg": [
+      0.20696946447802558,
+      0.2202324606232457,
+      0.2519295109300693
+    ],
+    "clock_rate_divisor_P10_P50_P90": [
+      5.139389289560511,
+      5.404649212464914,
+      6.038590218601387
+    ],
+    "effective_radius_P10_P50_P90_m": [
+      0.5284251784962455,
+      0.5284354744925123,
+      0.5284465904016051
+    ],
+    "nominal_speed_P10_P50_P90_mm_s": [
+      1.5,
+      6.597305226597968,
+      12.0
+    ],
+    "clock_rate_RMS_difference_deg_s": 0.0014454229558949964,
+    "active_code": "Operations.interact -> progress_reference(... overshoot=0.5deg, default lead=0.05deg); measured progress clock retained from frozen runtime",
+    "no_target_reached_before_45s": true,
+    "regression_valid_samples": 10479,
+    "qdd_rms_rad_s2": 0.005135458249309664,
+    "qd_rms_rad_s": 0.0027521078677810173,
+    "compensated_torque_rms_nm": 0.028657020981983236,
+    "regressor_information": {
+      "singular_values": [
+        4.604935976744942,
+        0.5257010995548381,
+        0.038304233295250054
+      ],
+      "condition": 120.22002741185217,
+      "logdet_regularized_fisher": 36.69035521525123,
+      "velocity_sign_correlation": 0.06519069063139257
+    },
+    "why_no_online_fit": "unchanged worker excludes both result.ok=False segments;0 completedFIT and0 VALIDATION",
+    "bidirectional_samples": false,
+    "perpendicular_hinge_radius_P10_P50_P90_m": [
+      0.4243190294725336,
+      0.4243337231654305,
+      0.42437841277397365
+    ]
+  },
+  "final_runner_status": "SESSION_COMPLETE",
+  "final_safe_exit": {
+    "safe_exit": {
+      "safe": true,
+      "already_verified_parked": true,
+      "park": {
+        "reached": true,
+        "region": "native_rest",
+        "measured_q": [
+          0.0008332710713148117,
+          -0.5007225275039673,
+          -0.0008404371910728514,
+          0.9988216757774353,
+          0.002002451568841934,
+          0.5020013451576233,
+          -0.003704212373122573
+        ],
+        "command_q": [
+          0.0,
+          -0.5,
+          0.0,
+          1.0,
+          0.0,
+          0.5,
+          0.0
+        ],
+        "joint_cell_error_rad": 0.003704212373122573,
+        "measured_collision_check": {
+          "valid": true,
+          "samples": 2,
+          "measured_fingers_rad": [
+            0.06013820320367813,
+            0.06013820320367813,
+            0.06013820692896843,
+            0.06013820320367813,
+            0.06013820320367813,
+            0.06013820320367813
+          ]
+        },
+        "unloaded": true,
+        "pad_loads_n": [
+          0.0,
+          0.0
+        ],
+        "moving_pose": [
+          [
+            0.9948579493519374,
+            4.40675133189794e-08,
+            0.10128010965266615,
+            0.47813522815704346
+          ],
+          [
+            0.10128010965265727,
+            1.7104183896998748e-07,
+            -0.9948579493519245,
+            -0.07486167550086975
+          ],
+          [
+            -6.116405214251497e-08,
+            0.9999999999999845,
+            1.6569917066222573e-07,
+            0.5026726126670837
+          ],
+          [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+          ]
+        ],
+        "door_angle_deg": 5.812891830407766
+      }
+    },
+    "completed": true
+  },
+  "valid_episode_completion": {
+    "returncode": 0,
+    "wall_including_init_cleanup_s": 2047.579202550929,
+    "actor_exited": true
+  },
+  "precontact_infrastructure_completion": {
+    "returncode": 0,
+    "wall_including_init_cleanup_s": 693.6146116510499,
+    "actor_exited": true
+  },
+  "profile": {
+    "wall_s": 2045.2256214120425,
+    "simulation_s": 358.0833333333333,
+    "simulation_per_wall_s": 0.17508255792635205,
+    "cost_wall_s": {
+      "initialization": 22.27324107615277,
+      "trajectory_planning": 15.024514080723748,
+      "actuation": 134.022962433286,
+      "physics_and_contact_callback": 394.2433801279403,
+      "state_and_FT": 144.41286150319502,
+      "collision_and_safety": 53.73936602845788,
+      "buffered_evidence": 72.96992092416622,
+      "RGBD_SAM3_and_incremental_geometry": 105.6898112508934,
+      "IK_and_view_planning": 0.6174877509474754,
+      "grasp_ranking_and_IK": 477.3219401242677,
+      "Pink_IK": 7.529492454836145,
+      "command_collision_queries": 7.6070481583010405,
+      "render_and_video": 1.029299528338015,
+      "export": 0.037227815948426723
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 22.27324107615277,
+      "trajectory_planning": 15.024514080723748,
+      "actuation": 134.022962433286,
+      "physics_and_contact_callback": 394.2433801279403,
+      "state_and_FT": 144.41286150319502,
+      "collision_and_safety": 53.73936602845788,
+      "buffered_evidence": 72.96992092416622,
+      "RGBD_SAM3_and_incremental_geometry": 105.6898112508934,
+      "IK_and_view_planning": 0.6174877509474754,
+      "grasp_ranking_and_IK": 477.3219401242677,
+      "Pink_IK": 7.529492454836145,
+      "command_collision_queries": 7.6070481583010405,
+      "render_and_video": 1.029299528338015,
+      "export": 0.037227815948426723
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 25,
+      "actuation": 85940,
+      "physics_and_contact_callback": 85940,
+      "state_and_FT": 85940,
+      "collision_and_safety": 85940,
+      "buffered_evidence": 85940,
+      "RGBD_SAM3_and_incremental_geometry": 4,
+      "IK_and_view_planning": 3,
+      "grasp_ranking_and_IK": 2,
+      "Pink_IK": 14709,
+      "command_collision_queries": 1838,
+      "render_and_video": 30,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 22.75776373106055,
+      "PREGRASP": 833.7225697473623,
+      "agent_return_to_execution_start": 0.8628782778978348,
+      "APPROACH": 16.905584989581257,
+      "SLOW_CLOSE": 307.7327862875536,
+      "CENTER": 31.286362189101055,
+      "LOW_PRELOAD": 4.305889022303745,
+      "FORCE_HOLD": 5.73520658002235,
+      "OPEN_CONTINUE": 116.41647017956711,
+      "RELEASE": 29.861336351837963,
+      "CLEARANCE_RETREAT": 18.03914295719005,
+      "SAFE_PARK_MOTION": 48.45246807183139,
+      "agent_wrist_motion": 0.4400948721449822
+    },
+    "unaccounted_wall_s": 608.7070681545883,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "storage_valid": {
+    "bytes_by_category": {
+      "source_and_metadata": 13710720,
+      "clips": 84724,
+      "numeric": 10284223,
+      "geometry": 7933140,
+      "observations": 18044355
+    },
+    "total_bytes": 50057162,
+    "budget_bytes": 1000000000
+  },
+  "storage_precontact": {
+    "bytes_by_category": {
+      "source_and_metadata": 11460654,
+      "numeric": 138916,
+      "geometry": 5747499,
+      "observations": 8198057
+    },
+    "total_bytes": 25545126,
+    "budget_bytes": 1000000000
+  },
+  "storage_root_before_summary": {
+    "bytes_by_category": {
+      "source_and_metadata": 76416931,
+      "clips": 84724
+    },
+    "total_bytes": 76501655,
+    "budget_bytes": 1000000000
+  },
+  "truth_access": {
+    "actor_exited": true,
+    "accessed_UTC": "2026-10-18T12:22:43.209988+00:00",
+    "configuration_commitment_match": true,
+    "online_model_preserved": true
+  },
+  "integrity": {
+    "online_model_unchanged": true,
+    "online_model_sha256": "046acad838f6e2b22df0ba19ef9cf170fe16a547a5bc85693a4adcce0d618ab3",
+    "all_original_chunk_hashes_match": true,
+    "telemetry_index_sha256": "38f2a5608be3e53a2710379dd14853ab4d045ff47ca165cc7dc767527fef91ed",
+    "same_train_validation_counts": true
+  },
+  "frozen_sources": {
+    "reference": "0305095",
+    "sources": {
+      "scripts/run_informative_probing_v31.py": "3492327eed4d7ea83a9b8c89c818d55665f6cab8f4375887b219a5cfd6f2cb5e",
+      "scripts/update_probing_v31_model.py": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+      "scripts/xarm_ft_v31_estimator.py": "b58507fc80954116d36c066146a45e6acafe77cf95937fb661e565eb146523dc",
+      "interaction_runtime/estimator_v31.py": "8d4e26c7850c72ddbdca72b3754d7335171e5f8aa1016923cc37b9caa519f825",
+      "interaction_runtime/runtime.py": "eb6c92efcc331b3d00ec0a6ac0c56a14ceecffd7c7063e1e41885b56a389132b",
+      "interaction_runtime/probing_v2.py": "4039c2ed5025cb1015d25540692c1f4e1a01a9612cf2d415ebbf9a6eb28a362a",
+      "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+      "interaction_runtime/operations.py": "c3b74b1e81d2facbff810734e9d563cd10e559805e100ae1271a78219767f86c",
+      "configs/interaction_runtime_v1.json": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+      "scripts/launch_independent_probing_v4.py": "b564dcdcfbd18f9c550c42ce7ec84be596f2bb2bb833d3815204ec2adac9aa07"
+    }
+  },
+  "private_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/independent_probing_v4_20261018",
+  "raw_published": false,
+  "decision_summary": [
+    {
+      "operation": "evaluate_view",
+      "reason": "Fresh RGB/depth shows only lower bar: gripper occludes upper extent. Raise wrist and view across the observed bar/panel to expose upper handle; partial accepted mask is not full reconstruction.",
+      "wall_s": 0.12947149202227592
+    },
+    {
+      "operation": "move_and_observe",
+      "reason": "Execute validated collision-checked wrist route to expose occluded upper bar; normal actuators only.",
+      "wall_s": 42.42748510185629
+    },
+    {
+      "operation": "evaluate_view",
+      "reason": "Fresh frontal RGB and depth now expose full bar, about299mm; panel-side gap/back surfaces remain uncertain. Request opposite oblique view of measured centroid to add bar side/support patches, not imagined rear geometry.",
+      "wall_s": 0.23721515713259578
+    },
+    {
+      "operation": "move_and_observe",
+      "reason": "Execute validated oblique wrist view to measure side/support surfaces before automatic planning.",
+      "wall_s": 41.373804232804105
+    },
+    {
+      "operation": "build_geometry",
+      "reason": "Inspected fresh oblique RGB/depth and accumulated semantic cloud. Full bar/supports retained across about300mm, with side depth observed; unknown rear remains uncertain. Enough measured support for frozen candidate ranking; stop observation now.",
+      "wall_s": 250.0198740470223
+    },
+    {
+      "operation": "validate_execution",
+      "reason": "Check fresh automatic plan observation-to-home-to-pregrasp route, measured start and execution-timed collision continuity before any contact authorization.",
+      "wall_s": 2.191116959787905
+    },
+    {
+      "operation": "attempt_grasp_and_probe",
+      "reason": "Explicit approval after actual measured-surface/G1 board inspection: bar is enclosed near mid-length, predicted first contacts bilateral around13.995mm. Current return, timed pregrasp and approach paths valid. Choose a finite contact block: acceleration-rich overlapping opening/closing FIT, steady velocity FIT reopen, then independent sine-speed closing VALIDATION. Continue only under original transmission/safety checks; guarded unload/park before Agent reasoning. No hidden dynamics consulted.",
+      "wall_s": 356.0824526359793
+    },
+    {
+      "operation": "inspect_contact_result",
+      "reason": "First acquired grasp transmitted almost no opening and triggered existing stall; safe park confirmed. Inspect measured contact/motion feedback before deciding one allowed recovery.",
+      "wall_s": 0.08313780906610191
+    },
+    {
+      "operation": "reobserve_and_replan",
+      "reason": "Inspected real load/aperture/drift plot: acquired bilateral hold was stable, but opening produced1.465mm relative drift and only0.035deg net progress. No force-limit increase justified. Safe unloaded native_rest park is verified. Use the single allowed recovery: fresh wrist observations and existing alternative candidate families, retaining failed family in episode memory. Do not repeat the unchanged grasp or reset door.",
+      "wall_s": 48.507850411115214
+    },
+    {
+      "operation": "evaluate_view",
+      "reason": "Fresh recovery RGB again shows only lower bar behind gripper. Choose raised left oblique view to recover full bar plus side geometry in one motion; current door remains in measured nonzero state. Candidate alternatives will come from frozen planner, not a manual grasp correction.",
+      "wall_s": 0.25536743900738657
+    },
+    {
+      "operation": "move_and_observe",
+      "reason": "Execute validated new recovery observation route and inspect fresh handle geometry before choosing alternative candidate.",
+      "wall_s": 53.48006841004826
+    },
+    {
+      "operation": "build_geometry",
+      "reason": "Fresh recovery view fully exposes bar and supports, score0.875, with measured side patches. Inspected incremental semantic support; rear remains uncertain. Enough evidence for original candidate ranking; no further sensing needed. Use existing per-episode failed-family exclusion to obtain alternative to stalled first grasp, without score changes.",
+      "wall_s": 227.3025040780194
+    },
+    {
+      "operation": "validate_execution",
+      "reason": "Validate current measured nonzero-door recovery route and fresh alternate automatic grasp; no historical saved pose.",
+      "wall_s": 2.0773786711506546
+    },
+    {
+      "operation": "attempt_grasp_and_probe",
+      "reason": "Explicit single recovery approval after inspecting fresh alternate G1/observed-surface board and validated return/approach. Frozen planner selected a different longitudinal candidate, failed first family excluded. Choose compact informative block: plateau-speed acceleration-rich FIT to13deg, steady-speed closing FIT to4deg, then independent sine-speed opening VALIDATION to11deg within training coverage. Existing safety and transmission checks remain authoritative. This is the last acquisition; guarded unload/park on completion or failure, no additional retries.",
+      "wall_s": 452.40652003791183
+    },
+    {
+      "operation": "inspect_contact_result",
+      "reason": "Both acquisition attempts consumed. Recovery moved door but did not reach target within original45s; no closing/validation followed. Inspect recorded progress, loads and worker status before ending safely; no additional contact actions.",
+      "wall_s": 0.0702793300151825
+    },
+    {
+      "operation": "finish",
+      "reason": "Inspected measured recovery progress/load/drift plot: actual and reference increased only to5.81/6.1deg over45s, then original bound stopped the segment. Grasp was acquired and held, but no completed FIT or independent VALIDATION exists. Both acquisitions consumed; safe unloaded native_rest park verified. End episode and export; no extra physical retry, no estimator tuning or truth-based decision.",
+      "wall_s": 0.10176481795497239
+    }
+  ]
+}
