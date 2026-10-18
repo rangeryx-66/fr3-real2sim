@@ -1,0 +1,25 @@
+{
+  "reference": "aec1458",
+  "estimator_reference": "0305095",
+  "asset": "45936",
+  "episodes": 1,
+  "maximum_handle_acquisitions": 2,
+  "frozen_skill": "xArm7_native_G1_agent_wrist_incremental_RGBD_FAST_DEV",
+  "sensor": "ideal_virtual_wrist_load_cell_240Hz",
+  "hidden_dynamics": "independent_secrets_seed_draw_existing_xarm_ft_id_scene_PRIORS; scene_generator_and_post_exit_evaluator_only",
+  "truth_reveal": "after_actor_exit_and_all_Agent_decisions_finish",
+  "deadline_s": 2700,
+  "reserve_final_exit_s": 600,
+  "storage_target_bytes": 100000000,
+  "FIT_quality": "predeclared_intervals_only; safe_timeout_opt_in; no_failed_action_relabel",
+  "VALIDATION_quality": "complete_independent_trajectory_only; no_interrupted_or_truncated_requested_target",
+  "default_action_menu": [
+    {"role":"FIT_V41_ACCEL_OPEN","target_deg":12,"profile":"constant","velocity_program":"plateaus","reference_speed_m_s":0.012,"reference_acceleration_m_s2":0.04,"low_speed_fraction":0.125,"ramp_s":0.45,"plateau_s":0.55,"max_sim_s":45,"fit_intervals_s":[[0.6,44]],"hold":true},
+    {"role":"FIT_V41_SPEED_CLOSE","target_deg":4,"profile":"constant","velocity_program":"plateaus","reference_speed_m_s":0.009,"reference_acceleration_m_s2":0.04,"low_speed_fraction":0.4,"ramp_s":0.65,"plateau_s":1.0,"max_sim_s":45,"fit_intervals_s":[[0.6,44]],"hold":true},
+    {"role":"FIT_V41_STEADY_REOPEN","target_deg":15,"profile":"constant","velocity_program":"constant","reference_speed_m_s":0.007,"reference_acceleration_m_s2":0.04,"max_sim_s":45,"fit_intervals_s":[[0.6,44]],"hold":true},
+    {"role":"VALIDATION_V41_CLOSE_SINE","target_deg":5,"profile":"constant","velocity_program":"sine","reference_speed_m_s":0.010,"reference_acceleration_m_s2":0.04,"low_speed_fraction":0.3,"period_s":2.7,"max_sim_s":45,"hold":true}
+  ],
+  "Agent_policy": "inspect_fresh_RGB_mask_depth_pointcloud_and_contact_feedback; choose_bounded_views_and_viable_profiles; finite_sequences_preapproved_at_unloaded_boundary; stop_or_one_safe_feedback_regrasp_if_needed; no_truth_or_saved_success_pose",
+  "online_dependencies": ["known_hinge_and_dynamic_state","registered_base_station","simulation_wrist_mount","approximate_actuators","native_scene_collision_checker"],
+  "success_claim": "requires_substantial_bidirectional_motion_complete_validation_and_identifiable_I_b_C; not_short_fit_only"
+}
