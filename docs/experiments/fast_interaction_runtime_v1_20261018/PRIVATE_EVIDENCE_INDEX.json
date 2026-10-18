@@ -1,0 +1,692 @@
+{
+  "raw_private": true,
+  "private_server_root": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018",
+  "cases": {
+    "comparison_02/fast_short": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/comparison_02/fast_short",
+      "process": {
+        "pid": 3932091,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/comparison_02/fast_short/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "4"
+        ]
+      },
+      "result": {
+        "status": "FREE_SPACE_COMPLETE"
+      },
+      "telemetry": {
+        "records": 1936,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 3301957,
+        "index_sha256": "a16957bdd0b0cde0255f4eab6be1ba43e97fc48efe66b51fc7fd8df04730efa7",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "3df091e09db3c9cf41978caf8ca578afeac9e5e561a0b6f6b578e9d4b30c3321"
+    },
+    "comparison_02/legacy_short": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/comparison_02/legacy_short",
+      "process": {
+        "pid": 3929073,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_legacy_runtime_short_control.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/comparison_02/legacy_short/job.json"
+        ]
+      },
+      "result": {
+        "status": "LEGACY_UNLOADED_CONTROL_COMPLETE",
+        "success": true,
+        "simulation_s": 8.8,
+        "wall_s": 81.85214889096096
+      },
+      "videos": [
+        {
+          "file": "contact_baseline.mp4",
+          "bytes": 447950,
+          "sha256": "0b7bdaf6f5e501d67e241f64bb2e24ac9ad5896d1f70e1dec33a2c5cae3d911f"
+        }
+      ]
+    },
+    "contact_01": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_01",
+      "process": {
+        "pid": 3942227,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_01/job.json",
+          "--test",
+          "fixture",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 604.7883442901075,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "SHORT_CONTACT_REGRESSION_COMPLETE"
+      },
+      "telemetry": {
+        "records": 35761,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 18,
+        "bytes": 60635871,
+        "index_sha256": "08d8f258591464cac8d912d8dcfe076bd6366d54be8cdc8a327f7ba3f60d84d4",
+        "chunk_hashes_verified": true
+      },
+      "videos": [
+        {
+          "file": "events.mp4",
+          "bytes": 237100,
+          "sha256": "5277102202c78c9c1bca1ddba9d4fac77d780001221cad14ba7ce751ed9f29d1"
+        }
+      ],
+      "provenance_sha256": "ba7080319aef746ad593646f1d86f3b1f63e48e39e7a8d3e1a30d3d936ece348"
+    },
+    "contact_02": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_02",
+      "process": {
+        "pid": 3960007,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_02/job.json",
+          "--test",
+          "fixture",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 626.8050503369886,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "SHORT_CONTACT_REGRESSION_STOP"
+      },
+      "telemetry": {
+        "records": 36469,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 18,
+        "bytes": 63003378,
+        "index_sha256": "57e69aaedcaa2ed0f19824ec3457144d06885d118fac8c55b8a77785d945369b",
+        "chunk_hashes_verified": true
+      },
+      "videos": [
+        {
+          "file": "events.mp4",
+          "bytes": 290607,
+          "sha256": "c5b7aef3c31713a15c289b08b0b076455415f328e8bbc326008eee7bf791f51a"
+        }
+      ],
+      "provenance_sha256": "4d6c14e0629d7033ec4a86e7ae55a0605e4a46747d65a5ddac9bd06b549de883"
+    },
+    "contact_03": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_03",
+      "process": {
+        "pid": 4004985,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_03/job.json",
+          "--test",
+          "fixture",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 156.48715541511774,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "BOUNDED_FIXTURE_STOP"
+      },
+      "telemetry": {
+        "records": 0,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 0,
+        "bytes": 0,
+        "index_sha256": "5c10fc3cbca49022f3668563dde933a508ecf0c2a85978613bbb3c60008d720a",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "6bab8b76a929d8a59f82ec0ffe16f238c58d65a05b46e6e8fbf86becc27bab40"
+    },
+    "contact_04": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_04",
+      "process": {
+        "pid": 4011358,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_04/job.json",
+          "--test",
+          "fixture",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 575.213307403028,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "SHORT_CONTACT_REGRESSION_COMPLETE"
+      },
+      "telemetry": {
+        "records": 43035,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 22,
+        "bytes": 75994875,
+        "index_sha256": "adff78d2cbe51a91c1a36ee32892caaf8f0ae690bf7e87589805adebbb5ba6f8",
+        "chunk_hashes_verified": true
+      },
+      "videos": [
+        {
+          "file": "events.mp4",
+          "bytes": 357751,
+          "sha256": "d0e5037614dbfc2a5388cfd281a563ef137d003de987a04646d9a6f88affa8ce"
+        }
+      ],
+      "provenance_sha256": "6bab8b76a929d8a59f82ec0ffe16f238c58d65a05b46e6e8fbf86becc27bab40"
+    },
+    "contact_05": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_05",
+      "process": {
+        "pid": 4035556,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/contact_05/job.json",
+          "--test",
+          "fixture",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 535.6134522198699,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "SHORT_CONTACT_REGRESSION_COMPLETE"
+      },
+      "telemetry": {
+        "records": 43043,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 22,
+        "bytes": 76024574,
+        "index_sha256": "0a31578a1c934e1354f5c4bc64c027caa07b2dbc8e54b1b64dc35463465a79f1",
+        "chunk_hashes_verified": true
+      },
+      "videos": [
+        {
+          "file": "events.mp4",
+          "bytes": 351756,
+          "sha256": "54dad0045c65d3811db160fabc258fef6531aeda5242b6b218dbef9b93d641ca"
+        }
+      ],
+      "provenance_sha256": "381a99460c4f1275b639d076931fafb4f59acf356605305a44e19f2460ad5602"
+    },
+    "fast_final_free": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/fast_final_free",
+      "process": {
+        "pid": 3938461,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/fast_final_free/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 39.39912115200423,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "FREE_SPACE_COMPLETE"
+      },
+      "telemetry": {
+        "records": 1408,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 2404089,
+        "index_sha256": "b482b33a277575889f02f20f63f90bfc58d1858525f361a082da414d12b2b1f9",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "c708b8f6d8aee4a1211fa124f8506b4baddd82fbaf971cf16d3bd63b68a72e41"
+    },
+    "fast_optimized": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/fast_optimized",
+      "process": {
+        "pid": 3934636,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/fast_optimized/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "pid": 3934636,
+        "owned_command": "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python -u scripts/run_fast_interaction_v1.py --job /data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/fast_optimized/job.json --test free --cycles 4 ",
+        "actor_exited": false,
+        "wall_including_initialization_and_cleanup_s": 44.39389289403334
+      },
+      "result": {
+        "status": "FREE_SPACE_COMPLETE"
+      },
+      "telemetry": {
+        "records": 1936,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 3308401,
+        "index_sha256": "49cd9fbcb9b20f4ef4ff33cea64c358603b6fe31a05c1a030bcf4b2d3aeb45da",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "2a60f928c4792730e69fb85d4eed99c1aaa28ca066d87dec47d61e837925cdc7"
+    },
+    "fast_short": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/fast_short",
+      "process": {
+        "pid": 3926282,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/fast_short/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "4"
+        ]
+      },
+      "result": {
+        "status": "FREE_SPACE_COMPLETE"
+      },
+      "telemetry": {
+        "records": 1936,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 3225789,
+        "index_sha256": "ae72749b83bb5dcec7203a555865888437af4e65cbd8b1d5785fee35d8d0f951",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "b5cd06288318ac6cf4f10ca8e9746c400d489a8c2425d7635fab2d8a7d854389"
+    },
+    "final_paired/fast_short": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/final_paired/fast_short",
+      "process": {
+        "pid": 4056757,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/final_paired/fast_short/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "4"
+        ]
+      },
+      "result": {
+        "status": "FREE_SPACE_COMPLETE"
+      },
+      "telemetry": {
+        "records": 1408,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 2550585,
+        "index_sha256": "032ced34967739853d0c5f5d13efc9c261894890e4843d6268780cdb9a119895",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "6910e49b7ec397484c07e7da6062a54758c10b09e1dfc3e967852538ac72c294"
+    },
+    "final_paired/legacy_short": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/final_paired/legacy_short",
+      "process": {
+        "pid": 4053917,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_legacy_runtime_short_control.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/final_paired/legacy_short/job.json"
+        ]
+      },
+      "result": {
+        "status": "LEGACY_UNLOADED_CONTROL_COMPLETE",
+        "success": true,
+        "simulation_s": 8.8,
+        "wall_s": 74.04434969695285
+      },
+      "videos": [
+        {
+          "file": "contact_baseline.mp4",
+          "bytes": 445961,
+          "sha256": "71586dd0350a3a3d700647c2c72abe9e76202785b4b37bfe23bc9d3eec31c556"
+        }
+      ]
+    },
+    "final_render_guards": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/final_render_guards",
+      "process": {
+        "pid": 4058650,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/final_render_guards/job.json",
+          "--test",
+          "guards",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 22.51602495694533,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "NATIVE_GUARD_REGRESSION_COMPLETE"
+      },
+      "telemetry": {
+        "records": 198,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 223705,
+        "index_sha256": "ebcdac322b9a57125a725d89a3855f7cd8c11411dbad80d83c52b1b1a74a11f9",
+        "chunk_hashes_verified": true
+      },
+      "videos": [
+        {
+          "file": "events.mp4",
+          "bytes": 68230,
+          "sha256": "a6a7bc5dd49732c4bcdc683ab7c814e93442f148f6630ab332366f385ed0ba90"
+        }
+      ],
+      "provenance_sha256": "6910e49b7ec397484c07e7da6062a54758c10b09e1dfc3e967852538ac72c294"
+    },
+    "free_01": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/free_01",
+      "process": {
+        "pid": 3919129,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/free_01/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "2"
+        ]
+      },
+      "result": {
+        "status": "FAILED",
+        "error": "KeyError('moving_path')"
+      },
+      "videos": [],
+      "provenance_sha256": "bf36b23f35806d903ffffc0ee0774ec606144ef1c4e1e9b4bfaf6409fad6bd2f"
+    },
+    "free_02": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/free_02",
+      "process": {
+        "pid": 3921609,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/free_02/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "2"
+        ]
+      },
+      "telemetry": {
+        "records": 1040,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 1669991,
+        "index_sha256": "9b9b7df2f4bde11aa6de70fc8c753ac10f329c1bfe053daf382e3d25887cbb84",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "8257251e0db318646010ff7de76df0d0e70df1931fb066f83332e7a738df6194"
+    },
+    "legacy_short": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/legacy_short",
+      "process": {
+        "pid": 3925118,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_legacy_runtime_short_control.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/legacy_short/job.json"
+        ]
+      },
+      "result": {
+        "status": "RuntimeError('CUTOFF_05_00')",
+        "success": false,
+        "simulation_s": 0.0,
+        "wall_s": 31.419897781917825
+      },
+      "videos": [
+        {
+          "file": "contact_baseline.mp4",
+          "bytes": 261,
+          "sha256": "834c16a453ef1936676450f35268a0c3e057d02e281c4ae1498992f4e4525d47"
+        }
+      ]
+    },
+    "native_guards_01": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/native_guards_01",
+      "process": {
+        "pid": 3997662,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/native_guards_01/job.json",
+          "--test",
+          "guards",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 42.60681302589364,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "NATIVE_GUARD_REGRESSION_COMPLETE"
+      },
+      "telemetry": {
+        "records": 198,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 223705,
+        "index_sha256": "1c3bd8dd66b12ba0b2732509c053d0e73ffd1404a71248310686fc9eeb353d04",
+        "chunk_hashes_verified": true
+      },
+      "videos": [
+        {
+          "file": "events.mp4",
+          "bytes": 83203,
+          "sha256": "361bd7b8f41b6d92afddc9a980073074fd3ad009fcb0d5425ab414b85fa001c3"
+        }
+      ],
+      "provenance_sha256": "80bdbced2ee530aec9d3ce2d1c80e0c44f8338b22efde5595aa9754bcc606d45"
+    },
+    "release_free": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/release_free",
+      "process": {
+        "pid": 4030311,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/release_free/job.json",
+          "--test",
+          "free",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 45.35898173507303,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "FREE_SPACE_COMPLETE"
+      },
+      "telemetry": {
+        "records": 1408,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 2550585,
+        "index_sha256": "cdf44d0d0df830ff5d647ef6044abad6a3b0e6c6dfecf0a0b4f74a931d4e1f3a",
+        "chunk_hashes_verified": true
+      },
+      "videos": [],
+      "provenance_sha256": "6bab8b76a929d8a59f82ec0ffe16f238c58d65a05b46e6e8fbf86becc27bab40"
+    },
+    "release_guards": {
+      "private_directory": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/release_guards",
+      "process": {
+        "pid": 4032941,
+        "command": [
+          "/data1/home/rangeryx/isaaclab-arena/.venv/bin/python",
+          "-u",
+          "scripts/run_fast_interaction_v1.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/release_guards/job.json",
+          "--test",
+          "guards",
+          "--cycles",
+          "4"
+        ]
+      },
+      "completion": {
+        "returncode": 0,
+        "wall_including_initialization_and_cleanup_s": 26.33402268309146,
+        "actor_exited": true,
+        "only_owned_process_managed": true
+      },
+      "result": {
+        "status": "NATIVE_GUARD_REGRESSION_COMPLETE"
+      },
+      "telemetry": {
+        "records": 198,
+        "native_rate_hz": 240,
+        "issues": [],
+        "chunks": 1,
+        "bytes": 223705,
+        "index_sha256": "a4e99a0dc47205c3a7fa0c6e240941dc714af1170bb134ca01fced3b062a161e",
+        "chunk_hashes_verified": true
+      },
+      "videos": [
+        {
+          "file": "events.mp4",
+          "bytes": 81974,
+          "sha256": "ad820bc809b6b4cd2614099a1dc1fbbf2a8148ef3f7aa8443f60d023aa28acc7"
+        }
+      ],
+      "provenance_sha256": "6bab8b76a929d8a59f82ec0ffe16f238c58d65a05b46e6e8fbf86becc27bab40"
+    }
+  },
+  "remaining_recorded_processes": [],
+  "decodable_event_clips": {
+    "contact_05": {
+      "width": 640,
+      "height": 480,
+      "frames": 275,
+      "duration_s": 18.333333
+    },
+    "final_render_guards": {
+      "width": 640,
+      "height": 480,
+      "frames": 6,
+      "duration_s": 0.4
+    }
+  }
+}

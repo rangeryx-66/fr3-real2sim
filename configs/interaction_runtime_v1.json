@@ -1,0 +1,115 @@
+{
+  "schema": "isaac-interaction-runtime-v1",
+  "status": "ENGINEERING_CANDIDATE_NOT_PHYSICALLY_VALIDATED",
+  "baseline": "eb80bf3",
+  "physics_hz": 240,
+  "sensor_hz": 240,
+  "joint_margin_rad": 0.05,
+  "arm_velocity_fraction": 0.3333333333333333,
+  "arm_command_acceleration_rad_s2": {
+    "FREE": 1.6,
+    "APPROACH": 0.8,
+    "ESTABLISH": 0.8,
+    "LOADED": 0.8,
+    "RELEASE": 0.8,
+    "SEPARATE": 0.8,
+    "PARK": 1.6
+  },
+  "jaw_closure_m_s": 0.001,
+  "jaw_release_m_s": 0.012,
+  "jaw_free_m_s": 0.02,
+  "force": {
+    "pad_warning_n": 2.0,
+    "pad_sustained_n": 4.0,
+    "pad_emergency_n": 10.0,
+    "wrist_warning_n": 4.0,
+    "wrist_sustained_n": 8.0,
+    "wrist_emergency_n": 10.0,
+    "torque_warning_nm": 0.3,
+    "torque_sustained_nm": 0.6,
+    "torque_emergency_nm": 1.0,
+    "window_s": 0.05,
+    "sustained_s": 0.15,
+    "unloaded_pad_n": 0.05
+  },
+  "phases": {
+    "FREE": {
+      "speed_m_s": 0.08,
+      "acceleration_m_s2": 0.25,
+      "angular_speed_rad_s": 0.4,
+      "angular_acceleration_rad_s2": 1.0,
+      "measured_speed_stop_m_s": 0.15
+    },
+    "APPROACH": {
+      "speed_m_s": 0.02,
+      "acceleration_m_s2": 0.08,
+      "angular_speed_rad_s": 0.15,
+      "angular_acceleration_rad_s2": 0.4,
+      "measured_speed_stop_m_s": 0.05
+    },
+    "ESTABLISH": {
+      "speed_m_s": 0.008,
+      "acceleration_m_s2": 0.03,
+      "angular_speed_rad_s": 0.08,
+      "angular_acceleration_rad_s2": 0.2,
+      "measured_speed_stop_m_s": 0.03
+    },
+    "LOADED": {
+      "speed_m_s": 0.012,
+      "acceleration_m_s2": 0.04,
+      "angular_speed_rad_s": 0.08,
+      "angular_acceleration_rad_s2": 0.2,
+      "measured_speed_stop_m_s": 0.03
+    },
+    "RELEASE": {
+      "speed_m_s": 0.008,
+      "acceleration_m_s2": 0.03,
+      "angular_speed_rad_s": 0.08,
+      "angular_acceleration_rad_s2": 0.2,
+      "measured_speed_stop_m_s": 0.03
+    },
+    "SEPARATE": {
+      "speed_m_s": 0.02,
+      "acceleration_m_s2": 0.08,
+      "angular_speed_rad_s": 0.15,
+      "angular_acceleration_rad_s2": 0.4,
+      "measured_speed_stop_m_s": 0.05
+    },
+    "PARK": {
+      "speed_m_s": 0.08,
+      "acceleration_m_s2": 0.25,
+      "angular_speed_rad_s": 0.4,
+      "angular_acceleration_rad_s2": 1.0,
+      "measured_speed_stop_m_s": 0.15
+    }
+  },
+  "modes": {
+    "FAST_DEV": {
+      "continuous_video": false,
+      "video_wh": [
+        640,
+        480
+      ],
+      "video_hz": 15,
+      "event_clip_s": 1.0,
+      "chunk_records": 2048
+    },
+    "EVALUATION": {
+      "continuous_video": true,
+      "video_wh": [
+        1280,
+        960
+      ],
+      "video_hz": 30,
+      "event_clip_s": 1.0,
+      "chunk_records": 2048
+    }
+  },
+  "provenance": {
+    "scope": "APPROXIMATE_ACTUATOR_SIMULATION_ONLY; not hardware deployment limits",
+    "arm": "unchanged official xArm URDF speed/effort limits, existing one-third arm speed bound and finite implicit drives",
+    "gripper": "unchanged native G1 closure/preload/gains, 30 N nominal finite position-drive authority; no extra squeeze",
+    "force": "2 N retained as information only; 10 N emergency retained; sustained bands are provisional short-test engineering settings, not manufacturer safety ratings",
+    "motion": "explicit independent translation/rotation and acceleration bounds; provisional until native physics regressions complete"
+  }
+}
