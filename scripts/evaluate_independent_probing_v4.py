@@ -27,7 +27,7 @@ def evaluate(root):
     known=np.array([effective_inertia(truth,job['asset_root'],prior),truth['configuration']['b'],truth['configuration']['tau_c']])
     try:actual=summarize(p)
     except Exception as error:actual=dict(metrics_unavailable=repr(error),maximum_actual_deg=float(np.rad2deg(a['door_q'].max())),final_deg=float(np.rad2deg(a['door_q'][-1])))
-    excitation=[]
+    excitation=[];pieces=[];train=[];test=[]
     if (p/'identification_input.json').exists():
         pieces,train,test,provenance=load_segments(p)
         for d in pieces:
@@ -39,6 +39,23 @@ def evaluate(root):
             absolute_error=(beta-known).tolist() if np.isfinite(beta).all() else None,relative_error_percent=(100*(beta/known-1)).tolist() if np.isfinite(beta).all() else None,
             training_bins=model.get('training_bins'),validation_bins=model.get('validation_bins'),heldout_torque_rmse_nm=m.get('heldout_torque_rmse_nm'),heldout_motion=m.get('heldout_motion'),
             full_segment_boundary_sensitivity=m.get('full_segment_boundary_sensitivity'),information=m.get('information',model.get('information')),supported=m.get('supported'))
+    # Additional common-input evaluation: retain each frozen estimator output,
+    # but evaluate both parameter vectors with identical V3.1 held-out signals.
+    # Native per-estimator RMSEs above use different processing operators.
+    from update_probing_v31_model import XY,motion_prediction
+    if train and test:
+        X,y=XY(test);limits=np.rad2deg([min(s['q'] for s in train),max(s['q'] for s in train)]).tolist()
+        for name,model in [('V31_online',online),('V3_offline_same_data',legacy)]:
+            m=model.get('constant_model',{})
+            if not m.get('parameters'):continue
+            shared=dict(m,training_angle_range_deg=limits)
+            comparison[name]['common_V31_heldout_torque_rmse_nm']=float(np.sqrt(np.mean((y-X@shared['parameters'])**2)))
+            motions={}
+            for d in pieces:
+                if not str(d['segments'][0]).startswith('VALIDATION'):continue
+                clone=dict(d,qd=d['native_qd'].copy());edge=d['processing']['boundary_exclusion_samples']
+                motions[d['block_id']]=motion_prediction(clone,np.arange(edge,len(d['t'])-edge),shared)
+            comparison[name]['common_V31_heldout_motion']=motions
     checks=[h(p/'telemetry'/c['file'])==c['sha256'] for c in index['chunks']]
     result=dict(reference='0305095',registration='8590cd0',single_valid_episode=True,truth_access_after_actor_exit_UTC=accessed,
         label='AGENT_WRIST_RGBD / KNOWN_HINGE_STATE / IDEAL_LOAD_CELL / APPROXIMATE_ACTUATOR_SIMULATION',authored_configuration=truth['configuration'],authored_parameters=known.tolist(),
