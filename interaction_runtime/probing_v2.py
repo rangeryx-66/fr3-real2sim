@@ -4,6 +4,8 @@ from pathlib import Path
 import numpy as np
 from agent_command_protocol_v12 import atomic_json,receive,complete
 from .runtime import Runtime
+from .policy import SafetyStop
+from .segments import ExecutionBudgetExhausted
 from .operations import Operations
 from .compact_v2 import CompactRecorder,storage,prune_optional
 from .serialization import result_packet
@@ -58,11 +60,17 @@ class ProbingOperations(Operations):
     def attempt(self,command):
         self.actions=list(command['segments']);self.r.world.play()
         return super().attempt(command)
-    def interact(self,target_deg,max_sim_s=45):
-        a=self.actions.pop(0) if self.actions else dict(target_deg=target_deg,role='FIT_INTERACTION',profile='constant')
+    def interact(self,target_deg,max_sim_s=None,action=None):
+        a=self.actions.pop(0) if self.actions else (action or dict(target_deg=target_deg,role='FIT_INTERACTION',profile='constant'))
         self.inputs();self.r.record.begin(a,'HANDLE');self.r.probe_profile=a;self.r.profile_started=self.r.tick
         result={}
         try:result=super().interact(target_deg,max_sim_s,action=a);return result
+        except ExecutionBudgetExhausted as error:
+            self.r.stop_command();result=dict(ok=False,status='BUDGET_EXHAUSTED',reason=str(error),safely_stopped=True,physical_transmission_valid=False)
+            return result
+        except SafetyStop as error:
+            result=dict(ok=False,status='SAFETY_STOP',reason=error.reason,evidence=error.evidence,safely_stopped=False,physical_transmission_valid=False)
+            raise
         finally:self.r.probe_profile=None;self.r.record.end(result)
     def push(self,command=None):
         command=command or {};self.inputs();self.r.world.play();self.r.record.router=list(command.get('segments',[]));self.r.probe_profile=command.get('motion_profile',dict(profile='constant'));self.r.profile_started=self.r.tick
@@ -78,7 +86,7 @@ class ProbingOperations(Operations):
         self.worker.shutdown(wait=True)
 
 def action_check(a):
-    from .progress import validate_action
+    from .segments import validate_action
     validate_action(a)
     if not np.isfinite(a['target_deg']):raise ValueError('finite target required')
     if not a['role'].startswith(('FIT','VALIDATION')):raise ValueError('declare FIT/VALIDATION before motion')
@@ -97,11 +105,13 @@ def serve(r,operations_factory=ProbingOperations):
         for seq in range(22):
             if g['recovery_state']!='UNLOADED_OBSERVATION':return dict(status='SAFE_UNLOADED_BOUNDARY_UNAVAILABLE',trace=trace)
             # Unloaded communication deadline; independent of all motion/force limits.
-            wait_s=float(r.job.get('agent_wait_timeout_s',120))
+            resources=r.episode_budget.remaining(r.tick*r.dt)
+            if resources['wall_s']<=0 or resources['sim_s']<=0:return dict(status='BUDGET_EXHAUSTED',safe_exit=ops.release_park(),trace=trace)
+            wait_s=min(float(r.job.get('agent_wait_timeout_s',120)),resources['wall_s'])
             atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,timeout_s=wait_s))
             path=commands/('%03d.json'%seq);began=time.perf_counter()
             while not path.exists():
-                if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.perf_counter()-began>wait_s:return dict(status='BOUNDED_AGENT_STOP',trace=trace)
+                if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.perf_counter()-began>wait_s:return dict(status='BOUNDED_AGENT_STOP',safe_exit=ops.release_park() if not r.stopped and not (r.output/'STOP_AND_EXPORT').exists() else dict(safe=False,reason='OWNER_STOP'),trace=trace)
                 time.sleep(.05)
             command,ack=receive(path,seq,responses)
             if command is None:trace.append(ack);continue
@@ -124,6 +134,8 @@ def serve(r,operations_factory=ProbingOperations):
                 elif op=='safe_release_retreat':r.world.play();result=ops.release_park()
                 elif op=='finish':r.world.play();result=dict(safe_exit=ops.release_park());result['completed']=bool(result['safe_exit']['safe'])
                 else:raise ValueError('Operation not exposed')
+            except ExecutionBudgetExhausted as error:
+                result=dict(status='BUDGET_EXHAUSTED',reason=str(error),safe_exit=ops.release_park());complete(responses,seq,result_packet(dict(result=result)));trace.append(dict(command=command,result=result));return dict(status='BUDGET_EXHAUSTED',trace=trace,safe_exit=result['safe_exit'])
             except BaseException as error:
                 result=dict(error=repr(error),operation_stopped=True);complete(responses,seq,result_packet(dict(result=result)));trace.append(dict(command=command,result=result));return dict(status='OPERATION_STOP',trace=trace)
             entry=dict(command=command,result=result,wall_s=time.perf_counter()-started,unloaded_wait_s=started-began);complete(responses,seq,result_packet(entry));trace.append(entry)

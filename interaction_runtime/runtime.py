@@ -12,6 +12,8 @@ from .motion import timed_path, CartesianReference
 
 class Runtime:
     def __init__(self, job, mode='FAST_DEV', policy_path=None, record_factory=Recorder):
+        from .segments import EpisodeBudget
+        self.episode_budget=EpisodeBudget(job);self.budget_exit_only=False;self._decelerating=False
         self.job=job;self.output=Path(job['output']);self.output.mkdir(parents=True,exist_ok=True)
         self.root=Path(__file__).resolve().parents[1];self.profile=Profile();self.mode=mode;self.stopped=False
         self.policy=Policy.load(policy_path or self.root/'configs/interaction_runtime_v1.json')
@@ -65,6 +67,15 @@ class Runtime:
             no_legacy_owners=True,gripper_config=c,closure_sha256=expected,FT_primary='native fixed-interface transmitted wrench',
             optional_motor_force='unavailable; projected reactions are not drive torque',raw_private=True),indent=2))
         signal.signal(signal.SIGTERM,self.request_stop);signal.signal(signal.SIGINT,self.request_stop)
+    def ensure_execution_budget(self,phase):
+        from .segments import ExecutionBudgetExhausted
+        if self.supervisor.latched is not None:raise SafetyStop('LATCHED_'+self.supervisor.latched['reason'],self.supervisor.latched)
+        # Resource exhaustion forbids new work, never the existing checked exit.
+        if self._decelerating or phase in ('RELEASE','CLEARANCE_RETREAT','PANEL_SEPARATION','SAFE_PARK_MOTION','PARK'):return
+        remaining=self.episode_budget.remaining(self.tick*self.dt)
+        if self.budget_exit_only or remaining['wall_s']<=0 or remaining['sim_s']<=0:
+            if not self.budget_exit_only:self.event('BUDGET_EXIT_REQUESTED',remaining=remaining)
+            self.budget_exit_only=True;raise ExecutionBudgetExhausted('EXIT_RESERVE_REACHED')
     def request_stop(self,*unused):self.stopped=True
     @staticmethod
     def matrix(p,q):
@@ -117,6 +128,7 @@ class Runtime:
         # Validate commanded authority before submitting it to PhysX. Native
         # drive max-effort enforcement remains independent of this software check.
         if self.supervisor.latched is not None:raise SafetyStop('LATCHED_'+self.supervisor.latched['reason'],self.supervisor.latched)
+        self.ensure_execution_budget(self.phase)
         command=self.qtarget[self.arm]
         if self.model.margin(command)<=self.policy.data['joint_margin_rad']:raise SafetyStop('COMMAND_JOINT_MARGIN')
         if not np.isfinite(command).all() or not np.isfinite(self.qvelocity).all():raise SafetyStop('INVALID_COMMAND')
@@ -195,6 +207,7 @@ class Runtime:
         fingers=np.asarray(self.robot.get_joint_positions())[self.fingers]
         return self.collision.check(self.model.poses(q,self.base,finger_q=fingers),self.moving(),self.intentional_contact() if allow is None else allow)
     def move_path(self,path,phase='PREGRASP',minimum_duration=0.):
+        self.ensure_execution_budget(phase)
         self.world.play();self.g['at_safe_park']=False;self.g['phase']=phase;self.phase=phase;start=self.qtarget[self.arm].copy();points=[start]+list(path)
         with self.profile.measure('trajectory_planning'):
             # No physics advances during this deterministic planning call, so
@@ -209,15 +222,18 @@ class Runtime:
         self.g['qvelocity']=np.zeros(7)
     def compatible_move(self,q,duration):self.move_path([q],self.g['phase'])
     def stop_command(self):
-        velocity=np.asarray(self.g['qvelocity']).copy()
-        acceleration=self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(self.g['phase'])]
-        while np.max(abs(velocity))>1e-12:
-            next_velocity=velocity-np.clip(velocity,-acceleration*self.dt,acceleration*self.dt)
-            command=self.qtarget[self.arm]+.5*(velocity+next_velocity)*self.dt
-            ok,why=self.check_q(command)
-            if not ok:raise SafetyStop('STOP_ROUTE_COLLISION:'+why)
-            self.qtarget[self.arm]=command;self.g['qvelocity']=next_velocity;self.step();velocity=next_velocity
-        self.g['qvelocity']=np.zeros(7)
+        self._decelerating=True
+        try:
+            velocity=np.asarray(self.g['qvelocity']).copy()
+            acceleration=self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(self.g['phase'])]
+            while np.max(abs(velocity))>1e-12:
+                next_velocity=velocity-np.clip(velocity,-acceleration*self.dt,acceleration*self.dt)
+                command=self.qtarget[self.arm]+.5*(velocity+next_velocity)*self.dt
+                ok,why=self.check_q(command)
+                if not ok:raise SafetyStop('STOP_ROUTE_COLLISION:'+why)
+                self.qtarget[self.arm]=command;self.g['qvelocity']=next_velocity;self.step();velocity=next_velocity
+            self.g['qvelocity']=np.zeros(7)
+        finally:self._decelerating=False
     def hold(self,seconds):
         self.world.play();self.stop_command();self.g['qvelocity']=np.zeros(7)
         for _ in range(int(round(seconds/self.dt))):self.step()
@@ -227,6 +243,7 @@ class Runtime:
         self.reference_drive=CartesianReference(seed_pose(self.solver,self.base,self.seed));self.event('CONTINUOUS_REFERENCE_HANDOVER',unchanged_q_command=self.qtarget[self.arm].tolist())
     def motion_limits(self,phase):return self.policy.motion(phase)
     def cartesian_step(self,goal,phase):
+        self.ensure_execution_budget(phase)
         self.g['phase']=phase;self.phase=phase
         if self.reference_drive is None:self.begin_reference()
         # An exactly stationary virtual reference needs no repeated QP solve.

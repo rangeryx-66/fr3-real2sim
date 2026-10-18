@@ -10,7 +10,7 @@ from verify_estimator_v31 import synthetic_rows,PRIOR
 import update_probing_v31_model as production
 
 
-def verify():
+def verify(adaptive=False):
     with tempfile.TemporaryDirectory() as folder:
         p=Path(folder);record=RecorderV3(p/'telemetry');(p/'identification_input.json').write_text(json.dumps(dict(prior=PRIOR,bias=[0.]*6)))
         rows,vel,beta=synthetic_rows(mass=0.)
@@ -21,12 +21,12 @@ def verify():
             for i,row in enumerate(rows):
                 row=dict(row,t=(sid*len(rows)+i)/240,q=np.zeros(13),joint_velocities=np.zeros(13),command_q_arm=np.zeros(7),command_q_velocity_arm=np.zeros(7),T_tcp=np.eye(4),aperture_m=.02,command_aperture_m=.02,contacts=[dict(force_n=.5)])
                 row['telemetry']=dict(hinge_velocity_rad_s=float(vel[i]));record.append(row)
-            record.end(dict(ok=sid in (0,3),status='TARGET_REACHED' if sid in (0,3) else 'TIMEOUT',safely_stopped=True,physical_transmission_valid=True,fit_valid_until_s=9.5))
+            record.end(dict(ok=sid in (0,3),status='TARGET_REACHED' if sid in (0,3) else ('TRANSMISSION_FAILURE' if adaptive else 'TIMEOUT'),safely_stopped=True,physical_transmission_valid=not adaptive,fit_prefix_transmission_valid=adaptive,fit_valid_until_s=8.5 if adaptive else 9.5))
         record.close()
         strict=production.update(p,p/'strict',plot=False);new=production.update(p,p/'quality',plot=False,allow_interrupted_fit=True)
         assert new['training_bins']>strict['training_bins'] and new['validation_bins']==strict['validation_bins']
         assert np.max(abs(np.array(new['constant_model']['parameters'])/beta-1))<.003
-        provenance=new['segments'];assert provenance[1]['quality']['label']=='PREDECLARED_SAFE_INTERRUPTED_FIT' and not provenance[1]['quality']['action_ok']
+        provenance=new['segments'];assert provenance[1]['quality']['label']==('PREDECLARED_TRANSMITTING_FIT_PREFIX' if adaptive else 'PREDECLARED_SAFE_INTERRUPTED_FIT') and not provenance[1]['quality']['action_ok']
         assert provenance[2]['quality']['label']=='INCOMPLETE_VALIDATION_EXCLUDED'
         # Mutating every validation measurement cannot influence fitting/uncertainty.
         a,index=production.columns(p);mutated={k:v.copy() for k,v in a.items()};mask=np.isin(a['segment'],[3,4]);mutated['raw_ft'][mask]+=10.;mutated['door_q'][mask]+=.01;original=production.columns

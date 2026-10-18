@@ -1,0 +1,33 @@
+{
+  "schema": "adaptive-probing-v42-preparation-only",
+  "research_episode_executed": false,
+  "reference": "a2ea768",
+  "estimator": "V3.1-common-SG2, unchanged",
+  "episode_resources": {
+    "episode_wall_budget_s": 2400,
+    "episode_sim_budget_s": 1800,
+    "safe_exit_wall_reserve_s": 180,
+    "safe_exit_sim_reserve_s": 60
+  },
+  "segment_timing": "derive nominal time from target, perpendicular radius, velocity program and acceleration; live ETA from measured full-cycle progress; no implicit max_sim_s",
+  "ordering": [
+    "Fresh Agent-selected wrist RGB-D and automatic grasp; original one-second hold",
+    "FIT acceleration-rich opening within current supported range",
+    "FIT different-speed closing over an overlapping measured interval",
+    "Declare a complete VALIDATION trajectory using the measured reachable interval and a distinct smooth speed profile; execute before optional expansion",
+    "Only after complete VALIDATION: optional additional FIT angular exploration if useful and time remains",
+    "Guarded release and current-state collision-checked parking within reserved resources"
+  ],
+  "fit_motion_family": {
+    "acceleration_rich": {"profile": "constant", "velocity_program": "plateaus", "reference_speed_m_s": 0.012, "reference_acceleration_m_s2": 0.04, "low_speed_fraction": 0.125, "ramp_s": 0.45, "plateau_s": 0.55},
+    "velocity_rich_reverse": {"profile": "constant", "velocity_program": "constant", "reference_speed_m_s": 0.006, "reference_acceleration_m_s2": 0.03}
+  },
+  "validation_motion_family": {"profile": "constant", "velocity_program": "sine", "reference_speed_m_s": 0.008, "reference_acceleration_m_s2": 0.03, "low_speed_fraction": 0.35, "period_s": 3.1},
+  "target_declaration": "Before execution, choose endpoints inside the actually supported measured interval; check whole current-state arc, nominal duration and live episode resources. No GT dynamics. No fixed 13-degree requirement.",
+  "conditional_successors": "Explicit continue_after=[SAFE_PARTIAL_PROGRESS] only, with measured-state IK/collision checks and stable transmitting stopped contact; no continuation from TRANSMISSION_FAILURE or SAFETY_STOP",
+  "fit_interruption": "Predeclare time intervals; admit only the transmitting moving prefix with enough segment-local filter support. Preserve failed action status and excitation/identifiability limitations.",
+  "validation_interruption": "Always exclude incomplete VALIDATION; never relabel as FIT",
+  "recovery": "Use existing safe release/park and at most the registered recovery regrasp; slow Agent decisions only at an unloaded boundary",
+  "dependencies": ["known hinge and dynamic state", "registered station", "simulated wrist sensor mounting", "ideal wrist load cell", "approximate arm/gripper actuators"],
+  "recording": "FAST_DEV compact numerical 240 Hz, checkpoint RGB-D, bounded clips; raw private"
+}

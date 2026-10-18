@@ -58,7 +58,8 @@ def self_mask(depth,K,C,model,poses):
 
 def save_rgbd(g,label):
     import cv2
-    out=g['a'].output/'rgbd'/label;out.mkdir(parents=True,exist_ok=True)
+    from interaction_runtime.checkpoints import allocate
+    out=allocate(g['a'].output/'rgbd',label)
     camera=g['wrist_sensor']
     # Render at the physically reached pose. No timeline pause or pose setter.
     for _ in range(8):g['world'].render()
@@ -162,4 +163,6 @@ def refine(g):
         if not ok:raise RuntimeError(why)
         path.append(q.tolist());seed=q
     g.update(T=T,approach=path)
-    (g['a'].output/'visual_correction.json').write_text(json.dumps(dict(source='common-visible calibrated wrist RGB-D reprojection at distinct measured camera poses',common_points=len(A),D_visual=D.tolist(),T_before=old.tolist(),T_after=T.tolist(),fitness=fit.fitness,rmse_m=fit.inlier_rmse,GT_handle_pose_correction=False,metrics_diagnostic_only=True),indent=2))
+    correction=json.dumps(dict(checkpoint=str(folder),source='common-visible calibrated wrist RGB-D reprojection at distinct measured camera poses',common_points=len(A),D_visual=D.tolist(),T_before=old.tolist(),T_after=T.tolist(),fitness=fit.fitness,rmse_m=fit.inlier_rmse,GT_handle_pose_correction=False,metrics_diagnostic_only=True),indent=2)
+    (folder/'visual_correction.json').write_text(correction)
+    (g['a'].output/'visual_correction.json').write_text(correction)

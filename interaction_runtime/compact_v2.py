@@ -117,7 +117,7 @@ def compact_checkpoint_files(folder):
         # Reconstructible point-cloud/mask renderings and code copies are not raw observations.
         for f in view.iterdir():
             if f.is_dir():shutil.rmtree(f,ignore_errors=True)
-            elif f.name not in ['rgb.png','camera.json','checkpoint_arrays.npz','CHECKPOINT_STORAGE.json','INSPECTION.json','candidate_cues.json','visual_detection_attempts.json']:
+            elif f.name not in ['rgb.png','camera.json','checkpoint_arrays.npz','CHECKPOINT_STORAGE.json','INSPECTION.json','candidate_cues.json','visual_detection_attempts.json','visual_correction.json']:
                 f.unlink()
     for name in ['incremental_feedback','attempts']:
         shutil.rmtree(root/name,ignore_errors=True)

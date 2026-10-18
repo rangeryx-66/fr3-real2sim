@@ -85,14 +85,19 @@ def validate(command, sequence):
             require(type(action.get('hold')) is bool, 'boolean segment hold required')
             # Transport remains standard-library-only; numerical runtime imports
             # must not become a requirement for publishing an Agent command.
-            budget=action.get('max_sim_s',45.)
-            require(number(budget) and budget>=1/240,'positive finite segment budget required')
+            budget=action.get('max_sim_s')
+            require(budget is None or (number(budget) and budget>=1/240),'positive finite explicit ceiling required')
+            require(isinstance(action.get('continue_after',[]),list) and all(x=='SAFE_PARTIAL_PROGRESS' for x in action.get('continue_after',[])),'only safe-partial conditional successors allowed')
             require('allow_target_truncation' not in action or type(action['allow_target_truncation']) is bool,'boolean truncation declaration required')
+            require(action.get('velocity_program','constant') in ('constant','sine','plateaus'),'known velocity program required')
+            require(number(action.get('low_speed_fraction',.125)) and 0<action.get('low_speed_fraction',.125)<=1,'positive bounded low speed fraction required')
+            for key in ('period_s','ramp_s','plateau_s'):
+                if key in action:require(number(action[key]) and action[key]>0,'positive finite profile time required')
             windows=action.get('fit_intervals_s',[]);require(isinstance(windows,list),'FIT intervals must be a list')
             require(not windows or action['role'].startswith('FIT'),'incomplete VALIDATION cannot be admitted by FIT intervals')
             previous=0.
             for window in windows:
-                require(vector(window,2) and previous<=window[0]<window[1]<=budget,'ordered non-overlapping FIT intervals inside budget required')
+                require(vector(window,2) and previous<=window[0]<window[1] and (budget is None or window[1]<=budget),'ordered non-overlapping FIT intervals inside budget required')
                 previous=window[1]
             for key in ('reference_speed_m_s', 'reference_acceleration_m_s2', 'speed_scale'):
                 if key in action: require(number(action[key]) and action[key] > 0, 'positive finite ' + key + ' required')
