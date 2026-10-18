@@ -31,6 +31,13 @@ class RuntimeV3(ProbingRuntime):
         finally:self.record.calibration=False
 
 class OperationsV3(ProbingOperations):
+    def validate_execution(self):
+        first=super().validate_execution()
+        if not first.get('valid'):return first
+        from route_probing_approach_v3 import repair
+        route=repair(self.g,self.r.policy,self.r.c,self.r.solver)
+        if not route['valid']:return dict(valid=False,reason='NO_EXECUTABLE_PREGRASP_ROUTE',route=route)
+        result=super().validate_execution();result['timed_approach_route']=route;return result
     def _update(self,ready):
         began=time.perf_counter();folder=self.r.output/'model';folder.mkdir(exist_ok=True)
         if not ready.wait(30):return dict(error='numeric packet export not ready')

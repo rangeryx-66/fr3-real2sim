@@ -32,3 +32,11 @@ Forward validation initializes measured angle/native velocity once at the121-sam
 ## Budget / integrity
 
 FAST_DEV: one compressed numeric copy; checkpoint RGB-D; capped tiny event clip; private evidence below1GB. Target around30min; owner timeout35min plus90s cooperative export, no indefinite waits. No full Agent video/archive backups. Preserve prior results. Publish only code and compact derived report. Close all owned actors at finalization.
+
+## Pre-contact interruption and route-input correction
+
+The first actor completed observations/planning but its executed-timing pregrasp validator rejected a narrow `original39` collision missed by coarse geometric checking. Zero physical acquisitions and zero door motion. During the offline inspection the Agent exceeded the existing120s unloaded decision deadline; actor exported/exited safely after1348.85s. This is preserved as a pre-contact infrastructure/route failure, not a valid probing result or identification attempt.
+
+Before the sole valid contact episode, an explicit adapter reuses existing `parking_targets` and `route_to_joint` alternatives if the original `timed_path` rejects the straight pregrasp route. The same measured fingers/current-door collision predicate and original timing validate the entire new route. No grasp/TCP transform, margin, collision, score or control setting changes. Only the planned joint route is updated; live execution rechecks actual state. Archived offline route regression passes via the existing shoulder-rest alternative; previous successful V2 route is checked separately.
+
+Fresh sensing is required again; no archived viewpoint or grasp is supplied. The original episode budget applies to the valid contact run. A 10→3→12→4-degree finite block is permitted to prioritize speed/acceleration diversity and complete validation within the remaining research time, rather than maximizing angle.
