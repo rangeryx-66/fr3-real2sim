@@ -1,0 +1,685 @@
+{
+  "numeric": {
+    "no_Isaac": true,
+    "synthetic": [
+      {
+        "tool_mass_kg": 0.0,
+        "window": 61,
+        "known": [
+          0.3,
+          0.12,
+          0.04
+        ],
+        "parameters": [
+          0.3000076799638646,
+          0.11992455809195687,
+          0.04000155678513965
+        ],
+        "relative_errors": [
+          2.5599879548865445e-05,
+          0.0006286825670259732,
+          3.891962849111863e-05
+        ],
+        "covariance_std_consistent": true
+      },
+      {
+        "tool_mass_kg": 0.0,
+        "window": 121,
+        "known": [
+          0.3,
+          0.12,
+          0.04
+        ],
+        "parameters": [
+          0.3000076043357299,
+          0.1199036460164675,
+          0.04000226001251927
+        ],
+        "relative_errors": [
+          2.5347785766571818e-05,
+          0.000802949862770852,
+          5.65003129817665e-05
+        ],
+        "covariance_std_consistent": true
+      },
+      {
+        "tool_mass_kg": 0.0,
+        "window": 181,
+        "known": [
+          0.3,
+          0.12,
+          0.04
+        ],
+        "parameters": [
+          0.30000749430563733,
+          0.11986018159525114,
+          0.04000375806036086
+        ],
+        "relative_errors": [
+          2.4981018791114806e-05,
+          0.001165153372907124,
+          9.395150902147265e-05
+        ],
+        "covariance_std_consistent": true
+      },
+      {
+        "tool_mass_kg": 0.75,
+        "window": 61,
+        "known": [
+          0.3,
+          0.12,
+          0.04
+        ],
+        "parameters": [
+          0.3000096885086491,
+          0.11992455809502721,
+          0.04000155678501939
+        ],
+        "relative_errors": [
+          3.2295028830509054e-05,
+          0.0006286825414398844,
+          3.891962548463468e-05
+        ],
+        "covariance_std_consistent": true
+      },
+      {
+        "tool_mass_kg": 0.75,
+        "window": 121,
+        "known": [
+          0.3,
+          0.12,
+          0.04
+        ],
+        "parameters": [
+          0.30000961288599837,
+          0.11990364602176039,
+          0.04000226001231844
+        ],
+        "relative_errors": [
+          3.204295332803753e-05,
+          0.0008029498186633566,
+          5.6500307961115936e-05
+        ],
+        "covariance_std_consistent": true
+      },
+      {
+        "tool_mass_kg": 0.75,
+        "window": 181,
+        "known": [
+          0.3,
+          0.12,
+          0.04
+        ],
+        "parameters": [
+          0.30000950286420497,
+          0.11986018160106833,
+          0.04000375806013748
+        ],
+        "relative_errors": [
+          3.1676214016673754e-05,
+          0.0011651533244305678,
+          9.395150343705083e-05
+        ],
+        "covariance_std_consistent": true
+      }
+    ],
+    "boundary_and_gap_rejection": true,
+    "constant_speed_rank_deficiency_reported": true,
+    "default_filter_lookahead_s": 0.25833333333331865,
+    "tool_compensation_count": 1,
+    "frozen_operations_inherited_without_override": true,
+    "entrypoint_to_factory_to_async_worker_verified": true
+  },
+  "physical_episodes": 0,
+  "legacy_total_wall_s": 9.286379596916959,
+  "legacy_exact_reproduction": {
+    "parameters": [
+      0.16529843428468682,
+      0.30264456266437145,
+      0.0177257334753941
+    ],
+    "heldout": {
+      "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+        "status": "predicted",
+        "samples": 1961,
+        "duration_s": 8.166666666666686,
+        "angle_rmse_deg": 0.05785515882249244,
+        "final_error_deg": 0.12665692957259445,
+        "velocity_rmse_rad_s": 0.0010656281224071522,
+        "state_trajectory_forcing": false,
+        "supported_inertia": true,
+        "prediction_outside_observed_domain": false,
+        "initial_velocity": "native measured at sole initial condition",
+        "evaluation": "complete held-out trajectory reserved; 121-sample derivative edges excluded",
+        "training_angle_range_deg": [
+          0.12851152334799068,
+          11.456437580465742
+        ]
+      }
+    }
+  },
+  "async_production_subprocesses": [
+    {
+      "estimator_version": "V3.1-common-SG2",
+      "worker_script": "scripts/update_probing_v31_model.py",
+      "worker_sha256": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+      "timeout_s": 60,
+      "returncode": 0,
+      "estimator_ready": true,
+      "loaded_sources": {
+        "scripts/update_probing_v31_model.py": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+        "scripts/xarm_ft_v31_estimator.py": "b58507fc80954116d36c066146a45e6acafe77cf95937fb661e565eb146523dc",
+        "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b"
+      },
+      "wall_s": 4.374750667018816
+    },
+    {
+      "estimator_version": "V3.1-common-SG2",
+      "worker_script": "scripts/update_probing_v31_model.py",
+      "worker_sha256": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+      "timeout_s": 60,
+      "returncode": 0,
+      "estimator_ready": true,
+      "loaded_sources": {
+        "scripts/update_probing_v31_model.py": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+        "scripts/xarm_ft_v31_estimator.py": "b58507fc80954116d36c066146a45e6acafe77cf95937fb661e565eb146523dc",
+        "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b"
+      },
+      "wall_s": 4.475389614002779
+    }
+  ],
+  "production": {
+    "estimator_version": "V3.1-common-SG2",
+    "status": "updated",
+    "model": "tau=I_eff*qdd+b*qd+C*sign(qd)",
+    "window": 121,
+    "training_bins": 304,
+    "validation_bins": 83,
+    "segments": [
+      {
+        "id": 1,
+        "role": "FIT_OPEN_PLATEAUS",
+        "records": 360,
+        "blocks": [],
+        "status": "incomplete/failed segment retained, not fit"
+      },
+      {
+        "id": 2,
+        "role": "FIT_RECOVERY_OPEN_PLATEAUS",
+        "records": 3207,
+        "blocks": [
+          {
+            "records": 3207,
+            "valid": 2965,
+            "bins": 124,
+            "first_step": 70069,
+            "last_step": 73275,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "role": "FIT_RECOVERY_CLOSE_PLATEAUS",
+        "records": 2704,
+        "blocks": [
+          {
+            "records": 2704,
+            "valid": 2462,
+            "bins": 103,
+            "first_step": 73276,
+            "last_step": 75979,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "role": "FIT_RECOVERY_FAST_REOPEN",
+        "records": 2081,
+        "blocks": [
+          {
+            "records": 2081,
+            "valid": 1839,
+            "bins": 77,
+            "first_step": 75980,
+            "last_step": 78060,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "role": "VALIDATION_RECOVERY_CLOSE_SINE",
+        "records": 2203,
+        "blocks": [
+          {
+            "records": 2203,
+            "valid": 1961,
+            "bins": 83,
+            "first_step": 78061,
+            "last_step": 80263,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      }
+    ],
+    "hidden_dynamics_used": false,
+    "segment_local_processing": true,
+    "complete_validation_excluded_from_fit_uncertainty_and_selection": true,
+    "tool_compensation_count": 1,
+    "source_sha256": {
+      "scripts/update_probing_v31_model.py": "ea9ebf6c04dbe660c737e7a17499aef2735e9442dc8b8d5c29775d1bb34d85a8",
+      "scripts/xarm_ft_v31_estimator.py": "b58507fc80954116d36c066146a45e6acafe77cf95937fb661e565eb146523dc",
+      "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b"
+    },
+    "input_index_sha256": "acb59da7f47bcc87f05244f6913315df064ec9fecee13039e70e802a4a65758f",
+    "limitations": [
+      "ideal virtual load cell and approximate actuators",
+      "conditional uncertainty excludes compensation/solver/model bias",
+      "authored inertia is not an independent effective PhysX measurement",
+      "finite-difference and centered-filter latency remain"
+    ],
+    "constant_model": {
+      "kind": "constant",
+      "parameters": [
+        0.11212664331935025,
+        0.2888320154633744,
+        0.017949419685742818
+      ],
+      "conditional_std": [
+        0.00025306053003571946,
+        0.0008122522852632795,
+        1.1297133740709886e-05
+      ],
+      "training_rmse_nm": 8.605766461414152e-05,
+      "conditional_covariance": [
+        [
+          6.403963186195926e-08,
+          4.0962304141738644e-09,
+          -4.4907502200361383e-11
+        ],
+        [
+          4.096230414173864e-09,
+          6.5975377491542e-07,
+          -7.235848996716842e-09
+        ],
+        [
+          -4.4907502200361383e-11,
+          -7.235848996716842e-09,
+          1.2762523075548574e-10
+        ]
+      ],
+      "scaled_regressor_singular_values": [
+        0.7872371047939188,
+        0.3842632153640922,
+        0.029215255538785907
+      ],
+      "scaled_condition": 26.946096834538725,
+      "algebraic_rank": 3,
+      "supported": [
+        true,
+        true,
+        true
+      ],
+      "samples": 304,
+      "uncertainty": "FIT-only Bartlett HAC with iid diagonal floor; correlated-bin and ridge-aware; covariance diagonal equals std squared; no systematic-error coverage",
+      "residual_variance_nm2": 7.479734811320196e-09,
+      "HAC_lags": 5,
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "C_Nm"
+      ],
+      "support_semantics": "conditional regressor/residual support only; not independently validated physical accuracy",
+      "validation_used_for_parameters_or_uncertainty": false,
+      "physical_accuracy_validated": false,
+      "information": {
+        "singular_values": [
+          0.7872371047939188,
+          0.3842632153640922,
+          0.029215255538785907
+        ],
+        "condition": 26.946096834538725,
+        "logdet_regularized_fisher": 31.989097734053097,
+        "velocity_sign_correlation": 0.8875211077831703
+      },
+      "training_angle_range_deg": [
+        0.12851152334799068,
+        11.456437580465742
+      ],
+      "FIT_only_leave_segment_out": [
+        {
+          "held_segment": "FIT_RECOVERY_OPEN_PLATEAUS_02",
+          "parameters": [
+            0.1120065934911277,
+            0.2862159092325049,
+            0.0179719301466491
+          ],
+          "rmse_nm": 0.0001141268122552606
+        },
+        {
+          "held_segment": "FIT_RECOVERY_CLOSE_PLATEAUS_03",
+          "parameters": [
+            0.11218899587919028,
+            0.28858577518952067,
+            0.017952799515719434
+          ],
+          "rmse_nm": 8.543688206016662e-05
+        },
+        {
+          "held_segment": "FIT_RECOVERY_FAST_REOPEN_04",
+          "parameters": [
+            0.11211229905044601,
+            0.2906426198154293,
+            0.017939838395880262
+          ],
+          "rmse_nm": 6.335958286916991e-05
+        }
+      ],
+      "heldout_torque_rmse_nm": 6.716724269954945e-05,
+      "heldout_motion": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05#0": {
+          "status": "predicted",
+          "samples": 1961,
+          "duration_s": 8.166666666666686,
+          "angle_rmse_deg": 0.03969082831305794,
+          "final_error_deg": 0.08790466365043305,
+          "velocity_rmse_rad_s": 0.000501709581537644,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.12851152334799068,
+            11.456437580465742
+          ],
+          "measured_validation_outside_training_range_fraction": 0.05354411014788373,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee",
+          "initial_velocity": "native measured, one initial condition only",
+          "velocity_reference": "native measured",
+          "input": "once-filtered compensated wrist torque; no state correction",
+          "filter_lookahead_s": 0.2583333333330984
+        }
+      },
+      "heldout_motion_unfiltered_input": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05#0": {
+          "status": "predicted",
+          "samples": 1961,
+          "duration_s": 8.166666666666686,
+          "angle_rmse_deg": 0.0426165702235918,
+          "final_error_deg": 0.08870873231985307,
+          "velocity_rmse_rad_s": 0.00024461699921816965,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.12851152334799068,
+            11.456437580465742
+          ],
+          "measured_validation_outside_training_range_fraction": 0.05354411014788373,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee"
+        }
+      },
+      "full_segment_boundary_sensitivity": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05#0": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.0761765467731635,
+          "final_error_deg": -0.0008576682269280032,
+          "velocity_rmse_rad_s": 0.001179811588352943,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.12851152334799068,
+            11.456437580465742
+          ],
+          "measured_validation_outside_training_range_fraction": 0.10258738084430322,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee",
+          "includes_unreliable_filter_and_derivative_edges": true
+        }
+      }
+    },
+    "identified_parameters": {
+      "I_eff_kg_m2": 0.11212664331935025,
+      "b_Nm_s_rad": 0.2888320154633744,
+      "C_Nm": 0.017949419685742818
+    },
+    "worker_wall_s": 3.6193914220202714
+  },
+  "validation_mutation": {
+    "FIT_parameters_covariance_information_CV_bit_identical": true,
+    "modified_channels": [
+      "raw_FT",
+      "door_position",
+      "door_velocity",
+      "tool_poses"
+    ],
+    "complete_segments": true
+  },
+  "window_sensitivity": {
+    "61": {
+      "parameters": [
+        0.1120451877696326,
+        0.29150996113665156,
+        0.01791099453149948
+      ],
+      "training_bins": 304,
+      "heldout_torque_rmse_nm": 8.789999340203277e-05,
+      "heldout_motion": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05#0": {
+          "status": "predicted",
+          "samples": 1961,
+          "duration_s": 8.166666666666686,
+          "angle_rmse_deg": 0.03662464129353603,
+          "final_error_deg": 0.08450048481145074,
+          "velocity_rmse_rad_s": 0.0004349901785800398,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.12851152334799068,
+            11.456437580465742
+          ],
+          "measured_validation_outside_training_range_fraction": 0.05354411014788373,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee",
+          "initial_velocity": "native measured, one initial condition only",
+          "velocity_reference": "native measured",
+          "input": "once-filtered compensated wrist torque; no state correction",
+          "filter_lookahead_s": 0.13333333333321207
+        }
+      },
+      "processing_wall_s": 3.520211363909766
+    },
+    "181": {
+      "parameters": [
+        0.11219762176439149,
+        0.2871007427933522,
+        0.01797452344746785
+      ],
+      "training_bins": 304,
+      "heldout_torque_rmse_nm": 5.898577800144246e-05,
+      "heldout_motion": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05#0": {
+          "status": "predicted",
+          "samples": 1961,
+          "duration_s": 8.166666666666686,
+          "angle_rmse_deg": 0.050374651489040495,
+          "final_error_deg": 0.10321901158479939,
+          "velocity_rmse_rad_s": 0.0006072935872608982,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.12851152334799068,
+            11.456437580465742
+          ],
+          "measured_validation_outside_training_range_fraction": 0.05354411014788373,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee",
+          "initial_velocity": "native measured, one initial condition only",
+          "velocity_reference": "native measured",
+          "input": "once-filtered compensated wrist torque; no state correction",
+          "filter_lookahead_s": 0.3833333333329847
+        }
+      },
+      "processing_wall_s": 3.307146333158016
+    }
+  },
+  "independent_weak_verification": {
+    "0.5": {
+      "parameters": [
+        0.1112373430084831,
+        0.2914536438424604,
+        0.01791138571372305
+      ],
+      "training_bins": 283,
+      "training_rmse_nm": 0.00013572394015475,
+      "FIT_LOSO_rmse_nm": 0.00014300961148881467,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003287262249035182,
+      "heldout_torque_rmse_nm": 8.168455494768195e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03741517110138542,
+          "final_error_deg": 0.0754840018915275,
+          "velocity_rmse_rad_s": 0.0004809699319346837,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "FIT_only_conditional_HAC_std": [
+        0.00035909911853258754,
+        0.001223956850018617,
+        1.5893218548681815e-05
+      ],
+      "full_residual_acceleration_correlation": 0.00031809634962532606,
+      "residual_without_I_acceleration_correlation": 0.9985747059815961,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.05141768641599054,
+          "final_error_deg": 0.018070421931744022,
+          "velocity_rmse_rad_s": 0.001538517679305001,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    },
+    "1.0": {
+      "parameters": [
+        0.1113220954973914,
+        0.28835634777594726,
+        0.01795271620313967
+      ],
+      "training_bins": 271,
+      "training_rmse_nm": 4.5990166709156284e-05,
+      "FIT_LOSO_rmse_nm": 5.752964804200449e-05,
+      "common_unfiltered_FIT_LOSO_rmse_nm": 0.003287029679492551,
+      "heldout_torque_rmse_nm": 6.406166683737329e-05,
+      "common_unfiltered_heldout": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 1781,
+          "duration_s": 7.416666666666686,
+          "angle_rmse_deg": 0.03289585321622008,
+          "final_error_deg": 0.06588901145115272,
+          "velocity_rmse_rad_s": 0.0004666381132532268,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      },
+      "FIT_only_conditional_HAC_std": [
+        0.00018094487771192156,
+        0.0006806024310555046,
+        7.877984717687553e-06
+      ],
+      "full_residual_acceleration_correlation": 6.996325035000965e-05,
+      "residual_without_I_acceleration_correlation": 0.9997233462740802,
+      "full_reserved_heldout_including_derivative_edges": {
+        "VALIDATION_RECOVERY_CLOSE_SINE_05": {
+          "status": "predicted",
+          "samples": 2203,
+          "duration_s": 9.175000000000011,
+          "angle_rmse_deg": 0.05362053238050513,
+          "final_error_deg": 0.006366480749058932,
+          "velocity_rmse_rad_s": 0.0015322753540312649,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_observed_domain": false
+        }
+      }
+    }
+  },
+  "archive_unchanged": true,
+  "original_archive_hashes": {
+    "telemetry/index.json": "acb59da7f47bcc87f05244f6913315df064ec9fecee13039e70e802a4a65758f",
+    "model/estimate.json": "899cfecd73105c11ed297d4c37a4a6760d5fc9fbcf13c21ef0b71914c0949985",
+    "model/updates.json": "da95279b0fd924395925effc9c0f8dd38e72a73feb37af74b96a737b9aa203f9"
+  },
+  "wall_s": 35.832420805003494
+}
