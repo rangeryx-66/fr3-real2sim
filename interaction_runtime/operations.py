@@ -115,7 +115,14 @@ class Operations:
         if not planning['valid']:return dict(ok=False,status='NOT_STARTED_BUDGET_INFEASIBLE',reason=planning['reason'],planning=planning,angle_deg=math.degrees(start))
         target=planning['selected_target_rad'];clock=ProgressClock(start,target);began=self.r.tick*self.r.dt;checkpoint=began
         self.r.reference_drive=None;last_angle=start;last_relative=self.r.rows[-1]['relative_translation_slip_m'];stalls=0;reason=None;panel_contacts=0
-        while clock.direction*(target-measure())>0:
+        while True:
+            if clock.direction*(target-measure())<=0:
+                self.r.stop_command();self.r.reference_drive=None;clock.velocity=0.
+                if clock.direction*(target-measure())<=0:break
+                # Deceleration can expose tracking recoil. Continue the SAME
+                # reference/contact transform within its remaining budget.
+                if self.r.tick*self.r.dt-began>=planning['max_sim_s']-planning['stop_reserve_s']:
+                    reason='SEGMENT_TIMEOUT';break
             motion=self.r.motion_limits('LOADED');reference,state=clock.advance(measure(),motion['speed_m_s'],hinge_radius(self.r.tcp()[:3,3],origin,axis),self.r.dt,motion['angular_speed_rad_s'],motion['acceleration_m_s2'],motion['angular_acceleration_rad_s2'])
             R=Rotation.from_rotvec(axis*(reference-start)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
             self.g['current_articulation_reference']=reference;self.r.cartesian_step(D@T,phase);now=self.r.tick*self.r.dt

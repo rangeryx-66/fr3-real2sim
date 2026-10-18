@@ -1,0 +1,54 @@
+{
+  "classification": "OFFLINE_ENGINEERING_REGRESSION_NOT_PHYSICAL_VALIDATION",
+  "policy_sha256": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+  "checks": {
+    "legacy_numbers_all_phases_nonfatal": true,
+    "fault_injections": "collision/joint/velocity/actuator/emergency pad/emergency wrist/phase speed stop",
+    "sustained_history_crosses_modes_without_reset": [
+      35,
+      "SUSTAINED_OVERLOAD"
+    ],
+    "independent_rotation_translation_and_acceleration": true,
+    "actual_stop_command_joint_acceleration_rad_s2": 0.8000000000000002,
+    "normal_panel_stop_precedes_separation_and_exceptions_do_not_continue": true,
+    "recoverable_failure_preserves_velocity_for_guarded_release": true,
+    "active_source_audit": true,
+    "FAST_DEV_idle_render_requests": 0,
+    "chunked_native_numeric_contact_roundtrip_records": 513,
+    "protocol": {
+      "physical_actors": 0,
+      "concurrent_commands": 200,
+      "malformed_recoverable": 8,
+      "same_sequence_winners": 1,
+      "actual_owner_bad_then_finish": "PASS",
+      "packet_producer_consumer_order": [
+        "packet0",
+        "packet1"
+      ],
+      "missing_prefix": "EXPLICIT_DIAGNOSTIC_NO_PARTIAL_FIT",
+      "physical_safety_or_control_changed": false
+    }
+  },
+  "sources": {
+    "interaction_runtime/__init__.py": "b4ea43a6d6d65ad90f82162143b78fbebf116d4aff9ec3f9ab1ced81e66dbc36",
+    "interaction_runtime/compact_v2.py": "c7c7989ea1c6223dbe74144c56f27078bef12a62899cf8cd70e9fdd0b191b3a3",
+    "interaction_runtime/estimator_v31.py": "30e247c92d21cd8dcd24ed0b940c670bb2b3b292c6dafd8835cc770b4366c55e",
+    "interaction_runtime/evidence.py": "7265be5a40e17cb6ad2dbda4789c67e6cf2d8549615399f92ea4e940b829e4ba",
+    "interaction_runtime/fixture.py": "7ae1b0d171512fc42b3f11e37a364adba4d72926010beb749577f744cb30a4ca",
+    "interaction_runtime/guard_regression.py": "ac55190f7f8ac62ce044852176dc0c688302189dd2a1ff996cd165ec71ad3323",
+    "interaction_runtime/kinematics.py": "a4021461e8e97280d3000788392bc7f2791f4a7ade05d0b13dafaf1df2ed72aa",
+    "interaction_runtime/motion.py": "284a88d37f76bdbbe288b2bacfac13e3d2c0e59df9a1f18074c3f0b124aa5a2b",
+    "interaction_runtime/native_scene.py": "11150e73512c5121d3475398ff0c275d8f265dfe4916996e6bac0deeee226524",
+    "interaction_runtime/operations.py": "168267c7d4a2210684771b5d35d3cc3212cf63d9960f2df5e7ba566e3ebe8ca3",
+    "interaction_runtime/policy.py": "6a15747b8d7c5ff23265356a59a4489b24ee7895270a6a218401e0cf7ea7bf7a",
+    "interaction_runtime/probing_profiles_v3.py": "a24fd2a2c1b58ce8b7b8c82ad07415e1e89a9c0cf92565abc05f3f4d993f5a00",
+    "interaction_runtime/probing_v2.py": "c047588579dbf403213302c6e7285538f0a4d3966484d996d4ee85ac7db0f3b3",
+    "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+    "interaction_runtime/progress.py": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f",
+    "interaction_runtime/runtime.py": "eb6c92efcc331b3d00ec0a6ac0c56a14ceecffd7c7063e1e41885b56a389132b",
+    "interaction_runtime/segment_quality.py": "f8fc1493e8f856f74153acd84aa6e871d7f865e412e87c2aae2c35d333cf1c75",
+    "interaction_runtime/serialization.py": "cd4af3fea6076e83399683e59a3fd513c61e6e1d811dc7738d6b8edb5ef7bf39",
+    "interaction_runtime/session.py": "9fb65831bd5cc373024d21e308196e35c1d10dc8c70695048f69205c2c80e01f"
+  },
+  "physical_actors": 0
+}

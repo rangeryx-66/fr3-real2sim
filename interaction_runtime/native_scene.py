@@ -280,6 +280,9 @@ def build(job, c):
         except Exception:
             pass
         return locals()
-    except BaseException:
+    except BaseException as error:
+        # Isaac fast shutdown may exit before the caller can export the error.
+        import traceback
+        (output/'INITIALIZATION_FAILURE.json').write_text(json.dumps(dict(error=repr(error),traceback=traceback.format_exc()),indent=2))
         app.close()
         raise
