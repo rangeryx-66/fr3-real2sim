@@ -11,13 +11,13 @@ from .evidence import Profile, Recorder, RenderSchedule
 from .motion import timed_path, CartesianReference
 
 class Runtime:
-    def __init__(self, job, mode='FAST_DEV', policy_path=None):
+    def __init__(self, job, mode='FAST_DEV', policy_path=None, record_factory=Recorder):
         self.job=job;self.output=Path(job['output']);self.output.mkdir(parents=True,exist_ok=True)
         self.root=Path(__file__).resolve().parents[1];self.profile=Profile();self.mode=mode;self.stopped=False
         self.policy=Policy.load(policy_path or self.root/'configs/interaction_runtime_v1.json')
         self.job.get('wrist_experiment',{}).pop('force_policy',None)
         self.events=[];self.issues=[];self.tick=0;self.phase='SETTLE';self.previous=None;self.pad_presence={};self.filtered_loads=deque(maxlen=int(.08*240));self.rows=deque(maxlen=2400);self.last_command=None
-        self.record=Recorder(self.output/'telemetry',self.policy.data['modes'][mode]['chunk_records'])
+        self.record=record_factory(self.output/'telemetry',self.policy.data['modes'][mode]['chunk_records'])
         self.render=RenderSchedule(mode,self.policy.data['modes'][mode]);self.video=None;self.video_index=[]
         from xarm_wrist_ft import prepare
         c=prepare(self.output/'sensor_assembly')
@@ -225,6 +225,7 @@ class Runtime:
         from interaction_reference_handover import seed_pose
         self.seed=np.asarray(self.robot.get_joint_positions())[self.arm].copy();self.reference_bias=self.qtarget[self.arm]-self.seed
         self.reference_drive=CartesianReference(seed_pose(self.solver,self.base,self.seed));self.event('CONTINUOUS_REFERENCE_HANDOVER',unchanged_q_command=self.qtarget[self.arm].tolist())
+    def motion_limits(self,phase):return self.policy.motion(phase)
     def cartesian_step(self,goal,phase):
         self.g['phase']=phase;self.phase=phase
         if self.reference_drive is None:self.begin_reference()
@@ -234,7 +235,7 @@ class Runtime:
         # physical tracking tolerance or grasp acceptance condition.
         if np.max(abs(np.asarray(goal)-self.reference_drive.pose))<1e-12 and np.max(abs(self.g['qvelocity']))<1e-10:
             return self.step()
-        target=self.reference_drive.advance(goal,self.dt,self.policy.motion(phase))
+        target=self.reference_drive.advance(goal,self.dt,self.motion_limits(phase))
         with self.profile.measure('Pink_IK'):q=self.solver.velocity_step(target,self.base,self.seed,self.dt)
         if q is None:raise RuntimeError('LOCAL_IK_UNAVAILABLE')
         requested=q+self.reference_bias;delta=requested-self.qtarget[self.arm]

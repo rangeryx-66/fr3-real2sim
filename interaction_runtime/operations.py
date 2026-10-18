@@ -108,9 +108,10 @@ class Operations:
         prior=kinematic_prior(self.g);axis=np.asarray(prior['axis_world']);origin=np.asarray(prior['origin_world_m']);start=self.r.actual();target=math.radians(target_deg);direction=1 if target>=start else -1
         T=self.r.tcp();angle0=self.r.actual();reference=angle0;self.r.reference_drive=None;began=self.r.tick*self.r.dt;checkpoint=began;last_angle=angle0;last_relative=0.;stalls=0
         while direction*(target-self.r.actual())>0:
-            theta=self.r.actual();radius=max(.001,float(np.linalg.norm(self.r.tcp()[:3,3]-origin)));motion=self.r.policy.motion('LOADED')
+            theta=self.r.actual();radius=max(.001,float(np.linalg.norm(self.r.tcp()[:3,3]-origin)));motion=self.r.motion_limits('LOADED')
             reference=progress_reference(theta,reference,target,direction,motion['speed_m_s'],radius,self.r.dt,math.radians(.5))
             R=Rotation.from_rotvec(axis*(reference-angle0)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
+            self.g['current_articulation_reference']=reference
             self.r.cartesian_step(D@T,'OPEN_CONTINUE');now=self.r.tick*self.r.dt
             if now-checkpoint>=.5:
                 drift=self.r.rows[-1]['relative_translation_slip_m'];progress=direction*(self.r.actual()-last_angle)*radius
@@ -168,7 +169,8 @@ class Operations:
             self.r.move_path(p['entry_path'],'PANEL_APPROACH')
             self.r.reference_drive=None
             while self.r.actual()>math.radians(p['target_deg']):
-                theta=self.r.actual();reference=progress_reference(theta,reference,math.radians(p['target_deg']),-1,self.r.policy.motion('LOADED')['speed_m_s'],radius,self.r.dt);R=Rotation.from_rotvec(axis*(reference-start)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
+                theta=self.r.actual();reference=progress_reference(theta,reference,math.radians(p['target_deg']),-1,self.r.motion_limits('LOADED')['speed_m_s'],radius,self.r.dt);R=Rotation.from_rotvec(axis*(reference-start)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
+                self.g['current_articulation_reference']=reference
                 self.r.cartesian_step(D@T,'PANEL_PUSH');contact_count+=sum(c['force_n']>0 and c['target'] in self.r.collision.paths for c in self.r.rows[-1]['contacts'])
                 if self.r.tick*self.r.dt-began>30:break
             # Normal completion must decelerate under the still-authorized
