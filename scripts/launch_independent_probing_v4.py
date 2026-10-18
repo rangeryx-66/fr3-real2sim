@@ -22,14 +22,23 @@ def main():
         public=prepare(a.root);(a.root/'CONFIGURATION_COMMITMENT.json').write_text(json.dumps(public,indent=2));print(json.dumps(public));return
     lock=(ROOT/'results/fast_runtime_v1_20261018/owned_actor.lock').open('a');fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
     out=a.root/'episode_00'
+    if out.exists():
+        # Only the documented, unloaded Agent-timeout run may be reinitialized.
+        failed=json.loads((out/'EPISODE_RESULT.json').read_text())
+        events=json.loads((out/'events.json').read_text())
+        completion=json.loads((out/'PROCESS_COMPLETION.json').read_text())
+        if failed['status']!='BOUNDED_AGENT_STOP' or not completion['actor_exited'] or any(e.get('name',e.get('event'))=='PHYSICAL_GRASP_START' for e in events):
+            raise RuntimeError('No retry of a valid physical attempt')
+        if any(e['command']['operation'] in ['attempt_grasp_and_probe','execute_panel_push'] for e in failed['trace']):raise RuntimeError('Physical command already consumed')
+        out=a.root/'episode_01'
     if out.exists():raise RuntimeError('Preserve episode: no overwrite or automatic valid-attempt retry')
     out.mkdir(parents=True);old=json.loads((ROOT/'results/agent_pull_push_v12_20261018/job.json').read_text())
     keep={'source','asset_root','skill','camera_calibration','wrist_calibration','robust_uncertainty_config','visual_prompt','visual_reobservations','visual_planning_wall_s','benchmark_goal_rad','authored_target_rad','robot_start_q','active_closure_source','expected_active_closure_sha256','ft_calibration','shared_execution'}
     job={k:v for k,v in old.items() if k in keep};job.update(output=str(out),gpu=a.gpu,visual_gpu=a.visual_gpu,wrist_experiment={'sam3':old['wrist_experiment']['sam3']},runtime_acquisition_budget=2,
-        private_physics_configuration=str(a.root/'HIDDEN_CONFIGURATIONS.json'),identification_case=0,research_reference='0305095',storage_target_bytes=100000000)
+        private_physics_configuration=str(a.root/'HIDDEN_CONFIGURATIONS.json'),identification_case=0,research_reference='0305095',storage_target_bytes=100000000,agent_wait_timeout_s=600)
     deadline_s=2700 # 45 min owner bound; Agent reserves final 10 min for exit, not new contact.
     job['deadline_shanghai']=(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))+datetime.timedelta(seconds=deadline_s)).isoformat();(out/'job.json').write_text(json.dumps(job,indent=2))
-    sources=['scripts/run_informative_probing_v31.py','scripts/update_probing_v31_model.py','scripts/xarm_ft_v31_estimator.py','interaction_runtime/estimator_v31.py','interaction_runtime/runtime.py','interaction_runtime/probing_v3.py','interaction_runtime/operations.py','configs/interaction_runtime_v1.json',str(Path(__file__).relative_to(ROOT))]
+    sources=['scripts/run_informative_probing_v31.py','scripts/update_probing_v31_model.py','scripts/xarm_ft_v31_estimator.py','interaction_runtime/estimator_v31.py','interaction_runtime/runtime.py','interaction_runtime/probing_v2.py','interaction_runtime/probing_v3.py','interaction_runtime/operations.py','configs/interaction_runtime_v1.json',str(Path(__file__).relative_to(ROOT))]
     (a.root/'FROZEN_SOURCE.json').write_text(json.dumps(dict(reference='0305095',sources={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in sources}),indent=2))
     env=dict(os.environ,PYTHONPATH='.:scripts',PYTHONNOUSERSITE='1',OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MPLCONFIGDIR=str(out/'plot_cache'),PATH='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static:'+os.environ['PATH'])
     cmd=['/data1/home/rangeryx/isaaclab-arena/.venv/bin/python','-u','scripts/run_informative_probing_v31.py','--job',str(out/'job.json')];began=time.perf_counter()

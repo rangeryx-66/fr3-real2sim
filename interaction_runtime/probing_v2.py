@@ -94,10 +94,12 @@ def serve(r,operations_factory=ProbingOperations):
         first=ops.observe();atomic_json(r.output/'INITIAL_OBSERVATION_READY.json',result_packet(first))
         for seq in range(22):
             if g['recovery_state']!='UNLOADED_OBSERVATION':return dict(status='SAFE_UNLOADED_BOUNDARY_UNAVAILABLE',trace=trace)
-            atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,timeout_s=120))
+            # Unloaded communication deadline; independent of all motion/force limits.
+            wait_s=float(r.job.get('agent_wait_timeout_s',120))
+            atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,timeout_s=wait_s))
             path=commands/('%03d.json'%seq);began=time.perf_counter()
             while not path.exists():
-                if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.perf_counter()-began>120:return dict(status='BOUNDED_AGENT_STOP',trace=trace)
+                if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.perf_counter()-began>wait_s:return dict(status='BOUNDED_AGENT_STOP',trace=trace)
                 time.sleep(.05)
             command,ack=receive(path,seq,responses)
             if command is None:trace.append(ack);continue
