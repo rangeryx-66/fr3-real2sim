@@ -1,7 +1,12 @@
-# V7 engineering preflight — benchmark not yet started
+# V7 — frozen revolute subset registered
 
-Reference: `25e2189`. This file records engineering progress, not a V7 result.
-No blind benchmark configuration or research episode has been executed yet.
+Reference `25e2189`; implementation `2a91dbf`. Before any research episode,
+[BENCHMARK.json](BENCHMARK.json) freezes all eight objects / sixteen configurations,
+71 source/protocol hashes and blind configuration commitment
+`ef92278ff59b4df57dbffd8e784e5eab56c51637f97cbf44830d920a023d523e`.
+The user-authorized active subset is four revolute objects / eight episodes;
+all eight prismatic episodes are deferred as PRISMATIC_ENGINEERING_UNRESOLVED.
+No research result is claimed here. The engineering history below is preserved.
 
 Engineering resumed after the user's explicit prismatic-repair request. The
 historical stop section below remains unchanged as a record of that stop.
