@@ -1,0 +1,13 @@
+# V5 pre-registration
+
+One fresh blind cabinet 45936 episode. V4.5 `79d93bb` and all existing manipulation, observation, contact, safety, robot and gripper implementations remain frozen. New files activate the existing native passive friction owner and a versioned V3.1-compatible numeric worker. No GT grasp/view input.
+
+Hidden scene-generation configuration: existing positive-density family, base Coulomb 0.018–0.026 Nm, localized nonnegative Gaussian amplitude 0.008–0.016 Nm, center uniformly 8–14 degrees and width 3–5 degrees. Native static/dynamic DOF friction only; imported viscous value preserved. Actual backend readback is required. No applied object effort or target. Commit exact bytes by SHA before launch; reveal only after actor/Agent/worker completion.
+
+Models: unchanged V3.1 constant baseline, quadratic/cubic nonnegative Bernstein friction on prior 0–20 degree domain. Raw product B_j(q) sign(native velocity) is filtered through the same SG121 operator as torque, acceleration, velocity. Fixed smoothness candidates 1e-4,1e-3,1e-2; ridge1e-3. Model choice uses complete FIT-trajectory CV, at least three FIT trajectories and >10% improvement. No VALIDATION/truth used for selection, fitting, uncertainty or coefficient adjustment. Unvisited angle estimates/uncertainty are null.
+
+Agent inspects fresh RGB/mask/depth/cloud and native-G1 plan. Initial acceleration-rich and reverse baseline FIT; inspect available parameters/residuals/coverage at verified unloaded boundary. At most one subsequent fresh acquisition, using observation-based automatic planning. Agent chooses additional supported angular regions and profiles from measured uncertainty/information surrogates plus collision/contact feasibility. Informative regional FIT precedes separately declared distinct-profile complete VALIDATION. Targets are declared by the Agent before execution, not hidden law or archived poses. Stable finite preapproved sequences only while loaded.
+
+At most two handle acquisitions in one continuous scene; no valid-episode retry. Maximum four view adjustments. Existing V4.4 fallback and guarded release/parking. 3600 s wall /1800 s sim with300/90 exit reserve;3900 s launcher and cooperative export. 240Hz essential numeric channels, checkpoint RGB-D, bounded event clips, target<100MB.
+
+PASS requires observed angle dependence plus better independent held-out prediction, not FIT residual or reach alone. Report torque and one-initial-state free angle/velocity prediction under held-out measured F/T input for both frozen selected and constant models. Authored truth is posthoc only and not independent effective PhysX inertia. Coverage, conditional uncertainty limitations, every failed action and incomplete validation remain explicit.
