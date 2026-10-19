@@ -1,0 +1,71 @@
+{
+  "motion_callback": {
+    "passed": true,
+    "dependencies": {
+      "actuate": true,
+      "observe": true
+    },
+    "events": [
+      "play",
+      [
+        "actuate",
+        {
+          "test_route": true
+        },
+        "agent_adjustment_1"
+      ],
+      [
+        "observe",
+        1
+      ],
+      "pause"
+    ],
+    "result": {
+      "fresh_observation": "synthetic only"
+    },
+    "physics_executed": false,
+    "real_robot_motion_verified": false,
+    "source_sha256": "ce16a2b51e7d8dea18cd16812de008a67b0513f39e248c3f2140e9c1495f67b8",
+    "checked_unix_s": 1792129467.9053376
+  },
+  "physics_executed": false,
+  "geometry_binding": [
+    "semantic_incremental_geometry",
+    "planner_reads_incremental_contact_mesh"
+  ],
+  "physical_handoff": {
+    "selected_T_preserved": true,
+    "plan_file_unchanged": true,
+    "incremental_geometry_loaded": true,
+    "events": [
+      "play",
+      "agent_return_to_execution_start",
+      "actuator_return",
+      "settle",
+      "diagnostic_video_camera_only"
+    ],
+    "return_and_approach_validation_stubbed": true,
+    "real_actuators_executed": false
+  },
+  "complete_Agent_interface": {
+    "operations": [
+      "evaluate_view",
+      "move_and_observe",
+      "build_geometry",
+      "validate_execution",
+      "execute"
+    ],
+    "events": [
+      "actuate",
+      "observe",
+      "observe",
+      "incremental_build",
+      "approved_handoff"
+    ],
+    "returned_to_frozen_physical_runner": true
+  },
+  "passed": true,
+  "generated_sha256": "a53d94c2193808a454dedef2d070f759ac7227c872ff433c0fd72bae86876dd6",
+  "measured_state_refine": "unchanged native_g1_wrist_input.refine",
+  "controller_changes": false
+}

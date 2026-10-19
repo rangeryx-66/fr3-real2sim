@@ -1,0 +1,20 @@
+from pathlib import Path
+import re,json,xml.etree.ElementTree as ET
+import numpy as np
+from scipy.spatial.transform import Rotation
+import sys,pinocchio as pin
+repo=Path(sys.argv[1]);O=repo/'results/nero_actuator_stability_20261012';u=repo/'results/nero_feasibility_20261012/nero_sim.urdf';root=ET.parse(u).getroot();text=(O/'run_02/native_asset/nero_sim/payloads/Physics/physics.usda').read_text();bodies={};name=None
+for line in text.splitlines():
+ match=re.search(r'over "([^"]+)"',line)
+ if match:name=match.group(1)
+ for field in ['mass','diagonalInertia','principalAxes','centerOfMass']:
+  if 'physics:'+field+' =' in line:
+   value=line.split('=',1)[1].strip().strip('()');parts=[float(x.strip()) for x in value.split(',')];bodies.setdefault(name,{})[field]=parts if len(parts)>1 else parts[0]
+rows=[];native_tree=ET.parse(repo/'results/nero_feasibility_20261012/nero_dynamics_coordinates.urdf')
+for name,actual in bodies.items():
+ link=root.find(f"link[@name='{name}']");ins=link.find('inertial');a=ins.find('inertia').attrib;I=np.array([[float(a['ixx']),float(a['ixy']),float(a['ixz'])],[float(a['ixy']),float(a['iyy']),float(a['iyz'])],[float(a['ixz']),float(a['iyz']),float(a['izz'])]]);origin=ins.find('origin');rpy=[float(x) for x in origin.get('rpy','0 0 0').split()];R=Rotation.from_euler('xyz',rpy).as_matrix();I=R@I@R.T;nativeR=Rotation.from_quat(np.roll(actual['principalAxes'],-1)).as_matrix();nativeI=nativeR@np.diag(actual['diagonalInertia'])@nativeR.T
+ node=native_tree.getroot().find(f"link[@name='{name}']/inertial/inertia");
+ for key,(i,j) in {'ixx':(0,0),'ixy':(0,1),'ixz':(0,2),'iyy':(1,1),'iyz':(1,2),'izz':(2,2)}.items():node.set(key,str(nativeI[i,j]))
+ rows.append({'body':name,'official_mass_kg':float(ins.find('mass').get('value')),'native_mass_kg':actual['mass'],'mass_error_kg':abs(float(ins.find('mass').get('value'))-actual['mass']),'official_inertia_eigenvalues':np.linalg.eigvalsh(I).tolist(),'native_diagonal_inertia':actual['diagonalInertia'],'reconstructed_inertia_max_error':float(abs(I-nativeI).max()),'inverse_principal_axes_reconstruction_error':float(abs(I-nativeR.T@np.diag(actual['diagonalInertia'])@nativeR).max())})
+candidate=O/'native_inertia_diagnostic_only.urdf';native_tree.write(candidate);model=pin.buildModelFromUrdf(str(candidate));data=model.createData();q=pin.neutral(model);cfg=json.loads((repo/'results/nero_feasibility_20261012/NERO_MODEL.json').read_text());names=list(model.names)[1:];ai=[names.index(n) for n in cfg['arm_joint_names']];q[ai]=cfg['home_q'];q[-2:]=[.04,-.04];M=pin.crba(model,data,q)[np.ix_(ai,ai)];old=json.loads((repo/'results/nero_feasibility_20261012/integration_probe/APPROXIMATE_ACTUATOR.json').read_text());K=np.diag(old['kp_nm_rad']);D=np.diag(old['kd_nm_s_rad']);h=1/240;I=np.eye(7);Mi=np.linalg.inv(M);A=np.block([[I-h*h*Mi@K,h*(I-h*Mi@D)],[-h*Mi@K,I-h*Mi@D]]);F=np.linalg.inv(I+h*Mi@D+h*h*Mi@K);B=np.block([[I-h*h*F@Mi@K,h*F],[-h*F@Mi@K,F]])
+result={'imported_axis_interpretation_explicit_linearization_radius':float(max(abs(np.linalg.eigvals(A)))),'imported_axis_interpretation_implicit_linearization_radius':float(max(abs(np.linalg.eigvals(B)))),'inertia_orientation_status':'standard local principal-axis interpretation differs; conjugated quaternion reproduces official tensor. Native-backend interpretation still requires explicit confirmation before claiming official-inertia fidelity','source':'native importer generated Physics/physics.usda versus unmodified official URDF inertias','body_count':len(rows),'maximum_mass_error_kg':max(x['mass_error_kg'] for x in rows),'maximum_inertia_error_kg_m2':max(x['reconstructed_inertia_max_error'] for x in rows),'records':rows,'maximum_inverse_axis_reconstruction_error':max(x['inverse_principal_axes_reconstruction_error'] for x in rows),'numerical_precision':'Mass/eigenvalues match float32; orientation discrepancy is not float32 noise; official URDF and running scene left unchanged'};(O/'IMPORTED_INERTIA_AUDIT.json').write_text(json.dumps(result,indent=2));print({k:v for k,v in result.items() if k!='records'})

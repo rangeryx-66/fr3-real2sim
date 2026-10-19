@@ -1,0 +1,1022 @@
+{
+  "reference": "136b6e0",
+  "truth_boundary": {
+    "UTC": "2026-10-16T22:21:52.102897+00:00",
+    "actor_checks": [
+      {
+        "case": 0,
+        "pid": 1040509,
+        "alive": false,
+        "export_complete": true
+      },
+      {
+        "case": 1,
+        "pid": 1188735,
+        "alive": false,
+        "export_complete": true
+      },
+      {
+        "case": 2,
+        "pid": 1316958,
+        "alive": false,
+        "export_complete": true
+      }
+    ],
+    "all_actions_finished_before_truth_evaluation": true
+  },
+  "cases": [
+    {
+      "case": 0,
+      "seed": 17046427,
+      "authored_configuration": {
+        "case": 0,
+        "asset": "46427",
+        "seed": 17046427,
+        "mass_scale": 1.1168977473440236,
+        "density_gradient": [
+          0.23199412650326295,
+          -0.18489072650529909,
+          0.2919879411364626
+        ],
+        "tau_c": 0.044204083504352995,
+        "b": 0.1025061297037789,
+        "spring": false
+      },
+      "authored_truth": {
+        "I_eff_kg_m2": 0.49013074755037445,
+        "b_nm_s_rad": 0.1025061297037789,
+        "tau_c_nm": 0.044204083504352995
+      },
+      "parameters": {
+        "I_eff_kg_m2": 2.6436964131875382e-17,
+        "b_nm_s_rad": 7.332634218050341e-09,
+        "tau_c_nm": 0.04434799115026253
+      },
+      "conditional_std": {
+        "I_eff_kg_m2": 0.5270141816612944,
+        "b_nm_s_rad": 2.7946937809248484,
+        "tau_c_nm": 0.00285558664092262
+      },
+      "observability": {
+        "I_eff": false,
+        "b": false,
+        "tau_c": true
+      },
+      "relative_error_provisional_parameters": {
+        "I_eff_kg_m2": 1.0,
+        "b_nm_s_rad": 0.999999928466383,
+        "tau_c_nm": 0.0032555283245576526
+      },
+      "absolute_error_provisional_parameters": {
+        "I_eff_kg_m2": 0.49013074755037445,
+        "b_nm_s_rad": 0.10250612237114468,
+        "tau_c_nm": 0.00014390764590953287
+      },
+      "heldout_torque_rmse_nm": null,
+      "heldout_motion": {},
+      "simulation_s": 838.5208333333334,
+      "wall_s_report_including_export": 6532.592641367111,
+      "wall_s_runner": 6502.932739851996,
+      "status": "SAFE_EXIT_UNAVAILABLE",
+      "lifecycle_success": false,
+      "grasps": 2,
+      "recovery_grasps": 1,
+      "observation_adjustments": 2,
+      "attempts": [
+        {
+          "index": 0,
+          "termination_reason": "AGENT_INTERACTION_TIMEOUT_SAFE_EXIT",
+          "acquisition": {
+            "event": "GRASP_VERIFIED",
+            "t": 314.0541666666667,
+            "step": 75373,
+            "angle_deg": 0.0014147608308121562,
+            "grasp_index": 0,
+            "pad_loads_n": [
+              0.5491530836379791,
+              0.43215463285183237
+            ],
+            "base": [
+              0.19605376022549204,
+              -0.5328198023693291,
+              -0.1,
+              -0.7953990037810357
+            ],
+            "contact_recovery_attempt_index": 0
+          },
+          "opening_gain_deg": 3.042770877596922,
+          "force_events": [],
+          "peak_pad_load_n": 1.0862046910659204,
+          "minimum_joint_margin_rad": 0.8681994633483887,
+          "physical_attempt_wall_s": 1862.774466543924,
+          "short_success": false
+        },
+        {
+          "index": 1,
+          "termination_reason": "RuntimeError('DANGEROUS_LOADED_CONTACT:gripper_link2:/World/articulated_pose/asset/Geometry/l_world/l_1/abstract_1_0/l_0/tn__l_0_original38_aL/tn__l_0_original38_aL')",
+          "acquisition": null,
+          "opening_gain_deg": 0.0,
+          "force_events": [],
+          "peak_pad_load_n": 0.0,
+          "minimum_joint_margin_rad": 0.8681732373046875,
+          "physical_attempt_wall_s": 1322.1320811880287,
+          "short_success": false
+        }
+      ],
+      "updates": [
+        {
+          "parameters": {
+            "I_eff_kg_m2": 2.6436964131875382e-17,
+            "b_nm_s_rad": 7.332634218050341e-09,
+            "tau_c_nm": 0.04434799115026253
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.5270141816612944,
+            "b_nm_s_rad": 2.7946937809248484,
+            "tau_c_nm": 0.00285558664092262
+          },
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "rank": 3,
+          "scaled_condition": 3082.8155974456986,
+          "training_rmse_nm": 0.0006086387972967966,
+          "heldout_torque_rmse_nm": null,
+          "supported_samples": 515,
+          "heldout_samples": 0
+        }
+      ],
+      "telemetry_export": {
+        "observations": 201245,
+        "physics_steps": 201245,
+        "closure_commands": 36007
+      },
+      "telemetry_issues": {},
+      "video": [
+        {
+          "file": "episode/contact_baseline.mp4",
+          "probe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "width": 1280,
+                "height": 960,
+                "r_frame_rate": "30/1",
+                "duration": "838.500000",
+                "nb_frames": "25155"
+              }
+            ],
+            "format": {
+              "duration": "838.500000",
+              "size": "37063782"
+            }
+          }
+        }
+      ],
+      "strict_posthoc": {
+        "rule": "same SG121 +/-60 samples at every segment boundary; no truth-based selection",
+        "model": {
+          "supported_samples": 512,
+          "heldout_samples": 0,
+          "kinematic_prior": {
+            "joint_type": "revolute",
+            "axis_world": [
+              3.23870081735437e-08,
+              -9.544032231190158e-13,
+              -0.9999999999999991
+            ],
+            "origin_world_m": [
+              0.11582376963042196,
+              -0.14359151569706569,
+              0.2858329961449573
+            ],
+            "source": "explicit KNOWN_MODEL native joint anchor relative to measured moving body; no dynamics read",
+            "angle_source": "allowed actual articulation state V0",
+            "geometry_reference": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_transfer_20261015/46427/asset",
+            "native_joint_path": "/scene/Physics/joint_revolute_l_1_abstract_1_0",
+            "native_asset_sha256": "7208e6585483e89bbf0d9909529f737bb5f453ad86cb93766d3bc37888a9a2f5",
+            "measured_moving_body": "l_0",
+            "legacy_measurement_field": "T_moving_link",
+            "T_moving_joint": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                -0.3841760754585266
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0,
+                0.12341105192899704
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0,
+                0.09359149634838104
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "model": "tau=I_eff*qdd+b*qd+tau_c*sign(qd)",
+          "terms_not_identified": [
+            "mass",
+            "full COM",
+            "full inertia tensor",
+            "angle-dependent friction",
+            "spring vs gravity"
+          ],
+          "gravity_axis_projection": 0.9999999999999991,
+          "measurement": "fixed-joint wrist F/T minus bias plus tool gravity minus tool inertia; no GT object effort",
+          "derivative_window_samples": 121,
+          "update_latency_s": 0.25,
+          "data_tags": "not execution gates",
+          "uncertainty_note": "conditional linear covariance, not calibrated hardware confidence; correlated sensor/solver residuals remain",
+          "parameters": {
+            "I_eff_kg_m2": 8.451336240388098e-16,
+            "b_nm_s_rad": 8.551411556325566e-09,
+            "tau_c_nm": 0.04434540027734257
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.5744948678792485,
+            "b_nm_s_rad": 2.8042907574990044,
+            "tau_c_nm": 0.00286585098542968
+          },
+          "rank": 3,
+          "scaled_singular_values": [
+            1.017365865056245,
+            0.0064454117391608695,
+            0.0003298457079168989
+          ],
+          "scaled_condition": 3084.368965966837,
+          "training_rmse_nm": 0.0006082677537066458,
+          "regularization": 0.001,
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "valid_range_rad": [
+            8.674757816789608e-06,
+            0.05206032820371085
+          ]
+        },
+        "heldout_motion_predictions": {}
+      },
+      "stream_integrity": {
+        "records": {
+          "rows": 201245,
+          "FT_valid": 201245,
+          "FT_missing": 0
+        },
+        "timestamp_interval_s": [
+          0.004166666666606034,
+          0.0041666666667197205
+        ],
+        "maximum_angle_deg": 3.044545888900757,
+        "minimum_joint_margin_rad": 0.8681663827705384,
+        "phase_simulation_s": {
+          "PREGRASP": 459.99583333333334,
+          "SETTLE": 1.0,
+          "APPROACH": 50.291666666666664,
+          "SLOW_CLOSE": 147.19583333333333,
+          "CENTER": 2.2041666666666666,
+          "LOW_PRELOAD": 0.625,
+          "FORCE_HOLD": 0.5041666666666667,
+          "VALIDATED_PREFIX_EXTRA_HOLD": 0.5,
+          "TRANSMISSION_PROBE": 18.054166666666667,
+          "OPEN_CONTINUE": 34.19583333333333,
+          "IDENTIFICATION_STATIC_PAUSE": 23.470833333333335,
+          "RELEASE": 74.65833333333333,
+          "CLEARANCE_RETREAT": 25.825
+        },
+        "maximum_measured_TCP_speed_m_s_by_phase": {
+          "PREGRASP": 0.027780228801238753,
+          "SETTLE": 5.454764042653339e-05,
+          "APPROACH": 0.005334123671035569,
+          "SLOW_CLOSE": 0.00041748271541978423,
+          "CENTER": 0.0005279695666589401,
+          "LOW_PRELOAD": 0.0008902245083017696,
+          "FORCE_HOLD": 0.0002641197329334571,
+          "VALIDATED_PREFIX_EXTRA_HOLD": 0.000206387892169632,
+          "TRANSMISSION_PROBE": 0.0010018654286683983,
+          "OPEN_CONTINUE": 0.0009040407952049229,
+          "IDENTIFICATION_STATIC_PAUSE": 0.0007292158288887662,
+          "RELEASE": 0.0019209651357671859,
+          "CLEARANCE_RETREAT": 0.004991125792124562
+        },
+        "pad_peaks_n": {
+          "filtered_gripper_link1": 0.8169932077584662,
+          "filtered_gripper_link2": 1.0862046910659204,
+          "raw_gripper_link1": 0.8169932077584662,
+          "raw_gripper_link2": 1.0862046910659204
+        },
+        "missing_FT_sample_times_s": [],
+        "torque_semantics": "wrist raw is incoming fixed-joint spatial reaction; arm/G1 projected reactions are not isolated drive torque",
+        "independent_motor_drive_output_available": false
+      }
+    },
+    {
+      "case": 1,
+      "seed": 17046428,
+      "authored_configuration": {
+        "case": 1,
+        "asset": "46427",
+        "seed": 17046428,
+        "mass_scale": 0.7900619327756282,
+        "density_gradient": [
+          -0.20130329734834618,
+          -0.12238566640428589,
+          0.09344131103664849
+        ],
+        "tau_c": 0.036530685193707356,
+        "b": 0.33370995884726423,
+        "spring": false
+      },
+      "authored_truth": {
+        "I_eff_kg_m2": 0.2807774652433637,
+        "b_nm_s_rad": 0.33370995884726423,
+        "tau_c_nm": 0.036530685193707356
+      },
+      "parameters": {
+        "I_eff_kg_m2": 1.2096971869756095e-15,
+        "b_nm_s_rad": 1.2158886699776064e-08,
+        "tau_c_nm": 0.0369117185010996
+      },
+      "conditional_std": {
+        "I_eff_kg_m2": 0.5092979041745775,
+        "b_nm_s_rad": 2.4522299568362604,
+        "tau_c_nm": 0.0025042243764424985
+      },
+      "observability": {
+        "I_eff": false,
+        "b": false,
+        "tau_c": true
+      },
+      "relative_error_provisional_parameters": {
+        "I_eff_kg_m2": 0.9999999999999957,
+        "b_nm_s_rad": 0.9999999635645076,
+        "tau_c_nm": 0.010430499876248745
+      },
+      "absolute_error_provisional_parameters": {
+        "I_eff_kg_m2": 0.2807774652433625,
+        "b_nm_s_rad": 0.33370994668837756,
+        "tau_c_nm": 0.00038103330739224645
+      },
+      "heldout_torque_rmse_nm": null,
+      "heldout_motion": {},
+      "simulation_s": 831.6291666666666,
+      "wall_s_report_including_export": 6116.087960808072,
+      "wall_s_runner": 6086.153655420989,
+      "status": "SAFE_EXIT_UNAVAILABLE",
+      "lifecycle_success": false,
+      "grasps": 2,
+      "recovery_grasps": 1,
+      "observation_adjustments": 2,
+      "attempts": [
+        {
+          "index": 0,
+          "termination_reason": "AGENT_INTERACTION_TIMEOUT_SAFE_EXIT",
+          "acquisition": {
+            "event": "GRASP_VERIFIED",
+            "t": 313.2833333333333,
+            "step": 75188,
+            "angle_deg": 0.0020498111844062805,
+            "grasp_index": 0,
+            "pad_loads_n": [
+              0.5678844376952391,
+              0.418897179239134
+            ],
+            "base": [
+              0.19605376022549204,
+              -0.5328198023693291,
+              -0.1,
+              -0.7953990037810357
+            ],
+            "contact_recovery_attempt_index": 0
+          },
+          "opening_gain_deg": 3.0414584800601006,
+          "force_events": [],
+          "peak_pad_load_n": 1.071085012467212,
+          "minimum_joint_margin_rad": 0.8681993441390992,
+          "physical_attempt_wall_s": 1849.6540211848915,
+          "short_success": false
+        },
+        {
+          "index": 1,
+          "termination_reason": "RuntimeError('DANGEROUS_LOADED_CONTACT:gripper_link2:/World/articulated_pose/asset/Geometry/l_world/l_1/abstract_1_0/l_0/tn__l_0_original38_aL/tn__l_0_original38_aL')",
+          "acquisition": null,
+          "opening_gain_deg": 0.0,
+          "force_events": [],
+          "peak_pad_load_n": 0.0,
+          "minimum_joint_margin_rad": 0.8681732969093323,
+          "physical_attempt_wall_s": 1308.7899385117926,
+          "short_success": false
+        }
+      ],
+      "updates": [
+        {
+          "parameters": {
+            "I_eff_kg_m2": 1.2096971869756095e-15,
+            "b_nm_s_rad": 1.2158886699776064e-08,
+            "tau_c_nm": 0.0369117185010996
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.5092979041745775,
+            "b_nm_s_rad": 2.4522299568362604,
+            "tau_c_nm": 0.0025042243764424985
+          },
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "rank": 3,
+          "scaled_condition": 2708.2038223086156,
+          "training_rmse_nm": 0.0010842973700821781,
+          "heldout_torque_rmse_nm": null,
+          "supported_samples": 516,
+          "heldout_samples": 0
+        }
+      ],
+      "telemetry_export": {
+        "observations": 199591,
+        "physics_steps": 199591,
+        "closure_commands": 35940
+      },
+      "telemetry_issues": {},
+      "video": [
+        {
+          "file": "episode/contact_baseline.mp4",
+          "probe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "width": 1280,
+                "height": 960,
+                "r_frame_rate": "30/1",
+                "duration": "831.600000",
+                "nb_frames": "24948"
+              }
+            ],
+            "format": {
+              "duration": "831.600000",
+              "size": "36418784"
+            }
+          }
+        }
+      ],
+      "strict_posthoc": {
+        "rule": "same SG121 +/-60 samples at every segment boundary; no truth-based selection",
+        "model": {
+          "supported_samples": 512,
+          "heldout_samples": 0,
+          "kinematic_prior": {
+            "joint_type": "revolute",
+            "axis_world": [
+              8.063824823451246e-08,
+              -2.299049839393774e-12,
+              -0.9999999999999968
+            ],
+            "origin_world_m": [
+              0.11582388333874044,
+              -0.14359151413629687,
+              0.2858329925090203
+            ],
+            "source": "explicit KNOWN_MODEL native joint anchor relative to measured moving body; no dynamics read",
+            "angle_source": "allowed actual articulation state V0",
+            "geometry_reference": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_transfer_20261015/46427/asset",
+            "native_joint_path": "/scene/Physics/joint_revolute_l_1_abstract_1_0",
+            "native_asset_sha256": "7208e6585483e89bbf0d9909529f737bb5f453ad86cb93766d3bc37888a9a2f5",
+            "measured_moving_body": "l_0",
+            "legacy_measurement_field": "T_moving_link",
+            "T_moving_joint": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                -0.3841760754585266
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0,
+                0.12341105192899704
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0,
+                0.09359149634838104
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "model": "tau=I_eff*qdd+b*qd+tau_c*sign(qd)",
+          "terms_not_identified": [
+            "mass",
+            "full COM",
+            "full inertia tensor",
+            "angle-dependent friction",
+            "spring vs gravity"
+          ],
+          "gravity_axis_projection": 0.9999999999999968,
+          "measurement": "fixed-joint wrist F/T minus bias plus tool gravity minus tool inertia; no GT object effort",
+          "derivative_window_samples": 121,
+          "update_latency_s": 0.25,
+          "data_tags": "not execution gates",
+          "uncertainty_note": "conditional linear covariance, not calibrated hardware confidence; correlated sensor/solver residuals remain",
+          "parameters": {
+            "I_eff_kg_m2": 2.7087768925672243e-15,
+            "b_nm_s_rad": 9.862092219134694e-08,
+            "tau_c_nm": 0.03690732944667413
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.6192247703887743,
+            "b_nm_s_rad": 2.4947961909953156,
+            "tau_c_nm": 0.0025492068821986935
+          },
+          "rank": 3,
+          "scaled_singular_values": [
+            1.0175624201576654,
+            0.005981537619368264,
+            0.00037076431227163427
+          ],
+          "scaled_condition": 2744.4993665198426,
+          "training_rmse_nm": 0.0010864077780658049,
+          "regularization": 0.001,
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "valid_range_rad": [
+            -2.910077414907367e-09,
+            0.05204534625086663
+          ]
+        },
+        "heldout_motion_predictions": {}
+      },
+      "stream_integrity": {
+        "records": {
+          "rows": 199591,
+          "FT_valid": 199591,
+          "FT_missing": 0
+        },
+        "timestamp_interval_s": [
+          0.004166666666606034,
+          0.0041666666667197205
+        ],
+        "maximum_angle_deg": 3.044160842895508,
+        "minimum_joint_margin_rad": 0.8681663827705384,
+        "phase_simulation_s": {
+          "PREGRASP": 453.5416666666667,
+          "SETTLE": 1.0,
+          "APPROACH": 50.291666666666664,
+          "SLOW_CLOSE": 146.90833333333333,
+          "CENTER": 2.2,
+          "LOW_PRELOAD": 0.6375,
+          "FORCE_HOLD": 0.5041666666666667,
+          "VALIDATED_PREFIX_EXTRA_HOLD": 0.5,
+          "TRANSMISSION_PROBE": 18.045833333333334,
+          "OPEN_CONTINUE": 34.1875,
+          "IDENTIFICATION_STATIC_PAUSE": 23.308333333333334,
+          "RELEASE": 74.675,
+          "CLEARANCE_RETREAT": 25.829166666666666
+        },
+        "maximum_measured_TCP_speed_m_s_by_phase": {
+          "PREGRASP": 0.027786666454213273,
+          "SETTLE": 6.135781017778227e-05,
+          "APPROACH": 0.005345404015198152,
+          "SLOW_CLOSE": 0.00047154714051178277,
+          "CENTER": 0.000498704688869204,
+          "LOW_PRELOAD": 0.0008387106498000275,
+          "FORCE_HOLD": 0.0001703377011545811,
+          "VALIDATED_PREFIX_EXTRA_HOLD": 0.00015973735524914972,
+          "TRANSMISSION_PROBE": 0.0010256747780251155,
+          "OPEN_CONTINUE": 0.000908752093418862,
+          "IDENTIFICATION_STATIC_PAUSE": 0.0007810722660555239,
+          "RELEASE": 0.001872600831884608,
+          "CLEARANCE_RETREAT": 0.004976609651753473
+        },
+        "pad_peaks_n": {
+          "filtered_gripper_link1": 0.8051826093592581,
+          "filtered_gripper_link2": 1.071085012467212,
+          "raw_gripper_link1": 0.8051826093592581,
+          "raw_gripper_link2": 1.071085012467212
+        },
+        "missing_FT_sample_times_s": [],
+        "torque_semantics": "wrist raw is incoming fixed-joint spatial reaction; arm/G1 projected reactions are not isolated drive torque",
+        "independent_motor_drive_output_available": false
+      }
+    },
+    {
+      "case": 2,
+      "seed": 17046429,
+      "authored_configuration": {
+        "case": 2,
+        "asset": "46427",
+        "seed": 17046429,
+        "mass_scale": 1.1431620101671005,
+        "density_gradient": [
+          -0.004930458421391171,
+          0.0898729721079985,
+          0.04915657832949749
+        ],
+        "tau_c": 0.01936224590746212,
+        "b": 0.22135139932234227,
+        "spring": false
+      },
+      "authored_truth": {
+        "I_eff_kg_m2": 0.44943639327178553,
+        "b_nm_s_rad": 0.22135139932234227,
+        "tau_c_nm": 0.01936224590746212
+      },
+      "parameters": {
+        "I_eff_kg_m2": 1.7991025452789911e-06,
+        "b_nm_s_rad": 0.895238449508454,
+        "tau_c_nm": 0.018590212158467512
+      },
+      "conditional_std": {
+        "I_eff_kg_m2": 0.30000451090073477,
+        "b_nm_s_rad": 0.6921084872119247,
+        "tau_c_nm": 0.0007961150140899776
+      },
+      "observability": {
+        "I_eff": false,
+        "b": false,
+        "tau_c": true
+      },
+      "relative_error_provisional_parameters": {
+        "I_eff_kg_m2": 0.9999959969807247,
+        "b_nm_s_rad": 3.0444219112650193,
+        "tau_c_nm": 0.039873150701854765
+      },
+      "absolute_error_provisional_parameters": {
+        "I_eff_kg_m2": 0.44943459416924025,
+        "b_nm_s_rad": 0.6738870501861117,
+        "tau_c_nm": 0.0007720337489946077
+      },
+      "heldout_torque_rmse_nm": 0.0007124276926693896,
+      "heldout_motion": {
+        "VALIDATION_CLOSE_1": {
+          "status": "predicted",
+          "duration_s": 33.81666666666666,
+          "samples": 8117,
+          "theta_rmse_deg": 0.40229084436232787,
+          "velocity_rmse_rad_s": 0.0020326487441534205,
+          "final_angle_error_deg": -0.6319891481723793,
+          "measured_initial_angle_rad": 0.05271439007400067,
+          "measured_initial_velocity_rad_s": 8.742816662909644e-05,
+          "GT_trajectory_forcing": false,
+          "model": "constant Coulomb+viscous+inertia; passive backward-Euler native-step integration with Coulomb inclusion; no fitted per-angle terms",
+          "parameter_observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          }
+        }
+      },
+      "simulation_s": 694.6833333333333,
+      "wall_s_report_including_export": 4820.813281761017,
+      "wall_s_runner": 4796.771057141945,
+      "status": "SHORT_OPENING_SUCCESS",
+      "lifecycle_success": true,
+      "grasps": 1,
+      "recovery_grasps": 0,
+      "observation_adjustments": 1,
+      "attempts": [
+        {
+          "index": 0,
+          "termination_reason": "BOUNDED_IDENTIFICATION_INTERACTIONS_COMPLETE",
+          "acquisition": {
+            "event": "GRASP_VERIFIED",
+            "t": 312.5625,
+            "step": 75015,
+            "angle_deg": 0.002346604596823454,
+            "grasp_index": 0,
+            "pad_loads_n": [
+              0.5528193646731581,
+              0.4374364376100575
+            ],
+            "base": [
+              0.19605376022549204,
+              -0.5328198023693291,
+              -0.1,
+              -0.7953990037810357
+            ],
+            "contact_recovery_attempt_index": 0
+          },
+          "opening_gain_deg": 6.054941088426858,
+          "force_events": [],
+          "peak_pad_load_n": 1.551927587845481,
+          "minimum_joint_margin_rad": 0.8681995229530335,
+          "physical_attempt_wall_s": 2903.969147352036,
+          "short_success": true
+        }
+      ],
+      "updates": [
+        {
+          "parameters": {
+            "I_eff_kg_m2": 2.762912274828662e-10,
+            "b_nm_s_rad": 0.4911623565164623,
+            "tau_c_nm": 0.01907862480833284
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.5156957306858915,
+            "b_nm_s_rad": 1.785566916154428,
+            "tau_c_nm": 0.0018000655209045712
+          },
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "rank": 3,
+          "scaled_condition": 1986.6118914949766,
+          "training_rmse_nm": 0.0006407128495520477,
+          "heldout_torque_rmse_nm": null,
+          "supported_samples": 523,
+          "heldout_samples": 0
+        },
+        {
+          "parameters": {
+            "I_eff_kg_m2": 2.7629048001694785e-10,
+            "b_nm_s_rad": 0.4911746179445455,
+            "tau_c_nm": 0.019078650249963424
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.5156957306858915,
+            "b_nm_s_rad": 1.785566916154428,
+            "tau_c_nm": 0.0018000655209045712
+          },
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "rank": 3,
+          "scaled_condition": 1986.6118914949766,
+          "training_rmse_nm": 0.0006407125812735325,
+          "heldout_torque_rmse_nm": 0.0007179980245149957,
+          "supported_samples": 523,
+          "heldout_samples": 338
+        },
+        {
+          "parameters": {
+            "I_eff_kg_m2": 3.1456903033455974e-06,
+            "b_nm_s_rad": 1.2058935610503125,
+            "tau_c_nm": 0.01826705122827893
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.3460643159528654,
+            "b_nm_s_rad": 0.9130697304457374,
+            "tau_c_nm": 0.001011526646535967
+          },
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "rank": 3,
+          "scaled_condition": 1588.7509617016715,
+          "training_rmse_nm": 0.0008982466813953364,
+          "heldout_torque_rmse_nm": 0.0007118678297901841,
+          "supported_samples": 1279,
+          "heldout_samples": 338
+        },
+        {
+          "parameters": {
+            "I_eff_kg_m2": 1.7991025452789911e-06,
+            "b_nm_s_rad": 0.895238449508454,
+            "tau_c_nm": 0.018590212158467512
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.30000451090073477,
+            "b_nm_s_rad": 0.6921084872119247,
+            "tau_c_nm": 0.0007961150140899776
+          },
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "rank": 3,
+          "scaled_condition": 1449.3004343179848,
+          "training_rmse_nm": 0.0007790911432074427,
+          "heldout_torque_rmse_nm": 0.0007124276926693896,
+          "supported_samples": 1852,
+          "heldout_samples": 338
+        }
+      ],
+      "telemetry_export": {
+        "observations": 166724,
+        "physics_steps": 166724,
+        "closure_commands": 18621
+      },
+      "telemetry_issues": {},
+      "video": [
+        {
+          "file": "episode/contact_baseline.mp4",
+          "probe": {
+            "programs": [],
+            "stream_groups": [],
+            "streams": [
+              {
+                "codec_name": "h264",
+                "width": 1280,
+                "height": 960,
+                "r_frame_rate": "30/1",
+                "duration": "694.666667",
+                "nb_frames": "20840"
+              }
+            ],
+            "format": {
+              "duration": "694.666667",
+              "size": "34111267"
+            }
+          }
+        }
+      ],
+      "strict_posthoc": {
+        "rule": "same SG121 +/-60 samples at every segment boundary; no truth-based selection",
+        "model": {
+          "supported_samples": 1839,
+          "heldout_samples": 332,
+          "kinematic_prior": {
+            "joint_type": "revolute",
+            "axis_world": [
+              5.0355020087683444e-08,
+              1.6773277983217483e-07,
+              -0.9999999999999846
+            ],
+            "origin_world_m": [
+              0.1158237640914842,
+              -0.14359152875922981,
+              0.28583300545535545
+            ],
+            "source": "explicit KNOWN_MODEL native joint anchor relative to measured moving body; no dynamics read",
+            "angle_source": "allowed actual articulation state V0",
+            "geometry_reference": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_transfer_20261015/46427/asset",
+            "native_joint_path": "/scene/Physics/joint_revolute_l_1_abstract_1_0",
+            "native_asset_sha256": "7208e6585483e89bbf0d9909529f737bb5f453ad86cb93766d3bc37888a9a2f5",
+            "measured_moving_body": "l_0",
+            "legacy_measurement_field": "T_moving_link",
+            "T_moving_joint": [
+              [
+                1.0,
+                0.0,
+                0.0,
+                -0.3841760754585266
+              ],
+              [
+                0.0,
+                -1.0,
+                0.0,
+                0.12341105192899704
+              ],
+              [
+                0.0,
+                0.0,
+                -1.0,
+                0.09359149634838104
+              ],
+              [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+              ]
+            ]
+          },
+          "model": "tau=I_eff*qdd+b*qd+tau_c*sign(qd)",
+          "terms_not_identified": [
+            "mass",
+            "full COM",
+            "full inertia tensor",
+            "angle-dependent friction",
+            "spring vs gravity"
+          ],
+          "gravity_axis_projection": 0.9999999999999846,
+          "measurement": "fixed-joint wrist F/T minus bias plus tool gravity minus tool inertia; no GT object effort",
+          "derivative_window_samples": 121,
+          "update_latency_s": 0.25,
+          "data_tags": "not execution gates",
+          "uncertainty_note": "conditional linear covariance, not calibrated hardware confidence; correlated sensor/solver residuals remain",
+          "parameters": {
+            "I_eff_kg_m2": 3.3294158181518783e-06,
+            "b_nm_s_rad": 0.3145276299343261,
+            "tau_c_nm": 0.019264992217015667
+          },
+          "conditional_std": {
+            "I_eff_kg_m2": 0.35112078491379506,
+            "b_nm_s_rad": 0.7491304287886918,
+            "tau_c_nm": 0.0008632959658861025
+          },
+          "rank": 3,
+          "scaled_singular_values": [
+            1.9297995080124921,
+            0.010758046669415,
+            0.0012343963544930265
+          ],
+          "scaled_condition": 1563.3548341165279,
+          "training_rmse_nm": 0.0005135931171288965,
+          "regularization": 0.001,
+          "observability": {
+            "I_eff": false,
+            "b": false,
+            "tau_c": true
+          },
+          "valid_range_rad": [
+            5.5605425905368995e-06,
+            0.1056721987308519
+          ],
+          "heldout_torque_rmse_nm": 0.0007262749652539066
+        },
+        "heldout_motion_predictions": {
+          "VALIDATION_CLOSE_1": {
+            "status": "predicted",
+            "duration_s": 33.81666666666666,
+            "samples": 8117,
+            "theta_rmse_deg": 1.7407608714457816,
+            "velocity_rmse_rad_s": 0.005495906998365971,
+            "final_angle_error_deg": -2.7806680649011204,
+            "measured_initial_angle_rad": 0.05271439007400067,
+            "measured_initial_velocity_rad_s": 8.742816662909644e-05,
+            "GT_trajectory_forcing": false,
+            "model": "constant Coulomb+viscous+inertia; passive backward-Euler native-step integration with Coulomb inclusion; no fitted per-angle terms"
+          }
+        }
+      },
+      "stream_integrity": {
+        "records": {
+          "rows": 166724,
+          "FT_valid": 166724,
+          "FT_missing": 0
+        },
+        "timestamp_interval_s": [
+          0.004166666666606034,
+          0.0041666666667197205
+        ],
+        "maximum_angle_deg": 6.057287693023682,
+        "minimum_joint_margin_rad": 0.86819248960495,
+        "phase_simulation_s": {
+          "PREGRASP": 248.7,
+          "SETTLE": 0.5,
+          "APPROACH": 25.141666666666666,
+          "SLOW_CLOSE": 74.40833333333333,
+          "CENTER": 2.533333333333333,
+          "LOW_PRELOAD": 0.6416666666666667,
+          "FORCE_HOLD": 0.5041666666666667,
+          "VALIDATED_PREFIX_EXTRA_HOLD": 0.5,
+          "TRANSMISSION_PROBE": 65.63333333333334,
+          "OPEN_CONTINUE": 154.45416666666668,
+          "IDENTIFICATION_STATIC_PAUSE": 21.208333333333332,
+          "RELEASE": 74.67916666666666,
+          "CLEARANCE_RETREAT": 25.779166666666665
+        },
+        "maximum_measured_TCP_speed_m_s_by_phase": {
+          "PREGRASP": 0.027828002627529807,
+          "SETTLE": 4.524817606132279e-05,
+          "APPROACH": 0.005399850065525787,
+          "SLOW_CLOSE": 0.00041700883160024956,
+          "CENTER": 0.00048794837122707776,
+          "LOW_PRELOAD": 0.0005904533284674082,
+          "FORCE_HOLD": 0.00021187819214398275,
+          "VALIDATED_PREFIX_EXTRA_HOLD": 0.0002226190013193498,
+          "TRANSMISSION_PROBE": 0.0015235977186606705,
+          "OPEN_CONTINUE": 0.0010700056612287338,
+          "IDENTIFICATION_STATIC_PAUSE": 0.001177220678046336,
+          "RELEASE": 0.001831037583377577,
+          "CLEARANCE_RETREAT": 0.005460681709752977
+        },
+        "pad_peaks_n": {
+          "filtered_gripper_link1": 0.8002153162394774,
+          "filtered_gripper_link2": 1.551927587845481,
+          "raw_gripper_link1": 0.8002153162394774,
+          "raw_gripper_link2": 1.551927587845481
+        },
+        "missing_FT_sample_times_s": [],
+        "torque_semantics": "wrist raw is incoming fixed-joint spatial reaction; arm/G1 projected reactions are not isolated drive torque",
+        "independent_motor_drive_output_available": false
+      }
+    }
+  ]
+}

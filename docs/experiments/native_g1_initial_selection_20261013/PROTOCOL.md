@@ -1,0 +1,11 @@
+# Initial-contact grasp selection development protocol
+
+Reference `5d15b90`. Preserve the ten-case benchmark and both isolated closure-development versions. No CENTER tuning, force/position-bound increase, arm-gain change or collision/dynamics modification.
+
+Analyze existing cached candidate families and archived native contacts for 45623, 45717, 45671, 45916 and successful 45638. Score entry accessibility from the same native closing audit and existing visual/native common-aperture curves. The single shared change replaces unconstrained best-final-aperture contact utility with interpolated bilateral support at the earliest native finger engagement. The verified direct-normal opening support, candidate family, root/other-object collision treatment, Pink costs, IK branches, approach checks, base search and 300 s planning budget remain unchanged.
+
+Fine offline checks use the unchanged actual cooked object geometry and official native G1 hand; compare first finger-contact apertures, pad support and the existing 4 cm open-hand approach. Evaluate the recorded 1.58 mm / 0.389° TCP command-to-measured transform as sensitivity only; do not apply it to correct the chosen pose or alter execution.
+
+If a credible automatic plan exists, execute at most ONE normally closed **45671 grasp-and-hold** episode. Use original frozen `JawCenteredClosure` SHA256 `b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c`, original native actuator and physical protections. Neither the unconditional CENTER-closing module nor contact-feedback module is loaded. Reuse the closure-only runner with bounded centering retained; no opening, manual correction, release, regrasp, restart or stitching. Initial base optimization is permitted; base and object remain fixed during the attempt.
+
+Verify actual source/plan/configuration hashes and recording before approach. GPU capacity, not exclusivity, governs scheduling; our actors run sequentially. Keep continuous video and raw 240 Hz streams private. Preserve complete exports and close the finished actor. Stop after the single attempt; do not tune or retry a physical failure. If no credible candidate exists, report the geometric/planning blocker without launching physics.

@@ -1,0 +1,32 @@
+{
+  "reference": "1c98f9b",
+  "label": "AGENT_WRIST_RGBD / KNOWN_HINGE_STATE / IDEAL_LOAD_CELL / APPROXIMATE_ACTUATOR_SIMULATION",
+  "storage_budget_bytes": 1000000000,
+  "optional_clip_budget_bytes": 12000000,
+  "optional_event_clip_seconds_total": 4.0,
+  "unloaded_record_hz": 10,
+  "contact_record_hz": 240,
+  "array_chunk_records": 8192,
+  "agent_adjustments": 4,
+  "max_handle_acquisitions": 2,
+  "max_agent_commands": 22,
+  "episode_wall_limit_s": 1800,
+  "agent_wait_limit_s": 120,
+  "identification": {
+    "model": "tau = I_eff*qdd + b*qd + C*sign(qd)",
+    "derivative_window_samples": 121,
+    "segment_edge_exclusion_samples": 121,
+    "effort_floor_nm": 0.004644,
+    "regularization": 0.001,
+    "scales": [1.0, 0.25, 0.045],
+    "hidden_dynamics_input": false,
+    "validation": "complete predeclared segments; segment-local preprocessing only"
+  },
+  "motion_menu": {
+    "slow": {"reference_speed_m_s": 0.006, "reference_acceleration_m_s2": 0.02, "profile": "constant"},
+    "normal": {"reference_speed_m_s": 0.012, "reference_acceleration_m_s2": 0.04, "profile": "constant"},
+    "varied": {"reference_speed_m_s": 0.010, "reference_acceleration_m_s2": 0.03, "profile": "smooth_variation"}
+  },
+  "geometry_policy": "unchanged observed wrist RGB-D/SAM3, incremental semantic fusion and native G1 scoring",
+  "physics_and_grip": "unchanged from 1c98f9b; constant resistance scene; no new grip authority"
+}

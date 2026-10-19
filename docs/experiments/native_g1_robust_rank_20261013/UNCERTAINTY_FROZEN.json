@@ -1,0 +1,117 @@
+{
+  "schema": "native-g1-robust-rank-v1",
+  "frozen_before_new_planning_or_outcomes": true,
+  "translation_m": 0.001,
+  "rotation_deg": 0.5,
+  "aperture_m": 0.0006,
+  "perturbations": "15 deterministic samples: nominal; +/- each of three TCP-local translations; +/- each of three TCP-local rotations; +/- common aperture. No joint GT settling transform used.",
+  "scale_rationale": "1 mm modest translation is of the order of 0.64-0.86 mm successful closure nominal residuals and below 1.57-2.66 mm failed centered residuals. 0.5 deg is a modest rounded orientation stress, documented against all archived residuals. 0.6 mm aperture covers common finite-position load deflection across successful 45526,45638,45667,45850,45908; not a measured settling replay. These are stress scales, not confidence bounds.",
+  "archive_evidence": [
+    {
+      "asset_id": "45526",
+      "grasp_success": true,
+      "t": 123.46249999999999,
+      "nominal_to_measured_tcp_shift_mm": 0.8167601300306976,
+      "nominal_to_measured_orientation_deg": 0.28892494114707934,
+      "measured_minus_command_aperture_mm": 0.607007004710225,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45638",
+      "grasp_success": true,
+      "t": 135.11666666666667,
+      "nominal_to_measured_tcp_shift_mm": 0.6420414321623688,
+      "nominal_to_measured_orientation_deg": 0.23224812447867726,
+      "measured_minus_command_aperture_mm": 0.5974053782899086,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45667",
+      "grasp_success": true,
+      "t": 139.575,
+      "nominal_to_measured_tcp_shift_mm": 0.8553248824289096,
+      "nominal_to_measured_orientation_deg": 0.19776641097684797,
+      "measured_minus_command_aperture_mm": 0.6064726639452775,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45623",
+      "grasp_success": false,
+      "t": 352.21666666666664,
+      "nominal_to_measured_tcp_shift_mm": 2.658097758958627,
+      "nominal_to_measured_orientation_deg": 0.24057938754903915,
+      "measured_minus_command_aperture_mm": 0.032755495105358384,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45717",
+      "grasp_success": false,
+      "t": 180.525,
+      "nominal_to_measured_tcp_shift_mm": 1.572103212904632,
+      "nominal_to_measured_orientation_deg": 0.16452691017453783,
+      "measured_minus_command_aperture_mm": 0.0669335342059138,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45850",
+      "grasp_success": true,
+      "t": 154.74166666666667,
+      "nominal_to_measured_tcp_shift_mm": 0.7944294220593329,
+      "nominal_to_measured_orientation_deg": 0.18150135656135835,
+      "measured_minus_command_aperture_mm": 0.6050437764911348,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45671",
+      "grasp_success": false,
+      "t": 166.17916666666667,
+      "nominal_to_measured_tcp_shift_mm": 1.0663885259201766,
+      "nominal_to_measured_orientation_deg": 0.14131947049353072,
+      "measured_minus_command_aperture_mm": 0.20034456206438275,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45783",
+      "grasp_success": true,
+      "t": 273.0708333333333,
+      "nominal_to_measured_tcp_shift_mm": 0.32644898976686454,
+      "nominal_to_measured_orientation_deg": 0.29714387580009805,
+      "measured_minus_command_aperture_mm": 0.5867481988935906,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45908",
+      "grasp_success": true,
+      "t": 115.87916666666666,
+      "nominal_to_measured_tcp_shift_mm": 0.8198137854206033,
+      "nominal_to_measured_orientation_deg": 0.2131434944070624,
+      "measured_minus_command_aperture_mm": 0.6201550236601301,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    },
+    {
+      "asset_id": "45916",
+      "grasp_success": false,
+      "t": 156.6875,
+      "nominal_to_measured_tcp_shift_mm": 1.9040977370864418,
+      "nominal_to_measured_orientation_deg": 0.24332939456120387,
+      "measured_minus_command_aperture_mm": 0.029277946659675425,
+      "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+    }
+  ],
+  "shortlist_max": 18,
+  "aperture_samples": 5,
+  "pad_grid": [
+    9,
+    7
+  ],
+  "mean_weight": 0.7,
+  "lower_quartile_weight": 0.3,
+  "friction_cone_assumption_mu": 0.5,
+  "friction_note": "hypothetical isotropic Coulomb cone used only as relative direction-capacity ranking; no measured friction, calibrated wrench or physical parameter change. Also report mu=0 sensitivity, never veto on its sign.",
+  "retention_longitudinal_scale_fraction_pad_depth": 0.1,
+  "retention_lateral_scale_fraction_pad_width": 0.025,
+  "support_gap_band_m": 0.0006,
+  "depth_orientation_refinement": false,
+  "per_object_planning_wall_s": 450,
+  "new_execution_gates": false
+}

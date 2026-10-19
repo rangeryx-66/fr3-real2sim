@@ -1,0 +1,90 @@
+{
+  "schema": "structure-physics-refinement-v1",
+  "base_commit": "f598240",
+  "output": "results/interactive_twin_refinement_20261004",
+  "original_output": "results/interactive_twin_benchmark_20261003_v2",
+  "recovery_output": "results/interactive_twin_recovery_20261003_v2",
+  "deadline_shanghai": "2026-10-04T05:00:00+08:00",
+  "episodes": [
+    "dev_7320_00",
+    "test_45621_00",
+    "test_45621_01",
+    "test_45621_02"
+  ],
+  "fitting": {
+    "position_noise_m": 2e-05,
+    "rotation_noise_rad": 2e-05,
+    "maximum_samples": 180,
+    "max_nfev": 160
+  },
+  "refinement": {
+    "maximum_extra_trajectories": 1,
+    "opening_deg": 10.0,
+    "reverse_deg": 2.5,
+    "switch_exclusion_s": 0.5
+  },
+  "selection": {
+    "minimum_validation_improvement_fraction": 0.05,
+    "maximum_validation_rms_noise_units": 10.0,
+    "minimum_train_motion_m": 0.005,
+    "minimum_reverse_motion_m": 0.005
+  },
+  "physics": {
+    "grid": {
+      "tau_c": [
+        0.0,
+        0.004,
+        0.012
+      ],
+      "b": [
+        0.0,
+        0.3,
+        1.0
+      ]
+    },
+    "maximum_candidates": 9,
+    "wrong_prior": {
+      "tau_c": 0.012,
+      "b": 1.0
+    },
+    "additional_hidden_condition": {
+      "tau_c": 0.004,
+      "b": 0.3
+    },
+    "profile_loss_delta": 1.0
+  },
+  "actions": [
+    {
+      "probe_id": "P1",
+      "split": "train",
+      "duration_s": 8.0,
+      "speed_m_s": 0.00025,
+      "pattern": "opening"
+    },
+    {
+      "probe_id": "P2",
+      "split": "train",
+      "duration_s": 8.0,
+      "speed_m_s": 0.0005,
+      "pattern": "opening"
+    },
+    {
+      "probe_id": "P3",
+      "split": "validation",
+      "duration_s": 10.0,
+      "speed_m_s": 0.0005,
+      "pattern": "stop_restart"
+    },
+    {
+      "probe_id": "P4",
+      "split": "heldout",
+      "duration_s": 8.0,
+      "speed_m_s": 0.0003,
+      "pattern": "reverse_pulse"
+    }
+  ],
+  "test_policy": "P4 is a new reverse pulse. Prior round P4 is historical data, not this round unseen test. Test response is only scored after model/parameter selection is saved.",
+  "physics_semantics": "effective simulator parameters; no real torque scale; fixed original mass/inertia/robot/control/contact priors",
+  "safety_baseline": "f5dcc6f + cd61660; unchanged",
+  "transfer_scope": "one unseen asset 45621, three existing configurations; original 12-scene failures retained"
+}

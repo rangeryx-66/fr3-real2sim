@@ -1,0 +1,203 @@
+{
+  "schema": "observability-aware-conditional-probes-v1",
+  "base_commit": "3e5e856",
+  "output": "results/interactive_twin_observable_20261004",
+  "refinement_output": "results/interactive_twin_refinement_20261004",
+  "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+  "gpus": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "native_wall_clock_budget_s": 1000,
+  "maximum_structure_candidates": 5,
+  "maximum_physics_candidates_per_structure": 9,
+  "maximum_reference_probes": 4,
+  "physics_grid": {
+    "tau_c": [
+      0.0,
+      0.004,
+      0.012
+    ],
+    "b": [
+      0.0,
+      0.3,
+      1.0
+    ]
+  },
+  "wrong_prior": {
+    "tau_c": 0.012,
+    "b": 1.0
+  },
+  "selection": {
+    "profile_loss_delta": 1.0,
+    "max_validation_rms_noise_units": 10.0,
+    "regression_absolute_tolerance_m": 1e-05,
+    "improvement_fraction": 0.05
+  },
+  "structure_policy": {
+    "seed": 732061660,
+    "temporal_blocks": 4,
+    "bootstrap_samples": 4,
+    "scatter_fraction": 0.25,
+    "maximum_training_ratio": 1.5,
+    "fitting": {
+      "position_noise_m": 2e-05,
+      "rotation_noise_rad": 2e-05,
+      "maximum_samples": 180,
+      "max_nfev": 160
+    }
+  },
+  "noise_calibration": "results/interactive_twin_benchmark_20261003_v2/robot_calibration/robot_calibration.json",
+  "trial_semantics": "Each probe is a separate conditional-A trial: one identical observed stable-grasp initialization, contacts physically rebuilt; not uninterrupted multi-action manipulation. No state reset within a trial.",
+  "prediction_budget": "At most 5x9 distinct structure/physics points; each receives at most four <=10s training actions. No optimizer iteration. Predictions for optional actions are generated before reference responses.",
+  "regression_source": "results/interactive_twin_conditional_20261004/dev_7320_00/common_start_heldout/results.json",
+  "episodes": [
+    {
+      "episode_id": "dev_7320_00",
+      "source_job": "results/interactive_twin_conditional_20261004/dev_7320_00/prepared.json",
+      "source_job_key": "source_job",
+      "snapshot": "results/interactive_twin_conditional_20261004/dev_7320_00/stable_grasp_snapshot.json",
+      "scene": "results/interactive_twin_refinement_20261004/dev_7320_00/reference/initial_scene_private.json",
+      "structure_actions": "results/interactive_twin_refinement_20261004/dev_7320_00/refinement_once/measured_actions.json",
+      "center_fit": "results/interactive_twin_refinement_20261004/dev_7320_00/structure_selection.json",
+      "center_fit_key": "refined",
+      "prior_reverse_actions": "results/interactive_twin_conditional_20261004/dev_7320_00/reference/original/measured_actions.json",
+      "conditions": {
+        "original": {
+          "tau_c": 0.0005,
+          "b": 0.05
+        },
+        "additional_nonzero": {
+          "tau_c": 0.004,
+          "b": 0.3
+        }
+      }
+    },
+    {
+      "episode_id": "test_45621_00",
+      "source_job": "results/interactive_twin_conditional_20261004/test_45621_00/reference/original/job_private.json",
+      "snapshot": "results/interactive_twin_conditional_20261004/test_45621_00/stable_grasp_snapshot.json",
+      "scene": "results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_execution/candidate_00/initial_scene_private.json",
+      "structure_observations": "results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_execution/candidate_00/observations.json",
+      "prior_reverse_actions": "results/interactive_twin_conditional_20261004/test_45621_00/reference/original/measured_actions.json",
+      "conditions": {
+        "original": null
+      }
+    }
+  ],
+  "probes": [
+    {
+      "name": "low_forward",
+      "probe_id": "P1",
+      "split": "train",
+      "duration_s": 8.0,
+      "speed_m_s": 0.00025,
+      "windows": [
+        [
+          1.0,
+          6.0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "high_forward",
+      "probe_id": "P2",
+      "split": "train",
+      "duration_s": 8.0,
+      "speed_m_s": 0.0005,
+      "windows": [
+        [
+          1.0,
+          6.0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "stop_dwell",
+      "probe_id": "P3",
+      "split": "validation",
+      "duration_s": 8.0,
+      "speed_m_s": 0.00025,
+      "windows": [
+        [
+          1.0,
+          3.0,
+          1
+        ]
+      ]
+    },
+    {
+      "name": "reverse",
+      "probe_id": "P2",
+      "split": "train",
+      "duration_s": 10.0,
+      "speed_m_s": 0.0005,
+      "windows": [
+        [
+          0.5,
+          4.0,
+          1
+        ],
+        [
+          4.0,
+          9.0,
+          -1
+        ]
+      ]
+    }
+  ],
+  "heldout": {
+    "name": "unseen_pulse",
+    "probe_id": "P4",
+    "split": "heldout",
+    "duration_s": 10.0,
+    "speed_m_s": 0.000325,
+    "windows": [
+      [
+        1.0,
+        3.0,
+        1
+      ],
+      [
+        4.5,
+        7.5,
+        1
+      ]
+    ]
+  },
+  "regression_spec": {
+    "probe_id": "P4",
+    "split": "heldout",
+    "duration_s": 8.0,
+    "speed_m_s": 0.000375,
+    "pattern": "double_pulse",
+    "active_windows_s": [
+      [
+        0.8,
+        2.4
+      ],
+      [
+        3.2,
+        5.6
+      ]
+    ]
+  },
+  "no_changes": [
+    "grasp",
+    "contact",
+    "proxy",
+    "base",
+    "controller",
+    "joint_fitter",
+    "physics_scoring",
+    "friction/force safety",
+    "mobile_recovery",
+    "1mm observability"
+  ]
+}

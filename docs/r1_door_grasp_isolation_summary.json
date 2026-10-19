@@ -1,0 +1,690 @@
+{
+  "fixed_base": [
+    0.5,
+    -0.55,
+    -0.1,
+    150.0
+  ],
+  "no_geometry_friction_or_gripper_force_changes": true,
+  "door_no_robot": {
+    "kind": "passive door torque sweep, robot not loaded",
+    "hinge_axis_world": [
+      0.0,
+      0.0,
+      -1.0
+    ],
+    "handle_radius_m": 0.4126382304514479,
+    "joint_limits_rad": {
+      "lower": -0.0,
+      "upper": 1.5707963267948966
+    },
+    "mass_audit": [
+      {
+        "link": "abstract_0_1",
+        "before": {
+          "center_of_mass": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "diagonal_inertia": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "mass_kg": 1.0
+        },
+        "geometry_com_local_m": [
+          0.21569289394321706,
+          -0.17443511248053534,
+          0.006730646544508417
+        ],
+        "geometry_inertia_kg_m2": [
+          0.0054231350807327815,
+          0.01585581639902224,
+          0.020941046328916288
+        ]
+      },
+      {
+        "link": "l_1",
+        "before": {
+          "center_of_mass": [
+            -0.038195837289094925,
+            -0.018334990367293358,
+            0.13720455765724182
+          ],
+          "diagonal_inertia": [
+            0.005423135124146938,
+            0.01585581712424755,
+            0.020941046997904778
+          ],
+          "mass_kg": 1.0
+        },
+        "geometry_com_local_m": [
+          -0.03819583871715865,
+          -0.018334989894973994,
+          0.13720455223138853
+        ],
+        "geometry_inertia_kg_m2": [
+          0.0054231350807327815,
+          0.01585581639902224,
+          0.020941046328916288
+        ]
+      }
+    ],
+    "collision_geometry_unchanged": true,
+    "opening_torque_upper_bound_nm": 1.0,
+    "opening_tangential_force_upper_bound_n": 2.4234303227452956,
+    "threshold": "more than 0.5 degree within test duration; includes support collision friction"
+  },
+  "door_torque_trials": [
+    {
+      "torque_nm": 0.0,
+      "max_angle_deg": 0.00018935395676458665,
+      "end_angle_deg": 2.1894714516145274e-07,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 0.00011531088966876268
+      }
+    },
+    {
+      "torque_nm": 0.01,
+      "max_angle_deg": 0.013826885878891049,
+      "end_angle_deg": 0.013826885878891049,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 133.41827392578125
+      }
+    },
+    {
+      "torque_nm": 0.1,
+      "max_angle_deg": 0.07676750429985502,
+      "end_angle_deg": 0.07676750429985502,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 133.35458374023438
+      }
+    },
+    {
+      "torque_nm": 0.25,
+      "max_angle_deg": 0.07919602341597802,
+      "end_angle_deg": 0.07919602341597802,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 199.5328826904297
+      }
+    },
+    {
+      "torque_nm": 0.5,
+      "max_angle_deg": 0.08634591746597893,
+      "end_angle_deg": 0.0862225605143088,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 266.1767578125
+      }
+    },
+    {
+      "torque_nm": 0.75,
+      "max_angle_deg": 0.13660127544016915,
+      "end_angle_deg": 0.13660127544016915,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 199.21495056152344
+      }
+    },
+    {
+      "torque_nm": 1.0,
+      "max_angle_deg": 42.047430002353046,
+      "end_angle_deg": 42.047430002353046,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 253.41835021972656
+      }
+    },
+    {
+      "torque_nm": 2.0,
+      "max_angle_deg": 90.00000933466734,
+      "end_angle_deg": 90.00000933466734,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 10.021077156066895
+      }
+    },
+    {
+      "torque_nm": -0.1,
+      "max_angle_deg": 5.861278982714179e-11,
+      "end_angle_deg": 5.778705695402942e-11,
+      "collision_peak_by_body_n": {
+        "/World/articulated_pose/asset/Geometry/l_world": 0.0,
+        "/World/articulated_pose/asset/Geometry/l_world/l_0": 0.0,
+        "/World/table": 0.0,
+        "/World/cabinet_fixture": 0.00011589472705963999
+      }
+    }
+  ],
+  "max_feasible_door_angle_with_ideal_grasp": 21.5,
+  "ideal_result_scope": "continuous local IK branch with robot MoveIt collisions checked; not a globally optimal bound or environment-clearance certification",
+  "ideal_failed_angle_deg": 22.0,
+  "ideal_failure_reason": "NO_SAFE_CONTINUOUS_IK",
+  "ideal_failure_trials": [
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": null,
+      "position_error_m": 0.0012164431790362131,
+      "rotation_error_rad": 0.0025355420316127133,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.05500000000000016,
+      "joint_margins_rad": {
+        "J1": 0.07766149839748326,
+        "J2": 0.05500000000000016,
+        "J3": 1.023984807487904,
+        "J4": 0.12772717294469302,
+        "J5": 0.05500000000000016,
+        "J6": 0.4840587286662601,
+        "J7": 1.3374256424937385
+      },
+      "J5": 0.05500000000000016,
+      "J6": 0.4840587286662601,
+      "J7": 1.3374256424937385,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": null,
+      "position_error_m": 0.001050483178938045,
+      "rotation_error_rad": 0.0032078430603458856,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.05500000000000371,
+      "joint_margins_rad": {
+        "J1": 0.07469809161891572,
+        "J2": 0.05500000000000016,
+        "J3": 1.0236110602724953,
+        "J4": 0.12709236501369917,
+        "J5": 0.05500000000000371,
+        "J6": 0.4827304171097614,
+        "J7": 1.34034554490318
+      },
+      "J5": 0.05500000000000371,
+      "J6": 0.4827304171097614,
+      "J7": 1.34034554490318,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": null,
+      "position_error_m": 0.0016040668711170486,
+      "rotation_error_rad": 0.007406462843069572,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.05500000000000016,
+      "joint_margins_rad": {
+        "J1": 0.07422369405842444,
+        "J2": 0.05500000000000016,
+        "J3": 1.0186940166387854,
+        "J4": 0.12398884013965317,
+        "J5": 0.05500000000000016,
+        "J6": 0.48694542164087357,
+        "J7": 1.336458469274747
+      },
+      "J5": 0.05500000000000016,
+      "J6": 0.48694542164087357,
+      "J7": 1.336458469274747,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": 2.364852042740605,
+      "position_error_m": 0.003666015828110578,
+      "rotation_error_rad": 0.008726646259943014,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.07936992071250781,
+      "joint_margins_rad": {
+        "J1": 0.11814795725939531,
+        "J2": 0.05500000000000016,
+        "J3": 1.0457336249807692,
+        "J4": 0.13725695707882535,
+        "J5": 0.07936992071250781,
+        "J6": 0.4951479034213925,
+        "J7": 1.3136733650361538
+      },
+      "J5": 0.07936992071250781,
+      "J6": 0.4951479034213925,
+      "J7": 1.3136733650361538,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": 2.4448520427406044,
+      "position_error_m": 0.003666015828110578,
+      "rotation_error_rad": 0.008726646259943014,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.07936992071250781,
+      "joint_margins_rad": {
+        "J1": 0.11814795725939531,
+        "J2": 0.05500000000000016,
+        "J3": 1.0457336249807692,
+        "J4": 0.13725695707882535,
+        "J5": 0.07936992071250781,
+        "J6": 0.4951479034213925,
+        "J7": 1.3136733650361538
+      },
+      "J5": 0.07936992071250781,
+      "J6": 0.4951479034213925,
+      "J7": 1.3136733650361538,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": 2.5248520427406045,
+      "position_error_m": 0.003666015828110578,
+      "rotation_error_rad": 0.008726646259943014,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.07936992071250781,
+      "joint_margins_rad": {
+        "J1": 0.11814795725939531,
+        "J2": 0.05500000000000016,
+        "J3": 1.0457336249807692,
+        "J4": 0.13725695707882535,
+        "J5": 0.07936992071250781,
+        "J6": 0.4951479034213925,
+        "J7": 1.3136733650361538
+      },
+      "J5": 0.07936992071250781,
+      "J6": 0.4951479034213925,
+      "J7": 1.3136733650361538,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": 2.6679999,
+      "position_error_m": 0.0013451731866321104,
+      "rotation_error_rad": 0.0028388668950459746,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.05500000000000016,
+      "joint_margins_rad": {
+        "J1": 0.07664641141168715,
+        "J2": 0.057247366127579635,
+        "J3": 1.0243260780531065,
+        "J4": 0.1281097554016279,
+        "J5": 0.05500000000000016,
+        "J6": 0.481762604423642,
+        "J7": 1.3385010400421968
+      },
+      "J5": 0.05500000000000016,
+      "J6": 0.481762604423642,
+      "J7": 1.3385010400421968,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": 2.6679999,
+      "position_error_m": 0.0013451731866321104,
+      "rotation_error_rad": 0.0028388668950459746,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.05500000000000016,
+      "joint_margins_rad": {
+        "J1": 0.07664641141168715,
+        "J2": 0.057247366127579635,
+        "J3": 1.0243260780531065,
+        "J4": 0.1281097554016279,
+        "J5": 0.05500000000000016,
+        "J6": 0.481762604423642,
+        "J7": 1.3385010400421968
+      },
+      "J5": 0.05500000000000016,
+      "J6": 0.481762604423642,
+      "J7": 1.3385010400421968,
+      "status": "NO_EXACT_IK"
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J1",
+      "fixed_redundant_q_rad": 2.6679999,
+      "position_error_m": 0.0013451731866321104,
+      "rotation_error_rad": 0.0028388668950459746,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.05500000000000016,
+      "joint_margins_rad": {
+        "J1": 0.07664641141168715,
+        "J2": 0.057247366127579635,
+        "J3": 1.0243260780531065,
+        "J4": 0.1281097554016279,
+        "J5": 0.05500000000000016,
+        "J6": 0.481762604423642,
+        "J7": 1.3385010400421968
+      },
+      "J5": 0.05500000000000016,
+      "J6": 0.481762604423642,
+      "J7": 1.3385010400421968,
+      "status": "NO_EXACT_IK"
+    }
+  ],
+  "weighted_jacobian_singular_values_at_failure": [
+    0.4907053048065825,
+    0.3143075211229499,
+    0.13953990227062446,
+    0.09025852552940783,
+    0.05009224799912185,
+    0.03615096637060178
+  ],
+  "max_stable_tangential_force": null,
+  "load_test_status": "LOAD_NO_SAFE_IK",
+  "load_failure_trials": [
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": null,
+      "position_error_m": 1.626893484962075e-14,
+      "rotation_error_rad": 2.2192869514373127e-14,
+      "all_joint_min_rad": 0.19113784908025266,
+      "focus_min_rad": 0.5239999999999987,
+      "joint_margins_rad": {
+        "J1": 1.2689277050787355,
+        "J2": 0.19113784908025266,
+        "J3": 1.6529515883619217,
+        "J4": 0.9102800182536553,
+        "J5": 0.6241689406275814,
+        "J6": 0.5239999999999987,
+        "J7": 1.3506948403170616
+      },
+      "J5": 0.6241689406275814,
+      "J6": 0.5239999999999987,
+      "J7": 1.3506948403170616,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": null,
+      "position_error_m": 5.526148348549989e-15,
+      "rotation_error_rad": 7.201488842070053e-15,
+      "all_joint_min_rad": 0.19113784908024778,
+      "focus_min_rad": 0.5239999999999989,
+      "joint_margins_rad": {
+        "J1": 1.2689277050786776,
+        "J2": 0.19113784908024778,
+        "J3": 1.652951588361914,
+        "J4": 0.910280018253659,
+        "J5": 0.6241689406275572,
+        "J6": 0.5239999999999989,
+        "J7": 1.3506948403171126
+      },
+      "J5": 0.6241689406275572,
+      "J6": 0.5239999999999989,
+      "J7": 1.3506948403171126,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": null,
+      "position_error_m": 4.02913055320928e-11,
+      "rotation_error_rad": 6.756442351900662e-11,
+      "all_joint_min_rad": 0.19113784912996667,
+      "focus_min_rad": 0.5239999999999988,
+      "joint_margins_rad": {
+        "J1": 1.26892770512359,
+        "J2": 0.19113784912996667,
+        "J3": 1.6529515883533827,
+        "J4": 0.9102800181354543,
+        "J5": 0.6241689406513824,
+        "J6": 0.5239999999999988,
+        "J7": 1.3506948401406687
+      },
+      "J5": 0.6241689406513824,
+      "J6": 0.5239999999999988,
+      "J7": 1.3506948401406687,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": -0.28004986211657523,
+      "position_error_m": 3.6188843062238402e-16,
+      "rotation_error_rad": 2.0388543822366052e-15,
+      "all_joint_min_rad": 0.2439501378834248,
+      "focus_min_rad": 0.2439501378834248,
+      "joint_margins_rad": {
+        "J1": 1.1996149505047162,
+        "J2": 0.47221670166786067,
+        "J3": 1.7715335472404334,
+        "J4": 0.9109699442539465,
+        "J5": 0.46844572653054595,
+        "J6": 0.2439501378834248,
+        "J7": 1.40572534390953
+      },
+      "J5": 0.46844572653054595,
+      "J6": 0.2439501378834248,
+      "J7": 1.40572534390953,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": -0.20004986211657524,
+      "position_error_m": 5.366522967413762e-10,
+      "rotation_error_rad": 1.1416753315823508e-09,
+      "all_joint_min_rad": 0.32395013788342475,
+      "focus_min_rad": 0.32395013788342475,
+      "joint_margins_rad": {
+        "J1": 1.2168218873798735,
+        "J2": 0.3902187965422761,
+        "J3": 1.7381790264130086,
+        "J4": 0.9110166693395434,
+        "J5": 0.5159154269483066,
+        "J6": 0.32395013788342475,
+        "J7": 1.385121794869559
+      },
+      "J5": 0.5159154269483066,
+      "J6": 0.32395013788342475,
+      "J7": 1.385121794869559,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": -0.12004986211657524,
+      "position_error_m": 1.9970121844107674e-12,
+      "rotation_error_rad": 3.750404414104944e-12,
+      "all_joint_min_rad": 0.30964771039122185,
+      "focus_min_rad": 0.40395013788342476,
+      "joint_margins_rad": {
+        "J1": 1.2360878425422808,
+        "J2": 0.30964771039122185,
+        "J3": 1.7046086748354932,
+        "J4": 0.910865241999545,
+        "J5": 0.560611659454678,
+        "J6": 0.40395013788342476,
+        "J7": 1.3686459002767435
+      },
+      "J5": 0.560611659454678,
+      "J6": 0.40395013788342476,
+      "J7": 1.3686459002767435,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": 0.03995013788342476,
+      "position_error_m": 2.2631975096358145e-12,
+      "rotation_error_rad": 3.1023868129822514e-12,
+      "all_joint_min_rad": 0.15230051107379383,
+      "focus_min_rad": 0.48404986211657525,
+      "joint_margins_rad": {
+        "J1": 1.2809523150636837,
+        "J2": 0.15230051107379383,
+        "J3": 1.6352339701992868,
+        "J4": 0.9099906959689834,
+        "J5": 0.6447126455664425,
+        "J6": 0.48404986211657525,
+        "J7": 1.3463808875411667
+      },
+      "J5": 0.6447126455664425,
+      "J6": 0.48404986211657525,
+      "J7": 1.3463808875411667,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": true,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": 0.11995013788342476,
+      "position_error_m": 5.783999296036366e-10,
+      "rotation_error_rad": 6.310698781243924e-10,
+      "all_joint_min_rad": 0.07540485948572595,
+      "focus_min_rad": 0.40404986211657523,
+      "joint_margins_rad": {
+        "J1": 1.3068004873598118,
+        "J2": 0.07540485948572595,
+        "J3": 1.5986855463929988,
+        "J4": 0.9092668585646688,
+        "J5": 0.6853848392462998,
+        "J6": 0.40404986211657523,
+        "J7": 1.3401168198113929
+      },
+      "J5": 0.6853848392462998,
+      "J6": 0.40404986211657523,
+      "J7": 1.3401168198113929,
+      "status": "COLLISION",
+      "contacts": [
+        [
+          "cabinet_door",
+          "dex1_Link1_2"
+        ]
+      ]
+    },
+    {
+      "solver_success": false,
+      "redundant_joint": "J6",
+      "fixed_redundant_q_rad": 0.19995013788342475,
+      "position_error_m": 0.003790233984077456,
+      "rotation_error_rad": 0.014959187825413752,
+      "all_joint_min_rad": 0.05500000000000016,
+      "focus_min_rad": 0.3856601123247587,
+      "joint_margins_rad": {
+        "J1": 1.307674227179347,
+        "J2": 0.05500000000000016,
+        "J3": 1.5931597580125274,
+        "J4": 0.9098306259443389,
+        "J5": 0.6970072260285831,
+        "J6": 0.3856601123247587,
+        "J7": 1.331081652174268
+      },
+      "J5": 0.6970072260285831,
+      "J6": 0.3856601123247587,
+      "J7": 1.331081652174268,
+      "status": "NO_EXACT_IK"
+    }
+  ],
+  "zero_displacement_preload_n": 2.3393222353930936,
+  "load_rows": [
+    {
+      "commanded_tangential_displacement_m": 0.0,
+      "relative_slip_m": 1.1638178938488147e-07,
+      "measured_tangential_force_n": 2.3393222353930936,
+      "signed_tangential_force_n": 2.3393222353930936,
+      "force_peak_n": 2.341241542728702,
+      "single_side_contact_loss_fraction": 0.0,
+      "forces_n": [
+        7.326744556427002,
+        11.11121940612793
+      ],
+      "actual_door_angle_deg": -1.4921820371351242e-07,
+      "all_joint_margin_rad": 0.2305208316802978,
+      "status": "STABLE"
+    }
+  ],
+  "capacity_not_measured_reason": "first 0.25 mm loading increment violates non-pad finger/door collision constraint; preload is not capacity",
+  "comfortable_grasp_margin": {
+    "all_joint_min_rad": 0.2397005076677723,
+    "focus_min_rad": 0.4826860079702058,
+    "joint_margins_rad": {
+      "J1": 1.2568135844334891,
+      "J2": 0.2397005076677723,
+      "J3": 1.6623630084510894,
+      "J4": 0.9182225156964235,
+      "J5": 0.6049570337002272,
+      "J6": 0.4826860079702058,
+      "J7": 1.343137412423876
+    },
+    "J5": 0.6049570337002272,
+    "J6": 0.4826860079702058,
+    "J7": 1.343137412423876
+  },
+  "gripper_close_forces_n": [
+    7.333823204040527,
+    11.114480972290039
+  ],
+  "urdf_isaac_max_pose_errors": {
+    "position_m": 2.465985779228207e-07,
+    "rotation_rad": 0.00042381891398690636
+  },
+  "max_joint_step_rad": 0.056209555591719695,
+  "min_ideal_joint_margin_rad": 0.05500000000000016,
+  "fully_collision_free_system_angle_deg": null,
+  "physical_scene_collision_blocker": "moving door collides with cabinet_fixture during opening; robot-only IK angle does not certify door/environment clearance"
+}

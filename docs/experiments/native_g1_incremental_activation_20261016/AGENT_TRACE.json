@@ -1,0 +1,82 @@
+[
+  {
+    "sequence": 0,
+    "operation": "evaluate_view",
+    "agent_reasoning": {
+      "observation": 0,
+      "inspected": [
+        {
+          "file": "engineering_artifacts_20261016/native_g1_incremental_activation/live/agent_00/agent_inspection.png",
+          "sha256": "608f54a7a839152a607978543c2686f72c36aa735a5081ed0c1a5ffbce4c8226"
+        },
+        {
+          "file": "engineering_artifacts_20261016/native_g1_incremental_activation/live/agent_00/semantic_surfaces.png",
+          "sha256": "17a818ec7a25d245c1be320186381c663476a675c1ae9efd59e31c62d35d27d6"
+        },
+        {
+          "file": "engineering_artifacts_20261016/native_g1_incremental_activation/live/agent_00/camera.json",
+          "sha256": "bc5c04a6c726ba488f3cc7066f2d8884f966cf440ae288b60541c43136a8b60f"
+        },
+        {
+          "file": "engineering_artifacts_20261016/native_g1_incremental_activation/live/agent_00/INSPECTION.json",
+          "sha256": "0e0a8a0994af33c9f35f834e1651867b084291f80efe9ce2738392b59d4e0244"
+        }
+      ],
+      "interpretation": "Fresh image shows lower handle only; upper jaw occludes its continuation. The semantic mask is accepted but does not establish full physical extent.",
+      "missing": "Upper continuation and another measured surface direction",
+      "choice": "Raise eye, shift toward observed handle side and re-center look above visible handle center",
+      "expected_benefit": "Expose upper continuation and reduce left-image framing bias without replaying archived views",
+      "GT_handle_input": false,
+      "decided_unix_s": 1792090968.168271
+    },
+    "agent_wait_wall_s": 85.52992900693789,
+    "operation_wall_s": 0.18750386405736208,
+    "target": {
+      "eye_world_m": [
+        0.4,
+        -0.94,
+        0.4
+      ],
+      "look_at_world_m": [
+        0.314,
+        -0.335,
+        0.51
+      ]
+    },
+    "feasible": true,
+    "validator": "unchanged IK/collision checker",
+    "route_executed": false
+  },
+  {
+    "sequence": 1,
+    "operation": "move_and_observe",
+    "agent_reasoning": {
+      "reason": "Original validator returned a direct collision/IK-feasible route with the currently observed cue in frame; execute actual joint motion and inspect a fresh observation.",
+      "expected": "Upper handle exposed; first-view footprint must not clip new surfaces",
+      "GT_handle_input": false,
+      "decided_unix_s": 1792090992.670176
+    },
+    "agent_wait_wall_s": 24.318234839942306,
+    "operation_wall_s": 0.15224513597786427,
+    "result": {
+      "error": "NameError(\"name 'actuate' is not defined\")",
+      "scene_preserved": true
+    }
+  },
+  {
+    "sequence": 2,
+    "operation": "finish",
+    "agent_reasoning": {
+      "no_new_view_was_executed": true,
+      "GT_handle_input": false,
+      "decided_unix_s": 1792091118.4088068
+    },
+    "agent_wait_wall_s": 125.71472863596864,
+    "operation_wall_s": 3.9256876334547997e-05,
+    "result": {
+      "completed": true,
+      "reason": "Bounded live validation stopped: move_and_observe callback has missing actuate global; evaluated move never executed. Preserve and export the one scene; no restart or retry.",
+      "grasp_or_opening_executed": false
+    }
+  }
+]

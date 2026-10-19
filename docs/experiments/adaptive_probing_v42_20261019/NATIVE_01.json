@@ -1,0 +1,292 @@
+{
+  "private_root": "results/adaptive_probing_v42_20261019/native_contact_01",
+  "classification": "ENGINEERING_COMPLETE",
+  "engineering_fixture_not_research": true,
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_HEALTHY_BEYOND_45",
+      "records": 1082,
+      "result": {
+        "ok": false,
+        "status": "SAFE_PARTIAL_PROGRESS",
+        "reason": "REMAINING_EPISODE_CANNOT_COMPLETE",
+        "angle_deg": 0.015380728902169159,
+        "gain_deg": 0.015381012940205541,
+        "requested_target_reached": false,
+        "planning": {
+          "valid": true,
+          "requested_target_rad": 0.013962634015954637,
+          "selected_target_rad": 0.013962634015954637,
+          "target_truncated": false,
+          "nominal_duration_s": 59.24583333333333,
+          "nominal_is_conservative_bound": false,
+          "max_sim_s": 445.5333333333333,
+          "stop_reserve_s": 0.006666666666666666,
+          "profile_cycle_s": 1.5,
+          "episode_remaining": {
+            "wall_s": 843.0173556210939,
+            "sim_s": 445.5333333333333,
+            "exit_reserved": true
+          },
+          "timing_assumption": "nominal ideal tracking; live measured ETA and finite episode resources; no implicit segment ceiling",
+          "reason": null
+        },
+        "panel_contacts": 0,
+        "safely_stopped": true,
+        "physical_transmission_valid": true,
+        "fit_prefix_transmission_valid": true,
+        "fit_valid_until_s": 4.504166666666663,
+        "transmission": {
+          "t_s": 4.504166666666663,
+          "window_s": 1.5,
+          "progress_rad": 4.719148273579776e-05,
+          "requested_travel_rad": 0.0003535088706446145,
+          "transmission_ratio": 0.1334944796427464,
+          "lead_rad": 0.0006582094143214531,
+          "suspect": false
+        },
+        "transmission_failure": null,
+        "remaining_ETA_s": 435.2968195168022,
+        "elapsed_sim_s": 4.508333333333326,
+        "slip_exceeds_progress_windows": 0,
+        "stopped_state": {
+          "command_velocity_max_rad_s": 0.0,
+          "measured_joint_velocity_max_rad_s": 0.0016788681969046593,
+          "measured_TCP_speed_m_s": 8.323020462270437e-05,
+          "measured_hinge_velocity_rad_s": 0.0001874932204373181
+        },
+        "reference_deg": 0.06079344209647289,
+        "tracking_limited_fraction": 0.0,
+        "final_tracking_lag_deg": 0.04541271319430373
+      },
+      "actual_range_deg": [
+        -2.804933972470795e-07,
+        0.015380728902169159
+      ],
+      "pad_peaks_n": [
+        0.7561312317848206,
+        0.5165584087371826
+      ],
+      "max_slip_mm": 0.03374035656452179,
+      "max_TCP_mm_s": 0.329164916914978,
+      "max_joint_tracking_error_rad": 0.0035598278045654297
+    }
+  ],
+  "continuations": [
+    {
+      "valid": false,
+      "reason": "UNAUTHORIZED_OR_UNSAFE_PARTIAL_SUCCESSOR"
+    }
+  ],
+  "acquisition": {
+    "acquired": true,
+    "hold_s": 1.0,
+    "angle_deg": -2.840380363840395e-07
+  },
+  "safe_exit": true,
+  "parking": {
+    "reached": true,
+    "region": "native_rest",
+    "measured_q": [
+      0.0008333289297297597,
+      -0.5007235407829285,
+      -0.0008404385298490524,
+      0.9988210201263428,
+      0.002002404071390629,
+      0.5020017027854919,
+      0.0037173235323280096
+    ],
+    "command_q": [
+      0.0,
+      -0.5,
+      0.0,
+      1.0,
+      0.0,
+      0.5,
+      0.0
+    ],
+    "joint_cell_error_rad": 0.0037173235323280096,
+    "measured_collision_check": {
+      "valid": true,
+      "samples": 2,
+      "measured_fingers_rad": [
+        0.06013817340135574,
+        0.06013817340135574,
+        0.06013817340135574,
+        0.060138169676065445,
+        0.060138169676065445,
+        0.060138169676065445
+      ]
+    },
+    "unloaded": true,
+    "pad_loads_n": [
+      0.0,
+      0.0
+    ],
+    "moving_pose": [
+      [
+        0.9999999639709727,
+        1.2343593610390498e-07,
+        0.000268436282533544,
+        0.4999389052391052
+      ],
+      [
+        0.000268436282533544,
+        1.656735859612013e-11,
+        -0.9999999639709803,
+        -0.05006277561187744
+      ],
+      [
+        -1.2343593610390498e-07,
+        0.9999999999999923,
+        -1.65673030849689e-11,
+        0.502672553062439
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "door_angle_deg": 0.015380740574855728
+  },
+  "error": null,
+  "minimum_joint_margin_rad": 0.946580990791321,
+  "all_ft_valid": true,
+  "hard_stops": 0,
+  "records": 6582,
+  "numeric_export_issues": [],
+  "source_provenance": {
+    "reference": "1c98f9b",
+    "research_reference": "a2ea768",
+    "runtime_factory": "RuntimeV3",
+    "sources": {
+      "interaction_runtime/estimator_v31.py": "30e247c92d21cd8dcd24ed0b940c670bb2b3b292c6dafd8835cc770b4366c55e",
+      "interaction_runtime/probing_v2.py": "f8d8d26f7d2212548e998e1ccba7ae8440b2a8c734c2e70c84c819b8d4665fa0",
+      "interaction_runtime/compact_v2.py": "38cc19baa7623d46925f490d13d55f1e3c27dc8877246c5072eefad1da2adc40",
+      "interaction_runtime/kinematics.py": "a4021461e8e97280d3000788392bc7f2791f4a7ade05d0b13dafaf1df2ed72aa",
+      "interaction_runtime/session.py": "9fb65831bd5cc373024d21e308196e35c1d10dc8c70695048f69205c2c80e01f",
+      "interaction_runtime/policy.py": "6a15747b8d7c5ff23265356a59a4489b24ee7895270a6a218401e0cf7ea7bf7a",
+      "interaction_runtime/operations.py": "c4f9d674fc56d14c46d702fe63c95063b653b6cb3e3bfb14305fbf58a295d8e8",
+      "interaction_runtime/segments.py": "5556908572a6c3426750e46d4f9225d7e6d8e850050df563025f3c0692fd472b",
+      "interaction_runtime/progress.py": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f",
+      "interaction_runtime/probing_profiles_v3.py": "a24fd2a2c1b58ce8b7b8c82ad07415e1e89a9c0cf92565abc05f3f4d993f5a00",
+      "interaction_runtime/motion.py": "284a88d37f76bdbbe288b2bacfac13e3d2c0e59df9a1f18074c3f0b124aa5a2b",
+      "interaction_runtime/segment_quality.py": "863a1fe9809b220022581882a5af56e289526ebf8fcfb94eadd144970b3815d4",
+      "interaction_runtime/checkpoints.py": "41acb59b819694a689f04d0113d84dab59cb8ca8aa40589f1304b6950349355f",
+      "interaction_runtime/serialization.py": "cd4af3fea6076e83399683e59a3fd513c61e6e1d811dc7738d6b8edb5ef7bf39",
+      "interaction_runtime/runtime.py": "4520aa31ca4ec6bf4a3c57447844983978df4a1b600445ec53eabda0181a5b2f",
+      "interaction_runtime/__init__.py": "b4ea43a6d6d65ad90f82162143b78fbebf116d4aff9ec3f9ab1ced81e66dbc36",
+      "interaction_runtime/evidence.py": "7265be5a40e17cb6ad2dbda4789c67e6cf2d8549615399f92ea4e940b829e4ba",
+      "interaction_runtime/native_scene.py": "47eca01961e94e8a482f0239aca64813a3f7e6e15d63ba33e51e8eabae610c0c",
+      "interaction_runtime/guard_regression.py": "ac55190f7f8ac62ce044852176dc0c688302189dd2a1ff996cd165ec71ad3323",
+      "interaction_runtime/fixture.py": "7ae1b0d171512fc42b3f11e37a364adba4d72926010beb749577f744cb30a4ca",
+      "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+      "configs/interaction_runtime_v1.json": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+      "configs/efficient_probing_v2.json": "a56d02cd5f22cca3eed3ce74610ddd8636ff678b7a1051c8ad8700aab50b9bc2",
+      "scripts/update_probing_v2_model.py": "f64b058d15ee093877495958096f0fd5a06af6d9049efa75e126cab85d6fd24e",
+      "scripts/run_efficient_probing_v2.py": "921ab6d9f812a18f8d7be98de3c41a42584040039cf800cded9765d6a470df5c",
+      "scripts/run_adaptive_contact_v42.py": "b174e9a58c74900e24f2fa94ae7666c24c4c01eef78763e9bc6cea7117f3dba0",
+      "scripts/update_probing_v31_model.py": "01cc3021e562965193daf8ee8ddf192b402f8f9dc99faa74935bb0715f93f6cc",
+      "scripts/xarm_ft_v31_estimator.py": "b58507fc80954116d36c066146a45e6acafe77cf95937fb661e565eb146523dc",
+      "scripts/native_g1_wrist_input.py": "110264b4212e6c98256c7b06a9803f617bf19d370156a12d8caba63d06647517",
+      "scripts/agent_command_protocol_v12.py": "0fe095e4514951499f77e13b07351d717d251f301f572dac7bc9f07d7b2b9664"
+    },
+    "physics_hz": 240,
+    "primary_wrench": "native fixed-interface wrist six-axis F/T",
+    "fresh_observation": true,
+    "saved_grasp_input": false
+  },
+  "profile": {
+    "wall_s": 303.17807534197345,
+    "simulation_s": 123.44166666666666,
+    "simulation_per_wall_s": 0.4071589494966914,
+    "cost_wall_s": {
+      "initialization": 18.827256095129997,
+      "trajectory_planning": 3.7413252950645983,
+      "actuation": 46.42978400038555,
+      "physics_and_contact_callback": 114.92844515666366,
+      "state_and_FT": 44.44689252320677,
+      "collision_and_safety": 17.044518287992105,
+      "buffered_evidence": 23.766606144141406,
+      "Pink_IK": 1.2450016564689577,
+      "command_collision_queries": 1.4113551755435765,
+      "render_and_video": 0.8743140078149736,
+      "export": 0.0336930479388684
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 18.827256095129997,
+      "trajectory_planning": 3.7413252950645983,
+      "actuation": 46.42978400038555,
+      "physics_and_contact_callback": 114.92844515666366,
+      "state_and_FT": 44.44689252320677,
+      "collision_and_safety": 17.044518287992105,
+      "buffered_evidence": 23.766606144141406,
+      "Pink_IK": 1.2450016564689577,
+      "command_collision_queries": 1.4113551755435765,
+      "render_and_video": 0.8743140078149736,
+      "export": 0.0336930479388684
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 5,
+      "actuation": 29626,
+      "physics_and_contact_callback": 29626,
+      "state_and_FT": 29626,
+      "collision_and_safety": 29626,
+      "buffered_evidence": 29626,
+      "Pink_IK": 2892,
+      "command_collision_queries": 362,
+      "render_and_video": 30,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 18.827256095129997,
+      "agent_return_to_execution_start": 0.4222320499829948,
+      "PREGRASP": 30.966174373868853,
+      "APPROACH": 7.592532742070034,
+      "SLOW_CLOSE": 136.19400025508367,
+      "CENTER": 12.75508678634651,
+      "LOW_PRELOAD": 0.5798399082850665,
+      "FORCE_HOLD": 2.782096787588671,
+      "OPEN_CONTINUE": 10.948338206857443,
+      "RELEASE": 13.245968763018027,
+      "CLEARANCE_RETREAT": 8.692386897513643,
+      "SAFE_PARK_MOTION": 29.743278524605557
+    },
+    "unaccounted_wall_s": 30.428883951622993,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "completion": {
+    "returncode": 0,
+    "wall_s": 305.283926354954,
+    "actor_exited": true
+  },
+  "storage": {
+    "bytes_by_category": {
+      "source_and_metadata": 892397,
+      "clips": 82682,
+      "numeric": 2591331,
+      "geometry": 5002100,
+      "observations": 3350619
+    },
+    "total_bytes": 11919129,
+    "budget_bytes": 1000000000
+  },
+  "raw_integrity": [
+    {
+      "file": "00000000.npz",
+      "sha256": "1a43bd6fb4160d8400f481afd7f9338e6d269246de8df38a677d5a37e2e36280",
+      "verified": true
+    },
+    {
+      "file": "00023754.npz",
+      "sha256": "b42de1915fbc626eaa18899afdb714d43fc93c00f378a2e0ea6ead5fcc65da2e",
+      "verified": true
+    }
+  ],
+  "guards": null,
+  "park_before_deliberate_faults": null
+}

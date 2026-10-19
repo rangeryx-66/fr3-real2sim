@@ -1,0 +1,34 @@
+"""Post-episode compact evidence and Agent trace; no physics or decisions."""
+import argparse,hashlib,json,shutil
+from pathlib import Path
+import numpy as np
+ROOT=Path(__file__).resolve().parents[1]
+
+def sha(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
+def load(p):return json.loads(Path(p).read_text())
+def save(p,d):Path(p).write_text(json.dumps(d,indent=2))
+
+if __name__=='__main__':
+    p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);a=p.parse_args();r=a.root.resolve();run=r/'episode'
+    episode=load(run/'AGENT_EPISODE_RESULT.json');trace=load(run/'AGENT_ACTION_TRACE.json');obs=load(run/'AGENT_OBSERVATIONS.json');metrics=load(r/'analysis/telemetry/METRICS.json');geo=load(r/'analysis/GEOMETRY_COMPARISON.json');plan=load(run/'visual_plan.json');process=load(r/'PROCESS_EXIT.json');routes=load(run/'WRIST_ROBOT_TRAJECTORIES.json');build=load(run/'AGENT_GEOMETRY_PLAN_RESULT.json')
+    observations=[]
+    for o in obs:
+        f=Path(o['folder']).resolve();packet=load(f/'INSPECTION.json');cue=packet['highest_cue'];row=dict(o,cue=cue,robot_q=packet['camera']['robot_q'],T_world_camera_optical=packet['camera']['T_world_camera_optical'],robot_self_mask_fraction=packet['camera']['robot_self_mask_fraction'],image_files={name:dict(path=str((f/name).relative_to(run)),sha256=sha(f/name)) for name in ['rgb.png','agent_inspection.png','agent_mask_overlay.png','depth_m.npy','camera.json']})
+        g=f/'measured_geometry/GEOMETRY.json'
+        if g.exists():row['preserved_geometry_audit']=load(g)
+        observations.append(row)
+    compact_trace=[];inspections={}
+    for entry in trace:
+        c=entry['command'];result=entry['result'];out={k:result[k] for k in ['feasible','observation','geometry','plan','planning_wall_s','geometry_wall_s','reason','completed','error'] if k in result}
+        if result.get('route'):out['minimum_planned_margin_rad']=result['route']['minimum_joint_margin_rad']
+        compact_trace.append(dict(sequence=entry['sequence'],command=c,agent_wait_wall_s=entry['agent_wait_wall_s'],operation_wall_s=entry['operation_wall_s'],actual_result=out))
+        for f in c.get('inspected_files',[]):inspections[f['path']]=sha(run/f['path'])==f['sha256']
+    frozen=load('/tmp/wrist_baseline_frozen.json')['sources'];baseline={name:sha(name)==value for name,value in frozen.items()}
+    actor=load(run/'AGENT_EXECUTABLE_HASH.json');active={name:sha(name)==value for name,value in actor['sources'].items()}
+    files=['infer_sam3_agent_observed.py','native_g1_agent_inspection.py','native_g1_agent_observation.py','run_native_g1_agent_observation.py','launch_native_g1_agent_observation.py','render_agent_local_geometry.py','render_agent_fused_geometry.py','evaluate_native_g1_agent_evidence.py','summarize_native_g1_agent_observation.py']
+    configs=[ROOT/'configs/xarm7_wrist_rgbd_sim.json',ROOT/'results/xarm7_native_gripper_20261012/NATIVE_CONFIG.json',ROOT/'results/xarm7_native_gripper_20261012/xarm7_native_gripper.urdf',Path(load(r/'job.json')['robust_uncertainty_config'])]
+    provenance=dict(reference='d2ad962',execution_source_commit='0a68093',task_sources={name:sha(ROOT/'scripts'/name) for name in files},config_hashes={str(x):sha(x) for x in configs},actor_source_checks=active,frozen_baseline_source_checks=baseline,inspected_image_checks=inspections,active_controller=metrics['report']['active_sources'],posthoc_GT_evaluation_after_actor_exit=(r/'analysis/GEOMETRY_COMPARISON.json').stat().st_mtime>=process['end_unix_s'],no_execution_or_scoring_change=all(baseline.values()) and all(active.values()))
+    result=dict(reference='d2ad962',classification='CODEX_AGENT_ACTIVE_WRIST / RGBD_SAM3 / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION',outcome='CLIPPED_HANDLE_RECOVERED_AND_AUTOMATIC_PLAN_OBTAINED',one_development_case_not_generalization_rate=True,observations=observations,Agent_adjustments=episode['agent_adjustments'],robot_motion_segments=len(routes),accepted_geometry_views=build['geometry_data']['accepted_views'],fused_observed_points=build['geometry_data']['observed_points'],observed_triangles=build['geometry_data']['observed_triangles'],no_grasp_or_opening_attempt=True,actual_door_angle_deg=metrics['report']['max_actual_angle_deg'],plan=dict(found=build['plan'],planned_range_deg=float(np.rad2deg(plan['planned_reached_state'])),minimum_approach_arc_margin_rad=plan['minimum_approach_arc_margin_rad'],section_fraction=plan['section_fraction'],insertion_m=plan['insertion_m'],roll_deg=plan['roll_deg'],pitch_deg=plan['pitch_deg'],expected_aperture_m=plan['contact_geometry_audit']['robust_contact']['chosen_expected_aperture_m'],saved_GT_grasp_template_used=plan['saved_GT_grasp_template_used'],station_source=plan['station_source'],contact_score_surface_source=plan['contact_score_surface_source'],not_physical_execution=True),time=dict(simulation_s=metrics['report']['simulation_s'],actor_wall_s=process['end_unix_s']-process['start_unix_s'],motion_and_settling_wall_s=sum(v['motion_wall_s'] for v in routes),sensing_segmentation_processing_wall_s=sum(o['sensing_and_segmentation_wall_s'] for o in obs),inspection_board_wall_s=sum(o['inspection_wall_s'] for o in obs),Agent_turn_wait_wall_s=sum(t['agent_wait_wall_s'] for t in trace),view_evaluation_wall_s=sum(t['operation_wall_s'] for t in trace if t['command']['operation']=='evaluate_view'),geometry_fusion_wall_s=build['geometry_wall_s'],grasp_planning_wall_s=build['planning_wall_s'],Agent_wait_includes_image_transfer_tools_visualizations_and_scheduling=True,physics_paused_during_Agent_wait=True),telemetry=dict(records=metrics['telemetry_records'],fields_present_records=metrics['telemetry_fields_present_records'],timestamps_uniform=metrics['physics_timestamps_uniform'],peak_pad_load_n=metrics['peak_raw_allowed_normal_load_n'],minimum_actual_joint_margin_rad=metrics['report']['minimum_joint_margin_rad'],max_unloaded_TCP_mm_s=metrics['max_all_phase_TCP_mm_s'],max_joint_command_tracking_rad=metrics['max_joint_command_tracking_rad'],loaded_velocity_not_applicable=True),geometry_comparison=geo['clouds'],source_and_inspection_checks_all_pass=all(active.values()) and all(baseline.values()) and all(inspections.values()),GT_handle_or_scene_depth_execution_input=False,raw_private=True)
+    save(r/'COMPACT_RESULT.json',result);save(r/'AGENT_TRACE.json',compact_trace);save(r/'PROVENANCE.json',provenance)
+    save(r/'OWNED_PROCESS_CLEANUP.json',dict(pid=process['pid'],process_exists=Path('/proc/'+str(process['pid'])).exists(),returncode=process['returncode'],export_complete=(run/'EXPORT_COMPLETE.json').exists(),normal_finish=True,other_users_processes_touched=False))
+    print(json.dumps(dict(outcome=result['outcome'],time=result['time'],hashes=result['source_and_inspection_checks_all_pass']),indent=2))

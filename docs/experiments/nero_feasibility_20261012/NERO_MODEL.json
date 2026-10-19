@@ -1,0 +1,78 @@
+{
+  "robot": "nero",
+  "urdf": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/nero_feasibility_20261012/nero_kinematic.urdf",
+  "sim_urdf": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/nero_feasibility_20261012/nero_sim.urdf",
+  "arm_joint_names": [
+    "joint1",
+    "joint2",
+    "joint3",
+    "joint4",
+    "joint5",
+    "joint6",
+    "joint7"
+  ],
+  "home_q": [
+    0,
+    0,
+    0,
+    0.8,
+    0,
+    0,
+    0
+  ],
+  "dof": 7,
+  "tcp_frame": "tcp_link",
+  "flange_frame": "flange_link",
+  "mount_status": "OFFICIAL_NERO_NATIVE_GRIPPER_ASSEMBLY",
+  "joint_limits": [
+    {
+      "effort": "100",
+      "lower": "-2.70526",
+      "upper": "2.70526",
+      "velocity": "5"
+    },
+    {
+      "effort": "100",
+      "lower": "-1.74",
+      "upper": "1.74",
+      "velocity": "5"
+    },
+    {
+      "effort": "100",
+      "lower": "-2.75",
+      "upper": "2.75",
+      "velocity": "5"
+    },
+    {
+      "effort": "100",
+      "lower": "-1.01",
+      "upper": "2.14",
+      "velocity": "5"
+    },
+    {
+      "effort": "100",
+      "lower": "-2.75",
+      "upper": "2.75",
+      "velocity": "5"
+    },
+    {
+      "effort": "100",
+      "lower": "-0.73",
+      "upper": "0.95",
+      "velocity": "5"
+    },
+    {
+      "effort": "100",
+      "lower": "-1.5707963",
+      "upper": "1.5707963",
+      "velocity": "5"
+    }
+  ],
+  "arm_base_height_m": -0.1,
+  "source_commit": "983788b58d7eae76511177f768d85877534917fe",
+  "reference_commit": "4b73580",
+  "native_gripper_conventions": "official joint1 rpy pi/2,0,pi; joint2 rpy pi/2,0,0; q1=width/2,q2=-width/2",
+  "no_collision_pair_exemptions_without_audit": true,
+  "tool_convention": "native TCP at gripper_base xyz0,0,.138 rpy0,0,pi, geometrically aligned to frozen shared PiPER pad frame",
+  "sim_mimic": "one physical jaw width drive; q2=-q1, virtual width joint folded into q1"
+}

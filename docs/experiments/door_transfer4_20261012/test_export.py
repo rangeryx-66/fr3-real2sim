@@ -1,0 +1,7 @@
+from pathlib import Path
+import json,subprocess,os,time
+ROOT=Path('/data1/home/rangeryx/fr3_real2sim_known_whole_20261007');out=ROOT/'results/door_transfer4_20261012';env=dict(os.environ,OMP_NUM_THREADS='1',OPENBLAS_NUM_THREADS='1',PYTHONPATH=str(ROOT)+':'+str(ROOT/'scripts'));env['PATH']='/data1/home/rangeryx/tools/ffmpeg/ffmpeg-7.0.2-amd64-static:'+env['PATH'];python='/data1/home/rangeryx/isaaclab-arena/.venv/bin/python';baseline=ROOT/'results/benchmarkA_30deg_20261011/shared_sources/frozen_run_7320_speed.py';folder=out/'export_fixture';folder.mkdir(exist_ok=True)
+cmd=[python,'-u',str(ROOT/'scripts/run_shared_door_skill.py'),'--lifecycle-selftest',str(folder),'--fixture',str(ROOT/'results/45415_precontact_continuity_20261011/physical_01'),'--baseline',str(baseline)];log=(folder/'process.log').open('w');p=subprocess.Popen(cmd,cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
+while not (folder/'SELFTEST_READY.json').exists() and p.poll() is None:time.sleep(.2)
+if p.poll() is not None:raise RuntimeError('INFRA_EXIT_BEFORE_READY_NO_PHYSICAL_ATTEMPT')
+(folder/'STOP_AND_EXPORT').touch();code=p.wait(timeout=120);log.close();result=json.loads((folder/'SELFTEST_RESULT.json').read_text());result.update(process_returncode=code,physical_episodes=0,actual_entry_path=str(ROOT/'scripts/run_shared_door_skill.py'),pid=p.pid,actor_exited=True);(out/'EXPORT_LIFECYCLE_VERIFIED.json').write_text(json.dumps(result,indent=2));print(json.dumps(result,indent=2))

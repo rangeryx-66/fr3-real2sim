@@ -1,0 +1,158 @@
+{
+  "source_url": "https://huggingface.co/datasets/Caoza/PhysX-Mobility",
+  "license": "CC-BY-NC-4.0",
+  "asset_id": "45249",
+  "object_name": "Cabinet",
+  "prepared_urdf": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/benchmarkA_30deg_20261011/discovery_assets/45249/urdf/45249.urdf",
+  "source_urdf_sha256": "476caa647f70c37f503e70695160e195ee135f0957f678523c001af534878ee6",
+  "source_metadata_sha256": "9a2f032291928c64e9fb92bd53c49c07c053a2876031515e691bb24aaf8087bd",
+  "scale_source_to_meters": 0.5856103817008468,
+  "prepared_height_m": 0.9,
+  "source_up_axis": "+Y",
+  "static_source_bounds": [
+    [
+      -0.470012,
+      -0.782691,
+      -0.547981
+    ],
+    [
+      0.465467,
+      0.754167,
+      0.521138
+    ]
+  ],
+  "moving_source_bounds": [
+    [
+      -0.46166,
+      -0.573879,
+      0.521138
+    ],
+    [
+      0.457114,
+      0.745815,
+      0.626936
+    ]
+  ],
+  "moving_links": [
+    "abstract_2_4",
+    "l_4"
+  ],
+  "moving_link": "abstract_2_4",
+  "door_link": "l_4",
+  "joint_name": "joint_revolute_l_2_abstract_2_4",
+  "source_joint_axis": "0.0 -1.0 0.0",
+  "source_joint_limits_rad": {
+    "lower": -0.0,
+    "upper": 3.12413936106985
+  },
+  "grasp_mesh_stems": [
+    "original-32"
+  ],
+  "grasp_mesh_bounds_source": [
+    [
+      0.377766,
+      0.106849,
+      0.601879
+    ],
+    [
+      0.402823,
+      0.612175,
+      0.626936
+    ]
+  ],
+  "handle_mesh_selection": "provisional most protruding door mesh; verify visually; evaluation/camera only",
+  "uv_repaired_visuals": [
+    "original-34",
+    "original-33"
+  ],
+  "collision_mesh_count": 24,
+  "physics_note": "source masses preserved; link COM and inertia from uniform box approximation; not measured hardware properties",
+  "prepared_geometry_sha256": "227a77af81380132d63bb5dbced09c4ac2252558c304d7cb3e19f60edae3a9e1",
+  "category": "Storage Furniture",
+  "benchmark_preparation": {
+    "method": "unchanged existing generic importer; no per-asset tuning",
+    "height_policy": "authored metadata centimetres converted to metres",
+    "source_raw_has_no_collision_tags": true,
+    "collision_policy": "existing per-visual convex hull importer; no new handle proxy",
+    "inertia_policy": "existing importer uniform-box approximation, frozen before selection/planning",
+    "source_mass_and_joint_limits_preserved": true,
+    "no_IK_used_for_discovery": true
+  },
+  "interaction_geometry": {
+    "selection": {
+      "asset_id": "45249",
+      "asset_root": "results/benchmarkA_30deg_20261011/discovery_assets/45249",
+      "joint_name": "joint_revolute_l_2_abstract_2_4",
+      "joint_type": "revolute",
+      "moving_link": "abstract_2_4",
+      "handle_link": "l_4",
+      "mesh": "original-32",
+      "panel_mesh": "original-30",
+      "axis_root": [
+        0.000695704128047849,
+        -0.9999272019974039,
+        -0.012046024298880409
+      ],
+      "outward_normal_root": [
+        -0.0576535611376546,
+        -0.0120660973658843,
+        0.9982637307758424
+      ],
+      "dimensions_m": [
+        0.29607936807216895,
+        0.014649228380461315,
+        0.018218811573747717
+      ],
+      "sections": [
+        {
+          "opposing_patch_areas_m2": [
+            0.0,
+            0.0
+          ],
+          "fraction": -0.3,
+          "anchor_root_m": [
+            0.2285605071845949,
+            0.2993642358106463,
+            0.3598034787487108
+          ],
+          "bar_depth_m": 0.014475231000000002,
+          "visual_rear_gap_m": 0.027877767,
+          "collision_rear_gap_m": 0.027877767
+        },
+        {
+          "opposing_patch_areas_m2": [
+            0.0,
+            0.0
+          ],
+          "fraction": 0,
+          "anchor_root_m": [
+            0.2285605071714722,
+            0.21053395871950717,
+            0.35980347897592857
+          ],
+          "bar_depth_m": 0.014475231000000002,
+          "visual_rear_gap_m": 0.027877767,
+          "collision_rear_gap_m": 0.027877767
+        },
+        {
+          "opposing_patch_areas_m2": [
+            0.0,
+            0.0
+          ],
+          "fraction": 0.3,
+          "anchor_root_m": [
+            0.2285605071583495,
+            0.12170368162836802,
+            0.35980347920314637
+          ],
+          "bar_depth_m": 0.014475231,
+          "visual_rear_gap_m": 0.027877768,
+          "collision_rear_gap_m": 0.027877768
+        }
+      ],
+      "minimum_collision_rear_gap_m": 0.027877767,
+      "screen_rejections": [],
+      "score": 2.9377767
+    }
+  }
+}

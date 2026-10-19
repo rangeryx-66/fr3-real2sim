@@ -1,0 +1,67 @@
+{
+  "status": "ZERO_PROBE_UNOBSERVABLE",
+  "success": false,
+  "mode": "unknown-articulation real-contact RGB-D probe",
+  "baseline_commit": "f5dcc6f",
+  "candidate": 0,
+  "base_fixed": [
+    0.5,
+    -0.55,
+    -0.1,
+    150.0
+  ],
+  "official_unsplit_finger_counts": {
+    "gripper_link1": 1,
+    "gripper_link2": 1
+  },
+  "grasp_contact_implementation_unchanged": true,
+  "gt_control_inputs": false,
+  "gt_fit_inputs": false,
+  "gt_runtime_object_pose_reads": false,
+  "observed_handle_motion": "calibrated RGB-D free rigid ICP; no segmentation/GT link pose",
+  "estimate": {
+    "sample_count": 750,
+    "travel_m": 4.28325096022799e-06,
+    "prismatic": {
+      "axis": [
+        -0.0021189074186827622,
+        0.13985274067000036,
+        0.9901700465871713
+      ],
+      "point_on_axis": [
+        0.6584789875973986,
+        -0.19543273192489755,
+        0.16201372896007224
+      ],
+      "position_rmse_m": 1.6879814309377207e-07,
+      "rotation_rmse_rad": 5.685748497286011e-06
+    },
+    "joint_type": "UNOBSERVABLE",
+    "confidence": 0.0,
+    "reason": "less than 1 mm observed motion"
+  },
+  "probe": {},
+  "evaluation": {
+    "type_correct": false,
+    "actual_final_door_angle_deg": -3.844127682839371e-09,
+    "gt_access_after_saved_fit": true,
+    "gt_access_after_world_pause": true
+  },
+  "bilateral_hold_established": true,
+  "followed_estimated_articulation": false,
+  "minimum_joint_margin_rad": 0.06349032012023925,
+  "maximum_relative_translation_slip_m": 0.00016943780080702495,
+  "peak_finger_handle_force_n": 0.5966235305995412,
+  "duration_s": 110.32083333333333,
+  "first_failure_state": null,
+  "no_operation": true,
+  "video": "contact_baseline.mp4",
+  "attachments": false,
+  "object_actuation": false,
+  "GT_access_log_after_fit": [
+    "asset_chain.joints",
+    "asset_chain.root_to_link",
+    "articulation.get_joint_positions"
+  ],
+  "GT_scope": "scene assembly only; static geometry and final joint state read only after saved fit and stopped interaction"
+}

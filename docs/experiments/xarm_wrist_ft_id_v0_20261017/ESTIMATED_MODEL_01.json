@@ -1,0 +1,116 @@
+{
+  "schema": "articulated_physical_model_v0",
+  "geometry_reference": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_transfer_20261015/46427/asset",
+  "observed_geometry_reference": "results/xarm_wrist_ft_id_v0_20261017/case_01/episode/agent_geometry/observed_geometry.json",
+  "joint": {
+    "joint_type": "revolute",
+    "axis_world": [
+      8.063824823451246e-08,
+      -2.299049839393774e-12,
+      -0.9999999999999968
+    ],
+    "origin_world_m": [
+      0.11582388333874044,
+      -0.14359151413629687,
+      0.2858329925090203
+    ],
+    "source": "explicit KNOWN_MODEL native joint anchor relative to measured moving body; no dynamics read",
+    "angle_source": "allowed actual articulation state V0",
+    "geometry_reference": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_transfer_20261015/46427/asset",
+    "native_joint_path": "/scene/Physics/joint_revolute_l_1_abstract_1_0",
+    "native_asset_sha256": "7208e6585483e89bbf0d9909529f737bb5f453ad86cb93766d3bc37888a9a2f5",
+    "measured_moving_body": "l_0",
+    "legacy_measurement_field": "T_moving_link",
+    "T_moving_joint": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.3841760754585266
+      ],
+      [
+        0.0,
+        -1.0,
+        0.0,
+        0.12341105192899704
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0,
+        0.09359149634838104
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "current_motion_state": {
+    "angle_deg": 3.044160842895508,
+    "source": "known actual state V0; not visual dynamic estimation"
+  },
+  "identified_parameters": {
+    "I_eff_kg_m2": null,
+    "b_nm_s_rad": null,
+    "tau_c_nm": 0.0369117185010996
+  },
+  "provisional_fit_parameters": {
+    "I_eff_kg_m2": 1.2096971869756095e-15,
+    "b_nm_s_rad": 1.2158886699776064e-08,
+    "tau_c_nm": 0.0369117185010996
+  },
+  "uncertainties": {
+    "I_eff_kg_m2": 0.5092979041745775,
+    "b_nm_s_rad": 2.4522299568362604,
+    "tau_c_nm": 0.0025042243764424985
+  },
+  "observability": {
+    "I_eff": false,
+    "b": false,
+    "tau_c": true
+  },
+  "all_terms_conditionally_supported": false,
+  "model_status": "provisional; interpret held-out prediction and uncertainty before simulation use",
+  "unsupported_parameters_are_unknown_not_GT_filled": true,
+  "valid_operating_range_rad": [
+    -2.910077414907367e-09,
+    0.05241195567494639
+  ],
+  "unidentified": [
+    "mass",
+    "full COM",
+    "full inertia tensor",
+    "angle-dependent friction",
+    "spring vs gravity"
+  ],
+  "sensor_configuration": "results/xarm_wrist_ft_id_v0_20261017/case_01/episode/WRIST_FT_MAPPING.json",
+  "calibration_provenance": "results/xarm_wrist_ft_id_v0_20261017/sensor_smoke_00/SENSOR_ANALYSIS.json",
+  "interaction_records": [
+    "identification/attempt_00/00/native_joint_prior/IDENTIFIED_MODEL.json"
+  ],
+  "RGBD_references": [
+    "rgbd/attempt_01_pregrasp",
+    "rgbd/generation_01_agent_01",
+    "rgbd/attempt_00_pregrasp",
+    "rgbd/generation_00_agent_01",
+    "rgbd/generation_01_agent_00",
+    "rgbd/generation_00_agent_00",
+    "rgbd/identification_state_00"
+  ],
+  "authored_truth_excluded": true,
+  "known_model_dependencies": [
+    "joint geometry",
+    "dynamic state",
+    "registered station",
+    "native scene safety collision model"
+  ],
+  "limitations": [
+    "idealized zero-thickness load cell",
+    "approximate simulator actuators",
+    "conditional covariance not calibrated confidence",
+    "check heldout prediction before claiming physical twin"
+  ]
+}

@@ -1,0 +1,709 @@
+{
+  "reference": "9ae41fb",
+  "frozen_input_commit": "4e91cc2686b0eca91bacefd7f0d84e1b6d1520b4",
+  "classification": "RGBD_SAM3_HANDLE / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION",
+  "paired_development_not_held_out": true,
+  "registered_cases": [
+    "45600",
+    "45606",
+    "45671"
+  ],
+  "cases": [
+    {
+      "asset_id": "45600",
+      "status": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+      "visual_grasp": false,
+      "actual_gain_after_acquisition_deg": null,
+      "short_transmission_ge2deg": false,
+      "previous_visual": {
+        "visual_grasp": false,
+        "actual_gain_after_acquisition_deg": null,
+        "short_transmission_ge2deg": false,
+        "physical_motion_started": false,
+        "closure_attempt_started": false,
+        "simulation_s": 0.0,
+        "wall_s": 75.55786264291964,
+        "peak_raw_pad_load_n": 0,
+        "max_relative_shift_mm": null
+      },
+      "oracle_grasp": true,
+      "oracle_gain_deg": 3.000204605745239,
+      "detection_coverage": true,
+      "plan_available": true,
+      "simulation_s": 179.90416666666667,
+      "wall_s": 1330.9647978739813,
+      "minimum_joint_margin_rad": 1.003955121498108,
+      "peak_raw_pad_load_n": 0.09183096301792942,
+      "max_relative_shift_mm": null,
+      "max_relative_rotation_deg": null,
+      "max_all_phase_TCP_mm_s": 20.976659776731886,
+      "max_postgrasp_TCP_mm_s": null,
+      "all_phase_TCP_peak_context": {
+        "t": 21.383333333333333,
+        "phase": "PREGRASP",
+        "raw_loads_n": {
+          "gripper_link1": 0.0,
+          "gripper_link2": 0.0
+        },
+        "after_grasp": false
+      },
+      "hold_s": null,
+      "streams": {
+        "observations": {
+          "records": 43177,
+          "indexed": 43177,
+          "errors": []
+        },
+        "physics_steps": {
+          "records": 43177,
+          "indexed": 43177,
+          "errors": []
+        },
+        "closure_commands": {
+          "records": 24000,
+          "indexed": 24000,
+          "errors": []
+        }
+      },
+      "force_event_levels": {},
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 54.3625,
+        "APPROACH": 25.041666666666668,
+        "SLOW_CLOSE": 63.61666666666667,
+        "CENTER": 36.38333333333333
+      },
+      "phase_native_positive_contact_fraction": {
+        "SETTLE": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "PREGRASP": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "APPROACH": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "SLOW_CLOSE": {
+          "left": 0.07728582656536546,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "CENTER": {
+          "left": 1.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        }
+      },
+      "video_decode_rc": 0,
+      "video_decode_error_bytes": 0,
+      "telemetry_issues": {},
+      "process_wall_s": 1333.8790757656097,
+      "actor_returncode": 0,
+      "visual_plan_comparison": {
+        "previous": null,
+        "updated": {
+          "selected": {
+            "section_fraction": -0.3,
+            "insertion_m": 0.0,
+            "roll_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "expected_aperture_mm": 12.535874999999999,
+          "observed_dimensions": [
+            {
+              "capture": "initial",
+              "dimensions_m": [
+                0.3442444955367946,
+                0.013800012892637804,
+                0.013800012892637804
+              ]
+            }
+          ]
+        }
+      },
+      "perception_recovery": {
+        "crop_recovery_attempted": true,
+        "crop_inferences": 1,
+        "handle_inferences": 2,
+        "camera_reobservations": 0,
+        "initial_captures": 1,
+        "auxiliary_panel_calls": 0,
+        "pregrasp_capture_count": 1,
+        "GT_fallback": false
+      },
+      "detection_attempts": [
+        {
+          "input_sha256": "98bf4b42368063484bf3cb558dc5470e95964ada34200f77c7e10f6db900dab9",
+          "threshold": 0.25,
+          "prompt": "cabinet door handle",
+          "attempts": [
+            {
+              "kind": "full_frame",
+              "crop_xyxy": [
+                0,
+                0,
+                1280,
+                960
+              ],
+              "raw_max": 0.1884765625,
+              "threshold": 0.25,
+              "confidence_retained_scores": [],
+              "mask_filter": [],
+              "accepted": false,
+              "wall_s": 0.47101335879415274,
+              "error": null
+            },
+            {
+              "kind": "observed_depth_crop",
+              "crop_xyxy": [
+                122,
+                371,
+                990,
+                960
+              ],
+              "raw_max": 0.66015625,
+              "threshold": 0.25,
+              "confidence_retained_scores": [
+                0.66015625
+              ],
+              "mask_filter": [
+                {
+                  "index": 0,
+                  "score": 0.66015625,
+                  "pixels": 3490,
+                  "rejection": null
+                }
+              ],
+              "accepted": true,
+              "wall_s": 0.8476212951354682,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "postgrasp_normal_unloading": {},
+      "GT_grasp_fallback": false,
+      "live_planning": {
+        "previous": [],
+        "updated": [
+          {
+            "found": true,
+            "wall_s": 94.21551370620728,
+            "checked_arc_branches": 19,
+            "planned_reached_rad": 0.5235987755982988
+          }
+        ]
+      }
+    },
+    {
+      "asset_id": "45606",
+      "status": "SHORT_OPENING_TARGET_REACHED",
+      "visual_grasp": true,
+      "actual_gain_after_acquisition_deg": 3.00572062615538,
+      "short_transmission_ge2deg": true,
+      "previous_visual": {
+        "visual_grasp": false,
+        "actual_gain_after_acquisition_deg": null,
+        "short_transmission_ge2deg": false,
+        "physical_motion_started": true,
+        "closure_attempt_started": true,
+        "simulation_s": 196.09166666666667,
+        "wall_s": 1540.7300092841033,
+        "peak_raw_pad_load_n": 0.1186175504536474,
+        "max_relative_shift_mm": null
+      },
+      "oracle_grasp": true,
+      "oracle_gain_deg": 3.001786768436432,
+      "detection_coverage": true,
+      "plan_available": true,
+      "simulation_s": 154.84166666666667,
+      "wall_s": 1183.434031598037,
+      "minimum_joint_margin_rad": 1.047933324813843,
+      "peak_raw_pad_load_n": 1.137555181198314,
+      "max_relative_shift_mm": 0.8081934148601883,
+      "max_relative_rotation_deg": 0.4182935082635998,
+      "max_all_phase_TCP_mm_s": 21.810678595086053,
+      "max_postgrasp_TCP_mm_s": 1.1637236022540804,
+      "all_phase_TCP_peak_context": {
+        "t": 22.7,
+        "phase": "PREGRASP",
+        "raw_loads_n": {
+          "gripper_link1": 0.0,
+          "gripper_link2": 0.0
+        },
+        "after_grasp": false
+      },
+      "hold_s": 1.0041666666666667,
+      "streams": {
+        "observations": {
+          "records": 37162,
+          "indexed": 37162,
+          "errors": []
+        },
+        "physics_steps": {
+          "records": 37162,
+          "indexed": 37162,
+          "errors": []
+        },
+        "closure_commands": {
+          "records": 18151,
+          "indexed": 18151,
+          "errors": []
+        }
+      },
+      "force_event_levels": {},
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 38.3375,
+        "APPROACH": 25.25,
+        "SLOW_CLOSE": 69.36666666666666,
+        "CENTER": 5.9875,
+        "LOW_PRELOAD": 0.2708333333333333,
+        "FORCE_HOLD": 0.5041666666666667,
+        "VALIDATED_PREFIX_EXTRA_HOLD": 0.5,
+        "TRANSMISSION_PROBE": 4.341666666666667,
+        "OPEN_CONTINUE": 9.783333333333333
+      },
+      "phase_native_positive_contact_fraction": {
+        "SETTLE": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "PREGRASP": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "APPROACH": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "SLOW_CLOSE": {
+          "left": 0.022104757328207592,
+          "right": 0.0006607400288322922,
+          "bilateral": 0.0006607400288322922
+        },
+        "CENTER": {
+          "left": 1.0,
+          "right": 0.032707028531663185,
+          "bilateral": 0.032707028531663185
+        },
+        "LOW_PRELOAD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "FORCE_HOLD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "VALIDATED_PREFIX_EXTRA_HOLD": {
+          "left": 1.0,
+          "right": 1.0,
+          "bilateral": 1.0
+        },
+        "TRANSMISSION_PROBE": {
+          "left": 0.09980806142034548,
+          "right": 1.0,
+          "bilateral": 0.09980806142034548
+        },
+        "OPEN_CONTINUE": {
+          "left": 0.0,
+          "right": 1.0,
+          "bilateral": 0.0
+        }
+      },
+      "video_decode_rc": 0,
+      "video_decode_error_bytes": 0,
+      "telemetry_issues": {},
+      "process_wall_s": 1186.9085779190063,
+      "actor_returncode": 0,
+      "visual_plan_comparison": {
+        "previous": {
+          "selected": {
+            "section_fraction": 0.3,
+            "insertion_m": 0.0,
+            "roll_deg": 180.0,
+            "pitch_deg": 0.0
+          },
+          "expected_aperture_mm": 6.0589499999999985,
+          "observed_dimensions": [
+            {
+              "capture": "initial",
+              "dimensions_m": [
+                0.28460734226675943,
+                0.005943448223921384,
+                0.005943448223921384
+              ]
+            }
+          ]
+        },
+        "updated": {
+          "selected": {
+            "section_fraction": -0.3,
+            "insertion_m": 0.009374999906867743,
+            "roll_deg": 180.0,
+            "pitch_deg": 0.0
+          },
+          "expected_aperture_mm": 10.476899999999993,
+          "observed_dimensions": [
+            {
+              "capture": "initial",
+              "dimensions_m": [
+                0.2672783342061824,
+                0.010472235826042904,
+                0.010472235826042904
+              ]
+            }
+          ]
+        }
+      },
+      "perception_recovery": {
+        "crop_recovery_attempted": false,
+        "crop_inferences": 0,
+        "handle_inferences": 1,
+        "camera_reobservations": 0,
+        "initial_captures": 1,
+        "auxiliary_panel_calls": 0,
+        "pregrasp_capture_count": 1,
+        "GT_fallback": false
+      },
+      "detection_attempts": [
+        {
+          "input_sha256": "bb8a1c41320fa4f043353eb0641f6b2ca351090864eb996eb07d018597769f23",
+          "threshold": 0.25,
+          "prompt": "cabinet door handle",
+          "attempts": [
+            {
+              "kind": "full_frame",
+              "crop_xyxy": [
+                0,
+                0,
+                1280,
+                960
+              ],
+              "raw_max": 0.734375,
+              "threshold": 0.25,
+              "confidence_retained_scores": [
+                0.734375
+              ],
+              "mask_filter": [
+                {
+                  "index": 0,
+                  "score": 0.734375,
+                  "pixels": 2544,
+                  "rejection": null
+                }
+              ],
+              "accepted": true,
+              "wall_s": 0.45624744915403426,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "postgrasp_normal_unloading": {
+        "gripper_link1": {
+          "total_s": 13.691667380525416,
+          "longest_s": 13.67916737987349,
+          "definition": "no positive allowed pad normal contact; not an added grasp-loss gate"
+        },
+        "gripper_link2": {
+          "total_s": 0,
+          "longest_s": 0,
+          "definition": "no positive allowed pad normal contact; not an added grasp-loss gate"
+        }
+      },
+      "GT_grasp_fallback": false,
+      "live_planning": {
+        "previous": [
+          {
+            "found": true,
+            "wall_s": 269.1839723587036,
+            "checked_arc_branches": 18,
+            "planned_reached_rad": 0.5235987755982988
+          }
+        ],
+        "updated": [
+          {
+            "found": true,
+            "wall_s": 201.9315915107727,
+            "checked_arc_branches": 18,
+            "planned_reached_rad": 0.5235987755982988
+          }
+        ]
+      }
+    },
+    {
+      "asset_id": "45671",
+      "status": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+      "visual_grasp": false,
+      "actual_gain_after_acquisition_deg": null,
+      "short_transmission_ge2deg": false,
+      "previous_visual": {
+        "visual_grasp": true,
+        "actual_gain_after_acquisition_deg": 2.998820014297962,
+        "short_transmission_ge2deg": true,
+        "physical_motion_started": true,
+        "closure_attempt_started": true,
+        "simulation_s": 245.92499999999998,
+        "wall_s": 1928.052415576065,
+        "peak_raw_pad_load_n": 0.8070786035675658,
+        "max_relative_shift_mm": 1.0348852034575002
+      },
+      "oracle_grasp": true,
+      "oracle_gain_deg": 3.00012074079703,
+      "detection_coverage": true,
+      "plan_available": true,
+      "simulation_s": 185.6125,
+      "wall_s": 1329.511814615922,
+      "minimum_joint_margin_rad": 1.092747743587494,
+      "peak_raw_pad_load_n": 0.16748914574366303,
+      "max_relative_shift_mm": null,
+      "max_relative_rotation_deg": null,
+      "max_all_phase_TCP_mm_s": 20.60603347036399,
+      "max_postgrasp_TCP_mm_s": null,
+      "all_phase_TCP_peak_context": {
+        "t": 22.8125,
+        "phase": "PREGRASP",
+        "raw_loads_n": {
+          "gripper_link1": 0.0,
+          "gripper_link2": 0.0
+        },
+        "after_grasp": false
+      },
+      "hold_s": null,
+      "streams": {
+        "observations": {
+          "records": 44547,
+          "indexed": 44547,
+          "errors": []
+        },
+        "physics_steps": {
+          "records": 44547,
+          "indexed": 44547,
+          "errors": []
+        },
+        "closure_commands": {
+          "records": 24000,
+          "indexed": 24000,
+          "errors": []
+        }
+      },
+      "force_event_levels": {},
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 60.0625,
+        "APPROACH": 25.05,
+        "SLOW_CLOSE": 65.14583333333333,
+        "CENTER": 34.854166666666664
+      },
+      "phase_native_positive_contact_fraction": {
+        "SETTLE": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "PREGRASP": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "APPROACH": {
+          "left": 0.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "SLOW_CLOSE": {
+          "left": 0.08762392069075792,
+          "right": 0.0,
+          "bilateral": 0.0
+        },
+        "CENTER": {
+          "left": 1.0,
+          "right": 0.0,
+          "bilateral": 0.0
+        }
+      },
+      "video_decode_rc": 0,
+      "video_decode_error_bytes": 0,
+      "telemetry_issues": {},
+      "process_wall_s": 1332.4141256809235,
+      "actor_returncode": 0,
+      "visual_plan_comparison": {
+        "previous": {
+          "selected": {
+            "section_fraction": 0.3,
+            "insertion_m": 0.009374999906867743,
+            "roll_deg": 0.0,
+            "pitch_deg": 0.0
+          },
+          "expected_aperture_mm": 10.476899999999993,
+          "observed_dimensions": [
+            {
+              "capture": "initial_retry_1",
+              "dimensions_m": [
+                0.2914044832870206,
+                0.011531994707560255,
+                0.011531994707560255
+              ]
+            }
+          ]
+        },
+        "updated": {
+          "selected": {
+            "section_fraction": 0.3,
+            "insertion_m": 0.0,
+            "roll_deg": 0.0,
+            "pitch_deg": -15.0
+          },
+          "expected_aperture_mm": 11.335874999999998,
+          "observed_dimensions": [
+            {
+              "capture": "initial_retry_1",
+              "dimensions_m": [
+                0.19499345755581682,
+                0.010320272923617167,
+                0.010320272923617167
+              ]
+            }
+          ]
+        }
+      },
+      "perception_recovery": {
+        "crop_recovery_attempted": true,
+        "crop_inferences": 1,
+        "handle_inferences": 3,
+        "camera_reobservations": 1,
+        "initial_captures": 2,
+        "auxiliary_panel_calls": 1,
+        "pregrasp_capture_count": 1,
+        "GT_fallback": false
+      },
+      "detection_attempts": [
+        {
+          "input_sha256": "597dc013d55146a84978cd2845a9402f3e311d259a292c5c3cc9a4abb1e68c43",
+          "threshold": 0.25,
+          "prompt": "cabinet door handle",
+          "attempts": [
+            {
+              "kind": "full_frame",
+              "crop_xyxy": [
+                0,
+                0,
+                1280,
+                960
+              ],
+              "raw_max": 0.0155029296875,
+              "threshold": 0.25,
+              "confidence_retained_scores": [],
+              "mask_filter": [],
+              "accepted": false,
+              "wall_s": 0.5199562071356922,
+              "error": null
+            },
+            {
+              "kind": "observed_depth_crop",
+              "crop_xyxy": [
+                21,
+                3,
+                1175,
+                960
+              ],
+              "raw_max": 0.02294921875,
+              "threshold": 0.25,
+              "confidence_retained_scores": [],
+              "mask_filter": [],
+              "accepted": false,
+              "wall_s": 0.7378512448631227,
+              "error": null
+            }
+          ]
+        },
+        {
+          "input_sha256": "ee0f99850414624884cf6f7e85314dbec1639093d597a2ddf2a855d3a74f8973",
+          "threshold": 0.25,
+          "prompt": "cabinet door handle",
+          "attempts": [
+            {
+              "kind": "full_frame",
+              "crop_xyxy": [
+                0,
+                0,
+                1280,
+                960
+              ],
+              "raw_max": 0.84375,
+              "threshold": 0.25,
+              "confidence_retained_scores": [
+                0.84375
+              ],
+              "mask_filter": [
+                {
+                  "index": 0,
+                  "score": 0.84375,
+                  "pixels": 3480,
+                  "rejection": null
+                }
+              ],
+              "accepted": true,
+              "wall_s": 0.5023471910972148,
+              "error": null
+            }
+          ]
+        }
+      ],
+      "postgrasp_normal_unloading": {},
+      "GT_grasp_fallback": false,
+      "live_planning": {
+        "previous": [
+          {
+            "found": true,
+            "wall_s": 73.41387033462524,
+            "checked_arc_branches": 21,
+            "planned_reached_rad": 0.3665191429188092
+          }
+        ],
+        "updated": [
+          {
+            "found": true,
+            "wall_s": 40.950766801834106,
+            "checked_arc_branches": 16,
+            "planned_reached_rad": 0.3490658503988659
+          }
+        ]
+      }
+    }
+  ],
+  "previous_matched_three_case": {
+    "detection_coverage": "2/3",
+    "grasp_acquisition": "1/3",
+    "short_transmission_ge2deg": "1/3"
+  },
+  "updated_matched_three_case": {
+    "detection_coverage": "3/3",
+    "grasp_acquisition": "1/3",
+    "short_transmission_ge2deg": "1/3"
+  },
+  "prior_four_case_visual_unchanged": "2/4",
+  "original_30deg_benchmark_unchanged": "4/10",
+  "no_net_physical_reliability_gain": true,
+  "between_case_tuning": false,
+  "valid_physical_episodes": 3,
+  "physical_retries": 0,
+  "initialization_retries": 0,
+  "continuous_video_decode_passes": 3,
+  "total_simulation_s": 520.3583333333333,
+  "batch_process_wall_s": 3853.417453765869,
+  "physical_controls_unchanged": true,
+  "raw_evidence_public": false
+}

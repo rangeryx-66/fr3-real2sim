@@ -1,0 +1,42 @@
+{
+  "schema": 1,
+  "note": "JSON-compatible YAML. Values marked provisional reproduce the existing simulation; they are not Unitree R1+Dex1 hardware specifications.",
+  "link7_to_dex1_base": {
+    "xyz_m": [0.0, -0.047736, 0.0],
+    "rpy_rad": [0.0, 0.0, 3.141592653589793],
+    "status": "provisional_mesh_fit; measure installed adapter"
+  },
+  "dex1_base_to_tcp": {
+    "xyz_m": [0.0, 0.097343, 0.0142],
+    "rpy_rad": [0.0, -1.5707963267948966, -1.5707963267948966],
+    "status": "provisional_pad_center; no official Dex1 TCP frame"
+  },
+  "simulated_opening": {
+    "closed_width_m": 0.001067,
+    "open_width_m": 0.09,
+    "status": "derived from official prismatic limits and URDF geometry; verify measured pad gap"
+  },
+  "contact_proxy": {
+    "finger_stall_q_threshold_m": 0.018,
+    "bilateral_force_threshold_n": 0.1,
+    "surface_region_tcp_min_m": [-0.032, -0.055, 0.002],
+    "surface_region_tcp_max_m": [0.005, 0.055, 0.048],
+    "box_center_tcp_min_m": [-0.026, -0.014, 0.004],
+    "box_center_tcp_max_m": [0.002, 0.014, 0.042],
+    "grasp_width_range_m": [0.018, 0.085],
+    "status": "simulation heuristic; calibrate pad friction, contact sensors and stall criterion"
+  },
+  "real_robot": {
+    "official_dds_command_topic_template": "rt/dex1/{side}/cmd",
+    "official_dds_state_topic_template": "rt/dex1/{side}/state",
+    "official_motor_closed_zero_rad": 0.0,
+    "official_nominal_open_motor_rad": 5.4,
+    "official_nominal_open_gap_m": 0.09,
+    "side": null,
+    "motor_id": null,
+    "motor_zero_to_urdf_q": null,
+    "motor_rad_to_pad_gap_m": null,
+    "pad_friction_coefficient": null,
+    "status": "unknown until hardware calibration; never infer DDS motor radians from URDF prismatic metres"
+  }
+}

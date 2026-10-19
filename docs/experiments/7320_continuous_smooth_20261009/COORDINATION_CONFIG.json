@@ -1,0 +1,30 @@
+{
+  "classification": "KNOWN_MODEL_DIAGNOSTIC",
+  "physical_grasp_count": 1,
+  "intentional_releases": 0,
+  "regrasps": 0,
+  "acquired_body_TCP_transform": "once after verified physical grasp; never replaced",
+  "reference_speed_open_m_s": 0.0015,
+  "reference_speed_compensation_m_s": 0.001,
+  "reference_acceleration_m_s2": 0.002,
+  "base_reference_peak_speed_early_m_s": 0.0003,
+  "base_reference_peak_speed_corrected_m_s": 0.0015,
+  "base_segments_m": [
+    0.001,
+    0.005,
+    0.03
+  ],
+  "base_segment_minimum_duration_s": 4.0,
+  "segment_hold_s": 0.5,
+  "opening_hold_s": 0.3,
+  "hold_semantics": "stop arm task drive and base command advancement while maintaining jaw effort; then resume smooth compensation",
+  "station_transition": "bound command reference at the selected station reachable interval, relocate without release; final90 target uses actual progress",
+  "world_TCP_speed_protection_m_s": 0.005,
+  "joint_margin_protection_rad": 0.05,
+  "arm_jaw_controller_gains_changed": false,
+  "clamp_effort_changed": false,
+  "friction_collision_object_physics_changed": false,
+  "new_fatal_checks": false,
+  "physical_base": "same driven PhysX XY carriage as prior probes; no runtime base pose writes; not wheeled dynamics",
+  "final_integrated_closed_start_reproduction_tested": false
+}

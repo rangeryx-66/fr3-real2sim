@@ -1,0 +1,16 @@
+{
+  "research_question": "Does small physical interaction plus online structure updating improve subsequent object prediction and manipulation over no update or one estimate?",
+  "operation_evidence": "SYSTEM_MAIN_TABLE.csv; 5 degrees is small interaction only",
+  "model_value_evidence": "COMMON_ACTION_PREDICTION.csv; frozen predictors, same excluded object/EE response",
+  "reconstruction_evidence": "OBSERVATION_UPPER_BOUND.csv and STRUCTURE_MAIN_TABLE.csv",
+  "paired_state_evidence": "paired_grasp_states.csv",
+  "limitations": [
+    "diagnostic cohort is already exposed",
+    "conditional geometric prediction is not autonomous physics prediction",
+    "simulator-only contact safety supervisor remains",
+    "full drift is evaluation-only",
+    "dataset GT prior diagnostic is an oracle, not visual Real2Sim",
+    "no real-world system identification evidence"
+  ],
+  "next_step": "freeze findings before deciding whether independent object observations are needed; no new perception work or threshold tuning in this round"
+}

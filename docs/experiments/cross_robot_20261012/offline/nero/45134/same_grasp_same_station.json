@@ -1,0 +1,89 @@
+{
+  "mode": "SAME_GRASP_SAME_PIPER_STATION",
+  "base": [
+    0.4025467009999848,
+    -0.727709643272114,
+    -0.1,
+    59.466385695757424
+  ],
+  "T_grasp": [
+    [
+      0.9999569782123576,
+      -0.002400771259991092,
+      0.008959800319637983,
+      0.6820156765914184
+    ],
+    [
+      -0.009238690172240922,
+      -0.34416529633091936,
+      0.9388636191723225,
+      -0.2492727269871651
+    ],
+    [
+      0.0008296555381139385,
+      -0.9389060044002318,
+      -0.34417266970647215,
+      0.08327569316172334
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "path": [],
+  "range_deg": 0.0,
+  "initial_ik": true,
+  "blocker": "SELF_COLLISION:link7:link5",
+  "first_blocked": {
+    "angle_deg": 0,
+    "configuration": {
+      "joint": "joint3",
+      "margin_rad": 0.2371498470393143,
+      "q_rad": 2.5128501529606857,
+      "limit_rad": [
+        -2.75,
+        2.75
+      ]
+    }
+  },
+  "minimum_margin_rad": null,
+  "limiting": {
+    "joint": "joint3",
+    "margin_rad": 0.2371498470393143,
+    "q_rad": 2.5128501529606857,
+    "limit_rad": [
+      -2.75,
+      2.75
+    ]
+  },
+  "solver_calls": 2,
+  "branch_audit": [
+    {
+      "range_deg": 0.0,
+      "initial_ik": true,
+      "blocker": "SELF_COLLISION:link7:link5",
+      "limiting": {
+        "joint": "joint3",
+        "margin_rad": 0.2371498470393143,
+        "q_rad": 2.5128501529606857,
+        "limit_rad": [
+          -2.75,
+          2.75
+        ]
+      }
+    },
+    {
+      "range_deg": 0.0,
+      "initial_ik": false,
+      "blocker": "NO_INITIAL_PINK_IK",
+      "limiting": null
+    }
+  ],
+  "approach": {
+    "feasible": false,
+    "reason": "NO_COLLISION_FREE_INITIAL_GRASP",
+    "steps_checked": 0
+  }
+}

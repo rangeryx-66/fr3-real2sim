@@ -1,0 +1,479 @@
+{
+  "status": "SHORT_NATIVE_ENGINEERING_RUNTIME_VALIDATED",
+  "reference": "eb80bf3",
+  "physical_research_episode_rerun": false,
+  "hardware_safety_validation": false,
+  "performance": {
+    "scenario": "four identical native unloaded round-trip endpoints; faster bounded time law",
+    "old_wall_including_init_cleanup_s": 76.62378781405278,
+    "new_wall_including_init_cleanup_s": 34.13995438115671,
+    "wall_speedup": 2.2444021734353776,
+    "old_execution_sim_s": 8.8,
+    "new_execution_sim_s": 5.866666666666666,
+    "throughput_ratio": 1.496268115623585,
+    "fidelity": "240 Hz native physics and raw sensors unchanged",
+    "profile": {
+      "wall_s": 32.22592232818715,
+      "simulation_s": 5.866666666666666,
+      "simulation_per_wall_s": 0.18204806077917124,
+      "cost_wall_s": {
+        "initialization": 17.681988520082086,
+        "actuation": 1.4152660456020385,
+        "physics_and_contact_callback": 5.965500575024635,
+        "state_and_FT": 1.883250299608335,
+        "collision_and_safety": 0.9114120765589178,
+        "buffered_evidence": 0.00459860754199326,
+        "trajectory_planning": 3.573010634863749,
+        "export": 0.23787213605828583
+      },
+      "inclusive_cost_wall_s": {
+        "initialization": 17.681988520082086,
+        "actuation": 1.4152660456020385,
+        "physics_and_contact_callback": 5.965500575024635,
+        "state_and_FT": 1.883250299608335,
+        "collision_and_safety": 0.9114120765589178,
+        "buffered_evidence": 0.00459860754199326,
+        "trajectory_planning": 3.573010634863749,
+        "export": 0.23787213605828583
+      },
+      "calls": {
+        "initialization": 1,
+        "actuation": 1408,
+        "physics_and_contact_callback": 1408,
+        "state_and_FT": 1408,
+        "collision_and_safety": 1408,
+        "buffered_evidence": 1408,
+        "trajectory_planning": 8,
+        "export": 1
+      },
+      "phase_accounted_wall_s": {
+        "INITIALIZE": 17.681988520082086,
+        "SETTLE": 0.8445534210186452,
+        "PREGRASP": 6.48888677963987,
+        "SAFE_PARK_MOTION": 6.657470174599439
+      },
+      "unaccounted_wall_s": 0.5530234328471124,
+      "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+    }
+  },
+  "contact_chain": {
+    "case": "contact_05",
+    "acquisition": {
+      "acquired": true,
+      "hold_s": 1.0,
+      "angle_deg": -2.840380363840395e-07
+    },
+    "opening": {
+      "ok": true,
+      "angle_deg": 1.0157379220401062,
+      "gain_deg": 1.0157382060781426
+    },
+    "push": {
+      "panel_contacts": 189,
+      "closing_deg": 0.6429677549253782,
+      "angle_deg": 0.38608380663266967
+    },
+    "safe_park": true,
+    "final": {
+      "angle_deg": 0.38486907349703875,
+      "pad_loads_n": {
+        "gripper_link1": 0.0,
+        "gripper_link2": 0.0
+      },
+      "joint_state": [
+        0.0008332529105246067,
+        -0.5007234215736389,
+        -0.000839825312141329,
+        0.9988208413124084,
+        0.002002382418140769,
+        0.5020017027854919,
+        0.0037249622400850058,
+        0.06016167998313904,
+        0.06016167998313904,
+        0.06016167625784874,
+        0.06016167625784874,
+        0.06016167625784874,
+        0.06016167625784874
+      ]
+    },
+    "records": 43043,
+    "execution_sim_s": 179.34583333333333,
+    "wall_including_init_cleanup_s": 535.6134522198699,
+    "operation_wall_s": [
+      {
+        "operation": "attempt_grasp_and_probe",
+        "wall_s": 307.79093182785437
+      },
+      {
+        "operation": "fresh_mode_observation",
+        "wall_s": 30.679521822137758
+      },
+      {
+        "operation": "plan_panel_push",
+        "wall_s": 0.8203783838544041
+      },
+      {
+        "operation": "execute_panel_push",
+        "wall_s": 122.21897602919489
+      },
+      {
+        "operation": "finish",
+        "wall_s": 0.012081233086064458
+      }
+    ],
+    "phases": {
+      "PREGRASP": {
+        "records": 10140,
+        "max_tcp_mm_s": 80.35391017562041,
+        "max_pad_n": 0.0,
+        "max_compensated_wrist_n": 0.1370999137811849,
+        "minimum_joint_margin_rad": 0.2867284746575356,
+        "max_tracking_rad": 0.0051302313804626465,
+        "positive_native_contact_records": 0,
+        "first_angle_deg": 0.0,
+        "last_angle_deg": 1.0290515615580478,
+        "max_relative_translation_mm": 0.0,
+        "max_command_joint_acceleration_rad_s2": 0.1216979595992762,
+        "max_measured_TCP_acceleration_mm_s2": 401.24788923799395,
+        "simulation_s": 42.25
+      },
+      "APPROACH": {
+        "records": 915,
+        "max_tcp_mm_s": 20.0561292270302,
+        "max_pad_n": 0.0,
+        "max_compensated_wrist_n": 0.18564237050138252,
+        "minimum_joint_margin_rad": 0.946580990791321,
+        "max_tracking_rad": 0.0036039352416992188,
+        "positive_native_contact_records": 0,
+        "first_angle_deg": 0.0,
+        "last_angle_deg": 0.0,
+        "max_command_joint_acceleration_rad_s2": 0.0952749649422896,
+        "max_measured_TCP_acceleration_mm_s2": 265.89581512274134,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 3.8125
+      },
+      "SLOW_CLOSE": {
+        "records": 16612,
+        "max_tcp_mm_s": 0.3479697405224285,
+        "max_pad_n": 0.11285453356353842,
+        "max_compensated_wrist_n": 0.09432365980362512,
+        "minimum_joint_margin_rad": 0.9616838541030885,
+        "max_tracking_rad": 0.004571199417114258,
+        "positive_native_contact_records": 470,
+        "first_angle_deg": 0.0,
+        "last_angle_deg": -1.1545452318842955e-12,
+        "max_command_joint_acceleration_rad_s2": 0.058825568902420855,
+        "max_measured_TCP_acceleration_mm_s2": 42.56344953243844,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 69.21666666666667
+      },
+      "CENTER": {
+        "records": 1291,
+        "max_tcp_mm_s": 0.3417156932766716,
+        "max_pad_n": 0.1352093950757531,
+        "max_compensated_wrist_n": 0.1330878770521176,
+        "minimum_joint_margin_rad": 0.9617075767517091,
+        "max_tracking_rad": 0.004570722579956055,
+        "positive_native_contact_records": 1291,
+        "first_angle_deg": -2.9799971031179655e-11,
+        "last_angle_deg": 6.2902227886305716e-06,
+        "max_command_joint_acceleration_rad_s2": 0.027165832847231286,
+        "max_measured_TCP_acceleration_mm_s2": 39.35089097679474,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 5.379166666666666
+      },
+      "LOW_PRELOAD": {
+        "records": 63,
+        "max_tcp_mm_s": 1.1934616855723141,
+        "max_pad_n": 0.7500803305979858,
+        "max_compensated_wrist_n": 0.4804545765027426,
+        "minimum_joint_margin_rad": 0.9639921035766603,
+        "max_tracking_rad": 0.0035233497619628906,
+        "positive_native_contact_records": 63,
+        "first_angle_deg": 6.235506663223419e-06,
+        "last_angle_deg": -7.198978785438376e-08,
+        "max_command_joint_acceleration_rad_s2": 0.06851705004322639,
+        "max_measured_TCP_acceleration_mm_s2": 163.14667377959145,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 0.2625
+      },
+      "FORCE_HOLD": {
+        "records": 242,
+        "max_tcp_mm_s": 0.3546560056093903,
+        "max_pad_n": 0.6258458468194773,
+        "max_compensated_wrist_n": 0.26653211364637214,
+        "minimum_joint_margin_rad": 0.9639382209777834,
+        "max_tracking_rad": 0.0034847259521484375,
+        "positive_native_contact_records": 242,
+        "first_angle_deg": -6.685144909985472e-08,
+        "last_angle_deg": -2.840380363840395e-07,
+        "max_command_joint_acceleration_rad_s2": 0.04304676117641293,
+        "max_measured_TCP_acceleration_mm_s2": 61.07476243070004,
+        "max_relative_translation_mm": 0.010538900592223092,
+        "simulation_s": 1.0083333333333333
+      },
+      "OPEN_CONTINUE": {
+        "records": 416,
+        "max_tcp_mm_s": 7.542774715488013,
+        "max_pad_n": 1.3322847706801304,
+        "max_compensated_wrist_n": 1.423745286013788,
+        "minimum_joint_margin_rad": 0.9639382209777834,
+        "max_tracking_rad": 0.0045566558837890625,
+        "positive_native_contact_records": 416,
+        "first_angle_deg": -2.791997002692849e-07,
+        "last_angle_deg": 1.0157379220401062,
+        "max_command_joint_acceleration_rad_s2": 0.8000000000000002,
+        "max_measured_TCP_acceleration_mm_s2": 160.89186467065497,
+        "max_relative_translation_mm": 0.3663539880232281,
+        "simulation_s": 1.7333333333333334
+      },
+      "RELEASE": {
+        "records": 3174,
+        "max_tcp_mm_s": 4.441568030410848,
+        "max_pad_n": 0.20180159650789523,
+        "max_compensated_wrist_n": 0.4016399851700381,
+        "minimum_joint_margin_rad": 0.2694698007512093,
+        "max_tracking_rad": 0.004830218851566315,
+        "positive_native_contact_records": 4,
+        "first_angle_deg": 1.0178996769124153,
+        "last_angle_deg": 0.38486907349703875,
+        "max_command_joint_acceleration_rad_s2": 0.0,
+        "max_measured_TCP_acceleration_mm_s2": 182.9657185519305,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 13.225
+      },
+      "CLEARANCE_RETREAT": {
+        "records": 1782,
+        "max_tcp_mm_s": 21.37591089656694,
+        "max_pad_n": 0.0,
+        "max_compensated_wrist_n": 0.038748954497079456,
+        "minimum_joint_margin_rad": 0.2694741369891167,
+        "max_tracking_rad": 0.003602266311645508,
+        "positive_native_contact_records": 0,
+        "first_angle_deg": 1.0290515615580478,
+        "last_angle_deg": 0.38486907349703875,
+        "max_command_joint_acceleration_rad_s2": 0.24545753905738682,
+        "max_measured_TCP_acceleration_mm_s2": 45.08093353070064,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 7.425
+      },
+      "SAFE_PARK_MOTION": {
+        "records": 6390,
+        "max_tcp_mm_s": 80.12186771247607,
+        "max_pad_n": 0.0,
+        "max_compensated_wrist_n": 0.09682009544488729,
+        "minimum_joint_margin_rad": 0.34484377072334294,
+        "max_tracking_rad": 0.005112051963806152,
+        "positive_native_contact_records": 0,
+        "first_angle_deg": 1.0290515615580478,
+        "last_angle_deg": 0.38486907349703875,
+        "max_command_joint_acceleration_rad_s2": 0.058479656893007936,
+        "max_measured_TCP_acceleration_mm_s2": 196.79516628464108,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 26.625
+      },
+      "PANEL_APPROACH": {
+        "records": 878,
+        "max_tcp_mm_s": 20.073858517129622,
+        "max_pad_n": 0.0,
+        "max_compensated_wrist_n": 0.07706803360334975,
+        "minimum_joint_margin_rad": 0.23103328735709192,
+        "max_tracking_rad": 0.0048532262444496155,
+        "positive_native_contact_records": 0,
+        "first_angle_deg": 1.0290515615580478,
+        "last_angle_deg": 1.0290515615580478,
+        "max_command_joint_acceleration_rad_s2": 0.2679789818197642,
+        "max_measured_TCP_acceleration_mm_s2": 87.9691508230128,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 3.658333333333333
+      },
+      "PANEL_PUSH": {
+        "records": 227,
+        "max_tcp_mm_s": 10.10709546048663,
+        "max_pad_n": 0.0,
+        "max_compensated_wrist_n": 0.9659986562699782,
+        "minimum_joint_margin_rad": 0.2173183405506611,
+        "max_tracking_rad": 0.004848651587963104,
+        "positive_native_contact_records": 166,
+        "first_angle_deg": 1.0290515615580478,
+        "last_angle_deg": 0.38608380663266967,
+        "max_command_joint_acceleration_rad_s2": 0.8000000000000002,
+        "max_measured_TCP_acceleration_mm_s2": 115.65424904898097,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 0.9458333333333333
+      },
+      "PANEL_SEPARATION": {
+        "records": 913,
+        "max_tcp_mm_s": 19.972522325690562,
+        "max_pad_n": 0.0,
+        "max_compensated_wrist_n": 0.12426487479673137,
+        "minimum_joint_margin_rad": 0.2172965662288666,
+        "max_tracking_rad": 0.0048508793115615845,
+        "positive_native_contact_records": 0,
+        "first_angle_deg": 0.38553533710623233,
+        "last_angle_deg": 0.38486907349703875,
+        "max_command_joint_acceleration_rad_s2": 0.204990451457987,
+        "max_measured_TCP_acceleration_mm_s2": 244.65115564052482,
+        "max_relative_translation_mm": 0.0,
+        "simulation_s": 3.8041666666666667
+      }
+    },
+    "no_original_safety_stops": true
+  },
+  "safety": {
+    "status": "NATIVE_GUARD_REGRESSION_COMPLETE",
+    "tests": [
+      {
+        "test": "joint_limit_command",
+        "stop": "COMMAND_JOINT_MARGIN",
+        "physics_steps_advanced": 0
+      },
+      {
+        "test": "velocity_command",
+        "stop": "COMMAND_JOINT_VELOCITY",
+        "physics_steps_advanced": 0
+      },
+      {
+        "test": "native_collision_route",
+        "native_pair": "DANGEROUS_GEOMETRY_COLLISION:gripper_link1:/World/articulated_pose/asset/Geometry/l_world/l_3/abstract_3_2/l_2/tn__l_2_original32_aL/tn__l_2_original32_aL",
+        "rejection": "RuntimeError('MOTION_PATH_UNAVAILABLE:DANGEROUS_GEOMETRY_COLLISION:gripper_link1:/World/articulated_pose/asset/Geometry/l_world/l_3/l_0/tn__l_0_original5_rJ/tn__l_0_original5_rJ')",
+        "physics_steps_advanced": 0
+      },
+      {
+        "test": "native_finite_effort_readback",
+        "arm_caps_nm": [
+          50.0,
+          50.0,
+          30.0,
+          30.0,
+          30.0,
+          20.0,
+          20.0
+        ],
+        "master_cap_nm": 2.6456491947174072,
+        "expected_arm_caps_nm": [
+          50.0,
+          50.0,
+          30.0,
+          30.0,
+          30.0,
+          20.0,
+          20.0
+        ],
+        "motor_output_claim": false
+      },
+      {
+        "test": "native_wrist_informational_load",
+        "applied_to": "robot gripper body, never object",
+        "known_force_world_n": [
+          0.0,
+          0.0,
+          4.2
+        ],
+        "measured_peak_wrist_n": 4.396973501157005,
+        "continued_steps": 48
+      },
+      {
+        "test": "native_wrist_emergency_load",
+        "applied_to": "robot gripper body only",
+        "known_force_world_n": [
+          0,
+          0,
+          11.0
+        ],
+        "stop": {
+          "reason": "EMERGENCY_WRIST_FORCE",
+          "evidence": {
+            "reason": "EMERGENCY_WRIST_FORCE",
+            "phase": "SETTLE",
+            "t": 0.8208333333333333,
+            "force": {
+              "status": "EMERGENCY_WRIST_FORCE",
+              "raw_peak_n": 0.0,
+              "wrist_force_n": 10.075477267876893,
+              "wrist_torque_nm": 0.04570542989555218,
+              "window_mean_n": 0.0,
+              "sustained_duration_s": 0.15,
+              "t": 0.8208333333333333,
+              "stop": true,
+              "normal_only_pad_measurement": true
+            },
+            "tcp_speed_m_s": 0.05285351085743395
+          },
+          "steps_to_stop": 6
+        }
+      }
+    ],
+    "physical_object_contact": false,
+    "object_force_applied": false,
+    "force_test_samples_not_for_identification": true
+  },
+  "diagnostic_render_equivalence": {
+    "first": "results/fast_runtime_v1_20261018/release_guards",
+    "second": "results/fast_runtime_v1_20261018/final_render_guards",
+    "records": [
+      198,
+      198
+    ],
+    "native_hz": [
+      240,
+      240
+    ],
+    "equal_record_count": true,
+    "export_issues": [
+      [],
+      []
+    ],
+    "maximum_absolute_difference": {
+      "timestamp_s": 0.0,
+      "joint_position_rad": 0.0,
+      "joint_velocity_rad_s": 0.0,
+      "TCP_world_matrix": 0.0,
+      "raw_sensor_wrench": 0.0,
+      "compensated_wrench_world": 0.0
+    },
+    "contact_records_equal": true
+  },
+  "offline_checks": {
+    "legacy_numbers_all_phases_nonfatal": true,
+    "fault_injections": "collision/joint/velocity/actuator/emergency pad/emergency wrist/phase speed stop",
+    "sustained_history_crosses_modes_without_reset": [
+      35,
+      "SUSTAINED_OVERLOAD"
+    ],
+    "independent_rotation_translation_and_acceleration": true,
+    "actual_stop_command_joint_acceleration_rad_s2": 0.8000000000000002,
+    "normal_panel_stop_precedes_separation_and_exceptions_do_not_continue": true,
+    "recoverable_failure_preserves_velocity_for_guarded_release": true,
+    "active_source_audit": true,
+    "FAST_DEV_idle_render_requests": 0,
+    "chunked_native_numeric_contact_roundtrip_records": 513,
+    "protocol": {
+      "physical_actors": 0,
+      "concurrent_commands": 200,
+      "malformed_recoverable": 8,
+      "same_sequence_winners": 1,
+      "actual_owner_bad_then_finish": "PASS",
+      "packet_producer_consumer_order": [
+        "packet0",
+        "packet1"
+      ],
+      "missing_prefix": "EXPLICIT_DIAGNOSTIC_NO_PARTIAL_FIT",
+      "physical_safety_or_control_changed": false
+    }
+  },
+  "baseline_preservation": {
+    "baseline_files": 87,
+    "mismatches": []
+  },
+  "source_audit": {
+    "tracked_files_scanned": 4706,
+    "legacy_sites": 232,
+    "selected_delegate_functions": 24,
+    "active_old_fatal_guard_owners": 0
+  },
+  "cleanup": {
+    "all_registered_owned_processes_exited": true,
+    "remaining_owned_actor_count": 0
+  }
+}

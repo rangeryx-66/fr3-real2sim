@@ -1,0 +1,614 @@
+{
+  "classification": "OFFLINE_ONLY_NO_PHYSICAL_TRIAL",
+  "physical_trials_consumed": 0,
+  "runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_oracle_door_precontact_continuity.py",
+  "runner_sha256": "a1d6d3a053928249c211c4c15b4361c82fe52a37d7e51876e5a9a30502dfa261",
+  "helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+  "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+  "unchanged_opening_controller_excerpt_sha256": "08131e645e34119507edfd8fc0365ea22be1f67e907c37795a6560c4f74eb6f1",
+  "diagnosis": {
+    "PREGRASP": {
+      "actual_peak_m_s": 0.44111304248041416,
+      "t": 1.5166666666666666,
+      "jacobian_predicted_command_TCP_m_s": 0.43909463912763863,
+      "adjacent_speeds_m_s": [
+        0.44107250367780254,
+        0.441102848855157,
+        0.44111304248041416,
+        0.4410153068440965,
+        0.44091506247940054
+      ],
+      "cause": "Broad mid-segment fast motion: joint-rate-only cubic timing permits high Cartesian speed; not an isolated command handover spike."
+    },
+    "SLOW_CLOSE_entry": {
+      "actual_peak_m_s": 0.10078541853310531,
+      "t": 5.404166666666667,
+      "command_equilibrium_offset_rad": [
+        -0.00010843658505521603,
+        -0.000547385679352308,
+        -0.0007125727811261306,
+        -4.204881658631532e-05,
+        2.7050044884013857e-05,
+        1.0028410122986386e-05
+      ],
+      "old_command_FK_snap_m_s": 0.13099816878556425,
+      "fixed_command_FK_snap_m_s": 1.926521377896951e-05,
+      "cause": "Measured-state IK resets gravity-deflected position equilibrium; one-step delta creates velocity-feedforward impulse. Preserve the acquired command-minus-feedback offset while still seeding IK from feedback."
+    }
+  },
+  "FK_and_Jacobian": {
+    "max_URDF_vs_Pinocchio_matrix_error": 6.661338147750939e-16,
+    "max_Jacobian_vs_central_difference_error": 1.511626102068675e-10,
+    "max_simulator_TCP_vs_feedback_FK_position_error_m": 3.9823292103298764e-07,
+    "samples": 84
+  },
+  "trajectory_replay": {
+    "segments": [
+      {
+        "index": 0,
+        "phase": "PREGRASP",
+        "duration_s": 35.55416666666667,
+        "max_command_TCP_m_s": 0.027276546094369393,
+        "max_command_joint_velocity_rad_s": 0.10399817082033434,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.807647540096422e-09,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 1,
+        "phase": "PREGRASP",
+        "duration_s": 0.8,
+        "max_command_TCP_m_s": 0.0,
+        "max_command_joint_velocity_rad_s": 0.0,
+        "finite_difference_vs_analytic_velocity_rad_s": 0.0,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 2,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029898737807937358,
+        "max_command_joint_velocity_rad_s": 0.010056017216970909,
+        "finite_difference_vs_analytic_velocity_rad_s": 2.9304197833283525e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 3,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990019530761606,
+        "max_command_joint_velocity_rad_s": 0.01011311318551449,
+        "finite_difference_vs_analytic_velocity_rad_s": 2.9470578553783716e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 4,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900194187377754,
+        "max_command_joint_velocity_rad_s": 0.010169443206915995,
+        "finite_difference_vs_analytic_velocity_rad_s": 2.96347304762887e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 5,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900193073839148,
+        "max_command_joint_velocity_rad_s": 0.010225578769422473,
+        "finite_difference_vs_analytic_velocity_rad_s": 2.9798314450379963e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 6,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990019198840633,
+        "max_command_joint_velocity_rad_s": 0.010281536694754302,
+        "finite_difference_vs_analytic_velocity_rad_s": 2.996138210526733e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 7,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990019093097239,
+        "max_command_joint_velocity_rad_s": 0.010337333719041924,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.012397899033402e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 8,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990018990110144,
+        "max_command_joint_velocity_rad_s": 0.010392986508057669,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.028615803141972e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 9,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.00299001888977621,
+        "max_command_joint_velocity_rad_s": 0.0104485116641227,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.044796360419355e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 10,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990018792093423,
+        "max_command_joint_velocity_rad_s": 0.010503925733286332,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.0609444919804107e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 11,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990018696995539,
+        "max_command_joint_velocity_rad_s": 0.010559245212802108,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.0770650761385666e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 12,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900186044592753,
+        "max_command_joint_velocity_rad_s": 0.010614486558847868,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.093162955177514e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 13,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900185144726256,
+        "max_command_joint_velocity_rad_s": 0.010669666194537767,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.10924294237898e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 14,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990018426924136,
+        "max_command_joint_velocity_rad_s": 0.01072480051818741,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.1253095628190075e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 15,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990018341735602,
+        "max_command_joint_velocity_rad_s": 0.010779905911849021,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.1413678602151953e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 16,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900182590344333,
+        "max_command_joint_velocity_rad_s": 0.010834998750124806,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.1574223388432717e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 17,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900181785704315,
+        "max_command_joint_velocity_rad_s": 0.010890095409234414,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.173478037304761e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 18,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900181003915047,
+        "max_command_joint_velocity_rad_s": 0.010945212276377996,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.189539737379267e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 19,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900180244969514,
+        "max_command_joint_velocity_rad_s": 0.011000365759363522,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.2056119724691e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 20,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.0029900179507763394,
+        "max_command_joint_velocity_rad_s": 0.01105557229651905,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.221699569200935e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      },
+      {
+        "index": 21,
+        "phase": "APPROACH",
+        "duration_s": 1.2541666666666667,
+        "max_command_TCP_m_s": 0.002990017879233298,
+        "max_command_joint_velocity_rad_s": 0.011110848366910585,
+        "finite_difference_vs_analytic_velocity_rad_s": 3.237807656388441e-07,
+        "start_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "end_velocity_rad_s": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "exact_endpoint_error_rad": 0.0
+      }
+    ],
+    "max_command_TCP_m_s": 0.027276546094369393,
+    "duration_s": 61.4375,
+    "same_joint_endpoints_and_branch": true,
+    "quintic_zero_velocity_and_acceleration_at_segment_boundaries": true,
+    "not_physical_validation": true
+  },
+  "replay": {
+    "fixed_reopenings": 0,
+    "closure_replay_reused_from_frozen_verified_baseline": true
+  },
+  "source_provenance": {
+    "frozen_inputs_unchanged": true,
+    "whole_plan_identical": true,
+    "grasp_plan_identical": true
+  },
+  "offline_supported": true
+}

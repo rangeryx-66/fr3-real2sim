@@ -1,0 +1,150 @@
+{
+  "classification": "CONTACT_FEEDBACK_CLOSURE_DEVELOPMENT_ONLY",
+  "asset_id": "45671",
+  "physical_trials": 1,
+  "success": false,
+  "status": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+  "opening_task_claim": false,
+  "maximum_incidental_door_angle_deg": 0.02735985815525055,
+  "simulation_s": 166.18333333333334,
+  "wall_s": 1085.819673578022,
+  "minimum_joint_margin_rad": 1.0682583408164978,
+  "first_unilateral": {
+    "t": 123.61666666666666,
+    "measured_aperture_m": 0.02647782726883082,
+    "aperture_command_m": 0.026436896652658443,
+    "filtered_pad_loads_n": [
+      0.05427461201924404,
+      0.0
+    ]
+  },
+  "first_bilateral_filtered_contact": null,
+  "grasp_acquisition": null,
+  "final_command_aperture_m": 0.023082729985992145,
+  "final_measured_aperture_m": 0.023366689169076013,
+  "peak_raw_loads_n": {
+    "gripper_link1": 0.6223768517091093,
+    "gripper_link2": 0.0
+  },
+  "peak_filtered_loads_n": {
+    "gripper_link1": 0.5275104225321631,
+    "gripper_link2": 0.0
+  },
+  "final_raw_loads_n": {
+    "gripper_link1": 0.5195014293838226,
+    "gripper_link2": 0.0
+  },
+  "final_filtered_loads_n": [
+    0.5127978445919654,
+    0.0
+  ],
+  "maximum_command_TCP_displacement_mm": 2.000000000000014,
+  "maximum_measured_TCP_displacement_mm": 1.9931275741480832,
+  "final_axis_signed_TCP_displacement_mm": 1.3670598174780564,
+  "maximum_post_step_TCP_tracking_error_mm": 1.8823870425073999,
+  "final_post_step_TCP_tracking_error_mm": 1.5823766519818856,
+  "maximum_handle_relative_acquisition_translation_mm": 1.9516464654693662,
+  "maximum_handle_relative_acquisition_rotation_deg": 0.32394872134174657,
+  "maximum_TCP_speed_after_unilateral_mm_s": 0.975535438324199,
+  "correction_summary": {
+    "center_phase": "UNLOAD",
+    "closing_advanced": false,
+    "correction_count": 10221,
+    "cumulative_command_distance_m": 0.002008463920226662,
+    "command_displacement_m": 0.002000000000000006,
+    "closing_axis_world": [
+      0.005467722413543867,
+      0.2729692834528991,
+      0.9620072111490741
+    ],
+    "response_count": 537,
+    "latest_response": {
+      "phase": "UNLOAD",
+      "loaded_force_before_n": 0.5034314955096083,
+      "loaded_force_after_n": 0.4975646655349162,
+      "actual_TCP_toward_loaded_m": 1.5039212546912622e-06,
+      "unloading_observed": true,
+      "geometry_direction_world": [
+        0.005458691340248898,
+        0.2729703777057347,
+        0.9620069519416378
+      ]
+    }
+  },
+  "feedback_response_windows": 537,
+  "expected_direction_unloading_windows": 225,
+  "CENTER_close_advanced_updates": 805,
+  "CENTER_aperture_held_updates": 9411,
+  "command_reopenings": 0,
+  "protection_events": [],
+  "positive_contact_pairs": [
+    {
+      "finger": "gripper_link1",
+      "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/tn__l_1_original35_aL/tn__l_1_original35_aL",
+      "records": 10224
+    }
+  ],
+  "streams": {
+    "observations": {
+      "decoded_records": 39884,
+      "indexed_records": 39884,
+      "errors": []
+    },
+    "physics_steps": {
+      "decoded_records": 39884,
+      "indexed_records": 39884,
+      "errors": []
+    },
+    "closure_commands": {
+      "decoded_records": 24000,
+      "indexed_records": 24000,
+      "errors": []
+    }
+  },
+  "video_decode_rc": 0,
+  "video_decode_error_bytes": 0,
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1280,
+        "height": 960,
+        "duration": "166.166667",
+        "nb_frames": "4985"
+      }
+    ]
+  },
+  "active_sources": {
+    "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_contact_correction.py",
+    "runner_sha256": "0cc6baf4f8480341c8a6a8b929c410a0f78a1d45a2e2ce60424c32211d1567f0",
+    "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/jaw_contact_feedback_closure.py",
+    "active_closure_sha256": "76a34ad55910febf0de8fc8853f6dd0aca9071ebc12581d0c1b8ab9e3d1e1d22",
+    "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/jaw_contact_feedback_closure.py",
+    "argv": [
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_contact_correction.py",
+      "--job",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_contact_correction_20261013/job.json"
+    ],
+    "pid": 1108342,
+    "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+    "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+    "initial_sequence_sha256": "a3227c795e3a8011c541c64f1ab54671facc6ddbc2461c71f1eab90421398aa7",
+    "active_closure_alias": true
+  },
+  "servo_handover": {
+    "command_bias_rad": [
+      -0.0008314960344041333,
+      0.0007379614611252028,
+      0.0008420306686918178,
+      0.0011760770753734828,
+      -0.0020048315125353877,
+      -0.002001007784145137,
+      0.003677888826023046
+    ],
+    "original_time_budget_s": 100,
+    "sensor_response_period_s": 0.07916666666666666,
+    "handle_pose_used_by_closure": false
+  },
+  "metrics_note": "Intentional TCP acquisition correction is not post-grasp slip. Measured feedback and raw transforms are retained; reference was not reset to hide drift."
+}

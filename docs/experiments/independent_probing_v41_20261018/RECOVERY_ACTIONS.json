@@ -1,0 +1,73 @@
+{
+  "reason": "First grasp acquired but transmission degraded and opening safely timed out; adapt finite profiles at verified unloaded boundary to prioritize substantial closing and independent validation.",
+  "first_attempt_remains_failed": true,
+  "hidden_truth_access": false,
+  "actions": [
+    {
+      "role": "FIT_V41_RECOVERY_CLOSE",
+      "target_deg": 4,
+      "profile": "constant",
+      "velocity_program": "plateaus",
+      "reference_speed_m_s": 0.009,
+      "reference_acceleration_m_s2": 0.04,
+      "low_speed_fraction": 0.4,
+      "ramp_s": 0.65,
+      "plateau_s": 1.0,
+      "max_sim_s": 45,
+      "fit_intervals_s": [
+        [
+          0.6,
+          44
+        ]
+      ],
+      "hold": true
+    },
+    {
+      "role": "FIT_V41_RECOVERY_ACCEL_OPEN",
+      "target_deg": 13,
+      "profile": "constant",
+      "velocity_program": "plateaus",
+      "reference_speed_m_s": 0.012,
+      "reference_acceleration_m_s2": 0.04,
+      "low_speed_fraction": 0.125,
+      "ramp_s": 0.45,
+      "plateau_s": 0.55,
+      "max_sim_s": 45,
+      "fit_intervals_s": [
+        [
+          0.6,
+          44
+        ]
+      ],
+      "hold": true
+    },
+    {
+      "role": "FIT_V41_RECOVERY_STEADY_CLOSE",
+      "target_deg": 5,
+      "profile": "constant",
+      "velocity_program": "constant",
+      "reference_speed_m_s": 0.006,
+      "reference_acceleration_m_s2": 0.04,
+      "max_sim_s": 45,
+      "fit_intervals_s": [
+        [
+          0.6,
+          44
+        ]
+      ],
+      "hold": true
+    },
+    {
+      "role": "VALIDATION_V41_RECOVERY_REOPEN_SINE",
+      "target_deg": 10,
+      "profile": "constant",
+      "velocity_program": "sine",
+      "reference_speed_m_s": 0.008,
+      "reference_acceleration_m_s2": 0.04,
+      "low_speed_fraction": 0.3,
+      "period_s": 2.7,
+      "max_sim_s": 45,
+      "hold": true
+    }
+  ]
+}

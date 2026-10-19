@@ -1,0 +1,81 @@
+{
+  "schema": "agent-wrist-cross-object-preregistration/v1",
+  "reference": "34607b4",
+  "registered_utc": "2026-10-15T15:57:46.161882+00:00",
+  "execution_order": [
+    "45936",
+    "46427"
+  ],
+  "cases": [
+    {
+      "asset_id": "45936",
+      "handle_mesh": "original-39",
+      "handle_link": "l_2",
+      "moving_link": "abstract_3_2",
+      "joint": "joint_revolute_l_3_abstract_3_2",
+      "authored_deg": 100,
+      "authored_height_m": 0.9,
+      "geometry": "Tall cabinet; long straight vertical protruding bar (~296 mm); source -X side",
+      "reason": "Long vertical handle and taller cabinet differ from the 45600 development handle and from the second case."
+    },
+    {
+      "asset_id": "46427",
+      "handle_mesh": "original-42",
+      "handle_link": "l_0",
+      "moving_link": "abstract_1_0",
+      "joint": "joint_revolute_l_1_abstract_1_0",
+      "authored_deg": 90,
+      "authored_height_m": 0.25,
+      "geometry": "Low wall cabinet; short vertical central bar (~63 mm) with curved mounting supports; source +X side",
+      "reason": "Short handle, curved supports and low mounting geometry differ from the first case."
+    }
+  ],
+  "selection_basis": "Source metadata and closed-state visual mesh inspection only, before new IK/grasp planning or physics. Previously listed in raw eligible inventory; no prior experimental planning/physics/development records found. Not claiming unseen network training data.",
+  "eligibility": "Conventional single revolute protruding-handle doors, >=30 deg authored range; no planner/contact score used.",
+  "draft_amendment": "Provisional 45526/45916 draft withdrawn before formal registration, planning or physics because history audit found development use; no results observed or replaced.",
+  "source_provenance": "Unchanged generic prepare_physx_microwave importer; source metadata scale and masses retained, existing box inertia/COM approximation and per-visual convex hull colliders. Generic importer object_name Microwave is a label, these are source Cabinet/Wall Cabinet.",
+  "collision_limitations": "No new eligibility exclusion for convex-proxy gaps; separate per-visual hulls retained. Curved support hull fill-in may matter; not established as a blocker before testing.",
+  "registered_common_base_xyzyawdeg": [
+    0.19605376022549204,
+    -0.5328198023693291,
+    -0.1,
+    -0.7953990037810357
+  ],
+  "station_dependency": "Same known-model 45600 registered station copied as base only for both new cases; no station tuning or saved grasp/view reuse.",
+  "installation": {
+    "x_m": 0.5,
+    "y_m": -0.05,
+    "yaw_deg": -90,
+    "fixture_height_m": 0.04
+  },
+  "target_deg": 3,
+  "post_acquisition_success_deg": 2,
+  "hold_s": 1,
+  "maximum_agent_adjustments": 4,
+  "maximum_valid_closed_start_episodes_per_case": 1,
+  "between_case_tuning": false,
+  "GT_handle_online": false,
+  "known_dependencies": [
+    "registered common station",
+    "coarse cabinet envelope for initial generic observation",
+    "hinge geometry/dynamic state",
+    "collision safety models",
+    "ideal simulated camera/robot calibration",
+    "approximate finite-effort actuators"
+  ],
+  "private_raw_evidence": true,
+  "frozen_source_sha256": {
+    "scripts/run_native_g1_agent_manipulation.py": "a161b0f92aa1f93ab0e1fb2bd51c7dbba8ab551ecde830978101cc0272840d62",
+    "scripts/native_g1_agent_execution.py": "f2b61cd6286e2b3856d44589f3e95c41054b148edb0fb4161ccacc8ba565e15d",
+    "scripts/native_g1_agent_observation.py": "2df3e2c1c123408a14e647161765989579e2069b18c7544c9eed07e6881c8ea1",
+    "scripts/native_g1_wrist_input.py": "63cc95162460baf6f07610f0ca7e7e6d418d616812bc8c78e7a8fcff63c5cb6d",
+    "scripts/native_g1_visual_input.py": "37406ab96de216247ba9f2ca9a8a9167d73971e6294c3bf7fa0c11d3f6edbac6",
+    "scripts/native_g1_multiview_input.py": "f7b853bdfd2666c01acc4cbedcd9e2ba99e687206b4a8edc4c21a0a257eb4137",
+    "scripts/native_g1_metric_rgbd_geometry.py": "db76529d2593858a280f14ab9514ef56ade1e3c737a998861b3c9c912d2fc110",
+    "scripts/precontact_trajectory.py": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+    "scripts/shared_door_execution.py": "13e3c388f83eb8efdb2c727fbcc14815498a1a7dfc77107db5393c03d9cda622",
+    "scripts/xarm7_native_execution.py": "9998fead6af71cbf288f4ceef9b531e1936fc0d4bdc8306965fbccd6ff3e5897",
+    "configs/xarm7_wrist_rgbd_sim.json": "b7fd4bbf07ec42f557f2aedbf8af5d13619e631d5227861210a5eab24551576a"
+  },
+  "metadata_amendment_before_grasp_planning": "Separate active joint child (moving_link) from visual descendant (door_link / handle_link). Initial preparation incorrectly conflated them. Corrected before any new grasp planning or contact outcome. No scene restart, controller or geometry change; current runtime visual-frame motion is rigidly equivalent for articulation delta."
+}

@@ -1,0 +1,7 @@
+<robot xmlns:xacro="http://ros.org/wiki/xacro" name="xarm_gripper">
+      <xacro:property name="mesh_path" value="/data1/home/rangeryx/cross_robot_sources_20261012/xarm_ros/xarm_description/meshes"/>
+      <xacro:property name="mesh_suffix" value="stl"/>
+      <xacro:include filename="/data1/home/rangeryx/cross_robot_sources_20261012/xarm_ros/xarm_description/urdf/common/common.link.xacro"/>
+      <xacro:include filename="/data1/home/rangeryx/cross_robot_sources_20261012/xarm_ros/xarm_description/urdf/gripper/xarm_gripper.urdf.xacro"/>
+      <xacro:xarm_gripper_urdf attach_to="link_eef"/>
+    </robot>

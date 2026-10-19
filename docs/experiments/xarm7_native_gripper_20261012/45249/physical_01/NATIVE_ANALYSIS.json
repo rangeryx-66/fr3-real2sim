@@ -1,0 +1,108 @@
+{
+  "asset_id": "45249",
+  "actual_physical_grasp": true,
+  "max_angle_after_valid_grasp_deg": 0.0537954643368721,
+  "max_relative_slip_mm": 0.4890785528706185,
+  "max_relative_rotation_deg": 0.13078676851181145,
+  "max_all_phase_TCP_mm_s": 31.250952894602765,
+  "max_loaded_TCP_mm_s": 1.1368616287054458,
+  "minimum_margin_rad": 0.6730720122628888,
+  "max_arm_reference_tracking_error_rad": 0.004679034054682951,
+  "max_native_velocity_rad_s": [
+    0.10705439001321793,
+    0.0474519208073616,
+    0.10295401513576508,
+    0.06671125441789627,
+    0.14753778278827667,
+    0.08146876841783524,
+    0.20172594487667084
+  ],
+  "max_fullstep_velocity_rad_s": [
+    0.10708093643188477,
+    0.04745006561279297,
+    0.10279744863510132,
+    0.06674766540527344,
+    0.14618396759033203,
+    0.08148193359375,
+    0.20107269287109375
+  ],
+  "peak_raw_pad_load_n": 2.0627125077665034,
+  "sim_s": 242.99166666666667,
+  "wall_s": 1560.1415424649604,
+  "phase_sim_s": {
+    "SETTLE": 0.5,
+    "PREGRASP": 142.7125,
+    "APPROACH": 25.083333333333332,
+    "SLOW_CLOSE": 69.38333333333333,
+    "CENTER": 2.0208333333333335,
+    "LOW_PRELOAD": 0.3125,
+    "FORCE_HOLD": 0.5041666666666667,
+    "TRANSMISSION_PROBE": 2.475
+  },
+  "both_pad_filtered_contact_loss_intervals": [],
+  "native_collider_pairs": [
+    {
+      "collider": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/xarm_gripper_base_link/right_outer_knuckle/right_finger/right_finger_1/right_finger",
+      "target": "/World/articulated_pose/asset/Geometry/l_world/l_2/abstract_2_4/l_4/tn__l_4_original32_aL/tn__l_4_original32_aL",
+      "samples": 6360
+    },
+    {
+      "collider": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/xarm_gripper_base_link/left_outer_knuckle/left_finger/left_finger_1/left_finger",
+      "target": "/World/articulated_pose/asset/Geometry/l_world/l_2/abstract_2_4/l_4/tn__l_4_original32_aL/tn__l_4_original32_aL",
+      "samples": 3236
+    }
+  ],
+  "native_gripper_mimic_error_max_rad": 0.001558542251586914,
+  "native_position_hold": true,
+  "hardware_pad_feedback": false,
+  "telemetry_counts": {
+    "physics_step_index": 58318,
+    "step_start_s": 58318,
+    "post_step_simulation_time_s": 58318,
+    "physics_dt_s": 58318,
+    "physics_substeps": 58318,
+    "sensor_period_s": 58318,
+    "sensor_rate_hz": 58318,
+    "command_q_all": 58318,
+    "command_q_velocity_arm": 58318,
+    "command_aperture_m": 58318,
+    "measured_aperture_m": 58318,
+    "command_finger_efforts": 58318,
+    "legacy_closure_effort_request_not_applied": 58318,
+    "gripper_control_mode": 58318,
+    "native_gripper_feedback": 58318,
+    "joint_velocities": 58318,
+    "applied_joint_efforts": 58318,
+    "measured_joint_efforts": 58318,
+    "measured_joint_forces": 58318,
+    "hinge_velocity_rad_s": 58318,
+    "base_pose": 58318,
+    "command_base_pose": 58318,
+    "base_motion_state": 58318,
+    "grasp_index": 58318,
+    "pad_load_raw_n": 58318,
+    "pad_load_filtered_n": 58318,
+    "raw_contact_records": 58318,
+    "pad_contact": 58318,
+    "finger_net_impulse_world_ns": 58318,
+    "finger_net_force_world_n": 58318
+  },
+  "observation_records": 58318,
+  "raw_physics_records": 58318,
+  "video": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "width": 1280,
+        "height": 960,
+        "duration": "242.966667",
+        "nb_frames": "7289"
+      }
+    ]
+  },
+  "native_force_note": "Actual raw PhysX contact, not native hardware tactile feedback",
+  "position_preload_note": "Legacy clamp request converted to a latched finite implicit position offset using approximate gripper stiffness and aperture Jacobian; no external jaw torque applied",
+  "status": "RuntimeError('HARD_FORCE_STOP_SUSTAINED')",
+  "success": false
+}

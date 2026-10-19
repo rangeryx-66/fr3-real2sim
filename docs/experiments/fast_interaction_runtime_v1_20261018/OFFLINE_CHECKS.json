@@ -1,0 +1,45 @@
+{
+  "checks": {
+    "legacy_numbers_all_phases_nonfatal": true,
+    "fault_injections": "collision/joint/velocity/actuator/emergency pad/emergency wrist/phase speed stop",
+    "sustained_history_crosses_modes_without_reset": [
+      35,
+      "SUSTAINED_OVERLOAD"
+    ],
+    "independent_rotation_translation_and_acceleration": true,
+    "actual_stop_command_joint_acceleration_rad_s2": 0.8000000000000002,
+    "normal_panel_stop_precedes_separation_and_exceptions_do_not_continue": true,
+    "recoverable_failure_preserves_velocity_for_guarded_release": true,
+    "active_source_audit": true,
+    "FAST_DEV_idle_render_requests": 0,
+    "chunked_native_numeric_contact_roundtrip_records": 513,
+    "protocol": {
+      "physical_actors": 0,
+      "concurrent_commands": 200,
+      "malformed_recoverable": 8,
+      "same_sequence_winners": 1,
+      "actual_owner_bad_then_finish": "PASS",
+      "packet_producer_consumer_order": [
+        "packet0",
+        "packet1"
+      ],
+      "missing_prefix": "EXPLICIT_DIAGNOSTIC_NO_PARTIAL_FIT",
+      "physical_safety_or_control_changed": false
+    }
+  },
+  "policy_sha256": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+  "legacy_replay": {
+    "panel": "Measured speed crossed a phase-insensitive stop before native panel contact; small position increments do not rule out velocity-target/implicit-drive transient.",
+    "handover": "Archived independent FK replay proves a 35.194 mm/s command discontinuity at centering-to-probe; must repair handover, not only raise threshold.",
+    "closing": "SOFT warning was thrown by recovery wrapper before sustained-overload windows; 2.000265 N alone is not an emergency. Transmission quality remains separate."
+  },
+  "FK_equivalence": {
+    "samples": 100,
+    "maximum_matrix_error": 0.0,
+    "original_fk_wall_s": 0.15565941063687205,
+    "cached_tree_fk_wall_s": 0.028569607064127922,
+    "speedup": 5.448426724507473,
+    "physical_episodes": 0,
+    "geometry_changed": false
+  }
+}

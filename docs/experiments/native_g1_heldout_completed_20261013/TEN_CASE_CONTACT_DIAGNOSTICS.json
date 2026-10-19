@@ -1,0 +1,5098 @@
+{
+  "classification": "SAVED_DATA_OFFLINE_DIAGNOSTIC_ONLY",
+  "pad_bounds_logical_frame_m": {
+    "gripper_link1": [
+      [
+        -0.014749999158084393,
+        0.02225320227444172,
+        -0.02600320242345333
+      ],
+      [
+        0.014750000089406967,
+        0.05975320190191269,
+        -0.02600320242345333
+      ]
+    ],
+    "gripper_link2": [
+      [
+        -0.014750000089406967,
+        0.02225320227444172,
+        -0.02600320242345333
+      ],
+      [
+        0.014749999158084393,
+        0.05975320190191269,
+        -0.02600320242345333
+      ]
+    ]
+  },
+  "normal_sign_note": "absolute alignment; native collider ordering and signed impulses remain archived. No directional-friction inference.",
+  "static_sample_note": "nearest precomputed planned-pose aperture sample is not a replay of actual centered pose or dynamic contact",
+  "projection_note": "inner-pad XY footprint only; distances from its surface plane are reported separately; no new runtime contact or success gate",
+  "cases": [
+    {
+      "asset_id": "45526",
+      "geometry": "vertical straight round bar",
+      "success": true,
+      "grasp_success": true,
+      "visual_rear_gap_m": [
+        0.02729028,
+        0.027290279,
+        0.027290279
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.02729028,
+        0.027290279,
+        0.027290279
+      ],
+      "chosen_pose": {
+        "section_fraction": 0.3,
+        "insertion_m": 0.0,
+        "roll_deg": 180.0,
+        "pitch_deg": 15.0,
+        "shared_selection_utility": 0.030486689008058863
+      },
+      "predicted_best_common_aperture_m": 0.016174941176470586,
+      "predicted_best_common_support": 0.014368718843189817,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.014368718843189817,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.05505563180306705,
+              "interior_supported_area_m2": 6.121423427518341e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.05496316324756914,
+              "interior_supported_area_m2": 6.111025161903347e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2614245331185626
+        },
+        "native": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.014368718843189819,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.05505563180306705,
+              "interior_supported_area_m2": 6.121423427518341e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.05496316324756914,
+              "interior_supported_area_m2": 6.111025161903346e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2614245331185626
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.013752617647058818,
+        "bilateral_score": 0.0001521152243540573,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.0005923296743304863,
+            "interior_supported_area_m2": 2.5255064636042712e-06
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 0.000584452601345616,
+            "interior_supported_area_m2": 2.5330590068373692e-06
+          }
+        ],
+        "native_pad_normal_opening_component": 0.26142453311856245
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 120.91666666666667,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.014735045316559326,
+          "command_aperture_m": 0.014699863605714056,
+          "load_n": 0.05091653576772862
+        },
+        "gripper_link2": {
+          "t": 122.6375,
+          "phase": "CENTER",
+          "aperture_m": 0.014141954712464523,
+          "command_aperture_m": 0.014074863605714125,
+          "load_n": 0.0519944333940939
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 69.92083333333333,
+          "mean_loads_n": [
+            0.0005492900500006544,
+            1.4132402149990486e-05
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.00738930933794172,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.01414217749875911,
+            "median": 0.04903994672269342,
+            "max": 0.08399428466742938
+          },
+          "command_aperture_m": {
+            "min": 0.014074863605714125,
+            "median": 0.04903319693904361,
+            "max": 0.08399153027237309
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 161,
+              "contact_step_fraction": 0.009594183898456588,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014247140019631132,
+                0.042960571080918976,
+                -0.026003233993226516
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01424738458426921,
+                  0.04296030113024205,
+                  -0.026003784399976252
+                ],
+                [
+                  -0.014246889785728325,
+                  0.042960846955369426,
+                  -0.026002433192735062
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000229237715,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2945379236318185,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.0391085526750832e-09,
+                "median": 1.3432866332110938e-07,
+                "max": 7.692307182685654e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 6,
+              "contact_step_fraction": 0.00035754722602943806,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014129834475904011,
+                0.039736233639124804,
+                -0.026003076650229776
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01412997288668323,
+                  0.03973606473870465,
+                  -0.02600368131222617
+                ],
+                [
+                  -0.014129661706900946,
+                  0.03973640207771385,
+                  -0.026001973086214648
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000349815188,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.29194489820137604,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 8.50506628978509e-08,
+                "median": 2.747648742782577e-07,
+                "max": 1.2293372386833201e-06
+              }
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 1.15,
+          "mean_loads_n": [
+            0.04928836443297807,
+            0.004872017766116423
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.3695652173913043,
+            0.036231884057971016
+          ],
+          "aperture_m": {
+            "min": 0.014141731926185723,
+            "median": 0.014395859219060465,
+            "max": 0.0147086013084375
+          },
+          "command_aperture_m": {
+            "min": 0.014074863605714125,
+            "median": 0.014370696939047425,
+            "max": 0.014658196939047394
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 276,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01424712902956308,
+                0.04296062275438147,
+                -0.02600324664921667
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.0142474912018508,
+                  0.042960345549720974,
+                  -0.02600378124552486
+                ],
+                [
+                  -0.014246860960589141,
+                  0.0429609333700034,
+                  -0.026002583116006592
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000202970363,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2945470448414298,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.0456546977187795e-09,
+                "median": 1.4379858829377534e-07,
+                "max": 6.193074467385207e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 28,
+              "contact_step_fraction": 0.10144927536231885,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014129872951017983,
+                0.03973626622231816,
+                -0.02600315363530496
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014130104499082067,
+                  0.03973605366039048,
+                  -0.026003608731093884
+                ],
+                [
+                  -0.014129555736410178,
+                  0.03973637600472934,
+                  -0.026002855978136254
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000285345378,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2919402230939876,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.9394630089430986e-08,
+                "median": 1.52417865275159e-07,
+                "max": 4.0630764055332724e-07
+              }
+            }
+          }
+        },
+        "LOW_PRELOAD": {
+          "simulation_s": 0.26666666666666666,
+          "mean_loads_n": [
+            0.5256128968949559,
+            0.4983275581130948
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.014113792031507665,
+            "median": 0.014115777433221606,
+            "max": 0.014132427336915727
+          },
+          "command_aperture_m": {
+            "min": 0.013492958723290042,
+            "median": 0.013497069153057595,
+            "max": 0.013533126726031387
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 64,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014247167121167177,
+                0.042960844792342974,
+                -0.026003311813503537
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.0142475137690354,
+                  0.04295971360828964,
+                  -0.026004617042550755
+                ],
+                [
+                  -0.014246873100305812,
+                  0.042961086029380924,
+                  -0.026002523624777972
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000132467266,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2944902049514657,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.6959064772236196e-09,
+                "median": 1.56803913247891e-07,
+                "max": 1.4146190974242967e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 64,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014129851489770187,
+                0.03973625182366567,
+                -0.026003001049912385
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014130131168724053,
+                  0.039734499456841856,
+                  -0.02600371758666099
+                ],
+                [
+                  -0.01412952242742007,
+                  0.03973675256097794,
+                  -0.025999523891372497
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.000000016784851,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2918805547915492,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.556091389052886e-09,
+                "median": 1.689862098239181e-07,
+                "max": 3.678532080834268e-06
+              }
+            }
+          }
+        },
+        "FORCE_HOLD": {
+          "simulation_s": 0.5041666666666667,
+          "mean_loads_n": [
+            0.4721767799084116,
+            0.5375623486439832
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.014106525340982053,
+            "median": 0.014108877676273876,
+            "max": 0.014113851003817564
+          },
+          "command_aperture_m": {
+            "min": 0.01349962972815362,
+            "median": 0.01349962972815362,
+            "max": 0.01349962972815362
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014247190139160511,
+                0.042960923840059194,
+                -0.02600325767778443
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014247489214903541,
+                  0.04296076067371081,
+                  -0.026003666298510274
+                ],
+                [
+                  -0.014246927948697653,
+                  0.04296115623955153,
+                  -0.026002801532366056
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000252208923,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2945160330245061,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 7.080209613041788e-10,
+                "median": 1.4981748412690177e-07,
+                "max": 4.638750569427308e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014129842650004438,
+                0.03973638210551757,
+                -0.026003142831562333
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014130100504745884,
+                  0.039736172254262264,
+                  -0.026003469165234296
+                ],
+                [
+                  -0.014129568513633001,
+                  0.03973662532306724,
+                  -0.02600275196805871
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000249940115,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.29183737606638543,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 4.0944267420961467e-10,
+                "median": 1.0512038794291412e-07,
+                "max": 4.504553946203804e-07
+              }
+            }
+          }
+        },
+        "TRANSMISSION_PROBE": {
+          "simulation_s": 7.041666666666667,
+          "mean_loads_n": [
+            0.6074664539300285,
+            0.3617134480106722
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.985207100591716,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.014066660409409376,
+            "median": 0.01408938086753395,
+            "max": 0.014106518788518548
+          },
+          "command_aperture_m": {
+            "min": 0.01349962972815362,
+            "median": 0.01349962972815362,
+            "max": 0.01349962972815362
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 1690,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014201801036850628,
+                0.041716727068499056,
+                -0.026004602722809175
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014251208250194195,
+                  0.04159858107088912,
+                  -0.026007496668151345
+                ],
+                [
+                  -0.014196528603001376,
+                  0.0429619014008743,
+                  -0.026002626111326557
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000224737344,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.29786691465889237,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 4.991751768879116e-10,
+                "median": 1.4350793793530686e-06,
+                "max": 4.2942446980137605e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 1690,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014097374675063615,
+                0.038891243679944086,
+                -0.026001542314206056
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014130162174759195,
+                  0.038445921122271215,
+                  -0.026007697047873677
+                ],
+                [
+                  -0.014080780067002833,
+                  0.03973872369546933,
+                  -0.025998956258337633
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000252661723,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2941692942931866,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.208155601232889e-09,
+                "median": 1.4711593905800124e-06,
+                "max": 4.494624420346011e-06
+              }
+            }
+          }
+        },
+        "FIRST_OPEN_5_DEG": {
+          "simulation_s": 29.6,
+          "mean_loads_n": [
+            0.6666646366812947,
+            0.26204483464871653
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.014046826421997456,
+            "median": 0.014062303080415846,
+            "max": 0.014087903295529842
+          },
+          "command_aperture_m": {
+            "min": 0.01349962972815362,
+            "median": 0.01349962972815362,
+            "max": 0.01349962972815362
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 8225,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.0021208564220823478,
+                0.04166866025990925,
+                -0.02600463005934401
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014204954815310927,
+                  0.0415141242383165,
+                  -0.026005365729154285
+                ],
+                [
+                  0.01417772720629466,
+                  0.041767921351410754,
+                  -0.026002866103506814
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000256148946,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.29757424884684175,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.453198132637782e-08,
+                "median": 1.4356711548896284e-06,
+                "max": 2.163305700953605e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 7455,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.004346384655518589,
+                0.03881284983476136,
+                -0.02600175209404879
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014089605191036235,
+                  0.03845028511099256,
+                  -0.02600415738888398
+                ],
+                [
+                  0.014178321552914736,
+                  0.03905425265679936,
+                  -0.025999921096757743
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000283803545,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.294543087060351,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.2642362616787093e-08,
+                "median": 1.4613300971209886e-06,
+                "max": 3.2813266955880604e-06
+              }
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": 30.000412057477526,
+      "opening_execution_vs_saved_ik_path": {
+        "maximum_joint_difference_record": {
+          "t": 124.09583333333333,
+          "actual_deg": 0.0042023444548249245,
+          "max_abs_joint_difference_rad": 0.1172844046699677,
+          "joint_differences_rad": [
+            -0.1172844046699677,
+            -0.005429667753759637,
+            0.08775576089830588,
+            -0.017298770112371575,
+            -0.03291517903289254,
+            0.058076087037010504,
+            0.0786480081417481
+          ]
+        },
+        "last": {
+          "t": 342.12916666666666,
+          "actual_deg": 30.000411987304688,
+          "max_abs_joint_difference_rad": 0.07730887569515743,
+          "joint_differences_rad": [
+            0.03760268564919356,
+            0.030038496176583163,
+            0.022816361784665506,
+            -0.00909929278078403,
+            -0.06905467131098941,
+            -3.8431456333087866e-05,
+            0.07730887569515743
+          ]
+        },
+        "definition": "Measured arm q versus linear interpolation of the original saved endpoint-IK path at actual angle; descriptive only, no tracking gate"
+      },
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.0001369508492908814,
+        "maximum_rotation_error_deg": 6.090279947191861e-06,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": {
+        "first": {
+          "t": 123.46666666666667,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 0.001035467954352498,
+          "reference_deg": 0.051019532882531686,
+          "relative_drift_mm": 0.0001506392645322985,
+          "tcp_reference_error_mm": 0.00012361293599556645
+        },
+        "last": {
+          "t": 130.50416666666666,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 1.0015881061553955,
+          "reference_deg": 1.051017797161671,
+          "relative_drift_mm": 1.75748927652949,
+          "tcp_reference_error_mm": 1.3553515942402974
+        },
+        "max_actual_deg": 1.0015881061553955,
+        "reference_deg_range": [
+          0.051019532882531686,
+          1.051017797161671
+        ],
+        "maximum_tcp_reference_error_mm": 1.3581769646020367
+      },
+      "closure_end": {
+        "t": 123.46249999999999,
+        "aperture_m": 0.014106636732863845,
+        "command_aperture_m": 0.01349962972815362,
+        "loads_n": {
+          "gripper_link1": 0.4551379906878969,
+          "gripper_link2": 0.5514503645893419
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 0.8167601300306976
+      },
+      "all_phase_command_activity_simulation_s": {
+        "FORCE_HOLD": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.5
+        },
+        "CENTER": {
+          "command_changed": 1.15,
+          "command_stationary": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "command_changed": 7.041666666666667,
+          "command_stationary": 0.0
+        },
+        "APPROACH": {
+          "command_changed": 25.166666666666668,
+          "command_stationary": 0.0
+        },
+        "LOW_PRELOAD": {
+          "command_changed": 0.26666666666666666,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 69.92083333333333,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        },
+        "OPEN_CONTINUE": {
+          "command_changed": 211.625,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 25.158333333333335,
+          "command_stationary": 0.8
+        }
+      }
+    },
+    {
+      "asset_id": "45638",
+      "geometry": "vertical short curved bow",
+      "success": true,
+      "grasp_success": true,
+      "visual_rear_gap_m": [
+        0.022340556
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.0
+      ],
+      "chosen_pose": {
+        "section_fraction": 0,
+        "insertion_m": 0.0,
+        "roll_deg": 0.0,
+        "pitch_deg": 15.0,
+        "shared_selection_utility": 0.003485049061893387
+      },
+      "predicted_best_common_aperture_m": 0.016174941176470586,
+      "predicted_best_common_support": 0.001608345998614102,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.001608345998614102,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.011567433408525382,
+              "interior_supported_area_m2": 1.57214073398752e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.006062179719335249,
+              "interior_supported_area_m2": 7.252952005868186e-06
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2678559077826516
+        },
+        "native": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.004459076086698586,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.016925453961512873,
+              "interior_supported_area_m2": 1.9092061522980947e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.07558165708972188,
+              "interior_supported_area_m2": 9.334144764537784e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2678559077826516
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.016174941176470586,
+        "bilateral_score": 0.004459076086698586,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.016925453961512873,
+            "interior_supported_area_m2": 1.9092061522980947e-05
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 0.07558165708972188,
+            "interior_supported_area_m2": 9.334144764537784e-05
+          }
+        ],
+        "native_pad_normal_opening_component": 0.2678559077826516
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 128.45,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.019527789129106597,
+          "command_aperture_m": 0.019489358076517,
+          "load_n": 0.05277848900969167
+        },
+        "gripper_link2": {
+          "t": 134.29583333333332,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.017367017000597257,
+          "command_aperture_m": 0.01728935807651724,
+          "load_n": 0.05068243386117787
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 66.725,
+          "mean_loads_n": [
+            0.0018319046614308392,
+            2.6903017384121974e-05
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.02141875858623704,
+            0.00012489072061945796
+          ],
+          "aperture_m": {
+            "min": 0.017366689178001715,
+            "median": 0.05066218222490382,
+            "max": 0.08401180277937158
+          },
+          "command_aperture_m": {
+            "min": 0.017285191409850575,
+            "median": 0.05064560807651357,
+            "max": 0.08400602474317656
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 541,
+              "contact_step_fraction": 0.033782939927563385,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177557190432254,
+                0.05343767531152211,
+                -0.02600307533911516
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176826306234735,
+                  0.053125165684562756,
+                  -0.026003808747841202
+                ],
+                [
+                  0.014178548857925258,
+                  0.053897358544889064,
+                  -0.02600209818481845
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000247752305,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2734310829343092,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.197418369319747e-09,
+                "median": 1.6938995180473815e-07,
+                "max": 1.1042386348809885e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 11,
+              "contact_step_fraction": 0.0006868989634070189,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014240485684926052,
+                0.04276489000365953,
+                -0.026003380920158838
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01424057470820791,
+                  0.042764657449397385,
+                  -0.026003615511376876
+                ],
+                [
+                  -0.01424041370495242,
+                  0.04276513495015935,
+                  -0.02600309013682838
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9986884460473759,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3354295589072567,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.0160101523992715e-08,
+                "median": 2.1174390492373352e-07,
+                "max": 4.130879235446361e-07
+              }
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 3.691666666666667,
+          "mean_loads_n": [
+            0.06733863327957844,
+            0.0010285596319212869
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.618510158013544,
+            0.012415349887133182
+          ],
+          "aperture_m": {
+            "min": 0.017366085984440484,
+            "median": 0.018834986035634202,
+            "max": 0.019526156704707066
+          },
+          "command_aperture_m": {
+            "min": 0.017285191409850575,
+            "median": 0.018814358076517074,
+            "max": 0.01945602474318367
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 886,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177277741967316,
+                0.05364431519100305,
+                -0.026003122069304947
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176690671432842,
+                  0.05312517858889478,
+                  -0.026003849982906096
+                ],
+                [
+                  0.014178817321778408,
+                  0.05389710027139487,
+                  -0.026001925413638723
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000256508765,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2730686915450839,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.678663714450469e-10,
+                "median": 1.4450086123322936e-07,
+                "max": 1.2770098146083764e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 23,
+              "contact_step_fraction": 0.025959367945823927,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014240447036355105,
+                0.042765178894423335,
+                -0.026003442825069223
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014240608276290527,
+                  0.04276471127483091,
+                  -0.026003802354835813
+                ],
+                [
+                  -0.014240098623000283,
+                  0.04276584714009436,
+                  -0.026000921004784038
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9986884057085416,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.33543517725058336,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 7.210673023949621e-09,
+                "median": 2.5550053010803264e-07,
+                "max": 2.281418669293489e-06
+              }
+            }
+          }
+        },
+        "LOW_PRELOAD": {
+          "simulation_s": 0.26666666666666666,
+          "mean_loads_n": [
+            0.5002446682392359,
+            0.5051149082888038
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.017328078272441386,
+            "median": 0.017329409229472074,
+            "max": 0.017351196288537964
+          },
+          "command_aperture_m": {
+            "min": 0.016716157072047964,
+            "median": 0.01671774294005815,
+            "max": 0.01675668986963609
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 64,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177115303280365,
+                0.05312566389515932,
+                -0.02600330153200651
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176460341107337,
+                  0.0531242519819813,
+                  -0.02600403023369063
+                ],
+                [
+                  0.014178083042447434,
+                  0.05312868887920017,
+                  -0.026000006964745765
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000216873008,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.27416195881489985,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.2777270214092695e-10,
+                "median": 1.8352999705747997e-07,
+                "max": 3.1954587075659624e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 64,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014240512425300658,
+                0.04276498775459519,
+                -0.02600327171049818
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014241375895270816,
+                  0.0427638518697514,
+                  -0.02600373073495004
+                ],
+                [
+                  -0.014239895245640982,
+                  0.04276681660835472,
+                  -0.026001278647845103
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.998688447003199,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.33560374887896843,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 6.757558013159581e-09,
+                "median": 1.9719925418645867e-07,
+                "max": 1.9237756082278457e-06
+              }
+            }
+          }
+        },
+        "FORCE_HOLD": {
+          "simulation_s": 0.5041666666666667,
+          "mean_loads_n": [
+            0.4089135768928695,
+            0.5855724554597801
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.017315981647762074,
+            "median": 0.017319489340260157,
+            "max": 0.017328904383690363
+          },
+          "command_aperture_m": {
+            "min": 0.016718576269472166,
+            "median": 0.016718576269472166,
+            "max": 0.016718576269472166
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.01417709548696501,
+                0.05312575933971334,
+                -0.026003269453516546
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176817574465036,
+                  0.053125327253318914,
+                  -0.026003841255373743
+                ],
+                [
+                  0.014177456667705304,
+                  0.05312619986519917,
+                  -0.026002901626101773
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000204584552,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.27407994664699825,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 4.481548711993133e-09,
+                "median": 1.3443545305441562e-07,
+                "max": 6.388319204117532e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014240511629942703,
+                0.04276521003002305,
+                -0.026003446743739375
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014240824369346892,
+                  0.04276471195267524,
+                  -0.026004404865466905
+                ],
+                [
+                  -0.014240218795640726,
+                  0.04276560104766882,
+                  -0.026002840597367658
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9986883745674481,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3355925494096972,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 7.119347611439508e-10,
+                "median": 2.2341210309528847e-07,
+                "max": 1.2024420135738068e-06
+              }
+            }
+          }
+        },
+        "TRANSMISSION_PROBE": {
+          "simulation_s": 14.2875,
+          "mean_loads_n": [
+            0.4480511669245935,
+            0.5474494800175916
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.017282032465668958,
+            "median": 0.01732174475411654,
+            "max": 0.017333225077260903
+          },
+          "command_aperture_m": {
+            "min": 0.016718576269472166,
+            "median": 0.016718576269472166,
+            "max": 0.016718576269472166
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 3429,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177012907270465,
+                0.053112958122286974,
+                -0.026002525767350845
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014175416010714138,
+                  0.05302776386051265,
+                  -0.026003629160510962
+                ],
+                [
+                  0.014179227929451213,
+                  0.05312925325677638,
+                  -0.02600184547521543
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000249512393,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2742587489498226,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.1237703302635627e-09,
+                "median": 6.84785442035124e-07,
+                "max": 1.3569482379023612e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 3429,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014240090769163685,
+                0.04276049677029899,
+                -0.026004092436722442
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014242522590680212,
+                  0.04274604113448534,
+                  -0.026005076083344764
+                ],
+                [
+                  -0.014238308488063175,
+                  0.04277327263524731,
+                  -0.02600271213890019
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.998724440312141,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.33559933848325607,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.1169538289012024e-08,
+                "median": 8.912292363098817e-07,
+                "max": 1.873659891432622e-06
+              }
+            }
+          }
+        },
+        "FIRST_OPEN_5_DEG": {
+          "simulation_s": 64.07083333333334,
+          "mean_loads_n": [
+            0.4324499459003278,
+            0.5548679769537191
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.01730804836447241,
+            "median": 0.01731610622000725,
+            "max": 0.017322472518531702
+          },
+          "command_aperture_m": {
+            "min": 0.016718576269472166,
+            "median": 0.016718576269472166,
+            "max": 0.016718576269472166
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 15377,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177197758276147,
+                0.05307231246964815,
+                -0.026002452246668344
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.01417611290698261,
+                  0.053027693675739,
+                  -0.026003290088626174
+                ],
+                [
+                  0.014178766755188423,
+                  0.05310087903030029,
+                  -0.026001526832111474
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9998571446329723,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.28150811061205966,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.2507434705988363e-09,
+                "median": 7.38432693735136e-07,
+                "max": 1.675591341857019e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 15377,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014240723807911393,
+                0.042781873751474256,
+                -0.02600386742904118
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014242314323405074,
+                  0.04277240586434027,
+                  -0.02600473300961188
+                ],
+                [
+                  -0.014239510826116854,
+                  0.042792303722456765,
+                  -0.026002088152818306
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9995674789572248,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3160612352546643,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.8637285464917497e-10,
+                "median": 6.623021025740916e-07,
+                "max": 1.5305861585483693e-06
+              }
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": 29.94706978648901,
+      "opening_execution_vs_saved_ik_path": {
+        "maximum_joint_difference_record": {
+          "t": 657.2833333333333,
+          "actual_deg": 29.9990291595459,
+          "max_abs_joint_difference_rad": 0.005968254738231593,
+          "joint_differences_rad": [
+            0.0006899211311137687,
+            0.005684978101851312,
+            0.0029336145968601457,
+            0.0017353591243638444,
+            -0.005968254738231593,
+            0.004163136752617813,
+            0.005767232022309665
+          ]
+        },
+        "last": {
+          "t": 657.3041666666667,
+          "actual_deg": 30.00016975402832,
+          "max_abs_joint_difference_rad": 0.005966899246174773,
+          "joint_differences_rad": [
+            0.0006913872213720751,
+            0.0056836269363118586,
+            0.0029350393429122823,
+            0.0017364002231421427,
+            -0.005966899246174773,
+            0.004163775059724095,
+            0.005771549259279807
+          ]
+        },
+        "definition": "Measured arm q versus linear interpolation of the original saved endpoint-IK path at actual angle; descriptive only, no tracking gate"
+      },
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.0002545864786069566,
+        "maximum_rotation_error_deg": 6.5860042598404265e-06,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": {
+        "first": {
+          "t": 135.12083333333334,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 0.050479136407375336,
+          "reference_deg": 0.10048165468119317,
+          "relative_drift_mm": 0.000341517583643017,
+          "tcp_reference_error_mm": 0.0003768043258718509
+        },
+        "last": {
+          "t": 149.40416666666667,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 1.0507142543792725,
+          "reference_deg": 1.134959626550388,
+          "relative_drift_mm": 0.10281210663523353,
+          "tcp_reference_error_mm": 0.5236769776796721
+        },
+        "max_actual_deg": 1.0507142543792725,
+        "reference_deg_range": [
+          0.10048165468119317,
+          1.134959626550388
+        ],
+        "maximum_tcp_reference_error_mm": 0.6189692594363515
+      },
+      "closure_end": {
+        "t": 135.11666666666667,
+        "aperture_m": 0.017315981647762074,
+        "command_aperture_m": 0.016718576269472166,
+        "loads_n": {
+          "gripper_link1": 0.3543382705784594,
+          "gripper_link2": 0.6306857741950966
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 0.6420414321623688
+      },
+      "all_phase_command_activity_simulation_s": {
+        "FORCE_HOLD": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.5
+        },
+        "CENTER": {
+          "command_changed": 3.691666666666667,
+          "command_stationary": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "command_changed": 14.2875,
+          "command_stationary": 0.0
+        },
+        "APPROACH": {
+          "command_changed": 25.183333333333334,
+          "command_stationary": 0.0
+        },
+        "LOW_PRELOAD": {
+          "command_changed": 0.26666666666666666,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 66.725,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        },
+        "OPEN_CONTINUE": {
+          "command_changed": 507.9,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 37.45,
+          "command_stationary": 0.8
+        }
+      }
+    },
+    {
+      "asset_id": "45667",
+      "geometry": "horizontal straight round bar, low mounting",
+      "success": true,
+      "grasp_success": true,
+      "visual_rear_gap_m": [
+        0.025057096,
+        0.025057096,
+        0.025057095999999997
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.025057096,
+        0.025057096,
+        0.025057095999999997
+      ],
+      "chosen_pose": {
+        "section_fraction": 0.3,
+        "insertion_m": 0.0,
+        "roll_deg": 180.0,
+        "pitch_deg": 15.0,
+        "shared_selection_utility": 0.05337481185414687
+      },
+      "predicted_best_common_aperture_m": 0.013752617647058818,
+      "predicted_best_common_support": 0.025440305582016137,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.013752617647058818,
+          "bilateral_score": 0.025440305582016137,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.0734494399560593,
+              "interior_supported_area_m2": 8.201145363272276e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.07350746977175507,
+              "interior_supported_area_m2": 8.20659299200487e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.34636488716606617
+        },
+        "native": {
+          "common_aperture_m": 0.013752617647058818,
+          "bilateral_score": 0.025440305582016137,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.0734494399560593,
+              "interior_supported_area_m2": 8.201145363272276e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.07350746977175507,
+              "interior_supported_area_m2": 8.20659299200487e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.34636488716606617
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.013752617647058818,
+        "bilateral_score": 0.025440305582016137,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.0734494399560593,
+            "interior_supported_area_m2": 8.201145363272276e-05
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 0.07350746977175507,
+            "interior_supported_area_m2": 8.20659299200487e-05
+          }
+        ],
+        "native_pad_normal_opening_component": 0.34636488716606617
+      },
+      "first_positive_pad_load": {
+        "gripper_link2": {
+          "t": 137.4125,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.013796799677105571,
+          "command_aperture_m": 0.013764122576437804,
+          "load_n": 0.05248587360954437
+        },
+        "gripper_link1": {
+          "t": 138.76666666666665,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.013108136753349917,
+          "command_aperture_m": 0.013030789243104551,
+          "load_n": 0.05435542989867122
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 70.80833333333334,
+          "mean_loads_n": [
+            3.2997171328806e-05,
+            0.0005705343294199436
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.00011768859597505002,
+            0.006060962692715076
+          ],
+          "aperture_m": {
+            "min": 0.013107946800784732,
+            "median": 0.048337775432784766,
+            "max": 0.08380650150314627
+          },
+          "command_aperture_m": {
+            "min": 0.013026622576437885,
+            "median": 0.04842870590976732,
+            "max": 0.08383078924309675
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 15,
+              "contact_step_fraction": 0.0008826644698128751,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014135659498508221,
+                0.039901699585059756,
+                -0.026003133749488715
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014135858402413833,
+                  0.03990133349751022,
+                  -0.02600366138178754
+                ],
+                [
+                  -0.01413528797822021,
+                  0.03990183705388706,
+                  -0.026002467815072695
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.999985258750681,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3457628053700003,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.0731017172083135e-08,
+                "median": 2.0146662749534472e-07,
+                "max": 7.34608380636298e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 190,
+              "contact_step_fraction": 0.011180416617629751,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014242178722559671,
+                0.04281731127697988,
+                -0.0260024296397616
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014247281458742317,
+                  0.042299410352632696,
+                  -0.026003738435946687
+                ],
+                [
+                  -0.014223091526193592,
+                  0.04295303973464994,
+                  -0.026001728783953435
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000242012002,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3466803638770777,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.865371594665492e-09,
+                "median": 8.638487856722082e-07,
+                "max": 1.4736394998958458e-06
+              }
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 0.6541666666666667,
+          "mean_loads_n": [
+            0.003086123881136453,
+            0.048021236949134086
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.050955414012738856,
+            0.4267515923566879
+          ],
+          "aperture_m": {
+            "min": 0.013107815799024113,
+            "median": 0.013452157686240612,
+            "max": 0.01376793921043952
+          },
+          "command_aperture_m": {
+            "min": 0.013026622576437885,
+            "median": 0.013426622576437841,
+            "max": 0.013726622576437808
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 8,
+              "contact_step_fraction": 0.050955414012738856,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014135639051491355,
+                0.03990175078230218,
+                -0.026003128713721846
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014135824561030979,
+                  0.039901612460397765,
+                  -0.026003255682794116
+                ],
+                [
+                  -0.014135406931802555,
+                  0.03990185198036319,
+                  -0.026002989971343288
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999852611107433,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.34577153931273,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 3.158469749284243e-08,
+                "median": 8.014980925827309e-08,
+                "max": 2.124521100432819e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 157,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014242450176385306,
+                0.04282396830408001,
+                -0.026002521343544003
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01424739959908836,
+                  0.04229974089876281,
+                  -0.026003953892660737
+                ],
+                [
+                  -0.014223111117675937,
+                  0.04295289864431873,
+                  -0.026001672804314386
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000281589883,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3466765898607242,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.7311761047199568e-09,
+                "median": 7.780228284716417e-07,
+                "max": 1.5296191389450875e-06
+              }
+            }
+          }
+        },
+        "LOW_PRELOAD": {
+          "simulation_s": 0.26666666666666666,
+          "mean_loads_n": [
+            0.5088201983870931,
+            0.5040414346050609
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.013073395327571041,
+            "median": 0.013074934577188866,
+            "max": 0.013096281121245078
+          },
+          "command_aperture_m": {
+            "min": 0.012459728901312528,
+            "median": 0.012462270175860945,
+            "max": 0.01249981346692235
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 64,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01413573723665528,
+                0.03990174626504344,
+                -0.02600316450247835
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01413765412546482,
+                  0.039900521587908085,
+                  -0.026003629992996453
+                ],
+                [
+                  -0.014135223758158056,
+                  0.0399020356633318,
+                  -0.026001517527257847
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999852731635792,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3457762163880361,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.241646481440876e-09,
+                "median": 1.4767150145061914e-07,
+                "max": 1.6848961954842034e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 64,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014223257679668932,
+                0.042299954655150705,
+                -0.02600311266101998
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014223751374109974,
+                  0.04229602551089282,
+                  -0.02600556293050838
+                ],
+                [
+                  -0.014221232911935453,
+                  0.042300422018792284,
+                  -0.02600157390933231
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.000000029116947,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3464625471276527,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 6.260960812298766e-10,
+                "median": 1.6168714367728598e-07,
+                "max": 2.360507055050587e-06
+              }
+            }
+          }
+        },
+        "FORCE_HOLD": {
+          "simulation_s": 0.5041666666666667,
+          "mean_loads_n": [
+            0.4510413375153302,
+            0.5605646982389212
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.01306995003192564,
+            "median": 0.013071115929910442,
+            "max": 0.013073578727474857
+          },
+          "command_aperture_m": {
+            "min": 0.012463962067075292,
+            "median": 0.012463962067075292,
+            "max": 0.012463962067075292
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014134820119508234,
+                0.039878097567196756,
+                -0.026003170182548677
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01413589233111474,
+                  0.039766898833533966,
+                  -0.026004429822280063
+                ],
+                [
+                  -0.014130455013784593,
+                  0.03990206700428444,
+                  -0.02600126897945028
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999854316194574,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3458258749358497,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 7.29009901057065e-10,
+                "median": 1.0931539476052854e-07,
+                "max": 1.933444003052176e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014223284029784173,
+                0.042300113155142594,
+                -0.026003244193180446
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01422359345892658,
+                  0.042299645202740904,
+                  -0.026004056368380928
+                ],
+                [
+                  -0.014222800214179928,
+                  0.042300406319594586,
+                  -0.02600277486136053
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.00000003057595,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.34655630025828355,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.216655158038261e-10,
+                "median": 1.0040863753640883e-07,
+                "max": 8.539449275965505e-07
+              }
+            }
+          }
+        },
+        "TRANSMISSION_PROBE": {
+          "simulation_s": 18.833333333333332,
+          "mean_loads_n": [
+            0.22880283290156972,
+            0.7876688977777572
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.9982300884955753,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.013058042184268401,
+            "median": 0.013065515694653938,
+            "max": 0.013097859685548247
+          },
+          "command_aperture_m": {
+            "min": 0.012463962067075292,
+            "median": 0.012463962067075292,
+            "max": 0.012463962067075292
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 4516,
+              "contact_step_fraction": 0.9991150442477876,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01413007970476917,
+                0.039754467971616345,
+                -0.026004066484660245
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014134980713873917,
+                  0.03968557321395295,
+                  -0.026012821454235554
+                ],
+                [
+                  -0.014126009158084513,
+                  0.039810385009168066,
+                  -0.025997108603737586
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999854399168427,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.34628366370313357,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 7.789273219482862e-10,
+                "median": 9.271188457435353e-07,
+                "max": 9.619030782222898e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 4520,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014219808184149382,
+                0.04220445068432927,
+                -0.02600224663700026
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01422711994243887,
+                  0.042143854705998136,
+                  -0.026010331333881438
+                ],
+                [
+                  -0.014216754640853329,
+                  0.04230545557199521,
+                  -0.025998711516610498
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000241843916,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3474472506766217,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 9.980197918091349e-11,
+                "median": 1.033272198285723e-06,
+                "max": 7.128910428106511e-06
+              }
+            }
+          }
+        },
+        "FIRST_OPEN_5_DEG": {
+          "simulation_s": 63.55833333333333,
+          "mean_loads_n": [
+            0.1415414787702716,
+            0.8633287912525873
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.9972466238363707,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.013052186531255817,
+            "median": 0.013060459118961223,
+            "max": 0.013078163729522321
+          },
+          "command_aperture_m": {
+            "min": 0.012463962067075292,
+            "median": 0.012463962067075292,
+            "max": 0.012463962067075292
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 15231,
+              "contact_step_fraction": 0.9984921987675364,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014119691005630056,
+                0.03947009220365256,
+                -0.026004314523275673
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014129984274782922,
+                  0.03925163855645735,
+                  -0.026013862719724046
+                ],
+                [
+                  -0.014109962733929988,
+                  0.039688761389962274,
+                  -0.025995221895239312
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999870855514095,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3468968107531411,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.2543607952618672e-10,
+                "median": 1.063334397102822e-06,
+                "max": 1.0660296270715436e-05
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 15254,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014209720598900888,
+                0.041927488000005515,
+                -0.026002095169162614
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014218805742977476,
+                  0.04166811860403196,
+                  -0.026010111856890488
+                ],
+                [
+                  -0.014199467025059889,
+                  0.042145079595095815,
+                  -0.025998997380511975
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000250834806,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.34782308462137795,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.164094597967292e-10,
+                "median": 1.172347822351455e-06,
+                "max": 6.909433437157081e-06
+              }
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": 29.93950379639864,
+      "opening_execution_vs_saved_ik_path": {
+        "maximum_joint_difference_record": {
+          "t": 470.3958333333333,
+          "actual_deg": 29.82834243774414,
+          "max_abs_joint_difference_rad": 0.009320445774662456,
+          "joint_differences_rad": [
+            0.0006849403342921168,
+            0.0011917503018833986,
+            -0.009320445774662456,
+            0.004605800649724712,
+            -0.0032147804503426247,
+            0.005975977711957681,
+            -0.0074234892363278515
+          ]
+        },
+        "last": {
+          "t": 472.0125,
+          "actual_deg": 30.000259399414062,
+          "max_abs_joint_difference_rad": 0.009301156428907748,
+          "joint_differences_rad": [
+            0.0007043242222304347,
+            0.001224817825137392,
+            -0.009301156428907748,
+            0.004679159913595854,
+            -0.00316227615775877,
+            0.005968330979062131,
+            -0.007421246665510806
+          ]
+        },
+        "definition": "Measured arm q versus linear interpolation of the original saved endpoint-IK path at actual angle; descriptive only, no tracking gate"
+      },
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.0003013470525972358,
+        "maximum_rotation_error_deg": 6.226575517638199e-06,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": {
+        "first": {
+          "t": 139.57916666666665,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 0.06045089289546013,
+          "reference_deg": 0.11045891354224881,
+          "relative_drift_mm": 0.00019978173007555562,
+          "tcp_reference_error_mm": 0.00024024531029929452
+        },
+        "last": {
+          "t": 158.40833333333333,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 1.060667634010315,
+          "reference_deg": 1.1901523927826048,
+          "relative_drift_mm": 0.08579321947683291,
+          "tcp_reference_error_mm": 1.4738060515015745
+        },
+        "max_actual_deg": 1.060667634010315,
+        "reference_deg_range": [
+          0.11045891354224881,
+          1.1901523927826048
+        ],
+        "maximum_tcp_reference_error_mm": 1.494464361761549
+      },
+      "closure_end": {
+        "t": 139.575,
+        "aperture_m": 0.01307043473102057,
+        "command_aperture_m": 0.012463962067075292,
+        "loads_n": {
+          "gripper_link1": 0.45744938625445714,
+          "gripper_link2": 0.5479841666018709
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 0.8553248824289096
+      },
+      "all_phase_command_activity_simulation_s": {
+        "FORCE_HOLD": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.5
+        },
+        "CENTER": {
+          "command_changed": 0.6541666666666667,
+          "command_stationary": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "command_changed": 18.833333333333332,
+          "command_stationary": 0.0
+        },
+        "APPROACH": {
+          "command_changed": 25.083333333333332,
+          "command_stationary": 0.0
+        },
+        "LOW_PRELOAD": {
+          "command_changed": 0.26666666666666666,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 70.80833333333334,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        },
+        "OPEN_CONTINUE": {
+          "command_changed": 313.6041666666667,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 40.9625,
+          "command_stationary": 0.8
+        }
+      }
+    },
+    {
+      "asset_id": "45623",
+      "geometry": "vertical long curved bow",
+      "success": false,
+      "grasp_success": false,
+      "visual_rear_gap_m": [
+        0.012168087000000001,
+        0.027966891,
+        0.011707249999999999
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "chosen_pose": {
+        "section_fraction": 0,
+        "insertion_m": 0.0,
+        "roll_deg": 0.0,
+        "pitch_deg": 15.0,
+        "shared_selection_utility": 0.016620504727439516
+      },
+      "predicted_best_common_aperture_m": 0.011330294117647063,
+      "predicted_best_common_support": 0.007872391969821976,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.011330294117647063,
+          "bilateral_score": 0.007872391969821976,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.05279237548244742,
+              "interior_supported_area_m2": 6.221120224665653e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.030066014075376405,
+              "interior_supported_area_m2": 4.268864545164205e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.301052072315313
+        },
+        "native": {
+          "common_aperture_m": 0.011330294117647063,
+          "bilateral_score": 0.013745719117545333,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.056699728876949004,
+              "interior_supported_area_m2": 7.266863503738017e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.05091061377944995,
+              "interior_supported_area_m2": 6.60820792595141e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.301052072315313
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.018597264705882355,
+        "bilateral_score": 1.001857957949279e-05,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.02079064360224367,
+            "interior_supported_area_m2": 2.6630269107796286e-05
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 3.722211567353096e-05,
+            "interior_supported_area_m2": 4.833187373206648e-08
+          }
+        ],
+        "native_pad_normal_opening_component": 0.301052072315313
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 313.1041666666667,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.0231409562965156,
+          "command_aperture_m": 0.023110799827791656,
+          "load_n": 0.05209865002374344
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 64.47916666666667,
+          "mean_loads_n": [
+            0.0031145482394761823,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.035670436187399034,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.019565046337174864,
+            "median": 0.051765622795248725,
+            "max": 0.0839973271933704
+          },
+          "command_aperture_m": {
+            "min": 0.019519133161125385,
+            "median": 0.051756633161121834,
+            "max": 0.08399413316111828
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 869,
+              "contact_step_fraction": 0.05615508885298869,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01175008043093701,
+                0.05975291497098475,
+                -0.026003254955638988
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750562598385484,
+                  0.05975265755715998,
+                  -0.02600398683786362
+                ],
+                [
+                  -0.01174938512987388,
+                  0.05975327928615715,
+                  -0.026001621421192552
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.931046798531801,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.08191880372767794,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.9908268173274584,
+              "inner_pad_plane_distance_m": {
+                "min": 6.905547834945569e-10,
+                "median": 1.6295216262451895e-07,
+                "max": 1.5810022607788687e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 35.520833333333336,
+          "mean_loads_n": [
+            0.06136442792532983,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.9286803519061584,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.019547587984370826,
+            "median": 0.01955190176803156,
+            "max": 0.023453032531374672
+          },
+          "command_aperture_m": {
+            "min": 0.019519133161125385,
+            "median": 0.019519133161125385,
+            "max": 0.023069133161124994
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 8525,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011750072781130983,
+                0.05975320649491342,
+                -0.026003200732824507
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750674915464243,
+                  0.0597514774576172,
+                  -0.02600659840248123
+                ],
+                [
+                  -0.011749349266358355,
+                  0.059753950147097896,
+                  -0.02600244785954714
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9312410760129386,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.08230173630758658,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.2764189674019411,
+              "inner_pad_plane_distance_m": {
+                "min": 3.9549960528795225e-13,
+                "median": 8.723462826751294e-08,
+                "max": 3.3959790279002033e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": null,
+      "opening_execution_vs_saved_ik_path": null,
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.00011722849140924604,
+        "maximum_rotation_error_deg": 3.1329572565488926e-10,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": null,
+      "closure_end": {
+        "t": 352.21666666666664,
+        "aperture_m": 0.019551888656230743,
+        "command_aperture_m": 0.019519133161125385,
+        "loads_n": {
+          "gripper_link1": 0.056284005539680014,
+          "gripper_link2": 0.0
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 2.658097758958627
+      },
+      "all_phase_command_activity_simulation_s": {
+        "CENTER": {
+          "command_changed": 35.520833333333336,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 225.82916666666668,
+          "command_stationary": 0.8083333333333333
+        },
+        "APPROACH": {
+          "command_changed": 25.083333333333332,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 64.47916666666667,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        }
+      }
+    },
+    {
+      "asset_id": "45717",
+      "geometry": "horizontal short bow, low mounting",
+      "success": false,
+      "grasp_success": false,
+      "visual_rear_gap_m": [
+        0.024047026,
+        0.024653923,
+        0.024040915
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "chosen_pose": {
+        "section_fraction": 0,
+        "insertion_m": 0.0,
+        "roll_deg": 0.0,
+        "pitch_deg": 15.0,
+        "shared_selection_utility": 0.017303615487174177
+      },
+      "predicted_best_common_aperture_m": 0.013752617647058818,
+      "predicted_best_common_support": 0.010334441162598724,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.013752617647058818,
+          "bilateral_score": 0.010334441162598724,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.03688944156401345,
+              "interior_supported_area_m2": 4.0959185412056705e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.05634714730768589,
+              "interior_supported_area_m2": 6.256351834470238e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2801463162478508
+        },
+        "native": {
+          "common_aperture_m": 0.013752617647058818,
+          "bilateral_score": 0.013849596125105513,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.053839578532693895,
+              "interior_supported_area_m2": 8.293032865724165e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.13534148581619498,
+              "interior_supported_area_m2": 0.00014995725950892955
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2801463162478508
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.03313120588235294,
+        "bilateral_score": 2.230038758243468e-16,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.004006847681327827,
+            "interior_supported_area_m2": 6.171838713229187e-06
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 8.652084607400722e-16,
+            "interior_supported_area_m2": 9.583112107503971e-19
+          }
+        ],
+        "native_pad_normal_opening_component": 0.2801463162478508
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 128.42916666666667,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.03593817230526234,
+          "command_aperture_m": 0.03596193909174454,
+          "load_n": 0.05397607582602621
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 47.95,
+          "mean_loads_n": [
+            8.59676804317084e-05,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.0008689607229753215,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.03591646936065559,
+            "median": 0.059795296646353774,
+            "max": 0.08384287519732778
+          },
+          "command_aperture_m": {
+            "min": 0.03591610575841121,
+            "median": 0.05988902242507524,
+            "max": 0.08386193909173927
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 18,
+              "contact_step_fraction": 0.0015641293013555788,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01174945114938231,
+                0.059753011693199166,
+                -0.026003157408715748
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750082920069014,
+                  0.059752795550050274,
+                  -0.026003675105272312
+                ],
+                [
+                  -0.011748958735759095,
+                  0.059753202771846856,
+                  -0.02600263454167849
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.845549560743442,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2738289850323627,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.9258268762169118,
+              "inner_pad_plane_distance_m": {
+                "min": 1.660619150870013e-08,
+                "median": 2.457621295082202e-07,
+                "max": 5.678817748405729e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 52.05,
+          "mean_loads_n": [
+            0.1689491833154917,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.03209679405042534,
+            "median": 0.03216193955187941,
+            "max": 0.035914561019757256
+          },
+          "command_aperture_m": {
+            "min": 0.03209679405042534,
+            "median": 0.03209679405042534,
+            "max": 0.03591610575841121
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 12492,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011749893631336578,
+                0.05975321540869333,
+                -0.026003256205086155
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011751185228620701,
+                  0.059751932621155544,
+                  -0.026005317266059223
+                ],
+                [
+                  -0.01174873708866646,
+                  0.05975398517564546,
+                  -0.026001998851294027
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.8463701427155665,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.27354359461131206,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.48332077628500364,
+              "inner_pad_plane_distance_m": {
+                "min": 1.4745569348884047e-11,
+                "median": 1.3584866588416122e-07,
+                "max": 2.1148426058922865e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": null,
+      "opening_execution_vs_saved_ik_path": null,
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 7.310847654650045e-05,
+        "maximum_rotation_error_deg": 2.586023759608517e-10,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": null,
+      "closure_end": {
+        "t": 180.525,
+        "aperture_m": 0.032163727584631256,
+        "command_aperture_m": 0.03209679405042534,
+        "loads_n": {
+          "gripper_link1": 0.1944419949500326,
+          "gripper_link2": 0.0
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 1.572103212904632
+      },
+      "all_phase_command_activity_simulation_s": {
+        "CENTER": {
+          "command_changed": 52.05,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 54.05416666666667,
+          "command_stationary": 0.8
+        },
+        "APPROACH": {
+          "command_changed": 25.175,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 47.95,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        }
+      }
+    },
+    {
+      "asset_id": "45850",
+      "geometry": "vertical short straight bar, low cabinet",
+      "success": true,
+      "grasp_success": true,
+      "visual_rear_gap_m": [
+        0.025065814000000002,
+        0.025065814,
+        0.025065814
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.025060503,
+        0.025060502999999998,
+        0.025060503999999997
+      ],
+      "chosen_pose": {
+        "section_fraction": 0,
+        "insertion_m": 0.0,
+        "roll_deg": 180.0,
+        "pitch_deg": -15.0,
+        "shared_selection_utility": 0.04250897996739367
+      },
+      "predicted_best_common_aperture_m": 0.016174941176470586,
+      "predicted_best_common_support": 0.0202257676788497,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.02022577624186264,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.07499039042676409,
+              "interior_supported_area_m2": 8.788871231946795e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.09548822947167329,
+              "interior_supported_area_m2": 0.00010764575668394351
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2713428255667945
+        },
+        "native": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.0202257676788497,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.07499039042692522,
+              "interior_supported_area_m2": 8.788871238167471e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.09549590619726349,
+              "interior_supported_area_m2": 0.00010765282969622503
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2713428255667945
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.016174941176470586,
+        "bilateral_score": 0.0202257676788497,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.07499039042692522,
+            "interior_supported_area_m2": 8.788871238167471e-05
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 0.09549590619726349,
+            "interior_supported_area_m2": 0.00010765282969622503
+          }
+        ],
+        "native_pad_normal_opening_component": 0.2713428255667945
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 150.02916666666667,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.017789937967336317,
+          "command_aperture_m": 0.017752962806991637,
+          "load_n": 0.054959540123940234
+        },
+        "gripper_link2": {
+          "t": 153.925,
+          "phase": "CENTER",
+          "aperture_m": 0.016309152536121092,
+          "command_aperture_m": 0.01624462947365847,
+          "load_n": 0.05166046131470534
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 67.75416666666666,
+          "mean_loads_n": [
+            0.0012631984714826935,
+            1.16961668728358e-05
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.014267265235840354,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.0163102473530629,
+            "median": 0.05012885139856384,
+            "max": 0.08399788972912113
+          },
+          "command_aperture_m": {
+            "min": 0.01624462947365847,
+            "median": 0.05011962947365474,
+            "max": 0.08399462947365101
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 373,
+              "contact_step_fraction": 0.022938318676588156,
+              "force_weighted_local_contact_centroid_m": [
+                0.009663929049748938,
+                0.04495879875625525,
+                -0.026002828345405668
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.009536340547276482,
+                  0.044479403151342994,
+                  -0.026003465757832665
+                ],
+                [
+                  0.009801673452455133,
+                  0.0459967254005267,
+                  -0.0260022236494901
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000252696661,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2830992100298681,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 9.622381603319186e-09,
+                "median": 3.6589594352640087e-07,
+                "max": 9.787739632324821e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 5,
+              "contact_step_fraction": 0.0003074841645655249,
+              "force_weighted_local_contact_centroid_m": [
+                0.010484984197225315,
+                0.03951584172639977,
+                -0.026003001188516648
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.01048481688112971,
+                  0.0395157384366813,
+                  -0.026003342022863127
+                ],
+                [
+                  0.010485089072812821,
+                  0.0395163035137114,
+                  -0.026001158703238183
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000032099292,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2937190313464596,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.5725517939669844e-08,
+                "median": 1.0102173477605225e-07,
+                "max": 2.0437202151481204e-06
+              }
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 2.4375,
+          "mean_loads_n": [
+            0.12841191492255388,
+            0.0031566639569357152
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.6393162393162393,
+            0.020512820512820513
+          ],
+          "aperture_m": {
+            "min": 0.016308798523492964,
+            "median": 0.017483486142789578,
+            "max": 0.018056416047925364
+          },
+          "command_aperture_m": {
+            "min": 0.01624462947365847,
+            "median": 0.017436296140325006,
+            "max": 0.017719629473658308
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 585,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.009571349562107638,
+                0.04552136723449289,
+                -0.026002945203832842
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.009536261391616042,
+                  0.04447923548040766,
+                  -0.02600355945442632
+                ],
+                [
+                  0.009801795447576415,
+                  0.0459965063218739,
+                  -0.026002170514443007
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000206260338,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.28255389984431484,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 3.980090389210655e-09,
+                "median": 3.283853211230592e-07,
+                "max": 1.031909010323906e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 39,
+              "contact_step_fraction": 0.06666666666666667,
+              "force_weighted_local_contact_centroid_m": [
+                0.010485033864984323,
+                0.03951561809164884,
+                -0.02600324049587551
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.01048482955801634,
+                  0.03951515743306159,
+                  -0.026003762508179148
+                ],
+                [
+                  0.01048532216622092,
+                  0.039516016196511836,
+                  -0.026002885965611632
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.000000017877764,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2937346404945761,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 8.219999056424676e-10,
+                "median": 1.122742391002074e-07,
+                "max": 5.60084725816784e-07
+              }
+            }
+          }
+        },
+        "LOW_PRELOAD": {
+          "simulation_s": 0.2625,
+          "mean_loads_n": [
+            0.5011911465474855,
+            0.508670198020341
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.01627358746637922,
+            "median": 0.016275082179080018,
+            "max": 0.016298505941765747
+          },
+          "command_aperture_m": {
+            "min": 0.015658176591989877,
+            "median": 0.01566026814170372,
+            "max": 0.015699491263599336
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 63,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.009801345239497604,
+                0.04447996038690453,
+                -0.026003153664900743
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.009800683583450733,
+                  0.04447893621583359,
+                  -0.02600356922453963
+                ],
+                [
+                  0.009802125435233643,
+                  0.04448381748178914,
+                  -0.02600146583045892
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000286711477,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.28341437925093305,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.8100118279185118e-09,
+                "median": 1.387498757311756e-07,
+                "max": 1.7365929944127e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 63,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.010485040615769926,
+                0.03951571270901395,
+                -0.026003208354505772
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.010484222127557804,
+                  0.039514859245775386,
+                  -0.02600380418743142
+                ],
+                [
+                  0.010485637064477811,
+                  0.03951778197204247,
+                  -0.02600145556385359
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000261494095,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2938779723913816,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.0727931385189358e-09,
+                "median": 1.551793716893235e-07,
+                "max": 1.7468595997424674e-06
+              }
+            }
+          }
+        },
+        "FORCE_HOLD": {
+          "simulation_s": 0.5041666666666667,
+          "mean_loads_n": [
+            0.44923643255973617,
+            0.5546065842378494
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.016266487585393088,
+            "median": 0.016269057439915934,
+            "max": 0.016274144705726162
+          },
+          "command_aperture_m": {
+            "min": 0.015661509366403575,
+            "median": 0.015661509366403575,
+            "max": 0.015661509366403575
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.009801326843357418,
+                0.04447970864830074,
+                -0.026003150499894
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.009800925580095803,
+                  0.044479395194564855,
+                  -0.026003638291000004
+                ],
+                [
+                  0.009801628499780881,
+                  0.04448003264615296,
+                  -0.026002588806031963
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000230784658,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.28330659038936684,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 6.999043185296205e-10,
+                "median": 9.247319633642892e-08,
+                "max": 6.136174213675072e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.010485021212521477,
+                0.039515660195700526,
+                -0.026003258123564087
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.010484700159333327,
+                  0.03951524265660002,
+                  -0.02600363628295982
+                ],
+                [
+                  0.010485392970787277,
+                  0.0395160837909094,
+                  -0.02600285644573288
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000244653506,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.29378795967433174,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.3988851223223353e-09,
+                "median": 1.0509282355464222e-07,
+                "max": 4.3385950648788807e-07
+              }
+            }
+          }
+        },
+        "TRANSMISSION_PROBE": {
+          "simulation_s": 21.354166666666668,
+          "mean_loads_n": [
+            0.5285147717122396,
+            0.47808679679016985
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.9480975609756097,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.01621330098858252,
+            "median": 0.016272584435665968,
+            "max": 0.016285302613449914
+          },
+          "command_aperture_m": {
+            "min": 0.015661509366403575,
+            "median": 0.015661509366403575,
+            "max": 0.015661509366403575
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 4864,
+              "contact_step_fraction": 0.9490731707317073,
+              "force_weighted_local_contact_centroid_m": [
+                0.009750530725827827,
+                0.04614269383786025,
+                -0.0260021311067868
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.009682321299533699,
+                  0.04447945724278848,
+                  -0.026003521156035807
+                ],
+                [
+                  0.009809849377217966,
+                  0.04624527246478137,
+                  -0.02599886187817007
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.000000023609796,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2799399739625305,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.444555378093959e-09,
+                "median": 1.1256299259094354e-06,
+                "max": 4.340545283261499e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 5125,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.01052632092589749,
+                0.04096789933085144,
+                -0.026004108814668296
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.010441712044257907,
+                  0.03937653407040719,
+                  -0.026008017806012685
+                ],
+                [
+                  0.010552752884965771,
+                  0.04129608606603895,
+                  -0.025991296307002316
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000233523691,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2907800740748629,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 6.438825930765724e-10,
+                "median": 1.1737835902865534e-06,
+                "max": 1.1906116451014526e-05
+              }
+            }
+          }
+        },
+        "FIRST_OPEN_5_DEG": {
+          "simulation_s": 71.00833333333334,
+          "mean_loads_n": [
+            0.5523086073003605,
+            0.4642929132746662
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.01627380380635573,
+            "median": 0.016275187071211308,
+            "max": 0.0162763015502026
+          },
+          "command_aperture_m": {
+            "min": 0.015661509366403575,
+            "median": 0.015661509366403575,
+            "max": 0.015661509366403575
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 17042,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.009682140053599724,
+                0.046244384100570676,
+                -0.026002047697177923
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.009681374025614047,
+                  0.04624355272578369,
+                  -0.02600298447017023
+                ],
+                [
+                  0.00968312596878422,
+                  0.04624531622208928,
+                  -0.026001025102764187
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000256259445,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2797304269480619,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.1795328310203477e-07,
+                "median": 1.151761234460466e-06,
+                "max": 2.1773206891444186e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 17042,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.010552740047049891,
+                0.04108763010079661,
+                -0.02600438951065627
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.010551814996370944,
+                  0.04108691855773309,
+                  -0.026005135231497386
+                ],
+                [
+                  0.010553474901152675,
+                  0.04108835936846991,
+                  -0.026003761456386932
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 1.0000000253333066,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.29036927375028027,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.590329336009614e-07,
+                "median": 1.1836396191632764e-06,
+                "max": 1.9328080440549067e-06
+              }
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": 29.955142881721258,
+      "opening_execution_vs_saved_ik_path": {
+        "maximum_joint_difference_record": {
+          "t": 210.2625,
+          "actual_deg": 2.9606175422668457,
+          "max_abs_joint_difference_rad": 0.039419013395685154,
+          "joint_differences_rad": [
+            0.0010692732731116816,
+            -0.028321611410475178,
+            0.010999699915984706,
+            0.00027560147338800967,
+            -0.039419013395685154,
+            -0.007357053211338727,
+            0.030663107914381982
+          ]
+        },
+        "last": {
+          "t": 622.2375,
+          "actual_deg": 30.00008773803711,
+          "max_abs_joint_difference_rad": 0.024549947958830476,
+          "joint_differences_rad": [
+            0.005440473432972881,
+            -0.024549947958830476,
+            0.008390286602573793,
+            -0.0023054676364249183,
+            -0.018148185275413564,
+            -0.009133615763772918,
+            0.022753631834993016
+          ]
+        },
+        "definition": "Measured arm q versus linear interpolation of the original saved endpoint-IK path at actual angle; descriptive only, no tracking gate"
+      },
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.0002861964854703548,
+        "maximum_rotation_error_deg": 6.306699725371477e-06,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": {
+        "first": {
+          "t": 154.74583333333334,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 0.04235200211405754,
+          "reference_deg": 0.09237898926261515,
+          "relative_drift_mm": 0.00023944706578041505,
+          "tcp_reference_error_mm": 0.0005583783175533698
+        },
+        "last": {
+          "t": 176.22083333333333,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 1.0424115657806396,
+          "reference_deg": 1.1482899140462788,
+          "relative_drift_mm": 1.7436260651200162,
+          "tcp_reference_error_mm": 0.7065098402539481
+        },
+        "max_actual_deg": 1.0424115657806396,
+        "reference_deg_range": [
+          0.051830966984863634,
+          1.1482899140462788
+        ],
+        "maximum_tcp_reference_error_mm": 0.9713611417193718
+      },
+      "closure_end": {
+        "t": 154.74166666666667,
+        "aperture_m": 0.01626655314289471,
+        "command_aperture_m": 0.015661509366403575,
+        "loads_n": {
+          "gripper_link1": 0.4106802264353348,
+          "gripper_link2": 0.5887550063136331
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 0.7944294220593329
+      },
+      "all_phase_command_activity_simulation_s": {
+        "FORCE_HOLD": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.5
+        },
+        "LOCAL_CENTERING": {
+          "command_changed": 0.125,
+          "command_stationary": 0.0
+        },
+        "CENTER": {
+          "command_changed": 2.4375,
+          "command_stationary": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "command_changed": 20.854166666666668,
+          "command_stationary": 0.5
+        },
+        "APPROACH": {
+          "command_changed": 25.083333333333332,
+          "command_stationary": 0.0
+        },
+        "LOW_PRELOAD": {
+          "command_changed": 0.2625,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 67.75416666666666,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        },
+        "OPEN_CONTINUE": {
+          "command_changed": 446.01666666666665,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 57.40416666666667,
+          "command_stationary": 0.8
+        }
+      }
+    },
+    {
+      "asset_id": "45671",
+      "geometry": "horizontal long curved bow, low mounting",
+      "success": false,
+      "grasp_success": false,
+      "visual_rear_gap_m": [
+        0.014348763,
+        0.032869461,
+        0.013703301
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "chosen_pose": {
+        "section_fraction": 0,
+        "insertion_m": 0.0,
+        "roll_deg": 0.0,
+        "pitch_deg": 15.0,
+        "shared_selection_utility": 0.027327242375059877
+      },
+      "predicted_best_common_aperture_m": 0.011330294117647063,
+      "predicted_best_common_support": 0.01387160567171073,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.011330294117647063,
+          "bilateral_score": 0.01387160567171073,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.06356118973088919,
+              "interior_supported_area_m2": 7.598229387736249e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.05848634280776644,
+              "interior_supported_area_m2": 8.079149274016496e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.27268582601121133
+        },
+        "native": {
+          "common_aperture_m": 0.011330294117647063,
+          "bilateral_score": 0.016109252011073338,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.06465728334969209,
+              "interior_supported_area_m2": 8.470859007941354e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.11598131553005145,
+              "interior_supported_area_m2": 0.00014580507494237418
+            }
+          ],
+          "native_pad_normal_opening_component": 0.27268582601121133
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.025864235294117646,
+        "bilateral_score": 4.5169982019304175e-10,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.0074381327804006235,
+            "interior_supported_area_m2": 9.738484369323774e-06
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 1.9847012051141897e-09,
+            "interior_supported_area_m2": 2.7114608851333522e-12
+          }
+        ],
+        "native_pad_normal_opening_component": 0.2726858260112112
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 123.725,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.026324937619306713,
+          "command_aperture_m": 0.026324396652658455,
+          "load_n": 0.05965776563086408
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 58.920833333333334,
+          "mean_loads_n": [
+            0.0014811013326810757,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.022487801428470407,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.0244993075143157,
+            "median": 0.054327090030878905,
+            "max": 0.0838476445675718
+          },
+          "command_aperture_m": {
+            "min": 0.024477988383678033,
+            "median": 0.054407729985988695,
+            "max": 0.08386606331931878
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 335,
+              "contact_step_fraction": 0.02368997949225656,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01175015829184873,
+                0.05975310296612153,
+                -0.02600320932540774
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750803381677949,
+                  0.059752709900553494,
+                  -0.026003975214115363
+                ],
+                [
+                  -0.01174922836825252,
+                  0.05975376879186796,
+                  -0.02600266573134672
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.919968115826351,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.12530581419992373,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.8000083424687732,
+              "inner_pad_plane_distance_m": {
+                "min": 7.744445397472877e-10,
+                "median": 1.3970105909588693e-07,
+                "max": 7.727906620319525e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 41.079166666666666,
+          "mean_loads_n": [
+            0.22338741793669942,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.9108428846739021,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.024480248139255683,
+            "median": 0.024643601266088652,
+            "max": 0.026341386443709577
+          },
+          "command_aperture_m": {
+            "min": 0.024477988383678033,
+            "median": 0.024477988383678033,
+            "max": 0.02628689665265846
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 9837,
+              "contact_step_fraction": 0.9977685363627142,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011750143249833311,
+                0.059753209211983294,
+                -0.02600317682203166
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011751171437190188,
+                  0.05975261101516983,
+                  -0.026009673965661124
+                ],
+                [
+                  -0.01174853272666731,
+                  0.05975444498652504,
+                  -0.02599798202594523
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9195629135972401,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.12515830060067926,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.5122064572089461,
+              "inner_pad_plane_distance_m": {
+                "min": 7.993564143937704e-12,
+                "median": 1.2891857687283292e-07,
+                "max": 6.471542207793501e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": null,
+      "opening_execution_vs_saved_ik_path": null,
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.0003733193034352986,
+        "maximum_rotation_error_deg": 9.93028769578921e-09,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": null,
+      "closure_end": {
+        "t": 166.17916666666667,
+        "aperture_m": 0.024678332945742416,
+        "command_aperture_m": 0.024477988383678033,
+        "loads_n": {
+          "gripper_link1": 0.3847828936111154,
+          "gripper_link2": 0.0
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 1.0663885259201766
+      },
+      "all_phase_command_activity_simulation_s": {
+        "CENTER": {
+          "command_changed": 41.079166666666666,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 39.8,
+          "command_stationary": 0.8
+        },
+        "APPROACH": {
+          "command_changed": 25.083333333333332,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 58.920833333333334,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        }
+      }
+    },
+    {
+      "asset_id": "45783",
+      "geometry": "horizontal short bow, high mounting",
+      "success": false,
+      "grasp_success": true,
+      "visual_rear_gap_m": [
+        0.016966512,
+        0.020943962,
+        0.016966662
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "chosen_pose": {
+        "section_fraction": 0,
+        "insertion_m": 0.0,
+        "roll_deg": 180.0,
+        "pitch_deg": 0.0,
+        "shared_selection_utility": 0.002015434332137057
+      },
+      "predicted_best_common_aperture_m": 0.018597264705882355,
+      "predicted_best_common_support": 0.0009292069177906104,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.018597264705882355,
+          "bilateral_score": 0.0009292069177906104,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.05686051283693391,
+              "interior_supported_area_m2": 6.294158593262634e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.03872291694595376,
+              "interior_supported_area_m2": 4.2864210934608554e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.02399630480026906
+        },
+        "native": {
+          "common_aperture_m": 0.018597264705882355,
+          "bilateral_score": 0.0025214090238060917,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.1259648838120608,
+              "interior_supported_area_m2": 0.0001426802390739101
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.1084344653603281,
+              "interior_supported_area_m2": 0.00012493440472765609
+            }
+          ],
+          "native_pad_normal_opening_component": 0.02399630480026906
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.023441911764705878,
+        "bilateral_score": 0.0007736445271996248,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.034108660232113584,
+            "interior_supported_area_m2": 3.858922615627182e-05
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 0.03322974038503136,
+            "interior_supported_area_m2": 3.823111561464036e-05
+          }
+        ],
+        "native_pad_normal_opening_component": 0.023996304800269094
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 268.1166666666667,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.023253242641890524,
+          "command_aperture_m": 0.02321465242516628,
+          "load_n": 0.05345342187222339
+        },
+        "gripper_link2": {
+          "t": 272.2416666666667,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.022652945880751858,
+          "command_aperture_m": 0.02258965242516635,
+          "load_n": 0.051164104214425805
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 61.454166666666666,
+          "mean_loads_n": [
+            0.0006760808289550532,
+            4.650561099797377e-05
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.008746355685131196,
+            0.0006102108617533392
+          ],
+          "aperture_m": {
+            "min": 0.02265153093478974,
+            "median": 0.05329850329796001,
+            "max": 0.08401220529051683
+          },
+          "command_aperture_m": {
+            "min": 0.02255631909183302,
+            "median": 0.053281319091829635,
+            "max": 0.08400631909182625
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 168,
+              "contact_step_fraction": 0.011390602752728999,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011749982457734747,
+                0.05975326751788449,
+                -0.02600331848669448
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750520271177359,
+                  0.05975295617631275,
+                  -0.026004073690805745
+                ],
+                [
+                  -0.011749595731291137,
+                  0.05975416749072253,
+                  -0.025999221241013948
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9899090255810629,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.1628751119470437,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.3905485994705559,
+              "inner_pad_plane_distance_m": {
+                "min": 1.3741059158578484e-09,
+                "median": 2.3240146765357572e-07,
+                "max": 3.9811824393831685e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 13,
+              "contact_step_fraction": 0.0008814156891992677,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011750072563114463,
+                0.059753194802226725,
+                -0.026003276464250512
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750405793984706,
+                  0.05975301428180224,
+                  -0.026003966381810503
+                ],
+                [
+                  -0.01174985793249167,
+                  0.059753506156291554,
+                  -0.0260028780242395
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9857891642493353,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.1455821439574606,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.5468033195716632,
+              "inner_pad_plane_distance_m": {
+                "min": 9.960887469018243e-09,
+                "median": 2.038888403180228e-07,
+                "max": 7.639583571722453e-07
+              }
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 3.5083333333333333,
+          "mean_loads_n": [
+            0.05564881651162988,
+            0.0005422075241879131
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.6567695961995249,
+            0.0023752969121140144
+          ],
+          "aperture_m": {
+            "min": 0.02265132131310007,
+            "median": 0.02285511133350629,
+            "max": 0.023233156589811014
+          },
+          "command_aperture_m": {
+            "min": 0.02255631909183302,
+            "median": 0.022822985758499656,
+            "max": 0.023177152425166284
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 842,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011750027198705739,
+                0.05975323854430094,
+                -0.02600344356317429
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750662883765403,
+                  0.059752942781607914,
+                  -0.026004330099046447
+                ],
+                [
+                  -0.011749475232295102,
+                  0.05975371232969501,
+                  -0.02600256692372838
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.989906260540948,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.16288914219827164,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.377628774390285,
+              "inner_pad_plane_distance_m": {
+                "min": 5.776285005865134e-10,
+                "median": 2.5515526438403546e-07,
+                "max": 1.1276755931162452e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 19,
+              "contact_step_fraction": 0.022565320665083134,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011749978718392335,
+                0.05975319367204557,
+                -0.02600325886592311
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750197394071515,
+                  0.05975305893998246,
+                  -0.026003882683754767
+                ],
+                [
+                  -0.011749633353865854,
+                  0.0597533552290641,
+                  -0.02600250531307772
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.985785961518104,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.14558823710179275,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.6217566518484594,
+              "inner_pad_plane_distance_m": {
+                "min": 2.7370104377366644e-09,
+                "median": 1.574891484897034e-07,
+                "max": 6.971103756123198e-07
+              }
+            }
+          }
+        },
+        "LOW_PRELOAD": {
+          "simulation_s": 0.2833333333333333,
+          "mean_loads_n": [
+            0.4844198549585413,
+            0.43152990222385756
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.022548860148182866,
+            "median": 0.0225581853863729,
+            "max": 0.02262629105162303
+          },
+          "command_aperture_m": {
+            "min": 0.021978283567740578,
+            "median": 0.021991059525205497,
+            "max": 0.022042994098090733
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 68,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011749915876421931,
+                0.059752979179970314,
+                -0.02600296537522057
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01175051751520949,
+                  0.059752154024661434,
+                  -0.02600408012037118
+                ],
+                [
+                  -0.011749209953085184,
+                  0.05975506628553041,
+                  -0.025998831028923763
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9898894070067273,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.1629884758593932,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.7862344685845665,
+              "inner_pad_plane_distance_m": {
+                "min": 9.993485206027941e-11,
+                "median": 3.2454168881826395e-07,
+                "max": 4.371394529568279e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 68,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011750081476588604,
+                0.05975266808837291,
+                -0.026003292625827217
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750619072122841,
+                  0.05975199500121838,
+                  -0.026004728233648113
+                ],
+                [
+                  -0.011749627816923796,
+                  0.05975315348698801,
+                  -0.025999206322921912
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.985864906307257,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.1458234362814595,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.401560630915789e-09,
+                "median": 4.289963833614685e-07,
+                "max": 3.996100531419161e-06
+              }
+            }
+          }
+        },
+        "FORCE_HOLD": {
+          "simulation_s": 0.5041666666666667,
+          "mean_loads_n": [
+            0.5521720835461852,
+            0.3950401883560036
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.022548257462182586,
+            "median": 0.022562250223523074,
+            "max": 0.022564916438850238
+          },
+          "command_aperture_m": {
+            "min": 0.021977932407751137,
+            "median": 0.021977932407751137,
+            "max": 0.021977932407751137
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011750009364971722,
+                0.05975298902315867,
+                -0.02600301016633366
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750538336311954,
+                  0.05975240071999308,
+                  -0.026003411153938213
+                ],
+                [
+                  -0.01174938466341212,
+                  0.05975342771660882,
+                  -0.026002548107424386
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9898893728829317,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.16291889558774753,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.773943561889485,
+              "inner_pad_plane_distance_m": {
+                "min": 2.6079190335037694e-09,
+                "median": 2.0873048488245782e-07,
+                "max": 6.543160289453065e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01175000468174802,
+                0.05975300825130013,
+                -0.026003438513679897
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.01175067438212528,
+                  0.05975230174314345,
+                  -0.02600429780465007
+                ],
+                [
+                  -0.01174954355213672,
+                  0.05975349408704604,
+                  -0.026002642369940696
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9859058467448164,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.1456963258771904,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.7803061203279753,
+              "inner_pad_plane_distance_m": {
+                "min": 9.946585222131432e-10,
+                "median": 2.2652937284664554e-07,
+                "max": 1.0953811967404081e-06
+              }
+            }
+          }
+        },
+        "TRANSMISSION_PROBE": {
+          "simulation_s": 3.5083333333333333,
+          "mean_loads_n": [
+            0.6432700171725831,
+            0.27011256830982744
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.022470529479603003,
+            "median": 0.022547012784139307,
+            "max": 0.022567851237868954
+          },
+          "command_aperture_m": {
+            "min": 0.021977932407751137,
+            "median": 0.021977932407751137,
+            "max": 0.021977932407751137
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 842,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.011750012368485423,
+                0.05975309947305154,
+                -0.026003023709135806
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750866395337801,
+                  0.05975215276929696,
+                  -0.026004149304411882
+                ],
+                [
+                  -0.011749007588876642,
+                  0.0597551434622184,
+                  -0.026001173325216332
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9898844160555437,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.16297888961383872,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.7071785493200078,
+              "inner_pad_plane_distance_m": {
+                "min": 1.1652022680053165e-09,
+                "median": 1.9863684174586949e-07,
+                "max": 2.0290982369990107e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 842,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01174999761803961,
+                0.05975319332756784,
+                -0.026003286190016534
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011751045722289761,
+                  0.05975158045288865,
+                  -0.026007671138406265
+                ],
+                [
+                  -0.011749238188782441,
+                  0.05975738751827203,
+                  -0.02598990988490235
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9858842089100724,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.14561119885854565,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.5585352077987651,
+              "inner_pad_plane_distance_m": {
+                "min": 8.675479154507393e-10,
+                "median": 2.5649706269365025e-07,
+                "max": 1.3292538550979671e-05
+              }
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": 0.0,
+      "opening_execution_vs_saved_ik_path": {
+        "maximum_joint_difference_record": {
+          "t": 272.5708333333333,
+          "actual_deg": 0.8101978302001953,
+          "max_abs_joint_difference_rad": 0.03533242264755998,
+          "joint_differences_rad": [
+            0.0116794859079985,
+            -0.004126743931182508,
+            0.013142602925465763,
+            0.008402911401673707,
+            -0.03533242264755998,
+            -0.016578172724692086,
+            0.012038846507604894
+          ]
+        },
+        "last": {
+          "t": 276.5833333333333,
+          "actual_deg": 0.6361839175224304,
+          "max_abs_joint_difference_rad": 0.03325408548847353,
+          "joint_differences_rad": [
+            0.01462763068495021,
+            -0.005001974678340293,
+            0.012775463809114651,
+            0.006721896410197825,
+            -0.03325408548847353,
+            -0.01654713753388548,
+            0.009788475893013349
+          ]
+        },
+        "definition": "Measured arm q versus linear interpolation of the original saved endpoint-IK path at actual angle; descriptive only, no tracking gate"
+      },
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.0003564898336580481,
+        "maximum_rotation_error_deg": 7.92046751890899e-06,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": {
+        "first": {
+          "t": 273.075,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 0.7901627421379089,
+          "reference_deg": 0.8401804229322497,
+          "relative_drift_mm": 0.00024199585462480525,
+          "tcp_reference_error_mm": 0.00021388993999409405
+        },
+        "last": {
+          "t": 276.5833333333333,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 0.6361839175224304,
+          "reference_deg": 0.7844068637846705,
+          "relative_drift_mm": 0.18566566742382076,
+          "tcp_reference_error_mm": 0.16274333463865479
+        },
+        "max_actual_deg": 0.7901627421379089,
+        "reference_deg_range": [
+          0.7006128176798851,
+          0.9179695504424182
+        ],
+        "maximum_tcp_reference_error_mm": 0.48053629259403613
+      },
+      "closure_end": {
+        "t": 273.0708333333333,
+        "aperture_m": 0.022564680606644728,
+        "command_aperture_m": 0.021977932407751137,
+        "loads_n": {
+          "gripper_link1": 0.6071541524227171,
+          "gripper_link2": 0.34960520334069045
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 0.32644898976686454
+      },
+      "all_phase_command_activity_simulation_s": {
+        "FORCE_HOLD": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.5
+        },
+        "LOCAL_CENTERING": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.0
+        },
+        "CENTER": {
+          "command_changed": 3.5083333333333333,
+          "command_stationary": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "command_changed": 3.0083333333333333,
+          "command_stationary": 0.5
+        },
+        "APPROACH": {
+          "command_changed": 25.083333333333332,
+          "command_stationary": 0.0
+        },
+        "LOW_PRELOAD": {
+          "command_changed": 0.2833333333333333,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 61.454166666666666,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        },
+        "PREGRASP": {
+          "command_changed": 180.93333333333334,
+          "command_stationary": 0.8083333333333333
+        }
+      }
+    },
+    {
+      "asset_id": "45908",
+      "geometry": "vertical long straight round bar",
+      "success": false,
+      "grasp_success": true,
+      "visual_rear_gap_m": [
+        0.030315837999999998,
+        0.030315837999999998,
+        0.030315839
+      ],
+      "collision_proxy_rear_gap_m": [
+        0.026989756999999996,
+        0.026989757000000003,
+        0.026989758
+      ],
+      "chosen_pose": {
+        "section_fraction": -0.3,
+        "insertion_m": 0.0,
+        "roll_deg": 0.0,
+        "pitch_deg": -15.0,
+        "shared_selection_utility": 0.04317425507095205
+      },
+      "predicted_best_common_aperture_m": 0.016174941176470586,
+      "predicted_best_common_support": 0.02077811580175702,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.02077811580175702,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.0728007251094091,
+              "interior_supported_area_m2": 8.202092280305198e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.07279242177320583,
+              "interior_supported_area_m2": 8.201051550375391e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.28544344694687124
+        },
+        "native": {
+          "common_aperture_m": 0.016174941176470586,
+          "bilateral_score": 0.02077811580175702,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.0728007251094091,
+              "interior_supported_area_m2": 8.202092280305197e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.07279242177320583,
+              "interior_supported_area_m2": 8.20105155037539e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.28544344694687124
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.016174941176470586,
+        "bilateral_score": 0.02077811580175702,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.0728007251094091,
+            "interior_supported_area_m2": 8.202092280305197e-05
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 0.07279242177320583,
+            "interior_supported_area_m2": 8.20105155037539e-05
+          }
+        ],
+        "native_pad_normal_opening_component": 0.28544344694687124
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 114.80416666666666,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.015181009560255226,
+          "command_aperture_m": 0.015145312637541583,
+          "load_n": 0.05748525970269542
+        },
+        "gripper_link2": {
+          "t": 115.04583333333333,
+          "phase": "CENTER",
+          "aperture_m": 0.015119542701158353,
+          "command_aperture_m": 0.015045312637541594,
+          "load_n": 0.05221514413604992
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 68.95416666666667,
+          "mean_loads_n": [
+            0.0001105529117573389,
+            2.0499508708959605e-05
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.0012085322375974378,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.015120565175208205,
+            "median": 0.04952998120233072,
+            "max": 0.0839986932064511
+          },
+          "command_aperture_m": {
+            "min": 0.015045312637541594,
+            "median": 0.0495203126375378,
+            "max": 0.083995312637534
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 32,
+              "contact_step_fraction": 0.0019336515801559007,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177031582120185,
+                0.04357300805025229,
+                -0.02600323676136285
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176760077138834,
+                  0.04357236572763619,
+                  -0.026003671169178295
+                ],
+                [
+                  0.014177313660406352,
+                  0.04357394893106973,
+                  -0.026001201420125093
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999708042714277,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.30921650922013105,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.7590642303888515e-08,
+                "median": 2.040192673639224e-07,
+                "max": 2.0010033282384654e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 14,
+              "contact_step_fraction": 0.0008459725663182066,
+              "force_weighted_local_contact_centroid_m": [
+                0.01417698577848928,
+                0.039685484575671906,
+                -0.026003107658201262
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176805097785185,
+                  0.039685145073119876,
+                  -0.026003567857448423
+                ],
+                [
+                  0.014177142601547272,
+                  0.03968573057954692,
+                  -0.026002811811425927
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999699409739514,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3085318837161864,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.757754811125393e-09,
+                "median": 1.9320623983153096e-07,
+                "max": 3.9061202740386936e-07
+              }
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 0.2,
+          "mean_loads_n": [
+            0.06517820441667467,
+            0.03050891084187013
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.7708333333333334,
+            0.22916666666666666
+          ],
+          "aperture_m": {
+            "min": 0.015119391951800197,
+            "median": 0.015120191578892071,
+            "max": 0.015157590700248844
+          },
+          "command_aperture_m": {
+            "min": 0.015045312637541594,
+            "median": 0.015045312637541594,
+            "max": 0.015103645970874921
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 48,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177093181416928,
+                0.043573041840537736,
+                -0.02600323794452554
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.0141767618915796,
+                  0.043572168185254924,
+                  -0.02600374386182089
+                ],
+                [
+                  0.014177353460962355,
+                  0.04357356775844535,
+                  -0.026002788464012768
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999708106934345,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3092041306637713,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.534571750395509e-09,
+                "median": 1.6115175604375365e-07,
+                "max": 5.41438367560737e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 32,
+              "contact_step_fraction": 0.6666666666666666,
+              "force_weighted_local_contact_centroid_m": [
+                0.014176949841383273,
+                0.03968554053022864,
+                -0.026003195875760412
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176754240177794,
+                  0.03968479386287729,
+                  -0.02600366099548375
+                ],
+                [
+                  0.014177200873438062,
+                  0.03968595561441463,
+                  -0.026002845985674945
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999699365946428,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3085034802527713,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.2596653102547872e-08,
+                "median": 1.5748694986300604e-07,
+                "max": 4.5857203041788086e-07
+              }
+            }
+          }
+        },
+        "LOW_PRELOAD": {
+          "simulation_s": 0.2708333333333333,
+          "mean_loads_n": [
+            0.5580984358607101,
+            0.46665217551858673
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.015090113907471656,
+            "median": 0.015092833932051151,
+            "max": 0.015110622281055662
+          },
+          "command_aperture_m": {
+            "min": 0.014470751523258052,
+            "median": 0.014474814135071193,
+            "max": 0.014510475429416664
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 65,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177069500306309,
+                0.04357276985373056,
+                -0.026003293975489745
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176656117091983,
+                  0.043570956944641255,
+                  -0.026004588383042683
+                ],
+                [
+                  0.014177478184273043,
+                  0.04357386677573961,
+                  -0.026001970468839005
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999708036060012,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.30906888744732286,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 7.327237427912081e-11,
+                "median": 1.8147403406387763e-07,
+                "max": 1.3859595893520038e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 65,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177028542723211,
+                0.039685089427744874,
+                -0.026002956296195517
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176623344971592,
+                  0.0396811134087088,
+                  -0.02600684347916552
+                ],
+                [
+                  0.014177442575942873,
+                  0.03968612741104083,
+                  -0.025999768211686237
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999699344151242,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.30839451670197715,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 2.4984545484579845e-08,
+                "median": 3.7514233819369025e-07,
+                "max": 3.6410557121904774e-06
+              }
+            }
+          }
+        },
+        "FORCE_HOLD": {
+          "simulation_s": 0.5041666666666667,
+          "mean_loads_n": [
+            0.5823615396868335,
+            0.4443702317732214
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.01509165416213596,
+            "median": 0.01509367943402911,
+            "max": 0.015098103575080315
+          },
+          "command_aperture_m": {
+            "min": 0.014477771585688099,
+            "median": 0.014477771585688099,
+            "max": 0.014477771585688099
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014177114024100313,
+                0.04357353868354899,
+                -0.0260031998886047
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.0141768162884817,
+                  0.043572929557468124,
+                  -0.026003661224082198
+                ],
+                [
+                  0.01417756724651675,
+                  0.04357392507818447,
+                  -0.02600265111921745
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999708084918544,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3089898658869918,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 5.701824786624732e-09,
+                "median": 1.4724249074171691e-07,
+                "max": 5.513042358809561e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 121,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.014176972787877913,
+                0.03968581124181374,
+                -0.02600320273851529
+              ],
+              "local_contact_bounds_m": [
+                [
+                  0.014176492807508623,
+                  0.039685386683679214,
+                  -0.026003779652182583
+                ],
+                [
+                  0.014177261289967623,
+                  0.039686091432261,
+                  -0.026002461399266614
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999699491788185,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3083317442264139,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.6877063462039654e-09,
+                "median": 1.3363240923894293e-07,
+                "max": 7.410241867171485e-07
+              }
+            }
+          }
+        },
+        "TRANSMISSION_PROBE": {
+          "simulation_s": 12.804166666666667,
+          "mean_loads_n": [
+            0.24373211074077217,
+            0.6975992764301435
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.014991171776557278,
+            "median": 0.015041022686519127,
+            "max": 0.015098693460908072
+          },
+          "command_aperture_m": {
+            "min": 0.014477771585688099,
+            "median": 0.014477771585688099,
+            "max": 0.014477771585688099
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 3123,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.00801005309351053,
+                0.042945040007518136,
+                -0.026004727382353435
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014236152803394892,
+                  0.042636615077850964,
+                  -0.02600655435894841
+                ],
+                [
+                  0.01417822979258194,
+                  0.04357930616961422,
+                  -0.026002614673522193
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999782824323129,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3075887948999663,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 9.508051949935759e-10,
+                "median": 1.683132760190581e-06,
+                "max": 3.3519354950793667e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 3385,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                0.007332376110410206,
+                0.0389359883779106,
+                -0.0260015949597533
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014095290075840013,
+                  0.038717493451104736,
+                  -0.02600747040101087
+                ],
+                [
+                  0.014187705361190236,
+                  0.03968613966228412,
+                  -0.025998793548772693
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.999999243024448,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3020015793327222,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 8.159795408801962e-10,
+                "median": 1.5881410757867531e-06,
+                "max": 4.408874680637831e-06
+              }
+            }
+          }
+        },
+        "FIRST_OPEN_5_DEG": {
+          "simulation_s": 50.229166666666664,
+          "mean_loads_n": [
+            0.37968504763775357,
+            0.6191090343700512
+          ],
+          "load_duty_above_existing_0p05_n": [
+            1.0,
+            1.0
+          ],
+          "aperture_m": {
+            "min": 0.01503796843230329,
+            "median": 0.015082320883036592,
+            "max": 0.015087118605351543
+          },
+          "command_aperture_m": {
+            "min": 0.014477771585688099,
+            "median": 0.014477771585688099,
+            "max": 0.014477771585688099
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 12055,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01423008111416586,
+                0.04249927694874101,
+                -0.026004793394723745
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014236637873092334,
+                  0.04248303831258718,
+                  -0.026006884777981843
+                ],
+                [
+                  -0.014228254980465562,
+                  0.04264044554254335,
+                  -0.026002511226082166
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999991778866614,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.30361934184580913,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 1.414525267751099e-10,
+                "median": 1.5937211916630667e-06,
+                "max": 3.682354528512094e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 12055,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.014088953349912305,
+                0.038617870361225666,
+                -0.02600159618479169
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.014095175887542017,
+                  0.03859269160665843,
+                  -0.026003710707777385
+                ],
+                [
+                  -0.014086880589027548,
+                  0.03875923843822528,
+                  -0.025999914747567205
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.9999991200852006,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.3026538179333517,
+              "force_weighted_fraction_inside_inner_pad_projection": 1.0,
+              "inner_pad_plane_distance_m": {
+                "min": 6.261778935645612e-09,
+                "median": 1.6212561640936707e-06,
+                "max": 3.287675886125968e-06
+              }
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": 29.891745335889993,
+      "opening_execution_vs_saved_ik_path": {
+        "maximum_joint_difference_record": {
+          "t": 632.3583333333333,
+          "actual_deg": 29.889312744140625,
+          "max_abs_joint_difference_rad": 0.27217634919860345,
+          "joint_differences_rad": [
+            -0.27217634919860345,
+            0.22090784702758537,
+            -0.03339404350274189,
+            0.0359388514688046,
+            0.19065356705859626,
+            0.23929236794514197,
+            -0.18759031994967756
+          ]
+        },
+        "last": {
+          "t": 632.3583333333333,
+          "actual_deg": 29.889312744140625,
+          "max_abs_joint_difference_rad": 0.27217634919860345,
+          "joint_differences_rad": [
+            -0.27217634919860345,
+            0.22090784702758537,
+            -0.03339404350274189,
+            0.0359388514688046,
+            0.19065356705859626,
+            0.23929236794514197,
+            -0.18759031994967756
+          ]
+        },
+        "definition": "Measured arm q versus linear interpolation of the original saved endpoint-IK path at actual angle; descriptive only, no tracking gate"
+      },
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 0.0005166268263964355,
+        "maximum_rotation_error_deg": 6.315365439678734e-06,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": {
+        "first": {
+          "t": 115.88333333333333,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": -8.247595815191744e-07,
+          "reference_deg": 0.049999180700156944,
+          "relative_drift_mm": 0.0006653786539533642,
+          "tcp_reference_error_mm": 0.0006765582716716622
+        },
+        "last": {
+          "t": 128.68333333333334,
+          "phase": "TRANSMISSION_PROBE",
+          "actual_deg": 1.00009286403656,
+          "reference_deg": 1.0560533260269995,
+          "relative_drift_mm": 1.3920990900370915,
+          "tcp_reference_error_mm": 1.275838790642098
+        },
+        "max_actual_deg": 1.00009286403656,
+        "reference_deg_range": [
+          0.049999180700156944,
+          1.0560533260269995
+        ],
+        "maximum_tcp_reference_error_mm": 1.2908986220168248
+      },
+      "closure_end": {
+        "t": 115.87916666666666,
+        "aperture_m": 0.01509792660934823,
+        "command_aperture_m": 0.014477771585688099,
+        "loads_n": {
+          "gripper_link1": 0.6179662718882193,
+          "gripper_link2": 0.41347707301688486
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 0.8198137854206033
+      },
+      "all_phase_command_activity_simulation_s": {
+        "FORCE_HOLD": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.5
+        },
+        "CENTER": {
+          "command_changed": 0.2,
+          "command_stationary": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "command_changed": 12.804166666666667,
+          "command_stationary": 0.0
+        },
+        "APPROACH": {
+          "command_changed": 25.083333333333332,
+          "command_stationary": 0.0
+        },
+        "LOW_PRELOAD": {
+          "command_changed": 0.2708333333333333,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 68.95416666666667,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        },
+        "OPEN_CONTINUE": {
+          "command_changed": 503.675,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 19.570833333333333,
+          "command_stationary": 0.8
+        }
+      }
+    },
+    {
+      "asset_id": "45916",
+      "geometry": "vertical short curved bow, opposite-side handle",
+      "success": false,
+      "grasp_success": false,
+      "visual_rear_gap_m": [
+        0.023541082,
+        0.024132959,
+        0.023532460999999998
+      ],
+      "collision_proxy_rear_gap_m": [
+        1.4553999999999956e-05,
+        1.4553999999999956e-05,
+        1.4553999999999956e-05
+      ],
+      "chosen_pose": {
+        "section_fraction": 0,
+        "insertion_m": 0.0,
+        "roll_deg": 0.0,
+        "pitch_deg": 15.0,
+        "shared_selection_utility": 0.021580484734407757
+      },
+      "predicted_best_common_aperture_m": 0.013752617647058818,
+      "predicted_best_common_support": 0.010044001415745279,
+      "best_common_aperture_support": {
+        "visual": {
+          "common_aperture_m": 0.013752617647058818,
+          "bilateral_score": 0.010044001415745279,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.05011246685778432,
+              "interior_supported_area_m2": 5.6021706897406257e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.0353417150990701,
+              "interior_supported_area_m2": 3.95110020120453e-05
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2841967774313109
+        },
+        "native": {
+          "common_aperture_m": 0.013752617647058818,
+          "bilateral_score": 0.0155282491997045,
+          "sides": [
+            {
+              "finger": "gripper_link1",
+              "support_score": 0.05942114795276068,
+              "interior_supported_area_m2": 8.704860859061373e-05
+            },
+            {
+              "finger": "gripper_link2",
+              "support_score": 0.10206491669273374,
+              "interior_supported_area_m2": 0.00011340738257427187
+            }
+          ],
+          "native_pad_normal_opening_component": 0.2841967774313109
+        }
+      },
+      "nearest_static_planned_pose_sample_to_final_closure_aperture": {
+        "common_aperture_m": 0.030708882352941176,
+        "bilateral_score": 4.8986376013205964e-14,
+        "sides": [
+          {
+            "finger": "gripper_link1",
+            "support_score": 0.012392494726644615,
+            "interior_supported_area_m2": 1.81543012898123e-05
+          },
+          {
+            "finger": "gripper_link2",
+            "support_score": 1.8638492362559266e-13,
+            "interior_supported_area_m2": 2.0654393710735563e-16
+          }
+        ],
+        "native_pad_normal_opening_component": 0.28419677743131094
+      },
+      "first_positive_pad_load": {
+        "gripper_link1": {
+          "t": 107.99166666666666,
+          "phase": "SLOW_CLOSE",
+          "aperture_m": 0.032733874132581275,
+          "command_aperture_m": 0.03269875626055324,
+          "load_n": 0.053375958162359155
+        }
+      },
+      "contact_phases": {
+        "SLOW_CLOSE": {
+          "simulation_s": 53.8625,
+          "mean_loads_n": [
+            0.0029279148811361707,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.04332018256362652,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.030172411637366177,
+            "median": 0.05708175941774496,
+            "max": 0.08400271641102533
+          },
+          "command_aperture_m": {
+            "min": 0.03014042292722019,
+            "median": 0.05706958959388389,
+            "max": 0.08399875626054759
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 624,
+              "contact_step_fraction": 0.04827106057089812,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01174991369076273,
+                0.059753033118958326,
+                -0.026003185957471735
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750633081895626,
+                  0.059752497077845114,
+                  -0.02600398860622415
+                ],
+                [
+                  -0.011749244271084792,
+                  0.059753514177416436,
+                  -0.026002511161820712
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.8702418072735398,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.23818938400022993,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.8021713108396038,
+              "inner_pad_plane_distance_m": {
+                "min": 1.6821376236375585e-10,
+                "median": 1.3008922155992309e-07,
+                "max": 7.86182770818461e-07
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        },
+        "CENTER": {
+          "simulation_s": 46.1375,
+          "mean_loads_n": [
+            0.05577913904873708,
+            0.0
+          ],
+          "load_duty_above_existing_0p05_n": [
+            0.7483970017158855,
+            0.0
+          ],
+          "aperture_m": {
+            "min": 0.030169375060456825,
+            "median": 0.03037834248253025,
+            "max": 0.032803504029804864
+          },
+          "command_aperture_m": {
+            "min": 0.03014042292722019,
+            "median": 0.0303487562605535,
+            "max": 0.032661256260553245
+          },
+          "optional_contact_geometry_missing": 0,
+          "contacts": {
+            "gripper_link1": {
+              "positive_contact_records": 11073,
+              "contact_step_fraction": 1.0,
+              "force_weighted_local_contact_centroid_m": [
+                -0.01174969682972089,
+                0.05975283625790062,
+                -0.026003334435323232
+              ],
+              "local_contact_bounds_m": [
+                [
+                  -0.011750507584473109,
+                  0.059749648964357055,
+                  -0.0260062729278389
+                ],
+                [
+                  -0.011746847512336588,
+                  0.05975369602409197,
+                  -0.0260024124941277
+                ]
+              ],
+              "force_weighted_abs_normal_alignment_to_closing": 0.8703552307999787,
+              "force_weighted_abs_normal_alignment_to_opening_tangent": 0.2382622265036086,
+              "force_weighted_fraction_inside_inner_pad_projection": 0.8589057868066939,
+              "inner_pad_plane_distance_m": {
+                "min": 1.20651023893803e-11,
+                "median": 1.005582129648408e-07,
+                "max": 3.070504385568884e-06
+              }
+            },
+            "gripper_link2": {
+              "positive_contact_records": 0
+            }
+          }
+        }
+      },
+      "postgrasp_max_additional_angle_deg": null,
+      "opening_execution_vs_saved_ik_path": null,
+      "joint_to_moving_body_mapping_offline": {
+        "maximum_position_error_mm": 5.094136998367721e-06,
+        "maximum_rotation_error_deg": 9.715222538493792e-14,
+        "definition": "Known URDF joint axis/origin predicts delta applied to first measured closed body frame; static importer frame offset is held constant; diagnostic only"
+      },
+      "probe_summary": null,
+      "closure_end": {
+        "t": 156.6875,
+        "aperture_m": 0.030169700873879865,
+        "command_aperture_m": 0.03014042292722019,
+        "loads_n": {
+          "gripper_link1": 0.05088598834767958,
+          "gripper_link2": 0.0
+        },
+        "tcp_position_shift_from_planned_grasp_mm": 1.9040977370864418
+      },
+      "all_phase_command_activity_simulation_s": {
+        "CENTER": {
+          "command_changed": 46.1375,
+          "command_stationary": 0.0
+        },
+        "PREGRASP": {
+          "command_changed": 30.308333333333334,
+          "command_stationary": 0.8
+        },
+        "APPROACH": {
+          "command_changed": 25.083333333333332,
+          "command_stationary": 0.0
+        },
+        "SLOW_CLOSE": {
+          "command_changed": 53.8625,
+          "command_stationary": 0.0
+        },
+        "SETTLE": {
+          "command_changed": 0.004166666666666667,
+          "command_stationary": 0.49583333333333335
+        }
+      }
+    }
+  ]
+}

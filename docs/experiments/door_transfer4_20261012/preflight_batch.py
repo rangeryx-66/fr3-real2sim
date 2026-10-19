@@ -1,0 +1,21 @@
+"""Source/geometry preflight before the immutable four-case physical batch."""
+from pathlib import Path
+import sys,json,hashlib,numpy as np,py_compile
+ROOT=Path('/data1/home/rangeryx/fr3_real2sim_known_whole_20261007');sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+from revolute10_fixed import Model,physical_scene_class,at_base,authored_handle_colliders,calibration,camera_clearance
+out=ROOT/'results/door_transfer4_20261012';sha=lambda p:hashlib.sha256(Path(p).read_bytes()).hexdigest();frozen=json.loads((out/'FROZEN_INPUT_HASHES.json').read_text());old_changes=[p for p,h in frozen.items() if sha(p)!=h];summary=[]
+for i in ['45415','45176','45134','45443']:
+ case=out/i
+ if not (case/'job.json').exists():continue
+ job=json.loads((case/'job.json').read_text());job.update(expected_runner_sha256=sha(ROOT/'scripts/run_shared_door_skill.py'),shared_policy_sha256=sha(ROOT/'scripts/shared_door_execution.py'));(case/'job.json').write_text(json.dumps(job,indent=2));p=json.loads((case/'whole_plan.json').read_text());model=Model(ROOT/'config/piper.urdf',job['asset_root'],json.loads((Path(job['source'])/'report.json').read_text()));export=json.loads(Path(job['collision_export']).read_text());e=next(e for e in export['shapes'] if e.get('rigid_body_path','').endswith('/base_link'));E=np.array(e['rigid_body_world_transform']);initial=[*E[:3,3],float(np.rad2deg(np.arctan2(E[1,0],E[0,0])))];selection=job['grasp_geometry_candidates'][0];allowed=authored_handle_colliders(export,selection);sc=physical_scene_class(ROOT)(at_base(export,initial,p['base']),model,allowed);cal=calibration(job['camera_calibration']);failures=[];fk=[];margin=[]
+ for phase,qs in [('home',p['preplan']),('approach',p['approach']),('opening',[x['q'] for x in p['path']])]:
+  for index,q in enumerate(qs):
+   aperture=p.get('contact_geometry_audit',{}).get('physical_aperture_m',selection['dimensions_m'][1]);P=model.poses(np.array(q),p['base'],width=.1 if phase!='opening' else aperture);M=sc.moving_reference
+   if phase=='opening':
+    state=p['path'][index]['state'];joint=model.manifest['joint_name'];link=model.manifest['moving_link'];D=model.asset_T@model.asset.root_to_link(link,{joint:state})@np.linalg.inv(model.asset_T@model.asset.root_to_link(link,{joint:0.}));M=D@M;fk.append(float(np.linalg.norm(P['tcp_link'][:3,3]-np.array(p['path'][index]['T_tcp'])[:3,3])))
+   ok,why=sc.check(P,M,phase=='opening');camera_ok,camera_why=camera_clearance(sc,P,cal)
+   if not ok or not camera_ok:failures.append({'phase':phase,'index':index,'collision':why,'camera':camera_why})
+   margin.append(model.margin(np.array(q)))
+ pink=Path(job['pink_runner']).read_text();core='def body_at(theta):'+pink.split('def body_at(theta):',1)[1].split('initial_grasp=False',1)[0];adapted=core.replace('moving()@grasp_relative','moving()@grasp_relative@drive_correction');record={'asset_id':i,'runner_path':str(ROOT/'scripts/run_shared_door_skill.py'),'runner_sha256':job['expected_runner_sha256'],'shared_policy_sha256':job['shared_policy_sha256'],'frozen_execution_sha256':job['frozen_execution_sha256'],'active_closure_sha256':job['expected_active_closure_sha256'],'unchanged_core_sha256':hashlib.sha256(core.encode()).hexdigest(),'adapted_target_excerpt_sha256':hashlib.sha256(adapted.encode()).hexdigest(),'offline_interval_deg':float(np.rad2deg(p['planned_reached_state'])),'minimum_planning_margin_rad':min(margin),'maximum_FK_error_m':max(fk),'original_collision_camera_failures':failures,'initial_base_equals_plan':json.loads((Path(job['source'])/'report.json').read_text())['robot_base_pose']==p['base'],'source_config_hashes':{str(x):sha(x) for x in [case/'job.json',case/'whole_plan.json',case/'grasp_plan.json',Path(job['asset_root'])/'manifest.json',Path(job['source'])/'report.json']},'offline_geometry_not_execution_gate':True};(case/'PREFLIGHT.json').write_text(json.dumps(record,indent=2));summary.append(record);print('PREFLIGHT',i,record['offline_interval_deg'],len(failures),flush=True)
+for name in ['common_aperture_contact.py','plan_shared_door_skill.py','shared_door_execution.py','run_shared_door_skill.py']:py_compile.compile(str(ROOT/'scripts'/name),doraise=True)
+(out/'PREFLIGHT_BATCH.json').write_text(json.dumps({'frozen_input_changes':old_changes,'cases':summary,'no_physical_episode_started':True},indent=2));print('OLD_SOURCE_CHANGES',old_changes)

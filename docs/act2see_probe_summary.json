@@ -1,0 +1,248 @@
+{
+  "probe": {
+    "metadata": {
+      "kind": "ideal kinematic grasp; physical unknown-joint point-force probe; no real contact success",
+      "base_pose": [
+        0.5,
+        -0.55,
+        -0.1,
+        150.0
+      ],
+      "scene_source": "results/microwave_7320_table_edge_preflight_full_rgb",
+      "initial_state": "results/r1_contact_consistency/physical_local_161/report.json",
+      "bootstrap_sha256": "136ccb2d68c3d81768f6095cc589f9d7ec15d5dafec8e3f68ca0d354474c8fc0",
+      "force_direction_world": [
+        0.02984865209281723,
+        -0.9003831404449671,
+        -0.434072872189337
+      ],
+      "force_n": 0.05,
+      "duration_s": 6.5,
+      "motion_cap_m": 0.025,
+      "gt_used_for_control": false,
+      "gt_used_for_fit": false,
+      "physical_parameters_changed": false,
+      "attachment": "massless ideal TCP rigidly attached to observed moving-link frame; force forwarded to that body; finite-tracking R1 follower",
+      "robot_drive_gains_unchanged": true,
+      "object_joint_targets_issued": false,
+      "measured_wrench_tcp": null,
+      "stop_reason": "PROBE_COMPLETE",
+      "sample_count": 1560,
+      "min_observed_joint_margin_rad": 0.1419507076740265,
+      "zero_input_baseline_motion_m": 2.7755575615628914e-17,
+      "max_tracking_error_m": 0.0007094282993149492,
+      "max_observed_displacement_m": 0.0213306745699551
+    },
+    "estimate": {
+      "sample_count": 1560,
+      "travel_m": 0.02133067456995513,
+      "prismatic": {
+        "axis": [
+          -0.15756234104954883,
+          -0.9875090423296,
+          5.113386059023206e-07
+        ],
+        "point_on_axis": [
+          0.6601734535870334,
+          -0.2429734668667512,
+          0.13955238773234613
+        ],
+        "position_rmse_m": 3.990668387639823e-05,
+        "rotation_rmse_rad": 0.021268772053247682
+      },
+      "joint_type": "revolute",
+      "confidence": 0.999,
+      "confidence_definition": "relative model-score gap; not a calibrated probability",
+      "scores": {
+        "line": 70569286.84272672,
+        "circle": 80.08619858800033
+      },
+      "revolute": {
+        "axis": [
+          -2.534857482800599e-06,
+          -6.661338147722402e-16,
+          0.9999999999967872
+        ],
+        "point_on_axis": [
+          0.2461156246478942,
+          -0.18047065908064755,
+          0.13955134774283415
+        ],
+        "radius_m": 0.4188049828613266,
+        "angle_span_rad": 0.05093732759679064,
+        "position_rmse_m": 8.33237642566915e-06,
+        "rotation_rmse_rad": 6.2584393129643e-08,
+        "axis_point_gauge": "first EE orbit plane"
+      }
+    },
+    "robot_ee_estimate": {
+      "sample_count": 1560,
+      "travel_m": 0.02123379579918891,
+      "prismatic": {
+        "axis": [
+          -0.15789120118903488,
+          -0.9874564300847981,
+          -0.0004089881049070142
+        ],
+        "point_on_axis": [
+          0.6601705516378085,
+          -0.24296893051419502,
+          0.13955667190826856
+        ],
+        "position_rmse_m": 9.65473716628278e-05,
+        "rotation_rmse_rad": 0.021235449936395027
+      },
+      "joint_type": "revolute",
+      "confidence": 0.999,
+      "confidence_definition": "relative model-score gap; not a calibrated probability",
+      "scores": {
+        "line": 70353162.06440656,
+        "circle": 18555.504859791145
+      },
+      "revolute": {
+        "axis": [
+          0.0001258627635004957,
+          -0.0001451947122230577,
+          -0.9999999815385301
+        ],
+        "point_on_axis": [
+          0.24588849212878414,
+          -0.18028987584977146,
+          0.13949187699625112
+        ],
+        "radius_m": 0.41905459553517094,
+        "angle_span_rad": 0.05057726881674342,
+        "position_rmse_m": 0.00016309068475342623,
+        "rotation_rmse_rad": 0.00011097568650918536,
+        "axis_point_gauge": "first EE orbit plane"
+      }
+    },
+    "ground_truth_evaluation_only": {
+      "joint_type": "revolute",
+      "axis_world": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "origin_world": [
+        0.24611126733962435,
+        -0.18047390568688015,
+        0.3399840970082496
+      ]
+    },
+    "evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.00014523691027686355,
+      "axis_line_distance_m": 5.4338372618226095e-06,
+      "joint_origin_error_in_observed_plane_m": 5.534691897714152e-06,
+      "raw_origin_point_distance_m": 0.20043274933907257,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 8.333178996513962e-06
+    },
+    "robot_ee_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.011009580449062648,
+      "axis_line_distance_m": 0.00028895635572029414,
+      "joint_origin_error_in_observed_plane_m": 0.0002952296645907859,
+      "raw_origin_point_distance_m": 0.20049242823886174,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.00016321119709591982
+    }
+  },
+  "zero_force_control": {
+    "metadata": {
+      "kind": "ideal kinematic grasp; physical unknown-joint point-force probe; no real contact success",
+      "base_pose": [
+        0.5,
+        -0.55,
+        -0.1,
+        150.0
+      ],
+      "scene_source": "results/microwave_7320_table_edge_preflight_full_rgb",
+      "initial_state": "results/r1_contact_consistency/physical_local_161/report.json",
+      "bootstrap_sha256": "136ccb2d68c3d81768f6095cc589f9d7ec15d5dafec8e3f68ca0d354474c8fc0",
+      "force_direction_world": [
+        0.02984865209281723,
+        -0.9003831404449671,
+        -0.434072872189337
+      ],
+      "force_n": 0.0,
+      "duration_s": 6.5,
+      "motion_cap_m": 0.025,
+      "gt_used_for_control": false,
+      "gt_used_for_fit": false,
+      "physical_parameters_changed": false,
+      "attachment": "massless ideal TCP rigidly attached to observed moving-link frame; force forwarded to that body; finite-tracking R1 follower",
+      "robot_drive_gains_unchanged": true,
+      "object_joint_targets_issued": false,
+      "measured_wrench_tcp": null,
+      "stop_reason": "PROBE_COMPLETE",
+      "sample_count": 1560,
+      "min_observed_joint_margin_rad": 0.14196289682388308,
+      "zero_input_baseline_motion_m": 2.7755575615628914e-17,
+      "max_tracking_error_m": 1.8189185284944042e-07,
+      "max_observed_displacement_m": 2.7755575615628914e-17
+    },
+    "estimate": {
+      "sample_count": 1560,
+      "travel_m": 0.0,
+      "prismatic": {
+        "axis": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "point_on_axis": [
+          0.6610396504402161,
+          -0.237353578209877,
+          0.13955239951610565
+        ],
+        "position_rmse_m": 0.0,
+        "rotation_rmse_rad": 0.0
+      },
+      "joint_type": "UNOBSERVABLE",
+      "confidence": 0.0,
+      "reason": "less than 1 mm observed motion"
+    },
+    "robot_ee_estimate": {
+      "sample_count": 1560,
+      "travel_m": 1.8005141576520461e-07,
+      "prismatic": {
+        "axis": [
+          -0.9931270663228418,
+          0.08276058886023496,
+          0.08276058886023499
+        ],
+        "point_on_axis": [
+          0.661039471740906,
+          -0.23735356331826785,
+          0.139552429308876
+        ],
+        "position_rmse_m": 0.0,
+        "rotation_rmse_rad": 1.6358586419254185e-06
+      },
+      "joint_type": "UNOBSERVABLE",
+      "confidence": 0.0,
+      "reason": "less than 1 mm observed motion"
+    },
+    "ground_truth_evaluation_only": {
+      "joint_type": "revolute",
+      "axis_world": [
+        0.0,
+        0.0,
+        -1.0
+      ],
+      "origin_world": [
+        0.24611126733962435,
+        -0.18047390568688015,
+        0.3399840970082496
+      ]
+    },
+    "evaluation": {
+      "type_correct": false
+    },
+    "robot_ee_evaluation": {
+      "type_correct": false
+    }
+  }
+}

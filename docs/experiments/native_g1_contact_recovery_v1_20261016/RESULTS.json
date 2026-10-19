@@ -1,0 +1,389 @@
+{
+  "classification": "CONTACT_FEEDBACK_RECOVERY_V1 / AGENT_WRIST_RGBD / KNOWN_HINGE_STATE / APPROXIMATE_ACTUATOR_SIMULATION",
+  "runtime_freeze_commit": "2ad0d23",
+  "registered_cases": [
+    "45936",
+    "46427"
+  ],
+  "maximum_grasps": 4,
+  "actual_grasps": 3,
+  "actual_recovery_grasps": 1,
+  "extra_physical_trials": false,
+  "cases": {
+    "45936": {
+      "final_short_transmission_achieved": true,
+      "runner_completion_success": false,
+      "asset_id": "45936",
+      "success": false,
+      "status": "SAFE_EXIT_UNAVAILABLE",
+      "physical_grasp_attempts": 2,
+      "recovery_grasps": 1,
+      "recovery_triggered": true,
+      "Agent_adjustments": 2,
+      "observation_count": 4,
+      "simulation_s": 776.2208333333333,
+      "wall_s": 5257.570539877983,
+      "supervised_actor_wall_s": 5276.433611631393,
+      "telemetry": {
+        "physics_steps": {
+          "records": 186293,
+          "chunks": 182
+        },
+        "observations": {
+          "records": 186293,
+          "chunks": 182
+        },
+        "closure_commands": {
+          "records": 35457,
+          "chunks": 35
+        }
+      },
+      "sensor_force_limitations": {
+        "available": false,
+        "reason": "Existing public articulation getters expose explicit command or projected joint reaction, not isolated implicit-drive output; neither is relabeled as motor force."
+      },
+      "raw_evidence_public": false,
+      "known_dependencies": [
+        "registered station",
+        "known hinge/dynamic state",
+        "original scene collisions",
+        "simulated wrist mount without validated camera housing",
+        "approximate finite-effort actuator"
+      ],
+      "experiment_type": "two-case paired development; not a population robustness estimate",
+      "attempts": [
+        {
+          "index": 0,
+          "family": [
+            -0.3,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "bilateral_acquisition": true,
+          "acquisition": {
+            "event": "GRASP_VERIFIED",
+            "t": 263.5333333333333,
+            "step": 63248,
+            "angle_deg": -6.508484773348755e-08,
+            "grasp_index": 0,
+            "pad_loads_n": [
+              0.43507739919764465,
+              0.5742683016524249
+            ],
+            "base": [
+              0.19605376022549204,
+              -0.5328198023693291,
+              -0.1,
+              -0.7953990037810357
+            ],
+            "contact_recovery_attempt_index": 0
+          },
+          "hold_simulation_s": 1.0041666666667197,
+          "actual_post_acquisition_gain_deg": 0.009580737803432271,
+          "net_post_acquisition_gain_deg": 0.009580737803432271,
+          "controller_target_reached": false,
+          "short_success": false,
+          "termination_reason": "TrialFeedback('EXISTING_SOFT_FORCE_WARNING_RETURN_FOR_UNLOAD')",
+          "safe_exit": true,
+          "safe_exit_reason": null,
+          "release_and_clearance_completed": true,
+          "maximum_relative_translation_mm": 0.47342659504778195,
+          "maximum_relative_rotation_deg": 0.13615915439433027,
+          "relative_motion_anchor": "first full-resolution acquired sample; fixed across hold/opening; no controller-reference reset",
+          "first_positive_contact": {
+            "gripper_link1": {
+              "t": 257.5,
+              "aperture_mm": 15.435747654224029,
+              "commanded_aperture_mm": 15.423212761613723,
+              "raw_n": 0.02449407082493018
+            },
+            "gripper_link2": {
+              "t": 263.1125,
+              "aperture_mm": 14.810315099861505,
+              "commanded_aperture_mm": 14.760712761613796,
+              "raw_n": 0.004205750082641079
+            }
+          },
+          "predicted_first_contacts_before_refinement": {
+            "gripper_link1": {
+              "finger": "gripper_link1",
+              "width_m": 0.013994850000000003,
+              "local_contact_m": [
+                0.014232917423413871,
+                0.0401979066124991,
+                -0.025978682648559737
+              ],
+              "existing_pad_region": true
+            },
+            "gripper_link2": {
+              "finger": "gripper_link2",
+              "width_m": 0.013994850000000003,
+              "local_contact_m": [
+                -0.01311632449516914,
+                0.039917125009845573,
+                -0.02593520092877255
+              ],
+              "existing_pad_region": true
+            }
+          },
+          "peak_raw_post_acquisition_n": [
+            0.37606290492497113,
+            2.0025421114034074
+          ],
+          "max_contact_positive_TCP_speed_mm_s": 2.038783287881006,
+          "max_world_TCP_speed_during_attempt_mm_s": 28.34589520961978,
+          "minimum_joint_margin_rad": 0.41990624332427995,
+          "interface": {
+            "states": 48151,
+            "actual_finger_body_pose_records": 48151,
+            "position_target_readback_records": 48151,
+            "running_master_max_effort_range_nm": [
+              2.6395153999328613,
+              3.3000237941741943
+            ],
+            "independent_drive_force_available": false
+          },
+          "peak_raw_pad_load_all_attempt_n": 2.0025421114034074
+        },
+        {
+          "index": 1,
+          "family": [
+            0.3,
+            0.0,
+            180.0,
+            0.0
+          ],
+          "bilateral_acquisition": true,
+          "acquisition": {
+            "event": "GRASP_VERIFIED",
+            "t": 660.85,
+            "step": 158604,
+            "angle_deg": 0.006685059051960707,
+            "grasp_index": 0,
+            "pad_loads_n": [
+              0.5117256809746331,
+              0.5011620165132608
+            ],
+            "base": [
+              0.19605376022549204,
+              -0.5328198023693291,
+              -0.1,
+              -0.7953990037810357
+            ],
+            "contact_recovery_attempt_index": 1
+          },
+          "hold_simulation_s": 1.004166666666606,
+          "actual_post_acquisition_gain_deg": 2.995534617919475,
+          "net_post_acquisition_gain_deg": 2.995534617919475,
+          "controller_target_reached": true,
+          "short_success": true,
+          "termination_reason": "SHARED_DOOR_30_DEG_SUCCESS",
+          "safe_exit": false,
+          "safe_exit_reason": "NO_CHECKED_UNLOADED_RETURN:DANGEROUS_GEOMETRY_COLLISION:gripper_link1:/World/articulated_pose/asset/Geometry/l_world/l_3/abstract_3_2/l_2/tn__l_2_original39_aL/tn__l_2_original39_aL",
+          "release_and_clearance_completed": true,
+          "maximum_relative_translation_mm": 0.6549744890246642,
+          "maximum_relative_rotation_deg": 0.2472149519975796,
+          "relative_motion_anchor": "first full-resolution acquired sample; fixed across hold/opening; no controller-reference reset",
+          "first_positive_contact": {
+            "gripper_link1": {
+              "t": 658.9083333333333,
+              "aperture_mm": 14.74819857750284,
+              "commanded_aperture_mm": 14.707647419769584,
+              "raw_n": 0.020863375767313595
+            },
+            "gripper_link2": {
+              "t": 656.0,
+              "aperture_mm": 15.734340305521767,
+              "commanded_aperture_mm": 15.72431408643614,
+              "raw_n": 0.0019351748132129766
+            }
+          },
+          "predicted_first_contacts_before_refinement": {
+            "gripper_link1": {
+              "finger": "gripper_link1",
+              "width_m": 0.011935874999999999,
+              "local_contact_m": [
+                -0.015140536977301111,
+                0.03767664012363828,
+                -0.025377681569912547
+              ],
+              "existing_pad_region": true
+            },
+            "gripper_link2": {
+              "finger": "gripper_link2",
+              "width_m": 0.011935874999999999,
+              "local_contact_m": [
+                0.01459598183489963,
+                0.043563276149377085,
+                -0.025749861037422273
+              ],
+              "existing_pad_region": true
+            }
+          },
+          "peak_raw_post_acquisition_n": [
+            1.6178580112773442,
+            0.6550750659614444
+          ],
+          "max_contact_positive_TCP_speed_mm_s": 1.5885194639748992,
+          "max_world_TCP_speed_during_attempt_mm_s": 29.374545489538328,
+          "minimum_joint_margin_rad": 0.8774789889627179,
+          "interface": {
+            "states": 54461,
+            "actual_finger_body_pose_records": 54461,
+            "position_target_readback_records": 54461,
+            "running_master_max_effort_range_nm": [
+              2.639808416366577,
+              3.3000237941741943
+            ],
+            "independent_drive_force_available": false
+          },
+          "peak_raw_pad_load_all_attempt_n": 1.6178580112773442
+        }
+      ],
+      "final_actual_door_angle_deg": 3.0333275646508597,
+      "unchanged_hard_protection_triggered": false
+    },
+    "46427": {
+      "final_short_transmission_achieved": true,
+      "runner_completion_success": true,
+      "asset_id": "46427",
+      "success": true,
+      "status": "SHORT_OPENING_SUCCESS",
+      "physical_grasp_attempts": 1,
+      "recovery_grasps": 0,
+      "recovery_triggered": false,
+      "Agent_adjustments": 1,
+      "observation_count": 2,
+      "simulation_s": 483.93333333333334,
+      "wall_s": 3332.4084986029193,
+      "supervised_actor_wall_s": 3346.040260076523,
+      "telemetry": {
+        "physics_steps": {
+          "records": 116144,
+          "chunks": 114
+        },
+        "observations": {
+          "records": 116144,
+          "chunks": 114
+        },
+        "closure_commands": {
+          "records": 18675,
+          "chunks": 19
+        }
+      },
+      "sensor_force_limitations": {
+        "available": false,
+        "reason": "Existing public articulation getters expose explicit command or projected joint reaction, not isolated implicit-drive output; neither is relabeled as motor force."
+      },
+      "raw_evidence_public": false,
+      "known_dependencies": [
+        "registered station",
+        "known hinge/dynamic state",
+        "original scene collisions",
+        "simulated wrist mount without validated camera housing",
+        "approximate finite-effort actuator"
+      ],
+      "experiment_type": "two-case paired development; not a population robustness estimate",
+      "attempts": [
+        {
+          "index": 0,
+          "family": [
+            0.0,
+            0.009374999906867743,
+            180.0,
+            0.0
+          ],
+          "bilateral_acquisition": true,
+          "acquisition": {
+            "event": "GRASP_VERIFIED",
+            "t": 307.525,
+            "step": 73806,
+            "angle_deg": 0.0019296992104500532,
+            "grasp_index": 0,
+            "pad_loads_n": [
+              0.5162315153434514,
+              0.4691187064927589
+            ],
+            "base": [
+              0.19605376022549204,
+              -0.5328198023693291,
+              -0.1,
+              -0.7953990037810357
+            ],
+            "contact_recovery_attempt_index": 0
+          },
+          "hold_simulation_s": 1.0041666666666629,
+          "actual_post_acquisition_gain_deg": 3.0026357781607658,
+          "net_post_acquisition_gain_deg": 3.0026357781607658,
+          "controller_target_reached": true,
+          "short_success": true,
+          "termination_reason": "SHARED_DOOR_30_DEG_SUCCESS",
+          "safe_exit": true,
+          "safe_exit_reason": null,
+          "release_and_clearance_completed": true,
+          "maximum_relative_translation_mm": 0.10888791786519321,
+          "maximum_relative_rotation_deg": 0.46201817855542676,
+          "relative_motion_anchor": "first full-resolution acquired sample; fixed across hold/opening; no controller-reference reset",
+          "first_positive_contact": {
+            "gripper_link1": {
+              "t": 306.7875,
+              "aperture_mm": 9.674012577026398,
+              "commanded_aperture_mm": 9.644201346856423,
+              "raw_n": 0.025656806149946188
+            },
+            "gripper_link2": {
+              "t": 302.1333333333333,
+              "aperture_mm": 11.587604793432071,
+              "commanded_aperture_mm": 11.577534680189544,
+              "raw_n": 0.0010529971130651072
+            }
+          },
+          "predicted_first_contacts_before_refinement": {
+            "gripper_link1": {
+              "finger": "gripper_link1",
+              "width_m": 0.007817925000000003,
+              "local_contact_m": [
+                -0.01426467565926659,
+                0.04944566176281737,
+                -0.025860572368157864
+              ],
+              "existing_pad_region": true
+            },
+            "gripper_link2": {
+              "finger": "gripper_link2",
+              "width_m": 0.007817925000000003,
+              "local_contact_m": [
+                0.014610275963806402,
+                0.0483646173933561,
+                -0.0257682619729257
+              ],
+              "existing_pad_region": true
+            }
+          },
+          "peak_raw_post_acquisition_n": [
+            0.3880730995090462,
+            1.1259642008552766
+          ],
+          "max_contact_positive_TCP_speed_mm_s": 1.8120066680145916,
+          "max_world_TCP_speed_during_attempt_mm_s": 27.811353772712746,
+          "minimum_joint_margin_rad": 0.8681995229530335,
+          "interface": {
+            "states": 62185,
+            "actual_finger_body_pose_records": 62185,
+            "position_target_readback_records": 62185,
+            "running_master_max_effort_range_nm": [
+              2.639890432357788,
+              3.3000237941741943
+            ],
+            "independent_drive_force_available": false
+          },
+          "peak_raw_pad_load_all_attempt_n": 1.1259642008552766
+        }
+      ],
+      "final_actual_door_angle_deg": 2.997180709459271,
+      "unchanged_hard_protection_triggered": false
+    }
+  },
+  "raw_evidence_public": false
+}

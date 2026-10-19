@@ -1,0 +1,76 @@
+{
+  "classification": "SIMULATION_CONTACT_MEASUREMENTS_NOT_HARDWARE_TACTILE",
+  "physical_bodies": {
+    "gripper_link1": "left_finger",
+    "gripper_link2": "right_finger"
+  },
+  "T_native_finger_logical_pad": {
+    "left_finger": [
+      [
+        -1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "right_finger": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        -1.0,
+        0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "native_body_coordinates_preserved_in_model": true,
+  "raw_contact_points_normals_impulses": "world coordinates; native collider0/collider1 IDs preserved",
+  "pad_load": "norm of summed signed native finger-to-registered-handle impulse / physics interval",
+  "filter": "unchanged arithmetic mean over 0.08 seconds / 19 samples at 240 Hz",
+  "software_gain": 1,
+  "bias": 0,
+  "clipping": null,
+  "real_gripper_feedback": "position/status/error only assumed; no pad force sensor, independent jaw positions or effort-hold claimed",
+  "native_hand_joint_units": "radians, radians/s, N*m",
+  "position_command": "aperture-to-drive-angle interpolation of unchanged official finger FK",
+  "preload_position_rule": "latch measured driver angle once on legacy LOW_PRELOAD; add requested_preload_N * absolute aperture derivative / approximate stiffness; retain position command during hold",
+  "joint_coupling": "five bilateral internal PhysX mimic constraints matching official URDF; no object constraints",
+  "coupling_source": "official G1 xarm_gripper.urdf.xacro",
+  "physical_contact_feedback_deployment_gap": true,
+  "telemetry_is_passive": true
+}

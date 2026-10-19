@@ -1,0 +1,34 @@
+{
+  "corrected_pairs": [
+    {
+      "pair": [
+        "link5",
+        "link7"
+      ],
+      "configurations_checked": 22,
+      "raw_mesh_clear_in_all": true,
+      "minimum_exact_surface_gap_m": 0.010484416646693046,
+      "minimum_sampled_signed_gap_m": 0.010902307989873204,
+      "signed_inside_test_qualification": "link5 non-watertight; full triangle intersections + exact surface distance are primary evidence; signed sample is diagnostic",
+      "vendor_semantics": "link5-link7 Never in pinned SRDF",
+      "handling": "filter ONLY this convex-proxy body pair in PhysX, retain raw official triangle check at every inherited scene check; all other self/environment/gripper contacts unchanged"
+    },
+    {
+      "pair": [
+        "link5",
+        "flange_link"
+      ],
+      "configurations_checked": 22,
+      "raw_mesh_clear_in_all": true,
+      "minimum_exact_surface_gap_m": 0.001714835556110787,
+      "minimum_sampled_signed_gap_m": 0.0019275037491300658,
+      "signed_inside_test_qualification": "link5 non-watertight; full triangle intersections + exact surface distance are primary evidence; signed sample is diagnostic",
+      "vendor_semantics": "flange is fixed child of link7; exact assembly geometry independently verified",
+      "handling": "filter ONLY this convex-proxy body pair in PhysX, retain raw official triangle check at every inherited scene check; all other self/environment/gripper contacts unchanged"
+    }
+  ],
+  "no_other_SRDF_exemptions_applied": true,
+  "official_collision_meshes_unchanged": true,
+  "convex_proxy_issue": "link5 hull volume \u22483.8 times raw signed volume; hull fills wrist cavity, causing false intersections",
+  "real_raw_geometry_collisions_still_stop": true
+}

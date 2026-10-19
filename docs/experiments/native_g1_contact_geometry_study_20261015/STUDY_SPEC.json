@@ -1,0 +1,46 @@
+{
+  "reference": "8425f13",
+  "cases": [
+    "45671",
+    "45600",
+    "45606"
+  ],
+  "purpose": "GEOMETRY_ONLY_NO_GRASP_OR_OPENING",
+  "preservation": "preserve inherited trusted body mask with no height/length quantile deletion; extend only missing longitudinal intervals using locally separated observed depth layers and metric-connected SAM contour support",
+  "mesh": "measured per-image neighbor triangles; no rectangular solid declared observed",
+  "new_views_per_case_max": 3,
+  "view_azimuths_about_observed_panel_normal_deg": [
+    -55,
+    0,
+    55
+  ],
+  "standoff_m": 0.7,
+  "height_offset_m": 0.1,
+  "camera_motion": "simulation-only scene camera reposition; no robot sensing/reachability claim",
+  "mask_new_view": "project SAM-derived observed world seeds; saved-depth consistency; connected protrusion growth; no GT mask/crop",
+  "fusion_voxel_m": 0.0005,
+  "hidden_depth_hypotheses": [
+    0.75,
+    1.0,
+    1.25
+  ],
+  "hypothesis_units": "times observed width, unchanged declared prior; observed curved cross-section retained; hypothetical rear completion labeled uncertain",
+  "first_contact_apertures": "frozen 41-sample sweep from 84.0mm to 1.641mm at archived visual-corrected grasp poses; no new executable poses",
+  "GT_boundary": "GT surfaces and cooked colliders only in separate evaluator",
+  "physical_manipulation_trials": 0,
+  "controllers_or_physics_modified": false,
+  "preservation_image_support": "two-pixel SAM/projection seed dilation limits connected growth; prevents broad bounding-box trim contamination",
+  "capture_api": "Replicator orchestrator.step(delta_time=0.0,pause_timeline=True,rt_subframes=8)",
+  "selection_notes": "Shared development rules were diagnosed offline; GT remains confined to the separate evaluator, never a geometric input or executable pose correction. Intermediate rejected variants are preserved; this is not a blind held-out evaluation.",
+  "camera_clip_repair": "new overview capture camera clipping 0.05..3m to match frozen primary camera; inherited default 1m near clipping invalidated 0.7m views; baseline camera unchanged",
+  "preserved_invalid_attempts": [
+    "preinit_package_shadowing",
+    "paused_empty_depth",
+    "overview_near_clip_target_absent"
+  ],
+  "final_model_scope": "offline study only; not installed in frozen actors or promoted as a validated grasp policy",
+  "private_rejected_development_versions": [
+    "naive 3mm growth reintroduced trim",
+    "local-layer-only replacement reintroduced background on controls"
+  ]
+}

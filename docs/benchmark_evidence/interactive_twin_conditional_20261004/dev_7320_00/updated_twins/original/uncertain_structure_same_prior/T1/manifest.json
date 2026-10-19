@@ -1,0 +1,286 @@
+{
+  "source_url": "https://huggingface.co/datasets/Caoza/PhysX-Mobility",
+  "license": "CC-BY-NC-4.0",
+  "asset_id": "7320",
+  "object_name": "Microwave",
+  "prepared_urdf": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/updated_twins/original/uncertain_structure_same_prior/T1/urdf/7320.urdf",
+  "source_urdf_sha256": "96bbada6e88bcec915876b97746ba6da683f33330988f5815ebb0927339c910f",
+  "source_metadata_sha256": "77de0951f59daaf636291e5efab54d7e9256fcae25931fc516eee4b9cc78f565",
+  "scale_source_to_meters": 0.3313123281317298,
+  "prepared_height_m": 0.3,
+  "source_up_axis": "+Y",
+  "static_source_bounds": [
+    [
+      -0.77006,
+      -0.434285,
+      -0.431838
+    ],
+    [
+      0.832909,
+      0.471205,
+      0.399828
+    ]
+  ],
+  "moving_source_bounds": [
+    [
+      -0.77006,
+      -0.434285,
+      0.346172
+    ],
+    [
+      0.539487,
+      0.323604,
+      0.482077
+    ]
+  ],
+  "moving_links": [
+    "abstract_0_1",
+    "l_1"
+  ],
+  "moving_link": "abstract_0_1",
+  "door_link": "l_1",
+  "joint_name": "joint_revolute_l_0_abstract_0_1",
+  "source_joint_axis": "-0.0037977037391048133 -0.99999214174950113 -0.001137490903541305",
+  "source_joint_limits_rad": {
+    "lower": -0.0,
+    "upper": 1.5707963267948966
+  },
+  "grasp_mesh_stems": [
+    "original-19"
+  ],
+  "grasp_mesh_bounds_source": [
+    [
+      0.443391,
+      -0.397067,
+      0.396581
+    ],
+    [
+      0.513252,
+      0.26912,
+      0.482077
+    ]
+  ],
+  "handle_mesh_selection": "provisional most protruding door mesh; verify visually; evaluation/camera only",
+  "uv_repaired_visuals": [
+    "original-4",
+    "original-6",
+    "original-3"
+  ],
+  "collision_mesh_count": 19,
+  "physics_note": "source masses preserved; link COM and inertia from uniform box approximation; not measured hardware properties",
+  "prepared_geometry_sha256": "eb0b48afcafd47b88906782ecf07c4e1643da89886720a6d956387847b557145",
+  "interaction_geometry": {
+    "method": "semantic PCA bar box + two support boxes; no CoACD",
+    "selection": {
+      "asset_id": "7320",
+      "asset_root": "/data1/home/rangeryx/datasets/physx_mobility/prepared/7320_v1",
+      "joint_name": "joint_revolute_l_0_abstract_0_1",
+      "joint_type": "revolute",
+      "moving_link": "abstract_0_1",
+      "handle_link": "l_1",
+      "mesh": "original-19",
+      "panel_mesh": "original-1",
+      "axis_root": [
+        0.00031030344245538423,
+        0.9999998953891005,
+        -0.00033605589134364243
+      ],
+      "outward_normal_root": [
+        -0.04085496546121222,
+        0.0003484527664889629,
+        0.9991650265986258
+      ],
+      "dimensions_m": [
+        0.22071593458606717,
+        0.023962420142918245,
+        0.02831144674459017
+      ],
+      "sections": [
+        {
+          "fraction": 0.0,
+          "anchor_root_m": [
+            0.15827118583444907,
+            -0.021195627468633127,
+            0.15051054828287017
+          ],
+          "bar_depth_m": 0.00876685,
+          "visual_rear_gap_m": 0.014569921999999999
+        }
+      ],
+      "minimum_collision_rear_gap_m": -0.0010321849999999997,
+      "screen_rejections": [
+        "INSUFFICIENT_REAR_HALF_PAD_DEPTH_CLEARANCE"
+      ],
+      "score": -9.9532185
+    },
+    "original_asset_root": "/data1/home/rangeryx/datasets/physx_mobility/prepared/7320_v1",
+    "original_urdf_sha256": "b3753db0c314e920383665f39279358dece57b6d3fea7036fea9f18476252790",
+    "visual_source_sha256": "7a995e9bd2ba38ec5b6e1f4c55414ff490bea5e035cf6522feae4a3841d18f17",
+    "pieces": [
+      {
+        "kind": "bar",
+        "file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/asset/interaction/handle_piece_000.stl",
+        "center_link_m": [
+          0.15827118583444907,
+          -0.021195627468633127,
+          0.15051054828287017
+        ],
+        "rotation_link": [
+          [
+            0.00031030344245538423,
+            -0.9991650391746785,
+            -0.04085496546121222
+          ],
+          [
+            0.9999998953891005,
+            0.0002963147955006977,
+            0.0003484527664889629
+          ],
+          [
+            -0.00033605589134364243,
+            -0.040855069313430505,
+            0.9991650265986258
+          ]
+        ],
+        "size_m": [
+          0.22071601566780363,
+          0.023962420142918245,
+          0.00876685
+        ],
+        "bounds": [
+          [
+            0.14608665045732938,
+            -0.1315587013842646,
+            0.1456042036995343
+          ],
+          [
+            0.17045572121156877,
+            0.08916744644699834,
+            0.15541689286620602
+          ]
+        ],
+        "volume_m3": 4.63669044172099e-05
+      },
+      {
+        "kind": "support",
+        "file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/asset/interaction/handle_piece_001.stl",
+        "center_link_m": [
+          0.15871844709749644,
+          -0.11610757015877145,
+          0.1388837994292901
+        ],
+        "rotation_link": [
+          [
+            0.00031030344245538423,
+            -0.9991650391746785,
+            -0.04085496546121222
+          ],
+          [
+            0.9999998953891005,
+            0.0002963147955006977,
+            0.0003484527664889629
+          ],
+          [
+            -0.00033605589134364243,
+            -0.040855069313430505,
+            0.9991650265986258
+          ]
+        ],
+        "size_m": [
+          0.026485921880136435,
+          0.023962420142918245,
+          0.014569921999999999
+        ],
+        "bounds": [
+          [
+            0.14644550470067766,
+            -0.129356618388108,
+            0.13111097763498417
+          ],
+          [
+            0.17099138949431522,
+            -0.1028585219294349,
+            0.14665662122359605
+          ]
+        ],
+        "volume_m3": 9.247045596630987e-06
+      },
+      {
+        "kind": "support",
+        "file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/asset/interaction/handle_piece_002.stl",
+        "center_link_m": [
+          0.15877734758543788,
+          0.07370818345874088,
+          0.13882001072034414
+        ],
+        "rotation_link": [
+          [
+            0.00031030344245538423,
+            -0.9991650391746785,
+            -0.04085496546121222
+          ],
+          [
+            0.9999998953891005,
+            0.0002963147955006977,
+            0.0003484527664889629
+          ],
+          [
+            -0.00033605589134364243,
+            -0.040855069313430505,
+            0.9991650265986258
+          ]
+        ],
+        "size_m": [
+          0.026485921880136435,
+          0.023962420142918245,
+          0.014569921999999999
+        ],
+        "bounds": [
+          [
+            0.1465044051886191,
+            0.060459135229404326,
+            0.1310471889260382
+          ],
+          [
+            0.17105028998225666,
+            0.08695723168807742,
+            0.14659283251465008
+          ]
+        ],
+        "volume_m3": 9.247045596630987e-06
+      }
+    ],
+    "PCA_centerline_root": {
+      "center_m": [
+        0.15827118583444907,
+        -0.021195627468633127,
+        0.15051054828287017
+      ],
+      "axis": [
+        0.00031030344245538423,
+        0.9999998953891005,
+        -0.00033605589134364243
+      ],
+      "length_m": 0.22071601566780363
+    },
+    "cross_section_m": [
+      0.023962420142918245,
+      0.00876685
+    ],
+    "rear_clearance_m": 0.014569921999999999,
+    "physics_parameters_preserved": true,
+    "proxy_scope": "grasp/contact physics only; visual unchanged; a semantic approximation, not an official collision model",
+    "raw_intersection_policy": "diagnostic only; never an acceptance veto"
+  },
+  "interactive_twin": {
+    "version": "T1",
+    "twin_metadata": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/updated_twins/original/uncertain_structure_same_prior/T1/twin.json",
+    "axis_source": "EE-only estimate",
+    "legacy_source_joint_limits_field_semantics": "prepared physical prior limits in twin coordinate; not interaction-identified",
+    "coordinate_sign_vs_prepared_prior": 1,
+    "geometry_changed": false,
+    "coordinate_frame_reexpressed": true,
+    "reference_modified": false,
+    "freeze_fixture_layout_from_initial_scene": true
+  }
+}

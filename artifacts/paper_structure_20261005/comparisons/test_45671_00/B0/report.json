@@ -1,0 +1,1129 @@
+{
+  "status": "LOW_JOINT_MARGIN",
+  "success": false,
+  "mode": "SIM_TO_SIM_BLIND_SYSID",
+  "zero_probe_uses_same_compliance": true,
+  "baseline_commit": "f5dcc6f",
+  "candidate": 0,
+  "base_fixed": [
+    0.5,
+    -0.55,
+    -0.1,
+    150.0
+  ],
+  "official_unsplit_finger_counts": {
+    "gripper_link1": 1,
+    "gripper_link2": 1
+  },
+  "grasp_contact_implementation_unchanged": true,
+  "gt_control_inputs": false,
+  "gt_fit_inputs": false,
+  "gt_runtime_object_pose_reads": false,
+  "observed_handle_motion": "not used online; initial geometry and grasp only",
+  "attempt_history": [
+    {
+      "index": 0,
+      "direction_name": "outward",
+      "direction_world": [
+        -0.04112091598624726,
+        -0.9990152907565399,
+        0.016658904618192694
+      ],
+      "start_s": 125.43333333333334,
+      "observation_start": 1,
+      "result": "USEFUL_MODEL_FREE_MOTION",
+      "end_s": 137.10416666666666,
+      "measured_ee_travel_m": 0.005005766244558591,
+      "observation_end": 352
+    }
+  ],
+  "accepted_estimate_count": 0,
+  "estimated_model_refined": false,
+  "estimate": {
+    "sample_count": 352,
+    "travel_m": 0.005005820155339535,
+    "prismatic": {
+      "axis": [
+        -0.05304718643678384,
+        -0.9985920061895202,
+        -3.4431530669788714e-05
+      ],
+      "point_on_axis": [
+        0.6634317461274182,
+        -0.19598257060433436,
+        0.16258280949248055
+      ],
+      "position_rmse_m": 2.371790630595064e-06,
+      "rotation_rmse_rad": 0.0032199554282442205
+    },
+    "joint_type": "revolute",
+    "confidence": 0.9366432059371138,
+    "confidence_definition": "relative model-score gap; not a calibrated probability",
+    "scores": {
+      "line": 364981.82276748185,
+      "circle": 23124.078181776174
+    },
+    "revolute": {
+      "axis": [
+        -0.24019443304765845,
+        -0.10755301050516386,
+        0.9647481455095884
+      ],
+      "point_on_axis": [
+        -0.14550384431204252,
+        -0.1550331455718006,
+        -0.03452030968425173
+      ],
+      "radius_m": 0.8336074826451757,
+      "angle_span_rad": 0.005964586453604187,
+      "position_rmse_m": 0.00033284377135212907,
+      "rotation_rmse_rad": 0.0004614772286773712,
+      "axis_point_gauge": "first EE orbit plane"
+    }
+  },
+  "probe": {
+    "duration_s": 155.24166666666667,
+    "distance_m": 0.005005820155339535,
+    "observed_rotation_span_deg": 0.3422616451298936,
+    "sample_count": 352,
+    "fit_input": "measured robot TCP SE(3) only",
+    "failure_phase": "ESTIMATED_FOLLOW"
+  },
+  "evaluation": {
+    "type_correct": true,
+    "axis_angular_error_deg": 15.258531837139413,
+    "axis_line_distance_m": 0.05821205880656898,
+    "joint_origin_error_in_observed_plane_m": 0.20551927128298753,
+    "raw_origin_point_distance_m": 0.14600075009433516,
+    "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+    "gt_constrained_reconstruction_rmse_m": 6.619436910813781e-05,
+    "actual_door_displacement_deg": 5.0924201011657715,
+    "actual_final_door_angle_deg": 5.0924201011657715,
+    "gt_access_after_saved_fit": true,
+    "gt_access_after_world_pause": true,
+    "final_true_relative_translation_slip_m": 0.0015253175343560529,
+    "final_true_relative_rotation_slip_deg": 0.17467491566680782
+  },
+  "bilateral_hold_established": true,
+  "followed_estimated_articulation": false,
+  "minimum_joint_margin_rad": 0.049994159613037104,
+  "slip_measurement": "contact-plane normal drift and tilt only; tangential slip unobservable, not maximum GT relative slip",
+  "collision_prediction": "measured EE transform under retained-grasp assumption; native actual contact guard remains active",
+  "probe_controller": "robot gravity/Coriolis + Jacobian-transpose directional impedance, free orthogonal and rotational stiffness",
+  "full_6D_pose_tracking_during_probe": false,
+  "full_relative_slip_observable_online": false,
+  "maximum_true_relative_slip_m": null,
+  "peak_estimated_model_consistency_error_m": 0.0,
+  "maximum_detected_contact_surface_drift_m": 0.00014158433099486026,
+  "peak_finger_handle_force_n": 0.6407819837043016,
+  "duration_s": 280.6791666666667,
+  "first_failure_state": {
+    "phase": "ESTIMATED_FOLLOW",
+    "q": [
+      -2.254817008972168,
+      1.1505738496780396,
+      -0.4305880069732666,
+      -1.2768722772598267,
+      -1.171736240386963,
+      -0.6882278919219971,
+      0.009840969927608967,
+      -0.009840969927608967
+    ],
+    "aperture_m": 0.019681939855217934,
+    "margin_rad": 0.049994159613037104,
+    "finger_world_poses": {
+      "gripper_link1": [
+        [
+          0.9918784191737897,
+          0.12716404723249414,
+          0.002550817272361532,
+          0.6561891986489332
+        ],
+        [
+          -0.12718762922422594,
+          0.991775784496194,
+          0.014286366202813592,
+          -0.27025146070915235
+        ],
+        [
+          -0.0007131266548074859,
+          -0.014494770726440467,
+          0.9998946909909876,
+          0.1724235201239893
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "gripper_link2": [
+        [
+          -0.9918784190370908,
+          0.12716404736919312,
+          -0.0025508636122258945,
+          0.6561389931607678
+        ],
+        [
+          0.12718762998982774,
+          0.9917757852617957,
+          -0.014286306237795853,
+          -0.27053264351939177
+        ],
+        [
+          0.0007131802389571879,
+          -0.014494717142291023,
+          -0.9998946917295404,
+          0.15274365294708483
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    },
+    "T_tcp": [
+      [
+        0.9918784693970366,
+        -0.0025506815105821104,
+        0.12716365821422207,
+        0.6561640142349603
+      ],
+      [
+        -0.1271872384308585,
+        -0.014286580054843456,
+        0.9917758315318378,
+        -0.2703919557220866
+      ],
+      [
+        -0.0007129704929862425,
+        -0.9998946882818052,
+        -0.014494965295163751,
+        0.1625836758264073
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "T_predicted_collision_body": [
+      [
+        0.9921994747691925,
+        -0.0016677863325501286,
+        -0.1246491907574526,
+        0.3813596596047199
+      ],
+      [
+        -0.12465116598800502,
+        -0.0011376337854338916,
+        -0.9921999761173151,
+        -0.014983711668354646
+      ],
+      [
+        0.0015129724285923255,
+        0.9999979621369832,
+        -0.0013366511553586072,
+        0.5363562337038954
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "relative_translation_slip_m": 3.1689801343005286e-05,
+    "estimated_angle_deg": 0.0,
+    "articulation_consistency_error_m": null,
+    "contact_patch_local_m": {
+      "gripper_link1": [
+        4.109653737052743e-05,
+        -0.010006710908085172,
+        -0.006851925179426035
+      ],
+      "gripper_link2": [
+        -2.590780587802266e-05,
+        0.010006890036224021,
+        -0.00684280134068322
+      ]
+    },
+    "tactile_patch_drift_m": 3.1689801343005286e-05,
+    "slip_measurement": "observed contact-plane normal drift + tilt at patch radius; not full relative slip",
+    "unobservable_slip_components": [
+      "translation within parallel contact planes",
+      "rotation about their normal"
+    ],
+    "contact_plane_count": 2,
+    "global_reconstruction_consistency_error_m": null,
+    "constrained_drive": {
+      "direction_world": [
+        -0.04112091598624726,
+        -0.9990152907565399,
+        0.016658904618192694
+      ],
+      "command_wrench_world": [
+        0.0005156891629873356,
+        -0.00023857357427780473,
+        0.0003439055227951967,
+        -2.1965245049763766e-05,
+        -2.464368352068941e-06,
+        2.6150589556680193e-05
+      ],
+      "measured_tcp_twist": [
+        -7.087450829207386e-05,
+        -0.0004958980780310201,
+        -2.3422821873354685e-05,
+        0.0005383856667151576,
+        9.385008098661274e-05,
+        -0.0006249848344452857
+      ],
+      "drive_reference_world_m": [
+        0.656207152003134,
+        -0.2707257969582319,
+        0.16259989206120368
+      ],
+      "orthogonal_stiffness_n_m": 0.0,
+      "rotational_stiffness_nm_rad": 0.0,
+      "force_cap_n": 0.2,
+      "moment_cap_nm": 0.01,
+      "native_joint_velocity": [
+        -0.002314383862540126,
+        -0.0011008018627762794,
+        0.001378541113808751,
+        -0.0009570354595780373,
+        -0.0043222950771451,
+        -0.0022829603403806686
+      ],
+      "encoder_difference_joint_velocity": [
+        -0.00274658203125,
+        -0.00125885009765625,
+        0.0014662742614746094,
+        -0.0009441375732421875,
+        -0.0020313262939453125,
+        0.0003147125244140625
+      ],
+      "EE_difference_velocity_m_s": [
+        -3.5731519503201525e-05,
+        -0.00048312387128213174,
+        -3.340540388308e-05
+      ],
+      "robot_gravity_effort": [
+        2.1077619294374017e-07,
+        -1.6290967464447021,
+        -3.841102361679077,
+        0.6559792160987854,
+        -0.5891890525817871,
+        0.00036184469354338944
+      ],
+      "command_arm_effort": [
+        -0.00015488557592795485,
+        -1.6291200353975832,
+        -3.8412617292003564,
+        0.6560771580294753,
+        -0.589148583827726,
+        0.0003562300233089996
+      ]
+    },
+    "t": 280.675,
+    "forces_n": {
+      "gripper_link1": 0.5250116359692066,
+      "gripper_link2": 0.5266341540327313
+    },
+    "contacts": [
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "target": "/World/table",
+        "finger": "link1",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.055080194026231766,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.5036447644233704,
+          -0.5050210952758789,
+          0.002549741417169571
+        ],
+        "native_normal_world": [
+          -9.372905333293602e-05,
+          -0.9989280104637146,
+          0.04629135876893997
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "target": "/World/table",
+        "finger": "link2",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.05229613184928894,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.5092589259147644,
+          -0.501015305519104,
+          0.005173603072762489
+        ],
+        "native_normal_world": [
+          -0.09045418351888657,
+          -0.9751917123794556,
+          0.2020377814769745
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "target": "/World/table",
+        "finger": "link2",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.05183662474155426,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.4937601089477539,
+          -0.5005683302879333,
+          0.00039214640855789185
+        ],
+        "native_normal_world": [
+          -0.09045418351888657,
+          -0.9751917123794556,
+          0.2020377814769745
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "target": "/World/table",
+        "finger": "link2",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.05016123875975609,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.49798664450645447,
+          -0.4989336133003235,
+          0.010174889117479324
+        ],
+        "native_normal_world": [
+          -0.09045418351888657,
+          -0.9751917123794556,
+          0.2020377814769745
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "target": "/World/table",
+        "finger": "link2",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.05111867934465408,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.5084877014160156,
+          -0.4998667538166046,
+          0.010372184216976166
+        ],
+        "native_normal_world": [
+          -0.09045418351888657,
+          -0.9751917123794556,
+          0.2020377814769745
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "target": "/World/r1a7_pedestal",
+        "finger": "link1",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          0.0,
+          0.0
+        ],
+        "separation_m": 0.08300009369850159,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "collider1": "/World/r1a7_pedestal",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.5286320447921753,
+          -0.5342227816581726,
+          -0.016999928280711174
+        ],
+        "native_normal_world": [
+          -1.0891485047181959e-08,
+          5.902792565848358e-08,
+          1.0
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "target": "/World/r1a7_pedestal",
+        "finger": "link1",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          0.0,
+          0.0
+        ],
+        "separation_m": 0.08320008963346481,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "collider1": "/World/r1a7_pedestal",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.5320570468902588,
+          -0.5421675443649292,
+          -0.01679992862045765
+        ],
+        "native_normal_world": [
+          -1.0891485047181959e-08,
+          5.902792565848358e-08,
+          1.0
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "target": "/World/r1a7_pedestal",
+        "finger": "link1",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          0.0,
+          0.0
+        ],
+        "separation_m": 0.08000010997056961,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link1_1/link1_1",
+        "collider1": "/World/r1a7_pedestal",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.49534979462623596,
+          -0.5509859919548035,
+          -0.019999923184514046
+        ],
+        "native_normal_world": [
+          -1.0891485047181959e-08,
+          5.902792565848358e-08,
+          1.0
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "target": "/World/r1a7_pedestal",
+        "finger": "link2",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.09348508715629578,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "collider1": "/World/r1a7_pedestal",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.5051092505455017,
+          -0.5935239791870117,
+          -0.006515119224786758
+        ],
+        "native_normal_world": [
+          -0.004763204604387283,
+          -0.00181011320091784,
+          0.9999870657920837
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "target": "/World/r1a7_pedestal",
+        "finger": "link2",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.09210747480392456,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "collider1": "/World/r1a7_pedestal",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.4795820415019989,
+          -0.5122939348220825,
+          -0.007888486608862877
+        ],
+        "native_normal_world": [
+          -0.004763204604387283,
+          -0.00181011320091784,
+          0.9999870657920837
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "target": "/World/r1a7_pedestal",
+        "finger": "link2",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.09305065870285034,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link2_1/link2_1",
+        "collider1": "/World/r1a7_pedestal",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.5227285027503967,
+          -0.5825487375259399,
+          -0.006949335336685181
+        ],
+        "native_normal_world": [
+          -0.004763204604387283,
+          -0.00181011320091784,
+          0.9999870657920837
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "target": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "finger": "flange_link",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        "separation_m": 0.0009999647736549377,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6460639238357544,
+          -0.4133601486682892,
+          0.19164061546325684
+        ],
+        "native_normal_world": [
+          0.12716299295425415,
+          0.9917759299278259,
+          -0.014495845884084702
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "target": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "finger": "flange_link",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        "separation_m": 0.0009999573230743408,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6307661533355713,
+          -0.4121943414211273,
+          0.13720574975013733
+        ],
+        "native_normal_world": [
+          0.12716299295425415,
+          0.9917759299278259,
+          -0.014495845884084702
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "target": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "finger": "flange_link",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        "separation_m": 0.0009999647736549377,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6640918850898743,
+          -0.41620808839797974,
+          0.15493729710578918
+        ],
+        "native_normal_world": [
+          0.12716299295425415,
+          0.9917759299278259,
+          -0.014495845884084702
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "target": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "finger": "flange_link",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          0.0,
+          0.0,
+          -0.0
+        ],
+        "separation_m": 0.0009999647736549377,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/flange_1/flange_1",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link5_1/link5_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6114543080329895,
+          -0.40917569398880005,
+          0.1743234544992447
+        ],
+        "native_normal_world": [
+          0.12716299295425415,
+          0.9917759299278259,
+          -0.014495845884084702
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_base_1/gripper_base_1",
+        "target": "/World/table",
+        "finger": "gripper_base",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.08224306255578995,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_base_1/gripper_base_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6372077465057373,
+          -0.3427411615848541,
+          0.0822424367070198
+        ],
+        "native_normal_world": [
+          -0.00010361268505221233,
+          -0.0009192157885991037,
+          0.9999995231628418
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_base_1/gripper_base_1",
+        "target": "/World/table",
+        "finger": "gripper_base",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.08177128434181213,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_base_1/gripper_base_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6564451456069946,
+          -0.3452146053314209,
+          0.08177066594362259
+        ],
+        "native_normal_world": [
+          -0.00010361268505221233,
+          -0.0009192157885991037,
+          0.9999995231628418
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_base_1/gripper_base_1",
+        "target": "/World/table",
+        "finger": "gripper_base",
+        "owner": "robot_body",
+        "allowed_pad_target": false,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          0.0
+        ],
+        "separation_m": 0.08185705542564392,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_base_1/gripper_base_1",
+        "collider1": "/World/table",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6357886791229248,
+          -0.36121827363967896,
+          0.08185642957687378
+        ],
+        "native_normal_world": [
+          -0.00010361268505221233,
+          -0.0009192157885991037,
+          0.9999995231628418
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link1",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "separation_m": 8.754922191656078e-07,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6661379337310791,
+          -0.27169081568717957,
+          0.17241881787776947
+        ],
+        "native_normal_world": [
+          -0.0026184171438217163,
+          -0.013407237827777863,
+          -0.9999067187309265
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link1",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "separation_m": 0.0004056819307152182,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6410052180290222,
+          -0.28194141387939453,
+          0.17303965985774994
+        ],
+        "native_normal_world": [
+          -0.0026184171438217163,
+          -0.013407237827777863,
+          -0.9999067187309265
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link1",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "separation_m": 0.00025073825963772833,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6680686473846436,
+          -0.285473495721817,
+          0.17285986244678497
+        ],
+        "native_normal_world": [
+          -0.0026184171438217163,
+          -0.013407237827777863,
+          -0.9999067187309265
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link1",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.5250116633506972,
+        "impulse_world_ns": [
+          5.72791441300069e-06,
+          2.9328981327125803e-05,
+          0.002187344478443265
+        ],
+        "separation_m": -7.721303063590312e-08,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link1/gripper_link1_1/gripper_link1_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6462241411209106,
+          -0.26909345388412476,
+          0.17243614792823792
+        ],
+        "native_normal_world": [
+          -0.0026184171438217163,
+          -0.013407237827777863,
+          -0.9999067187309265
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link2",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.5266341814988428,
+        "impulse_world_ns": [
+          -6.088704594731098e-06,
+          -3.127811214653775e-05,
+          -0.0021940777078270912
+        ],
+        "separation_m": -8.950863161771849e-08,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6461728811264038,
+          -0.2693650424480438,
+          0.15275238454341888
+        ],
+        "native_normal_world": [
+          0.002774770837277174,
+          0.014254196546971798,
+          0.9998946189880371
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link2",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        "separation_m": 0.00040620568324811757,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6678886413574219,
+          -0.28573909401893616,
+          0.15251918137073517
+        ],
+        "native_normal_world": [
+          0.002774770837277174,
+          0.014254196546971798,
+          0.9998946189880371
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link2",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        "separation_m": 0.0002475976652931422,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6408296823501587,
+          -0.2822057902812958,
+          0.15270261466503143
+        ],
+        "native_normal_world": [
+          0.002774770837277174,
+          0.014254196546971798,
+          0.9998946189880371
+        ]
+      },
+      {
+        "collider": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "target": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "finger": "gripper_link2",
+        "owner": "whole_finger",
+        "allowed_pad_target": true,
+        "force_n": 0.0,
+        "impulse_world_ns": [
+          -0.0,
+          -0.0,
+          -0.0
+        ],
+        "separation_m": -9.503695747037355e-11,
+        "face0": 0,
+        "face1": 0,
+        "collider0": "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/handle_piece_000/handle_piece_000",
+        "collider1": "/World/Piper/Geometry/world/base_link/link1/link2/link3/link4/link5/link6/flange_link/gripper_base/gripper_link2/gripper_link2_1/gripper_link2_1",
+        "normal_reference": "native report direction; original collider ordering preserved",
+        "contact_point_world_m": [
+          0.6660793423652649,
+          -0.2719626724720001,
+          0.15273399651050568
+        ],
+        "native_normal_world": [
+          0.002774770837277174,
+          0.014254196546971798,
+          0.9998946189880371
+        ]
+      }
+    ],
+    "mode": "effort",
+    "closing_effort_n": 0.5244053069276666,
+    "command_q_arm": [
+      -1.9440785195109282,
+      1.3953286947303472,
+      -0.6247057854199948,
+      -1.081551904315235,
+      -1.0265159000018933,
+      -0.8152152627585966
+    ]
+  },
+  "no_operation": false,
+  "video": "contact_baseline.mp4",
+  "attachments": false,
+  "object_actuation": false,
+  "GT_access_log_after_fit": [
+    "asset_chain.joints",
+    "asset_chain.root_to_link",
+    "articulation.get_joint_positions",
+    "door_link.get_world_pose"
+  ],
+  "GT_scope": "scene assembly only; static geometry and final joint state read only after saved fit and stopped interaction",
+  "paper_internal_baseline": "B0",
+  "evaluation_trajectory_is_private": true,
+  "structure_protocol": true,
+  "online_success": false,
+  "success_is_post_episode_evaluation": true,
+  "frozen_runner_sha256": "57b79ed6f7a1fed192f63fc1c7ca9a86ea775de9f5424ad10a3f9fe8d7019c3c",
+  "experiment": "interactive_twin",
+  "episode_id": "test_45671_00_B0",
+  "role": "reference",
+  "physics_protocol_complete": false,
+  "simulator_only_safety_supervisor": true,
+  "hardware_deployable_contact_supervisor": false,
+  "replay_uses_same_estimated_consistency_safety": false,
+  "failure_phase": "ESTIMATED_FOLLOW"
+}

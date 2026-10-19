@@ -1,0 +1,349 @@
+{
+  "baseline": "f5dcc6f unchanged",
+  "GT_policy": "fit saved and simulation paused before evaluation; no runtime object trajectory",
+  "slip_source": "RGB-D observed handle transform, not GT",
+  "runs": [
+    {
+      "status": "SUSTAINED_RELATIVE_SLIP",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 0.0023662504825411775,
+      "peak_finger_handle_force_n": 0.8247503021592599,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": 0.004247791133821011,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "insufficient observed samples"
+      },
+      "run": "v1_candidate_00",
+      "observer_methods": [],
+      "postgrasp_valid_frame_fraction": 0.0,
+      "postgrasp_observation_count": 0
+    },
+    {
+      "status": "IMPLEMENTATION_ERROR:OpenCV(4.13.0) /io/opencv/modules/imgproc/src/imgwarp.cpp:1603: error: (-215:Assertion failed) dst.cols < SHRT_MAX && dst.rows < SHRT_MAX && src.cols < SHRT_MAX && src.rows < SHRT_MAX in function 'remap'\n",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 0.0,
+      "peak_finger_handle_force_n": 0.5966235305995412,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": 9.273760224459693e-05,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "insufficient observed samples"
+      },
+      "run": "v2_candidate_00",
+      "observer_methods": [],
+      "postgrasp_valid_frame_fraction": 0.0,
+      "postgrasp_observation_count": 0
+    },
+    {
+      "status": "SUSTAINED_CONTACT_LOSS",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 0.0001625917877406125,
+      "peak_finger_handle_force_n": 1.117208945222497,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": 0.03841831162571907,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "sample_count": 23,
+        "travel_m": 0.00029149901656964336,
+        "prismatic": {
+          "axis": [
+            -0.04985903410747793,
+            -0.9869317024950917,
+            -0.1532314958747373
+          ],
+          "point_on_axis": [
+            0.65846987743591,
+            -0.1955880266028683,
+            0.1619951203081563
+          ],
+          "position_rmse_m": 4.407509376655277e-06,
+          "rotation_rmse_rad": 0.0008215977407922144
+        },
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "less than 1 mm observed motion"
+      },
+      "run": "v4_candidate_00",
+      "exploratory_duration_s": 0.7083333333333428,
+      "measured_ee_travel_m": 0.00029281472602764037,
+      "measured_ee_rotation_span_deg": 0.07322838627546037,
+      "minimum_motion_joint_margin_rad": 0.18018250552215576,
+      "final_finger_forces_n": [
+        0.0,
+        1.057061194942324
+      ],
+      "first_failure_layer": "observation/compliant following",
+      "observer_methods": [
+        "RGB-D fixed optical correspondences, free SE3"
+      ],
+      "postgrasp_valid_frame_fraction": 1.0,
+      "postgrasp_observation_count": 37
+    },
+    {
+      "status": "ZERO_PROBE_UNOBSERVABLE",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 0.00012819532300873855,
+      "peak_finger_handle_force_n": 0.5966235305995412,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": -3.844127682839371e-09,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "sample_count": 750,
+        "travel_m": 4.28325096022799e-06,
+        "prismatic": {
+          "axis": [
+            -0.0021189074186827622,
+            0.13985274067000036,
+            0.9901700465871713
+          ],
+          "point_on_axis": [
+            0.6584789875973986,
+            -0.19543273192489755,
+            0.16201372896007224
+          ],
+          "position_rmse_m": 1.6879814309377207e-07,
+          "rotation_rmse_rad": 5.685748497286011e-06
+        },
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "less than 1 mm observed motion"
+      },
+      "run": "v4_no_operation",
+      "exploratory_duration_s": 25.0,
+      "measured_ee_travel_m": 3.0936773451660706e-06,
+      "measured_ee_rotation_span_deg": 0.0004709007537357292,
+      "minimum_motion_joint_margin_rad": 0.18255167094268798,
+      "final_finger_forces_n": [
+        0.5079930905834512,
+        0.5368899969627392
+      ],
+      "first_failure_layer": "ZERO_PROBE_UNOBSERVABLE",
+      "observer_methods": [
+        "RGB-D fixed optical correspondences, free SE3"
+      ],
+      "postgrasp_valid_frame_fraction": 0.9934725848563969,
+      "postgrasp_observation_count": 766
+    },
+    {
+      "status": "SUSTAINED_CONTACT_LOSS",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 0.0003358294451819178,
+      "peak_finger_handle_force_n": 1.0775810743149246,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": 0.0517771914601326,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "sample_count": 42,
+        "travel_m": 0.000539818790743515,
+        "prismatic": {
+          "axis": [
+            -0.053175950588458684,
+            -0.9897098224191303,
+            -0.1328412047751275
+          ],
+          "point_on_axis": [
+            0.6584622506676486,
+            -0.19573354029527312,
+            0.16198749868490842
+          ],
+          "position_rmse_m": 9.607392806044007e-06,
+          "rotation_rmse_rad": 0.0011063580609287284
+        },
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "less than 1 mm observed motion"
+      },
+      "run": "v5_candidate_00",
+      "exploratory_duration_s": 1.3708333333333371,
+      "measured_ee_travel_m": 0.0005427311627787313,
+      "measured_ee_rotation_span_deg": 0.1131276057919843,
+      "minimum_motion_joint_margin_rad": 0.17838471022644042,
+      "final_finger_forces_n": [
+        0.0,
+        1.0533155241628402
+      ],
+      "first_failure_layer": "observation/compliant following",
+      "observer_methods": [
+        "RGB-D fixed optical correspondences, free SE3"
+      ],
+      "postgrasp_valid_frame_fraction": 1.0,
+      "postgrasp_observation_count": 57
+    },
+    {
+      "status": "RGBD_TRACKING_LOSS",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 0.000330068008943307,
+      "peak_finger_handle_force_n": 0.9114248483174866,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": 0.051607824862003326,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "sample_count": 28,
+        "travel_m": 0.0003723879594401201,
+        "prismatic": {
+          "axis": [
+            -0.020229720926176295,
+            -0.9702357011266157,
+            0.2413160638055275
+          ],
+          "point_on_axis": [
+            0.6584740642580574,
+            -0.19562940148698868,
+            0.16203462333855587
+          ],
+          "position_rmse_m": 1.7867493137642263e-05,
+          "rotation_rmse_rad": 0.007334203771143098
+        },
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "less than 1 mm observed motion"
+      },
+      "run": "v6_candidate_00",
+      "exploratory_duration_s": 0.9000000000000057,
+      "measured_ee_travel_m": 0.00038039494542744883,
+      "measured_ee_rotation_span_deg": 0.8342098657155463,
+      "minimum_motion_joint_margin_rad": 0.18251638499298095,
+      "final_finger_forces_n": [
+        0.4004080677983123,
+        0.6549749756594787
+      ],
+      "first_failure_layer": "observation/compliant following",
+      "observer_methods": [
+        "RGB-D fixed optical correspondences, free SE3"
+      ],
+      "postgrasp_valid_frame_fraction": 0.9767441860465116,
+      "postgrasp_observation_count": 43
+    },
+    {
+      "status": "RGBD_TRACKING_LOSS",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 7.706586893135495e-05,
+      "peak_finger_handle_force_n": 0.5966235305995412,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": 0.007636055815964937,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "insufficient observed samples"
+      },
+      "run": "v7_candidate_00",
+      "exploratory_duration_s": 0.10000000000000853,
+      "measured_ee_travel_m": 5.5003394270189415e-05,
+      "measured_ee_rotation_span_deg": 0.002545820795816275,
+      "minimum_motion_joint_margin_rad": 0.18232934561767578,
+      "final_finger_forces_n": [
+        0.503101929146152,
+        0.5421658659839802
+      ],
+      "first_failure_layer": "observation/compliant following",
+      "observer_methods": [
+        "RGB-D fixed optical correspondences, free SE3",
+        "initial RGB-D points + optical PnP, free SE3"
+      ],
+      "postgrasp_valid_frame_fraction": 0.9473684210526315,
+      "postgrasp_observation_count": 19,
+      "depth_consistency_max_rmse_m": 0.0011725494763507207
+    },
+    {
+      "status": "ZERO_PROBE_UNOBSERVABLE",
+      "success": false,
+      "minimum_joint_margin_rad": 0.06349032012023925,
+      "maximum_relative_translation_slip_m": 0.00016943780080702495,
+      "peak_finger_handle_force_n": 0.5966235305995412,
+      "bilateral_hold_established": true,
+      "followed_estimated_articulation": false,
+      "evaluation": {
+        "type_correct": false,
+        "actual_final_door_angle_deg": -3.844127682839371e-09,
+        "gt_access_after_saved_fit": true,
+        "gt_access_after_world_pause": true
+      },
+      "estimate": {
+        "sample_count": 750,
+        "travel_m": 4.28325096022799e-06,
+        "prismatic": {
+          "axis": [
+            -0.0021189074186827622,
+            0.13985274067000036,
+            0.9901700465871713
+          ],
+          "point_on_axis": [
+            0.6584789875973986,
+            -0.19543273192489755,
+            0.16201372896007224
+          ],
+          "position_rmse_m": 1.6879814309377207e-07,
+          "rotation_rmse_rad": 5.685748497286011e-06
+        },
+        "joint_type": "UNOBSERVABLE",
+        "confidence": 0.0,
+        "reason": "less than 1 mm observed motion"
+      },
+      "run": "v7_no_operation",
+      "exploratory_duration_s": 25.0,
+      "measured_ee_travel_m": 3.0936773451660706e-06,
+      "measured_ee_rotation_span_deg": 0.0004709007537357292,
+      "minimum_motion_joint_margin_rad": 0.18255167094268798,
+      "final_finger_forces_n": [
+        0.5079930905834512,
+        0.5368899969627392
+      ],
+      "first_failure_layer": "ZERO_PROBE_UNOBSERVABLE",
+      "observer_methods": [
+        "RGB-D fixed optical correspondences, free SE3",
+        "initial RGB-D points + optical PnP, free SE3"
+      ],
+      "postgrasp_valid_frame_fraction": 0.05352480417754569,
+      "postgrasp_observation_count": 766,
+      "depth_consistency_max_rmse_m": 0.004868976778474538
+    }
+  ]
+}

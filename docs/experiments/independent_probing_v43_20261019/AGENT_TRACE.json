@@ -1,0 +1,305 @@
+[
+  {
+    "sequence": 0,
+    "operation": "evaluate_view",
+    "reason": "Fresh RGB shows only the lower bar below a gripper occluder. Raise and slightly lateralize the wrist to center the hidden upper continuation; seek independently observed length and side surfaces.",
+    "wall_s": 0.2017536039929837,
+    "unloaded_wait_s": 107.97313579893671,
+    "inspected": [
+      {
+        "path": "rgbd/generation_00_agent_00/agent_inspection.png",
+        "sha256": "31d3d8c3c5fffb87b1d71c287e3a6da7dd27693842e83d5c2343f3bcb04fd48d"
+      },
+      {
+        "path": "incremental_feedback/00/semantic_surfaces.png",
+        "sha256": "0b61c5f9140c00aa3d05467f332d78c6f6fb858bfcede0c6e669fb2c17713732"
+      }
+    ]
+  },
+  {
+    "sequence": 1,
+    "operation": "move_and_observe",
+    "reason": "Execute the checked elevated lateral view through normal actuators. Direct route is collision-free, minimum joint margin 0.809 rad, all currently observed points project in frame. Inspect fresh RGB-D before any further decision.",
+    "wall_s": 42.993927747011185,
+    "unloaded_wait_s": 23.71536818984896,
+    "inspected": []
+  },
+  {
+    "sequence": 2,
+    "operation": "evaluate_view",
+    "reason": "Fresh elevated RGB reveals both ends of the approximately 300-mm bar. Current measured patches still view it from the same lateral side; request the opposite oblique side to observe a complementary closing-contact surface before ranking grasps. Unknown rear remains unknown.",
+    "wall_s": 0.18754756497219205,
+    "unloaded_wait_s": 65.94631984597072,
+    "inspected": [
+      {
+        "path": "rgbd/generation_00_agent_01/agent_inspection.png",
+        "sha256": "b8474657e2e86d183fe3d7f38ee00475c52dc1eb499383b1d5c948aafcfe64ee"
+      },
+      {
+        "path": "incremental_feedback/01/semantic_surfaces.png",
+        "sha256": "51f3f02d142daa345888748be73272d5cc6fc5f5c3255637a4c660546c24493a"
+      }
+    ]
+  },
+  {
+    "sequence": 3,
+    "operation": "move_and_observe",
+    "reason": "Execute the validated complementary side view; then inspect actual RGB-D and incremental surfaces. No grasp/opening is approved yet.",
+    "wall_s": 36.095957315992564,
+    "unloaded_wait_s": 20.274020412005484,
+    "inspected": []
+  },
+  {
+    "sequence": 4,
+    "operation": "build_geometry",
+    "reason": "After actual RGB/depth/cloud inspection: both elevated views show the full bar and mounts without gripper occlusion; the complementary side adds 7338 measured voxels while preserving approximately 296 mm of supported extent. Stop observing and run the frozen native-G1 automatic ranking/IK on incremental measured surfaces; rear uncertainty remains explicit.",
+    "wall_s": 261.2441818630323,
+    "unloaded_wait_s": 39.76505682012066,
+    "inspected": [
+      {
+        "path": "rgbd/generation_00_agent_02/agent_inspection.png",
+        "sha256": "1872d3a7d258152d1b0854986f539f3e514120fadbab3b21180a1aebf72a7e1d"
+      },
+      {
+        "path": "incremental_feedback/02/semantic_surfaces.png",
+        "sha256": "261af3caeb88c59072579df30894354761a4f2241d7b5659e6cd09ae54d9ffae"
+      }
+    ]
+  },
+  {
+    "sequence": 5,
+    "operation": "validate_execution",
+    "reason": "Fresh incremental observations support two pad contacts with no root or non-handle closing collision; validate complete actuator return and measured-state approach before explicit physical approval.",
+    "wall_s": 2.2321181639563292,
+    "unloaded_wait_s": 21.32969216397032,
+    "inspected": [],
+    "validation_result": {
+      "valid": true,
+      "return_audit": {
+        "valid": true,
+        "samples": 152,
+        "minimum_margin_rad": 0.8094395372474676
+      }
+    },
+    "approach_rejection": null
+  },
+  {
+    "sequence": 6,
+    "operation": "attempt_grasp_and_probe",
+    "reason": "Explicit Agent physical approval after inspecting three fresh wrist RGB/mask/depth/cloud boards and fresh G1 grasp board. Full bar retained, bilateral predicted pad support around 13.995 mm; actual contact remains uncertain. Current-state return/approach validated. Finite preapproved sequence prioritizes FIT opening 8, reverse FIT 3, complete distinct sine VALIDATION 6 within initial requested range, then optional 12 only after validation TARGET_REACHED. Stable safe partial FIT may continue only through original measured-state successor checks. No continuation from transmission failure/safety stop; original 1s hold, V3.1 worker and guarded exit unchanged. No hidden dynamics read.",
+    "wall_s": 316.90352050215006,
+    "unloaded_wait_s": 47.46085754502565,
+    "inspected": [
+      {
+        "path": "agent_grasp_board.png",
+        "sha256": "6eaab61f9722cfa3b3b58f79c584a379bc0052b668e4c4e61b83ed415e5b3acb"
+      }
+    ],
+    "predeclared_actions": [
+      {
+        "profile": "constant",
+        "hold": true,
+        "target_deg": 8.0,
+        "role": "FIT_ACCEL_OPEN",
+        "velocity_program": "plateaus",
+        "reference_speed_m_s": 0.012,
+        "reference_acceleration_m_s2": 0.04,
+        "low_speed_fraction": 0.125,
+        "ramp_s": 0.45,
+        "plateau_s": 0.55,
+        "fit_intervals_s": [
+          [
+            0.55,
+            120.0
+          ]
+        ]
+      },
+      {
+        "profile": "constant",
+        "hold": true,
+        "target_deg": 3.0,
+        "role": "FIT_REVERSE_VELOCITY",
+        "velocity_program": "constant",
+        "reference_speed_m_s": 0.006,
+        "reference_acceleration_m_s2": 0.03,
+        "fit_intervals_s": [
+          [
+            0.55,
+            120.0
+          ]
+        ],
+        "continue_after": [
+          "SAFE_PARTIAL_PROGRESS"
+        ]
+      },
+      {
+        "profile": "constant",
+        "hold": true,
+        "target_deg": 6.0,
+        "role": "VALIDATION_DISTINCT_SINE",
+        "velocity_program": "sine",
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.03,
+        "low_speed_fraction": 0.35,
+        "period_s": 3.1,
+        "continue_after": [
+          "SAFE_PARTIAL_PROGRESS"
+        ]
+      },
+      {
+        "profile": "constant",
+        "hold": true,
+        "target_deg": 12.0,
+        "role": "FIT_OPTIONAL_POSTVALIDATION",
+        "velocity_program": "plateaus",
+        "reference_speed_m_s": 0.012,
+        "reference_acceleration_m_s2": 0.04,
+        "low_speed_fraction": 0.125,
+        "ramp_s": 0.45,
+        "plateau_s": 0.55,
+        "fit_intervals_s": [
+          [
+            0.55,
+            120.0
+          ]
+        ]
+      }
+    ],
+    "physical_outcome": {
+      "acquired": true,
+      "hold_s": 1.0,
+      "physical_grasp_started": true,
+      "segments": [
+        {
+          "status": "BUDGET_EXHAUSTED",
+          "reason": "ADAPTIVE_HORIZON_WITHOUT_HEALTHY_PROGRESS",
+          "angle_deg": 5.900164145640781
+        }
+      ],
+      "safe_exit": true
+    }
+  },
+  {
+    "sequence": 7,
+    "operation": "inspect_contact_result",
+    "reason": "First acquisition and hold succeeded but opening stalled at 5.90 deg with 0.50 deg lead and low measured transmission. Guarded release/park confirmed unloaded. Inspect actual model/load/motion evidence before choosing the single permitted recovery.",
+    "wall_s": 0.06785778095945716,
+    "unloaded_wait_s": 34.955223391065374,
+    "inspected": []
+  },
+  {
+    "sequence": 8,
+    "operation": "reobserve_and_replan",
+    "reason": "Actual contact/motion plots inspected: useful acceleration-rich opening initially, then measured progress and measured torque collapse while reference consumes lead. Existing monitor rejects continuation, and parked unloaded exit is verified. Use the single permitted recovery: fresh wrist views at the actual 5.90 degree door state and automatic alternative candidate family; no pose offsets, gain/score changes or truth access.",
+    "wall_s": 42.81220944481902,
+    "unloaded_wait_s": 28.530575070064515,
+    "inspected": [
+      {
+        "path": "contact_feedback_first.png",
+        "sha256": "3f7e5d898952dddf7f7468fd4b3304a229a785ae7ea6adb26229f5c935583a37"
+      },
+      {
+        "path": "model/feedback.png",
+        "sha256": "62f2dc29576268335e52ff566a3add12a03bdc6d54479d9affff5738ecb880f6"
+      }
+    ]
+  },
+  {
+    "sequence": 9,
+    "operation": "evaluate_view",
+    "reason": "Inspected fresh RGB: lower handle bar visible near pixel (320,220), upper bar occluded, SAM3 has no candidate. Use measured depth of that pixel only for a view target, elevated 10 cm; panel normal and lateral offset uncover the bar. No mask/geometry/grasp accepted from this cue. Corrected target-field name rejected locally before publication; no actor action was consumed.",
+    "wall_s": 0.17028043209575117,
+    "unloaded_wait_s": 73.26882849098183,
+    "inspected": [
+      {
+        "path": "rgbd/generation_01_agent_00/agent_inspection.png",
+        "sha256": "378b4e29ade806370e336f90620d724cc46ef8af8aed5f76b9fb66991e91acbe"
+      }
+    ]
+  },
+  {
+    "sequence": 10,
+    "operation": "move_and_observe",
+    "reason": "Execute the just-validated elevated view derived from the fresh visible bar/depth cue; inspect fresh SAM3 and supported surfaces afterward.",
+    "wall_s": 40.49731307500042,
+    "unloaded_wait_s": 9.527383142150939,
+    "inspected": []
+  },
+  {
+    "sequence": 11,
+    "operation": "evaluate_view",
+    "reason": "Actual fresh RGB/mask/depth and semantic board inspected: full 296-mm bar now detected (score .613), both mounts visible, supported surfaces remain mostly one-sided. Use the remaining bounded view adjustment on the opposite lateral side, centered on metric SAM3 points, to observe complementary contact support before the automatic recovery ranking.",
+    "wall_s": 0.18742966488935053,
+    "unloaded_wait_s": 33.00617837999016,
+    "inspected": [
+      {
+        "path": "rgbd/generation_01_agent_01/agent_inspection.png",
+        "sha256": "85267e603e12bb7625d1b820bcfb3d56daea88a9738161681e994d5c19b17fa9"
+      }
+    ]
+  },
+  {
+    "sequence": 12,
+    "operation": "move_and_observe",
+    "reason": "Execute the validated complementary observation; this is the fourth and last Agent-selected wrist adjustment in this episode.",
+    "wall_s": 36.733572240918875,
+    "unloaded_wait_s": 7.780429166043177,
+    "inspected": []
+  },
+  {
+    "sequence": 13,
+    "operation": "build_geometry",
+    "reason": "Inspected fresh complementary RGB/SAM3/depth/cloud and semantic support: full bar/mounts visible at current door angle; second view adds 9548 measured voxels, cumulative extent 295.88 mm. Four Agent adjustments used. Stop observing; use unchanged automatic ranking on current incremental surfaces and the existing within-episode failed-family exclusion. No saved success pose or GT surface.",
+    "wall_s": 200.3874383608345,
+    "unloaded_wait_s": 25.057410713052377,
+    "inspected": [
+      {
+        "path": "rgbd/generation_01_agent_02/agent_inspection.png",
+        "sha256": "a3cf76983d5af701fb8354e13bb2d6df399c5f81bcd15be067bf7937153f5c4e"
+      }
+    ]
+  },
+  {
+    "sequence": 14,
+    "operation": "validate_execution",
+    "reason": "Fresh recovery incremental geometry produced a different automatically ranked candidate with both predicted pad contacts and no GT fallback. Validate the complete current-angle observation-to-execution route and measured-state approach before the final recovery approval.",
+    "wall_s": 0.7998465711716563,
+    "unloaded_wait_s": 35.324085644911975,
+    "inspected": [],
+    "validation_result": {
+      "valid": false,
+      "return_audit": {
+        "valid": true,
+        "samples": 161,
+        "minimum_margin_rad": 0.725592839189809
+      }
+    },
+    "approach_rejection": "DANGEROUS_GEOMETRY_COLLISION:gripper_link2:/World/articulated_pose/asset/Geometry/l_world/l_3/abstract_3_2/l_2/tn__l_2_original39_aL/tn__l_2_original39_aL"
+  },
+  {
+    "sequence": 15,
+    "operation": "plan_panel_push",
+    "reason": "Recovery grasp approach was rejected by original gripper_link2/original39 collision check, with no second acquisition executed. Inspected fresh native-resolution wrist RGB: broad flat moving panel right of handle, away from mounts/trim, is visible in rectangle [760,320,940,540]. Check the existing closed-G1 push contact and complete separation/parking route from actual 5.90 deg toward 3.5 deg. Native geometry is safety/contact-identity only, not snapping. No physical execution approved until route is valid.",
+    "wall_s": 0.03839204809628427,
+    "unloaded_wait_s": 107.38548752409406,
+    "inspected": [
+      {
+        "path": "rgbd/generation_01_agent_02/rgb.png",
+        "sha256": "ba55994265c7d1362080431e39330a3de6d856029aad818e80b85bca67c19a79"
+      }
+    ],
+    "validation_result": {
+      "valid": false,
+      "reason": "observed patch has no corresponding current native moving surface"
+    },
+    "approach_rejection": null
+  },
+  {
+    "sequence": 16,
+    "operation": "finish",
+    "reason": "End this single valid research episode. First physical grasp/hold acquired, opening stopped at 5.90 deg due lost transmission; original route safety rejected recovery grasp approach, and observed panel patch lacked corresponding current native moving surface. No safe validated continuation remains. Do not retry or alter frozen logic. Guarded park/export; independent VALIDATION and held-out metrics remain N/A. Hidden truth stays unread until actor exit and online decisions finish.",
+    "wall_s": 39.067949505057186,
+    "unloaded_wait_s": 41.179619408911094,
+    "inspected": []
+  }
+]

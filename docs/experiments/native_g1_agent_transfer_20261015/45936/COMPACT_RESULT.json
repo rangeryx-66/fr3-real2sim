@@ -1,0 +1,507 @@
+{
+  "asset": "45936",
+  "reference": "34607b4",
+  "classification": "CODEX_AGENT_WRIST / RGBD_SAM3 / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION",
+  "stages": {
+    "initial_view_route": true,
+    "fresh_wrist_observations": 3,
+    "accepted_wrist_views": 3,
+    "fused_measured_geometry": true,
+    "automatic_grasp_plan": true,
+    "execution_approved": true,
+    "physical_grasp_attempted": true,
+    "bilateral_acquisition": true,
+    "verified_hold_s": 1.0041666666666629,
+    "post_acquisition_opening_gain_deg": 2.998523026704788,
+    "short_transmission_at_least_2deg": true
+  },
+  "result_stage": "SHORT_TRANSMISSION_SUCCESS",
+  "status": "SHORT_OPENING_TARGET_REACHED",
+  "geometry_plan_reason": null,
+  "report": {
+    "classification": "XARM7_NATIVE_G1 / RGBD_SAM3_HANDLE / KNOWN_HINGE_STATE_COLLISION / SHORT_FORCE_TRANSMISSION",
+    "asset_id": "45936",
+    "success": true,
+    "status": "SHORT_OPENING_TARGET_REACHED",
+    "initial_grasp": true,
+    "target_deg": 3.0295352887709224,
+    "max_actual_angle_deg": 3.029703378677368,
+    "max_actual_angle_after_valid_grasp_deg": 3.029703378677368,
+    "final_actual_angle_deg": 3.029703508965933,
+    "initial_actual_angle_deg": 0.0,
+    "grasp_acquisition": {
+      "event": "GRASP_VERIFIED",
+      "t": 282.9291666666667,
+      "step": 67903,
+      "angle_deg": 0.031180351972579956,
+      "grasp_index": 0,
+      "pad_loads_n": [
+        0.4828708512721529,
+        0.5097096887872874
+      ],
+      "base": [
+        0.19605376022549204,
+        -0.5328198023693291,
+        -0.1,
+        -0.7953990037810357
+      ]
+    },
+    "base_fixed": [
+      0.19605376022549204,
+      -0.5328198023693291,
+      -0.1,
+      -0.7953990037810357
+    ],
+    "base_moves_after_grasp": 0,
+    "regrasps": 0,
+    "intentional_releases": 0,
+    "simulation_s": 329.4125,
+    "wall_s": 2317.02421059506,
+    "physics_steps": 79059,
+    "observation_records": 79059,
+    "closure_update_calls": 18201,
+    "unilateral_fix_branch_calls": 1254,
+    "aperture_command_reopenings": 0,
+    "minimum_joint_margin_rad": 0.4026714410781862,
+    "peak_pad_load_n": 1.1628074180447694,
+    "motion_scale": 1.0,
+    "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+    "telemetry_issues": {},
+    "first_divergence": null,
+    "active_sources": {
+      "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_agent_manipulation.py",
+      "runner_sha256": "a161b0f92aa1f93ab0e1fb2bd51c7dbba8ab551ecde830978101cc0272840d62",
+      "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+      "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+      "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+      "argv": [
+        "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_agent_manipulation.py",
+        "--job",
+        "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_agent_transfer_20261015/45936/job.json"
+      ],
+      "pid": 3097796,
+      "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+      "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+      "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+      "active_closure_alias": true
+    },
+    "GT_dependencies": [
+      "registered station",
+      "known hinge/dynamic state",
+      "robot calibration",
+      "unchanged scene collisions and native contact IDs"
+    ],
+    "scene_restart_or_stitching": false,
+    "object_physics_or_geometry_changed": false,
+    "requested_increment_deg": 3.0,
+    "full_30_degree_task_success_claim": false,
+    "original_shared_return_status": "SHARED_DOOR_30_DEG_SUCCESS",
+    "opening_start_angle_deg": 0.02953528877092227,
+    "selected_plan_unchanged": false,
+    "GT_grasp_fallback": false,
+    "hold_s": 1.0,
+    "capture_shadow_only": false
+  },
+  "metrics": {
+    "first_contacts": {
+      "gripper_link1": {
+        "t_s": 275.9666810594499,
+        "phase": "SLOW_CLOSE",
+        "measured_aperture_mm": 15.13881244609446,
+        "commanded_aperture_mm": 15.124664846111385,
+        "normal_load_n": 0.010453909780417353
+      },
+      "gripper_link2": {
+        "t_s": 280.3833479564637,
+        "phase": "CENTER",
+        "measured_aperture_mm": 14.757157501816765,
+        "commanded_aperture_mm": 14.716331512778098,
+        "normal_load_n": 0.004918840091513122
+      }
+    },
+    "actual_gain_after_acquisition_deg": 2.998523026704788,
+    "physics_pre_step_gain_after_acquisition_deg": 2.998222142457962,
+    "angle_sampling_note": "Primary gain uses post-step observation/report maximum minus acquisition event angle; native contact geometry snapshots precede integration by one step.",
+    "closure_relative_motion_from_first_contact": {
+      "start_s": 275.96666666666664,
+      "max_translation_mm": 0.7527483164433013,
+      "definition": "Measured moving-body-relative TCP change during closure, including original centering. Not the post-acquisition slip metric or a new gate."
+    },
+    "closure_state_first_records": {
+      "SLOW_CLOSE": {
+        "t_s": 207.09583333333333,
+        "commanded_aperture_mm": 83.99549817943713,
+        "measured_aperture_mm": 83.9996648461038,
+        "filtered_pad_loads_n": [
+          0.0,
+          0.0
+        ]
+      },
+      "CENTER": {
+        "t_s": 276.0416666666667,
+        "commanded_aperture_mm": 15.05383151277806,
+        "measured_aperture_mm": 15.111343254790604,
+        "filtered_pad_loads_n": [
+          0.050193127864385734,
+          0.0
+        ]
+      },
+      "LOW_PRELOAD": {
+        "t_s": 280.55,
+        "commanded_aperture_mm": null,
+        "measured_aperture_mm": 14.75524381610397,
+        "filtered_pad_loads_n": [
+          0.061569510372018715,
+          0.05112564784353588
+        ]
+      },
+      "FORCE_HOLD": {
+        "t_s": 282.9291666666667,
+        "commanded_aperture_mm": null,
+        "measured_aperture_mm": 14.704289019763637,
+        "filtered_pad_loads_n": [
+          0.48561540147509447,
+          0.5071263742044033
+        ]
+      }
+    },
+    "final_closure": {
+      "t": 282.9291666666667,
+      "state": "FORCE_HOLD",
+      "aperture_command_m": null,
+      "measured_aperture_m": 0.014704289019763638,
+      "filtered_pad_loads_n": [
+        0.48561540147509447,
+        0.5071263742044033
+      ]
+    },
+    "actual_gain_after_opening_start_deg": 3.000168089906446,
+    "peak_raw_allowed_normal_load_n": 1.162807478689902,
+    "max_all_phase_TCP_mm_s": 29.722276371124952,
+    "max_post_acquisition_TCP_mm_s": 0.7779745660136316,
+    "max_post_acquisition_relative_translation_mm": 0.7934388490220062,
+    "max_post_acquisition_relative_rotation_deg": 0.31385040351818694,
+    "max_joint_command_tracking_rad": 0.0046522575780290065,
+    "max_planned_TCP_tracking_mm": 0.5462247375770545,
+    "positive_normal_absence_after_acquisition": {
+      "left": [],
+      "right": []
+    },
+    "telemetry_records": {
+      "physics_steps": 79059,
+      "observations": 79059,
+      "closure_commands": 18201
+    },
+    "telemetry_fields_present_records": {
+      "raw_contact_records": 79059,
+      "pad_load_raw_n": 79059,
+      "pad_load_filtered_n": 79059,
+      "joint_velocities": 79059,
+      "applied_joint_efforts": 79059,
+      "measured_joint_efforts": 79059,
+      "measured_joint_forces": 79059,
+      "native_gripper_feedback": 79059
+    },
+    "expected_native_rate_hz": 240.0,
+    "physics_timestamps_uniform": true,
+    "positive_normal_absence_is_not_true_grasp_loss": true,
+    "normal_loads_are_partial_not_complete_wrenches": true,
+    "peak_recorded_raw_pad_n": {
+      "gripper_link1": 1.0670381815176304,
+      "gripper_link2": 1.1628074180447694
+    },
+    "peak_recorded_filtered_pad_n": {
+      "left": 1.0603950180254331,
+      "right": 1.1305495187088206
+    },
+    "max_TCP_with_positive_allowed_normal_contact_mm_s": 1.754404087397051,
+    "positive_contact_speed_is_passive_diagnostic_not_new_threshold": true
+  },
+  "observations": [
+    {
+      "index": 0,
+      "accepted": true,
+      "t_sim": 40.545833333333334,
+      "cue": {
+        "name": "candidate_00_000",
+        "score": 0.455078125,
+        "kind": "full_frame",
+        "pixels": 4175,
+        "bbox_xyxy": [
+          315,
+          154,
+          355,
+          316
+        ],
+        "borders": {
+          "left": false,
+          "right": false,
+          "top": false,
+          "bottom": false
+        },
+        "partial": false,
+        "eligible_for_grasp": true,
+        "role": "partial cue for viewpoint reasoning; existing border filter still applies to grasp input"
+      },
+      "camera_pose": [
+        [
+          0.9999850907550633,
+          -0.005443026288501199,
+          0.0004378725964172864,
+          0.5019488334655762
+        ],
+        [
+          -0.0004408727179345145,
+          -0.0005499986701357207,
+          0.9999997515663239,
+          -0.8943731188774109
+        ],
+        [
+          -0.005442784106924451,
+          -0.9999850353711728,
+          -0.0005523901518643681,
+          0.26417049765586853
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "robot_q": [
+        0.8562338352203369,
+        -0.6581872701644897,
+        -1.9052221775054932,
+        1.2795097827911377,
+        0.7158217430114746,
+        1.9060148000717163,
+        -0.45670047402381897,
+        0.057225484400987625,
+        0.057225484400987625,
+        0.05722549557685852,
+        0.05722549185156822,
+        0.057225484400987625,
+        0.057225488126277924
+      ],
+      "FK_camera_translation_error_m": 1.314577511815645e-06,
+      "geometry_issue": null
+    },
+    {
+      "index": 1,
+      "accepted": true,
+      "t_sim": 59.96666666666667,
+      "cue": {
+        "name": "candidate_00_000",
+        "score": 0.83203125,
+        "kind": "full_frame",
+        "pixels": 16249,
+        "bbox_xyxy": [
+          616,
+          71,
+          646,
+          652
+        ],
+        "borders": {
+          "left": false,
+          "right": false,
+          "top": false,
+          "bottom": false
+        },
+        "partial": false,
+        "eligible_for_grasp": true,
+        "role": "partial cue for viewpoint reasoning; existing border filter still applies to grasp input"
+      },
+      "camera_pose": [
+        [
+          0.9999951584794382,
+          0.0015138198781793491,
+          0.0027187068727862647,
+          0.3142659366130829
+        ],
+        [
+          -0.0027472738575974927,
+          0.019199837206141546,
+          0.9998118916764341,
+          -0.8008410334587097
+        ],
+        [
+          0.001461336386691169,
+          -0.9998145200989205,
+          0.019203903127511357,
+          0.4499027132987976
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "robot_q": [
+        0.0036408822052180767,
+        -0.959397554397583,
+        -1.1212608814239502,
+        1.1566070318222046,
+        0.8150469064712524,
+        2.1129908561706543,
+        0.12857292592525482,
+        0.057113125920295715,
+        0.057113125920295715,
+        0.05711313337087631,
+        0.05711313337087631,
+        0.057113125920295715,
+        0.057113129645586014
+      ],
+      "FK_camera_translation_error_m": 8.849658068754181e-07,
+      "geometry_issue": null
+    },
+    {
+      "index": 2,
+      "accepted": true,
+      "t_sim": 72.89166666666667,
+      "cue": {
+        "name": "candidate_00_000",
+        "score": 0.890625,
+        "kind": "full_frame",
+        "pixels": 20401,
+        "bbox_xyxy": [
+          591,
+          173,
+          645,
+          782
+        ],
+        "borders": {
+          "left": false,
+          "right": false,
+          "top": false,
+          "bottom": false
+        },
+        "partial": false,
+        "eligible_for_grasp": true,
+        "role": "partial cue for viewpoint reasoning; existing border filter still applies to grasp input"
+      },
+      "camera_pose": [
+        [
+          0.8810262691391967,
+          -0.010046284576509468,
+          0.4729606593078071,
+          0.10060093551874161
+        ],
+        [
+          -0.47306673958537226,
+          -0.020309616015385723,
+          0.8807924723766508,
+          -0.7310395240783691
+        ],
+        [
+          0.000756957550582027,
+          -0.9997432628747819,
+          -0.022645868315241124,
+          0.5296338796615601
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.0
+        ]
+      ],
+      "robot_q": [
+        -0.4896543622016907,
+        -1.2506896257400513,
+        -0.9051597118377686,
+        1.3014925718307495,
+        0.862540602684021,
+        2.1158807277679443,
+        0.5730502605438232,
+        0.05732017755508423,
+        0.05732017755508423,
+        0.05732019245624542,
+        0.057320185005664825,
+        0.05732018128037453,
+        0.057320185005664825
+      ],
+      "FK_camera_translation_error_m": 6.398098639960227e-07,
+      "geometry_issue": null
+    }
+  ],
+  "agent_selected_adjustments": 2,
+  "time": {
+    "simulation_s": 329.4125,
+    "actor_wall_s": 2320.1735227108,
+    "Agent_wait_wall_s": 233.85234725894406,
+    "sensing_wall_s": 98.11195424874313,
+    "geometry_wall_s": 1.6993936281651258,
+    "grasp_planning_wall_s": 170.20309021812864,
+    "motion_wall_s": 353.7169956867583,
+    "Agent_wait_includes_transfer_tools_and_scheduling": true
+  },
+  "warning_or_stop_events": [],
+  "telemetry_counts": {
+    "physics_steps": 79059,
+    "observations": 79059,
+    "closure_commands": 18201
+  },
+  "evidence_integrity": {
+    "active_sources": {
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_agent_manipulation.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_agent_execution.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_agent_observation.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_agent_inspection.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/infer_sam3_agent_observed.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_wrist_input.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_wrist_views.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_multiview_input.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_metric_rgbd_geometry.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_visual_input.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/precontact_trajectory.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/shared_door_execution.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/xarm7_native_execution.py": true
+    },
+    "frozen_baseline": {
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_multiview_input.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_multiview_short.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_metric_rgbd_geometry.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_visual_input.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_visual_hypothesis_rank.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_robust_contact_ranking.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_initial_contact_ranking.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/xarm7_native_planning.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/xarm7_native_execution.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_short_open.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_native_g1_rgbd_short.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/xarm7_native_gripper.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/xarm7_door_adapter.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/shared_door_execution.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/precontact_trajectory.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_oracle_door_precontact_continuity.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/handle_contact_quality.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/plan_shared_door_skill.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/infer_sam3_observed.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/native_g1_observed_regions.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/45415_closure_verification_20261011/provenance/active_closure.py": true,
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_robust_rank_20261013/UNCERTAINTY_FROZEN.json": true
+    },
+    "inspected_images": {
+      "rgbd/agent_00/agent_inspection.png": true,
+      "rgbd/agent_00/agent_local_geometry.png": true,
+      "rgbd/agent_01/agent_inspection.png": true,
+      "rgbd/agent_02/agent_inspection.png": true,
+      "agent_geometry/AGENT_FUSED_INSPECTION.png": true,
+      "AGENT_GRASP_PLAN_INSPECTION.png": true
+    },
+    "all_match": true
+  },
+  "known_dependencies": [
+    "common registered station",
+    "coarse cabinet envelope for initial survey",
+    "hinge and dynamic state",
+    "scene collision safety models",
+    "ideal simulated camera/robot calibration",
+    "approximate actuators"
+  ],
+  "GT_handle_grasp_fallback": false,
+  "physical_retries": 0,
+  "raw_evidence_private": true
+}

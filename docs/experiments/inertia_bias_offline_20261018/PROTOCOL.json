@@ -1,0 +1,58 @@
+{
+  "windows": [
+    61,
+    121,
+    181
+  ],
+  "shifts_samples": [
+    -8,
+    -4,
+    -2,
+    -1,
+    0,
+    1,
+    2,
+    4,
+    8
+  ],
+  "common_edge_samples": 211,
+  "original_edge_samples": 121,
+  "differentiation": [
+    "position_SG2",
+    "native_velocity_SG1",
+    "position_gradient_SG0"
+  ],
+  "torque_filters": [
+    "none",
+    "SG0",
+    "SG2_equivalent"
+  ],
+  "selection": "minimum sample-weighted FIT-only leave-complete-segment-out torque RMSE; no validation/truth selection",
+  "synthetic_parameters": [
+    0.3,
+    0.4,
+    0.02
+  ],
+  "synthetic_frequencies_hz": [
+    0.1,
+    0.31831,
+    0.5,
+    1.0,
+    1.5,
+    2.0
+  ],
+  "weak_windows_s": [
+    0.5,
+    1.0
+  ],
+  "nuisance_models": [
+    "bias",
+    "direction_offset",
+    "slip_rate",
+    "aperture_rate"
+  ],
+  "comparison_target": "common original unfiltered compensated torque for CV and forward prediction; own-filter errors reported separately",
+  "matched_compensation": "filter raw+bias+gravity once; subtract already smoothed tool inertia once (no second smoothing)",
+  "truth_inputs": false,
+  "diagnostic_only": true
+}

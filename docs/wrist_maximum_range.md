@@ -1,0 +1,155 @@
+# Maximum-range wrist/mobile skill
+
+Independent `maximum-range` mode based on c1959ad. Historical periodic capture,
+physical-contact baseline, force/controller constants and robot geometry are
+retained. This is simulation with an approximate interaction proxy and nominal
+D435 intrinsics/extrinsic, not calibrated real hardware.
+
+## Single entry
+
+On the experiment server, from `/data1/home/rangeryx/fr3_real2sim_piper_mobile`:
+
+```bash
+python3 scripts/run_wrist_reconstruction.py \
+  --mode maximum-range \
+  --config configs/wrist_reconstruction_max_range.json \
+  --output results/wrist_maximum_20261006 \
+  --stage full --resume
+```
+
+Omit `--resume` for a new output directory. The saved start time and cutoff are
+not reset by resuming. Capture has 12 hours; backend receives 6 hours only after
+**both** objects have two qualifying clean states and independently evaluated
+physical span. Previous experiments and pre-contact entry smoke are retained.
+
+## Operation
+
+No periodic 15-degree/5-cm release. Measured-q margins, native contact danger,
+original load and speed limits remain active. Relative contact-plane drift is a
+diagnostic and effort-invalidity flag, not a default whole-task stop. It is not a
+complete slip observer. Confidence residual is not relabelled physical slip.
+
+The first bilateral grasp saves the measured TCP and official fixed TCP/gripper
+transform relative to the observed handle. Regrasp tries 12 deterministic local
+templates, then up to 12 diversified bar-family alternatives; actual closure and
+bilateral validation remain mandatory. Recorded aperture is not a closing goal.
+
+A released hand retreats to clearance instead of requiring home. Mobile routes
+check the actual locked arm, camera housing and chassis. No base move while the
+object is held. The platform remains the existing simulated kinematic SE(2)
+platform, not verified wheel/navigation dynamics.
+
+Each operation recovery has a finite 60-base/6-full-path/4-actual-base budget;
+12 cycles and 48 base moves per object. Observational anomalies pause further
+release commands and require three consistent above-1-mm observations to confirm
+motion. A dangerous physical event is never converted to a warning by this mode.
+
+## Progress and resume semantics
+
+- `maximum_progress.jsonl`: new sensor-observed maximum states.
+- `max_range_checkpoint.json`: current/max state, measured q/base, handle
+  observation, successful template, capture/effort and recovery cursor.
+- `observed_progress.jsonl`: RGB-D registrations with confidence audit; EE-only
+  fallback explicitly marked `EE_PROXY_NOT_OBJECT_MEASUREMENT`.
+- `execution_sources/` + expanded source: actual execution implementation.
+- `observations.jsonl`, `command_tape.jsonl`, `physics_steps.jsonl`: complete
+  journals; legacy JSON counterparts contain only bounded diagnostic tails.
+
+Recoverable failures run in the same live Isaac process. `--resume` preserves an
+already-live actor and its cutoff. If that actor crashed after manipulation,
+this version returns `COLD_RESUME_REQUIRES_VERIFIED_ACTION_REPLAY`; it does not
+pretend that a JSON checkpoint restores physical state. Automatic cold replay
+and continued reobservation remain an explicitly unfinished path. No object
+joint position, contact impulses, weld or attachment are restored.
+
+## Results and limitations
+
+`maximum_range_evaluation.json` is an independent **post-stop** actual-object
+motion report. It never enters control. State CSVs and REPORT distinguish actual
+range from online RGB-D estimate and EE proxy. Reconstruction gates use both
+clean captures and independently confirmed actual span; progress is not zeroed
+by scan or reconstruction failure.
+
+Effort validity is separate from manipulation acceptance. Invalid relative
+motion/contact/regrasp segments retain raw measurements but are excluded from
+summaries. Available normal+friction tensor projection is labelled simulation
+measurement; otherwise commanded wrench projection is labelled an uncalibrated
+proxy. EE motion onset cannot prove minimum static friction.
+
+At implementation freeze: eight policy/integration regressions passed; all 15
+existing wrist regressions passed across Isaac and ArtGS environments. Physical
+results must be read from the experiment artifacts, not inferred from these
+software tests. No new 60-degree/10-cm result is claimed by this document.
+
+## First physical integration regression
+
+Both initial nominal grasps established bilateral hold (7320 approximately
+0.526/0.519 N; 45746 approximately 0.518/0.529 N), then the new recovery halt
+accidentally changed finger force-hold to position mode and removed preload.
+Failures are retained under `hold_transition_failure_<id>`; neither is claimed
+as opening success. Recovery now preserves finger hold mode while stopping the
+arm; a genuinely failed grasp monitor is explicitly disarmed for its release/
+recovery phase, then actual closure must re-establish bilateral validation.
+The original contact-loss threshold, force cap, gains and closure law remain.
+7320's corrected physical run reached incremental release; the full recovery
+cycle and maximum range were still pending at this note's creation.
+
+The next release run gave three identical ~1.20-mm ICP observations. Post-stop
+GT evaluation found only ~0.069-degree maximum part rotation. Paired reanalysis
+on exactly the same saved RGB-D retained pixels visible in both frames (union of
+known-q robot masks) and obtained 0.644 mm for all three observations, below the
+unchanged 1-mm guard. The original after-cloud had newly revealed surface
+pixels, changing its visibility distribution. This measurement implementation
+fix is generic; the raw images, rejected run and post-stop evaluation remain
+under `release_visibility_failure_7320`. It is not a threshold relaxation.
+
+45746 subsequently completed actual release, clearance retreat, SE(2) motion to
+`(0.63054, -0.75638, -0.1 m; yaw 57.66 deg)`, wrist reobservation and the **first
+successful-template candidate** physical regrasp. Bilateral loads were about
+0.529/0.521 N and minimum current margin about 0.522 rad. Its first continued
+pull stopped on a Python TypeError: the unbound revolute diagnostic method used
+`super()` on a prismatic memory instance. The diagnostic now checks its actual
+class; no fitter/probe/controller threshold changes. This run is retained under
+`prismatic_type_failure_45746`; it proves recovery, not >10-cm extraction.
+
+A new regrasp attempt also invalidates the previous release certificate before
+approach/closure. A failed candidate must physically release again before
+retreat. Mobile execution separately checks actual release aperture and zero
+load. Repeated candidate releases retain the most recent non-null model memory.
+
+The corrected 45746 run continued with real contact: independent post-run
+measurement found 5.88 mm maximum drawer motion; EE moved 5.86 mm, tracked object
+grasp point 5.85 mm, relative translation about 0.203 mm and EE rotation about
+0.061 degrees. It stopped on an instantaneous 2.017-N one-sided load above the
+unchanged 2-N cap. This is not evidence of large slip or a wrong pull direction
+(EE motion differed from command by about 1.85 degrees). The event and video are
+retained under `load_stop_5mm_45746`.
+
+Load recovery now stops the drive, tries the original protected bilateral-hold
+window and resumes the existing compliance only if that is safe. Otherwise it
+tries a preflighted slow release, with the same force/geometry guards on every
+step. A persistent unsafe load still stops. No force cap or controller gain is
+increased. Each event consumes the frozen recovery budget. An existing robot
+Jacobian/FK check is also repeated after base lock, using its original tolerance.
+These recovery additions were software-tested but had not yet passed a physical
+load-event recovery at the time of this note.
+
+7320's completed corrected trial physically reached **24.878 degrees** according
+to the post-stop evaluator. It had an 8-view clean closed capture and stable
+estimated-model opening beyond the old periodic 15-degree release. At the
+0.10-rad warning (actual margin ~0.097 rad), all fixed-orientation Cartesian
+retreats returned NO_IK; the recovery budget exhausted. The run and its data are
+retained under `cartesian_retreat_stop_7320`, not overwritten or scored zero.
+
+The same twelve-alternative retreat budget now includes six Cartesian and six
+joint-space clearance goals. Home is an optional endpoint, not a required gate.
+Joint paths and final opening sweeps use the existing margin/camera/environment
+checks. `--observation-source` reuses actual wrist captures with the original
+sensor identity verification; it restores no physical state.
+
+The simulator had exited on these implementation/safety stops. Subsequent trials
+reexecute the verified physical approach/closure/mobile/manipulation procedure
+from one episode initialization. This is **not** a claim of seamless cold state
+restoration or continuous 24.9→60-degree continuation. Exact automatic command-
+tape cold continuation remains unfinished; no GT door state is used to recover.
+The common original capture cutoff is 2026-10-07 02:38:12 Shanghai.

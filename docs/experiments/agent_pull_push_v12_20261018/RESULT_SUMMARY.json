@@ -1,0 +1,172 @@
+{
+  "label": "KNOWN_MODEL / AGENT_IN_LOOP / WRIST_RGBD / NATIVE_G1 / APPROXIMATE_ACTUATOR_SIMULATION / IDEAL_VIRTUAL_FT",
+  "reference": "587a269",
+  "execution_commit": "6e7193c",
+  "asset": "45936",
+  "valid_physical_episodes": 1,
+  "primary_bidirectional_PASS": false,
+  "initial_grasp_and_pull_success": true,
+  "max_actual_angle_deg": 10.10411262512207,
+  "post_acquisition_gain_deg": 10.101005520438775,
+  "one_second_hold_s": 1.0041666666666629,
+  "actual_panel_closing_deg": 0.0,
+  "handle_acquisitions": 1,
+  "handle_releases": 1,
+  "panel_push_attempts": 1,
+  "panel_contact_samples": 0,
+  "regrasps": 0,
+  "base_moves": 0,
+  "final_safe_park": true,
+  "stop": "PROBE_CARTESIAN_SPEED_LIMIT at pre-contact PANEL_PUSH entry",
+  "TCP_mm_s": {
+    "all_phases": 29.921352747315172,
+    "positive_contact": 1.2429791125311127,
+    "protected_panel_entry": 5.068035945954738,
+    "command_FK_panel_entry": 0.1910201974569222,
+    "existing_limit": 5
+  },
+  "peak_raw_finger_normal_N": 1.5158782191338527,
+  "minimum_joint_margin_rad": 0.5440500931549073,
+  "force_warnings_or_hard_force_stops": 0,
+  "simulation_s": 852.2791666666667,
+  "wall_s": 6629.858023994137,
+  "observations_and_physics_records": 204547,
+  "wrist_ft_valid": 204547,
+  "closure_policy_commands": 17961,
+  "live_command_acknowledgments": 11,
+  "payload_hash_mismatches": 0,
+  "offline_concurrent_commands": 200,
+  "offline_recoverable_malformed": 8,
+  "offline_duplicate_publishers": 8,
+  "offline_winners_per_sequence": 1,
+  "identification_packet_status": [
+    "READY",
+    "NO_LOCAL_DATA"
+  ],
+  "conditional_physics_fit": {
+    "kind": "constant",
+    "parameters": [
+      0.13361445334276567,
+      0.25311941562699447,
+      0.01812360833899732
+    ],
+    "conditional_std": [
+      0.14192420850928192,
+      0.39191443506145773,
+      0.0005876535623814509
+    ],
+    "training_rmse_nm": 0.0002988951809843614,
+    "conditional_covariance": [
+      [
+        0.02014248096098613,
+        -0.00021854201666849962,
+        3.142702400568724e-07
+      ],
+      [
+        -0.00021854202106099288,
+        0.1535969244095416,
+        -0.00022270882683776978
+      ],
+      [
+        3.142702464245298e-07,
+        -0.00022270882683766825,
+        3.4533670937960985e-07
+      ]
+    ],
+    "scaled_regressor_singular_values": [
+      1.3957709001870828,
+      0.03272194498041236,
+      0.0029622850199737365
+    ],
+    "scaled_condition": 471.18048762217273,
+    "scaled_fisher_information": [
+      [
+        49.64708441953247,
+        0.01975188431023153,
+        0.2597127642669204
+      ],
+      [
+        0.01975188431023153,
+        6.26803527688456,
+        727.6091269698758
+      ],
+      [
+        0.2597127642669204,
+        727.6091269698758,
+        90326.60296857214
+      ]
+    ],
+    "algebraic_rank": 3,
+    "supported": [
+      false,
+      false,
+      true
+    ],
+    "samples": 962,
+    "uncertainty": "conditional, correlated bins/solver residual not calibrated confidence; no execution gate"
+  },
+  "final_identified_parameters": {
+    "I_eff": null,
+    "b": null,
+    "Coulomb": null
+  },
+  "provisional_positive_direction_resistance_Nm": 0.01812360833899732,
+  "authored_parameters_posthoc": [
+    0.11217956530425283,
+    0.27697411215128165,
+    0.018081289130364265
+  ],
+  "relative_parameter_errors_conditional_not_identified": [
+    0.1910765831582361,
+    0.08612608716029707,
+    0.002340497313434737
+  ],
+  "heldout_torque_RMSE_Nm": 9.832382305933718e-05,
+  "heldout_forward": {
+    "VALIDATION_INTERIOR_FIT_INITIAL_HANDLE_PULL_00": {
+      "status": "predicted",
+      "samples": 5766,
+      "duration_s": 24.020833333333314,
+      "angle_rmse_deg": 0.0031165603249150528,
+      "final_error_deg": -0.0028540841297043855,
+      "velocity_rmse_rad_s": 6.066983247594461e-05,
+      "state_trajectory_forcing": false,
+      "supported_inertia": false,
+      "prediction_outside_observed_domain": false
+    }
+  },
+  "no_completed_independent_closing_validation": true,
+  "video": {
+    "codec_name": "h264",
+    "width": 1280,
+    "height": 960,
+    "duration": "852.266667",
+    "nb_read_frames": "25568"
+  },
+  "private_evidence": {
+    "manifest_sha256": "14e2b1ffabd5ec4c1f31a576a2649b0a9399992015dfa999c1acef871182bf6f",
+    "indexed_files": 1109,
+    "indexed_bytes": 1369252414,
+    "raw_uploaded_to_public_GitHub": false,
+    "archive_sha256": "5b1f61b611ef5e6712c9d8750df1d7b48e4f82067f53f88a8752450b3ae742b6",
+    "archive_bytes": 915276883
+  },
+  "owned_actor_encoder_workers_remaining": [],
+  "raw_scene_restart_or_stitching": false,
+  "object_physics_configuration": {
+    "family": "existing constant-resistance prior family",
+    "seed": 181845936,
+    "same_numeric_parameters_as_reference": false,
+    "fixed_within_episode": true,
+    "not_used_to_tune_controller": true
+  },
+  "remaining_known_dependencies": [
+    "known hinge geometry and dynamic articulation state",
+    "registered base station",
+    "coarse cabinet-envelope initializer",
+    "native GT collision safety model",
+    "simulated wrist calibration",
+    "approximate actuators",
+    "ideal virtual wrist load cell"
+  ]
+}

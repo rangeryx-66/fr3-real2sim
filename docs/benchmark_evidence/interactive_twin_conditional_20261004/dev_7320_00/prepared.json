@@ -1,0 +1,179 @@
+{
+  "source_job": {
+    "episode_id": "dev_7320_00",
+    "mode": "physics_reference",
+    "role": "reference",
+    "source": "/data1/home/rangeryx/fr3_real2sim_r1a7/results/microwave_7320_table_edge_preflight_full_rgb",
+    "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/asset",
+    "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/nominal_minimal/plan.json",
+    "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/reference/original",
+    "gpu": 1,
+    "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+    "wall_clock_budget_s": 1600,
+    "frozen_proxy_sha256": "a1bc615255468175c665311a47c798d63826fc12e5bc87821f3ea04ebd7c0cb4",
+    "continue_manipulation": false,
+    "robot_calibration_id": "robot_ff3e736f75bd2ff04b1e",
+    "plant": {
+      "tau_c": 0.0005,
+      "b": 0.05
+    },
+    "initial_estimate": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_benchmark_20261003_v2/episodes/dev_7320_00/dev_kinematics/estimated_articulation.json",
+    "initial_estimate_memory": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_benchmark_20261003_v2/episodes/dev_7320_00/dev_kinematics/structured_memory.json",
+    "fixed_fixture": {
+      "center": [
+        0.5104113242553755,
+        -0.033284815999101894,
+        0.020000000000000018
+      ],
+      "size": [
+        0.25271613830970363,
+        0.5310833913129908,
+        0.04
+      ],
+      "quaternion_wxyz": [
+        0.7071067811865477,
+        0.0,
+        0.0,
+        -0.7071067811865475
+      ],
+      "audit": {
+        "static_root_bounds_m": [
+          [
+            -0.2551303714011198,
+            -0.14388397442268827,
+            -0.14307325315574992
+          ],
+          [
+            0.27595301991187093,
+            0.15611602557731172,
+            0.13246794553225327
+          ]
+        ],
+        "support_root_bounds_m": [
+          [
+            -0.2551303714011198,
+            -0.14388397442268827,
+            -0.14307325315574992
+          ],
+          [
+            0.27595301991187093,
+            0.15611602557731172,
+            0.1096428851539537
+          ]
+        ],
+        "swept_root_bounds_m": [
+          [
+            -0.27883171983970156,
+            -0.14388397442268833,
+            0.11464288515395371
+          ],
+          [
+            0.17902596270393883,
+            0.1072139946327403,
+            0.5631013323140583
+          ]
+        ],
+        "cut_axis_source": 2,
+        "cut_sign": 1,
+        "sweep_clearance_m": 0.005,
+        "note": "support geometry corrected; asset, robot and grasp poses unchanged"
+      }
+    },
+    "physics_protocol": [
+      {
+        "probe_id": "P1",
+        "split": "train",
+        "duration_s": 8.0,
+        "speed_m_s": 0.00025,
+        "pattern": "opening",
+        "active_windows_s": [
+          [
+            1,
+            6
+          ]
+        ]
+      },
+      {
+        "probe_id": "P2",
+        "split": "train",
+        "duration_s": 8.0,
+        "speed_m_s": 0.00025,
+        "pattern": "closing",
+        "active_windows_s": [
+          [
+            1,
+            5
+          ]
+        ]
+      },
+      {
+        "probe_id": "P3",
+        "split": "validation",
+        "duration_s": 10.0,
+        "speed_m_s": 0.0005,
+        "pattern": "stop_restart",
+        "active_windows_s": [
+          [
+            1,
+            3
+          ],
+          [
+            5,
+            7
+          ]
+        ]
+      },
+      {
+        "probe_id": "P4",
+        "split": "heldout",
+        "duration_s": 8.0,
+        "speed_m_s": 0.000375,
+        "pattern": "double_pulse",
+        "active_windows_s": [
+          [
+            0.8,
+            2.4
+          ],
+          [
+            3.2,
+            5.6
+          ]
+        ]
+      }
+    ],
+    "conditional_snapshot": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/stable_grasp_snapshot.json"
+  },
+  "structures": [
+    {
+      "id": "S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S0/T1",
+      "estimate": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S0/estimated_articulation.json"
+    },
+    {
+      "id": "S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S1/T1",
+      "estimate": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S1/estimated_articulation.json"
+    },
+    {
+      "id": "S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S2/T1",
+      "estimate": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S2/estimated_articulation.json"
+    },
+    {
+      "id": "S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S3/T1",
+      "estimate": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S3/estimated_articulation.json"
+    },
+    {
+      "id": "S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S4/T1",
+      "estimate": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/models/S4/estimated_articulation.json"
+    }
+  ],
+  "source_hashes": {
+    "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_refinement_20261004/dev_7320_00/structure_selection.json": "0e1e64c391be201428767849d681a3f45f8e198dfafc4e03c833f8c9d55d988a",
+    "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/dev_7320_00/stable_grasp_snapshot.json": "b856dc59d473d2b8bd85d7428e59409bb7e128f3b4fd8dabdf7d38817641b4ac"
+  },
+  "physics_candidate_budget": 45,
+  "source_commit": "4558a28"
+}

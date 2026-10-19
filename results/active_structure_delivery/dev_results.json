@@ -1,0 +1,392 @@
+{
+  "45600": {
+    "asset_id": "45600",
+    "dev_not_test": true,
+    "selected_job": {
+      "episode_id": "dev_45600",
+      "mode": "kinematics",
+      "role": "reference",
+      "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_00/source",
+      "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_00/asset",
+      "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45600_00/planning/plan.json",
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/45600",
+      "gpu": 0,
+      "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+      "wall_clock_budget_s": 2400,
+      "frozen_proxy_sha256": "83e11465c436818a64c932fee2c64f8c01432e648207c33b5bd7f03c77ca38d4",
+      "continue_manipulation": true,
+      "robot_calibration_id": "PENDING_ROBOT_ONLY_CALIBRATION",
+      "candidate": 0,
+      "plant": {},
+      "initial_articulation_rad": 0.0,
+      "mobile_platform": true,
+      "refinement_once": true,
+      "refinement_target_deg": 10.0,
+      "structure_protocol": {
+        "fitting": {
+          "position_noise_m": 2e-05,
+          "rotation_noise_rad": 2e-05,
+          "maximum_samples": 180,
+          "max_nfev": 160
+        },
+        "selection": {
+          "minimum_validation_improvement_fraction": 0.05,
+          "maximum_validation_rms_noise_units": 10.0,
+          "minimum_train_motion_m": 0.005,
+          "minimum_reverse_motion_m": 0.005
+        },
+        "refinement": {
+          "maximum_extra_trajectories": 1,
+          "opening_deg": 10.0,
+          "reverse_deg": 2.5,
+          "switch_exclusion_s": 0.5
+        },
+        "validation": {
+          "forward_travel_m": 0.002,
+          "maximum_s": 12.0,
+          "observability_m": 0.001
+        },
+        "heldout": {
+          "schema": "frozen-forward-stop-segment-v1",
+          "active_s": 8.0,
+          "dwell_s": 2.0,
+          "fit_usage": "never",
+          "speed": "unchanged ConstrainedDrive .0005 m/s",
+          "prediction": "native same-command autonomous replay, physics unchanged"
+        },
+        "active": {
+          "discovery": {
+            "minimum_model_score_gap": 0.8,
+            "minimum_rotation_deg": 0.5,
+            "maximum_axis_dispersion_deg": 12.0,
+            "radius_range_m": [
+              0.03,
+              3.0
+            ],
+            "maximum_radius_cv": 0.35,
+            "maximum_tangent_dispersion_deg": 15.0,
+            "maximum_provisional_rotation_residual_rad": 0.002,
+            "bootstrap_seed": 61
+          },
+          "refinement": {
+            "segment_m": 0.001,
+            "segment_timeout_s": 4.0,
+            "maximum_segments": 120,
+            "maximum_path_m": 0.12,
+            "maximum_sim_s": 270.0,
+            "target_angle_deg": 6.0,
+            "robust_every_segments": 5,
+            "reverse_required": false
+          },
+          "final": {
+            "minimum_angle_deg": 2.0,
+            "position_rmse_m": 0.0003,
+            "rotation_rmse_rad": 0.001
+          }
+        }
+      }
+    },
+    "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/45600/report.json",
+    "status": "SUSTAINED_RELATIVE_SLIP",
+    "fixed_base_feasible": true,
+    "grasp_feasible": true,
+    "structure_validation": "NOT_REACHED",
+    "discovery_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 5.945944750076402,
+      "axis_line_distance_m": 0.008954939433196061,
+      "joint_origin_error_in_observed_plane_m": 0.07141822122382434,
+      "raw_origin_point_distance_m": 0.02238290985482337,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.000463522241968581
+    },
+    "grasp": true,
+    "probe": {
+      "distance_m": 0.008212750991732442,
+      "duration_s": 18.004166666666663,
+      "fit_input": "measured robot TCP SE(3) only",
+      "fit_saved_before_follow": true
+    },
+    "minimum_joint_margin_rad": 0.15277557459869384,
+    "observed_slip_m": 0.00022301736026156615,
+    "post_episode_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.20352503752485582,
+      "axis_line_distance_m": 0.008675357639556062,
+      "joint_origin_error_in_observed_plane_m": 0.009007295057572305,
+      "raw_origin_point_distance_m": 0.04802086339628566,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.000463522241968581,
+      "actual_door_displacement_deg": 5.106055736541748,
+      "actual_final_door_angle_deg": 5.106055736541748,
+      "gt_access_after_saved_fit": true,
+      "gt_access_after_world_pause": true,
+      "final_true_relative_translation_slip_m": 0.0006370313928591361,
+      "final_true_relative_rotation_slip_deg": 0.12423734819101566
+    },
+    "refined_accepted": false,
+    "online_success": false,
+    "success": false,
+    "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/45600/contact_baseline.mp4"
+  },
+  "38516": {
+    "asset_id": "38516",
+    "dev_not_test": true,
+    "selected_job": {
+      "episode_id": "dev_38516",
+      "mode": "kinematics",
+      "role": "reference",
+      "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_38516_00/source",
+      "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_38516_00/asset",
+      "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_38516_00/planning/plan.json",
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/38516",
+      "gpu": 1,
+      "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+      "wall_clock_budget_s": 2400,
+      "frozen_proxy_sha256": "c93a77d30dba55d2449d1a6a88fb13d6df429e12c700f28f55d1fa00f2c72271",
+      "continue_manipulation": true,
+      "robot_calibration_id": "PENDING_ROBOT_ONLY_CALIBRATION",
+      "candidate": 0,
+      "plant": {},
+      "initial_articulation_rad": 0.0,
+      "mobile_platform": true,
+      "refinement_once": true,
+      "refinement_target_deg": 10.0,
+      "structure_protocol": {
+        "fitting": {
+          "position_noise_m": 2e-05,
+          "rotation_noise_rad": 2e-05,
+          "maximum_samples": 180,
+          "max_nfev": 160
+        },
+        "selection": {
+          "minimum_validation_improvement_fraction": 0.05,
+          "maximum_validation_rms_noise_units": 10.0,
+          "minimum_train_motion_m": 0.005,
+          "minimum_reverse_motion_m": 0.005
+        },
+        "refinement": {
+          "maximum_extra_trajectories": 1,
+          "opening_deg": 10.0,
+          "reverse_deg": 2.5,
+          "switch_exclusion_s": 0.5
+        },
+        "validation": {
+          "forward_travel_m": 0.002,
+          "maximum_s": 12.0,
+          "observability_m": 0.001
+        },
+        "heldout": {
+          "schema": "frozen-forward-stop-segment-v1",
+          "active_s": 8.0,
+          "dwell_s": 2.0,
+          "fit_usage": "never",
+          "speed": "unchanged ConstrainedDrive .0005 m/s",
+          "prediction": "native same-command autonomous replay, physics unchanged"
+        },
+        "active": {
+          "discovery": {
+            "minimum_model_score_gap": 0.8,
+            "minimum_rotation_deg": 0.5,
+            "maximum_axis_dispersion_deg": 12.0,
+            "radius_range_m": [
+              0.03,
+              3.0
+            ],
+            "maximum_radius_cv": 0.35,
+            "maximum_tangent_dispersion_deg": 15.0,
+            "maximum_provisional_rotation_residual_rad": 0.002,
+            "bootstrap_seed": 61
+          },
+          "refinement": {
+            "segment_m": 0.001,
+            "segment_timeout_s": 4.0,
+            "maximum_segments": 120,
+            "maximum_path_m": 0.12,
+            "maximum_sim_s": 270.0,
+            "target_angle_deg": 6.0,
+            "robust_every_segments": 5,
+            "reverse_required": false
+          },
+          "final": {
+            "minimum_angle_deg": 2.0,
+            "position_rmse_m": 0.0003,
+            "rotation_rmse_rad": 0.001
+          }
+        }
+      }
+    },
+    "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/38516/report.json",
+    "status": "LOW_JOINT_MARGIN",
+    "fixed_base_feasible": true,
+    "grasp_feasible": true,
+    "structure_validation": "NOT_REACHED",
+    "discovery_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 1.9892610207933994,
+      "axis_line_distance_m": 0.0008651759183754004,
+      "joint_origin_error_in_observed_plane_m": 0.04751919717448669,
+      "raw_origin_point_distance_m": 0.845556945667094,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.0014279689527691753
+    },
+    "grasp": true,
+    "probe": {
+      "distance_m": 0.013674081714241575,
+      "duration_s": 29.004166666666663,
+      "fit_input": "measured robot TCP SE(3) only",
+      "fit_saved_before_follow": true
+    },
+    "minimum_joint_margin_rad": 0.049997497473144525,
+    "observed_slip_m": 0.00012186840309120299,
+    "post_episode_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 1.1508116954588987,
+      "axis_line_distance_m": 0.003658374967758892,
+      "joint_origin_error_in_observed_plane_m": 0.027604708260022294,
+      "raw_origin_point_distance_m": 0.8254156202260738,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.0014279689527691753,
+      "actual_door_displacement_deg": 2.725928783416748,
+      "actual_final_door_angle_deg": 2.725928783416748,
+      "gt_access_after_saved_fit": true,
+      "gt_access_after_world_pause": true,
+      "final_true_relative_translation_slip_m": 0.00033880150791887895,
+      "final_true_relative_rotation_slip_deg": 0.36583076035623874
+    },
+    "refined_accepted": false,
+    "online_success": false,
+    "success": false,
+    "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/38516/contact_baseline.mp4"
+  },
+  "45403": {
+    "asset_id": "45403",
+    "dev_not_test": true,
+    "selected_job": {
+      "episode_id": "dev_45403",
+      "mode": "kinematics",
+      "role": "reference",
+      "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45403_00/source",
+      "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45403_00/asset",
+      "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/cross_object_structure_20261004_v1/episodes/test_45403_00/planning/plan.json",
+      "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/45403",
+      "gpu": 2,
+      "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+      "wall_clock_budget_s": 2400,
+      "frozen_proxy_sha256": "6f47b634cec8fa75ef4d09aa1937d71a899b1ec1ae3e6e5e30b57730929a3191",
+      "continue_manipulation": true,
+      "robot_calibration_id": "PENDING_ROBOT_ONLY_CALIBRATION",
+      "candidate": 0,
+      "plant": {},
+      "initial_articulation_rad": 0.0,
+      "mobile_platform": true,
+      "refinement_once": true,
+      "refinement_target_deg": 10.0,
+      "structure_protocol": {
+        "fitting": {
+          "position_noise_m": 2e-05,
+          "rotation_noise_rad": 2e-05,
+          "maximum_samples": 180,
+          "max_nfev": 160
+        },
+        "selection": {
+          "minimum_validation_improvement_fraction": 0.05,
+          "maximum_validation_rms_noise_units": 10.0,
+          "minimum_train_motion_m": 0.005,
+          "minimum_reverse_motion_m": 0.005
+        },
+        "refinement": {
+          "maximum_extra_trajectories": 1,
+          "opening_deg": 10.0,
+          "reverse_deg": 2.5,
+          "switch_exclusion_s": 0.5
+        },
+        "validation": {
+          "forward_travel_m": 0.002,
+          "maximum_s": 12.0,
+          "observability_m": 0.001
+        },
+        "heldout": {
+          "schema": "frozen-forward-stop-segment-v1",
+          "active_s": 8.0,
+          "dwell_s": 2.0,
+          "fit_usage": "never",
+          "speed": "unchanged ConstrainedDrive .0005 m/s",
+          "prediction": "native same-command autonomous replay, physics unchanged"
+        },
+        "active": {
+          "discovery": {
+            "minimum_model_score_gap": 0.8,
+            "minimum_rotation_deg": 0.5,
+            "maximum_axis_dispersion_deg": 12.0,
+            "radius_range_m": [
+              0.03,
+              3.0
+            ],
+            "maximum_radius_cv": 0.35,
+            "maximum_tangent_dispersion_deg": 15.0,
+            "maximum_provisional_rotation_residual_rad": 0.002,
+            "bootstrap_seed": 61
+          },
+          "refinement": {
+            "segment_m": 0.001,
+            "segment_timeout_s": 4.0,
+            "maximum_segments": 120,
+            "maximum_path_m": 0.12,
+            "maximum_sim_s": 270.0,
+            "target_angle_deg": 6.0,
+            "robust_every_segments": 5,
+            "reverse_required": false
+          },
+          "final": {
+            "minimum_angle_deg": 2.0,
+            "position_rmse_m": 0.0003,
+            "rotation_rmse_rad": 0.001
+          }
+        }
+      }
+    },
+    "selected_report": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/45403/report.json",
+    "status": "LOW_JOINT_MARGIN",
+    "fixed_base_feasible": true,
+    "grasp_feasible": true,
+    "structure_validation": "NOT_REACHED",
+    "discovery_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 9.816837123714649,
+      "axis_line_distance_m": 0.041168656744420475,
+      "joint_origin_error_in_observed_plane_m": 0.18206022786434858,
+      "raw_origin_point_distance_m": 0.14891239031390266,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.0012027991019282261
+    },
+    "grasp": true,
+    "probe": {
+      "distance_m": 0.01674749345764729,
+      "duration_s": 37.00416666666668,
+      "fit_input": "measured robot TCP SE(3) only",
+      "fit_saved_before_follow": true
+    },
+    "minimum_joint_margin_rad": 0.049994398031616205,
+    "observed_slip_m": 0.00015780432129488699,
+    "post_episode_evaluation": {
+      "type_correct": true,
+      "axis_angular_error_deg": 0.033783607778563,
+      "axis_line_distance_m": 0.033260801190633744,
+      "joint_origin_error_in_observed_plane_m": 0.033260906148762856,
+      "raw_origin_point_distance_m": 0.04809147025467258,
+      "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+      "gt_constrained_reconstruction_rmse_m": 0.0012027991019282261,
+      "actual_door_displacement_deg": 3.6005539894104004,
+      "actual_final_door_angle_deg": 3.6005539894104004,
+      "gt_access_after_saved_fit": true,
+      "gt_access_after_world_pause": true,
+      "final_true_relative_translation_slip_m": 0.0020219870790059414,
+      "final_true_relative_rotation_slip_deg": 0.10956432281034753
+    },
+    "refined_accepted": false,
+    "online_success": false,
+    "success": false,
+    "video": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/active_structure_20261005_v1/dev/45403/contact_baseline.mp4"
+  }
+}

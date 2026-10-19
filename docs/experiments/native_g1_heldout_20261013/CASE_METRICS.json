@@ -1,0 +1,1518 @@
+{
+  "45526": {
+    "report": {
+      "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_NATIVE_GRIPPER_APPROXIMATE_ACTUATOR_SIMULATION",
+      "asset_id": "45526",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "initial_grasp": true,
+      "target_deg": 30.0,
+      "max_actual_angle_deg": 30.000411987304688,
+      "max_actual_angle_after_valid_grasp_deg": 30.000411987304688,
+      "final_actual_angle_deg": 30.000414061270842,
+      "initial_actual_angle_deg": 0.0,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 122.96249999999999,
+        "step": 29511,
+        "angle_deg": -7.017283820687226e-08,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.5061170974198184,
+          0.5161065948547044
+        ],
+        "base": [
+          0.8413995718527929,
+          -0.7025302633210116,
+          -0.1,
+          56.58597075037399
+        ]
+      },
+      "base_fixed": [
+        0.8413995718527929,
+        -0.7025302633210116,
+        -0.1,
+        56.58597075037399
+      ],
+      "base_moves_after_grasp": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "simulation_s": 342.1333333333333,
+      "wall_s": 1952.5032293319236,
+      "physics_steps": 82112,
+      "observation_records": 82112,
+      "closure_update_calls": 17122,
+      "unilateral_fix_branch_calls": 276,
+      "aperture_command_reopenings": 0,
+      "minimum_joint_margin_rad": 0.5434632148742677,
+      "peak_pad_load_n": 1.073239434093375,
+      "motion_scale": 1.0,
+      "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+      "telemetry_issues": {},
+      "first_divergence": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+        "runner_sha256": "c08fb22edcf6cffdddef32c3ddaf37a8123f6f7f59025d5e785e8305b97065e9",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_heldout_20261013/45526/job.json"
+        ],
+        "pid": 710895,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "GT_dependencies": [
+        "oracle handle mesh geometry",
+        "known articulation geometry",
+        "actual moving-body/articulation feedback",
+        "collision model"
+      ],
+      "scene_restart_or_stitching": false,
+      "object_physics_or_geometry_changed": false
+    },
+    "analysis": {
+      "asset_id": "45526",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "actual_max_after_grasp_deg": 30.000411987304688,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 122.96249999999999,
+        "step": 29511,
+        "angle_deg": -7.017283820687226e-08,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.5061170974198184,
+          0.5161065948547044
+        ],
+        "base": [
+          0.8413995718527929,
+          -0.7025302633210116,
+          -0.1,
+          56.58597075037399
+        ]
+      },
+      "max_slip_mm": 2.183778015263657,
+      "max_rotation_drift_deg": 0.3543670518211942,
+      "max_loaded_TCP_mm_s": 2.4728244095330716,
+      "max_all_phase_TCP_mm_s": 20.746127438092483,
+      "minimum_margin_rad": 0.5434632148742677,
+      "max_arm_tracking_error_rad": 0.004824682555725879,
+      "max_pad_load_n": 1.073239434093375,
+      "max_mimic_error_rad": 0.0006314516067504883,
+      "both_filtered_pad_unloading_intervals": [],
+      "simulation_s": 342.1333333333333,
+      "wall_s": 1952.5032293319236,
+      "records": 82112,
+      "native_physics_records": 82112,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 25.958333333333332,
+        "APPROACH": 25.166666666666668,
+        "SLOW_CLOSE": 69.92083333333333,
+        "CENTER": 1.15,
+        "LOW_PRELOAD": 0.26666666666666666,
+        "FORCE_HOLD": 0.5041666666666667,
+        "TRANSMISSION_PROBE": 7.041666666666667,
+        "OPEN_CONTINUE": 211.625
+      },
+      "telemetry_counts": {
+        "physics_step_index": 82112,
+        "step_start_s": 82112,
+        "post_step_simulation_time_s": 82112,
+        "physics_dt_s": 82112,
+        "physics_substeps": 82112,
+        "sensor_period_s": 82112,
+        "sensor_rate_hz": 82112,
+        "command_q_all": 82112,
+        "command_q_velocity_arm": 82112,
+        "command_aperture_m": 82112,
+        "measured_aperture_m": 82112,
+        "command_finger_efforts": 82112,
+        "legacy_closure_effort_request_not_applied": 82112,
+        "gripper_control_mode": 82112,
+        "native_gripper_feedback": 82112,
+        "joint_velocities": 82112,
+        "applied_joint_efforts": 82112,
+        "measured_joint_efforts": 82112,
+        "measured_joint_forces": 82112,
+        "hinge_velocity_rad_s": 82112,
+        "base_pose": 82112,
+        "command_base_pose": 82112,
+        "base_motion_state": 82112,
+        "grasp_index": 82112,
+        "pad_load_raw_n": 82112,
+        "pad_load_filtered_n": 82112,
+        "raw_contact_records": 82112,
+        "pad_contact": 82112,
+        "finger_net_impulse_world_ns": 82112,
+        "finger_net_force_world_n": 82112
+      },
+      "force_events": [],
+      "contact_pair_count": 2,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "duration": "342.133333",
+            "nb_frames": "10264"
+          }
+        ]
+      },
+      "contact_force_note": "normal point impulse only; friction anchors were not included in this frozen telemetry interface"
+    },
+    "nonhandle_contact_audit": {
+      "asset_id": "45526",
+      "nonhandle_contact_by_phase": {},
+      "positive_nonhandle_contacts_after_valid_grasp": 0,
+      "largest_nonhandle_contact": null,
+      "note": "passive saved-telemetry audit; contact-pair occurrence counts alone do not establish positive impulse"
+    },
+    "integrity": {
+      "asset_id": "45526",
+      "decoded_streams": {
+        "observations_chunks": {
+          "decoded_records": 82112,
+          "indexed_records": 82112,
+          "chunk_errors": [],
+          "matches_report": true
+        },
+        "physics_steps_chunks": {
+          "decoded_records": 82112,
+          "indexed_records": 82112,
+          "chunk_errors": [],
+          "matches_report": true
+        }
+      },
+      "video_decode_errors_bytes": 0,
+      "export_complete": true,
+      "actor_exit": {
+        "asset_id": "45526",
+        "pid": 710895,
+        "returncode": 0,
+        "physical_attempts": 1,
+        "retry": false
+      },
+      "source_runner_matches": true
+    },
+    "gpu": {
+      "mode": "capacity-based/shared-authorized",
+      "gpu": 5,
+      "other_compute_process_count": 0,
+      "hardware_exclusive": true,
+      "one_owned_actor": true,
+      "selection": "largest free VRAM, utilization and other processes are not blockers",
+      "resources_csv": "0, 18020, 30518, 49140, 100\n1, 48517, 21, 49140, 0\n2, 48517, 21, 49140, 0\n3, 25424, 23114, 49140, 100\n4, 45551, 2987, 49140, 0\n5, 48519, 19, 49140, 0\n6, 48518, 20, 49140, 0\n7, 5676, 42862, 49140, 0\n"
+    },
+    "initialization_failures_preserved": 1
+  },
+  "45638": {
+    "report": {
+      "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_NATIVE_GRIPPER_APPROXIMATE_ACTUATOR_SIMULATION",
+      "asset_id": "45638",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "initial_grasp": true,
+      "target_deg": 30.0,
+      "max_actual_angle_deg": 30.00016975402832,
+      "max_actual_angle_after_valid_grasp_deg": 30.00016975402832,
+      "final_actual_angle_deg": 30.000171589555308,
+      "initial_actual_angle_deg": 0.0,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 134.61666666666667,
+        "step": 32308,
+        "angle_deg": 0.053099967539310455,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.48079427234792876,
+          0.5281354488506312
+        ],
+        "base": [
+          0.5911043635099881,
+          -0.5667553562465651,
+          -0.1,
+          181.98100250244687
+        ]
+      },
+      "base_fixed": [
+        0.5911043635099881,
+        -0.5667553562465651,
+        -0.1,
+        181.98100250244687
+      ],
+      "base_moves_after_grasp": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "simulation_s": 657.3083333333333,
+      "wall_s": 3737.988911745837,
+      "physics_steps": 157754,
+      "observation_records": 157754,
+      "closure_update_calls": 16965,
+      "unilateral_fix_branch_calls": 886,
+      "aperture_command_reopenings": 0,
+      "minimum_joint_margin_rad": 1.0882457812600812,
+      "peak_pad_load_n": 0.818829763279603,
+      "motion_scale": 1.0,
+      "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+      "telemetry_issues": {},
+      "first_divergence": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+        "runner_sha256": "c08fb22edcf6cffdddef32c3ddaf37a8123f6f7f59025d5e785e8305b97065e9",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_heldout_20261013/45638/job.json"
+        ],
+        "pid": 749674,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "GT_dependencies": [
+        "oracle handle mesh geometry",
+        "known articulation geometry",
+        "actual moving-body/articulation feedback",
+        "collision model"
+      ],
+      "scene_restart_or_stitching": false,
+      "object_physics_or_geometry_changed": false
+    },
+    "analysis": {
+      "asset_id": "45638",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "actual_max_after_grasp_deg": 30.00016975402832,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 134.61666666666667,
+        "step": 32308,
+        "angle_deg": 0.053099967539310455,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.48079427234792876,
+          0.5281354488506312
+        ],
+        "base": [
+          0.5911043635099881,
+          -0.5667553562465651,
+          -0.1,
+          181.98100250244687
+        ]
+      },
+      "max_slip_mm": 0.21429074234894083,
+      "max_rotation_drift_deg": 0.4600935500146686,
+      "max_loaded_TCP_mm_s": 0.8664589232733481,
+      "max_all_phase_TCP_mm_s": 26.20837263628926,
+      "minimum_margin_rad": 1.0882457812600812,
+      "max_arm_tracking_error_rad": 0.004507615187448799,
+      "max_pad_load_n": 0.818829763279603,
+      "max_mimic_error_rad": 0.0009507536888122559,
+      "both_filtered_pad_unloading_intervals": [],
+      "simulation_s": 657.3083333333333,
+      "wall_s": 3737.988911745837,
+      "records": 157754,
+      "native_physics_records": 157754,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 38.25,
+        "APPROACH": 25.183333333333334,
+        "SLOW_CLOSE": 66.725,
+        "CENTER": 3.691666666666667,
+        "LOW_PRELOAD": 0.26666666666666666,
+        "FORCE_HOLD": 0.5041666666666667,
+        "TRANSMISSION_PROBE": 14.2875,
+        "OPEN_CONTINUE": 507.9
+      },
+      "telemetry_counts": {
+        "physics_step_index": 157754,
+        "step_start_s": 157754,
+        "post_step_simulation_time_s": 157754,
+        "physics_dt_s": 157754,
+        "physics_substeps": 157754,
+        "sensor_period_s": 157754,
+        "sensor_rate_hz": 157754,
+        "command_q_all": 157754,
+        "command_q_velocity_arm": 157754,
+        "command_aperture_m": 157754,
+        "measured_aperture_m": 157754,
+        "command_finger_efforts": 157754,
+        "legacy_closure_effort_request_not_applied": 157754,
+        "gripper_control_mode": 157754,
+        "native_gripper_feedback": 157754,
+        "joint_velocities": 157754,
+        "applied_joint_efforts": 157754,
+        "measured_joint_efforts": 157754,
+        "measured_joint_forces": 157754,
+        "hinge_velocity_rad_s": 157754,
+        "base_pose": 157754,
+        "command_base_pose": 157754,
+        "base_motion_state": 157754,
+        "grasp_index": 157754,
+        "pad_load_raw_n": 157754,
+        "pad_load_filtered_n": 157754,
+        "raw_contact_records": 157754,
+        "pad_contact": 157754,
+        "finger_net_impulse_world_ns": 157754,
+        "finger_net_force_world_n": 157754
+      },
+      "force_events": [],
+      "contact_pair_count": 3,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "duration": "657.300000",
+            "nb_frames": "19719"
+          }
+        ]
+      },
+      "contact_force_note": "normal point impulse only; friction anchors were not included in this frozen telemetry interface"
+    },
+    "nonhandle_contact_audit": {
+      "asset_id": "45638",
+      "nonhandle_contact_by_phase": {
+        "SETTLE": {
+          "records": 120,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "PREGRASP": {
+          "records": 9934,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "APPROACH": {
+          "records": 6044,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "SLOW_CLOSE": {
+          "records": 16014,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "CENTER": {
+          "records": 886,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "LOW_PRELOAD": {
+          "records": 64,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "FORCE_HOLD": {
+          "records": 121,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "records": 3429,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "OPEN_CONTINUE": {
+          "records": 130957,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        }
+      },
+      "positive_nonhandle_contacts_after_valid_grasp": 0,
+      "largest_nonhandle_contact": {
+        "t": 0.0,
+        "phase": "SETTLE",
+        "force_n": 0.0,
+        "contact": {
+          "collider": "/World/Piper/Geometry/world/link_base/link1/link1_1/link1",
+          "target": "/World/table",
+          "finger": "link1",
+          "owner": "robot_body",
+          "allowed_pad_target": false,
+          "force_n": 0.0,
+          "impulse_world_ns": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "separation_m": 0.08949918299913406,
+          "face0": 0,
+          "face1": 0,
+          "collider0": "/World/Piper/Geometry/world/link_base/link1/link1_1/link1",
+          "collider1": "/World/table",
+          "normal_reference": "native report direction; original collider ordering preserved",
+          "contact_point_world_m": [
+            0.6027467846870422,
+            -0.5206053256988525,
+            0.054999977350234985
+          ],
+          "native_normal_world": [
+            3.774874812734197e-07,
+            -0.7888936400413513,
+            0.6145297288894653
+          ]
+        },
+        "angle_deg": 0.0,
+        "before_valid_grasp": true
+      },
+      "note": "passive saved-telemetry audit; contact-pair occurrence counts alone do not establish positive impulse"
+    },
+    "integrity": {
+      "asset_id": "45638",
+      "decoded_streams": {
+        "observations_chunks": {
+          "decoded_records": 157754,
+          "indexed_records": 157754,
+          "chunk_errors": [],
+          "matches_report": true
+        },
+        "physics_steps_chunks": {
+          "decoded_records": 157754,
+          "indexed_records": 157754,
+          "chunk_errors": [],
+          "matches_report": true
+        }
+      },
+      "video_decode_errors_bytes": 0,
+      "export_complete": true,
+      "actor_exit": {
+        "asset_id": "45638",
+        "pid": 749674,
+        "returncode": 0,
+        "physical_attempts": 1,
+        "retry": false
+      },
+      "source_runner_matches": true
+    },
+    "gpu": {
+      "mode": "capacity-based/shared-authorized",
+      "gpu": 5,
+      "other_compute_process_count": 0,
+      "hardware_exclusive": true,
+      "one_owned_actor": true,
+      "selection": "largest free VRAM, utilization and other processes are not blockers",
+      "resources_csv": "0, 18004, 30533, 49140, 100\n1, 40217, 8321, 49140, 0\n2, 48517, 21, 49140, 0\n3, 25424, 23114, 49140, 100\n4, 48511, 27, 49140, 0\n5, 48519, 19, 49140, 0\n6, 40322, 8216, 49140, 0\n7, 5676, 42862, 49140, 0\n"
+    },
+    "initialization_failures_preserved": 1
+  },
+  "45667": {
+    "report": {
+      "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_NATIVE_GRIPPER_APPROXIMATE_ACTUATOR_SIMULATION",
+      "asset_id": "45667",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "initial_grasp": true,
+      "target_deg": 30.0,
+      "max_actual_angle_deg": 30.000259399414062,
+      "max_actual_angle_after_valid_grasp_deg": 30.000259399414062,
+      "final_actual_angle_deg": 30.000260382014517,
+      "initial_actual_angle_deg": 0.0,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 139.075,
+        "step": 33378,
+        "angle_deg": 0.06075560301542282,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.47509334978370926,
+          0.5409254894545424
+        ],
+        "base": [
+          0.6825104574248402,
+          -0.6194763800662042,
+          -0.1,
+          150.5690461801762
+        ]
+      },
+      "base_fixed": [
+        0.6825104574248402,
+        -0.6194763800662042,
+        -0.1,
+        150.5690461801762
+      ],
+      "base_moves_after_grasp": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "simulation_s": 472.01666666666665,
+      "wall_s": 3015.0543230611365,
+      "physics_steps": 113284,
+      "observation_records": 113284,
+      "closure_update_calls": 17216,
+      "unilateral_fix_branch_calls": 157,
+      "aperture_command_reopenings": 0,
+      "minimum_joint_margin_rad": 0.3892367703628541,
+      "peak_pad_load_n": 0.9143117868624268,
+      "motion_scale": 1.0,
+      "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+      "telemetry_issues": {},
+      "first_divergence": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+        "runner_sha256": "c08fb22edcf6cffdddef32c3ddaf37a8123f6f7f59025d5e785e8305b97065e9",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_heldout_20261013/45667/job.json"
+        ],
+        "pid": 2467272,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "GT_dependencies": [
+        "oracle handle mesh geometry",
+        "known articulation geometry",
+        "actual moving-body/articulation feedback",
+        "collision model"
+      ],
+      "scene_restart_or_stitching": false,
+      "object_physics_or_geometry_changed": false
+    },
+    "analysis": {
+      "asset_id": "45667",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "actual_max_after_grasp_deg": 30.000259399414062,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 139.075,
+        "step": 33378,
+        "angle_deg": 0.06075560301542282,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.47509334978370926,
+          0.5409254894545424
+        ],
+        "base": [
+          0.6825104574248402,
+          -0.6194763800662042,
+          -0.1,
+          150.5690461801762
+        ]
+      },
+      "max_slip_mm": 2.455807048729483,
+      "max_rotation_drift_deg": 0.18555515173106094,
+      "max_loaded_TCP_mm_s": 1.650739076739672,
+      "max_all_phase_TCP_mm_s": 24.99421356495545,
+      "minimum_margin_rad": 0.3892367703628541,
+      "max_arm_tracking_error_rad": 0.0046433847725790844,
+      "max_pad_load_n": 0.9143117868624268,
+      "max_mimic_error_rad": 0.0005124807357788086,
+      "both_filtered_pad_unloading_intervals": [],
+      "simulation_s": 472.01666666666665,
+      "wall_s": 3015.0543230611365,
+      "records": 113284,
+      "native_physics_records": 113284,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 41.7625,
+        "APPROACH": 25.083333333333332,
+        "SLOW_CLOSE": 70.80833333333334,
+        "CENTER": 0.6541666666666667,
+        "LOW_PRELOAD": 0.26666666666666666,
+        "FORCE_HOLD": 0.5041666666666667,
+        "TRANSMISSION_PROBE": 18.833333333333332,
+        "OPEN_CONTINUE": 313.6041666666667
+      },
+      "telemetry_counts": {
+        "physics_step_index": 113284,
+        "step_start_s": 113284,
+        "post_step_simulation_time_s": 113284,
+        "physics_dt_s": 113284,
+        "physics_substeps": 113284,
+        "sensor_period_s": 113284,
+        "sensor_rate_hz": 113284,
+        "command_q_all": 113284,
+        "command_q_velocity_arm": 113284,
+        "command_aperture_m": 113284,
+        "measured_aperture_m": 113284,
+        "command_finger_efforts": 113284,
+        "legacy_closure_effort_request_not_applied": 113284,
+        "gripper_control_mode": 113284,
+        "native_gripper_feedback": 113284,
+        "joint_velocities": 113284,
+        "applied_joint_efforts": 113284,
+        "measured_joint_efforts": 113284,
+        "measured_joint_forces": 113284,
+        "hinge_velocity_rad_s": 113284,
+        "base_pose": 113284,
+        "command_base_pose": 113284,
+        "base_motion_state": 113284,
+        "grasp_index": 113284,
+        "pad_load_raw_n": 113284,
+        "pad_load_filtered_n": 113284,
+        "raw_contact_records": 113284,
+        "pad_contact": 113284,
+        "finger_net_impulse_world_ns": 113284,
+        "finger_net_force_world_n": 113284
+      },
+      "force_events": [],
+      "contact_pair_count": 15,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "duration": "472.000000",
+            "nb_frames": "14160"
+          }
+        ]
+      },
+      "contact_force_note": "normal point impulse only; friction anchors were not included in this frozen telemetry interface"
+    },
+    "nonhandle_contact_audit": {
+      "asset_id": "45667",
+      "nonhandle_contact_by_phase": {
+        "PREGRASP": {
+          "records": 17794,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "APPROACH": {
+          "records": 46701,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "SLOW_CLOSE": {
+          "records": 247055,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "CENTER": {
+          "records": 3454,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "LOW_PRELOAD": {
+          "records": 1408,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "FORCE_HOLD": {
+          "records": 2662,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "records": 100735,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "OPEN_CONTINUE": {
+          "records": 841832,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        }
+      },
+      "positive_nonhandle_contacts_after_valid_grasp": 0,
+      "largest_nonhandle_contact": {
+        "t": 29.616666666666667,
+        "phase": "PREGRASP",
+        "force_n": 0.0,
+        "contact": {
+          "collider": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/xarm_gripper_base_link/left_outer_knuckle/left_finger/left_finger_1/left_finger",
+          "target": "/World/cabinet_fixture",
+          "finger": "gripper_link1",
+          "owner": "whole_finger",
+          "allowed_pad_target": false,
+          "force_n": 0.0,
+          "impulse_world_ns": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "separation_m": 0.10063257068395615,
+          "face0": 0,
+          "face1": 0,
+          "collider0": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/xarm_gripper_base_link/left_outer_knuckle/left_finger/left_finger_1/left_finger",
+          "collider1": "/World/cabinet_fixture",
+          "normal_reference": "native report direction; original collider ordering preserved",
+          "contact_point_world_m": [
+            0.19225117564201355,
+            -0.2513037323951721,
+            0.10690809041261673
+          ],
+          "native_normal_world": [
+            2.682209014892578e-07,
+            -0.7469548583030701,
+            0.6648748517036438
+          ]
+        },
+        "angle_deg": 0.0,
+        "before_valid_grasp": true
+      },
+      "note": "passive saved-telemetry audit; contact-pair occurrence counts alone do not establish positive impulse"
+    },
+    "integrity": {
+      "asset_id": "45667",
+      "decoded_streams": {
+        "observations_chunks": {
+          "decoded_records": 113284,
+          "indexed_records": 113284,
+          "chunk_errors": [],
+          "matches_report": true
+        },
+        "physics_steps_chunks": {
+          "decoded_records": 113284,
+          "indexed_records": 113284,
+          "chunk_errors": [],
+          "matches_report": true
+        }
+      },
+      "video_decode_errors_bytes": 0,
+      "export_complete": true,
+      "actor_exit": {
+        "asset_id": "45667",
+        "pid": 2467272,
+        "returncode": 0,
+        "physical_attempts": 1,
+        "retry": false
+      },
+      "source_runner_matches": true
+    },
+    "gpu": {
+      "mode": "exclusive",
+      "gpu": 2,
+      "other_compute_process_count": 0,
+      "hardware_exclusive": true,
+      "one_owned_actor": true
+    },
+    "initialization_failures_preserved": 0
+  },
+  "45623": {
+    "report": {
+      "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_NATIVE_GRIPPER_APPROXIMATE_ACTUATOR_SIMULATION",
+      "asset_id": "45623",
+      "success": false,
+      "status": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+      "initial_grasp": false,
+      "target_deg": 30.0,
+      "max_actual_angle_deg": 0.0026950910687446594,
+      "max_actual_angle_after_valid_grasp_deg": null,
+      "final_actual_angle_deg": 0.00012151518150962819,
+      "initial_actual_angle_deg": 2.1203697682767075e-16,
+      "grasp_acquisition": null,
+      "base_fixed": [
+        1.1399112157720364,
+        -0.712296282122733,
+        -0.1,
+        149.30809520867814
+      ],
+      "base_moves_after_grasp": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "simulation_s": 352.2208333333333,
+      "wall_s": 2088.6730779989157,
+      "physics_steps": 84533,
+      "observation_records": 84533,
+      "closure_update_calls": 24000,
+      "unilateral_fix_branch_calls": 8525,
+      "aperture_command_reopenings": 0,
+      "minimum_joint_margin_rad": 0.6276009718524378,
+      "peak_pad_load_n": 0.6580973991662931,
+      "motion_scale": 1.0,
+      "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+      "telemetry_issues": {},
+      "first_divergence": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+        "runner_sha256": "c08fb22edcf6cffdddef32c3ddaf37a8123f6f7f59025d5e785e8305b97065e9",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_heldout_20261013/45623/job.json"
+        ],
+        "pid": 337729,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "GT_dependencies": [
+        "oracle handle mesh geometry",
+        "known articulation geometry",
+        "actual moving-body/articulation feedback",
+        "collision model"
+      ],
+      "scene_restart_or_stitching": false,
+      "object_physics_or_geometry_changed": false
+    },
+    "analysis": {
+      "asset_id": "45623",
+      "success": false,
+      "status": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+      "actual_max_after_grasp_deg": null,
+      "grasp_acquisition": null,
+      "max_slip_mm": 0.0,
+      "max_rotation_drift_deg": 0.0,
+      "max_loaded_TCP_mm_s": 0.0,
+      "max_all_phase_TCP_mm_s": 28.435949087528446,
+      "minimum_margin_rad": 0.6276009718524378,
+      "max_arm_tracking_error_rad": 0.0037354035285455008,
+      "max_pad_load_n": 0.6580973991662931,
+      "max_mimic_error_rad": 9.56803560256958e-05,
+      "both_filtered_pad_unloading_intervals": [],
+      "simulation_s": 352.2208333333333,
+      "wall_s": 2088.6730779989157,
+      "records": 84533,
+      "native_physics_records": 84533,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 226.6375,
+        "APPROACH": 25.083333333333332,
+        "SLOW_CLOSE": 64.47916666666667,
+        "CENTER": 35.520833333333336
+      },
+      "telemetry_counts": {
+        "physics_step_index": 84533,
+        "step_start_s": 84533,
+        "post_step_simulation_time_s": 84533,
+        "physics_dt_s": 84533,
+        "physics_substeps": 84533,
+        "sensor_period_s": 84533,
+        "sensor_rate_hz": 84533,
+        "command_q_all": 84533,
+        "command_q_velocity_arm": 84533,
+        "command_aperture_m": 84533,
+        "measured_aperture_m": 84533,
+        "command_finger_efforts": 84533,
+        "legacy_closure_effort_request_not_applied": 84533,
+        "gripper_control_mode": 84533,
+        "native_gripper_feedback": 84533,
+        "joint_velocities": 84533,
+        "applied_joint_efforts": 84533,
+        "measured_joint_efforts": 84533,
+        "measured_joint_forces": 84533,
+        "hinge_velocity_rad_s": 84533,
+        "base_pose": 84533,
+        "command_base_pose": 84533,
+        "base_motion_state": 84533,
+        "grasp_index": 84533,
+        "pad_load_raw_n": 84533,
+        "pad_load_filtered_n": 84533,
+        "raw_contact_records": 84533,
+        "pad_contact": 84533,
+        "finger_net_impulse_world_ns": 84533,
+        "finger_net_force_world_n": 84533
+      },
+      "force_events": [],
+      "contact_pair_count": 1,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "duration": "352.200000",
+            "nb_frames": "10566"
+          }
+        ]
+      },
+      "contact_force_note": "normal point impulse only; friction anchors were not included in this frozen telemetry interface"
+    },
+    "nonhandle_contact_audit": {
+      "asset_id": "45623",
+      "nonhandle_contact_by_phase": {},
+      "positive_nonhandle_contacts_after_valid_grasp": 0,
+      "largest_nonhandle_contact": null,
+      "note": "passive saved-telemetry audit; contact-pair occurrence counts alone do not establish positive impulse"
+    },
+    "integrity": {
+      "asset_id": "45623",
+      "decoded_streams": {
+        "observations_chunks": {
+          "decoded_records": 84533,
+          "indexed_records": 84533,
+          "chunk_errors": [],
+          "matches_report": true
+        },
+        "physics_steps_chunks": {
+          "decoded_records": 84533,
+          "indexed_records": 84533,
+          "chunk_errors": [],
+          "matches_report": true
+        }
+      },
+      "video_decode_errors_bytes": 0,
+      "export_complete": true,
+      "actor_exit": {
+        "asset_id": "45623",
+        "pid": 337729,
+        "returncode": 0,
+        "physical_attempts": 1,
+        "retry": false
+      },
+      "source_runner_matches": true
+    },
+    "gpu": {
+      "mode": "exclusive",
+      "gpu": 2,
+      "other_compute_process_count": 0,
+      "hardware_exclusive": true,
+      "one_owned_actor": true
+    },
+    "initialization_failures_preserved": 0
+  },
+  "45717": {
+    "report": {
+      "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_NATIVE_GRIPPER_APPROXIMATE_ACTUATOR_SIMULATION",
+      "asset_id": "45717",
+      "success": false,
+      "status": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+      "initial_grasp": false,
+      "target_deg": 30.0,
+      "max_actual_angle_deg": 0.00212877313606441,
+      "max_actual_angle_after_valid_grasp_deg": null,
+      "final_actual_angle_deg": 9.127231235264317e-05,
+      "initial_actual_angle_deg": 0.0,
+      "grasp_acquisition": null,
+      "base_fixed": [
+        1.3444492796365852,
+        -0.6479619304430255,
+        -0.1,
+        149.70608713931193
+      ],
+      "base_moves_after_grasp": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "simulation_s": 180.52916666666667,
+      "wall_s": 1123.6696870599408,
+      "physics_steps": 43327,
+      "observation_records": 43327,
+      "closure_update_calls": 24000,
+      "unilateral_fix_branch_calls": 12492,
+      "aperture_command_reopenings": 0,
+      "minimum_joint_margin_rad": 0.6614084498691559,
+      "peak_pad_load_n": 0.2111322131646803,
+      "motion_scale": 1.0,
+      "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+      "telemetry_issues": {},
+      "first_divergence": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+        "runner_sha256": "c08fb22edcf6cffdddef32c3ddaf37a8123f6f7f59025d5e785e8305b97065e9",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_heldout_20261013/45717/job.json"
+        ],
+        "pid": 3745072,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "GT_dependencies": [
+        "oracle handle mesh geometry",
+        "known articulation geometry",
+        "actual moving-body/articulation feedback",
+        "collision model"
+      ],
+      "scene_restart_or_stitching": false,
+      "object_physics_or_geometry_changed": false
+    },
+    "analysis": {
+      "asset_id": "45717",
+      "success": false,
+      "status": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+      "actual_max_after_grasp_deg": null,
+      "grasp_acquisition": null,
+      "max_slip_mm": 0.0,
+      "max_rotation_drift_deg": 0.0,
+      "max_loaded_TCP_mm_s": 0.0,
+      "max_all_phase_TCP_mm_s": 19.35684627187631,
+      "minimum_margin_rad": 0.6614084498691559,
+      "max_arm_tracking_error_rad": 0.00375753128320655,
+      "max_pad_load_n": 0.2111322131646803,
+      "max_mimic_error_rad": 0.00011924654245376587,
+      "both_filtered_pad_unloading_intervals": [],
+      "simulation_s": 180.52916666666667,
+      "wall_s": 1123.6696870599408,
+      "records": 43327,
+      "native_physics_records": 43327,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 54.854166666666664,
+        "APPROACH": 25.175,
+        "SLOW_CLOSE": 47.95,
+        "CENTER": 52.05
+      },
+      "telemetry_counts": {
+        "physics_step_index": 43327,
+        "step_start_s": 43327,
+        "post_step_simulation_time_s": 43327,
+        "physics_dt_s": 43327,
+        "physics_substeps": 43327,
+        "sensor_period_s": 43327,
+        "sensor_rate_hz": 43327,
+        "command_q_all": 43327,
+        "command_q_velocity_arm": 43327,
+        "command_aperture_m": 43327,
+        "measured_aperture_m": 43327,
+        "command_finger_efforts": 43327,
+        "legacy_closure_effort_request_not_applied": 43327,
+        "gripper_control_mode": 43327,
+        "native_gripper_feedback": 43327,
+        "joint_velocities": 43327,
+        "applied_joint_efforts": 43327,
+        "measured_joint_efforts": 43327,
+        "measured_joint_forces": 43327,
+        "hinge_velocity_rad_s": 43327,
+        "base_pose": 43327,
+        "command_base_pose": 43327,
+        "base_motion_state": 43327,
+        "grasp_index": 43327,
+        "pad_load_raw_n": 43327,
+        "pad_load_filtered_n": 43327,
+        "raw_contact_records": 43327,
+        "pad_contact": 43327,
+        "finger_net_impulse_world_ns": 43327,
+        "finger_net_force_world_n": 43327
+      },
+      "force_events": [],
+      "contact_pair_count": 6,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "duration": "180.500000",
+            "nb_frames": "5415"
+          }
+        ]
+      },
+      "contact_force_note": "normal point impulse only; friction anchors were not included in this frozen telemetry interface"
+    },
+    "nonhandle_contact_audit": {
+      "asset_id": "45717",
+      "nonhandle_contact_by_phase": {
+        "PREGRASP": {
+          "records": 2099,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "APPROACH": {
+          "records": 10025,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "SLOW_CLOSE": {
+          "records": 38240,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "CENTER": {
+          "records": 61313,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        }
+      },
+      "positive_nonhandle_contacts_after_valid_grasp": 0,
+      "largest_nonhandle_contact": {
+        "t": 46.608333333333334,
+        "phase": "PREGRASP",
+        "force_n": 0.0,
+        "contact": {
+          "collider": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/xarm_gripper_base_link/right_outer_knuckle/right_finger/right_finger_1/right_finger",
+          "target": "/World/cabinet_fixture",
+          "finger": "gripper_link2",
+          "owner": "whole_finger",
+          "allowed_pad_target": false,
+          "force_n": 0.0,
+          "impulse_world_ns": [
+            0.0,
+            -0.0,
+            0.0
+          ],
+          "separation_m": 0.10057086497545242,
+          "face0": 0,
+          "face1": 0,
+          "collider0": "/World/Piper/Geometry/world/link_base/link1/link2/link3/link4/link5/link6/link7/link_eef/xarm_gripper_base_link/right_outer_knuckle/right_finger/right_finger_1/right_finger",
+          "collider1": "/World/cabinet_fixture",
+          "normal_reference": "native report direction; original collider ordering preserved",
+          "contact_point_world_m": [
+            1.0505247116088867,
+            -0.30216240882873535,
+            0.05806269496679306
+          ],
+          "native_normal_world": [
+            2.2072342176215898e-07,
+            -0.9837398529052734,
+            0.17959962785243988
+          ]
+        },
+        "angle_deg": 0.0,
+        "before_valid_grasp": true
+      },
+      "note": "passive saved-telemetry audit; contact-pair occurrence counts alone do not establish positive impulse"
+    },
+    "integrity": {
+      "asset_id": "45717",
+      "decoded_streams": {
+        "observations_chunks": {
+          "decoded_records": 43327,
+          "indexed_records": 43327,
+          "chunk_errors": [],
+          "matches_report": true
+        },
+        "physics_steps_chunks": {
+          "decoded_records": 43327,
+          "indexed_records": 43327,
+          "chunk_errors": [],
+          "matches_report": true
+        }
+      },
+      "video_decode_errors_bytes": 0,
+      "export_complete": true,
+      "actor_exit": {
+        "asset_id": "45717",
+        "pid": 3745072,
+        "returncode": 0,
+        "physical_attempts": 1,
+        "retry": false
+      },
+      "source_runner_matches": true
+    },
+    "gpu": {
+      "mode": "exclusive",
+      "gpu": 2,
+      "other_compute_process_count": 0,
+      "hardware_exclusive": true,
+      "one_owned_actor": true
+    },
+    "initialization_failures_preserved": 0
+  },
+  "45850": {
+    "report": {
+      "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_NATIVE_GRIPPER_APPROXIMATE_ACTUATOR_SIMULATION",
+      "asset_id": "45850",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "initial_grasp": true,
+      "target_deg": 30.0,
+      "max_actual_angle_deg": 30.00008773803711,
+      "max_actual_angle_after_valid_grasp_deg": 30.00008773803711,
+      "final_actual_angle_deg": 30.000089627285266,
+      "initial_actual_angle_deg": 0.0,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 154.24166666666667,
+        "step": 37018,
+        "angle_deg": 0.04494485631585121,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.49372217802899104,
+          0.5193948944039066
+        ],
+        "base": [
+          0.45460741943513516,
+          -0.5545757641755698,
+          -0.1,
+          28.663346715585675
+        ]
+      },
+      "base_fixed": [
+        0.45460741943513516,
+        -0.5545757641755698,
+        -0.1,
+        28.663346715585675
+      ],
+      "base_moves_after_grasp": 0,
+      "regrasps": 0,
+      "intentional_releases": 0,
+      "simulation_s": 622.2416666666667,
+      "wall_s": 3841.789413772989,
+      "physics_steps": 149338,
+      "observation_records": 149338,
+      "closure_update_calls": 16910,
+      "unilateral_fix_branch_calls": 585,
+      "aperture_command_reopenings": 0,
+      "minimum_joint_margin_rad": 0.7062829580307008,
+      "peak_pad_load_n": 1.1551108888556614,
+      "motion_scale": 1.0,
+      "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+      "telemetry_issues": {},
+      "first_divergence": null,
+      "active_sources": {
+        "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+        "runner_sha256": "c08fb22edcf6cffdddef32c3ddaf37a8123f6f7f59025d5e785e8305b97065e9",
+        "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+        "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+        "argv": [
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_native_transfer_repair.py",
+          "--job",
+          "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/native_g1_heldout_20261013/45850/job.json"
+        ],
+        "pid": 1459194,
+        "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+        "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+        "initial_sequence_sha256": "79a6b9d68f0b093e17014bfd2350e07b6c3983f7ae726b2e0cea6fd86f80442f",
+        "active_closure_alias": true
+      },
+      "GT_dependencies": [
+        "oracle handle mesh geometry",
+        "known articulation geometry",
+        "actual moving-body/articulation feedback",
+        "collision model"
+      ],
+      "scene_restart_or_stitching": false,
+      "object_physics_or_geometry_changed": false
+    },
+    "analysis": {
+      "asset_id": "45850",
+      "success": true,
+      "status": "SHARED_DOOR_30_DEG_SUCCESS",
+      "actual_max_after_grasp_deg": 30.00008773803711,
+      "grasp_acquisition": {
+        "event": "GRASP_VERIFIED",
+        "t": 154.24166666666667,
+        "step": 37018,
+        "angle_deg": 0.04494485631585121,
+        "grasp_index": 0,
+        "pad_loads_n": [
+          0.49372217802899104,
+          0.5193948944039066
+        ],
+        "base": [
+          0.45460741943513516,
+          -0.5545757641755698,
+          -0.1,
+          28.663346715585675
+        ]
+      },
+      "max_slip_mm": 1.9564329825142606,
+      "max_rotation_drift_deg": 0.28090330350172493,
+      "max_loaded_TCP_mm_s": 2.601121209244176,
+      "max_all_phase_TCP_mm_s": 17.257486451012632,
+      "minimum_margin_rad": 0.7062829580307008,
+      "max_arm_tracking_error_rad": 0.004620452798840047,
+      "max_pad_load_n": 1.1551108888556614,
+      "max_mimic_error_rad": 0.0012421607971191406,
+      "both_filtered_pad_unloading_intervals": [],
+      "simulation_s": 622.2416666666667,
+      "wall_s": 3841.789413772989,
+      "records": 149338,
+      "native_physics_records": 149338,
+      "phase_simulation_s": {
+        "SETTLE": 0.5,
+        "PREGRASP": 58.204166666666666,
+        "APPROACH": 25.083333333333332,
+        "SLOW_CLOSE": 67.75416666666666,
+        "CENTER": 2.4375,
+        "LOW_PRELOAD": 0.2625,
+        "FORCE_HOLD": 0.5041666666666667,
+        "TRANSMISSION_PROBE": 21.354166666666668,
+        "LOCAL_CENTERING": 0.125,
+        "OPEN_CONTINUE": 446.01666666666665
+      },
+      "telemetry_counts": {
+        "physics_step_index": 149338,
+        "step_start_s": 149338,
+        "post_step_simulation_time_s": 149338,
+        "physics_dt_s": 149338,
+        "physics_substeps": 149338,
+        "sensor_period_s": 149338,
+        "sensor_rate_hz": 149338,
+        "command_q_all": 149338,
+        "command_q_velocity_arm": 149338,
+        "command_aperture_m": 149338,
+        "measured_aperture_m": 149338,
+        "command_finger_efforts": 149338,
+        "legacy_closure_effort_request_not_applied": 149338,
+        "gripper_control_mode": 149338,
+        "native_gripper_feedback": 149338,
+        "joint_velocities": 149338,
+        "applied_joint_efforts": 149338,
+        "measured_joint_efforts": 149338,
+        "measured_joint_forces": 149338,
+        "hinge_velocity_rad_s": 149338,
+        "base_pose": 149338,
+        "command_base_pose": 149338,
+        "base_motion_state": 149338,
+        "grasp_index": 149338,
+        "pad_load_raw_n": 149338,
+        "pad_load_filtered_n": 149338,
+        "raw_contact_records": 149338,
+        "pad_contact": 149338,
+        "finger_net_impulse_world_ns": 149338,
+        "finger_net_force_world_n": 149338
+      },
+      "force_events": [],
+      "contact_pair_count": 3,
+      "video": {
+        "programs": [],
+        "stream_groups": [],
+        "streams": [
+          {
+            "width": 1280,
+            "height": 960,
+            "duration": "622.233333",
+            "nb_frames": "18667"
+          }
+        ]
+      },
+      "contact_force_note": "normal point impulse only; friction anchors were not included in this frozen telemetry interface"
+    },
+    "nonhandle_contact_audit": {
+      "asset_id": "45850",
+      "nonhandle_contact_by_phase": {
+        "SETTLE": {
+          "records": 120,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "PREGRASP": {
+          "records": 16196,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "APPROACH": {
+          "records": 6158,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "SLOW_CLOSE": {
+          "records": 16261,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "CENTER": {
+          "records": 585,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "LOW_PRELOAD": {
+          "records": 63,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "FORCE_HOLD": {
+          "records": 121,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "TRANSMISSION_PROBE": {
+          "records": 5125,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "LOCAL_CENTERING": {
+          "records": 30,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        },
+        "OPEN_CONTINUE": {
+          "records": 114939,
+          "positive_impulse_contact_records": 0,
+          "maximum_reported_force_n": 0.0
+        }
+      },
+      "positive_nonhandle_contacts_after_valid_grasp": 0,
+      "largest_nonhandle_contact": {
+        "t": 0.0,
+        "phase": "SETTLE",
+        "force_n": 0.0,
+        "contact": {
+          "collider": "/World/Piper/Geometry/world/link_base/link1/link1_1/link1",
+          "target": "/World/table",
+          "finger": "link1",
+          "owner": "robot_body",
+          "allowed_pad_target": false,
+          "force_n": 0.0,
+          "impulse_world_ns": [
+            -0.0,
+            -0.0,
+            0.0
+          ],
+          "separation_m": 0.08032102137804031,
+          "face0": 0,
+          "face1": 0,
+          "collider0": "/World/Piper/Geometry/world/link_base/link1/link1_1/link1",
+          "collider1": "/World/table",
+          "normal_reference": "native report direction; original collider ordering preserved",
+          "contact_point_world_m": [
+            0.46530643105506897,
+            -0.5085358619689941,
+            0.05500014126300812
+          ],
+          "native_normal_world": [
+            -6.686617837203812e-08,
+            -0.728773832321167,
+            0.684754490852356
+          ]
+        },
+        "angle_deg": 0.0,
+        "before_valid_grasp": true
+      },
+      "note": "passive saved-telemetry audit; contact-pair occurrence counts alone do not establish positive impulse"
+    },
+    "integrity": {
+      "asset_id": "45850",
+      "decoded_streams": {
+        "observations_chunks": {
+          "decoded_records": 149338,
+          "indexed_records": 149338,
+          "chunk_errors": [],
+          "matches_report": true
+        },
+        "physics_steps_chunks": {
+          "decoded_records": 149338,
+          "indexed_records": 149338,
+          "chunk_errors": [],
+          "matches_report": true
+        }
+      },
+      "video_decode_errors_bytes": 0,
+      "export_complete": true,
+      "actor_exit": {
+        "asset_id": "45850",
+        "pid": 1459194,
+        "returncode": 0,
+        "physical_attempts": 1,
+        "retry": false
+      },
+      "source_runner_matches": true
+    },
+    "gpu": {
+      "mode": "exclusive",
+      "gpu": 2,
+      "other_compute_process_count": 0,
+      "hardware_exclusive": true,
+      "one_owned_actor": true
+    },
+    "initialization_failures_preserved": 0
+  }
+}

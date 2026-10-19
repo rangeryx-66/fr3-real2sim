@@ -1,0 +1,121 @@
+{
+  "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / SHARED_FIXED_BASE_DOOR_SKILL",
+  "asset_id": "45415",
+  "success": true,
+  "status": "SHARED_DOOR_30_DEG_SUCCESS",
+  "initial_grasp": true,
+  "target_deg": 30.0,
+  "max_actual_angle_deg": 30.00002670288086,
+  "max_actual_angle_after_valid_grasp_deg": 30.00002670288086,
+  "final_actual_angle_deg": 30.000028155582736,
+  "initial_actual_angle_deg": 1.191841944826111e-18,
+  "grasp_acquisition": {
+    "event": "GRASP_VERIFIED",
+    "t": 152.3125,
+    "step": 36555,
+    "angle_deg": 1.6908893840650308e-08,
+    "grasp_index": 0,
+    "pad_loads_n": [
+      0.5266621820687768,
+      0.5256625024220402
+    ],
+    "base": [
+      0.8587593481165543,
+      -0.7283137102357088,
+      -0.09999997913837433,
+      150.01498871768138
+    ]
+  },
+  "base_fixed": [
+    0.8587593481165543,
+    -0.7283137102357088,
+    -0.09999997913837433,
+    150.01498871768138
+  ],
+  "base_moves_after_grasp": 0,
+  "regrasps": 0,
+  "intentional_releases": 0,
+  "simulation_s": 1083.3916666666667,
+  "wall_s": 5438.219054011162,
+  "physics_steps": 260014,
+  "observation_records": 260014,
+  "closure_update_calls": 21691,
+  "unilateral_fix_branch_calls": 828,
+  "aperture_command_reopenings": 0,
+  "minimum_joint_margin_rad": 0.12236374509582504,
+  "peak_pad_load_n": 1.2234145464141997,
+  "motion_scale": 1.0,
+  "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+  "telemetry_issues": {},
+  "first_divergence": null,
+  "active_sources": {
+    "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_shared_door_skill.py",
+    "runner_sha256": "c45dce5a56eec5c3b02d75b5ac598d243e7adbf6548dc836e5f7908c54b08d84",
+    "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+    "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+    "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+    "argv": [
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_shared_door_skill.py",
+      "--job",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/door_transfer4_20261012/45415/job.json"
+    ],
+    "pid": 3699451,
+    "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+    "frozen_runner_sha256": "a1d6d3a053928249c211c4c15b4361c82fe52a37d7e51876e5a9a30502dfa261",
+    "frozen_opening_sha256": "08131e645e34119507edfd8fc0365ea22be1f67e907c37795a6560c4f74eb6f1",
+    "shared_contact_policy_sha256": "13e3c388f83eb8efdb2c727fbcc14815498a1a7dfc77107db5393c03d9cda622",
+    "skill_inputs": {
+      "robot_gripper": {
+        "urdf": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/config/piper.urdf",
+        "gripper_policy": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/config/semantic_interaction.json",
+        "sha256": "2163f398eaf9e42c3e167f11d1b17f41849037089a7a4a91a3b425aac59259c8",
+        "base_height_m": -0.09999997913837433
+      },
+      "handle_region": {
+        "source": "oracle_handle",
+        "asset_id": "45415",
+        "mesh": "original-40"
+      },
+      "articulation_model": {
+        "type": "known_revolute",
+        "joint": "joint_revolute_l_1_abstract_1_2",
+        "axis": "0.0 1.0 0.0",
+        "authored_limits": {
+          "lower": 0.0,
+          "upper": 1.5833626974092558
+        },
+        "urdf_origin": {
+          "xyz": "0.3898112697731162 0.27391028447002447 0.14886136154606752",
+          "rpy": "0 0 0"
+        },
+        "origin_frame": "parent",
+        "axis_frame": "joint"
+      },
+      "state_source": {
+        "type": "oracle_dynamic",
+        "visual_source": null,
+        "GT_fallback_from_visual_allowed": false
+      },
+      "target": {
+        "actual_deg": 30.0
+      },
+      "permitted_recovery": {
+        "local_centering_attempts": 1,
+        "release": false,
+        "regrasp": false,
+        "move_base": false
+      }
+    },
+    "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+    "initial_sequence_sha256": "ac8b77279205d6aacdcc8d6e86e04c17c1c22de1fe93a0e7c72ce4aed6b0bea2",
+    "active_closure_alias": true
+  },
+  "GT_dependencies": [
+    "oracle handle mesh geometry",
+    "known articulation geometry",
+    "actual moving-body/articulation feedback",
+    "collision model"
+  ],
+  "scene_restart_or_stitching": false,
+  "object_physics_or_geometry_changed": false
+}

@@ -1,0 +1,88 @@
+{
+  "schema": "articulated_47686_preflight/v1",
+  "generated_utc": "2026-09-29T18:48:20.374433+00:00",
+  "kind": "evaluator-only reachability diagnostics and real Isaac/MoveIt smoke; no SAM3 or physical grasp trial",
+  "asset_id": "47686",
+  "sam3_checkpoint": "unavailable; official facebook/sam3 download returned HTTP 403",
+  "initial_pose": {
+    "x_m": 0.45,
+    "y_m": 0.05,
+    "yaw_deg": -90,
+    "fixture_height_m": 0.18,
+    "handle_visible_pixels": 1803,
+    "graspgenx_raw_candidates": 100,
+    "dex1_collision_counts": {
+      "raw": 100,
+      "target": 100,
+      "approach": 100,
+      "collision_free": 13,
+      "collision": 87,
+      "collision_unknown": 0,
+      "low_clearance": 0,
+      "width_unreachable": 0
+    },
+    "extended_dex1_variant_counts": {
+      "raw": 100,
+      "variants": 3900,
+      "target_near": 3898,
+      "collision_free": 406,
+      "collision": 3433,
+      "low_clearance": 59
+    },
+    "extended_offline_exact_ik": {
+      "tested": 406,
+      "feasible": 0
+    }
+  },
+  "placement_raw_grid": {
+    "tested": 125,
+    "distribution": {
+      "0": 108,
+      "1": 17
+    }
+  },
+  "placement_variant_grid": {
+    "tested": 27,
+    "best_offline_ik_count": 2
+  },
+  "pose_c": {
+    "installation": [
+      0.2,
+      0.2,
+      -120
+    ],
+    "default_camera_visible_pixels": 231,
+    "side_camera_visible_pixels": 1257,
+    "side_camera_fk_tcp_check": {
+      "position_error_m": 8.302388210551686e-07,
+      "rotation_error_rad": 5.537684411171182e-06
+    },
+    "moveit_raw_rank60_status": "COLLISION",
+    "moveit_raw_rank60_detail": "COLLISION:WORLD_COLLISION: [('Link7', 'r1a7_pedestal'), ('dex1_Link2_1', 'base_link'), ('dex1_Link2_2', 'base_link'), ('dex1_Link2_3', 'base_link'), ('dex1_base_link', 'base_link'), ('dex1_Link2_2', 'cabinet_door'), ('dex1_Link1_1', 'r1a7_pedestal'), ('dex1_Link1_2', 'r1a7_pedestal'), ('dex1_Link1_3', 'r1a7_pedestal'), ('dex1_Link2_1', 'r1a7_pedestal'), ('dex1_base_link', 'r1a7_pedestal')] x9"
+  },
+  "pose_d": {
+    "installation": [
+      0.35,
+      0.2,
+      -150
+    ],
+    "side_camera_visible_pixels": 0,
+    "moveit_variants": [
+      {
+        "rank": 52,
+        "variant": "surface_blend0.5_depth-0.020_pitch+20_yaw-30",
+        "status": "COLLISION",
+        "detail": "COLLISION:WORLD_COLLISION: [('Link1', 'cabinet_door'), ('Link1', 'cabinet_static'), ('Link2', 'cabinet_door'), ('Link2', 'cabinet_static'), ('dex1_Link1_1', 'base_link'), ('dex1_Link2_1', 'base_link'), ('dex1_Link2_2', 'base_link'), ('dex1_Link2_3', 'base_link'), ('dex1_base_link', 'base_link'), ('dex1_Link2_2', 'cabinet_door'), ('dex1_Link2_2', 'cabinet_static'), ('dex1_Link2_3', 'cabinet_static'), ('dex1_Link1_1', 'r1a7_pedestal'), ('dex1_Link1_2', 'r1a7_pedestal'), ('dex1_Link1_3', 'r1a7_pedestal'), ('dex1_Link2_1', 'r1a7_pedestal'), ('dex1_base_link', 'r1a7_pedestal')] x9"
+      },
+      {
+        "rank": 60,
+        "variant": "z+0.005_depth+0.000_side+0.005_rpy+0,+0,+0",
+        "status": "COLLISION",
+        "detail": "COLLISION:WORLD_COLLISION: [('Link1', 'cabinet_door'), ('Link1', 'cabinet_static'), ('Link2', 'cabinet_door'), ('Link2', 'cabinet_static'), ('Link7', 'cabinet_door'), ('dex1_Link2_1', 'base_link'), ('dex1_Link2_2', 'base_link'), ('dex1_Link2_3', 'base_link'), ('dex1_base_link', 'base_link'), ('dex1_Link2_1', 'cabinet_door'), ('dex1_Link2_2', 'cabinet_door'), ('dex1_base_link', 'cabinet_door'), ('dex1_Link2_1', 'cabinet_static'), ('dex1_Link2_2', 'cabinet_static'), ('dex1_Link2_3', 'cabinet_static'), ('dex1_base_link', 'cabinet_static'), ('dex1_Link1_1', 'r1a7_pedestal'), ('dex1_Link1_2', 'r1a7_pedestal'), ('dex1_Link1_3', 'r1a7_pedestal'), ('dex1_base_link', 'r1a7_pedestal')] x4; COLLISION:WORLD_COLLISION: [('Link1', 'cabinet_door'), ('Link1', 'cabinet_static'), ('Link2', 'cabinet_door'), ('Link2', 'cabinet_static'), ('Link7', 'Link5'), ('Link7', 'cabinet_door'), ('dex1_Link2_1', 'base_link'), ('dex1_Link2_2', 'base_link'), ('dex1_Link2_3', 'base_link'), ('dex1_base_link', 'base_link'), ('dex1_Link2_1', 'cabinet_door'), ('dex1_Link2_2', 'cabinet_door'), ('dex1_base_link', 'cabinet_door'), ('dex1_Link2_1', 'cabinet_static'), ('dex1_Link2_2', 'cabinet_static'), ('dex1_Link2_3', 'cabinet_static'), ('dex1_base_link', 'cabinet_static'), ('dex1_Link1_1', 'r1a7_pedestal'), ('dex1_Link1_2', 'r1a7_pedestal'), ('dex1_Link1_3', 'r1a7_pedestal'), ('dex1_base_link', 'r1a7_pedestal')] x4; COLLISION:WORLD_COLLISION: [('Link1', 'cabinet_door'), ('Link1', 'cabinet_static'), ('Link2', 'cabinet_door'), ('Link2', 'cabinet_static'), ('Link3', 'cabinet_door'), ('Link3', 'cabinet_static'), ('Link4', 'cabinet_door'), ('Link4', 'cabinet_static'), ('Link7', 'Link5'), ('Link5', 'cabinet_door'), ('Link5', 'cabinet_static'), ('Link7', 'cabinet_door'), ('dex1_Link2_1', 'base_link'), ('dex1_Link2_2', 'base_link'), ('dex1_Link2_3', 'base_link'), ('dex1_base_link', 'base_link'), ('dex1_Link2_1', 'cabinet_door'), ('dex1_Link2_2', 'cabinet_door'), ('dex1_base_link', 'cabinet_door'), ('dex1_Link2_1', 'cabinet_static'), ('dex1_Link2_2', 'cabinet_static'), ('dex1_Link2_3', 'cabinet_static'), ('dex1_base_link', 'cabinet_static'), ('dex1_Link1_1', 'r1a7_pedestal'), ('dex1_Link1_2', 'r1a7_pedestal'), ('dex1_Link1_3', 'r1a7_pedestal'), ('dex1_base_link', 'r1a7_pedestal')] x1"
+      }
+    ]
+  },
+  "full_gate": "SAM3 checkpoint unavailable; official facebook/sam3 access is required",
+  "actual_grasp_or_open_trials": 0,
+  "success": false
+}

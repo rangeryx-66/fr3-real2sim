@@ -1,0 +1,272 @@
+[
+  {
+    "sequence": 0,
+    "operation": "evaluate_view",
+    "reasoning": "Inspected fresh RGB/mask/depth/cloud: no accepted SAM cue; upper bar occluded by robot. Fresh visible pixel (340,275) is only a depth aiming cue, not a mask/grasp. Elevated oblique view should reveal top and support separation.",
+    "segments": null,
+    "inspected_image_sha256": "107b0662fd1e600bba4a930064d84757fb8d05823fce553352f50eebdc5ae426",
+    "wall_s": 0.17592402012087405,
+    "unloaded_wait_s": 60.97842392488383
+  },
+  {
+    "sequence": 1,
+    "operation": "move_and_observe",
+    "reasoning": "Original checker found direct route, minimum margin1.0936rad. Execute actual actuator motion and recapture; no camera relocation.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 42.30120948399417,
+    "unloaded_wait_s": 16.177691485034302
+  },
+  {
+    "sequence": 2,
+    "operation": "evaluate_view",
+    "reasoning": "Fresh inspected SAM score0.546875 detects bar but top touches image boundary. Measured cue spans256mm, bottom visible, top unknown. Increase standoff and raise aim from this cue to fit complete bar while retaining oblique clearance; no mask admission yet.",
+    "segments": null,
+    "inspected_image_sha256": "6fa4683fc534e1eb9b4b672fef4bb0508cd2780bec17bb9c0e760bc3ad89cbd0",
+    "wall_s": 0.11983857792802155,
+    "unloaded_wait_s": 39.36509708897211
+  },
+  {
+    "sequence": 3,
+    "operation": "move_and_observe",
+    "reasoning": "Fresh partial-view framing adjustment passed original IK/collision validation. Move normal actuators then inspect fresh full frame.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 35.23034628480673,
+    "unloaded_wait_s": 14.75673298817128
+  },
+  {
+    "sequence": 4,
+    "operation": "evaluate_view",
+    "reasoning": "Inspected fresh RGB/mask/depth and semantic cloud: complete295.86mm bar retained, but one-sided measured patches leave opposite lateral contact uncertain. Request opposite oblique view to add measured surface, not invent rear faces; reserve final view budget for later state if needed.",
+    "segments": null,
+    "inspected_image_sha256": "2aa9d9362a481340007d32fb3d41f3a4696a33916e4f6fe7d509dba2c296e776",
+    "wall_s": 0.13016019482165575,
+    "unloaded_wait_s": 29.264047416159883
+  },
+  {
+    "sequence": 5,
+    "operation": "move_and_observe",
+    "reasoning": "Complementary fresh-cloud view passed original complete path check. Execute and inspect measured contribution.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 36.49579590186477,
+    "unloaded_wait_s": 29.399949533166364
+  },
+  {
+    "sequence": 6,
+    "operation": "build_geometry",
+    "reasoning": "Inspected complementary RGB/SAM/depth/cloud and semantic surfaces: complete295.90mm bar,7830 new measured voxels; opposite-side observed support added and rear remains unknown. Evidence sufficient; stop scanning and automatically rank/validate current-state candidates.",
+    "segments": null,
+    "inspected_image_sha256": "9058d76d1efd06de26f671b6d1d873e874779b370d5bd0935b133ee5982627f9",
+    "wall_s": 237.83098191884346,
+    "unloaded_wait_s": 26.80342994304374
+  },
+  {
+    "sequence": 7,
+    "operation": "validate_execution",
+    "reasoning": "Automatic plan exists on fresh measured patches, both predicted first contacts13.995mm in pad regions, no root collision. Revalidate complete observation-to-start/approach with measured state before Agent physical approval.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 2.4750176779925823,
+    "unloaded_wait_s": 55.8620674170088
+  },
+  {
+    "sequence": 8,
+    "operation": "attempt_grasp_and_probe",
+    "reasoning": "Explicit first physical acquisition approval after inspecting fresh official-G1/observed-cloud board. Current-state complete approach passes. Initial modest overlap5.4→2.2→4.9deg gives internal acceleration and distinct velocities/directions before selecting wider angles from measured uncertainty. All are predeclared FIT, not validation. Existing controller stops/guarded parking authoritative; no loaded Agent wait.",
+    "segments": [
+      {
+        "target_deg": 5.4,
+        "role": "FIT_V5_BASE_ACCEL",
+        "profile": "constant",
+        "velocity_program": "plateaus",
+        "reference_speed_m_s": 0.012,
+        "reference_acceleration_m_s2": 0.04,
+        "low_speed_fraction": 0.125,
+        "ramp_s": 0.45,
+        "plateau_s": 0.55,
+        "fit_intervals_s": [
+          [
+            0.55,
+            90.0
+          ]
+        ],
+        "hold": true
+      },
+      {
+        "target_deg": 2.2,
+        "role": "FIT_V5_BASE_REVERSE",
+        "profile": "constant",
+        "velocity_program": "constant",
+        "reference_speed_m_s": 0.006,
+        "reference_acceleration_m_s2": 0.03,
+        "fit_intervals_s": [
+          [
+            0.55,
+            90.0
+          ]
+        ],
+        "hold": true,
+        "continue_after": [
+          "SAFE_PARTIAL_PROGRESS"
+        ]
+      },
+      {
+        "target_deg": 4.9,
+        "role": "FIT_V5_BASE_VARIED",
+        "profile": "constant",
+        "velocity_program": "sine",
+        "reference_speed_m_s": 0.009,
+        "reference_acceleration_m_s2": 0.035,
+        "low_speed_fraction": 0.25,
+        "period_s": 2.7,
+        "fit_intervals_s": [
+          [
+            0.55,
+            90.0
+          ]
+        ],
+        "hold": true,
+        "continue_after": [
+          "SAFE_PARTIAL_PROGRESS"
+        ]
+      }
+    ],
+    "inspected_image_sha256": "1af2339ad6c155659a07bdb120cb42915abd7428e05b0af9df69b45829077b75",
+    "wall_s": 399.0373374479823,
+    "unloaded_wait_s": 31.956038455013186
+  },
+  {
+    "sequence": 9,
+    "operation": "inspect_contact_result",
+    "reasoning": "All three predeclared baseline FIT targets reached. Inspect actual force/motion, support, FIT-only model and uncertainty only at the runner-verified unloaded parked boundary; then decide informative next angular region.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 0.03268499090336263,
+    "unloaded_wait_s": 0.0025077471509575844
+  },
+  {
+    "sequence": 10,
+    "operation": "reobserve_and_replan",
+    "reasoning": "Actually inspected baseline contact and model plots at verified park: three targets complete; left-dominant normal reports, peak2.498N informational warnings, no hard stop; slip2.145mm. Constant residual varies by angle/direction and FIT-only CV improves0.839→0.205mNm, but cubic condition1503 and >5.36deg unknown. Request fresh wrist geometry at actual4.944deg before second/final acquisition. Prefer bounded exploration near10deg rather than15deg: information gain~8.12 vs6deg2.46, with lower untested contact travel/cost. Separate reverse FIT then independent relevant-region validation before optional expansion.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 48.11122156097554,
+    "unloaded_wait_s": 81.89165202504955
+  },
+  {
+    "sequence": 11,
+    "operation": "evaluate_view",
+    "reasoning": "Inspected actual opened-state wrist RGB/depth/cloud: no accepted SAM cue, upper bar occluded. Use current visible lower-bar depth pixel318,300 and same-episode measured approximately296mm length only to aim higher/wider; fresh world coordinates from this camera. Request wider opposite oblique view, final bounded adjustment. No archived camera pose or GT handle correction.",
+    "segments": null,
+    "inspected_image_sha256": "be37d51f0c95b9d9f281d2d5dc399336890504e2ee2217bedb18a4d663000031",
+    "wall_s": 0.10895192413590848,
+    "unloaded_wait_s": 47.69912310806103
+  },
+  {
+    "sequence": 12,
+    "operation": "move_and_observe",
+    "reasoning": "Current-state widened view passed original IK/native collision route. Execute last allowed wrist adjustment and inspect fresh current-state geometry.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 48.67056986410171,
+    "unloaded_wait_s": 19.99652762687765
+  },
+  {
+    "sequence": 13,
+    "operation": "build_geometry",
+    "reasoning": "Actually inspected current-state RGB/SAM/depth/cloud and semantic patches: full295.815mm handle independently measured at4.944deg. Last view budget used; rear remains unknown. Generate current-state geometry/grasp automatically with unchanged native-G1 score and V4.4 full-execution fallback, no historical grasp reuse.",
+    "segments": null,
+    "inspected_image_sha256": "c63041cdf456be206cd512621f6862e90d7cd9ad8370bc0424487c5582407ad4",
+    "wall_s": 222.24943626509048,
+    "unloaded_wait_s": 35.570639465004206
+  },
+  {
+    "sequence": 14,
+    "operation": "validate_execution",
+    "reasoning": "Fresh current-state automatic family[-0.3,0,0,0] selected, both predicted11.936mm contacts in pad regions. Validate measured released fingers, entire approach and current4.944deg door before second/final acquisition; no saved successful pose.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 2.0172905391082168,
+    "unloaded_wait_s": 30.57829304994084
+  },
+  {
+    "sequence": 15,
+    "operation": "attempt_grasp_and_probe",
+    "reasoning": "Explicit second/final acquisition approval after actual fresh opened-state RGB-D/semantic and G1 plan inspection; complete measured-state routes pass, margin0.4388rad. FIT-only evidence favors variation but >5.36deg unknown; candidate10deg logdet gain8.12 vs6deg2.46, lower risk/cost than15deg12.83, given earlier2.15mm slip and informational normal asymmetry. New regional pull uses reduced max10mm/s and variable internal acceleration; reverse6.5mm/s overlaps; separately declared8.4deg sine-profile VALIDATION immediately follows, excluded from fit/complexity/uncertainty. No optional expansion or further acquisition. Original transmission/safety/parking contract authoritative.",
+    "segments": [
+      {
+        "target_deg": 10.0,
+        "role": "FIT_V5_REGION_ACCEL",
+        "profile": "constant",
+        "velocity_program": "plateaus",
+        "reference_speed_m_s": 0.01,
+        "reference_acceleration_m_s2": 0.04,
+        "low_speed_fraction": 0.3,
+        "ramp_s": 0.6,
+        "plateau_s": 0.6,
+        "fit_intervals_s": [
+          [
+            0.55,
+            90.0
+          ]
+        ],
+        "hold": true
+      },
+      {
+        "target_deg": 4.2,
+        "role": "FIT_V5_REGION_REVERSE",
+        "profile": "constant",
+        "velocity_program": "constant",
+        "reference_speed_m_s": 0.0065,
+        "reference_acceleration_m_s2": 0.03,
+        "fit_intervals_s": [
+          [
+            0.55,
+            90.0
+          ]
+        ],
+        "hold": true,
+        "continue_after": [
+          "SAFE_PARTIAL_PROGRESS"
+        ]
+      },
+      {
+        "target_deg": 8.4,
+        "role": "VALIDATION_V5_DISTINCT_PROFILE",
+        "profile": "constant",
+        "velocity_program": "sine",
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.03,
+        "low_speed_fraction": 0.35,
+        "period_s": 3.4,
+        "hold": true,
+        "continue_after": [
+          "SAFE_PARTIAL_PROGRESS"
+        ]
+      }
+    ],
+    "inspected_image_sha256": "a803695bc2f5e1be522880a6c6bfeab30802a770783888cd4149e7e08a955a56",
+    "wall_s": 398.26953064114787,
+    "unloaded_wait_s": 50.76133133401163
+  },
+  {
+    "sequence": 16,
+    "operation": "inspect_contact_result",
+    "reasoning": "Regional FIT physically reached10.048deg and reversed4.170deg; original independent8.4deg validation currently executing. Inspect completed physical outcome/model only after automatic guarded release and verified unloaded parking. No additional probing/acquisition authorized.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 0.022623958997428417,
+    "unloaded_wait_s": 0.0018257431220263243
+  },
+  {
+    "sequence": 17,
+    "operation": "finish",
+    "reasoning": "Actually inspected final measured contact/F-T/aperture/slip and C(q)/residual boards. Both acquisitions and all6 declared trajectories complete; held-out torque improves1.948→0.0671mNm, free angle0.3021→0.04139deg using same measured F/T input. Expanded FIT support0.237–9.731deg, condition151 vs1503 initial; model selection FIT-only. Informational unilateral normal loading persists, max relative motion3.011mm, no hard stop; safe unloaded park confirmed. Information and independent validation objectives complete; no optional expansion, more acquisitions or tuning. All online decisions finished; allow cooperative export/actor exit before any truth reveal.",
+    "segments": null,
+    "inspected_image_sha256": null,
+    "wall_s": 0.09485813090577722,
+    "unloaded_wait_s": 65.79437397792935
+  }
+]

@@ -1,0 +1,51 @@
+{
+  "registered_utc": "2026-10-16T20:22:08.398181+00:00",
+  "source_feedback_cases": [
+    0,
+    1
+  ],
+  "hidden_parameters_read": false,
+  "relative_targets_deg": [
+    3,
+    1,
+    6,
+    2
+  ],
+  "scales": [
+    0.6,
+    0.6,
+    1.0,
+    0.7
+  ],
+  "maximum_segments": 4,
+  "complete_holdout_segment": "VALIDATION_CLOSE_1",
+  "reason": "Chosen after actual case00/01 first-segment wrist/FT/motion inspection: steady opening permits a slow closing transmission check; weak I/b observability motivates direction and speed variation. Finite program preselected without hidden dynamics, not live per-segment Agent steering. Original realtime guards retain authority.",
+  "actions": [
+    {
+      "target_gain_deg": 1.0,
+      "speed_scale": 0.6,
+      "role": "VALIDATION_CLOSE_1",
+      "agent_reasoning": "Chosen after actual case00/01 first-segment wrist/FT/motion inspection: steady opening permits a slow closing transmission check; weak I/b observability motivates direction and speed variation. Finite program preselected without hidden dynamics, not live per-segment Agent steering. Original realtime guards retain authority.",
+      "decision_mode": "feedback_selected_bounded_batch"
+    },
+    {
+      "target_gain_deg": 6.0,
+      "speed_scale": 1.0,
+      "role": "FIT_OPEN_2",
+      "agent_reasoning": "Chosen after actual case00/01 first-segment wrist/FT/motion inspection: steady opening permits a slow closing transmission check; weak I/b observability motivates direction and speed variation. Finite program preselected without hidden dynamics, not live per-segment Agent steering. Original realtime guards retain authority.",
+      "decision_mode": "feedback_selected_bounded_batch"
+    },
+    {
+      "target_gain_deg": 2.0,
+      "speed_scale": 0.7,
+      "role": "FIT_CLOSE_3",
+      "agent_reasoning": "Chosen after actual case00/01 first-segment wrist/FT/motion inspection: steady opening permits a slow closing transmission check; weak I/b observability motivates direction and speed variation. Finite program preselected without hidden dynamics, not live per-segment Agent steering. Original realtime guards retain authority.",
+      "decision_mode": "feedback_selected_bounded_batch"
+    },
+    {
+      "stop": true,
+      "agent_reasoning": "Chosen after actual case00/01 first-segment wrist/FT/motion inspection: steady opening permits a slow closing transmission check; weak I/b observability motivates direction and speed variation. Finite program preselected without hidden dynamics, not live per-segment Agent steering. Original realtime guards retain authority.",
+      "decision_mode": "feedback_selected_bounded_batch"
+    }
+  ]
+}

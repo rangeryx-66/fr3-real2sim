@@ -1,0 +1,12 @@
+{
+  "source_hashes": {
+    "scripts/xarm_ft_known_joint_prior.py": "0a827561fd3862d839a985d0683359495193f179a03e133c123458526b766216",
+    "scripts/correct_xarm_ft_prior_input.py": "c9218feb518f8b7e69cca12b506b9b7eff99058ca03ef3ca772446cc22247cdb"
+  },
+  "timing": "External known-joint input repair established during case00 safe park, before recovery and later cases; original actor/estimator not modified",
+  "cause": "body_at(0) body origin was incorrectly used as hinge point; native joint anchor relative to actual recorded contact body required",
+  "original_models": "preserved, invalid as generalized joint dynamics",
+  "hidden_dynamic_parameters_read": false,
+  "original_raw_wrench": "unchanged",
+  "scope": "explicit permitted known kinematic prior input; same measured streams and frozen estimator"
+}

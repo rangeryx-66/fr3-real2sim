@@ -1,0 +1,619 @@
+{
+  "source_job": {
+    "episode_id": "test_45621_00",
+    "mode": "physics_reference",
+    "role": "reference",
+    "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_benchmark_20261003_v2/episodes/test_45621_00/source",
+    "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_benchmark_20261003_v2/episodes/test_45621_00/asset",
+    "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_plan.json",
+    "output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/test_45621_00/reference/original",
+    "gpu": 3,
+    "deadline_shanghai": "2026-10-05T05:00:00+08:00",
+    "wall_clock_budget_s": 1000,
+    "frozen_proxy_sha256": "9c927e72302d399704a5ab926f7cc2a2070ce9229c403a434db0f28c14adace1",
+    "continue_manipulation": false,
+    "robot_calibration_id": "robot_ff3e736f75bd2ff04b1e",
+    "seed": 2154004428262263588,
+    "initial_articulation_rad": 0.0,
+    "plant": {
+      "tau_c": 0.00613791986530075,
+      "b": 0.17274290528961533
+    },
+    "mobile_platform": true,
+    "budget_asset_id": "45621",
+    "asset_wall_clock_budget_s": 25200,
+    "asset_sysid_simulation_budget": 48,
+    "episode_sysid_simulation_budget": 16,
+    "candidate": 0,
+    "conditional_snapshot": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_conditional_20261004/test_45621_00/stable_grasp_snapshot.json",
+    "initial_estimate": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_execution/candidate_00/estimated_articulation.json",
+    "initial_estimate_memory": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_recovery_20261003_v2/mobile/test_45621_00/fixed_execution/candidate_00/structured_memory.json",
+    "fixed_fixture": {
+      "center": [
+        0.276497687955894,
+        0.011896743405968127,
+        0.007897622143124783
+      ],
+      "size": [
+        0.30013525351657433,
+        0.8425533826480189,
+        0.015795244286249566
+      ],
+      "quaternion_wxyz": [
+        -0.6982320575720943,
+        0.0,
+        0.0,
+        0.7158714925031165
+      ],
+      "audit": {
+        "static_root_bounds_m": [
+          [
+            -0.4335185423335277,
+            -0.29561135705817176,
+            -0.16197126030790263
+          ],
+          [
+            0.4090348403144912,
+            0.30438864294182827,
+            0.14441193206341266
+          ]
+        ],
+        "support_root_bounds_m": [
+          [
+            -0.4335185423335277,
+            -0.29561135705817176,
+            -0.16197126030790263
+          ],
+          [
+            0.4090348403144912,
+            0.30438864294182827,
+            0.1381639932086717
+          ]
+        ],
+        "swept_root_bounds_m": [
+          [
+            -0.16829049941904023,
+            -0.2908242270284173,
+            0.1431639932086717
+          ],
+          [
+            0.40425088126952136,
+            0.29960468389685857,
+            0.6713676628909367
+          ]
+        ],
+        "cut_axis_source": 2,
+        "cut_sign": 1,
+        "sweep_clearance_m": 0.005,
+        "note": "support geometry corrected; asset, robot and grasp poses unchanged"
+      }
+    },
+    "physics_protocol": [
+      {
+        "probe_id": "P1",
+        "split": "train",
+        "duration_s": 8.0,
+        "speed_m_s": 0.00025,
+        "pattern": "opening",
+        "active_windows_s": [
+          [
+            1,
+            6
+          ]
+        ]
+      },
+      {
+        "probe_id": "P2",
+        "split": "train",
+        "duration_s": 8.0,
+        "speed_m_s": 0.00025,
+        "pattern": "closing",
+        "active_windows_s": [
+          [
+            1,
+            5
+          ]
+        ]
+      },
+      {
+        "probe_id": "P3",
+        "split": "validation",
+        "duration_s": 10.0,
+        "speed_m_s": 0.0005,
+        "pattern": "stop_restart",
+        "active_windows_s": [
+          [
+            1,
+            3
+          ],
+          [
+            5,
+            7
+          ]
+        ]
+      },
+      {
+        "probe_id": "P4",
+        "split": "heldout",
+        "duration_s": 8.0,
+        "speed_m_s": 0.000375,
+        "pattern": "double_pulse",
+        "active_windows_s": [
+          [
+            0.8,
+            2.4
+          ],
+          [
+            3.2,
+            5.6
+          ]
+        ]
+      }
+    ]
+  },
+  "structures": [
+    {
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "estimate_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/estimated_articulation.json",
+      "estimate_sha256": "fe79b8751100c0cecbd39c6ef121380d665b9a6b81b30235119a26dd68720282",
+      "source_family": "observable"
+    },
+    {
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "estimate_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/estimated_articulation.json",
+      "estimate_sha256": "febfbb5d3a6ffd445417472904a17a91bc5c0f1022eb768d1ec4b0ce7641c8ea",
+      "source_family": "observable"
+    },
+    {
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "estimate_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/estimated_articulation.json",
+      "estimate_sha256": "82390d1b6c88cc1ff88f3a29de9708e00ed0163a28ada23be33d93785593eb9f",
+      "source_family": "observable"
+    },
+    {
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "estimate_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/estimated_articulation.json",
+      "estimate_sha256": "f5a7419f2d2ebcaae0ec352122bb91d1c829a25a3b71dd3d918a90fb91d6a383",
+      "source_family": "observable"
+    },
+    {
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "estimate_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/estimated_articulation.json",
+      "estimate_sha256": "7cd6dbf47dcf10b1bdc09e554b4d24411e1f6b9e3438785bdcfe74a31b55677a",
+      "source_family": "observable"
+    }
+  ],
+  "duplicate_structures": [],
+  "candidates": [
+    {
+      "candidate_id": "observable_S0_phi_000",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.0,
+      "b": 0.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_001",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.0,
+      "b": 0.3,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_002",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.0,
+      "b": 1.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_003",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.004,
+      "b": 0.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_004",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.004,
+      "b": 0.3,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_005",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.004,
+      "b": 1.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_006",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.012,
+      "b": 0.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_007",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.012,
+      "b": 0.3,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S0_phi_008",
+      "structure_id": "observable_S0",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S0/T1",
+      "tau_c": 0.012,
+      "b": 1.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_000",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.0,
+      "b": 0.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_001",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.0,
+      "b": 0.3,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_002",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.0,
+      "b": 1.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_003",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.004,
+      "b": 0.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_004",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.004,
+      "b": 0.3,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_005",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.004,
+      "b": 1.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_006",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.012,
+      "b": 0.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_007",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.012,
+      "b": 0.3,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S1_phi_008",
+      "structure_id": "observable_S1",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S1/T1",
+      "tau_c": 0.012,
+      "b": 1.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_000",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.0,
+      "b": 0.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_001",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.0,
+      "b": 0.3,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_002",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.0,
+      "b": 1.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_003",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.004,
+      "b": 0.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_004",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.004,
+      "b": 0.3,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_005",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.004,
+      "b": 1.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_006",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.012,
+      "b": 0.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_007",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.012,
+      "b": 0.3,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S2_phi_008",
+      "structure_id": "observable_S2",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S2/T1",
+      "tau_c": 0.012,
+      "b": 1.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_000",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.0,
+      "b": 0.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_001",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.0,
+      "b": 0.3,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_002",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.0,
+      "b": 1.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_003",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.004,
+      "b": 0.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_004",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.004,
+      "b": 0.3,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_005",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.004,
+      "b": 1.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_006",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.012,
+      "b": 0.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_007",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.012,
+      "b": 0.3,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S3_phi_008",
+      "structure_id": "observable_S3",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S3/T1",
+      "tau_c": 0.012,
+      "b": 1.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_000",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.0,
+      "b": 0.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_001",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.0,
+      "b": 0.3,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_002",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.0,
+      "b": 1.0,
+      "tau_s": 0.0,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_003",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.004,
+      "b": 0.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_004",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.004,
+      "b": 0.3,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_005",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.004,
+      "b": 1.0,
+      "tau_s": 0.004,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_006",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.012,
+      "b": 0.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_007",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.012,
+      "b": 0.3,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    },
+    {
+      "candidate_id": "observable_S4_phi_008",
+      "structure_id": "observable_S4",
+      "asset": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/models/S4/T1",
+      "tau_c": 0.012,
+      "b": 1.0,
+      "tau_s": 0.012,
+      "model_family": "dynamic_viscous"
+    }
+  ],
+  "conditions": {
+    "original": {
+      "tau_c": 0.00613791986530075,
+      "b": 0.17274290528961533
+    }
+  },
+  "command_tapes": {
+    "low_forward": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/commands/low_forward.json",
+    "high_forward": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/commands/high_forward.json",
+    "stop_dwell": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/commands/stop_dwell.json",
+    "reverse": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/commands/reverse.json",
+    "unseen_pulse": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00/commands/unseen_pulse.json",
+    "unseen_three_pulses": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_selection_20261004/test_45621_00/commands/unseen_three_pulses.json"
+  },
+  "prior_output": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/interactive_twin_observable_20261004/test_45621_00",
+  "snapshot_sha256": "f9b3fe31fe6f3811de8e07972bd3d9c255e99d03167d0ec77ff11ca31f137442",
+  "new_test_tape_sha256": "a55906fe73f9e7b8bf3cdeed9a5bf4dd840173985b536d58f1586f7d41fac175",
+  "selection_has_not_started": true,
+  "structure_fitter_called": false,
+  "candidate_source": "all pre-existing train-derived axis/axis-line candidates; no held-out-selected-only anchor"
+}

@@ -1,0 +1,1658 @@
+{
+  "no_new_poses": true,
+  "no_GT_in_scoring": true,
+  "unchanged_configuration": {
+    "schema": "native-g1-robust-rank-v1",
+    "frozen_before_new_planning_or_outcomes": true,
+    "translation_m": 0.001,
+    "rotation_deg": 0.5,
+    "aperture_m": 0.0006,
+    "perturbations": "15 deterministic samples: nominal; +/- each of three TCP-local translations; +/- each of three TCP-local rotations; +/- common aperture. No joint GT settling transform used.",
+    "scale_rationale": "1 mm modest translation is of the order of 0.64-0.86 mm successful closure nominal residuals and below 1.57-2.66 mm failed centered residuals. 0.5 deg is a modest rounded orientation stress, documented against all archived residuals. 0.6 mm aperture covers common finite-position load deflection across successful 45526,45638,45667,45850,45908; not a measured settling replay. These are stress scales, not confidence bounds.",
+    "archive_evidence": [
+      {
+        "asset_id": "45526",
+        "grasp_success": true,
+        "t": 123.46249999999999,
+        "nominal_to_measured_tcp_shift_mm": 0.8167601300306976,
+        "nominal_to_measured_orientation_deg": 0.28892494114707934,
+        "measured_minus_command_aperture_mm": 0.607007004710225,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45638",
+        "grasp_success": true,
+        "t": 135.11666666666667,
+        "nominal_to_measured_tcp_shift_mm": 0.6420414321623688,
+        "nominal_to_measured_orientation_deg": 0.23224812447867726,
+        "measured_minus_command_aperture_mm": 0.5974053782899086,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45667",
+        "grasp_success": true,
+        "t": 139.575,
+        "nominal_to_measured_tcp_shift_mm": 0.8553248824289096,
+        "nominal_to_measured_orientation_deg": 0.19776641097684797,
+        "measured_minus_command_aperture_mm": 0.6064726639452775,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45623",
+        "grasp_success": false,
+        "t": 352.21666666666664,
+        "nominal_to_measured_tcp_shift_mm": 2.658097758958627,
+        "nominal_to_measured_orientation_deg": 0.24057938754903915,
+        "measured_minus_command_aperture_mm": 0.032755495105358384,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45717",
+        "grasp_success": false,
+        "t": 180.525,
+        "nominal_to_measured_tcp_shift_mm": 1.572103212904632,
+        "nominal_to_measured_orientation_deg": 0.16452691017453783,
+        "measured_minus_command_aperture_mm": 0.0669335342059138,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45850",
+        "grasp_success": true,
+        "t": 154.74166666666667,
+        "nominal_to_measured_tcp_shift_mm": 0.7944294220593329,
+        "nominal_to_measured_orientation_deg": 0.18150135656135835,
+        "measured_minus_command_aperture_mm": 0.6050437764911348,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45671",
+        "grasp_success": false,
+        "t": 166.17916666666667,
+        "nominal_to_measured_tcp_shift_mm": 1.0663885259201766,
+        "nominal_to_measured_orientation_deg": 0.14131947049353072,
+        "measured_minus_command_aperture_mm": 0.20034456206438275,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45783",
+        "grasp_success": true,
+        "t": 273.0708333333333,
+        "nominal_to_measured_tcp_shift_mm": 0.32644898976686454,
+        "nominal_to_measured_orientation_deg": 0.29714387580009805,
+        "measured_minus_command_aperture_mm": 0.5867481988935906,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45908",
+        "grasp_success": true,
+        "t": 115.87916666666666,
+        "nominal_to_measured_tcp_shift_mm": 0.8198137854206033,
+        "nominal_to_measured_orientation_deg": 0.2131434944070624,
+        "measured_minus_command_aperture_mm": 0.6201550236601301,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      },
+      {
+        "asset_id": "45916",
+        "grasp_success": false,
+        "t": 156.6875,
+        "nominal_to_measured_tcp_shift_mm": 1.9040977370864418,
+        "nominal_to_measured_orientation_deg": 0.24332939456120387,
+        "measured_minus_command_aperture_mm": 0.029277946659675425,
+        "interpretation": "includes intentional bounded centering and finite-position compliance; not calibrated perception error"
+      }
+    ],
+    "shortlist_max": 18,
+    "aperture_samples": 5,
+    "pad_grid": [
+      9,
+      7
+    ],
+    "mean_weight": 0.7,
+    "lower_quartile_weight": 0.3,
+    "friction_cone_assumption_mu": 0.5,
+    "friction_note": "hypothetical isotropic Coulomb cone used only as relative direction-capacity ranking; no measured friction, calibrated wrench or physical parameter change. Also report mu=0 sensitivity, never veto on its sign.",
+    "retention_longitudinal_scale_fraction_pad_depth": 0.1,
+    "retention_lateral_scale_fraction_pad_width": 0.025,
+    "support_gap_band_m": 0.0006,
+    "depth_orientation_refinement": false,
+    "per_object_planning_wall_s": 450,
+    "new_execution_gates": false
+  },
+  "rows": [
+    {
+      "geometry": "incremental",
+      "pose": "failed",
+      "scores": {
+        "acquisition_score": 1.0,
+        "retention_score": 0.7644527191341033,
+        "task_score": 0.5151734250613821,
+        "robust_mean": 0.06566357174860213,
+        "robust_lower_quartile": 0.05653884916995086,
+        "robust_combined_score": 0.06292615497500674,
+        "chosen_expected_aperture_m": 0.014594850000000003,
+        "nominal_best_expected_aperture_m": 0.014594850000000003,
+        "uncertainty_changes_aperture_choice": false
+      },
+      "first_contacts": {
+        "gripper_link1": {
+          "finger": "gripper_link1",
+          "width_m": 0.013994850000000003,
+          "local_contact_m": [
+            0.014395378474080789,
+            0.04013919270542743,
+            -0.02588117671996798
+          ],
+          "existing_pad_region": true
+        },
+        "gripper_link2": {
+          "finger": "gripper_link2",
+          "width_m": 0.013994850000000003,
+          "local_contact_m": [
+            -0.006636241549052124,
+            0.04102455890605132,
+            -0.02564263834162006
+          ],
+          "existing_pad_region": true
+        }
+      },
+      "nominal_sides": [
+        {
+          "finger": "gripper_link1",
+          "support": 0.26174075884720066,
+          "longitudinal_retention": 0.8009886092949351,
+          "lateral_retention": 0.7015401112258155,
+          "retention": 0.7663639416990259,
+          "longitudinal_margin_mm": 15.59638925131997,
+          "lateral_margin_mm": 6.557483561321635,
+          "opening_capacity_assumed_mu": 0.33955886950514363,
+          "opening_capacity_mu0": 0.0,
+          "geometric_ray_support_area_proxy_m2": 0.00028955070421220604
+        },
+        {
+          "finger": "gripper_link2",
+          "support": 0.26397554433013487,
+          "longitudinal_retention": 0.7993411754921242,
+          "lateral_retention": 0.6892570663814045,
+          "retention": 0.7608199037837183,
+          "longitudinal_margin_mm": 15.435764457141563,
+          "lateral_margin_mm": 6.498172393934366,
+          "opening_capacity_assumed_mu": 0.5241435048217841,
+          "opening_capacity_mu0": 0.09668037939547823,
+          "geometric_ray_support_area_proxy_m2": 0.00029202293556507904
+        }
+      ],
+      "nominal_rear_hypotheses": [
+        {
+          "scale": 0.75,
+          "combined": 0.04807127406414159,
+          "contact": 0.12384984894485625,
+          "retention": 0.7764898717489551,
+          "task": 0.4998668727944186
+        },
+        {
+          "scale": 1.0,
+          "combined": 0.10436160583882707,
+          "contact": 0.2617029866791705,
+          "retention": 0.7608199037837183,
+          "task": 0.5241435048217841
+        },
+        {
+          "scale": 1.25,
+          "combined": 0.10440841636427728,
+          "contact": 0.26112416250011866,
+          "retention": 0.7607585720232742,
+          "task": 0.5255833441793051
+        }
+      ],
+      "perturbations": [
+        {
+          "label": "nominal",
+          "combined": 0.08279456778113602,
+          "contact": 0.2086374012790468,
+          "retention": 0.7644527191341033,
+          "task": 0.5151734250613821
+        },
+        {
+          "label": "translation_0_-1",
+          "combined": 0.08434122578460948,
+          "contact": 0.2111219268472493,
+          "retention": 0.7711505210199691,
+          "task": 0.5139967278792692
+        },
+        {
+          "label": "rotation_0_-1",
+          "combined": 0.09318102261524147,
+          "contact": 0.225894902894996,
+          "retention": 0.7713651754344625,
+          "task": 0.5336815763112919
+        },
+        {
+          "label": "translation_0_1",
+          "combined": 0.08459697465542369,
+          "contact": 0.21059288177023827,
+          "retention": 0.7710948930588443,
+          "task": 0.5177083813480443
+        },
+        {
+          "label": "rotation_0_1",
+          "combined": 0.06804968331024698,
+          "contact": 0.1775225588486124,
+          "retention": 0.7620357571608964,
+          "task": 0.4966644628268573
+        },
+        {
+          "label": "translation_1_-1",
+          "combined": 0.007575160722194509,
+          "contact": 0.018874303914501712,
+          "retention": 0.7698832614254004,
+          "task": 0.5177023497610648
+        },
+        {
+          "label": "rotation_1_-1",
+          "combined": 0.082228228956611,
+          "contact": 0.2108874409342289,
+          "retention": 0.7708654583445887,
+          "task": 0.5008024856788256
+        },
+        {
+          "label": "translation_1_1",
+          "combined": 0.0018664842296462515,
+          "contact": 0.004841643139204876,
+          "retention": 0.7461576483122951,
+          "task": 0.5120661728027075
+        },
+        {
+          "label": "rotation_1_1",
+          "combined": 0.08672494972653952,
+          "contact": 0.2110245178411323,
+          "retention": 0.7711835903697981,
+          "task": 0.5305440714097136
+        },
+        {
+          "label": "translation_2_-1",
+          "combined": 0.054564184162011996,
+          "contact": 0.16484133246601906,
+          "retention": 0.7700069505218656,
+          "task": 0.40287727161831477
+        },
+        {
+          "label": "rotation_2_-1",
+          "combined": 0.0820769627091886,
+          "contact": 0.2066833601682563,
+          "retention": 0.7647662658761382,
+          "task": 0.5155200889565306
+        },
+        {
+          "label": "translation_2_1",
+          "combined": 0.06736481985371429,
+          "contact": 0.16124895334149533,
+          "retention": 0.7789300991805894,
+          "task": 0.5360883891961256
+        },
+        {
+          "label": "rotation_2_1",
+          "combined": 0.08092196007715251,
+          "contact": 0.20318252128287126,
+          "retention": 0.7683755469490066,
+          "task": 0.5144645154939124
+        },
+        {
+          "label": "aperture_-1",
+          "combined": 0.05851351417788972,
+          "contact": 0.14848605338301465,
+          "retention": 0.760597436287827,
+          "task": 0.5142355105133867
+        },
+        {
+          "label": "aperture_1",
+          "combined": 0.050153837467425716,
+          "contact": 0.12183920306879481,
+          "retention": 0.7678304084766263,
+          "task": 0.5345187450190083
+        }
+      ],
+      "first_contact_predictions": {
+        "selected": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.236136132812502,
+              "bracket_mm": [
+                14.236136132812502,
+                14.244179003906252
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.7508798828125,
+              "bracket_mm": [
+                14.7508798828125,
+                14.758922753906251
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.252221875000002,
+              "bracket_mm": [
+                14.252221875000002,
+                14.260264746093751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.807179980468748,
+              "bracket_mm": [
+                14.807179980468748,
+                14.815222851562499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.252221875000002,
+              "bracket_mm": [
+                14.252221875000002,
+                14.260264746093751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.807179980468748,
+              "bracket_mm": [
+                14.807179980468748,
+                14.815222851562499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.252221875000002,
+              "bracket_mm": [
+                14.252221875000002,
+                14.260264746093751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.807179980468748,
+              "bracket_mm": [
+                14.807179980468748,
+                14.815222851562499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        },
+        "refined": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.228093261718751,
+              "bracket_mm": [
+                14.228093261718751,
+                14.236136132812502
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.734794140625,
+              "bracket_mm": [
+                14.734794140625,
+                14.742837011718748
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.260264746093751,
+              "bracket_mm": [
+                14.260264746093751,
+                14.268307617187501
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.799137109375,
+              "bracket_mm": [
+                14.799137109375,
+                14.807179980468748
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.252221875000002,
+              "bracket_mm": [
+                14.252221875000002,
+                14.260264746093751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.807179980468748,
+              "bracket_mm": [
+                14.807179980468748,
+                14.815222851562499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.244179003906252,
+              "bracket_mm": [
+                14.244179003906252,
+                14.252221875000002
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.815222851562499,
+              "bracket_mm": [
+                14.815222851562499,
+                14.823265722656249
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        }
+      }
+    },
+    {
+      "geometry": "incremental",
+      "pose": "success",
+      "scores": {
+        "acquisition_score": 0.7730806709292645,
+        "retention_score": 0.769416342218154,
+        "task_score": 0.4750323379049831,
+        "robust_mean": 0.05074470067493566,
+        "robust_lower_quartile": 0.04559675331978168,
+        "robust_combined_score": 0.038035813665314666,
+        "chosen_expected_aperture_m": 0.014594850000000003,
+        "nominal_best_expected_aperture_m": 0.014594850000000003,
+        "uncertainty_changes_aperture_choice": false
+      },
+      "first_contacts": {
+        "gripper_link2": {
+          "finger": "gripper_link2",
+          "width_m": 0.013994850000000003,
+          "local_contact_m": [
+            -0.014572627048046405,
+            0.03977912656891979,
+            -0.02589424337165752
+          ],
+          "existing_pad_region": true
+        },
+        "gripper_link1": {
+          "finger": "gripper_link1",
+          "width_m": 0.011935874999999999,
+          "local_contact_m": [
+            0.014577658303706997,
+            0.03731794976217585,
+            -0.025909013718882934
+          ],
+          "existing_pad_region": true
+        }
+      },
+      "nominal_sides": [
+        {
+          "finger": "gripper_link1",
+          "support": 0.21312617319615104,
+          "longitudinal_retention": 0.8012439222830429,
+          "lateral_retention": 0.6988595602666516,
+          "retention": 0.7655492506305155,
+          "longitudinal_margin_mm": 15.621282267413187,
+          "lateral_margin_mm": 6.532300020148099,
+          "opening_capacity_assumed_mu": 0.33801150956912723,
+          "opening_capacity_mu0": 0.0,
+          "geometric_ray_support_area_proxy_m2": 0.00023577082074184615
+        },
+        {
+          "finger": "gripper_link2",
+          "support": 0.25108681934083954,
+          "longitudinal_retention": 0.802128456520678,
+          "lateral_retention": 0.6974930602536877,
+          "retention": 0.7656129066713113,
+          "longitudinal_margin_mm": 15.707524354725864,
+          "lateral_margin_mm": 6.47639888494825,
+          "opening_capacity_assumed_mu": 0.4943796552796376,
+          "opening_capacity_mu0": 0.07770876739244649,
+          "geometric_ray_support_area_proxy_m2": 0.00027776478405102095
+        }
+      ],
+      "nominal_rear_hypotheses": [
+        {
+          "scale": 0.75,
+          "combined": 0.03706950125312792,
+          "contact": 0.1068408362734268,
+          "retention": 0.784027433844919,
+          "task": 0.4425355912437229
+        },
+        {
+          "scale": 1.0,
+          "combined": 0.08059026476498475,
+          "contact": 0.21293588473640374,
+          "retention": 0.7655492506305155,
+          "task": 0.4943796552796376
+        },
+        {
+          "scale": 1.25,
+          "combined": 0.07942854753246155,
+          "contact": 0.20923025370015846,
+          "retention": 0.7643897258590661,
+          "task": 0.49663497173297805
+        }
+      ],
+      "perturbations": [
+        {
+          "label": "nominal",
+          "combined": 0.06346198047963908,
+          "contact": 0.17084562426170188,
+          "retention": 0.769416342218154,
+          "task": 0.4750323379049831
+        },
+        {
+          "label": "translation_0_-1",
+          "combined": 0.06582774462252529,
+          "contact": 0.17479847044647204,
+          "retention": 0.7621519562564589,
+          "task": 0.48679696771445835
+        },
+        {
+          "label": "rotation_0_-1",
+          "combined": 0.0811716466592741,
+          "contact": 0.20514181981297364,
+          "retention": 0.7714139386387746,
+          "task": 0.5085011480191148
+        },
+        {
+          "label": "translation_0_1",
+          "combined": 0.06351568311318546,
+          "contact": 0.17091365509803108,
+          "retention": 0.7693220287397339,
+          "task": 0.47517844035931056
+        },
+        {
+          "label": "rotation_0_1",
+          "combined": 0.045979535096795435,
+          "contact": 0.13095251248217724,
+          "retention": 0.7672878443385237,
+          "task": 0.4458907013909912
+        },
+        {
+          "label": "translation_1_-1",
+          "combined": 0.013386597868948991,
+          "contact": 0.0356878175337843,
+          "retention": 0.7762961700376004,
+          "task": 0.47242309414296124
+        },
+        {
+          "label": "rotation_1_-1",
+          "combined": 0.06588531363198544,
+          "contact": 0.17198685290018031,
+          "retention": 0.769661913102301,
+          "task": 0.4915408333140015
+        },
+        {
+          "label": "translation_1_1",
+          "combined": 0.0006395586559235254,
+          "contact": 0.0017817007978973933,
+          "retention": 0.7331310399392001,
+          "task": 0.48325045210395273
+        },
+        {
+          "label": "rotation_1_1",
+          "combined": 0.059532508449192556,
+          "contact": 0.17094362146076472,
+          "retention": 0.7695026887092318,
+          "task": 0.44147597867075894
+        },
+        {
+          "label": "translation_2_-1",
+          "combined": 0.047221755279084475,
+          "contact": 0.14568421830369885,
+          "retention": 0.7463960239329966,
+          "task": 0.4146991884166268
+        },
+        {
+          "label": "rotation_2_-1",
+          "combined": 0.06344641010109696,
+          "contact": 0.17110618459778523,
+          "retention": 0.7679979837430473,
+          "task": 0.47513889345023663
+        },
+        {
+          "label": "translation_2_1",
+          "combined": 0.054244700377010124,
+          "contact": 0.1328961627540337,
+          "retention": 0.7756727415977421,
+          "task": 0.5249505565277761
+        },
+        {
+          "label": "rotation_2_1",
+          "combined": 0.06280621930616925,
+          "contact": 0.16867710311924455,
+          "retention": 0.7724022178532568,
+          "task": 0.4738675283121566
+        },
+        {
+          "label": "aperture_-1",
+          "combined": 0.045213971542767926,
+          "contact": 0.12258630922386073,
+          "retention": 0.7629425128390446,
+          "task": 0.4767417558168099
+        },
+        {
+          "label": "aperture_1",
+          "combined": 0.02883688494043625,
+          "contact": 0.07775920619805324,
+          "retention": 0.7695431604295637,
+          "task": 0.4736441121868954
+        }
+      ],
+      "first_contact_predictions": {
+        "selected": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 13.962678515625004,
+              "bracket_mm": [
+                13.962678515625004,
+                13.970721386718752
+              ],
+              "coarse_aperture_mm": 11.935875
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.048466113281249,
+              "bracket_mm": [
+                15.048466113281249,
+                15.056508984374998
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.268307617187501,
+              "bracket_mm": [
+                14.268307617187501,
+                14.276350488281253
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.064551855468746,
+              "bracket_mm": [
+                15.064551855468746,
+                15.072594726562498
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.260264746093751,
+              "bracket_mm": [
+                14.260264746093751,
+                14.268307617187501
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.072594726562498,
+              "bracket_mm": [
+                15.072594726562498,
+                15.080637597656247
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.260264746093751,
+              "bracket_mm": [
+                14.260264746093751,
+                14.268307617187501
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.088680468749997,
+              "bracket_mm": [
+                15.088680468749997,
+                15.096723339843747
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        },
+        "refined": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 13.825949707031253,
+              "bracket_mm": [
+                13.825949707031253,
+                13.833992578125002
+              ],
+              "coarse_aperture_mm": 11.935875
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.177152050781249,
+              "bracket_mm": [
+                15.177152050781249,
+                15.185194921874999
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.115493066406252,
+              "bracket_mm": [
+                14.115493066406252,
+                14.123535937500003
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.201280664062498,
+              "bracket_mm": [
+                15.201280664062498,
+                15.20932353515625
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.107450195312502,
+              "bracket_mm": [
+                14.107450195312502,
+                14.115493066406252
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.21736640625,
+              "bracket_mm": [
+                15.21736640625,
+                15.225409277343747
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.099407324218753,
+              "bracket_mm": [
+                14.099407324218753,
+                14.107450195312502
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 15.225409277343747,
+              "bracket_mm": [
+                15.225409277343747,
+                15.233452148437499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        }
+      }
+    },
+    {
+      "geometry": "first_seed",
+      "pose": "success",
+      "scores": {
+        "acquisition_score": 1.0,
+        "retention_score": 0.7721289205827744,
+        "task_score": 0.538544205431036,
+        "robust_mean": 0.07720547455500355,
+        "robust_lower_quartile": 0.0750787997121575,
+        "robust_combined_score": 0.07656747210214973,
+        "chosen_expected_aperture_m": 0.014294850000000003,
+        "nominal_best_expected_aperture_m": 0.014294850000000003,
+        "uncertainty_changes_aperture_choice": false
+      },
+      "first_contacts": {
+        "gripper_link1": {
+          "finger": "gripper_link1",
+          "width_m": 0.013994850000000003,
+          "local_contact_m": [
+            0.014751283054220132,
+            0.04087633596602672,
+            -0.025775005459889533
+          ],
+          "existing_pad_region": true
+        },
+        "gripper_link2": {
+          "finger": "gripper_link2",
+          "width_m": 0.013994850000000003,
+          "local_contact_m": [
+            -0.012685808916952312,
+            0.03974339029117254,
+            -0.02593157711658578
+          ],
+          "existing_pad_region": true
+        }
+      },
+      "nominal_sides": [
+        {
+          "finger": "gripper_link1",
+          "support": 0.2826471044339529,
+          "longitudinal_retention": 0.8014179168734014,
+          "lateral_retention": 0.7040569901808282,
+          "retention": 0.7675534649648655,
+          "longitudinal_margin_mm": 15.638246739804593,
+          "lateral_margin_mm": 6.583300308407528,
+          "opening_capacity_assumed_mu": 0.33495856548058695,
+          "opening_capacity_mu0": 0.0,
+          "geometric_ray_support_area_proxy_m2": 0.0003126783481978405
+        },
+        {
+          "finger": "gripper_link2",
+          "support": 0.2821445510503314,
+          "longitudinal_retention": 0.8014152153347802,
+          "lateral_retention": 0.7049027664006334,
+          "retention": 0.767858967648636,
+          "longitudinal_margin_mm": 15.637983339791672,
+          "lateral_margin_mm": 6.5922781687280025,
+          "opening_capacity_assumed_mu": 0.53914633652868,
+          "opening_capacity_mu0": 0.10558357424832393,
+          "geometric_ray_support_area_proxy_m2": 0.0003121223985369137
+        }
+      ],
+      "nominal_rear_hypotheses": [
+        {
+          "scale": 0.75,
+          "combined": 0.059842429951701206,
+          "contact": 0.14150525042184423,
+          "retention": 0.7874771903061932,
+          "task": 0.5370301675416121
+        },
+        {
+          "scale": 1.0,
+          "combined": 0.11675355673600922,
+          "contact": 0.28213360912762636,
+          "retention": 0.7675534649648655,
+          "task": 0.53914633652868
+        },
+        {
+          "scale": 1.25,
+          "combined": 0.11712130577968956,
+          "contact": 0.28262321700768417,
+          "retention": 0.767361951151646,
+          "task": 0.5400423380175317
+        }
+      ],
+      "perturbations": [
+        {
+          "label": "nominal",
+          "combined": 0.09502343291221654,
+          "contact": 0.22834031346242337,
+          "retention": 0.7721289205827744,
+          "task": 0.538544205431036
+        },
+        {
+          "label": "translation_0_-1",
+          "combined": 0.09503249406093825,
+          "contact": 0.22853640197961134,
+          "retention": 0.7721065915144779,
+          "task": 0.5379138886427943
+        },
+        {
+          "label": "rotation_0_-1",
+          "combined": 0.08968907816114191,
+          "contact": 0.21561587010012773,
+          "retention": 0.771813709575322,
+          "task": 0.5384993627175991
+        },
+        {
+          "label": "translation_0_1",
+          "combined": 0.09494294634713722,
+          "contact": 0.22823301309156718,
+          "retention": 0.7721210890069413,
+          "task": 0.5380669108458275
+        },
+        {
+          "label": "rotation_0_1",
+          "combined": 0.08951077457976833,
+          "contact": 0.21515681636619632,
+          "retention": 0.771744602378424,
+          "task": 0.5387110586701005
+        },
+        {
+          "label": "translation_1_-1",
+          "combined": 0.0053840503790474874,
+          "contact": 0.013063966501850176,
+          "retention": 0.7655082560205784,
+          "task": 0.5378373488189591
+        },
+        {
+          "label": "rotation_1_-1",
+          "combined": 0.0949192036077191,
+          "contact": 0.22774285317021925,
+          "retention": 0.772424258563767,
+          "task": 0.5393582552118229
+        },
+        {
+          "label": "translation_1_1",
+          "combined": 0.005446685343334833,
+          "contact": 0.013174328691171796,
+          "retention": 0.7661794563574781,
+          "task": 0.5392416468549175
+        },
+        {
+          "label": "rotation_1_1",
+          "combined": 0.09505275083605942,
+          "contact": 0.22840352547171217,
+          "retention": 0.7721561601756569,
+          "task": 0.538541574130981
+        },
+        {
+          "label": "translation_2_-1",
+          "combined": 0.08456957282062116,
+          "contact": 0.20330680987542826,
+          "retention": 0.7703888088127084,
+          "task": 0.5395846083366462
+        },
+        {
+          "label": "rotation_2_-1",
+          "combined": 0.09540014941626368,
+          "contact": 0.22948252962971938,
+          "retention": 0.7713743432063852,
+          "task": 0.5385289468157739
+        },
+        {
+          "label": "translation_2_1",
+          "combined": 0.0732709862986031,
+          "contact": 0.1742764812262602,
+          "retention": 0.7798077690895666,
+          "task": 0.5388689258426241
+        },
+        {
+          "label": "rotation_2_1",
+          "combined": 0.09151401388433732,
+          "contact": 0.21858349065835397,
+          "retention": 0.7767900950261409,
+          "task": 0.538528222068532
+        },
+        {
+          "label": "aperture_-1",
+          "combined": 0.07143936655215305,
+          "contact": 0.17163798801167618,
+          "retention": 0.7718881889982907,
+          "task": 0.5387763893370464
+        },
+        {
+          "label": "aperture_1",
+          "combined": 0.07688661312571189,
+          "contact": 0.18494603894859593,
+          "retention": 0.7714933526413588,
+          "task": 0.5383143009833093
+        }
+      ],
+      "first_contact_predictions": {
+        "selected": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.453293652343751,
+              "bracket_mm": [
+                14.453293652343751,
+                14.461336523437502
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.453293652343751,
+              "bracket_mm": [
+                14.453293652343751,
+                14.461336523437502
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.58197958984375,
+              "bracket_mm": [
+                14.58197958984375,
+                14.590022460937499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.606108203124998,
+              "bracket_mm": [
+                14.606108203124998,
+                14.61415107421875
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.58197958984375,
+              "bracket_mm": [
+                14.58197958984375,
+                14.590022460937499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.606108203124998,
+              "bracket_mm": [
+                14.606108203124998,
+                14.61415107421875
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.58197958984375,
+              "bracket_mm": [
+                14.58197958984375,
+                14.590022460937499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.606108203124998,
+              "bracket_mm": [
+                14.606108203124998,
+                14.61415107421875
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        },
+        "refined": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.316564843750001,
+              "bracket_mm": [
+                14.316564843750001,
+                14.324607714843749
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.58197958984375,
+              "bracket_mm": [
+                14.58197958984375,
+                14.590022460937499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.445250781250001,
+              "bracket_mm": [
+                14.445250781250001,
+                14.453293652343751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.742837011718748,
+              "bracket_mm": [
+                14.742837011718748,
+                14.7508798828125
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.445250781250001,
+              "bracket_mm": [
+                14.445250781250001,
+                14.453293652343751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.742837011718748,
+              "bracket_mm": [
+                14.742837011718748,
+                14.7508798828125
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.445250781250001,
+              "bracket_mm": [
+                14.445250781250001,
+                14.453293652343751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.7508798828125,
+              "bracket_mm": [
+                14.7508798828125,
+                14.758922753906251
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        }
+      }
+    },
+    {
+      "geometry": "first_seed",
+      "pose": "failed",
+      "scores": {
+        "acquisition_score": 1.0,
+        "retention_score": 0.7717267320281584,
+        "task_score": 0.5378667441285793,
+        "robust_mean": 0.07229618153582737,
+        "robust_lower_quartile": 0.06576904198074168,
+        "robust_combined_score": 0.07033803966930166,
+        "chosen_expected_aperture_m": 0.014294850000000003,
+        "nominal_best_expected_aperture_m": 0.014294850000000003,
+        "uncertainty_changes_aperture_choice": false
+      },
+      "first_contacts": {
+        "gripper_link1": {
+          "finger": "gripper_link1",
+          "width_m": 0.013994850000000003,
+          "local_contact_m": [
+            0.014395378035133854,
+            0.04013925258315274,
+            -0.025881205561067266
+          ],
+          "existing_pad_region": true
+        },
+        "gripper_link2": {
+          "finger": "gripper_link2",
+          "width_m": 0.013994850000000003,
+          "local_contact_m": [
+            -0.005553417076251899,
+            0.03980251758404144,
+            -0.025998630648429
+          ],
+          "existing_pad_region": true
+        }
+      },
+      "nominal_sides": [
+        {
+          "finger": "gripper_link1",
+          "support": 0.26670493187870403,
+          "longitudinal_retention": 0.8019071265153116,
+          "lateral_retention": 0.7025513858649101,
+          "retention": 0.7673180485769876,
+          "longitudinal_margin_mm": 15.685944679417027,
+          "lateral_margin_mm": 6.574664514077092,
+          "opening_capacity_assumed_mu": 0.3355032649028218,
+          "opening_capacity_mu0": 0.0,
+          "geometric_ray_support_area_proxy_m2": 0.00029504232043366796
+        },
+        {
+          "finger": "gripper_link2",
+          "support": 0.2768322508733559,
+          "longitudinal_retention": 0.8011008780381506,
+          "lateral_retention": 0.7030160207983877,
+          "retention": 0.7669726531430074,
+          "longitudinal_margin_mm": 15.607335453674725,
+          "lateral_margin_mm": 6.584547373524671,
+          "opening_capacity_assumed_mu": 0.5394285579290612,
+          "opening_capacity_mu0": 0.10591502817980455,
+          "geometric_ray_support_area_proxy_m2": 0.00030624566667442277
+        }
+      ],
+      "nominal_rear_hypotheses": [
+        {
+          "scale": 0.75,
+          "combined": 0.057130976356998014,
+          "contact": 0.13560108292131115,
+          "retention": 0.787376405216823,
+          "task": 0.5350890846514977
+        },
+        {
+          "scale": 1.0,
+          "combined": 0.11033943298286415,
+          "contact": 0.26669626520875284,
+          "retention": 0.7669726531430074,
+          "task": 0.5394285579290612
+        },
+        {
+          "scale": 1.25,
+          "combined": 0.11079077448994876,
+          "contact": 0.26757727460138236,
+          "retention": 0.7669549228854269,
+          "task": 0.5398642048829931
+        }
+      ],
+      "perturbations": [
+        {
+          "label": "nominal",
+          "combined": 0.09004817096126855,
+          "contact": 0.21664868085684708,
+          "retention": 0.7717267320281584,
+          "task": 0.5378667441285793
+        },
+        {
+          "label": "translation_0_-1",
+          "combined": 0.08972383804979417,
+          "contact": 0.2157493475203311,
+          "retention": 0.771718873741825,
+          "task": 0.5384159829201598
+        },
+        {
+          "label": "rotation_0_-1",
+          "combined": 0.07798118610663,
+          "contact": 0.18791480309967018,
+          "retention": 0.7708848127439704,
+          "task": 0.5376570096037723
+        },
+        {
+          "label": "translation_0_1",
+          "combined": 0.08942974757062339,
+          "contact": 0.21522558635838251,
+          "retention": 0.7715159154368074,
+          "task": 0.5378721738834011
+        },
+        {
+          "label": "rotation_0_1",
+          "combined": 0.09209488813740821,
+          "contact": 0.22183567220069217,
+          "retention": 0.7706368683399286,
+          "task": 0.5380350423379703
+        },
+        {
+          "label": "translation_1_-1",
+          "combined": 0.002642616308799322,
+          "contact": 0.006409805381251812,
+          "retention": 0.7655896310879687,
+          "task": 0.5375725056581095
+        },
+        {
+          "label": "rotation_1_-1",
+          "combined": 0.09008381542434589,
+          "contact": 0.21676804622434978,
+          "retention": 0.771760407792151,
+          "task": 0.5377828034523855
+        },
+        {
+          "label": "translation_1_1",
+          "combined": 0.009995646566993172,
+          "contact": 0.0241662937737461,
+          "retention": 0.7675192817410936,
+          "task": 0.5381219583337535
+        },
+        {
+          "label": "rotation_1_1",
+          "combined": 0.0899976176171677,
+          "contact": 0.21652606419840353,
+          "retention": 0.7717265640139216,
+          "task": 0.537869789708564
+        },
+        {
+          "label": "translation_2_-1",
+          "combined": 0.08771575259202083,
+          "contact": 0.210503997758575,
+          "retention": 0.7716055040699211,
+          "task": 0.5394534206177415
+        },
+        {
+          "label": "rotation_2_-1",
+          "combined": 0.09020382073704446,
+          "contact": 0.21711187528752143,
+          "retention": 0.7713957756838478,
+          "task": 0.537875838699278
+        },
+        {
+          "label": "translation_2_1",
+          "combined": 0.06924503268166277,
+          "contact": 0.1649892081643199,
+          "retention": 0.779550840870375,
+          "task": 0.538037274826127
+        },
+        {
+          "label": "rotation_2_1",
+          "combined": 0.08729392935490508,
+          "contact": 0.20898552888110847,
+          "retention": 0.7757241065034854,
+          "task": 0.5377797399097825
+        },
+        {
+          "label": "aperture_-1",
+          "combined": 0.055693609648926445,
+          "contact": 0.1339194245628128,
+          "retention": 0.7719484753224435,
+          "task": 0.537969463181253
+        },
+        {
+          "label": "aperture_1",
+          "combined": 0.06229305127982061,
+          "contact": 0.15009188908689244,
+          "retention": 0.7707280751857157,
+          "task": 0.5377637172098558
+        }
+      ],
+      "first_contact_predictions": {
+        "selected": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.678494042968751,
+              "bracket_mm": [
+                14.678494042968751,
+                14.6865369140625
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.228093261718751,
+              "bracket_mm": [
+                14.228093261718751,
+                14.236136132812502
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.758922753906251,
+              "bracket_mm": [
+                14.758922753906251,
+                14.766965625
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.300479101562502,
+              "bracket_mm": [
+                14.300479101562502,
+                14.308521972656251
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.766965625,
+              "bracket_mm": [
+                14.766965625,
+                14.775008496093749
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.29243623046875,
+              "bracket_mm": [
+                14.29243623046875,
+                14.300479101562502
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.775008496093749,
+              "bracket_mm": [
+                14.775008496093749,
+                14.783051367187499
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.29243623046875,
+              "bracket_mm": [
+                14.29243623046875,
+                14.300479101562502
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        },
+        "refined": {
+          "observed_only": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.670451171875001,
+              "bracket_mm": [
+                14.670451171875001,
+                14.678494042968751
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.212007519531253,
+              "bracket_mm": [
+                14.212007519531253,
+                14.220050390625003
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "0.75": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.742837011718748,
+              "bracket_mm": [
+                14.742837011718748,
+                14.7508798828125
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.300479101562502,
+              "bracket_mm": [
+                14.300479101562502,
+                14.308521972656251
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.0": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.742837011718748,
+              "bracket_mm": [
+                14.742837011718748,
+                14.7508798828125
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.300479101562502,
+              "bracket_mm": [
+                14.300479101562502,
+                14.308521972656251
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          },
+          "1.25": {
+            "gripper_link1": {
+              "first_aperture_mm": 14.742837011718748,
+              "bracket_mm": [
+                14.742837011718748,
+                14.7508798828125
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            },
+            "gripper_link2": {
+              "first_aperture_mm": 14.300479101562502,
+              "bracket_mm": [
+                14.300479101562502,
+                14.308521972656251
+              ],
+              "coarse_aperture_mm": 13.994850000000003
+            }
+          }
+        }
+      }
+    }
+  ],
+  "separate_GT_native_diagnostic": {
+    "success": {
+      "selected": {
+        "visual": {
+          "gripper_link1": {
+            "first_aperture_mm": 15.040423242187499,
+            "bracket_mm": [
+              15.040423242187499,
+              15.048466113281249
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.51763662109375,
+            "bracket_mm": [
+              14.51763662109375,
+              14.5256794921875
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        },
+        "cooked": {
+          "gripper_link1": {
+            "first_aperture_mm": 15.040423242187499,
+            "bracket_mm": [
+              15.040423242187499,
+              15.048466113281249
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.51763662109375,
+            "bracket_mm": [
+              14.51763662109375,
+              14.5256794921875
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        }
+      },
+      "refined": {
+        "visual": {
+          "gripper_link1": {
+            "first_aperture_mm": 14.90369443359375,
+            "bracket_mm": [
+              14.90369443359375,
+              14.911737304687499
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.64632255859375,
+            "bracket_mm": [
+              14.64632255859375,
+              14.6543654296875
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        },
+        "cooked": {
+          "gripper_link1": {
+            "first_aperture_mm": 14.90369443359375,
+            "bracket_mm": [
+              14.90369443359375,
+              14.911737304687499
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.64632255859375,
+            "bracket_mm": [
+              14.64632255859375,
+              14.6543654296875
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        }
+      }
+    },
+    "failed": {
+      "selected": {
+        "visual": {
+          "gripper_link1": {
+            "first_aperture_mm": 15.289752246093746,
+            "bracket_mm": [
+              15.289752246093746,
+              15.297795117187498
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.260264746093751,
+            "bracket_mm": [
+              14.260264746093751,
+              14.268307617187501
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        },
+        "cooked": {
+          "gripper_link1": {
+            "first_aperture_mm": 15.289752246093746,
+            "bracket_mm": [
+              15.289752246093746,
+              15.297795117187498
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.260264746093751,
+            "bracket_mm": [
+              14.260264746093751,
+              14.268307617187501
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        }
+      },
+      "refined": {
+        "visual": {
+          "gripper_link1": {
+            "first_aperture_mm": 15.273666503906249,
+            "bracket_mm": [
+              15.273666503906249,
+              15.281709374999997
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.244179003906252,
+            "bracket_mm": [
+              14.244179003906252,
+              14.252221875000002
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        },
+        "cooked": {
+          "gripper_link1": {
+            "first_aperture_mm": 15.273666503906249,
+            "bracket_mm": [
+              15.273666503906249,
+              15.281709374999997
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          },
+          "gripper_link2": {
+            "first_aperture_mm": 14.244179003906252,
+            "bracket_mm": [
+              14.244179003906252,
+              14.252221875000002
+            ],
+            "coarse_aperture_mm": 13.994850000000003
+          }
+        }
+      }
+    }
+  },
+  "source_hashes": {
+    "scripts/xarm7_native_planning.py": "666b0077fc08b0477e09827d231966ad2ab32f340a507abf4920da6fe0efcebd",
+    "scripts/native_g1_multiview_input.py": "f7b853bdfd2666c01acc4cbedcd9e2ba99e687206b4a8edc4c21a0a257eb4137",
+    "scripts/plan_shared_door_skill.py": "07feab6ffd9c515a9564143e9b267a8ff327b6dfb4cc14a5dc35e6dee0b1fba7"
+  }
+}

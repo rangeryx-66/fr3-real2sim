@@ -1,0 +1,141 @@
+{
+  "status": "SUCCESS",
+  "success": true,
+  "mode": "SIM_TO_SIM_BLIND_SYSID",
+  "zero_probe_uses_same_compliance": true,
+  "baseline_commit": "f5dcc6f",
+  "candidate": 0,
+  "base_fixed": [
+    0.5,
+    -0.55,
+    -0.1,
+    150.0
+  ],
+  "official_unsplit_finger_counts": {
+    "gripper_link1": 1,
+    "gripper_link2": 1
+  },
+  "grasp_contact_implementation_unchanged": true,
+  "gt_control_inputs": false,
+  "gt_fit_inputs": false,
+  "gt_runtime_object_pose_reads": false,
+  "observed_handle_motion": "not used online; initial geometry and grasp only",
+  "attempt_history": [
+    {
+      "index": 0,
+      "direction_name": "outward",
+      "direction_world": [
+        -0.04164746209793002,
+        -0.9991228400691521,
+        0.0043634107018588695
+      ],
+      "start_s": 87.52916666666667,
+      "observation_start": 1,
+      "result": "RELIABLE_REVOLUTE_ESTIMATE",
+      "end_s": 105.53333333333333,
+      "measured_ee_travel_m": 0.008160093323314839,
+      "observation_end": 542
+    }
+  ],
+  "accepted_estimate_count": 34,
+  "estimated_model_refined": true,
+  "estimate": {
+    "sample_count": 2523,
+    "travel_m": 0.04030548762639767,
+    "prismatic": {
+      "axis": [
+        -0.0842760121096338,
+        -0.9964358969351493,
+        -0.003613458446032045
+      ],
+      "point_on_axis": [
+        0.6571342335553175,
+        -0.21494604659964697,
+        0.16193660134862792
+      ],
+      "position_rmse_m": 0.00015043952252487188,
+      "rotation_rmse_rad": 0.05388703440155024
+    },
+    "joint_type": "revolute",
+    "confidence": 0.999,
+    "confidence_definition": "relative model-score gap; not a calibrated probability",
+    "scores": {
+      "line": 732654759.4422433,
+      "circle": 63179.00534324971
+    },
+    "revolute": {
+      "axis": [
+        -0.013233051725402123,
+        -0.00039410275973733003,
+        -0.9999123616722857
+      ],
+      "point_on_axis": [
+        0.23511179686255934,
+        -0.17967861735228602,
+        0.16760058326260452
+      ],
+      "radius_m": 0.4236972145445146,
+      "angle_span_rad": 0.09582347241932004,
+      "position_rmse_m": 0.00024616778237396557,
+      "rotation_rmse_rad": 8.867178042162426e-05,
+      "axis_point_gauge": "first EE orbit plane"
+    }
+  },
+  "probe": {
+    "distance_m": 0.008160063933468914,
+    "duration_s": 18.004166666666663,
+    "fit_input": "measured robot TCP SE(3) only",
+    "fit_saved_before_follow": true
+  },
+  "evaluation": {
+    "type_correct": true,
+    "axis_angular_error_deg": 0.7585563407894729,
+    "axis_line_distance_m": 0.011028183636073816,
+    "joint_origin_error_in_observed_plane_m": 0.01236703634036615,
+    "raw_origin_point_distance_m": 0.1727359159109824,
+    "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+    "gt_constrained_reconstruction_rmse_m": 0.0006426913843003868,
+    "actual_door_displacement_deg": 5.620856761932373,
+    "actual_final_door_angle_deg": 5.620856761932373,
+    "gt_access_after_saved_fit": true,
+    "gt_access_after_world_pause": true,
+    "final_true_relative_translation_slip_m": 0.00014539055481473413,
+    "final_true_relative_rotation_slip_deg": 0.2680167282190319
+  },
+  "bilateral_hold_established": true,
+  "followed_estimated_articulation": true,
+  "minimum_joint_margin_rad": 0.06349032012023925,
+  "slip_measurement": "contact-plane normal drift and tilt only; tangential slip unobservable, not maximum GT relative slip",
+  "collision_prediction": "measured EE transform under retained-grasp assumption; native actual contact guard remains active",
+  "probe_controller": "robot gravity/Coriolis + Jacobian-transpose directional impedance, free orthogonal and rotational stiffness",
+  "full_6D_pose_tracking_during_probe": false,
+  "full_relative_slip_observable_online": false,
+  "maximum_true_relative_slip_m": null,
+  "peak_estimated_model_consistency_error_m": 0.0003971857055751173,
+  "maximum_detected_contact_surface_drift_m": 0.00010071992906410707,
+  "peak_finger_handle_force_n": 0.5777368586269506,
+  "duration_s": 173.70416666666665,
+  "first_failure_state": null,
+  "no_operation": false,
+  "video": "contact_baseline.mp4",
+  "attachments": false,
+  "object_actuation": false,
+  "GT_access_log_after_fit": [
+    "asset_chain.joints",
+    "asset_chain.root_to_link",
+    "articulation.get_joint_positions",
+    "door_link.get_world_pose"
+  ],
+  "GT_scope": "scene assembly only; static geometry and final joint state read only after saved fit and stopped interaction",
+  "structure_protocol": false,
+  "online_success": true,
+  "success_is_post_episode_evaluation": true,
+  "frozen_runner_sha256": "57b79ed6f7a1fed192f63fc1c7ca9a86ea775de9f5424ad10a3f9fe8d7019c3c",
+  "experiment": "interactive_twin",
+  "episode_id": "control_7320",
+  "role": "reference",
+  "physics_protocol_complete": false,
+  "simulator_only_safety_supervisor": true,
+  "hardware_deployable_contact_supervisor": false,
+  "replay_uses_same_estimated_consistency_safety": false
+}

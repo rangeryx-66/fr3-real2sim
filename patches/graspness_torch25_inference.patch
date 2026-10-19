@@ -1,0 +1,15 @@
+diff --git a/models/graspnet.py b/models/graspnet.py
+index f44f189..ced6567 100644
+--- a/models/graspnet.py
++++ b/models/graspnet.py
+@@ -67,0 +68,2 @@ class GraspNet(nn.Module):
++            if cur_seed_xyz.shape[1] == 0:
++                raise RuntimeError("NO_GRASP: graspness predicts zero graspable scene points")
+diff --git a/utils/label_generation.py b/utils/label_generation.py
+index a5a7441..e55dfb3 100644
+--- a/utils/label_generation.py
++++ b/utils/label_generation.py
+@@ -14 +13,0 @@ sys.path.append(ROOT_DIR)
+-from knn.knn_modules import knn
+@@ -20,0 +20 @@ def process_grasp_labels(end_points):
++    from knn.knn_modules import knn

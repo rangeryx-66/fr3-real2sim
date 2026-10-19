@@ -1,0 +1,122 @@
+{
+  "status": "SUCCESS",
+  "success": true,
+  "mode": "SIM_TO_SIM_BLIND_SYSID",
+  "zero_probe_uses_same_compliance": true,
+  "baseline_commit": "f5dcc6f",
+  "candidate": 0,
+  "base_fixed": [
+    0.5,
+    -0.55,
+    -0.1,
+    150.0
+  ],
+  "official_unsplit_finger_counts": {
+    "gripper_link1": 1,
+    "gripper_link2": 1
+  },
+  "grasp_contact_implementation_unchanged": true,
+  "conditional_dynamics_only": false,
+  "gt_control_inputs": false,
+  "gt_fit_inputs": false,
+  "gt_runtime_object_pose_reads": false,
+  "observed_handle_motion": "not used online; initial geometry and grasp only",
+  "attempt_history": [],
+  "accepted_estimate_count": 34,
+  "estimated_model_refined": true,
+  "estimate": {
+    "sample_count": 3302,
+    "travel_m": 0.04007657440482633,
+    "prismatic": {
+      "axis": [
+        -0.07890650370254777,
+        -0.9968736045527572,
+        -0.004096366613539433
+      ],
+      "point_on_axis": [
+        0.6574587824826983,
+        -0.21037818932543254,
+        0.1619318483891102
+      ],
+      "position_rmse_m": 0.00015523051819216397,
+      "rotation_rmse_rad": 0.04684667864899294
+    },
+    "joint_type": "revolute",
+    "confidence": 0.999,
+    "confidence_definition": "relative model-score gap; not a calibrated probability",
+    "scores": {
+      "line": 724692510.4904846,
+      "circle": 38192.23503391363
+    },
+    "revolute": {
+      "axis": [
+        -0.01916495291389972,
+        0.0001768822116057107,
+        -0.9998163197770337
+      ],
+      "point_on_axis": [
+        0.23666274132986193,
+        -0.17978951572371743,
+        0.17009222225486323
+      ],
+      "radius_m": 0.42218373629830236,
+      "angle_span_rad": 0.09528875887123048,
+      "position_rmse_m": 0.0001418401001118271,
+      "rotation_rmse_rad": 0.00018726132190076885,
+      "axis_point_gauge": "first EE orbit plane"
+    }
+  },
+  "probe": {
+    "distance_m": 0.0,
+    "duration_s": 0.0,
+    "fit_input": "measured robot TCP SE(3) only",
+    "fit_saved_before_follow": true
+  },
+  "evaluation": {
+    "type_correct": true,
+    "axis_angular_error_deg": 1.0981849231180778,
+    "axis_line_distance_m": 0.009473279969410539,
+    "joint_origin_error_in_observed_plane_m": 0.01245647748332024,
+    "raw_origin_point_distance_m": 0.1701557878551275,
+    "origin_note": "point along axis is unidentifiable; raw point distance includes gauge difference",
+    "gt_constrained_reconstruction_rmse_m": 0.0004703092023243493,
+    "actual_door_displacement_deg": 5.616755485534668,
+    "actual_final_door_angle_deg": 5.616755485534668,
+    "gt_access_after_saved_fit": true,
+    "gt_access_after_world_pause": true,
+    "final_true_relative_translation_slip_m": 0.00017249190271266483,
+    "final_true_relative_rotation_slip_deg": 0.2821192765701898
+  },
+  "bilateral_hold_established": true,
+  "followed_estimated_articulation": true,
+  "minimum_joint_margin_rad": 0.06349032012023925,
+  "slip_measurement": "contact-plane normal drift and tilt only; tangential slip unobservable, not maximum GT relative slip",
+  "collision_prediction": "measured EE transform under retained-grasp assumption; native actual contact guard remains active",
+  "probe_controller": "robot gravity/Coriolis + Jacobian-transpose directional impedance, free orthogonal and rotational stiffness",
+  "full_6D_pose_tracking_during_probe": false,
+  "full_relative_slip_observable_online": false,
+  "maximum_true_relative_slip_m": null,
+  "peak_estimated_model_consistency_error_m": 0.0002760487660130931,
+  "maximum_detected_contact_surface_drift_m": 0.00010135246633560522,
+  "peak_finger_handle_force_n": 0.5777368586269506,
+  "duration_s": 200.13333333333333,
+  "first_failure_state": null,
+  "no_operation": false,
+  "video": "contact_baseline.mp4",
+  "attachments": false,
+  "object_actuation": false,
+  "GT_access_log_after_fit": [
+    "asset_chain.joints",
+    "asset_chain.root_to_link",
+    "articulation.get_joint_positions",
+    "door_link.get_world_pose"
+  ],
+  "GT_scope": "scene assembly only; static geometry and final joint state read only after saved fit and stopped interaction",
+  "experiment": "interactive_twin",
+  "episode_id": "dev_7320_00",
+  "role": "reference",
+  "physics_protocol_complete": true,
+  "simulator_only_safety_supervisor": true,
+  "hardware_deployable_contact_supervisor": false,
+  "replay_uses_same_estimated_consistency_safety": false
+}

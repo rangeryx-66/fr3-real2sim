@@ -1,0 +1,249 @@
+{
+  "physical_result": {
+    "classification": "ORACLE_HANDLE / KNOWN_MODEL_DEVELOPMENT / XARM7_APPROXIMATE_ACTUATOR_SIMULATION",
+    "asset_id": "45443",
+    "success": true,
+    "status": "SHARED_DOOR_30_DEG_SUCCESS",
+    "initial_grasp": true,
+    "target_deg": 30.0,
+    "max_actual_angle_deg": 30.00001335144043,
+    "max_actual_angle_after_valid_grasp_deg": 30.00001335144043,
+    "final_actual_angle_deg": 30.000014495204397,
+    "initial_actual_angle_deg": 1.0601848841383538e-16,
+    "grasp_acquisition": {
+      "event": "GRASP_VERIFIED",
+      "t": 251.9625,
+      "step": 60471,
+      "angle_deg": -2.3134749937980814e-07,
+      "grasp_index": 0,
+      "pad_loads_n": [
+        0.5286729900510642,
+        0.5223480577329962
+      ],
+      "base": [
+        0.9788435430402108,
+        -0.794156706951846,
+        -0.1,
+        119.44064037305306
+      ]
+    },
+    "base_fixed": [
+      0.9788435430402108,
+      -0.794156706951846,
+      -0.1,
+      119.44064037305306
+    ],
+    "base_moves_after_grasp": 0,
+    "regrasps": 0,
+    "intentional_releases": 0,
+    "simulation_s": 651.75,
+    "wall_s": 2939.203117693076,
+    "physics_steps": 156420,
+    "observation_records": 156420,
+    "closure_update_calls": 22009,
+    "unilateral_fix_branch_calls": 821,
+    "aperture_command_reopenings": 0,
+    "minimum_joint_margin_rad": 0.5251115185928346,
+    "peak_pad_load_n": 1.0728352918854358,
+    "motion_scale": 1.0,
+    "IK": "Pinocchio3.9.0/Pink3.3.0/DAQP",
+    "telemetry_issues": {
+      "video_start": {
+        "count": 1,
+        "first_error": "TypeError('expected str, bytes or os.PathLike object, not NoneType')"
+      },
+      "video": {
+        "count": 19552,
+        "first_error": "AttributeError(\"'NoneType' object has no attribute 'stdin'\")"
+      }
+    },
+    "first_divergence": null,
+    "active_sources": {
+      "actual_runner_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_shared_door.py",
+      "runner_sha256": "95ea8ac5f06326ecc7bb58956e9b4c74447383ddf698bf497e794b5b1424b49f",
+      "active_closure_path": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+      "active_closure_sha256": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+      "active_update_code_file": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py",
+      "argv": [
+        "scripts/run_xarm7_shared_door.py",
+        "--job",
+        "results/xarm7_shared_doors_20261012/45443/job.json"
+      ],
+      "pid": 386335,
+      "trajectory_helper_sha256": "669c46014c11f939e1367d25c1200652a47b4a48332c996b222cd15392d49d9a",
+      "opening_controller_sha256": "284090eb4779b5d188f5c81a2432fbba590fbc05a1d5286d2a5cbc200a991681",
+      "initial_sequence_sha256": "2a2c675d212a76fca25f69552c2583a08d3a5e5ff290251f3f3a72815bd4e782",
+      "active_closure_alias": true
+    },
+    "GT_dependencies": [
+      "oracle handle mesh geometry",
+      "known articulation geometry",
+      "actual moving-body/articulation feedback",
+      "collision model"
+    ],
+    "scene_restart_or_stitching": false,
+    "object_physics_or_geometry_changed": false
+  },
+  "initial_grasp_event": {
+    "event": "GRASP_VERIFIED",
+    "t": 251.9625,
+    "step": 60471,
+    "angle_deg": -2.3134749937980814e-07,
+    "grasp_index": 0,
+    "pad_loads_n": [
+      0.5286729900510642,
+      0.5223480577329962
+    ],
+    "base": [
+      0.9788435430402108,
+      -0.794156706951846,
+      -0.1,
+      119.44064037305306
+    ]
+  },
+  "maximum_actual_after_valid_grasp_deg": 30.00001335144043,
+  "max_relative_slip_m": 0.0011942008631895481,
+  "max_relative_rotation_slip_deg": 0.5649092142661852,
+  "max_TCP_speed_all_phases_m_s": 0.03239686140979778,
+  "max_TCP_speed_loaded_m_s": 0.00296104803397944,
+  "max_joint_tracking_error_rad": 0.004896643893352426,
+  "joint_tracking_peaks_rad": [
+    0.002094851983724666,
+    0.001251632154615434,
+    0.0013714173772939597,
+    0.0015410062503482536,
+    0.003637247306800928,
+    0.0023906622406087985,
+    0.004896643893352426
+  ],
+  "peak_native_projected_joint_reactions": [
+    0.4351077079772949,
+    15.574119567871094,
+    9.707082748413086,
+    15.111473083496094,
+    1.5070419311523438,
+    1.793033480644226,
+    0.042441193014383316
+  ],
+  "poststep_drive_law_estimated_saturation_fraction": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "drive_effort_estimate_qualification": "poststep diagnostic, not isolated native motor force; native reactions and external effort channels kept separately",
+  "minimum_joint_margin": {
+    "joint": "joint6",
+    "margin_rad": 0.5251115185928346,
+    "q": -1.1678584814071655,
+    "t": 651.7458333333333
+  },
+  "contact_target_counts": {
+    "/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/tn__l_1_original38_aL/tn__l_1_original38_aL": 777436
+  },
+  "contact_loss_event_count": 369,
+  "registered_handle": {
+    "asset_id": "45443",
+    "asset_root": "results/benchmarkA_30deg_20261011/discovery_assets/45443",
+    "joint_name": "joint_revolute_l_0_abstract_0_1",
+    "joint_type": "revolute",
+    "moving_link": "abstract_0_1",
+    "handle_link": "l_1",
+    "mesh": "original-38",
+    "panel_mesh": "original-26",
+    "axis_root": [
+      -1.2975860945325896e-06,
+      0.9999999911667768,
+      0.00013290885005684007
+    ],
+    "outward_normal_root": [
+      -0.009762512028023695,
+      -0.00013291518405774533,
+      0.9999523367103338
+    ],
+    "dimensions_m": [
+      0.3866680044539821,
+      0.012423998886819054,
+      0.012474455992552508
+    ],
+    "sections": [
+      {
+        "opposing_patch_areas_m2": [
+          0.0,
+          0.0
+        ],
+        "fraction": -0.3,
+        "anchor_root_m": [
+          0.48421292470305266,
+          -0.2635035913061043,
+          0.19418291690312137
+        ],
+        "bar_depth_m": 0.012392114,
+        "visual_rear_gap_m": 0.024259696999999997,
+        "collision_rear_gap_m": 0.024259696999999997
+      },
+      {
+        "opposing_patch_areas_m2": [
+          0.0,
+          0.0
+        ],
+        "fraction": 0,
+        "anchor_root_m": [
+          0.4842129247107179,
+          -0.1475031889451479,
+          0.19418291611798935
+        ],
+        "bar_depth_m": 0.012392114,
+        "visual_rear_gap_m": 0.024259696,
+        "collision_rear_gap_m": 0.024259696
+      },
+      {
+        "opposing_patch_areas_m2": [
+          0.0,
+          0.0
+        ],
+        "fraction": 0.3,
+        "anchor_root_m": [
+          0.4842129247086206,
+          -0.03150278658432441,
+          0.1941829163328097
+        ],
+        "bar_depth_m": 0.012392114,
+        "visual_rear_gap_m": 0.024259696,
+        "collision_rear_gap_m": 0.024259696
+      }
+    ],
+    "minimum_collision_rear_gap_m": 0.024259696,
+    "screen_rejections": [],
+    "score": 2.5759696
+  },
+  "descriptive_job_handle_header": {
+    "source": "oracle_handle",
+    "asset_id": "45134",
+    "mesh": "original-32"
+  },
+  "physics_records": 156420,
+  "all_optional_joint_effort_reaction_samples_present": true,
+  "source_sha256": {
+    "classification": "XARM7 / ORACLE_HANDLE / KNOWN_MODEL / APPROXIMATE_ACTUATOR_SIMULATION",
+    "sources": {
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_xarm7_shared_door.py": "95ea8ac5f06326ecc7bb58956e9b4c74447383ddf698bf497e794b5b1424b49f",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/xarm7_runtime.py": "5fcf0d7e80cb47aecb1ce8c36b623111c5533d16622ec57cc719e0be2921b8af",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/xarm7_door_adapter.py": "eda746a2e88894cbbd04f01e09033dfcc6495622ad716768e0a850ad551eeed7",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/run_oracle_door_precontact_continuity.py": "a1d6d3a053928249c211c4c15b4361c82fe52a37d7e51876e5a9a30502dfa261",
+      "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/benchmarkA_30deg_20261011/shared_sources/frozen_run_7320_speed.py": "b6a05a6878c6416a84b86342601cbe11d6956ab3c675d724b50aaf1321e71049",
+      "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/benchmarkA_30deg_20261011/shared_sources/run_7320_pink_fixed.py": "bab53efb7a8b455706441709ca4c1730751446971c7fc2519c4203d84e33fd75",
+      "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/45415_closure_verification_20261011/provenance/active_closure.py": "b522bcef78a1191a4a2a5c756c34d11d7df2e22ddaa5f782be61343947a1704c",
+      "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/shared_door_execution.py": "13e3c388f83eb8efdb2c727fbcc14815498a1a7dfc77107db5393c03d9cda622"
+    },
+    "composed_executable_sha256": "94f9acae7231d419534570cdaba0f711fde0630e7d46b77cc851ce4b069463f2",
+    "virtual_mount": true,
+    "intentional_release_regrasp": false
+  },
+  "fixed_base": true,
+  "releases": 0,
+  "regrasps": 0
+}

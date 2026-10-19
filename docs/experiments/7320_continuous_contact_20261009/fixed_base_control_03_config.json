@@ -1,0 +1,43 @@
+{
+  "source": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/known_model_whole_task_20261007/physical_7320_two_station_candidate_0_confirmed_capture/source",
+  "asset_root": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/semantic_interaction/asset",
+  "plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/7320_timing_20261007/regression_2x_a_20261007/grasp_plan.json",
+  "output": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/7320_continuous_contact_20261009/fixed_base_control_03",
+  "gpu": 4,
+  "whole_task_plan": "/data1/home/rangeryx/fr3_real2sim_piper_mobile/results/7320_timing_20261007/regression_2x_a_20261007/whole_plan.json",
+  "initial_articulation_rad": 0.0,
+  "plant": {
+    "tau_c": 0.0005,
+    "b": 0.05
+  },
+  "timing_experiment": {
+    "speed_scale": 1.0,
+    "shorten_endpoint_holds": true,
+    "chunked_export": true,
+    "reuse_invariant_collision_solids": true,
+    "preserve_approach_timing": true,
+    "contact_phase_original_closure_rate": true,
+    "continuous_hinge_time_law": false
+  },
+  "deadline_shanghai": "2026-10-09T17:03:15.435681+08:00",
+  "baseline_runner": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/7320_continuous_contact_20261009/frozen_known/run_7320_speed.py",
+  "continuous_contact": {
+    "fixed_base_control": true,
+    "extend": true
+  },
+  "milestone": "KNOWN_MODEL_DIAGNOSTIC dynamic XY base motion during one uninterrupted physical grasp",
+  "skill": {
+    "joint_type": "revolute"
+  },
+  "wrist_experiment": {
+    "force_policy": {
+      "soft_force_n": 2.0,
+      "window_s": 0.05,
+      "sustained_windows": 3,
+      "simulation_emergency_contact_n": 10.0,
+      "emergency_scope": "SIMULATION_ONLY; existing actuator effort ceiling used as conservative reaction proxy, not certified hardware limit",
+      "commanded_gripper_effort_unchanged": true
+    }
+  },
+  "publication_note": "Operational subset for review; exact full job remains in private evidence, identified by SHA256."
+}

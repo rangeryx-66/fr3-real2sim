@@ -1,0 +1,251 @@
+{
+  "45936": [
+    {
+      "sequence": 0,
+      "operation": "evaluate_view",
+      "reason": "Fresh RGB shows upper handle hidden by wrist/gripper. Raise and center camera toward observed upper continuation to reveal independent measured surfaces; no archived viewpoint input.",
+      "requested_view": {
+        "eye_world_m": [
+          0.365,
+          -0.845,
+          0.565
+        ],
+        "look_at_world_m": [
+          0.314,
+          -0.335,
+          0.525
+        ]
+      },
+      "agent_wait_wall_s": 37.932357277954,
+      "operation_wall_s": 0.22940821386873722,
+      "GT_handle_input": false,
+      "result": {
+        "feasible": true
+      }
+    },
+    {
+      "sequence": 1,
+      "operation": "move_and_observe",
+      "reason": "Execute the checked higher wrist view to expose the handle segment hidden by the gripper; inspect fresh RGB-D before planning.",
+      "requested_view": null,
+      "agent_wait_wall_s": 11.27108391188085,
+      "operation_wall_s": 153.63435495016165,
+      "GT_handle_input": false,
+      "result": {}
+    },
+    {
+      "sequence": 2,
+      "operation": "build_geometry",
+      "reason": "Fresh higher wrist image reveals the full vertical handle without gripper occlusion, with about295mm measured extent. Fuse the two independently observed views and inspect measured/uncertain surfaces and the unchanged automatic grasp plan before any execution.",
+      "requested_view": null,
+      "agent_wait_wall_s": 25.547455618856475,
+      "operation_wall_s": 196.4364084310364,
+      "GT_handle_input": false,
+      "result": {
+        "plan": true,
+        "candidate_family": [
+          -0.3,
+          0.0,
+          0.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "sequence": 3,
+      "operation": "validate_execution",
+      "reason": "Inspected new incremental measured surfaces and the actual selected finger geometry. Automatic bilateral support is plausible, with uncertain rear explicitly hypothetical. Check the measured-state observation return route and approach using original constraints before one attempt.",
+      "requested_view": null,
+      "agent_wait_wall_s": 42.90847430401482,
+      "operation_wall_s": 1.1175193930976093,
+      "GT_handle_input": false,
+      "result": {}
+    },
+    {
+      "sequence": 4,
+      "operation": "attempt_grasp_and_probe",
+      "reason": "Explicitly approve first physical attempt after inspecting fresh wrist RGB-D, measured/unknown surface separation, actual selected finger plan and valid original return/approach checks. Use unchanged closure, one-second hold and short opening. On failure unload and retreat before returning feedback; never resume through a hard stop.",
+      "requested_view": null,
+      "agent_wait_wall_s": 13.463140183128417,
+      "operation_wall_s": 1827.1822881030384,
+      "GT_handle_input": false,
+      "result": {
+        "opening_gain_deg": 0.009580737803432271,
+        "short_success": false,
+        "termination_reason": "TrialFeedback('EXISTING_SOFT_FORCE_WARNING_RETURN_FOR_UNLOAD')"
+      }
+    },
+    {
+      "sequence": 5,
+      "operation": "reobserve_and_replan",
+      "reason": "Inspected actual acquisition/stopped wrist and local images plus raw/filtered load, aperture and progress plots. Bilateral acquisition degraded to right-dominated loading with only0.00958deg transmission, and measured aperture grew despite fixed command. Safe release/retreat returned zero loads. Use the single recovery: fresh observations and a different existing candidate family, not stronger closure or reset reference. Additional oblique view should clarify observed side support/panel gap; unique physical cause is not asserted.",
+      "requested_view": null,
+      "agent_wait_wall_s": 60.61098633008078,
+      "operation_wall_s": 245.7464042978827,
+      "GT_handle_input": false,
+      "result": {}
+    },
+    {
+      "sequence": 6,
+      "operation": "evaluate_view",
+      "reason": "Fresh recovery RGB again shows upper self-occlusion. Prior same-episode physical feedback showed unilateral load growth and aperture drift. A higher oblique view should reveal the full observed handle and more side/panel-gap geometry before an alternative candidate is generated; no GT or saved grasp input.",
+      "requested_view": {
+        "eye_world_m": [
+          0.54,
+          -0.8,
+          0.56
+        ],
+        "look_at_world_m": [
+          0.314,
+          -0.335,
+          0.525
+        ]
+      },
+      "agent_wait_wall_s": 36.01794978999533,
+      "operation_wall_s": 0.2477430598810315,
+      "GT_handle_input": false,
+      "result": {
+        "feasible": true
+      }
+    },
+    {
+      "sequence": 7,
+      "operation": "move_and_observe",
+      "reason": "Execute the feasible oblique wrist route chosen to inspect side support and upper handle extent after the measured load-transmission failure; retain only fresh observed surfaces.",
+      "requested_view": null,
+      "agent_wait_wall_s": 11.87832685187459,
+      "operation_wall_s": 131.97404834604822,
+      "GT_handle_input": false,
+      "result": {}
+    },
+    {
+      "sequence": 8,
+      "operation": "build_geometry",
+      "reason": "Inspected fresh oblique RGB/mask/depth/cloud. Full handle and stronger visible side surface are available without wrist occlusion. Fuse these independent measured patches; use unchanged ranking with the episode-failed family excluded, then inspect the actual replacement plan. Unknown rear remains uncertain.",
+      "requested_view": null,
+      "agent_wait_wall_s": 94.96983004710637,
+      "operation_wall_s": 161.4449508988764,
+      "GT_handle_input": false,
+      "result": {
+        "plan": true,
+        "candidate_family": [
+          0.3,
+          0.0,
+          180.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "sequence": 9,
+      "operation": "validate_execution",
+      "reason": "Inspected fresh oblique measured geometry and actual replacement finger plan. Automatically selected section+0.3/roll180 differs from failed section-0.3/roll0; new location/contact orientation addresses the observed retention/transmission degradation without changing force or scoring. Check measured-state return and approach before the single recovery grasp.",
+      "requested_view": null,
+      "agent_wait_wall_s": 105.26146959001198,
+      "operation_wall_s": 1.3171385391615331,
+      "GT_handle_input": false,
+      "result": {}
+    },
+    {
+      "sequence": 10,
+      "operation": "attempt_grasp_and_probe",
+      "reason": "Explicit approval of the one recovery grasp after inspecting fresh recovery images, fused measured/uncertain surfaces, alternative finger plan and checked route. The automatic plan moved about178mm and changed orientation about180deg from the failed grasp, addressing degraded contact placement with a different existing family. Same physics, closure, one-second hold, short opening and protections. Stop after this recovery budget regardless of outcome.",
+      "requested_view": null,
+      "agent_wait_wall_s": 15.467046504141763,
+      "operation_wall_s": 1819.9242144848686,
+      "GT_handle_input": false,
+      "result": {
+        "opening_gain_deg": 2.995534617919475,
+        "short_success": true,
+        "termination_reason": "SHARED_DOOR_30_DEG_SUCCESS"
+      }
+    }
+  ],
+  "46427": [
+    {
+      "sequence": 0,
+      "operation": "evaluate_view",
+      "reason": "Fresh RGB shows a complete curved handle close to the right image edge, observed mainly from one side. Recenter on measured handle depth points and view slightly from above/front to complement the current oblique surface observation. Same Agent instructions, no saved viewpoints or GT geometry.",
+      "requested_view": {
+        "eye_world_m": [
+          0.85,
+          -0.67,
+          0.25
+        ],
+        "look_at_world_m": [
+          0.864,
+          -0.175,
+          0.166
+        ]
+      },
+      "agent_wait_wall_s": 102.4269217629917,
+      "operation_wall_s": 0.28656577900983393,
+      "GT_handle_input": false,
+      "result": {
+        "feasible": true
+      }
+    },
+    {
+      "sequence": 1,
+      "operation": "move_and_observe",
+      "reason": "Execute the checked centered front/high view to complement the measured side surface and improve handle framing; inspect the resulting RGB-D before planning.",
+      "requested_view": null,
+      "agent_wait_wall_s": 20.746743886033073,
+      "operation_wall_s": 176.01138844084926,
+      "GT_handle_input": false,
+      "result": {}
+    },
+    {
+      "sequence": 2,
+      "operation": "build_geometry",
+      "reason": "Inspected actual new RGB/mask/depth/cloud: complete curved handle centered with about145mm extent, complementary to the initial oblique view. Available visual evidence is sufficient to fuse independent observed surfaces and run unchanged native-G1 grasp ranking. Unknown rear and semantic support boundaries stay explicit.",
+      "requested_view": null,
+      "agent_wait_wall_s": 81.44773957994767,
+      "operation_wall_s": 106.39314834494144,
+      "GT_handle_input": false,
+      "result": {
+        "plan": true,
+        "candidate_family": [
+          0.0,
+          0.009374999906867743,
+          180.0,
+          0.0
+        ]
+      }
+    },
+    {
+      "sequence": 3,
+      "operation": "validate_execution",
+      "reason": "Inspected fresh curved measured handle, separated uncertain surfaces and actual selected finger geometry. Automatic plan places the pads around the central handle section using an existing insertion/orientation family. Validate original measured-state return and approach before one physical grasp/hold/probe; no manual pose correction.",
+      "requested_view": null,
+      "agent_wait_wall_s": 122.11409625201486,
+      "operation_wall_s": 1.1662951027974486,
+      "GT_handle_input": false,
+      "result": {}
+    },
+    {
+      "sequence": 4,
+      "operation": "attempt_grasp_and_probe",
+      "reason": "Explicit approval after inspecting fresh two-view RGB-D, incremental measured/uncertain geometry and selected native-G1 finger plan, with original return/approach validation valid. Execute unchanged closure, one-second hold and short opening. No recovery if first attempt succeeds; otherwise automatically unload before returning feedback. No between-case tuning.",
+      "requested_view": null,
+      "agent_wait_wall_s": 15.336262837983668,
+      "operation_wall_s": 2238.7954822389875,
+      "GT_handle_input": false,
+      "result": {
+        "opening_gain_deg": 3.0026357781607658,
+        "short_success": true,
+        "termination_reason": "SHARED_DOOR_30_DEG_SUCCESS"
+      }
+    },
+    {
+      "sequence": 5,
+      "operation": "finish",
+      "reason": "Inspected actual wrist/local acquisition and stopped images plus raw/filtered load, aperture, contact and motion plots. First grasp achieved+3.0026deg after acquisition, despite single-side normal unloading, with verified safe release/retreat/unloaded return. First success prohibits recovery. Both registered cases and three total physical grasps are complete; export and close without further experiment.",
+      "requested_view": null,
+      "agent_wait_wall_s": 150.6297221861314,
+      "operation_wall_s": 2.5009969249367714e-05,
+      "GT_handle_input": false,
+      "result": {}
+    }
+  ]
+}

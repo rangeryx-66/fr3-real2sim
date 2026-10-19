@@ -1,0 +1,49 @@
+{
+  "classification": "ORACLE_HANDLE / KNOWN_MODEL / CROSS_ROBOT_ABLATION",
+  "reference_commit": "81ab4f5330950b4f53a12d45137a6f47858ae436",
+  "robots": [
+    "piper",
+    "nero",
+    "xarm7",
+    "fr3"
+  ],
+  "assets": [
+    "45134",
+    "45443",
+    "45176",
+    "45415"
+  ],
+  "physical_asset": "45134",
+  "physical_attempt_limits": {
+    "piper": 0,
+    "nero": 1,
+    "xarm7": 1,
+    "fr3": 1
+  },
+  "no_retries": true,
+  "target_degrees": 30,
+  "fixed_base_after_grasp": true,
+  "gripper": "exact existing frozen PiPER gripper",
+  "offline_modes": [
+    "same_object_relative_grasp_and_PiPER_station",
+    "same_grasp_optimized_station",
+    "own_geometry_ranked_grasp_and_station"
+  ],
+  "fixed_joint_ordinal": 3,
+  "predefined_fixed_joint_angles_rad": [
+    -0.6,
+    0.0,
+    0.6
+  ],
+  "same_mount_geometry_for_full_and_reduced": true,
+  "margin_rad": 0.05,
+  "loaded_tcp_limit_m_s": 0.005,
+  "station_search_wall_s": 300,
+  "collision_geometry_unchanged": true,
+  "actuator_substitution_allowed": false,
+  "unvalidated_tool_mount_must_be_labeled_conditional": true,
+  "additional_fixed_joint_rule": "lock joint3 at the full7 initial-grasp value at the exact same selected station and grasp; ensures an initially matched feasible configuration, chosen by a universal rule before comparison",
+  "station_search_wall_s_per_mode": 300,
+  "absolute_base_height_m": -0.1,
+  "no_physical_motor_parameter_assumption": true
+}

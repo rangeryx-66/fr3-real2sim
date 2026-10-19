@@ -1,0 +1,213 @@
+{
+  "schema": "interactive-articulated-twin-v1",
+  "version": "T1",
+  "asset_id": "7320",
+  "joint_name": "joint_revolute_l_0_abstract_0_1",
+  "T_world_asset_initial": [
+    [
+      1.0,
+      0.0,
+      2.220446049250313e-16,
+      0.5
+    ],
+    [
+      2.220446049250313e-16,
+      0.0,
+      -1.0,
+      -0.05
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      0.18388397442268828
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "initial_joint_coordinate": 0.0,
+  "kinematics_updated": true,
+  "physics_updated": false,
+  "estimated_articulation": {
+    "joint_type": "revolute",
+    "axis_world": [
+      0.0016305065540406214,
+      -2.6119588434538687e-05,
+      -0.9999986703821883
+    ],
+    "point_on_axis_world_m": [
+      0.24536475249729187,
+      -0.18037572952549452,
+      0.1624306763312595
+    ],
+    "axis_point_gauge": "axis-normal plane through measured-position centroid",
+    "input_source": "saved measured-EE-only articulation estimate",
+    "confidence": 0.999,
+    "confidence_definition": "optimizer convergence flag, not calibrated probability or acceptance",
+    "sample_count": 4383,
+    "travel_m": 0.07234902493390073,
+    "radius_m": 0.41384501758525877,
+    "position_rmse_m": 0.00013417968389959543,
+    "rotation_rmse_rad": 0.0004073355075313239,
+    "angle_span_rad": 0.17389973236808173
+  },
+  "observed_range": {
+    "status": "OBSERVED_EE_MOTION",
+    "minimum": -2.9500932544495475e-07,
+    "maximum": 0.09600870301325101,
+    "units": "rad",
+    "coordinate_zero": "first supplied measured EE pose",
+    "supporting_observations": 2528,
+    "full_joint_limits_identified": false
+  },
+  "operational_joint_window": {
+    "lower": -0.1745329252,
+    "upper": 0.1745329252,
+    "units": "rad",
+    "source": "frozen policy_not_physical_limit",
+    "full_joint_limits_identified": false,
+    "authored_to_physical_joint": false
+  },
+  "physical_joint_limits": {
+    "lower": -0.0,
+    "upper": 1.5707963267948966,
+    "units": "rad",
+    "source": "prepared URDF prior; not estimated from observed motion",
+    "prepared_prior_limits": {
+      "lower": -0.0,
+      "upper": 1.5707963267948966
+    },
+    "coordinate_sign_vs_prepared_prior": 1,
+    "full_joint_limits_identified": false
+  },
+  "joint_coordinate_convention": {
+    "limits": {
+      "lower": -0.0,
+      "upper": 1.5707963267948966
+    },
+    "coordinate_sign_vs_prepared_prior": 1,
+    "coordinate_relation": "q_twin = sign * q_prepared_prior",
+    "axis_direction_dot_prior_diagnostic": 0.9999986703821883,
+    "prior_axis_use": "coordinate sign convention only; estimated axis direction and line unchanged",
+    "limit_source": "prepared URDF prior, including any initialization re-zero; not interaction-identified"
+  },
+  "physics": {
+    "status": "INITIAL_PRIOR",
+    "updated": false,
+    "parameters": {
+      "tau_c": 0.012,
+      "b": 1.0
+    },
+    "J_eff_prior_fixed": null,
+    "parameter_semantics": "effective simulator resistance parameters; not calibrated real hinge torque"
+  },
+  "native_physics_application": {
+    "dynamicFrictionEffort": 0.012,
+    "viscousFrictionCoefficient": 0.017453292519943295,
+    "viscousFrictionCoefficient_units": "N m s/degree in native USD angular axis",
+    "b_input_units": "effective simulator N m s/rad",
+    "note": "Apply/verify native PhysxJointAxisAPI attributes after import; URDF dynamics alone is not proof of equivalent PhysX resistance."
+  },
+  "geometry_relations": {
+    "source": "initial prepared association; not interaction-identified segmentation",
+    "moving_link": "abstract_0_1",
+    "moving_links": [
+      "abstract_0_1",
+      "l_1"
+    ],
+    "static_links": [
+      "l_0",
+      "l_world"
+    ],
+    "static_parent_link": "l_0",
+    "handle_link": "l_1",
+    "handle_relation": "fixed descendant association retained from prepared geometry",
+    "support_relation": "same frozen initial fixture/layout in every reference and twin replay",
+    "geometry_improvement_measured": false,
+    "geometry_improvement_metric": null
+  },
+  "reframe": {
+    "method": "child-frame compensation; unchanged original link names",
+    "moving_link": "abstract_0_1",
+    "parent_link": "l_0",
+    "new_origin_parent": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.25463524750270816
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        -0.02145329809142879
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.13037572952549448
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "axis_joint_local": [
+      0.0016305065540406214,
+      -0.9999986703821883,
+      2.611958843453905e-05
+    ],
+    "child_frame_compensation": [
+      [
+        1.0,
+        0.0,
+        0.0,
+        0.0007465148423324575
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.17755342067699015
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        9.817616138563245e-05
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "compensated_elements": [
+      "abstract_0_1/inertial/0",
+      "joint/joint_fixed_abstract_0_1"
+    ],
+    "physical_geometry_moved": false,
+    "note": "Moving-link coordinate origin changes; its initial physical geometry, COM and inertia do not."
+  },
+  "geometry_source_urdf_sha256": "ef69aca3042261176f341ae73c7cbff9907da9dffb3912970f435c5d1e47e63e",
+  "reference_modified": false,
+  "fixture_must_be_frozen_from_initial_scene": true,
+  "resource_policy": "read-only absolute references; source assets must remain available",
+  "initial_geometry_audit": {
+    "physical_element_count": 44,
+    "max_translation_error_m": 0.0,
+    "max_rotation_error_rad": 0.0,
+    "geometry_scale_shape_unchanged": true,
+    "mass_and_inertia_values_unchanged": true,
+    "scope": "URDF physical element transforms and properties; not a new mesh-fidelity claim"
+  }
+}
