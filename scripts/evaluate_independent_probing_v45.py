@@ -2,6 +2,7 @@
 import argparse,json,os
 from pathlib import Path
 from agent_command_protocol_v12 import atomic_json
+from interaction_runtime.serialization import result_packet
 
 
 def evaluate(root):
@@ -18,8 +19,8 @@ def evaluate(root):
     complete=[q for q in result['quality'] if q['role'].startswith('VALIDATION') and q.get('quality',{}).get('action_ok') and q.get('blocks')]
     result['assessment']=dict(status='REQUIRES_CREDIBILITY_REVIEW' if complete else 'FAIL',complete_validation=bool(complete),
         note='PASS also requires physically credible identifiable parameters and held-out prediction; no automatic training-residual or angle-based PASS')
-    atomic_json(root/'RESULT.json',result)
-    print(json.dumps({k:result[k] for k in ['experiment','assessment','comparison','prevalidation_frozen_model','storage','completion']},indent=2))
+    atomic_json(root/'RESULT.json',result_packet(result))
+    print(json.dumps(result_packet({k:result[k] for k in ['experiment','assessment','comparison','prevalidation_frozen_model','storage','completion']}),indent=2))
     return result
 
 if __name__=='__main__':
