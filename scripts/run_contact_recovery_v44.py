@@ -50,7 +50,7 @@ def run(r):
     if g.get('at_safe_park') and r.supervisor.latched is None:
         from interaction_runtime.guard_regression import run as verify_guards
         guards=verify_guards(r)
-    return dict(status='ENGINEERING_COMPLETE',scope='one failure-fixture acquisition plus at most one fresh Agent recovery; not research validation accuracy',first=first,Agent=result,guards=guards)
+    return dict(status='ENGINEERING_CHAIN_FINISHED' if result.get('status')=='SESSION_COMPLETE' else 'ENGINEERING_INCOMPLETE',scope='one failure-fixture acquisition plus at most one fresh Agent recovery; not research validation accuracy',first=first,Agent=result,guards=guards)
 
 if __name__=='__main__':
     sys.exit(main(ContactRuntime,run,extra_sources=('scripts/run_contact_recovery_v44.py','scripts/native_g1_execution_candidates.py','scripts/native_g1_panel_support.py','scripts/native_g1_agent_execution.py','scripts/native_g1_hybrid_contact.py','scripts/hybrid_panel_preflight.py','scripts/native_g1_visual_input.py','scripts/plan_shared_door_skill.py','scripts/xarm7_native_planning.py','scripts/native_g1_wrist_input.py','scripts/update_probing_v31_model.py','scripts/xarm_ft_v31_estimator.py')))

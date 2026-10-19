@@ -10,7 +10,7 @@ def main():
     out=ROOT/'results/contact_recovery_v44_20261019'/a.label;out.mkdir(parents=True,exist_ok=False)
     old=json.loads((ROOT/'results/independent_probing_v43_20261019/episode_00/job.json').read_text())
     job=dict(old,output=str(out),gpu=a.gpu,visual_gpu=a.visual_gpu,engineering_fixture=str(ROOT/'results/contact_recovery_v44_20261019/initial_fixture'),
-             research_reference='169263f',runtime_acquisition_budget=2,agent_wait_timeout_s=180,episode_wall_budget_s=1800.,episode_sim_budget_s=900.,safe_exit_wall_reserve_s=180.,safe_exit_sim_reserve_s=60.,
+             research_reference='169263f',runtime_acquisition_budget=2,agent_wait_timeout_s=360,episode_wall_budget_s=1800.,episode_sim_budget_s=900.,safe_exit_wall_reserve_s=180.,safe_exit_sim_reserve_s=60.,
              classification='V4.4_NATIVE_CONTACT_ENGINEERING; archived initial failure fixture, fresh Agent recovery; not blind research validation')
     job['deadline_shanghai']=(datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=8)))+datetime.timedelta(seconds=1980)).isoformat();(out/'job.json').write_text(json.dumps(job,indent=2))
     sources=list((ROOT/'interaction_runtime').glob('*.py'))+[ROOT/'scripts'/n for n in ['native_g1_execution_candidates.py','native_g1_agent_execution.py','native_g1_hybrid_contact.py','native_g1_panel_support.py','plan_shared_door_skill.py','xarm7_native_planning.py','native_g1_visual_input.py','run_contact_recovery_v44.py','native_g1_wrist_input.py','update_probing_v31_model.py','xarm_ft_v31_estimator.py']]
