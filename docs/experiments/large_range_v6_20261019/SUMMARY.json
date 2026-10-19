@@ -1,0 +1,672 @@
+{
+  "experiment": "V6",
+  "assessment": "PASS_WITH_LIMITATIONS_SINGLE_BLIND_DEVELOPMENT_EPISODE",
+  "reference": "fe69627",
+  "actual_executed_commit": "97f9364",
+  "case": "45936",
+  "episodes": 1,
+  "acquisitions": 2,
+  "recovery_regrasps": 1,
+  "Agent_view_adjustments": 4,
+  "wrist_checkpoints": [
+    {
+      "checkpoint": "generation_00_agent_00",
+      "t_sim": 10.008333333333333,
+      "FK_error_m": 1.2932429795434162e-06,
+      "rigid_error_m": 4.013163472777969e-08
+    },
+    {
+      "checkpoint": "generation_00_agent_01",
+      "t_sim": 16.604166666666668,
+      "FK_error_m": 9.513478786601314e-07,
+      "rigid_error_m": 5.929167276067254e-08
+    },
+    {
+      "checkpoint": "generation_00_agent_02",
+      "t_sim": 21.8625,
+      "FK_error_m": 1.0854345989395793e-06,
+      "rigid_error_m": 4.5504318439883066e-08
+    },
+    {
+      "checkpoint": "generation_01_agent_00",
+      "t_sim": 226.75,
+      "FK_error_m": 1.2604918634491234e-06,
+      "rigid_error_m": 4.341279408188433e-08
+    },
+    {
+      "checkpoint": "generation_01_agent_01",
+      "t_sim": 233.98333333333332,
+      "FK_error_m": 1.3444314251776865e-06,
+      "rigid_error_m": 6.935101398587535e-08
+    },
+    {
+      "checkpoint": "generation_01_agent_02",
+      "t_sim": 237.06666666666666,
+      "FK_error_m": 1.3957570426740225e-06,
+      "rigid_error_m": 8.98921037207594e-08
+    },
+    {
+      "checkpoint": "pregrasp",
+      "t_sim": 53.641666666666666,
+      "FK_error_m": 4.676565882298728e-07,
+      "rigid_error_m": 2.2539175775457737e-08
+    },
+    {
+      "checkpoint": "pregrasp_001",
+      "t_sim": 272.0083333333333,
+      "FK_error_m": 8.596611495344358e-07,
+      "rigid_error_m": 4.1698136625965737e-08
+    }
+  ],
+  "maximum_actual_deg": 30.280690873862316,
+  "final_deg": 30.26974549571737,
+  "opening_segment_travel_deg": 46.34364118862883,
+  "closing_segment_travel_deg": 16.079035410038934,
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_INITIAL_ACCEL",
+      "requested_deg": 12.0,
+      "actual_end_deg": 12.01507029256041,
+      "gain_deg": 12.01507029278337,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_duration_s": 19.59166666666667,
+      "physical_transmission_valid": true,
+      "FIT_quality": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS"
+    },
+    {
+      "id": 2,
+      "role": "FIT_INITIAL_REVERSE",
+      "requested_deg": 4.0,
+      "actual_end_deg": 3.9757446866113484,
+      "gain_deg": -8.039325605949061,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_duration_s": 10.404166666666669,
+      "physical_transmission_valid": true,
+      "FIT_quality": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS"
+    },
+    {
+      "id": 3,
+      "role": "FIT_EXPAND_VARIED",
+      "requested_deg": 20.0,
+      "actual_end_deg": 17.663065561591612,
+      "gain_deg": 13.687320874980264,
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "SUSTAINED_LOW_TRANSMISSION",
+      "sim_duration_s": 33.625,
+      "physical_transmission_valid": false,
+      "FIT_quality": "PREDECLARED_TRANSMITTING_FIT_PREFIX"
+    },
+    {
+      "id": 4,
+      "role": "FIT_NEW_REGION_ACCEL",
+      "requested_deg": 28.0,
+      "actual_end_deg": 28.0051604179065,
+      "gain_deg": 10.342453441246313,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_duration_s": 12.620833333333337,
+      "physical_transmission_valid": true,
+      "FIT_quality": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS"
+    },
+    {
+      "id": 5,
+      "role": "FIT_NEW_REGION_REVERSE",
+      "requested_deg": 20.0,
+      "actual_end_deg": 19.965450613816625,
+      "gain_deg": -8.039709804089874,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_duration_s": 10.512500000000045,
+      "physical_transmission_valid": true,
+      "FIT_quality": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS"
+    },
+    {
+      "id": 6,
+      "role": "VALIDATION_EXPANDED_DISTINCT",
+      "requested_deg": 25.0,
+      "actual_end_deg": 25.078117000043385,
+      "gain_deg": 5.11266638622676,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_duration_s": 6.649999999999977,
+      "physical_transmission_valid": true,
+      "FIT_quality": "COMPLETE_ACTION"
+    },
+    {
+      "id": 7,
+      "role": "FIT_PRIMARY_TARGET_AFTER_VALIDATION",
+      "requested_deg": 30.0,
+      "actual_end_deg": 30.26424719343551,
+      "gain_deg": 5.186130193392124,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_duration_s": 5.3583333333333485,
+      "physical_transmission_valid": true,
+      "FIT_quality": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS"
+    }
+  ],
+  "blind_commitment": "1b2bb257c8f084688db1356cc1885f0b31716d3404dd36e5f995859e92088122",
+  "truth_reveal_UTC": "2026-10-19T08:14:52.035326+00:00",
+  "authored_reference": {
+    "inertia_kg_m2": 0.14000274339697616,
+    "case": 0,
+    "asset": "45936",
+    "seed": 955234022,
+    "mass_scale": 0.8527998153284337,
+    "density_gradient": [
+      -0.26906484264995545,
+      -0.2475069333916003,
+      0.25982509604798304
+    ],
+    "tau_c": 0.022651306678159792,
+    "b": 0.33152365948525336,
+    "spring": false,
+    "law": {
+      "family": "localized_passive_friction",
+      "base_nm": 0.022651306678159792,
+      "amplitude_nm": 0.015205076632003668,
+      "center_rad": 0.23050600485533884,
+      "width_rad": 0.07181165075641624
+    }
+  },
+  "authored_not_independent_effective_PhysX_measurement": true,
+  "prevalidation_model": {
+    "training_bins": 527,
+    "validation_bins": 0,
+    "parameters": [
+      0.13960449482232626,
+      0.3429885530991764,
+      0.01633217642203139,
+      0.02449425803885604,
+      0.02184273348896963,
+      0.0345939905789923,
+      0.04181769759637331,
+      0.02331575442335482,
+      0.023231187797839777,
+      0.02116374753935192,
+      0.03465410791245262
+    ],
+    "conditional_std": [
+      0.0006328743093818014,
+      0.002625200620990563,
+      0.0014521655298914016,
+      0.00033190105194184536,
+      0.00014396246751308874,
+      0.00019271316529051707,
+      0.000501391772668774,
+      0.00014701305286987434,
+      0.00013451473576663433,
+      0.000270046547345749,
+      0.0034542311104590615
+    ],
+    "scaled_condition": 254.5255564892131
+  },
+  "primary_prevalidation_comparison": {
+    "constant_model": {
+      "resolution_deg": 0,
+      "active_controls": [
+        0
+      ],
+      "parameters": [
+        0.1421996721450177,
+        0.19580750674167952,
+        0.028795603717726877
+      ],
+      "conditional_std": [
+        0.01352026122284976,
+        0.05612314038804935,
+        0.0010218227714162997
+      ],
+      "cv_rmse_nm": 0.004201673222811867,
+      "support_deg": [
+        0.28957382329781395,
+        27.954528002865633
+      ],
+      "resistance_curve_rmse_nm": 0.004788730970572483,
+      "resistance_estimated_peak_to_peak_nm": 0.0,
+      "authored_resistance_peak_to_peak_nm": 0.014398624647805999,
+      "inertia_relative_error_pct": 1.569204070388941,
+      "damping_relative_error_pct": -40.9370941893849,
+      "heldout": {
+        "VALIDATION_EXPANDED_DISTINCT_06#0": {
+          "status": "predicted",
+          "samples": 1354,
+          "duration_s": 5.637499999999989,
+          "torque_rmse_nm": 0.0029216668126995794,
+          "angle_rmse_deg": 1.283003496308285,
+          "velocity_rmse_rad_s": 0.009505736285209773,
+          "final_error_deg": -2.745522747472261,
+          "prediction_outside_training_support": false,
+          "input": "held-out measured compensated wrist effort; one native initial q/qd, no state correction",
+          "filter_lookahead_s": 0.2583333333330984
+        }
+      }
+    },
+    "extended_model": {
+      "resolution_deg": 5.0,
+      "active_controls": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "parameters": [
+        0.13960449482232626,
+        0.3429885530991764,
+        0.01633217642203139,
+        0.02449425803885604,
+        0.02184273348896963,
+        0.0345939905789923,
+        0.04181769759637331,
+        0.02331575442335482,
+        0.023231187797839777,
+        0.02116374753935192,
+        0.03465410791245262
+      ],
+      "conditional_std": [
+        0.0006328743093818014,
+        0.002625200620990563,
+        0.0014521655298914016,
+        0.00033190105194184536,
+        0.00014396246751308874,
+        0.00019271316529051707,
+        0.000501391772668774,
+        0.00014701305286987434,
+        0.00013451473576663433,
+        0.000270046547345749,
+        0.0034542311104590615
+      ],
+      "cv_rmse_nm": 0.0002588088624627655,
+      "support_deg": [
+        0.28957382329781395,
+        27.954528002865633
+      ],
+      "resistance_curve_rmse_nm": 0.0002181011231921706,
+      "resistance_estimated_peak_to_peak_nm": 0.014580006825739351,
+      "authored_resistance_peak_to_peak_nm": 0.014398624647805999,
+      "inertia_relative_error_pct": -0.28445769346152616,
+      "damping_relative_error_pct": 3.4582429597104003,
+      "heldout": {
+        "VALIDATION_EXPANDED_DISTINCT_06#0": {
+          "status": "predicted",
+          "samples": 1354,
+          "duration_s": 5.637499999999989,
+          "torque_rmse_nm": 0.00012465280908719478,
+          "angle_rmse_deg": 0.08474860866235924,
+          "velocity_rmse_rad_s": 0.0004333351358660794,
+          "final_error_deg": 0.10797814417561281,
+          "prediction_outside_training_support": false,
+          "input": "held-out measured compensated wrist effort; one native initial q/qd, no state correction",
+          "filter_lookahead_s": 0.2583333333330984
+        }
+      }
+    }
+  },
+  "final_online_comparison": {
+    "parameters": [
+      0.13968586253260912,
+      0.34071388692215504,
+      0.020829696511510953,
+      0.023691182608796144,
+      0.021972953762027403,
+      0.03487827555163196,
+      0.0404804650884288,
+      0.0240430957188371,
+      0.02261017727842486,
+      0.02251800969079574,
+      0.022473524034720364,
+      0.02220697068928231
+    ],
+    "conditional_std": [
+      0.0006671115252933463,
+      0.002827059773151165,
+      0.0004642946506429196,
+      0.00012943760544603002,
+      9.13408685333437e-05,
+      0.000126576188574176,
+      0.0004718501201306948,
+      0.00011635802392083299,
+      7.99897625266264e-05,
+      9.11485979992966e-05,
+      0.00033899930959213186,
+      0.0006875197759283433
+    ],
+    "resolution_deg": 5.0,
+    "scaled_condition": 10522990.452443914,
+    "inertia_relative_error_pct": -0.22633903927763432,
+    "damping_relative_error_pct": 2.772118120067524,
+    "observed_support_curve_rmse_nm": 0.00021402899309275815,
+    "heldout": {
+      "VALIDATION_EXPANDED_DISTINCT_06#0": {
+        "status": "predicted",
+        "samples": 1354,
+        "duration_s": 5.637499999999989,
+        "torque_rmse_nm": 7.417898367638284e-05,
+        "angle_rmse_deg": 0.047761762716828214,
+        "velocity_rmse_rad_s": 0.00028008278431520455,
+        "final_error_deg": 0.07871872096371955,
+        "prediction_outside_training_support": false,
+        "input": "held-out measured compensated wrist effort; one native initial q/qd, no state correction",
+        "filter_lookahead_s": 0.2583333333330984
+      }
+    }
+  },
+  "qualified_FIT_support_intervals_deg": [
+    [
+      0.28957382329781395,
+      11.870164576847555
+    ],
+    [
+      18.07455944853924,
+      29.955966468643204
+    ]
+  ],
+  "excitation": [
+    {
+      "segment": "FIT_INITIAL_ACCEL_01#0",
+      "role": "FIT_INITIAL_ACCEL_01",
+      "range_deg": [
+        0.011726002399517108,
+        12.01507029256041
+      ],
+      "velocity_rms_rad_s": 0.013275854876130175,
+      "acceleration_rms_rad_s2": 0.02235138681997815,
+      "records": 4570,
+      "valid": 4328
+    },
+    {
+      "segment": "FIT_INITIAL_REVERSE_02#0",
+      "role": "FIT_INITIAL_REVERSE_02",
+      "range_deg": [
+        3.9746936912528126,
+        11.741469989882624
+      ],
+      "velocity_rms_rad_s": 0.014187337192854636,
+      "acceleration_rms_rad_s2": 0.0003854977836531266,
+      "records": 2365,
+      "valid": 2123
+    },
+    {
+      "segment": "FIT_EXPAND_VARIED_03#0",
+      "role": "FIT_EXPAND_VARIED_03",
+      "range_deg": [
+        4.098271023245384,
+        17.24243006910367
+      ],
+      "velocity_rms_rad_s": 0.015899694423221915,
+      "acceleration_rms_rad_s2": 0.008276873904003465,
+      "records": 6090,
+      "valid": 1334
+    },
+    {
+      "segment": "FIT_NEW_REGION_ACCEL_04#0",
+      "role": "FIT_NEW_REGION_ACCEL_04",
+      "range_deg": [
+        17.703034121067233,
+        28.0051604179065
+      ],
+      "velocity_rms_rad_s": 0.018722905059430743,
+      "acceleration_rms_rad_s2": 0.0338122690085849,
+      "records": 2897,
+      "valid": 2655
+    },
+    {
+      "segment": "FIT_NEW_REGION_REVERSE_05#0",
+      "role": "FIT_NEW_REGION_REVERSE_05",
+      "range_deg": [
+        19.963917236347957,
+        27.697299886351928
+      ],
+      "velocity_rms_rad_s": 0.013930367723694052,
+      "acceleration_rms_rad_s2": 0.0001977741868026527,
+      "records": 2391,
+      "valid": 2149
+    },
+    {
+      "segment": "VALIDATION_EXPANDED_DISTINCT_06#0",
+      "role": "VALIDATION_EXPANDED_DISTINCT_06",
+      "range_deg": [
+        19.965472811931427,
+        25.078117000043385
+      ],
+      "velocity_rms_rad_s": 0.015193432491743498,
+      "acceleration_rms_rad_s2": 0.006975441283571394,
+      "records": 1596,
+      "valid": 1354
+    },
+    {
+      "segment": "FIT_PRIMARY_TARGET_AFTER_VALIDATION_07#0",
+      "role": "FIT_PRIMARY_TARGET_AFTER_VALIDATION_07",
+      "range_deg": [
+        25.411283382472853,
+        30.280690873862316
+      ],
+      "velocity_rms_rad_s": 0.018829155657821017,
+      "acceleration_rms_rad_s2": 0.004070826932657362,
+      "records": 1154,
+      "valid": 912
+    }
+  ],
+  "postvalidation_FIT_was_predeclared": true,
+  "online_model_sha256": "a09b360fbd119f9255b77e9bc23b3f6acee6a15258c7f4bbcd393086728beaf4",
+  "online_model_unchanged": true,
+  "full_basis_conditioning_is_poor": true,
+  "unmeasured_resistance_gaps_deg": [
+    [
+      11.870164576847555,
+      18.07455944853924
+    ]
+  ],
+  "no_claim_of_measured_peak_in_gap": true,
+  "safety": {
+    "peak_pads_n": [
+      2.012223720550537,
+      2.5417165756225586
+    ],
+    "raw_sensor_peak_abs": [
+      8.596566200256348,
+      7.442145824432373,
+      5.4876790046691895,
+      0.48056846857070923,
+      0.6934472918510437,
+      0.05572550743818283
+    ],
+    "interaction_minimum_joint_margin_rad": 0.35781184037263003,
+    "sampled_all_phase_minimum_joint_margin_rad": 0.15259638627106753,
+    "measured_loaded_TCP_max_mm_s": 18.341417379196752,
+    "load_warning_samples": 6428,
+    "hard_stop_samples": 0,
+    "positive_normal_report_loss_events": 118
+  },
+  "final_safe_park": true,
+  "time": {
+    "wall_including_init_cleanup_s": 3117.1969310040586,
+    "simulation_s": 424.02916666666664,
+    "Agent_unloaded_wait_s": 1257.0040806334,
+    "physical_operations_wall_s": 1024.0887998999096,
+    "automatic_geometry_planning_wall_s": 512.5686953109689,
+    "passive_capture_wall_s": 5.708732472732663,
+    "worker_final_wall_s": 7.655381420161575
+  },
+  "storage": {
+    "bytes_by_category": {
+      "derived_source_metadata": 34057572,
+      "passive_RGBD_dataset": 9753212,
+      "event_video": 103820,
+      "numeric_FT_motion": 17158902,
+      "wrist_RGBD": 22663177
+    },
+    "total_bytes": 83736683,
+    "target_bytes": 200000000
+  },
+  "camera": {
+    "pairs": 15,
+    "cameras": 2,
+    "raw_files": 45,
+    "calibrated_fixed_poses": true,
+    "clock_repair": {
+      "original_index_sha256": "7353c9bb3045afe2e679bab9d430f98250216ba90d65f4a41eed8da7ca2de11d",
+      "original_valid_pairs": 1,
+      "recalibrated_valid_pairs": 15,
+      "maximum_world_clock_difference_s": 2.034683632246015e-05,
+      "maximum_nominal_tick_residual_s": 3.333582299092086e-10,
+      "negative_tests": [
+        "mismatched paired reference",
+        "wrong physics tick",
+        "stale reference"
+      ],
+      "no_image_bytes_changed": true,
+      "no_object_state_or_hidden_dynamics_read": true,
+      "source_sha256": "7f74a2b7edf5c4773108383964ce0f8e5768bf292747423dd51bef99514a6581"
+    },
+    "evaluation_only_coverage": [
+      {
+        "sequence": 0,
+        "actual_angle_deg": 0.0,
+        "moving_sample_depth_agreement": 0.506,
+        "stationary_sample_depth_agreement": 0.2783
+      },
+      {
+        "sequence": 1,
+        "actual_angle_deg": 1.00383781151524,
+        "moving_sample_depth_agreement": 0.6411428571428571,
+        "stationary_sample_depth_agreement": 0.2929
+      },
+      {
+        "sequence": 2,
+        "actual_angle_deg": 8.50543137528907,
+        "moving_sample_depth_agreement": 0.6362857142857142,
+        "stationary_sample_depth_agreement": 0.3061
+      },
+      {
+        "sequence": 3,
+        "actual_angle_deg": 12.01535033031638,
+        "moving_sample_depth_agreement": 0.634,
+        "stationary_sample_depth_agreement": 0.3097
+      },
+      {
+        "sequence": 4,
+        "actual_angle_deg": 4.513145251168421,
+        "moving_sample_depth_agreement": 0.6491428571428571,
+        "stationary_sample_depth_agreement": 0.2997
+      },
+      {
+        "sequence": 5,
+        "actual_angle_deg": 5.515688955279355,
+        "moving_sample_depth_agreement": 0.6362857142857142,
+        "stationary_sample_depth_agreement": 0.3017
+      },
+      {
+        "sequence": 6,
+        "actual_angle_deg": 13.017338227783604,
+        "moving_sample_depth_agreement": 0.6388571428571429,
+        "stationary_sample_depth_agreement": 0.3106
+      },
+      {
+        "sequence": 7,
+        "actual_angle_deg": 17.663162891787284,
+        "moving_sample_depth_agreement": 0.6348571428571429,
+        "stationary_sample_depth_agreement": 0.3156
+      },
+      {
+        "sequence": 8,
+        "actual_angle_deg": 18.664519850529928,
+        "moving_sample_depth_agreement": 0.5634285714285714,
+        "stationary_sample_depth_agreement": 0.2922
+      },
+      {
+        "sequence": 9,
+        "actual_angle_deg": 26.16507842720109,
+        "moving_sample_depth_agreement": 0.5537142857142857,
+        "stationary_sample_depth_agreement": 0.3078
+      },
+      {
+        "sequence": 10,
+        "actual_angle_deg": 28.004735238630666,
+        "moving_sample_depth_agreement": 0.55,
+        "stationary_sample_depth_agreement": 0.3122
+      },
+      {
+        "sequence": 11,
+        "actual_angle_deg": 20.503345086428055,
+        "moving_sample_depth_agreement": 0.5554285714285714,
+        "stationary_sample_depth_agreement": 0.2945
+      },
+      {
+        "sequence": 12,
+        "actual_angle_deg": 21.50618419622059,
+        "moving_sample_depth_agreement": 0.5651428571428572,
+        "stationary_sample_depth_agreement": 0.296
+      },
+      {
+        "sequence": 13,
+        "actual_angle_deg": 29.01051132976631,
+        "moving_sample_depth_agreement": 0.5654285714285714,
+        "stationary_sample_depth_agreement": 0.3156
+      },
+      {
+        "sequence": 14,
+        "actual_angle_deg": 30.280622571970614,
+        "moving_sample_depth_agreement": 0.594,
+        "stationary_sample_depth_agreement": 0.3175
+      }
+    ],
+    "geometry_observation_package_excludes_GT": true,
+    "online_fixed_image_inspections": 0
+  },
+  "integrity": {
+    "numeric_chunks_intact": true,
+    "unique_stored_steps": true,
+    "all_FT_valid": true,
+    "stored_records": 35644,
+    "physics_steps": 101767,
+    "recording_issues": [],
+    "metadata_patch_regression": {
+      "status": "PASS_METADATA_ONLY",
+      "all_candidate_parameters_covariance_CV_bit_identical": true,
+      "selected_model_identical": true,
+      "unmeasured_gap_null": true,
+      "original_online_model_unchanged": true,
+      "original_online_sha256": "a09b360fbd119f9255b77e9bc23b3f6acee6a15258c7f4bbcd393086728beaf4",
+      "raw_camera_files_hash_identical": 45,
+      "worker_wall_s": 6.963769586989656,
+      "fit_support_intervals_deg": [
+        [
+          0.28957382329781395,
+          11.870164576847555
+        ],
+        [
+          18.07455944853924,
+          29.955966468643204
+        ]
+      ],
+      "physical_episodes_added": 0
+    }
+  },
+  "native_passive_law": {
+    "method": "native tensor DOF static/dynamic friction update and backend readback; viscous preserved",
+    "readbacks": 426,
+    "C_range_nm": [
+      0.022654109725229295,
+      0.03785526362757195
+    ],
+    "property_max_abs_readback_error": 1.7795045784141372e-09,
+    "no_object_joint_target_or_effort": true
+  },
+  "limitations": [
+    "known hinge/state and registered station",
+    "simulated wrist/fixed cameras and ideal load cell",
+    "approximate actuators; not hardware safety validation",
+    "conditional covariance excludes systematic/contact and model-selection errors",
+    "no45deg or hinge reconstruction result",
+    "geometry/model observations have a qualified FIT gap; no measured peak there"
+  ]
+}

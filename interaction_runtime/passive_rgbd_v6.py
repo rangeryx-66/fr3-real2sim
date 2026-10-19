@@ -17,7 +17,7 @@ class PassiveRGBDPair:
         from isaacsim.sensors.camera import Camera
         from native_g1_wrist_views import look_at
         self.r=r;self.root=Path(r.job['passive_dataset_output']);self.eval=Path(r.job['passive_evaluation_output']);self.root.mkdir(parents=True,exist_ok=False);self.eval.mkdir(parents=True,exist_ok=True)
-        self.cameras=[];self.transforms=[];self.index=[];self.evaluation=[];self.wall_s=0.;self.last_q=r.actual();self.previous_q=self.last_q;self.direction=0;self.last_phase=None;self.pending_direction=None
+        self.cameras=[];self.transforms=[];self.index=[];self.evaluation=[];self.wall_s=0.;self.last_q=r.actual();self.previous_q=self.last_q;self.direction=0;self.last_phase=None;self.pending_direction=None;self.clock_origin=None
         m=r.model;b=np.asarray(m.manifest['static_source_bounds'])*m.manifest['scale_source_to_meters'];lo,hi=b;corners=np.array([[x,y,z] for x in [lo[0],hi[0]] for y in [lo[1],hi[1]] for z in [lo[2],hi[2]]]);P=corners@m.asset_T[:3,:3].T+m.asset_T[:3,3];center=(P.min(0)+P.max(0))/2
         normal=m.asset_T[:3,2].copy();normal[2]=0;normal/=np.linalg.norm(normal);side=np.cross([0,0,1],normal)
         calibration=[]
@@ -40,11 +40,14 @@ class PassiveRGBDPair:
             if not good:valid=False
             cv2.imwrite(str(folder/(name+'_rgb.png')),cv2.cvtColor(rgb,cv2.COLOR_RGB2BGR),[cv2.IMWRITE_PNG_COMPRESSION,6]);depths[name+'_depth_m']=depth
             cams.append(dict(camera_id=name,reference_time={k:int(v) for k,v in reference.items()} if isinstance(reference,dict) else {},callback_rendering_time=float(frame.get('rendering_time',-1)),valid_depth_fraction=float(finite.mean()),pose_max_abs_error=err,valid=bool(good)))
-        ref=cams[0]['reference_time'];sync=bool(ref and ref==cams[1]['reference_time'] and ref.get('referenceTimeDenominator',0)>0)
-        reference_s=ref.get('referenceTimeNumerator',0)/max(ref.get('referenceTimeDenominator',1),1)
-        sync=bool(sync and abs(reference_s-float(r.world.current_time))<2e-6 and (not self.index or reference_s>self.index[-1]['render_reference_timestamp_s']))
+        from .passive_clock_v6 import check_pair
+        clock=check_pair(cams,r.tick,float(r.world.current_time),self.clock_origin,self.index[-1]['render_reference_timestamp_s'] if self.index else None,r.dt)
+        sync=clock['synchronized'];reference_s=clock.get('reference_timestamp_s',-1.)
+        if self.clock_origin is None and sync:
+            self.clock_origin=clock['reference_physics_origin_s']
+            atomic_json(self.root/'clock_calibration.json',dict(reference='renderer ReferenceTime; canonical dataset clock',physics_hz=1/r.dt,reference_physics_origin_s=self.clock_origin,world_current_time='independently retained float32-dt accumulation; difference is diagnostic, not inter-camera desynchronization'))
         np.savez_compressed(folder/'depth_pair.npz',**depths)
-        item=dict(sequence=seq,path=folder.name,render_reference_timestamp_s=reference_s,simulation_timestamp_s=float(r.world.current_time),physics_tick=r.tick,direction={-1:'closing',0:'stationary',1:'opening'}[self.direction],phase=r.phase,reason=reason,cameras=cams,synchronized=sync,valid=bool(valid and sync),missing_frames=[] if valid else [c['camera_id'] for c in cams if not c['valid']])
+        item=dict(sequence=seq,path=folder.name,render_reference_timestamp_s=reference_s,simulation_timestamp_s=float(r.world.current_time),physics_tick=r.tick,direction={-1:'closing',0:'stationary',1:'opening'}[self.direction],phase=r.phase,reason=reason,cameras=cams,clock_diagnostics=clock,synchronized=sync,valid=bool(valid and sync),missing_frames=[] if valid else [c['camera_id'] for c in cams if not c['valid']])
         self.index.append(item);self.evaluation.append(dict(sequence=seq,simulation_timestamp_s=float(r.world.current_time),joint_angle_rad=float(r.actual()),T_world_moving=r.moving().tolist()))
         self.last_q=r.actual();self.last_phase=r.phase;self.wall_s+=time.perf_counter()-began;self.flush()
     def after_step(self):

@@ -28,19 +28,34 @@ def matrix(samples,model):
     return np.array([[s['qdd'],s['qd']]+[s['angle_features'][str(model['resolution_deg'])][i] for i in model['active_controls']] for s in samples])
 
 
+def support_intervals(samples):
+    groups={}
+    for row in samples:groups.setdefault(row.get('correlation_group',row['segment']),[]).append(row)
+    intervals=[]
+    for rows in groups.values():
+        rows=sorted(rows,key=lambda r:r['t']);start=0
+        for end in list(np.flatnonzero(np.diff([r['t'] for r in rows])>.2)+1)+[len(rows)]:
+            q=np.rad2deg([r['q'] for r in rows[start:end]]);intervals.append([float(q.min()),float(q.max())]);start=end
+    merged=[]
+    for lo,hi in sorted(intervals):
+        if merged and lo<=merged[-1][1]:merged[-1][1]=max(merged[-1][1],hi)
+        else:merged.append([lo,hi])
+    return merged
+
+
 def fit(samples,resolution,smoothness):
     if resolution==0:
-        m=ridge_fit(samples,0,0);m.update(resolution_deg=0,active_controls=[0],basis='constant');return m
+        m=ridge_fit(samples,0,0);m.update(resolution_deg=0,active_controls=[0],basis='constant',training_support_intervals_deg=support_intervals(samples),output_metadata_version=2);return m
     features=np.array([s['angle_features'][str(resolution)] for s in samples]);active=np.flatnonzero(np.max(abs(features),axis=0)>1e-12)
     # Reuse frozen nonnegative ridge/HAC implementation on observed controls.
     tag=len(active)-1;adapted=[dict(s,angle_features={str(tag):features[j,active].tolist()}) for j,s in enumerate(samples)]
-    m=ridge_fit(adapted,tag,smoothness);m.update(degree=3,resolution_deg=resolution,active_controls=active.tolist(),full_control_count=features.shape[1],basis='local nonnegative clamped cubic B-spline',knots_rad=knots(resolution).tolist())
+    m=ridge_fit(adapted,tag,smoothness);m.update(degree=3,resolution_deg=resolution,active_controls=active.tolist(),full_control_count=features.shape[1],basis='local nonnegative clamped cubic B-spline',knots_rad=knots(resolution).tolist(),training_support_intervals_deg=support_intervals(samples),output_metadata_version=2)
     return m
 
 
 def curve(model):
-    q=np.linspace(0,45,181);lo,hi=model['training_angle_range_deg'];B=basis(np.deg2rad(q),model['resolution_deg'])[:,model['active_controls']] if model['resolution_deg'] else np.ones((len(q),1));mean=B@model['parameters'][2:];cov=np.array(model['conditional_covariance'])[2:,2:];sd=np.sqrt(np.maximum(np.einsum('ij,jk,ik->i',B,cov,B),0));inside=(q>=lo)&(q<=hi)
-    return dict(angle_deg=q.tolist(),resistance_nm=[float(v) if k else None for v,k in zip(mean,inside)],conditional_std_nm=[float(v) if k else None for v,k in zip(sd,inside)],support_deg=[lo,hi],outside_qualified_FIT_support='unknown; not zero or extrapolated precision')
+    q=np.linspace(0,45,181);lo,hi=model['training_angle_range_deg'];B=basis(np.deg2rad(q),model['resolution_deg'])[:,model['active_controls']] if model['resolution_deg'] else np.ones((len(q),1));mean=B@model['parameters'][2:];cov=np.array(model['conditional_covariance'])[2:,2:];sd=np.sqrt(np.maximum(np.einsum('ij,jk,ik->i',B,cov,B),0));inside=np.array([any(a<=v<=b for a,b in model.get('training_support_intervals_deg',[[lo,hi]])) for v in q])
+    return dict(angle_deg=q.tolist(),resistance_nm=[float(v) if k else None for v,k in zip(mean,inside)],conditional_std_nm=[float(v) if k else None for v,k in zip(sd,inside)],support_deg=[lo,hi],support_intervals_deg=model.get('training_support_intervals_deg',[[lo,hi]]),outside_qualified_FIT_support='unknown; not zero or extrapolated precision')
 
 
 def analyze(train):
@@ -63,7 +78,7 @@ def prediction(d,model):
     if I<=1e-8:return dict(status='unknown inertia')
     qp=[float(q[0])];vp=[float(v[0])];lo,hi=np.deg2rad(model['training_angle_range_deg']);outside=False
     for j in range(1,len(t)):
-        z=qp[-1];outside=outside or not lo<=z<=hi
+        z=qp[-1];outside=outside or not any(a<=np.rad2deg(z)<=b for a,b in model.get('training_support_intervals_deg',[model['training_angle_range_deg']]))
         if not np.deg2rad(-5)<=z<=np.deg2rad(50):return dict(status='outside model domain; no clamp to measured state',prediction_outside_training_support=True)
         C=float(basis([z],model['resolution_deg'])[0,model['active_controls']]@model['parameters'][2:]) if model['resolution_deg'] else model['parameters'][2];dt=t[j]-t[j-1];mom=I*vp[-1]+dt*tau[j-1];vel=float(np.sign(mom)*max(abs(mom)-dt*C,0)/(I+dt*b));vp.append(vel);qp.append(qp[-1]+dt*vel)
     qp=np.array(qp);vp=np.array(vp);X=np.c_[d['qdd'][ix],d['qd'][ix],d['angle_features'][model['resolution_deg']][ix][:,model['active_controls']]] if model['resolution_deg'] else np.c_[d['qdd'][ix],d['qd'][ix],d['direction'][ix]]

@@ -1,4 +1,4 @@
-"""Single blind V4.5 registration/launch; reuse the frozen V4.4 research entry."""
+"""Single blind V6 registration/launch; inherited robot Skill, passive cameras separate."""
 import argparse,datetime,fcntl,hashlib,json,os,subprocess,sys,time
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1];sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]

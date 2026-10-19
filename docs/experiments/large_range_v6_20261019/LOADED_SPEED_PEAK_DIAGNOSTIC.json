@@ -1,0 +1,43 @@
+{
+  "t_sim": 389.0125,
+  "segment_id": 7,
+  "actual_TCP_mm_s": 18.341417379196752,
+  "command_FK_TCP_mm_s": 19.18654941380621,
+  "command_joint_velocity_max_rad_s": 0.08365631103523234,
+  "arm_tracking_error_max_rad": 0.004492282867431641,
+  "measured_stop_limit_mm_s": 30,
+  "nominal_reference_cap_mm_s": 12,
+  "interpretation": "Retained actual and command-FK transient both exceed the nominal12mm/s virtual-reference cap, but stay below30mm/s measured stop guard. Joint commands remain finite, speed/acceleration bounded; peak occurs after physical target crossing during guarded stopping. No filtering/removal, no hardware-safety claim. This round did not retune the frozen stop controller.",
+  "nearby_measured_rows": [
+    {
+      "t": 388.9625,
+      "actual_angle_deg": 30.089513878993657,
+      "reference_angle_deg": 30.142905914281663,
+      "max_command_dq": 0.12199270725250244
+    },
+    {
+      "t": 388.9875,
+      "actual_angle_deg": 30.130945806498953,
+      "reference_angle_deg": 30.142905914281663,
+      "max_command_dq": 0.10199270397424698
+    },
+    {
+      "t": 389.0125,
+      "actual_angle_deg": 30.17824145140671,
+      "reference_angle_deg": 30.142905914281663,
+      "max_command_dq": 0.08199270069599152
+    },
+    {
+      "t": 389.0375,
+      "actual_angle_deg": 30.227497360606254,
+      "reference_angle_deg": 30.142905914281663,
+      "max_command_dq": 0.06199270486831665
+    },
+    {
+      "t": 389.0625,
+      "actual_angle_deg": 30.261713193253435,
+      "reference_angle_deg": 30.142905914281663,
+      "max_command_dq": 0.041992705315351486
+    }
+  ]
+}
