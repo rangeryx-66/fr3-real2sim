@@ -93,7 +93,7 @@ def action_check(a):
     for k in ['reference_speed_m_s','reference_acceleration_m_s2']:
         if k in a and (not np.isfinite(a[k]) or a[k]<=0):raise ValueError('positive finite profile required')
 
-def serve(r,operations_factory=ProbingOperations,initialize=True):
+def serve(r,operations_factory=ProbingOperations,initialize=True,action_validator=action_check):
     ops=operations_factory(r);g=r.g;commands=r.output/'agent_commands';responses=r.output/'agent_responses'
     commands.mkdir(exist_ok=True);responses.mkdir(exist_ok=True);trace=[]
     try:
@@ -119,14 +119,14 @@ def serve(r,operations_factory=ProbingOperations,initialize=True):
             if command is None:trace.append(ack);continue
             op=command['operation'];started=time.perf_counter()
             try:
-                for a in command.get('segments',[]):action_check(a)
+                for a in command.get('segments',[]):action_validator(a)
                 if op=='observe':result=ops.observe()
                 elif op=='inspect':
                     from native_g1_agent_observation import inspect
                     result=inspect(Path(g['agent_observations'][-1]['folder']),g['agent_observations'])
                 elif op=='evaluate_view':result=ops.evaluate_view(command['target']);ops.cache[seq]=result
                 elif op=='move_and_observe':result=ops.move_and_observe(ops.cache.get(command['evaluated_command'],{}))
-                elif op=='build_geometry':result=ops.build_geometry()
+                elif op=='build_geometry':result=ops.request_plan(command) if hasattr(ops,'request_plan') else ops.build_geometry()
                 elif op=='validate_execution':result=ops.validate_execution()
                 elif op=='attempt_grasp_and_probe':result=ops.attempt(command)
                 elif op=='inspect_contact_result':result=ops.feedback()

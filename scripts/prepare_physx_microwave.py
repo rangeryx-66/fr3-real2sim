@@ -13,12 +13,14 @@ def main():
     p.add_argument('--source',type=Path,required=True)
     p.add_argument('--asset-id',default='7236')
     p.add_argument('--height-m',type=float,default=.30)
+    p.add_argument('--joint-type',choices=['revolute','prismatic'],default='revolute')
+    p.add_argument('--joint-name')
     p.add_argument('--output',type=Path,required=True)
     args=p.parse_args();source=args.source/'urdf'/f'{args.asset_id}.urdf'
     meta=args.source/'finaljson'/f'{args.asset_id}.json';root=ET.parse(source).getroot()
     chain=URDFChain(source)
-    movable=[j for j in root.findall('joint') if j.get('type')=='revolute']
-    if len(movable)!=1:raise ValueError('minimal microwave requires one revolute door joint')
+    movable=[j for j in root.findall('joint') if j.get('type')==args.joint_type and (args.joint_name is None or j.get('name')==args.joint_name)]
+    if len(movable)!=1:raise ValueError('exactly one selected articulation joint required')
     joint=movable[0];moving=joint.find('child').get('link')
     # Resolve descendants from the immutable source link tree.
     moving_links={moving}
@@ -77,6 +79,9 @@ def main():
     for j in root.findall('joint'):
         origin=j.find('origin')
         if origin is not None:origin.set('xyz',' '.join(map(str,np.fromstring(origin.get('xyz','0 0 0'),sep=' ')*factor)))
+        if j.get('type')=='prismatic':
+            for key in ('lower','upper'):
+                j.find('limit').set(key,str(float(j.find('limit').get(key))*factor))
     prepared=target/'urdf'/f'{args.asset_id}.urdf';ET.indent(root);ET.ElementTree(root).write(prepared,encoding='utf-8',xml_declaration=True)
     moving_pieces=[m for name,_,m,_ in pieces if name in moving_links];static_pieces=[m for name,_,m,_ in pieces if name not in moving_links]
     def bounds(items):return np.stack((np.min([m.bounds[0] for m in items],0),np.max([m.bounds[1] for m in items],0))).tolist()
@@ -85,18 +90,23 @@ def main():
     # The grasp input still comes from RGB + SAM3; no mesh-derived grasp is used.
     handle=max(door_pieces,key=lambda r:r[1].bounds[1,2])
     data={'source_url':'https://huggingface.co/datasets/Caoza/PhysX-Mobility','license':'CC-BY-NC-4.0',
-        'asset_id':args.asset_id,'object_name':'Microwave','prepared_urdf':str(prepared),
+        'asset_id':args.asset_id,'object_name':json.loads(meta.read_text())['object_name'],'prepared_urdf':str(prepared),
         'source_urdf_sha256':hashlib.sha256(source.read_bytes()).hexdigest(),
         'source_metadata_sha256':hashlib.sha256(meta.read_bytes()).hexdigest(),
         'scale_source_to_meters':factor,'prepared_height_m':args.height_m,'source_up_axis':'+Y',
         'static_source_bounds':bounds(static_pieces),'moving_source_bounds':bounds(moving_pieces),
-        'moving_links':sorted(moving_links),'moving_link':moving,'door_link':'l_1',
+        'moving_links':sorted(moving_links),'moving_link':moving,'door_link':next(n for n,_,_,_ in pieces if n in moving_links),
+        'joint_type':args.joint_type,
         'joint_name':joint.get('name'),'source_joint_axis':joint.find('axis').get('xyz'),
         'source_joint_limits_rad':{k:float(joint.find('limit').get(k)) for k in ('lower','upper')},
         'grasp_mesh_stems':[handle[0]],'grasp_mesh_bounds_source':handle[1].bounds.tolist(),
         'handle_mesh_selection':'provisional most protruding door mesh; verify visually; evaluation/camera only',
         'uv_repaired_visuals':repairs,'collision_mesh_count':collisions,
         'physics_note':'source masses preserved; link COM and inertia from uniform box approximation; not measured hardware properties'}
+    data['joint_limits_native']={k:float(joint.find('limit').get(k)) for k in ('lower','upper')}
+    data['joint_coordinate_unit']='rad' if args.joint_type=='revolute' else 'm'
+    if args.joint_type=='prismatic':data['prepared_joint_limits_m']=data.pop('source_joint_limits_rad')
+    data['collision_representation']='existing preparation convention: one convex hull per source visual piece; raw dataset URDF has no collision elements; not exact CAD contact'
     digest=hashlib.sha256(prepared.read_bytes())
     for path in sorted((target/'meshes/objs').glob('*.obj')):digest.update(path.read_bytes())
     data['prepared_geometry_sha256']=digest.hexdigest()

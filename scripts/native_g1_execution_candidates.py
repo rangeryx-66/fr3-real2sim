@@ -32,6 +32,8 @@ class CandidateCheck:
         result=dict(valid=check['valid'],return_valid=check['return_audit']['valid'],approach_valid=check['approach_audit']['valid'],
                     actual_door_state_rad=float(g['actual']()),measured_fingers_rad=self.fingers.tolist(),
                     reason=next((check[k].get('reason') for k in ['return_audit','approach_audit'] if not check[k]['valid']),None))
+        if g['model'].manifest.get('joint_type','revolute')=='prismatic':
+            result['actual_joint_coordinate_m']=result.pop('actual_door_state_rad')
         if result['valid']:
             def checked(q):
                 if g['model'].margin(q)<=self.policy.data['joint_margin_rad']:return False,'JOINT_MARGIN'

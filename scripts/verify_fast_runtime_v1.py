@@ -69,6 +69,7 @@ def verify(out):
     # Every active source is compiled; old guards remain in frozen files only.
     sources={}
     for f in sorted((ROOT/'interaction_runtime').glob('*.py')):
+        if f.name.startswith('._'):continue # macOS metadata is not a Python module
         s=f.read_text();compile(s,str(f),'exec');sources[str(f.relative_to(ROOT))]=hashlib.sha256(s.encode()).hexdigest()
         assert 'TemporalForceGuard' not in s and 'PROBE_CARTESIAN_SPEED_LIMIT' not in s and 'EXISTING_SOFT_FORCE_WARNING_RETURN_FOR_UNLOAD' not in s,f
     checks['active_source_audit']=True

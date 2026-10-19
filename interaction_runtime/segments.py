@@ -69,15 +69,15 @@ class EpisodeBudget:
         return dict(wall_s=max(0.,self.wall-(self.now()-self.started)-self.reserve_wall),sim_s=max(0.,self.sim-sim_s-self.reserve_sim),exit_reserved=True)
 
 
-def segment_plan(theta,target,action,motion,radius,dt,available):
-    validate_action(action);clock=ProgressClock(theta,target);last=theta
+def segment_plan(theta,target,action,motion,radius,dt,available,lookahead=LOOKAHEAD_RAD):
+    validate_action(action);clock=ProgressClock(theta,target,lookahead=lookahead);last=theta
     # Upper integration bound follows displacement and the minimum profile rate,
     # with room for acceleration and the existing lookahead. Not a loaded deadline.
     speed=min(motion['speed_m_s'],action.get('reference_speed_m_s',motion['speed_m_s']))
     acc=min(motion['acceleration_m_s2'],action.get('reference_acceleration_m_s2',motion['acceleration_m_s2']))
     rate=min(speed/max(radius,1e-9),motion['angular_speed_rad_s']);alpha=min(acc/max(radius,1e-9),motion['angular_acceleration_rad_s2'])
     low=1. if action.get('velocity_program','constant')=='constant' else float(action.get('low_speed_fraction',.125))
-    upper=(abs(target-theta)+LOOKAHEAD_RAD)/max(rate*low,1e-9)+2*rate/alpha+profile_cycle(action)
+    upper=(abs(target-theta)+lookahead)/max(rate*low,1e-9)+2*rate/alpha+profile_cycle(action)
     reached=None
     integration_bound=min(upper,available['sim_s'])
     for i in range(math.ceil(integration_bound/dt)):
@@ -98,7 +98,8 @@ class TransmissionMonitor:
     This is a recoverable transmission diagnosis, NOT a new hard safety gate.
     No pad-load symmetry or positive-normal-report assumption is used.
     """
-    def __init__(self,start,direction,action):
+    def __init__(self,start,direction,action,lookahead=LOOKAHEAD_RAD):
+        self.lookahead=float(lookahead)
         self.start=float(start);self.direction=direction;self.window=profile_cycle(action);self.samples=deque();self.bad=0;self.last=None;self.failure=None;self.valid_until=0.
     def update(self,t,q,state,dt,remaining):
         q=float(q);remaining=float(remaining)
@@ -106,7 +107,7 @@ class TransmissionMonitor:
         if self.samples[-1][0]-self.samples[0][0]<self.window:return None
         first=self.samples[0];duration=t-first[0];progress=self.direction*(q-first[1]);demand=sum(s[2] for s in self.samples)
         ratio=progress/max(demand,1e-12);lead=float(np.median([s[3] for s in self.samples]))
-        bad=bool(ratio<MIN_TRANSMISSION_RATIO and lead>=LEAD_SATURATION_FRACTION*LOOKAHEAD_RAD and remaining>0)
+        bad=bool(ratio<MIN_TRANSMISSION_RATIO and lead>=LEAD_SATURATION_FRACTION*self.lookahead and remaining>0)
         self.bad=self.bad+1 if bad else 0
         self.last=dict(t_s=t,window_s=duration,progress_rad=progress,requested_travel_rad=demand,transmission_ratio=ratio,lead_rad=lead,suspect=bad)
         if not bad:self.valid_until=t

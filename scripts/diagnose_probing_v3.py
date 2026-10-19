@@ -18,7 +18,8 @@ def rows_at(a,ix,meta,label):
         bodies=[]
         for prop,pose in zip(meta['body_properties'],a['tool_poses'][i]):
             T=matrix(pose);R=T[:3,:3];bodies.append(dict(name=prop['name'],mass_kg=prop['mass_kg'],T_world_body=T,com_world_m=R@prop['com_body_m']+T[:3,3],inertia_world_kg_m2=R@np.array(prop['inertia_body_kg_m2'])@R.T))
-        T=matrix(a['sensor_pose'][i]);rows.append(dict(t=float(a['t'][i]),door_angle_deg=float(np.rad2deg(a['door_q'][i])),phase=meta['phases'][a['phase'][i]],identification_segment=label,
+        coordinate=dict(joint_coordinate=float(a['joint_q'][i])) if 'joint_q' in a else dict(door_angle_deg=float(np.rad2deg(a['door_q'][i])))
+        T=matrix(a['sensor_pose'][i]);rows.append(dict(t=float(a['t'][i]),**coordinate,phase=meta['phases'][a['phase'][i]],identification_segment=label,
             relative_translation_slip_m=float(a['relative_slip_m'][i]),forces_n=dict(L=float(a['pad_load'][i,0]),R=float(a['pad_load'][i,1])),force_event=dict(status='HARD_STOP' if a['safety_stop'][i] else 'NORMAL'),
             wrist_ft=dict(valid=bool(a['ft_valid'][i]),raw_wrench_sensor=a['raw_ft'][i],T_world_sensor=T,body_states=bodies,tool_gravity_wrench_world=tool_gravity_world(bodies,T[:3,3]))))
     return rows

@@ -20,7 +20,7 @@ def register(output):
     return cases
 
 
-def author(stage,scene,case,output):
+def author(stage,scene,case,output,resistance_author=None):
     """Positive-density cuboid quadrature gives coherent COM/full inertia.
 
     This versioned approximation follows the baseline's uniform-box mass model.
@@ -49,7 +49,7 @@ def author(stage,scene,case,output):
         quat=np.roll(Rotation.from_matrix(axes).as_quat(),1)
         api.CreateMassAttr(mass);api.CreateCenterOfMassAttr(Gf.Vec3f(*local));api.CreateDiagonalInertiaAttr(Gf.Vec3f(*vals));api.CreatePrincipalAxesAttr(Gf.Quatf(*quat))
         audit.append(dict(body=name,path=path,mass_kg=mass,com_local_m=local.tolist(),inertia_local_kg_m2=I.tolist(),principal_values=vals.tolist()))
-    resistance=author_passive_resistance(stage,scene['asset_path'],case)
+    resistance=(resistance_author or author_passive_resistance)(stage,scene['asset_path'],case)
     (output/'HIDDEN_AUTHORED_PHYSICS.json').write_text(json.dumps(dict(configuration=case,bodies=audit,resistance=resistance,
         density='positive affine-density cuboid quadrature; baseline geometry box, not CAD material identification',object_joint_commands=False),indent=2))
     return audit

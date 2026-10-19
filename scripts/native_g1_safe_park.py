@@ -98,4 +98,4 @@ def verify_park(g,plan):
         region=plan['parking_region'],measured_q=measured.tolist(),command_q=g['qtarget'][g['arm']].tolist(),
         joint_cell_error_rad=error,measured_collision_check=check,unloaded=unloaded,
         pad_loads_n=g['filtered']().tolist(),moving_pose=np.asarray(g['moving']()).tolist(),
-        door_angle_deg=float(np.rad2deg(g['actual']())))
+        **(dict(joint_coordinate=float(g['actual']()),coordinate_unit='m') if g['model'].manifest.get('joint_type','revolute')=='prismatic' else dict(door_angle_deg=float(np.rad2deg(g['actual']())))))

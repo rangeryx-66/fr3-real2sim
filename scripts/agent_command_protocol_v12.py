@@ -74,12 +74,22 @@ def validate(command, sequence):
             require(vector(target.get('eye_world_m'), 3) and vector(target.get('look_at_world_m'), 3), 'finite eye/look vectors required')
     if op == 'move_and_observe':
         require(type(command.get('evaluated_command')) is int and 0 <= command['evaluated_command'] < sequence, 'previous evaluated_command sequence required')
+    if op == 'build_geometry' and 'candidate_request' in command:
+        request=command['candidate_request'];require(isinstance(request,dict),'candidate_request object required')
+        require(set(request)=={'catalog_sha256','candidate_id','reason'},'existing catalog selection only; no manual pose fields')
+        require(isinstance(request.get('catalog_sha256'),str) and len(request['catalog_sha256'])==64,'catalog SHA256 required')
+        require(isinstance(request.get('candidate_id'),str) and request['candidate_id'].isdigit(),'existing candidate id required')
+        require(isinstance(request.get('reason'),str) and bool(request['reason'].strip()),'observed feedback reason required')
     if op == 'attempt_grasp_and_probe':
         actions = command.get('segments')
         require(isinstance(actions, list) and 1 <= len(actions) <= 4, 'finite registered segment list required')
         for action in actions:
             require(isinstance(action, dict), 'segment object required')
-            require(number(action.get('target_deg')), 'finite target_deg required')
+            native='target_q' in action
+            require(not (native and 'target_deg' in action),'ambiguous native/degree target')
+            if native:
+                require(number(action.get('target_q')) and action.get('coordinate_unit') in ('rad','m'),'finite native target_q and explicit rad/m unit required')
+            else:require(number(action.get('target_deg')), 'finite target_deg required')
             require(isinstance(action.get('role'), str) and action['role'].startswith(('FIT', 'VALIDATION')), 'segment role required')
             require(action.get('profile') in ('constant', 'smooth_variation'), 'known segment profile required')
             require(type(action.get('hold')) is bool, 'boolean segment hold required')

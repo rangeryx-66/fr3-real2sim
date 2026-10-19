@@ -1,0 +1,700 @@
+{
+  "hidden_dynamics_used": false,
+  "units": {
+    "distance": "m",
+    "velocity": "m/s",
+    "effort": "N"
+  },
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_ENGINEERING_OPEN",
+      "original_result": {
+        "ok": false,
+        "status": "TRANSMISSION_FAILURE",
+        "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+        "joint_coordinate": 0.00012288747529964894,
+        "gain_native": 0.00012244179612252992,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        },
+        "requested_target_reached": false,
+        "planning": {
+          "valid": true,
+          "target_truncated": false,
+          "nominal_duration_s": 9.575,
+          "nominal_is_conservative_bound": false,
+          "max_sim_s": 1565.5958333333333,
+          "stop_reserve_s": 0.6041666666666666,
+          "profile_cycle_s": 2.0,
+          "episode_remaining": {
+            "wall_s": 2512.2455887531396,
+            "sim_s": 1565.5958333333333,
+            "exit_reserved": true
+          },
+          "timing_assumption": "nominal ideal tracking; live measured ETA and finite episode resources; no implicit segment ceiling",
+          "reason": null,
+          "bounded_preload_max_s": 3.391371771931365,
+          "preload_is_FIT_data": false,
+          "requested_target_native": 0.02,
+          "selected_target_native": 0.02,
+          "coordinate_unit": "m"
+        },
+        "panel_contacts": 0,
+        "safely_stopped": true,
+        "physical_transmission_valid": false,
+        "fit_prefix_transmission_valid": false,
+        "fit_valid_until_s": 0.0,
+        "transmission": null,
+        "transmission_failure": null,
+        "remaining_ETA_s": null,
+        "ETA_exceeds_resources_advisory": false,
+        "adaptive_horizon_s": 18.1872051052647,
+        "adaptive_extensions": 0,
+        "elapsed_sim_s": 4.308333333333337,
+        "slip_exceeds_progress_windows": 0,
+        "stopped_state": {
+          "command_velocity_max_rad_s": 0.0,
+          "measured_joint_velocity_max_rad_s": 8.166169573087245e-05,
+          "measured_TCP_speed_m_s": 1.6489123123220967e-05,
+          "measured_coordinate_velocity_native": 4.76797140436247e-07
+        },
+        "reference_native": 0.0019722502202290087,
+        "coordinate_unit": "m",
+        "tracking_limited_fraction": 0.5359001040582726,
+        "final_tracking_lag_native": 0.0018493627449293597,
+        "prismatic_startup": {
+          "phase": "OPEN_CONTINUE",
+          "classification": "PERSISTENT_SLIDING_STALL",
+          "sliding_started_s": 2.504166666666663,
+          "max_loading_s": 3.391371771931365,
+          "preload_speed_m_s": 0.001,
+          "unchanged_reference_allowance_m": 0.0018499999999999999,
+          "thresholds": {
+            "motion_resolution_m": 5e-05,
+            "velocity_resolution_m_s": 0.0001,
+            "force_change_resolution_N": 0.059774237836988785,
+            "tracking_resolution_m": 0.0002
+          },
+          "observed_windows": [
+            {
+              "t_s": 0.5041666666666629,
+              "duration_s": 0.5,
+              "drawer_progress_m": -7.571185278720804e-08,
+              "measured_TCP_travel_m": 1.222592713118198e-05,
+              "command_TCP_travel_m": 0.00040654118629990244,
+              "incremental_tracking_error_m": 0.0003942293900384142,
+              "TCP_drawer_relative_travel_m": 1.2301638983969188e-05,
+              "rail_effort_N": -0.013808868774467615,
+              "effort_change_N": -0.050125079625644046,
+              "observed_native_traction_N": -0.013411369347522843,
+              "observed_tangential_relative_speed_m_s": 3.747874714898105e-05,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": -0.001514237055744161,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 1.0041666666666629,
+              "duration_s": 0.5,
+              "drawer_progress_m": 9.578358799444686e-07,
+              "measured_TCP_travel_m": 0.00011557784503257729,
+              "command_TCP_travel_m": 0.0004992042636092764,
+              "incremental_tracking_error_m": 0.0007778558086151133,
+              "TCP_drawer_relative_travel_m": 0.00011462000915263282,
+              "rail_effort_N": 0.1336128114876941,
+              "effort_change_N": 0.09729660063651768,
+              "observed_native_traction_N": 0.1332070109820051,
+              "observed_tangential_relative_speed_m_s": 0.0001541611085386378,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": 0.008287365798129293,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 1.5041666666666629,
+              "duration_s": 0.5,
+              "drawer_progress_m": 1.292558636123431e-06,
+              "measured_TCP_travel_m": 0.00026006049786331253,
+              "command_TCP_travel_m": 0.0004995881742134722,
+              "incremental_tracking_error_m": 0.001017383484965273,
+              "TCP_drawer_relative_travel_m": 0.0002587679392271891,
+              "rail_effort_N": 0.13861540788841406,
+              "effort_change_N": 0.10229919703723764,
+              "observed_native_traction_N": 0.14484676539723296,
+              "observed_tangential_relative_speed_m_s": 0.0005184335329455935,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": 0.00497022287791973,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 2.004166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 1.2007047871520626e-05,
+              "measured_TCP_travel_m": 0.0003781095500242637,
+              "command_TCP_travel_m": 0.0004544814164869626,
+              "incremental_tracking_error_m": 0.0010937553514279719,
+              "TCP_drawer_relative_travel_m": 0.0003661025021527431,
+              "rail_effort_N": 0.14706632147498286,
+              "effort_change_N": 0.11075011062380644,
+              "observed_native_traction_N": 0.15218623148393817,
+              "observed_tangential_relative_speed_m_s": 0.0008442583198480526,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": 0.03175547370001662,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 2.504166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 0.00010411763014417375,
+              "measured_TCP_travel_m": 0.00012038777118594801,
+              "command_TCP_travel_m": 0.00010645114682700241,
+              "incremental_tracking_error_m": 0.0010798187270690263,
+              "TCP_drawer_relative_travel_m": 1.6270141041774266e-05,
+              "rail_effort_N": 0.3007726198922565,
+              "effort_change_N": 0.2644564090410801,
+              "observed_native_traction_N": 0.30055076199278113,
+              "observed_tangential_relative_speed_m_s": 6.758433360524093e-05,
+              "motion_resolved": true,
+              "tracking_settled": true,
+              "transmission_ratio_actual_TCP": 0.8648522114705172,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "BREAKAWAY_CONFIRMED",
+              "next_phase": "OPEN_CONTINUE",
+              "stop_reason": null
+            },
+            {
+              "t_s": 3.004166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 1.2377131497487426e-06,
+              "measured_TCP_travel_m": 3.39929706533737e-05,
+              "command_TCP_travel_m": 1.2517537576473003e-06,
+              "incremental_tracking_error_m": 0.0010470775101732999,
+              "TCP_drawer_relative_travel_m": 3.275525750362496e-05,
+              "rail_effort_N": 0.13775966427536332,
+              "effort_change_N": 0.1014434534241869,
+              "observed_native_traction_N": 0.14064175273233556,
+              "observed_tangential_relative_speed_m_s": 4.7265099659441265e-05,
+              "motion_resolved": false,
+              "tracking_settled": true,
+              "transmission_ratio_actual_TCP": 0.02475426299497485,
+              "phase": "OPEN_CONTINUE",
+              "classification": "PERSISTENT_SLIDING_STALL",
+              "next_phase": "OPEN_CONTINUE",
+              "stop_reason": null
+            },
+            {
+              "t_s": 3.504166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 1.2975942809134722e-06,
+              "measured_TCP_travel_m": 9.654089936084187e-06,
+              "command_TCP_travel_m": 1.3006403441484515e-06,
+              "incremental_tracking_error_m": 0.0010387240605813641,
+              "TCP_drawer_relative_travel_m": 8.356495655170715e-06,
+              "rail_effort_N": 0.15280908573607882,
+              "effort_change_N": 0.1164928748849024,
+              "observed_native_traction_N": 0.15314901756210014,
+              "observed_tangential_relative_speed_m_s": 3.464666585469917e-05,
+              "motion_resolved": false,
+              "tracking_settled": true,
+              "transmission_ratio_actual_TCP": 0.025951885618269444,
+              "phase": "OPEN_CONTINUE",
+              "classification": "PERSISTENT_SLIDING_STALL",
+              "next_phase": "OPEN_CONTINUE",
+              "stop_reason": null
+            },
+            {
+              "t_s": 4.004166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 9.756695362739265e-07,
+              "measured_TCP_travel_m": 1.2065554418905222e-06,
+              "command_TCP_travel_m": 9.91577202014149e-07,
+              "incremental_tracking_error_m": 0.0010385090823414878,
+              "TCP_drawer_relative_travel_m": 2.3088590561659572e-07,
+              "rail_effort_N": 0.12282522545370496,
+              "effort_change_N": 0.08650901460252852,
+              "observed_native_traction_N": 0.12286205407872326,
+              "observed_tangential_relative_speed_m_s": 3.1002709750373686e-05,
+              "motion_resolved": false,
+              "tracking_settled": true,
+              "transmission_ratio_actual_TCP": 0.01951339072547853,
+              "phase": "OPEN_CONTINUE",
+              "classification": "PERSISTENT_SLIDING_STALL",
+              "next_phase": "OPEN_CONTINUE",
+              "stop_reason": "PRISMATIC_PERSISTENT_SLIDING_STALL"
+            }
+          ],
+          "observed_mechanisms": [
+            "COMMAND_TO_TCP_TRACKING_DEFICIT",
+            "KINEMATIC_TANGENTIAL_SLIP_EVIDENCE"
+          ],
+          "stop_reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+          "first_suspect_s": 2.504166666666663,
+          "hidden_resistance_used": false,
+          "grasp_reference_reset": false,
+          "force_measurement": "bias/gravity-compensated wrist wrench; dynamic tool loading retained for conservative live trend; completed-segment estimator compensates it once",
+          "safety": "original independent force/collision/joint/actuator/velocity supervisor remains authoritative every physics step"
+        }
+      },
+      "records": 1034,
+      "duration_s": 4.304166666666674,
+      "drawer_gain_m": 0.0001224390094876071,
+      "measured_TCP_gain_m": 0.0009323242608523796,
+      "measured_TCP_to_drawer_relative_travel_m": 0.0008098852513647725,
+      "raw_pad_peak_N": [
+        1.09617018699646,
+        0.8284865617752075
+      ],
+      "aperture_range_m": [
+        0.011234106495976448,
+        0.011333581060171127
+      ],
+      "max_relative_translation_m": 0.0008135239477269351,
+      "force_warning_samples": 0,
+      "safety_stop_samples": 0,
+      "command_TCP_gain_m": 0.001969796172347993,
+      "incremental_command_to_TCP_deficit_m": 0.0010374719114956132,
+      "absolute_command_to_TCP_start_end_m": [
+        -0.0005414576410616712,
+        0.0004960142704339421
+      ],
+      "compensated_wrist_force_reliable_interior_quantiles_N": [
+        0.016679579369432585,
+        0.12254421960023146,
+        0.15576114856894271,
+        0.27177638641011465,
+        0.30123034182474867
+      ],
+      "unfiltered_compensated_force_peak_excluding_two_edge_samples_N": 0.34067015555400587,
+      "tool_inertia_force_RMS_reliable_interior_N": 0.011905227190070967,
+      "force_processing": {
+        "version": "V3.1-common-SG2",
+        "window": 121,
+        "dt_s": 0.004166666666662877,
+        "boundary_exclusion_samples": 121,
+        "centered_future_support_samples": 62,
+        "filter_lookahead_s": 0.2583333333330984,
+        "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+        "tool_compensation_count": 1,
+        "reference": "fixed world hinge origin before filtering",
+        "friction_basis": "K(sign(native_velocity))",
+        "coordinate_unit": "m",
+        "minimum_absolute_native_velocity": 0.0001,
+        "finite_difference_error_remains": true,
+        "availability": "completed segment plus worker latency; not zero-latency online state"
+      },
+      "native_anchor_valid_samples": 1034,
+      "native_normal_rail_mean_N": 0.0008055370952463663,
+      "native_friction_rail_mean_N": 0.16887212561260007,
+      "native_total_vs_compensated_wrist_RMS_N": 0.012187826012034511,
+      "friction_sign": "native finger-body force negated for object reaction; compared against wrist measurement, not GT torque"
+    },
+    {
+      "id": 2,
+      "role": "FIT_ENGINEERING_RECOVERY_OPEN",
+      "original_result": {
+        "ok": false,
+        "status": "TRANSMISSION_FAILURE",
+        "reason": "PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+        "joint_coordinate": 0.00012008644989691675,
+        "gain_native": 1.6856211004778743e-07,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        },
+        "requested_target_reached": false,
+        "planning": {
+          "valid": true,
+          "target_truncated": false,
+          "nominal_duration_s": 7.995833333333334,
+          "nominal_is_conservative_bound": false,
+          "max_sim_s": 1383.9291666666668,
+          "stop_reserve_s": 0.45416666666666666,
+          "profile_cycle_s": 1.5,
+          "episode_remaining": {
+            "wall_s": 1693.7490627060179,
+            "sim_s": 1383.9291666666668,
+            "exit_reserved": true
+          },
+          "timing_assumption": "nominal ideal tracking; live measured ETA and finite episode resources; no implicit segment ceiling",
+          "reason": null,
+          "bounded_preload_max_s": 3.079398586834684,
+          "preload_is_FIT_data": false,
+          "requested_target_native": 0.012,
+          "selected_target_native": 0.012,
+          "coordinate_unit": "m"
+        },
+        "panel_contacts": 0,
+        "safely_stopped": true,
+        "physical_transmission_valid": false,
+        "fit_prefix_transmission_valid": false,
+        "fit_valid_until_s": 0.0,
+        "transmission": null,
+        "transmission_failure": null,
+        "remaining_ETA_s": null,
+        "ETA_exceeds_resources_advisory": false,
+        "adaptive_horizon_s": 15.762731920168017,
+        "adaptive_extensions": 0,
+        "elapsed_sim_s": 3.808333333333337,
+        "slip_exceeds_progress_windows": 0,
+        "stopped_state": {
+          "command_velocity_max_rad_s": 0.0,
+          "measured_joint_velocity_max_rad_s": 0.0009839765261858702,
+          "measured_TCP_speed_m_s": 0.0001450221122061669,
+          "measured_coordinate_velocity_native": 4.868127234658459e-08
+        },
+        "reference_native": 0.0019708284267448664,
+        "coordinate_unit": "m",
+        "tracking_limited_fraction": 0.47324613555291317,
+        "final_tracking_lag_native": 0.0018507419768479497,
+        "prismatic_startup": {
+          "phase": "CONTACT_PRELOAD",
+          "classification": "KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+          "sliding_started_s": null,
+          "max_loading_s": 3.079398586834684,
+          "preload_speed_m_s": 0.001,
+          "unchanged_reference_allowance_m": 0.0018499999999999999,
+          "thresholds": {
+            "motion_resolution_m": 5e-05,
+            "velocity_resolution_m_s": 0.0001,
+            "force_change_resolution_N": 0.2722489681626793,
+            "tracking_resolution_m": 0.0002
+          },
+          "observed_windows": [
+            {
+              "t_s": 0.5041666666666629,
+              "duration_s": 0.5,
+              "drawer_progress_m": -1.8022401491180062e-06,
+              "measured_TCP_travel_m": 2.596730385562296e-05,
+              "command_TCP_travel_m": 0.00040746511129335916,
+              "incremental_tracking_error_m": 0.0003820745615938925,
+              "TCP_drawer_relative_travel_m": 2.7769544004740965e-05,
+              "rail_effort_N": -0.20664892747308128,
+              "effort_change_N": 0.012524566662485165,
+              "observed_native_traction_N": -0.20643595831643316,
+              "observed_tangential_relative_speed_m_s": 4.700423433101889e-05,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": -0.036044802982360125,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 1.0041666666666629,
+              "duration_s": 0.5,
+              "drawer_progress_m": 1.1175870895385742e-06,
+              "measured_TCP_travel_m": 0.000289814059781901,
+              "command_TCP_travel_m": 0.0005002331127432758,
+              "incremental_tracking_error_m": 0.0005924936145552673,
+              "TCP_drawer_relative_travel_m": 0.0002886964726923624,
+              "rail_effort_N": 0.049879889564904197,
+              "effort_change_N": 0.26905338370047066,
+              "observed_native_traction_N": 0.03563303071859984,
+              "observed_tangential_relative_speed_m_s": 0.0004167643634447922,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": 0.0038562210901003638,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 1.5041666666666629,
+              "duration_s": 0.5,
+              "drawer_progress_m": 4.189423634670675e-07,
+              "measured_TCP_travel_m": 0.0004037895389101265,
+              "command_TCP_travel_m": 0.0005006345158994896,
+              "incremental_tracking_error_m": 0.0006893385915446304,
+              "TCP_drawer_relative_travel_m": 0.0004033705965466594,
+              "rail_effort_N": 0.043954414856470496,
+              "effort_change_N": 0.2631279089920369,
+              "observed_native_traction_N": 0.03490987579061757,
+              "observed_tangential_relative_speed_m_s": 0.0005655638598284441,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": 0.0010375265406772057,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 2.004166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 5.169931682758033e-07,
+              "measured_TCP_travel_m": 0.00036376279642852394,
+              "command_TCP_travel_m": 0.00044487709186397106,
+              "incremental_tracking_error_m": 0.0007704528869800775,
+              "TCP_drawer_relative_travel_m": 0.00036324580326024813,
+              "rail_effort_N": 0.056028994890561,
+              "effort_change_N": 0.27520248902612743,
+              "observed_native_traction_N": 0.04813291149912393,
+              "observed_tangential_relative_speed_m_s": 0.000525216876617324,
+              "motion_resolved": false,
+              "tracking_settled": false,
+              "transmission_ratio_actual_TCP": 0.0014212370625905602,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 2.504166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 5.217589205130935e-07,
+              "measured_TCP_travel_m": 2.2590915465969807e-05,
+              "command_TCP_travel_m": -5.551117279178897e-07,
+              "incremental_tracking_error_m": 0.0007473068597861898,
+              "TCP_drawer_relative_travel_m": 2.2069156545456714e-05,
+              "rail_effort_N": 0.040307270115013054,
+              "effort_change_N": 0.2594807642505795,
+              "observed_native_traction_N": 0.03894250338453268,
+              "observed_tangential_relative_speed_m_s": 4.43516050541457e-05,
+              "motion_resolved": false,
+              "tracking_settled": true,
+              "transmission_ratio_actual_TCP": 0.01043517841026187,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 3.004166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": 3.969762474298477e-08,
+              "measured_TCP_travel_m": 2.1933839456589332e-05,
+              "command_TCP_travel_m": 1.9855398725177054e-07,
+              "incremental_tracking_error_m": 0.0007255715743168523,
+              "TCP_drawer_relative_travel_m": 2.1894141831846348e-05,
+              "rail_effort_N": -0.008344119542337271,
+              "effort_change_N": 0.21082937459322917,
+              "observed_native_traction_N": -0.008983309546238228,
+              "observed_tangential_relative_speed_m_s": 5.0042677124754494e-05,
+              "motion_resolved": false,
+              "tracking_settled": true,
+              "transmission_ratio_actual_TCP": 0.0007939524948596954,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "COMMAND_TO_TCP_TRACKING_LIMITED",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": null
+            },
+            {
+              "t_s": 3.504166666666663,
+              "duration_s": 0.5,
+              "drawer_progress_m": -3.974128048866987e-07,
+              "measured_TCP_travel_m": 2.8201861704602038e-05,
+              "command_TCP_travel_m": 6.153869747116403e-09,
+              "incremental_tracking_error_m": 0.0006973758664819973,
+              "TCP_drawer_relative_travel_m": 2.8599274509488737e-05,
+              "rail_effort_N": -0.05575059180335262,
+              "effort_change_N": 0.16342290233221382,
+              "observed_native_traction_N": -0.05649882072611951,
+              "observed_tangential_relative_speed_m_s": 5.0804893645542904e-05,
+              "motion_resolved": false,
+              "tracking_settled": true,
+              "transmission_ratio_actual_TCP": -0.007948256097733974,
+              "phase": "CONTACT_PRELOAD",
+              "classification": "KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+              "next_phase": "CONTACT_PRELOAD",
+              "stop_reason": "PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE"
+            }
+          ],
+          "observed_mechanisms": [
+            "COMMAND_TO_TCP_TRACKING_DEFICIT",
+            "KINEMATIC_TANGENTIAL_SLIP_EVIDENCE"
+          ],
+          "stop_reason": "PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+          "first_suspect_s": null,
+          "hidden_resistance_used": false,
+          "grasp_reference_reset": false,
+          "force_measurement": "bias/gravity-compensated wrist wrench; dynamic tool loading retained for conservative live trend; completed-segment estimator compensates it once",
+          "safety": "original independent force/collision/joint/actuator/velocity supervisor remains authoritative every physics step"
+        }
+      },
+      "records": 914,
+      "duration_s": 3.8041666666666742,
+      "drawer_gain_m": 1.8811988411471248e-07,
+      "measured_TCP_gain_m": 0.0011763992127073464,
+      "measured_TCP_to_drawer_relative_travel_m": 0.0011762110928232317,
+      "raw_pad_peak_N": [
+        0.02969316393136978,
+        1.3846266269683838
+      ],
+      "aperture_range_m": [
+        0.011220370419323444,
+        0.011490493081510067
+      ],
+      "max_relative_translation_m": 0.0011487595038488507,
+      "force_warning_samples": 0,
+      "safety_stop_samples": 0,
+      "command_TCP_gain_m": 0.0018528987377343653,
+      "incremental_command_to_TCP_deficit_m": 0.0006764995250270189,
+      "absolute_command_to_TCP_start_end_m": [
+        0.00022997534099084005,
+        0.000906474866017859
+      ],
+      "compensated_wrist_force_reliable_interior_quantiles_N": [
+        -0.11722738811208068,
+        -0.03689390131756073,
+        0.043304624137510295,
+        0.1068256278182538,
+        0.12073950598352885
+      ],
+      "unfiltered_compensated_force_peak_excluding_two_edge_samples_N": 0.32380116483524723,
+      "tool_inertia_force_RMS_reliable_interior_N": 0.011627307512465357,
+      "force_processing": {
+        "version": "V3.1-common-SG2",
+        "window": 121,
+        "dt_s": 0.004166666666662877,
+        "boundary_exclusion_samples": 121,
+        "centered_future_support_samples": 62,
+        "filter_lookahead_s": 0.2583333333330984,
+        "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+        "tool_compensation_count": 1,
+        "reference": "fixed world hinge origin before filtering",
+        "friction_basis": "K(sign(native_velocity))",
+        "coordinate_unit": "m",
+        "minimum_absolute_native_velocity": 0.0001,
+        "finite_difference_error_remains": true,
+        "availability": "completed segment plus worker latency; not zero-latency online state"
+      },
+      "native_anchor_valid_samples": 914,
+      "native_normal_rail_mean_N": 0.00040599373737291886,
+      "native_friction_rail_mean_N": 0.03804883603290703,
+      "native_total_vs_compensated_wrist_RMS_N": 0.010117953051874094,
+      "friction_sign": "native finger-body force negated for object reaction; compared against wrist measurement, not GT torque"
+    }
+  ],
+  "contact_measurements_available": true,
+  "contact_point_summary": [
+    {
+      "attempt": 1,
+      "finger": 0,
+      "normal_point_records": 1937,
+      "longitudinal_margin_quantiles_m": [
+        0.009077100083231926,
+        0.009530110284686089,
+        0.00971178524196148
+      ],
+      "lateral_margin_quantiles_m": [
+        0.0005729084950871766,
+        0.0005729392869397998,
+        0.0005729799740947783
+      ],
+      "median_native_normal_pad": [
+        -2.7889142384385224e-11,
+        -8.881077206979171e-08,
+        -1.0
+      ],
+      "derived_material_tangent_speed_quantiles_m_s": [
+        6.19579222984612e-05,
+        0.000432857096893713,
+        0.0013967525446787477
+      ]
+    },
+    {
+      "attempt": 1,
+      "finger": 1,
+      "normal_point_records": 1360,
+      "longitudinal_margin_quantiles_m": [
+        0.009007984772324562,
+        0.009319823235273361,
+        0.009615989401936531
+      ],
+      "lateral_margin_quantiles_m": [
+        0.0005729036056436598,
+        0.0005729457188863307,
+        0.0005729730473831296
+      ],
+      "median_native_normal_pad": [
+        6.924001649810663e-11,
+        1.1127940524602309e-07,
+        -1.0
+      ],
+      "derived_material_tangent_speed_quantiles_m_s": [
+        4.574180093186442e-05,
+        0.0007083723263349384,
+        0.0016511887079104781
+      ]
+    },
+    {
+      "attempt": 2,
+      "finger": 0,
+      "normal_point_records": 3906,
+      "longitudinal_margin_quantiles_m": [
+        0.009732754901051521,
+        0.010155837051570415,
+        0.010155870579183102
+      ],
+      "lateral_margin_quantiles_m": [
+        0.0005729250842705369,
+        0.0005729481345042586,
+        0.000572968041524291
+      ],
+      "median_native_normal_pad": [
+        -5.95408305992251e-11,
+        -7.475877339402359e-08,
+        -1.0
+      ],
+      "derived_material_tangent_speed_quantiles_m_s": [
+        3.851661676890217e-05,
+        0.00010116316843777895,
+        0.001154931727796793
+      ]
+    },
+    {
+      "attempt": 2,
+      "finger": 1,
+      "normal_point_records": 5215,
+      "longitudinal_margin_quantiles_m": [
+        0.009221503511071205,
+        0.010223964229226112,
+        0.010409875772893429
+      ],
+      "lateral_margin_quantiles_m": [
+        0.0005729128024540842,
+        0.0005729571566917002,
+        0.0005730022094212472
+      ],
+      "median_native_normal_pad": [
+        -7.152360734924423e-12,
+        9.63785851126886e-08,
+        -1.0
+      ],
+      "derived_material_tangent_speed_quantiles_m_s": [
+        4.680410711443983e-05,
+        0.000171950671938248,
+        0.0034463403280824423
+      ]
+    }
+  ],
+  "limitations": [
+    "A positive/absent normal report alone does not prove holding/separation",
+    "Material-point relative velocity is derived kinematics, not directly measured friction",
+    "Contact points are not pressure areas; individual contact force sign preserves native collider ordering",
+    "FT compensation retains finite-difference/temporal error; unfiltered peaks are not hidden",
+    "No geometric replacement grasp or controller change is computed by this audit"
+  ]
+}

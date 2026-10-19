@@ -104,8 +104,8 @@ def build(job, c):
         asset_path = '/World/articulated_pose/asset'
         add_reference_to_stage(str(asset_usd), asset_path)
         for prim in stage.Traverse():
-            if str(prim.GetPath()).startswith(asset_path) and prim.IsA(UsdPhysics.RevoluteJoint):
-                drive = UsdPhysics.DriveAPI.Get(prim, 'angular')
+            if str(prim.GetPath()).startswith(asset_path) and (prim.IsA(UsdPhysics.RevoluteJoint) or prim.IsA(UsdPhysics.PrismaticJoint)):
+                drive = UsdPhysics.DriveAPI.Get(prim, 'angular' if prim.IsA(UsdPhysics.RevoluteJoint) else 'linear')
                 if drive:
                     drive.CreateStiffnessAttr().Set(0.0)
                     drive.CreateDampingAttr().Set(0.0)
@@ -215,7 +215,10 @@ def build(job, c):
         from xarm7_native_gripper import configure_stage, configuration, NativeDrive, GRIPPER_JOINTS, NativeGripperGeometry
         xarm_config = c
         configure_stage(stage, '/World/Piper', xarm_config, Path(os.environ['R1A7_RUN_DIR']))
-        from xarm_ft_v1_scene import author
+        if job.get('experiment') in ('V7','V7_BENCHMARK'):
+            from xarm_ft_v7_scene import author
+        else:
+            from xarm_ft_v1_scene import author
         case = json.loads(Path(job['private_physics_configuration']).read_text())[job.get('identification_case', 0)]
         _id_physics_audit = author(stage, locals(), case, a.output)
         del case
@@ -242,8 +245,9 @@ def build(job, c):
         arm = [names.index(f'joint{i}') for i in range(1, 8)]
         fingers = [names.index(n) for n in GRIPPER_JOINTS]
         asset_names = articulation.dof_names
-        if asset_names != [asset_joint_name]:
-            raise RuntimeError(f'asset DOF mismatch: {asset_names}, expected {asset_joint_name}')
+        if asset_names.count(asset_joint_name)!=1:
+            raise RuntimeError(f'asset DOF mismatch: {asset_names}, selected {asset_joint_name}')
+        selected_asset_dof=asset_names.index(asset_joint_name)
         controller = robot.get_articulation_controller()
         kp = np.zeros(len(names))
         kd = np.zeros(len(names))
@@ -260,8 +264,10 @@ def build(job, c):
         controller = NativeDrive(robot, xarm_config, Path(os.environ['R1A7_RUN_DIR']))
         controller.apply_action(ArticulationAction(joint_positions=q[arm], joint_velocities=np.zeros(7), joint_indices=arm))
         controller.command_width(0.084)
-        articulation.set_joint_positions(np.array([0.0]))
-        articulation.set_joint_velocities(np.array([0.0]))
+        # Normal closed initialization only. Other native joints remain passive,
+        # retain their limits/collisions and are never locked or commanded later.
+        articulation.set_joint_positions(np.zeros(len(asset_names)))
+        articulation.set_joint_velocities(np.zeros(len(asset_names)))
         startup_angles = []
         xarm_startup_records = []
         for i in range(240):
@@ -271,7 +277,7 @@ def build(job, c):
                 xarm_startup_records.append({'step': i, 't': float(world.current_time), 'q': robot.get_joint_positions().tolist(), 'dq': robot.get_joint_velocities().tolist(), 'projected_efforts': robot.get_measured_joint_efforts().tolist(), 'joint_reactions': robot.get_measured_joint_forces().tolist(), 'actuator': controller.last.copy()})
             except Exception:
                 pass
-            startup_angles.append(float(articulation.get_joint_positions()[0]))
+            startup_angles.append(float(articulation.get_joint_positions()[selected_asset_dof]))
         try:
             native_tensor = {}
             for method in ['get_masses', 'get_inertias', 'get_coms']:

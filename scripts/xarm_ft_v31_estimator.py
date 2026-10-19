@@ -35,7 +35,7 @@ def second_difference(p,dt):
     return result
 
 
-def process(rows,prior,bias,native_velocity,window=DEFAULT_WINDOW,edge=DEFAULT_EDGE):
+def process(rows,prior,bias,native_velocity,window=DEFAULT_WINDOW,edge=DEFAULT_EDGE,native_coordinate=None):
     n=len(rows);support=window//2+2;edge=max(edge,support)
     if n<2*edge+5:return None
     if len({r['identification_segment'] for r in rows})!=1:raise ValueError('split FIT/VALIDATION/segment boundaries before processing')
@@ -64,7 +64,13 @@ def process(rows,prior,bias,native_velocity,window=DEFAULT_WINDOW,edge=DEFAULT_E
     selector=slice(3,6) if prior['joint_type']=='revolute' else slice(0,3)
     unfiltered_torque=(world+gravity-inertial)[:,selector]@axis
     torque=common_filter(unfiltered_torque,window)
-    q=np.deg2rad([r['door_angle_deg'] for r in rows]);qd=common_filter(velocity,window);qdd=common_filter(np.gradient(velocity,dt),window)
+    if native_coordinate is None:
+        if prior['joint_type']!='revolute':raise ValueError('Prismatic processing requires explicit metre coordinate; no degree fallback')
+        q=np.deg2rad([r['door_angle_deg'] for r in rows])
+    else:
+        q=np.asarray(native_coordinate,dtype=float)
+        if q.shape!=(n,) or not np.isfinite(q).all():raise ValueError('Finite native joint coordinate required')
+    qd=common_filter(velocity,window);qdd=common_filter(np.gradient(velocity,dt),window)
     direction=common_filter(np.sign(velocity),window);valid=np.ones(n,dtype=bool);tags=[]
     for i,r in enumerate(rows):
         reasons=[]
@@ -79,6 +85,7 @@ def process(rows,prior,bias,native_velocity,window=DEFAULT_WINDOW,edge=DEFAULT_E
         processing=dict(version=VERSION,window=window,dt_s=dt,boundary_exclusion_samples=edge,centered_future_support_samples=support,
             filter_lookahead_s=support*dt,kernel='SG3 second-derivative equivalent acceleration smoother; unit DC gain',
             tool_compensation_count=1,reference='fixed world hinge origin before filtering',friction_basis='K(sign(native_velocity))',
+            coordinate_unit='rad' if prior['joint_type']=='revolute' else 'm',minimum_absolute_native_velocity=1e-4,
             finite_difference_error_remains=True,availability='completed segment plus worker latency; not zero-latency online state'))
 
 

@@ -35,6 +35,8 @@ class Operations:
         from native_g1_hybrid_contact import initial_observation
         self.g['observation_generations'].append(self.g['agent_observations']);self.g['agent_observations']=[];self.g['wrist_routes']=[]
         return initial_observation(self.g)
+    def action_target(self,action):return action['target_deg']
+    def measured_coordinate_fields(self):return dict(angle_deg=math.degrees(self.r.actual()))
     def attempt(self,command):
         if self.acquisitions>=int(self.r.job.get('runtime_acquisition_budget',2)):
             return dict(executed=False,reason='Registered acquisition budget used')
@@ -50,7 +52,7 @@ class Operations:
                     route=self.check_successor(action) if allowed else dict(valid=False,reason=why)
                     result.setdefault('continuations',[]).append(route)
                     if not route['valid']:break
-                segment=self.interact(action['target_deg'],action=action);result['segments'].append(segment)
+                segment=self.interact(self.action_target(action),action=action);result['segments'].append(segment)
                 if segment['status'] not in ('TARGET_REACHED','SAFE_PARTIAL_PROGRESS'):break
         except BaseException as error:
             result['error']=repr(error)
@@ -109,9 +111,9 @@ class Operations:
             if closure.state=='FORCE_HOLD' and good:break
         else:raise RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')
         self.r.grasp_reference=np.linalg.inv(self.r.moving())@self.r.tcp();self.g['reference']=self.r.grasp_reference
-        self.r.event('GRASP_VERIFIED',angle_deg=math.degrees(self.r.actual()),pad_loads_n=self.r.filtered().tolist())
+        self.r.event('GRASP_VERIFIED',**self.measured_coordinate_fields(),pad_loads_n=self.r.filtered().tolist())
         self.g['phase']='FORCE_HOLD';self.r.hold(1.);self.r.reference_drive=None
-        return dict(acquired=True,hold_s=1.,angle_deg=math.degrees(self.r.actual()))
+        return dict(acquired=True,hold_s=1.,**self.measured_coordinate_fields())
     def check_successor(self,action):
         """Validate the next complete arc from measured state, never an old path."""
         from native_g1_ft_identification import kinematic_prior
@@ -132,7 +134,7 @@ class Operations:
         except ExecutionBudgetExhausted as error:
             self.r.stop_command()
             return dict(ok=False,status='BUDGET_EXHAUSTED',reason=str(error),safely_stopped=True,physical_transmission_valid=False)
-    def rotate_segment(self,target_deg,max_sim_s=None,action=None,phase='OPEN_CONTINUE',contact_pose=None,prior=None,measure=None):
+    def rotate_segment(self,target_deg,max_sim_s=None,action=None,phase='OPEN_CONTINUE',contact_pose=None,prior=None,measure=None,articulation=None,target_q=None):
         from native_g1_ft_identification import kinematic_prior
         from .progress import ProgressClock,hinge_radius
         from .segments import segment_plan,TransmissionMonitor,slip_stall_confirmed,classify_outcome,TRANSMISSION_REASONS
@@ -140,13 +142,26 @@ class Operations:
         if max_sim_s is not None:action.setdefault('max_sim_s',max_sim_s)
         prior=prior or kinematic_prior(self.g);measure=measure or self.r.actual
         axis=np.asarray(prior['axis_world']);axis/=np.linalg.norm(axis);origin=np.asarray(prior['origin_world_m'])
-        start=measure();requested=math.radians(target_deg);T=self.r.tcp().copy() if contact_pose is None else np.asarray(contact_pose).copy()
-        radius=hinge_radius(T[:3,3],origin,axis);planning=segment_plan(start,requested,action,self.r.policy.motion('LOADED'),radius,self.r.dt,self.r.episode_budget.remaining(self.r.tick*self.r.dt))
-        if not planning['valid']:return dict(ok=False,status='BUDGET_EXHAUSTED',reason=planning['reason'],planning=planning,angle_deg=math.degrees(start))
-        target=requested;clock=ProgressClock(start,target);monitor=TransmissionMonitor(start,clock.direction,action);began=self.r.tick*self.r.dt;checkpoint=began;wall_began=time.monotonic()
+        start=measure();requested=math.radians(target_deg) if target_q is None else float(target_q);T=self.r.tcp().copy() if contact_pose is None else np.asarray(contact_pose).copy()
+        linear=articulation is not None and articulation.joint_type=='prismatic'
+        radius=1. if linear else hinge_radius(T[:3,3],origin,axis)
+        motion_plan=dict(self.r.policy.motion('LOADED'))
+        # The finite rail lead is one nominal loaded-speed stopping distance
+        # plus one physics step. This is a reference allowance, not a new
+        # collision/force/contact acceptance threshold.
+        lookahead=(motion_plan['speed_m_s']**2/(2*motion_plan['acceleration_m_s2'])+motion_plan['speed_m_s']*self.r.dt) if linear else math.radians(.5)
+        if linear:motion_plan.update(angular_speed_rad_s=motion_plan['speed_m_s'],angular_acceleration_rad_s2=motion_plan['acceleration_m_s2'])
+        planning=segment_plan(start,requested,action,motion_plan,radius,self.r.dt,self.r.episode_budget.remaining(self.r.tick*self.r.dt),lookahead=lookahead)
+        if not planning['valid']:return dict(ok=False,status='BUDGET_EXHAUSTED',reason=planning['reason'],planning=planning,**self.measured_coordinate_fields())
+        target=requested;clock=ProgressClock(start,target,lookahead=lookahead);monitor=TransmissionMonitor(start,clock.direction,action,lookahead=lookahead);began=self.r.tick*self.r.dt;checkpoint=began;wall_began=time.monotonic()
+        startup=self.prismatic_startup(action,lookahead) if linear else None
+        if startup is not None:
+            planning['bounded_preload_max_s']=startup.max_loading_s
+            planning['preload_is_FIT_data']=False
         self.r.reference_drive=None;last_angle=start;last_relative=self.r.rows[-1]['relative_translation_slip_m'];stalls=0;reason=None;panel_contacts=0;eta=None;eta_exceeds=False
         rate=min(self.r.policy.motion('LOADED')['speed_m_s'],action.get('reference_speed_m_s',self.r.policy.motion('LOADED')['speed_m_s']))/max(radius,1e-9)
         horizon=min(planning['max_sim_s'],planning['nominal_duration_s']+clock.lookahead/rate+2*planning['profile_cycle_s']+planning['stop_reserve_s']);extensions=0
+        if startup is not None:horizon=min(planning['max_sim_s'],horizon+startup.max_loading_s)
         while True:
             if clock.direction*(target-measure())<=0:
                 self.r.stop_command();self.r.reference_drive=None;clock.velocity=0.
@@ -165,14 +180,37 @@ class Operations:
                 if monitor.stable() and monitor.last['progress_rad']>0:
                     horizon=min(planning['max_sim_s'],elapsed+max(planning['profile_cycle_s'],eta or planning['profile_cycle_s'])+planning['stop_reserve_s']);extensions+=1
                 else:reason='ADAPTIVE_HORIZON_WITHOUT_HEALTHY_PROGRESS';break
-            motion=self.r.motion_limits('LOADED');reference,state=clock.advance(measure(),motion['speed_m_s'],hinge_radius(self.r.tcp()[:3,3],origin,axis),self.r.dt,motion['angular_speed_rad_s'],motion['acceleration_m_s2'],motion['angular_acceleration_rad_s2'])
-            R=Rotation.from_rotvec(axis*(reference-start)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
-            self.g['current_articulation_reference']=reference;self.r.cartesian_step(D@T,phase);now=self.r.tick*self.r.dt
+            motion=self.r.motion_limits('LOADED')
+            feedback=measure();rail_feedback=None
+            if startup is not None:
+                feedback,rail_feedback=startup.clock_feedback(self.startup_sample(self.r.rows[-1],elapsed))
+                # Feedback and endpoint share the same bounded servo-offset
+                # coordinate. Physical completion still tests target-measure().
+                clock.target=target+clock.direction*rail_feedback['tracking_offset_m']
+            reference,state=clock.advance(feedback,motion['speed_m_s'],1. if linear else hinge_radius(self.r.tcp()[:3,3],origin,axis),self.r.dt,motion['speed_m_s'] if linear else motion['angular_speed_rad_s'],motion['acceleration_m_s2'],motion['acceleration_m_s2'] if linear else motion['angular_acceleration_rad_s2'])
+            if rail_feedback is not None:state.update(rail_feedback,actual_object_lead_m=clock.direction*(reference-measure()))
+            if articulation is not None:D=articulation.delta(reference-start)
+            else:
+                R=Rotation.from_rotvec(axis*(reference-start)).as_matrix();D=np.eye(4);D[:3,:3]=R;D[:3,3]=origin-R@origin
+            step_phase=startup.phase if startup is not None else phase
+            self.g['current_articulation_reference']=reference;self.r.cartesian_step(D@T,step_phase);now=self.r.tick*self.r.dt
             if phase=='PANEL_PUSH':panel_contacts+=sum(c['force_n']>0 and c['target'] in self.r.collision.paths for c in self.r.rows[-1]['contacts'])
+            if startup is not None:
+                was_sliding=startup.sliding;observed=startup.observe(self.startup_sample(self.r.rows[-1],now-began))
+                if observed is not None and observed['classification']!=getattr(startup,'reported_classification',None):
+                    self.r.event('PRISMATIC_CONTACT_STATE',classification=observed['classification'],phase_next=observed['next_phase'],actual_q_m=measure())
+                    startup.reported_classification=observed['classification']
+                if startup.stop_reason:reason=startup.stop_reason;break
+                if not was_sliding and startup.sliding:
+                    self.r.prismatic_preloading=False;self.r.profile_started=self.r.tick
+                    monitor=TransmissionMonitor(measure(),clock.direction,action,lookahead=lookahead)
+                    checkpoint=now;last_angle=measure();last_relative=self.r.rows[-1]['relative_translation_slip_m']
+                    self.r.event('PRISMATIC_BREAKAWAY_CONFIRMED',actual_q_m=measure(),grasp_reference_unchanged=True)
+                if not startup.sliding:continue
             if monitor.update(now-began,measure(),state,self.r.dt,clock.direction*(target-measure())):
                 reason='SUSTAINED_LOW_TRANSMISSION';break
             # Original increasing-slip detector is retained as an independent signal.
-            if phase=='OPEN_CONTINUE' and now-checkpoint>=.5:
+            if not linear and phase=='OPEN_CONTINUE' and now-checkpoint>=.5:
                 drift=self.r.rows[-1]['relative_translation_slip_m'];progress=clock.direction*(measure()-last_angle)*radius
                 stalls=stalls+1 if drift-last_relative>max(0.,progress) else 0
                 checkpoint=now;last_angle=measure();last_relative=drift
@@ -186,16 +224,19 @@ class Operations:
         self.r.hold(PARK_DEFINITION['stationary_hold_s'])
         stopped_q=np.asarray(self.r.robot.get_joint_positions())[self.r.arm]
         measured_stop=bool(np.max(abs(stopped_q-stopped_begin))<=PARK_DEFINITION['measured_joint_cell_rad'] and np.max(abs(stopped_q-self.r.qtarget[self.r.arm]))<=PARK_DEFINITION['measured_joint_cell_rad'])
-        reached=clock.direction*(target-measure())<=0;failed=reason in TRANSMISSION_REASONS;ok=reached and not failed and measured_stop
+        reached=clock.direction*(target-measure())<=0;failed=reason in TRANSMISSION_REASONS or bool(reason and reason.startswith('PRISMATIC_'));ok=reached and not failed and measured_stop
         stable=measured_stop and not failed and (ok or monitor.stable());gain=clock.direction*(measure()-start)
         status=classify_outcome(reached,measured_stop,reason,stable,gain)
+        if failed:status='TRANSMISSION_FAILURE'
         # Interrupted FIT ends BEFORE the first suspect full window, not at stop.
         fit_end=min(valid_until,max(0.,monitor.failure['first_suspect_s'])) if monitor.failure else (monitor.valid_until if failed else valid_until)
-        return dict(ok=bool(ok),status=status,reason=None if ok else reason,angle_deg=math.degrees(measure()),gain_deg=math.degrees(measure()-start),requested_target_reached=bool(reached),planning=planning,
+        if startup is not None and failed:fit_end=min(fit_end,startup.first_suspect_s if startup.first_suspect_s is not None else 0.)
+        coordinate_result=dict(angle_deg=math.degrees(measure()),gain_deg=math.degrees(measure()-start),reference_deg=math.degrees(clock.reference),final_tracking_lag_deg=math.degrees(clock.direction*(clock.reference-measure()))) if articulation is None else dict(joint_coordinate=float(measure()),gain_native=float(measure()-start),units=articulation.units)
+        return dict(ok=bool(ok),status=status,reason=None if ok else reason,**coordinate_result,requested_target_reached=bool(reached),planning=planning,
             panel_contacts=panel_contacts,safely_stopped=measured_stop,physical_transmission_valid=stable,fit_prefix_transmission_valid=fit_end>0 and monitor.last is not None,fit_valid_until_s=fit_end,
             transmission=monitor.last,transmission_failure=monitor.failure,remaining_ETA_s=eta,ETA_exceeds_resources_advisory=eta_exceeds,adaptive_horizon_s=horizon,adaptive_extensions=extensions,elapsed_sim_s=self.r.tick*self.r.dt-began,
-            slip_exceeds_progress_windows=stalls,stopped_state=dict(command_velocity_max_rad_s=float(np.max(abs(self.g['qvelocity']))),measured_joint_velocity_max_rad_s=float(np.max(abs(np.asarray(self.r.rows[-1]['joint_velocities'])[self.r.arm]))),measured_TCP_speed_m_s=self.r.rows[-1]['tcp_speed_m_s'],measured_hinge_velocity_rad_s=self.r.rows[-1]['telemetry']['hinge_velocity_rad_s']),
-            reference_deg=math.degrees(clock.reference),tracking_limited_fraction=clock.limited_steps/max(1,round(valid_until/self.r.dt)),final_tracking_lag_deg=math.degrees(clock.direction*(clock.reference-measure())))
+            slip_exceeds_progress_windows=stalls,stopped_state=dict(command_velocity_max_rad_s=float(np.max(abs(self.g['qvelocity']))),measured_joint_velocity_max_rad_s=float(np.max(abs(np.asarray(self.r.rows[-1]['joint_velocities'])[self.r.arm]))),measured_TCP_speed_m_s=self.r.rows[-1]['tcp_speed_m_s'],measured_coordinate_velocity_native=self.r.rows[-1]['joint_coordinate_velocity']),
+            reference_native=float(clock.reference),coordinate_unit='m' if linear else 'rad',tracking_limited_fraction=clock.limited_steps/max(1,round(valid_until/self.r.dt)),final_tracking_lag_native=float(clock.direction*(clock.reference-measure())))
     def release_park(self):
         if self.g.get('at_safe_park') and self.g.get('last_exit_plan'):
             from native_g1_safe_park import verify_park

@@ -86,7 +86,8 @@ def plan(job,output,wall_s=600,candidate_check=None):
     def arc(T,base,sc,seed,spacing=3,grasp_width=None):
         current_width=width if grasp_width is None else grasp_width
         path=[];reason=None
-        for s in np.linspace(start_state,goal,int(np.ceil(abs(np.rad2deg(goal-start_state))/spacing))+1):
+        steps=int(np.ceil(abs(goal-start_state)/(.01*spacing/3))) if model.manifest.get('joint_type','revolute')=='prismatic' else int(np.ceil(abs(np.rad2deg(goal-start_state))/spacing))
+        for s in np.linspace(start_state,goal,max(1,steps)+1):
             q=model.ik(delta(s)@T,base,seed)
             if q is None:reason='NO_CONTINUOUS_PINK_IK';break
             ok,reason=sc.check(model.poses(q,base,width=current_width),delta(s)@sc.moving_reference,True)
@@ -150,11 +151,19 @@ def plan(job,output,wall_s=600,candidate_check=None):
         report.update(valid=True,stage='complete_approach')
         if best is None or key>best[0]:best=(key,candidate)
         print('APPROACH_OK',model.manifest['asset_id'],key,base,flush=True)
+    linear=model.manifest.get('joint_type','revolute')=='prismatic'
+    if linear:
+        # Legacy internal ranking keys are dimensionless/native-coordinate
+        # aliases. Publish rail diagnostics with explicit SI labels.
+        for row in audit:row['reached_m']=row.pop('reached_rad')
+        if best:best[1].update(joint_type='prismatic',coordinate_unit='m')
     (output/'candidate_audit.json').write_text(json.dumps(audit,indent=2))
     (output/'candidate_approach_audit.json').write_text(json.dumps(approach_audit,indent=2))
     if candidate_check is not None:(output/'execution_candidate_audit.json').write_text(json.dumps(execution_audit,indent=2))
     if best:(output/'candidate.json').write_text(json.dumps(best[1],indent=2))
     summary={'asset_id':model.manifest['asset_id'],'oracle_handle':selection['mesh'],'found':best is not None,'wall_s':time.time()-started,'checked_arc_branches':len(audit),'target_rad':goal,'planned_reached_rad':best[1]['planned_reached_state'] if best else None,'minimum_approach_arc_margin_rad':best[1]['minimum_approach_arc_margin_rad'] if best else None,'blocker':None if best else 'BOUNDED_ORACLE_HANDLE_APPROACH_SEARCH_EXHAUSTED','new_execution_gates':False}
+    if linear:
+        summary.update(target_m=summary.pop('target_rad'),planned_reached_m=summary.pop('planned_reached_rad'),coordinate_unit='m')
     (output/'planning_summary.json').write_text(json.dumps(summary,indent=2));print(json.dumps(summary),flush=True)
     return best[1] if best else None
 

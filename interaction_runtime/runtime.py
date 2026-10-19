@@ -121,6 +121,7 @@ class Runtime:
         # estimator separately compensates tool inertia using these 240 Hz poses.
         comp=wrench_at(raw-bias,T,T[:3,3])+gravity
         return dict(raw_wrench_sensor=raw,T_world_sensor=T,valid=bool(np.isfinite(raw).all()),timestamp_s=self.tick*self.dt,world_simulation_timestamp_s=float(self.world.current_time),sample_period_s=self.dt,body_states=bodies,tool_gravity_wrench_world=gravity,gravity_compensated_wrench_world=comp,tool_inertia_compensation='segment-local estimator; raw poses retained'),comp
+    def enrich_measurement(self,row,pre_contact_poses):pass
     def step(self):
         from isaacsim.core.utils.types import ArticulationAction
         if self.stopped or (self.output/'STOP_AND_EXPORT').exists():raise KeyboardInterrupt('OWNER_REQUESTED_EXPORT')
@@ -149,15 +150,18 @@ class Runtime:
             speed=0. if self.previous is None else float(np.linalg.norm(T[:3,3]-self.previous[:3,3])/self.dt);self.previous=T
             relative=np.linalg.inv(D)@T
             row=dict(t=self.tick*self.dt,phase=self.phase,q=q,aperture_m=self.controller.geometry.width(float(q[self.controller.master])),
-                margin_rad=self.model.margin(q[self.arm]),T_tcp=T,T_moving_link=D,door_angle_deg=math.degrees(self.actual()),forces_n=loads,contacts=contacts['contacts'],
+                margin_rad=self.model.margin(q[self.arm]),T_tcp=T,T_moving_link=D,door_angle_deg=math.degrees(self.actual()) if self.model.manifest.get('joint_type','revolute')=='revolute' else None,forces_n=loads,contacts=contacts['contacts'],
                 command_q_arm=self.qtarget[self.arm].copy(),command_q_velocity_arm=self.qvelocity.copy(),command_aperture_m=self.jaw_width,wrist_ft=ft,
                 joint_velocities=dq,joint_reactions=reactions,projected_joint_efforts=self.optional('projected_joint_efforts',self.robot.get_measured_joint_efforts),explicit_applied_efforts=self.optional('explicit_applied_efforts',self.robot.get_applied_joint_efforts),tcp_speed_m_s=speed,base=self.base.copy(),physics_dt_s=contacts['physics_window_dt_s'],
                 relative_translation_slip_m=0. if self.grasp_reference is None else float(np.linalg.norm(relative[:3,3]-self.grasp_reference[:3,3])),
                 relative_rotation_slip_deg=0. if self.grasp_reference is None else float(np.degrees(Rotation.from_matrix(relative[:3,:3]@self.grasp_reference[:3,:3].T).magnitude())))
             if self.engineering_load is not None:row['independent_engineering_tool_load_world_n']=np.asarray(self.engineering_load).copy()
             row['actuator_position_target_arm']=self.controller.last.get('implicit_position_target');row['actuator_gravity_bias_nm']=self.controller.last.get('gravity_bias_nm');row['native_G1_master_effort_cap_nm']=float(self.controller.caps[self.controller.master])
+            coordinate_velocity=float(self.scene['articulation'].get_joint_velocities()[self.scene.get('selected_asset_dof',0)])
+            row['joint_coordinate']=self.actual();row['joint_coordinate_velocity']=coordinate_velocity
             row['telemetry']=dict(pad_load_raw_n=loads,pad_load_filtered_n=self.filtered(),command_aperture_m=self.jaw_width,joint_velocities=dq,measured_joint_forces=reactions,
-                hinge_velocity_rad_s=float(self.scene['articulation'].get_joint_velocities()[0]),command_q_velocity_arm=self.qvelocity.copy())
+                hinge_velocity_rad_s=coordinate_velocity if self.model.manifest.get('joint_type','revolute')=='revolute' else None,command_q_velocity_arm=self.qvelocity.copy())
+            self.enrich_measurement(row,pre_contact_poses)
         self.rows.append(row);self.tick+=1;self.g['tick']=self.tick
         for side,load in loads.items():
             present=load>.05

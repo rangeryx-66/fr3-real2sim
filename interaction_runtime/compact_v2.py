@@ -39,6 +39,8 @@ class CompactRecorder:
             self.segments[self.segment-1].update(last_step=self.count-1,completed=True,result=result or {})
             self.segment=0
         self.flush();event=threading.Event();self.queue.put(event);self.completed(event)
+    def coordinate_fields(self,row):
+        return dict(door_q=np.float64(np.deg2rad(row['door_angle_deg'])),door_dq=np.float64(row['telemetry']['hinge_velocity_rad_s']))
     def append(self,row):
         phase=row['phase']
         if self.segment and self.segments[self.segment-1]['mode']=='PANEL' and phase!='PANEL_PUSH':self.end()
@@ -53,7 +55,7 @@ class CompactRecorder:
         force=row.get('force_event',{});positive=sum(c['force_n']>0 for c in row['contacts'])
         x=dict(step=np.uint32(self.count),t=np.float64(row['t']),q=np.asarray(row['q'],dtype=np.float32),dq=np.asarray(row['joint_velocities'],dtype=np.float32),
             command_q=np.asarray(row['command_q_arm'],dtype=np.float32),command_dq=np.asarray(row['command_q_velocity_arm'],dtype=np.float32),
-            door_q=np.float64(np.deg2rad(row['door_angle_deg'])),door_dq=np.float64(row['telemetry']['hinge_velocity_rad_s']),
+            **self.coordinate_fields(row),
             raw_ft=np.asarray(ft['raw_wrench_sensor'],dtype=np.float64),sensor_pose=pose7(ft['T_world_sensor']),tool_poses=np.array([pose7(b['T_world_body']) for b in bodies]),tcp_pose=pose7(row['T_tcp']),
             reference_q=np.float64(ctx.get('current_articulation_reference',np.nan)),aperture=np.float32(row['aperture_m']),command_aperture=np.float32(row['command_aperture_m']),
             pad_load=np.array(list(row['forces_n'].values()),dtype=np.float32),relative_slip_m=np.float32(row['relative_translation_slip_m']),phase=np.uint8(self.metadata['phases'].index(phase)),

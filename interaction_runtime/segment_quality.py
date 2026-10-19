@@ -28,10 +28,11 @@ def selection(segment,arrays,indices,enabled=False):
     if adaptive:
         selected=interval_indices(segment,arrays,indices,windows,result['fit_valid_until_s'])
         if len(selected)<242:return indices[:0],dict(original,label='INTERRUPTED_FIT_INSUFFICIENT_SEGMENT_LOCAL_FILTER_SUPPORT')
-        q=arrays['door_q'][selected];t=arrays['t'][selected];v=arrays['door_dq'][selected]
+        native='joint_q' in arrays
+        q=arrays['joint_q' if native else 'door_q'][selected];t=arrays['t'][selected];v=arrays['joint_dq' if native else 'door_dq'][selected]
         # This reports excitation; it does not claim I/b identifiability. The
         # unchanged estimator still reports rank, uncertainty and sensitivity.
-        excitation=dict(duration_s=float(t[-1]-t[0]),range_rad=float(np.ptp(q)),velocity_rms_rad_s=float(np.sqrt(np.mean(v*v))))
+        excitation=dict(duration_s=float(t[-1]-t[0]),**(dict(range_native=float(np.ptp(q)),velocity_rms_native=float(np.sqrt(np.mean(v*v))),coordinate_unit=segment['coordinate_unit']) if native else dict(range_rad=float(np.ptp(q)),velocity_rms_rad_s=float(np.sqrt(np.mean(v*v))))))
         if np.ptp(q)<=np.finfo(float).eps*max(1.,float(np.max(abs(q)))):return indices[:0],dict(original,label='INTERRUPTED_FIT_NO_MEASURED_MOTION',excitation=excitation)
         return selected,dict(original,label='PREDECLARED_TRANSMITTING_FIT_PREFIX',declared_intervals_s=windows,valid_until_s=result['fit_valid_until_s'],excitation=excitation,action_remains_failed=True)
     # Invalid samples/gaps are split before centered filtering. Informational

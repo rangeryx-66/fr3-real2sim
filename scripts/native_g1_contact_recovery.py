@@ -46,11 +46,16 @@ def refine_current(g):
 
 def build_geometry(g):
     """Same scorer; only episode-local attempted families leave the new pool."""
-    attempted={tuple(r['family']) for r in g['contact_attempts'] if r['physical_grasp_started'] and not r['short_success']}
+    attempted={tuple(r['family']) for r in g['contact_attempts'] if r['physical_grasp_started'] and r.get('failed_contact_candidate',not r['short_success'])}
     original=multi.rescore
     def alternatives(*args,**kwargs):
         scored=original(*args,**kwargs)
         remaining=[c for c in scored if (float(c['section']),float(c['insertion_m']),float(c['roll']),float(c['pitch'])) not in attempted]
+        if g.get('expose_recovery_candidates_v7'):
+            from interaction_runtime.recovery_candidates_v7 import catalog,order
+            g['recovery_candidate_catalog']=catalog(scored,attempted,g['agent_observations'])
+            write(g,'AGENT_CANDIDATE_CATALOG.json',g['recovery_candidate_catalog'])
+            remaining=order(scored,attempted,g.get('preferred_existing_candidate_family'))
         write(g,'EPISODE_CANDIDATE_MEMORY.json',dict(failed_families=list(attempted),before=len(scored),after=len(remaining),scope='this episode only; scores unchanged; no object blacklist'))
         return remaining
     with patch.object(multi,'rescore',alternatives):result=incremental.build_geometry(g)
