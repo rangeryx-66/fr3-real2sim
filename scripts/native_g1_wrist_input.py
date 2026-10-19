@@ -127,13 +127,18 @@ def prepare(g):
         for q in list(reversed(route['q_path']))[1:]:g['move'](np.asarray(q),.8)
 
 
+def checkpoint_array(folder,name):
+    path=Path(folder)/(name+'.npy')
+    if path.exists():return np.load(path)
+    with np.load(Path(folder)/'checkpoint_arrays.npz') as saved:return saved[name].copy()
+
 def common_visible(before,after,anchor):
     """Two measured camera poses, optical-Z reprojection; no object GT warp."""
     from articulated_interaction_skill.capture import backproject
-    A=np.load(before/'depth_m.npy');B=np.load(after/'depth_m.npy')
+    A=checkpoint_array(before,'depth_m');B=checkpoint_array(after,'depth_m')
     ma=json.loads((before/'camera.json').read_text());mb=json.loads((after/'camera.json').read_text())
     K=np.asarray(mb['K']);Cb=np.asarray(mb['T_world_camera_optical']);Ca=np.asarray(ma['T_world_camera_optical'])
-    maskA=np.load(before/'robot_self_exclusion.npy');maskB=np.load(after/'robot_self_exclusion.npy')
+    maskA=checkpoint_array(before,'robot_self_exclusion');maskB=checkpoint_array(after,'robot_self_exclusion')
     valid=np.isfinite(A)&(A>.025)&(A<3)&~maskA
     P,_=backproject(A,np.asarray(ma['K']),Ca,valid,stride=2)
     P=P[np.linalg.norm(P-anchor,axis=1)<.10];Q=(P-Cb[:3,3])@Cb[:3,:3]

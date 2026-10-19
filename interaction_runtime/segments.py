@@ -23,6 +23,13 @@ def slip_stall_confirmed(windows,lag,lookahead=LOOKAHEAD_RAD):
     return bool(windows>=3 and lag>=LEAD_SATURATION_FRACTION*lookahead)
 
 STATUSES=('TARGET_REACHED','SAFE_PARTIAL_PROGRESS','TRANSMISSION_FAILURE','SAFETY_STOP','BUDGET_EXHAUSTED')
+TRANSMISSION_REASONS=('CONTACT_TRANSMISSION_STALL','SUSTAINED_LOW_TRANSMISSION','ADAPTIVE_HORIZON_WITHOUT_HEALTHY_PROGRESS')
+
+def classify_outcome(reached,measured_stop,reason,stable,gain):
+    if reason in TRANSMISSION_REASONS:return 'TRANSMISSION_FAILURE'
+    if reached and measured_stop:return 'TARGET_REACHED'
+    if stable and gain>0:return 'SAFE_PARTIAL_PROGRESS'
+    return 'BUDGET_EXHAUSTED'
 
 def validate_action(action):
     cap=action.get('max_sim_s')

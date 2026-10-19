@@ -50,12 +50,18 @@ def rays(mesh, origins, direction):
 
 def patch_from_rgbd(folder, rectangle):
     c = json.loads((folder/'camera.json').read_text())
-    depth = np.load(folder/'depth_m.npy'); K=np.asarray(c['K']); C=np.asarray(c['T_world_camera_optical'])
+    if (folder/'depth_m.npy').exists():depth=np.load(folder/'depth_m.npy')
+    else:
+        with np.load(folder/'checkpoint_arrays.npz') as saved:depth=saved['depth_m'].copy()
+    K=np.asarray(c['K']); C=np.asarray(c['T_world_camera_optical'])
     x0,y0,x1,y1=rectangle
     yy,xx=np.mgrid[y0:y1:4,x0:x1:4]
     z=depth[yy,xx]; good=np.isfinite(z)&(z>0)
     exclusion=folder/'robot_self_exclusion.npy'
     if exclusion.exists():good &= ~np.load(exclusion).astype(bool)[yy,xx]
+    elif (folder/'checkpoint_arrays.npz').exists():
+        with np.load(folder/'checkpoint_arrays.npz') as saved:
+            if 'robot_self_exclusion' in saved:good &= ~saved['robot_self_exclusion'].astype(bool)[yy,xx]
     px=np.c_[xx[good],yy[good],np.ones(good.sum())]
     Q=(px@np.linalg.inv(K).T)*z[good,None]
     points=Q@C[:3,:3].T+C[:3,3]

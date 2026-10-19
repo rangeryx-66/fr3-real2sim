@@ -214,16 +214,11 @@ def panel_plan(g,command):
     T=np.eye(4);T[:3,:3]=R;T[:3,3]=center-R@close_geometry(g)
     # Observed contact point is immutable. Native scene supplies only collider
     # identity and path validation, never GT snapping of the point.
-    from hybrid_panel_preflight import rays
-    target_paths=set()
-    for shape in g['collision'].original.scene:
-        if shape.body!=g['collision'].moving_link:continue
-        entry=g['collision'].entries[shape.path]
-        for mesh in meshes(entry):
-            local=np.linalg.inv(entry['rigid_body_world_transform'])@entry['world_transform'];mesh.apply_transform(local);mesh.apply_transform(g['moving']())
-            d=rays(mesh,[center+.01*normal],direction)[0]
-            if np.isfinite(d) and abs(d-.01)<.003:target_paths.add(shape.path)
-    if not target_paths:return dict(valid=False,reason='observed patch has no corresponding current native moving surface')
+    from native_g1_panel_support import correspondence
+    support=correspondence(g['collision'],g['moving'](),patch)
+    write(g,'PANEL_SURFACE_CORRESPONDENCE.json',support)
+    target_paths=set(support['target_paths'])
+    if not target_paths:return dict(valid=False,reason=support['reason'],correspondence=support)
     compact=g['controller'].geometry.width(.85);start=np.asarray(g['robot'].get_joint_positions())[g['arm']]
     def check(q):
         return g['collision'].original.check(g['model'].poses(q,g['base'],width=compact),g['moving'](),False)

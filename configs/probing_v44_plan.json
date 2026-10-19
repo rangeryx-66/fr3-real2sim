@@ -1,0 +1,20 @@
+{
+  "schema": "probing-v44-preparation-only",
+  "research_episode_launched": false,
+  "reference": "169263f",
+  "entry": "scripts/run_informative_probing_v44.py",
+  "estimator": "unchanged production V3.1-common-SG2",
+  "planning": "fresh observed geometry; unchanged ranking plus current articulated-state, measured-finger, complete execution feasibility and bounded candidate fallback",
+  "ordering": ["acceleration-rich opening FIT to a currently supported interval", "overlapping different-speed reverse FIT from actual measured angle", "complete independently declared distinct-profile VALIDATION immediately", "optional larger-angle FIT only after complete VALIDATION", "guarded release and verified parking"],
+  "profiles": {
+    "FIT_acceleration": {"profile":"constant","velocity_program":"plateaus","reference_speed_m_s":0.012,"reference_acceleration_m_s2":0.04,"low_speed_fraction":0.125,"ramp_s":0.45,"plateau_s":0.55},
+    "FIT_reverse": {"profile":"constant","velocity_program":"constant","reference_speed_m_s":0.006,"reference_acceleration_m_s2":0.03},
+    "VALIDATION": {"profile":"constant","velocity_program":"sine","reference_speed_m_s":0.008,"reference_acceleration_m_s2":0.03,"low_speed_fraction":0.35,"period_s":3.1}
+  },
+  "targets": "Agent declares finite endpoints before execution, inside measured supported opportunities; no fixed 13-degree target or successful saved pose",
+  "degraded_transmission": "original physical stop, TRANSMISSION_FAILURE; guarded unload before Agent decision; no loaded continuation",
+  "safe_partial": "preapproved successor only after original stable stopped-state and measured-state path checks",
+  "data": "predeclared qualified FIT intervals; complete VALIDATION excluded from fitting; no retrospective admission",
+  "blind_physics": "Generate and commit a new hidden physically consistent configuration only for a later authorized independent research episode",
+  "remaining_dependencies": ["known hinge/dynamic state", "registered station", "native collision safety model", "simulated wrist mounting", "ideal wrist load cell", "approximate actuators"]
+}

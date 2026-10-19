@@ -158,7 +158,7 @@ def plan_observed(g,folder):
     data=observed_geometry(folder);model=g['model'];inv=np.linalg.inv(model.asset_T)
     selection=dict(mesh='OBSERVED_RGBD_PRIOR_NOT_GT',dimensions_m=data['dimensions_m'],axis_root=(inv[:3,:3]@data['axis_world']).tolist(),outward_normal_root=(inv[:3,:3]@data['normal_world']).tolist(),sections=[dict(x,anchor_root_m=(inv@np.r_[x['anchor_world_m'],1])[:3].tolist()) for x in data['sections']])
     job=copy.deepcopy(g['job']);job['grasp_geometry_candidates']=[selection];job.pop('cached_closing_geometry_audit',None);job['planning_base_seeds']=[]
-    job['collision_export']=str(g['a'].output/'cooked_initial.json');job['visual_geometry_folder']=str(folder);job['visual_allowed_colliders']=list(g['allowed']);out=g['a'].output/'visual_planning'
+    job['collision_export']=str(g.get('planning_collision_export',g['a'].output/'cooked_initial.json'));job['planning_start_state_rad']=float(g.get('planning_start_state_rad',0.));job['visual_geometry_folder']=str(folder);job['visual_allowed_colliders']=list(g['allowed']);out=g['a'].output/'visual_planning'
     source=inspect.getsource(native.plan)
     injection='''
  text=text.replace("allowed=authored_handle_colliders(export,selection)","allowed=job['visual_allowed_colliders']")
@@ -177,7 +177,7 @@ def plan_observed(g,folder):
     ns=dict(native.__dict__,rank_surfaces=rank_surfaces,closing_scene=closing_scene,rescore_geometries=rescore_geometries)
     exec(compile(source,__file__+'::observed_input_only','exec'),ns)
     (g['a'].output/'VISUAL_PLANNING_ADAPTER_EXECUTED.py').write_text(source)
-    candidate=ns['plan'](job,out,wall_s=float(job['visual_planning_wall_s']))
+    candidate=ns['plan'](job,out,wall_s=float(job['visual_planning_wall_s']),candidate_check=g.get('execution_candidate_check'))
     if candidate is None:raise RuntimeError('BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED')
     candidate['classification']='RGBD_SAM3_HANDLE / KNOWN_HINGE_STATE_COLLISION / APPROXIMATE_ACTUATOR_SIMULATION';candidate['contact_score_surface_source']='observed loft and declared prior; API visual/native both use this same geometry';candidate['station_source']='registered oracle station only; no saved grasp transform'
     (g['a'].output/'visual_plan.json').write_text(json.dumps(candidate,indent=2));return candidate,data

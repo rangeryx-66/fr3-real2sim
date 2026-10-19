@@ -93,15 +93,17 @@ def action_check(a):
     for k in ['reference_speed_m_s','reference_acceleration_m_s2']:
         if k in a and (not np.isfinite(a[k]) or a[k]<=0):raise ValueError('positive finite profile required')
 
-def serve(r,operations_factory=ProbingOperations):
+def serve(r,operations_factory=ProbingOperations,initialize=True):
     ops=operations_factory(r);g=r.g;commands=r.output/'agent_commands';responses=r.output/'agent_responses'
     commands.mkdir(exist_ok=True);responses.mkdir(exist_ok=True);trace=[]
     try:
-        from native_g1_wrist_views import survey_candidates,select_route
-        proposal=next(survey_candidates(r.model,g['wrist_config']));route,audit=select_route(r.model,r.solver,r.collision,r.base,np.asarray(r.robot.get_joint_positions())[r.arm],[proposal],g['wrist_config'],g['wrist_X'])
-        if route is None:return dict(status='INITIAL_VIEW_UNAVAILABLE',audit=audit)
-        r.move_path(route['q_path'][1:],'PREGRASP');r.hold(g['wrist_config']['settle_s']);g['wrist_routes'].append(route)
-        first=ops.observe();atomic_json(r.output/'INITIAL_OBSERVATION_READY.json',result_packet(first))
+        if initialize:
+            from native_g1_wrist_views import survey_candidates,select_route
+            from native_g1_hybrid_contact import current_view_scene
+            proposal=next(survey_candidates(r.model,g['wrist_config']));route,audit=select_route(r.model,r.solver,current_view_scene(g),r.base,np.asarray(r.robot.get_joint_positions())[r.arm],[proposal],g['wrist_config'],g['wrist_X'])
+            if route is None:return dict(status='INITIAL_VIEW_UNAVAILABLE',audit=audit)
+            r.move_path(route['q_path'][1:],'PREGRASP');r.hold(g['wrist_config']['settle_s']);g['wrist_routes'].append(route)
+            first=ops.observe();atomic_json(r.output/'INITIAL_OBSERVATION_READY.json',result_packet(first))
         for seq in range(22):
             if g['recovery_state']!='UNLOADED_OBSERVATION':return dict(status='SAFE_UNLOADED_BOUNDARY_UNAVAILABLE',trace=trace)
             # Unloaded communication deadline; independent of all motion/force limits.

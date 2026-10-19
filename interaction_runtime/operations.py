@@ -135,7 +135,7 @@ class Operations:
     def rotate_segment(self,target_deg,max_sim_s=None,action=None,phase='OPEN_CONTINUE',contact_pose=None,prior=None,measure=None):
         from native_g1_ft_identification import kinematic_prior
         from .progress import ProgressClock,hinge_radius
-        from .segments import segment_plan,TransmissionMonitor,slip_stall_confirmed
+        from .segments import segment_plan,TransmissionMonitor,slip_stall_confirmed,classify_outcome,TRANSMISSION_REASONS
         action=dict(action or {})
         if max_sim_s is not None:action.setdefault('max_sim_s',max_sim_s)
         prior=prior or kinematic_prior(self.g);measure=measure or self.r.actual
@@ -186,9 +186,9 @@ class Operations:
         self.r.hold(PARK_DEFINITION['stationary_hold_s'])
         stopped_q=np.asarray(self.r.robot.get_joint_positions())[self.r.arm]
         measured_stop=bool(np.max(abs(stopped_q-stopped_begin))<=PARK_DEFINITION['measured_joint_cell_rad'] and np.max(abs(stopped_q-self.r.qtarget[self.r.arm]))<=PARK_DEFINITION['measured_joint_cell_rad'])
-        reached=clock.direction*(target-measure())<=0;failed=reason in ('CONTACT_TRANSMISSION_STALL','SUSTAINED_LOW_TRANSMISSION');ok=reached and not failed and measured_stop
+        reached=clock.direction*(target-measure())<=0;failed=reason in TRANSMISSION_REASONS;ok=reached and not failed and measured_stop
         stable=measured_stop and not failed and (ok or monitor.stable());gain=clock.direction*(measure()-start)
-        status='TARGET_REACHED' if ok else 'TRANSMISSION_FAILURE' if failed else 'SAFE_PARTIAL_PROGRESS' if stable and gain>0 else 'BUDGET_EXHAUSTED'
+        status=classify_outcome(reached,measured_stop,reason,stable,gain)
         # Interrupted FIT ends BEFORE the first suspect full window, not at stop.
         fit_end=min(valid_until,max(0.,monitor.failure['first_suspect_s'])) if monitor.failure else (monitor.valid_until if failed else valid_until)
         return dict(ok=bool(ok),status=status,reason=None if ok else reason,angle_deg=math.degrees(measure()),gain_deg=math.degrees(measure()-start),requested_target_reached=bool(reached),planning=planning,

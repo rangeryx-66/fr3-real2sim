@@ -12,12 +12,13 @@ import native_g1_visual_input as visual
 
 def check_path(g,path):
     samples=0;minimum=float('inf')
+    kwargs=dict(finger_q=np.asarray(g['robot'].get_joint_positions())[g['fingers']].copy()) if g.get('execution_measured_fingers',False) else dict(width=.084)
     for a,b in zip(path,path[1:]):
         a,b=np.asarray(a),np.asarray(b)
         for q in np.linspace(a,b,max(2,int(np.ceil(np.max(abs(b-a))/.025))+1)):
             samples+=1;minimum=min(minimum,g['model'].margin(q))
             if g['model'].margin(q)<=.05:return dict(valid=False,reason='LOW_JOINT_MARGIN',samples=samples)
-            ok,why=g['collision'].check(g['model'].poses(q,g['base'],width=.084),g['moving'](),False)
+            ok,why=g['collision'].check(g['model'].poses(q,g['base'],**kwargs),g['moving'](),False)
             if not ok:return dict(valid=False,reason=why,samples=samples)
     return dict(valid=True,samples=samples,minimum_margin_rad=minimum)
 
@@ -38,17 +39,19 @@ def approach_from(g,start,candidate):
     return dict(audit,preplan=path,approach=approach)
 
 
-def validate_execution(g):
+def validate_execution(g,candidate=None,write=True):
     started=time.perf_counter();p=g['a'].output/'visual_plan.json'
-    if not p.exists():return dict(valid=False,reason='No current visual plan')
-    candidate=json.loads(p.read_text());measured=np.asarray(g['robot'].get_joint_positions())[g['arm']]
+    if candidate is None:
+        if not p.exists():return dict(valid=False,reason='No current visual plan')
+        candidate=json.loads(p.read_text())
+    measured=np.asarray(g['robot'].get_joint_positions())[g['arm']]
     # Include both actual q and the still-active equilibrium command; no reset.
     path=[measured.tolist(),g['qtarget'][g['arm']].tolist()]
     for route in reversed(g['wrist_routes']):path+=list(reversed(route['q_path']))
     path.append(candidate['preplan'][0])
     returning=check_path(g,path);approach=approach_from(g,path[-1],candidate)
     result=dict(valid=returning['valid'] and approach['valid'],return_path=path,return_audit=returning,approach_audit=approach,measured_start_q=measured.tolist(),wall_s=time.perf_counter()-started,source='current episode routes and fresh visual plan; not saved successful views/grasps')
-    observation.write(g['a'].output/'AGENT_EXECUTION_TRANSITION_CHECK.json',result)
+    if write:observation.write(g['a'].output/'AGENT_EXECUTION_TRANSITION_CHECK.json',result)
     return result
 
 

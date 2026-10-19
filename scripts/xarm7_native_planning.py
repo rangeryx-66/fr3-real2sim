@@ -75,11 +75,11 @@ def common_quality(model,surfaces,T,base,tangent):
  best=max(samples,key=lambda s:min(s[k]['bilateral_score'] for k in ['visual','native']))
  return {k:{'best_common_pose_aperture':best[k],'samples':[s[k] for s in samples]} for k in ['visual','native']}|{'score':min(best[k]['bilateral_score'] for k in best),'classification':'NATIVE_GEOMETRY_RANK_ONLY','same_aperture_across_visual_native_and_both_fingers':True}
 
-def plan(job,output,wall_s=300):
+def plan(job,output,wall_s=300,candidate_check=None):
  text=Path(shared.__file__).read_text().split("if __name__=='__main__':",1)[0]
  text=text.replace('np.linspace(.1,0.,41)','np.linspace(.084,.001641,41)').replace('min(.1,float(selection', 'min(.084,float(selection').replace('width=.1','width=.084').replace('np.clip(quality[\'patch\'][\'native\'][\'best_common_pose_aperture\'][\'common_aperture_m\'],0,.1)','np.clip(quality[\'patch\'][\'native\'][\'best_common_pose_aperture\'][\'common_aperture_m\'],.001641,.084)')
  old="flip=q.copy();flip[3]+=np.pi if q[3]<0 else -np.pi;flip[4]*=-1;flip[5]+=np.pi if q[5]<0 else -np.pi\n            qf=model.ik(g['T'],base,flip)"
  text=text.replace(old,"qf=model.ik(g['T'],base,model.rng.uniform(model.limits[:,0]+.05,model.limits[:,1]-.05))")
  ns=dict(shared.__dict__);exec(compile(text,str(shared.__file__)+'::native_geometry_adapter','exec'),ns)
  ns['Model']=NativeModel;ns['PinkIK']=lambda ignored,home:RobotPinkIK(configuration());ns['physical_scene_class']=lambda root:lambda export,model,allowed:scene_factory(root,export,model,allowed);ns['common_contact_quality']=common_quality
- return ns['plan'](job,output,wall_s=wall_s)
+ return ns['plan'](job,output,wall_s=wall_s,candidate_check=candidate_check)

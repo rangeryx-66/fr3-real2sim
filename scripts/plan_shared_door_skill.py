@@ -44,7 +44,7 @@ def closing_quality(model,sc,T,base,width):
             'rank':float(pad)-float(root_contacts>0)*2-float(other is not None)*2}
 
 
-def plan(job,output,wall_s=600):
+def plan(job,output,wall_s=600,candidate_check=None):
     output=Path(output);output.mkdir(parents=True,exist_ok=True);started=time.time()
     source=json.loads((Path(job['source'])/'report.json').read_text())
     model=Model(ROOT/'config/piper.urdf',job['asset_root'],source);solver=PinkIK(model.urdf,model.home);model.ik=solver.solve
@@ -52,7 +52,7 @@ def plan(job,output,wall_s=600):
     selection=job['grasp_geometry_candidates'][0];allowed=authored_handle_colliders(export,selection)
     surfaces=handle_surfaces(model,export,allowed,selection)
     sc0=physical_scene_class(ROOT)(export,model,allowed);goal=float(job['benchmark_goal_rad'])
-    joint=model.manifest['joint_name'];link=model.manifest['moving_link'];M0=model.asset_T@model.asset.root_to_link(link,{joint:0.})
+    joint=model.manifest['joint_name'];link=model.manifest['moving_link'];start_state=float(job.get('planning_start_state_rad',0.));M0=model.asset_T@model.asset.root_to_link(link,{joint:start_state})
     def delta(s):return model.asset_T@model.asset.root_to_link(link,{joint:float(s)})@np.linalg.inv(M0)
     width=min(.1,float(selection['dimensions_m'][1]));P=model.poses(model.home,initial,width=width)
     offset=np.mean([(np.linalg.inv(P['tcp_link'])@P[n]@np.r_[model.pads[n].mean(0),1])[:3] for n in ('gripper_link1','gripper_link2')],axis=0)
@@ -66,7 +66,7 @@ def plan(job,output,wall_s=600):
             for roll,pitch in [(r,p) for r in (0.,180.) for p in (0.,-15.,15.)]:
                 T=E.copy();T[:3,:3]=E[:3,:3]@Rotation.from_euler('zx',[roll,pitch],degrees=True).as_matrix();T[:3,3]=anchor+normal*insertion-T[:3,:3]@offset
                 quality=closing_quality(model,sc0,T,initial,width)
-                tangent=(delta(1e-4)@T)[:3,3]-T[:3,3]
+                tangent=(delta(start_state+1e-4)@T)[:3,3]-T[:3,3]
                 quality['patch']=common_contact_quality(model,surfaces,T,initial,tangent)
                 quality['physical_aperture_m']=float(np.clip(quality['patch']['native']['best_common_pose_aperture']['common_aperture_m'],0,.1))
                 quality['support_score']=quality['patch']['score']/max(1.,1+quality['root_contact_count']) if quality['non_handle_closing_collision'] is None else 0.
@@ -86,7 +86,7 @@ def plan(job,output,wall_s=600):
     def arc(T,base,sc,seed,spacing=3,grasp_width=None):
         current_width=width if grasp_width is None else grasp_width
         path=[];reason=None
-        for s in np.linspace(0,goal,int(np.ceil(np.rad2deg(goal)/spacing))+1):
+        for s in np.linspace(start_state,goal,int(np.ceil(abs(np.rad2deg(goal-start_state))/spacing))+1):
             q=model.ik(delta(s)@T,base,seed)
             if q is None:reason='NO_CONTINUOUS_PINK_IK';break
             ok,reason=sc.check(model.poses(q,base,width=current_width),delta(s)@sc.moving_reference,True)
@@ -113,25 +113,28 @@ def plan(job,output,wall_s=600):
     # Contact quality first, then achieved interval and worst margin. No larger
     # safety margin is imposed; the original 0.05 rad bound remains the only one.
     ranked.sort(key=lambda r:joint_candidate_score(r[0]['contact_support'],r[0]['reached_rad'],goal,r[0]['min_arc_margin_rad'],r[0]['continuity_rad']),reverse=True)
-    best=None
+    best=None;execution_audit=[];approach_audit=[]
     for e,path,g in ranked[:24]:
         if time.time()-started>wall_s:break
         base=e['base'];T=g['T'];sc=physical_scene_class(ROOT)(at_base(export,initial,base),model,allowed)
+        report=dict(family=[g['section'],g['insertion_m'],g['roll'],g['pitch']],branch=e['branch'],valid=False);approach_audit.append(report)
         fine,reason=arc(T,base,sc,np.array(path[0]['q']),spacing=1,grasp_width=g['contact']['physical_aperture_m'])
-        if not fine:continue
+        if not fine:report.update(stage='opening_arc',reason=reason);continue
         pre=T.copy();pre[:3,3]-=.04*T[:3,2];seed=model.ik(pre,base,np.array(fine[0]['q']),starts=2)
-        if seed is None:continue
+        if seed is None:report.update(stage='pregrasp_IK',reason='NO_PREGRASP_IK');continue
         view=copy.copy(model)
         def free_check(q,b):
             P=model.poses(q,b,width=.1);ok,why=sc.check(P,sc.moving_reference,False)
             if ok:ok,why=camera_clearance(sc,P,cal)
             return ok,why,None
         view.check=free_check;free=Model.joint_plan(view,model.home,seed,base,iterations=600)
-        if free is None:continue
+        if free is None:report.update(stage='free_route',reason='NO_CURRENT_SCENE_FREE_ROUTE');continue
         approach=[]
         for f in np.linspace(0,1,21):
             X=pre.copy();X[:3,3]=(1-f)*pre[:3,3]+f*T[:3,3];seed=model.ik(X,base,seed)
-            if seed is None or not free_check(seed,base)[0]:break
+            if seed is None:report.update(stage='approach',reason='NO_APPROACH_IK');break
+            valid,why,_=free_check(seed,base)
+            if not valid:report.update(stage='approach',reason=why);break
             approach.append(seed.tolist())
         if len(approach)!=21:continue
         min_margin=min([p['margin_rad'] for p in fine]+[model.margin(np.array(q)) for q in approach+free])
@@ -139,9 +142,17 @@ def plan(job,output,wall_s=600):
         continuity=float(np.max(abs(np.diff(np.array([p['q'] for p in fine]),axis=0)))) if len(fine)>1 else 0.
         key=joint_candidate_score(g['contact']['support_score'],fine[-1]['state'],goal,min_margin,continuity)
         candidate['shared_selection_utility']=key
+        if candidate_check is not None:
+            feasibility=candidate_check(candidate)
+            execution_audit.append(dict(family=[g['section'],g['insertion_m'],g['roll'],g['pitch']],branch=e['branch'],utility=key,**feasibility))
+            if not feasibility['valid']:report.update(stage='execution_callback',reason=feasibility.get('reason'));continue
+            candidate['execution_feasibility']=feasibility
+        report.update(valid=True,stage='complete_approach')
         if best is None or key>best[0]:best=(key,candidate)
         print('APPROACH_OK',model.manifest['asset_id'],key,base,flush=True)
     (output/'candidate_audit.json').write_text(json.dumps(audit,indent=2))
+    (output/'candidate_approach_audit.json').write_text(json.dumps(approach_audit,indent=2))
+    if candidate_check is not None:(output/'execution_candidate_audit.json').write_text(json.dumps(execution_audit,indent=2))
     if best:(output/'candidate.json').write_text(json.dumps(best[1],indent=2))
     summary={'asset_id':model.manifest['asset_id'],'oracle_handle':selection['mesh'],'found':best is not None,'wall_s':time.time()-started,'checked_arc_branches':len(audit),'target_rad':goal,'planned_reached_rad':best[1]['planned_reached_state'] if best else None,'minimum_approach_arc_margin_rad':best[1]['minimum_approach_arc_margin_rad'] if best else None,'blocker':None if best else 'BOUNDED_ORACLE_HANDLE_APPROACH_SEARCH_EXHAUSTED','new_execution_gates':False}
     (output/'planning_summary.json').write_text(json.dumps(summary,indent=2));print(json.dumps(summary),flush=True)
