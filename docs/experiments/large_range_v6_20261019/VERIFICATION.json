@@ -1,0 +1,74 @@
+{
+  "status": "PASS_OFFLINE",
+  "synthetic": [
+    {
+      "varying": false,
+      "parameters": [
+        0.30001357913634136,
+        0.11995145955893176
+      ],
+      "control_max_error_nm": 0.0020578562767127953,
+      "FIT_coverage_deg": [
+        1.069179741997319,
+        42.38997616061914
+      ],
+      "selected": "constant"
+    },
+    {
+      "varying": true,
+      "parameters": [
+        0.30001357843879367,
+        0.11995583569776325
+      ],
+      "control_max_error_nm": 0.002057178102273717,
+      "FIT_coverage_deg": [
+        1.069179741997319,
+        42.38997616061914
+      ],
+      "selected": "local_angle_coulomb"
+    }
+  ],
+  "async_worker": {
+    "worker_script": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/scripts/update_probing_v6_model.py",
+    "worker_sha256": "a09d8431e8809c5d003559e6c9a9f63db40d237340d23e879e0457efe139be80",
+    "returncode": 0,
+    "estimator_ready": true,
+    "loaded_sources": {
+      "scripts/update_probing_v6_model.py": "a09d8431e8809c5d003559e6c9a9f63db40d237340d23e879e0457efe139be80",
+      "scripts/xarm_ft_v6_estimator.py": "c74806995ef64aab462e88f44f95f2f68b8bf0bcfcedcb7c26a270767b6154f8",
+      "scripts/update_probing_v31_model.py": "01cc3021e562965193daf8ee8ddf192b402f8f9dc99faa74935bb0715f93f6cc",
+      "scripts/xarm_ft_v31_estimator.py": "b58507fc80954116d36c066146a45e6acafe77cf95937fb661e565eb146523dc"
+    },
+    "wall_s": 3.8248571769800037
+  },
+  "VALIDATION_mutation_FIT_identical": true,
+  "production_operations_identity": true,
+  "no_fixed_camera_read_by_online_consumers": true,
+  "wall_s": 10.361027779988945,
+  "configuration": {
+    "domain_deg": [
+      -5.0,
+      50.0
+    ],
+    "reported_domain_deg": [
+      0.0,
+      45.0
+    ],
+    "spline_degree": 3,
+    "resolutions_deg": [
+      5.0,
+      10.0,
+      15.0
+    ],
+    "smoothness": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "ridge": 0.001,
+    "minimum_FIT_trajectories": 3,
+    "minimum_cv_improvement_fraction": 0.1,
+    "selection": "complete FIT-trajectory CV only; no VALIDATION/truth",
+    "uncertainty": "conditional Bartlett-HAC/iid floor; excludes model selection and systematic error"
+  }
+}

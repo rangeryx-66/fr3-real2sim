@@ -104,7 +104,7 @@ def serve(r,operations_factory=ProbingOperations,initialize=True):
             if route is None:return dict(status='INITIAL_VIEW_UNAVAILABLE',audit=audit)
             r.move_path(route['q_path'][1:],'PREGRASP');r.hold(g['wrist_config']['settle_s']);g['wrist_routes'].append(route)
             first=ops.observe();atomic_json(r.output/'INITIAL_OBSERVATION_READY.json',result_packet(first))
-        for seq in range(22):
+        for seq in range(int(r.job.get('maximum_agent_operations',22))):
             if g['recovery_state']!='UNLOADED_OBSERVATION':return dict(status='SAFE_UNLOADED_BOUNDARY_UNAVAILABLE',trace=trace)
             # Unloaded communication deadline; independent of all motion/force limits.
             resources=r.episode_budget.remaining(r.tick*r.dt)

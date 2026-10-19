@@ -19,14 +19,14 @@ class OperationsV5(OperationsV44):
         started=time.perf_counter();folder=self.r.output/'model';folder.mkdir(exist_ok=True)
         if not ready.wait(30):return dict(error='numeric export not ready')
         if not (self.r.output/'identification_input.json').exists():return dict(error='no interaction prior yet')
-        source=self.r.root/'scripts/update_probing_v5_model.py';status=dict(worker_script=str(source),worker_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
+        source=self.r.root/getattr(self,'worker_script','scripts/update_probing_v5_model.py');status=dict(worker_script=str(source),worker_sha256=hashlib.sha256(source.read_bytes()).hexdigest())
         try:
             command=[sys.executable,str(source),str(self.r.output)]
             if self.r.job.get('allow_interrupted_fit'):command.append('--allow-interrupted-fit')
             with (folder/'worker.log').open('w') as log:p=subprocess.run(command,stdout=log,stderr=subprocess.STDOUT,timeout=60)
             from xarm_ft_v5_estimator import VERSION
             r=json.loads((folder/'estimate.json').read_text()) if p.returncode==0 else {}
-            status.update(returncode=p.returncode,estimator_ready=r.get('estimator_version')==VERSION,loaded_sources=r.get('source_sha256',{}))
+            status.update(returncode=p.returncode,estimator_ready=r.get('estimator_version')==getattr(self,'worker_version',VERSION),loaded_sources=r.get('source_sha256',{}))
         except Exception as e:status.update(error=repr(e),estimator_ready=False)
         status['wall_s']=time.perf_counter()-started;atomic_json(folder/'WORKER_STATUS.json',result_packet(status));return status
 
