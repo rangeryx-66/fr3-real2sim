@@ -1,0 +1,1114 @@
+{
+  "experiment": "V4.5",
+  "reference": "bcf5dda",
+  "registration": "b76148b",
+  "assessment": {
+    "status": "PASS_LIMITED_BLIND_VALIDATION",
+    "basis": "Complete fresh physical FIT/reverse FIT/independent validation; interpretable full-rank estimates with small post-exit authored errors and free held-out prediction",
+    "limitations": [
+      "One development cabinet and one new physical configuration, 0–5.57deg only",
+      "Authored inertia is not independently measured effective PhysX inertia",
+      "Conditional statistical uncertainty misses damping/friction systematic bias",
+      "Legacy V3 slightly lower short-angle RMSE; no uniform superiority claim",
+      "Ideal virtual F/T, approximate actuators, registered station and known hinge/state"
+    ]
+  },
+  "authored_reference_I_b_C": [
+    0.11694827083790905,
+    0.34033872925713904,
+    0.033611969186850235
+  ],
+  "authored_configuration": {
+    "case": 0,
+    "asset": "45936",
+    "seed": 2958019966,
+    "mass_scale": 0.8856337529933067,
+    "density_gradient": [
+      0.19177946560991221,
+      0.26725530965008165,
+      0.2492009980735572
+    ],
+    "tau_c": 0.033611969186850235,
+    "b": 0.34033872925713904,
+    "spring": false,
+    "law": {
+      "family": "constant",
+      "base_nm": 0.033611969186850235,
+      "amplitude_nm": 0.0,
+      "center_rad": 0.0,
+      "width_rad": 1.0
+    }
+  },
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_V45_ACCEL_OPEN",
+      "status": "TARGET_REACHED",
+      "requested_target_deg": 5.5,
+      "start_deg": -3.28977187589248e-07,
+      "end_deg": 5.568105534517326,
+      "gain_deg": 5.568105865036217,
+      "duration_s": 7.445833333333326,
+      "records": 1788,
+      "continuous_240Hz": true,
+      "max_TCP_mm_s": 11.346498217664816,
+      "minimum_joint_margin_rad": 1.0034203376770021,
+      "max_handle_relative_slip_mm": 0.6889187097549438,
+      "pad_peaks_n": [
+        1.4538723230361938,
+        0.5479437708854675
+      ],
+      "normal_report_below_0p05N_fraction": [
+        0.0,
+        0.14429530201342283
+      ]
+    },
+    {
+      "id": 2,
+      "role": "FIT_V45_REVERSE_SPEED",
+      "status": "TARGET_REACHED",
+      "requested_target_deg": 2.0,
+      "start_deg": 5.568105534517326,
+      "end_deg": 1.9718254541809639,
+      "gain_deg": -3.5962800803363617,
+      "duration_s": 5.008333333333326,
+      "records": 1203,
+      "continuous_240Hz": true,
+      "max_TCP_mm_s": 7.108072009883844,
+      "minimum_joint_margin_rad": 1.0219517793655397,
+      "max_handle_relative_slip_mm": 0.7014750242233276,
+      "pad_peaks_n": [
+        0.8607310652732849,
+        1.1901839971542358
+      ],
+      "normal_report_below_0p05N_fraction": [
+        0.021612635078969242,
+        0.0
+      ]
+    },
+    {
+      "id": 3,
+      "role": "VALIDATION_V45_DISTINCT_PROFILE",
+      "status": "TARGET_REACHED",
+      "requested_target_deg": 4.5,
+      "start_deg": 1.9718416758802426,
+      "end_deg": 4.532356438869551,
+      "gain_deg": 2.5605309846885875,
+      "duration_s": 4.416666666666686,
+      "records": 1061,
+      "continuous_240Hz": true,
+      "max_TCP_mm_s": 7.809182748043346,
+      "minimum_joint_margin_rad": 1.021978482246399,
+      "max_handle_relative_slip_mm": 1.121325969696045,
+      "pad_peaks_n": [
+        1.6371451616287231,
+        0.4892704486846924
+      ],
+      "normal_report_below_0p05N_fraction": [
+        0.0,
+        0.294062205466541
+      ]
+    }
+  ],
+  "opening_travel_deg": 8.128636849724804,
+  "closing_travel_deg": 3.5962800803363617,
+  "comparison": {
+    "V31_online": {
+      "parameters": [
+        0.11696572720597245,
+        0.354059295211591,
+        0.033455244321605675
+      ],
+      "conditional_std": [
+        0.0004008165787054316,
+        0.0017997194168584468,
+        2.3420907280491722e-05
+      ],
+      "absolute_error": [
+        1.745636806339823e-05,
+        0.01372056595445198,
+        -0.00015672486524456047
+      ],
+      "relative_error_percent": [
+        0.014926572183004971,
+        4.031444198078771,
+        -0.46627695144345616
+      ],
+      "common_V31_heldout_torque_rmse_nm": 4.9782602486683446e-05,
+      "common_V31_heldout_motion": {
+        "VALIDATION_V45_DISTINCT_PROFILE_03#0": {
+          "status": "predicted",
+          "samples": 819,
+          "duration_s": 3.4083333333333314,
+          "angle_rmse_deg": 0.038326948726091194,
+          "final_error_deg": 0.05422030758942834,
+          "velocity_rmse_rad_s": 0.0005035660198374286,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.3938614066289129,
+            5.252705797468213
+          ],
+          "measured_validation_outside_training_range_fraction": 0.0,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee"
+        }
+      },
+      "full_segment_boundary_sensitivity": {
+        "VALIDATION_V45_DISTINCT_PROFILE_03#0": {
+          "status": "predicted",
+          "samples": 1061,
+          "duration_s": 4.416666666666686,
+          "angle_rmse_deg": 0.02083670773180601,
+          "final_error_deg": -0.0033525121930667026,
+          "velocity_rmse_rad_s": 0.001091960773013301,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.3938614066289129,
+            5.252705797468213
+          ],
+          "measured_validation_outside_training_range_fraction": 0.0,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee",
+          "includes_unreliable_filter_and_derivative_edges": true
+        }
+      }
+    },
+    "V3_offline_same_intervals": {
+      "parameters": [
+        0.16330543877149686,
+        0.3680015012878822,
+        0.033268159474180756
+      ],
+      "conditional_std": [
+        0.009857714982195512,
+        0.03559014284776841,
+        0.0005443531785214649
+      ],
+      "absolute_error": [
+        0.04635716793358781,
+        0.027662772030743188,
+        -0.00034380971266947946
+      ],
+      "relative_error_percent": [
+        39.63903664538921,
+        8.128011787292921,
+        -1.0228788166448344
+      ],
+      "common_V31_heldout_torque_rmse_nm": 0.000391475549169086,
+      "common_V31_heldout_motion": {
+        "VALIDATION_V45_DISTINCT_PROFILE_03#0": {
+          "status": "predicted",
+          "samples": 819,
+          "duration_s": 3.4083333333333314,
+          "angle_rmse_deg": 0.03350452748241666,
+          "final_error_deg": 0.059447849264613946,
+          "velocity_rmse_rad_s": 0.0009137705224048601,
+          "state_trajectory_forcing": false,
+          "supported_inertia": true,
+          "prediction_outside_configured_0_to_20_domain": false,
+          "training_angle_range_deg": [
+            0.3938614066289129,
+            5.252705797468213
+          ],
+          "measured_validation_outside_training_range_fraction": 0.0,
+          "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+          "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee"
+        }
+      },
+      "full_segment_boundary_sensitivity": null
+    }
+  },
+  "online_model": {
+    "parameters": [
+      0.11696572720597245,
+      0.354059295211591,
+      0.033455244321605675
+    ],
+    "conditional_std": [
+      0.0004008165787054316,
+      0.0017997194168584468,
+      2.3420907280491722e-05
+    ],
+    "supported": [
+      true,
+      true,
+      true
+    ],
+    "information": {
+      "singular_values": [
+        0.440063148216804,
+        0.2517380266588881,
+        0.01749611621157171
+      ],
+      "condition": 25.152047625618295,
+      "logdet_regularized_fisher": 28.954575549388615,
+      "velocity_sign_correlation": 0.8880107718362036
+    },
+    "training_bins": 95,
+    "validation_bins": 35,
+    "version": "V3.1-common-SG2",
+    "validation_excluded": true,
+    "unchanged_after_validation": true,
+    "tool_compensation_count": 1,
+    "worker_wall_s": 1.7254199560265988,
+    "posthoc_error_over_conditional_std": [
+      0.04355201104649735,
+      7.623725023983082,
+      -6.691664988362912
+    ],
+    "total_uncertainty_calibration": "not established"
+  },
+  "quality": [
+    {
+      "id": 1,
+      "role": "FIT_V45_ACCEL_OPEN",
+      "records": 1788,
+      "blocks": [
+        {
+          "records": 1656,
+          "valid": 1414,
+          "bins": 60,
+          "first_step": 34067,
+          "last_step": 35722,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.004166666666662877,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333330984,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          }
+        }
+      ],
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS",
+        "declared_intervals_s": [
+          [
+            0.55,
+            60.0
+          ]
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "role": "FIT_V45_REVERSE_SPEED",
+      "records": 1203,
+      "blocks": [
+        {
+          "records": 1071,
+          "valid": 829,
+          "bins": 35,
+          "first_step": 35855,
+          "last_step": 36925,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.004166666666662877,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333330984,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          }
+        }
+      ],
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS",
+        "declared_intervals_s": [
+          [
+            0.55,
+            60.0
+          ]
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "role": "VALIDATION_V45_DISTINCT_PROFILE",
+      "records": 1061,
+      "blocks": [
+        {
+          "records": 1061,
+          "valid": 819,
+          "bins": 35,
+          "first_step": 36926,
+          "last_step": 37986,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.004166666666662877,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333330984,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          }
+        }
+      ],
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION"
+      }
+    }
+  ],
+  "excitation": [
+    {
+      "segment": "FIT_V45_ACCEL_OPEN_01#0",
+      "duration_s": 6.895833333333343,
+      "angle_range_deg": [
+        0.02401530197246854,
+        5.568105534517326
+      ],
+      "qdd_rms": 0.032938335544016026,
+      "qd_rms": 0.017208328862433613,
+      "velocity_quantiles": [
+        0.003443152422551066,
+        0.014850889798253775,
+        0.02558773513883352
+      ],
+      "regressor_singular_values": [
+        37.60718563602531,
+        1.2385226995499705,
+        0.3434349832753284
+      ],
+      "processing": {
+        "version": "V3.1-common-SG2",
+        "window": 121,
+        "dt_s": 0.004166666666662877,
+        "boundary_exclusion_samples": 121,
+        "centered_future_support_samples": 62,
+        "filter_lookahead_s": 0.2583333333330984,
+        "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+        "tool_compensation_count": 1,
+        "reference": "fixed world hinge origin before filtering",
+        "friction_basis": "K(sign(native_velocity))",
+        "finite_difference_error_remains": true,
+        "availability": "completed segment plus worker latency; not zero-latency online state"
+      }
+    },
+    {
+      "segment": "FIT_V45_REVERSE_SPEED_02#0",
+      "duration_s": 4.458333333333314,
+      "angle_range_deg": [
+        1.9707810755681867,
+        5.32059399314805
+      ],
+      "qdd_rms": 0.0004450082290062717,
+      "qd_rms": 0.014096712607419064,
+      "velocity_quantiles": [
+        -0.014166557788848877,
+        -0.014107917435467243,
+        -0.014009933359920979
+      ],
+      "regressor_singular_values": [
+        28.795066563491005,
+        0.012771786444780688,
+        0.000857313615865954
+      ],
+      "processing": {
+        "version": "V3.1-common-SG2",
+        "window": 121,
+        "dt_s": 0.004166666666662877,
+        "boundary_exclusion_samples": 121,
+        "centered_future_support_samples": 62,
+        "filter_lookahead_s": 0.2583333333330984,
+        "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+        "tool_compensation_count": 1,
+        "reference": "fixed world hinge origin before filtering",
+        "friction_basis": "K(sign(native_velocity))",
+        "finite_difference_error_remains": true,
+        "availability": "completed segment plus worker latency; not zero-latency online state"
+      }
+    },
+    {
+      "segment": "VALIDATION_V45_DISTINCT_PROFILE_03#0",
+      "duration_s": 4.416666666666686,
+      "angle_range_deg": [
+        1.9718416758802426,
+        4.532356438869551
+      ],
+      "qdd_rms": 0.00879044945708519,
+      "qd_rms": 0.01225075486019655,
+      "velocity_quantiles": [
+        0.006633006129413843,
+        0.01123130414634943,
+        0.017727812752127647
+      ],
+      "regressor_singular_values": [
+        28.620154376308268,
+        0.2486440017570027,
+        0.10555444398372622
+      ],
+      "processing": {
+        "version": "V3.1-common-SG2",
+        "window": 121,
+        "dt_s": 0.004166666666662877,
+        "boundary_exclusion_samples": 121,
+        "centered_future_support_samples": 62,
+        "filter_lookahead_s": 0.2583333333330984,
+        "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+        "tool_compensation_count": 1,
+        "reference": "fixed world hinge origin before filtering",
+        "friction_basis": "K(sign(native_velocity))",
+        "finite_difference_error_remains": true,
+        "availability": "completed segment plus worker latency; not zero-latency online state"
+      }
+    }
+  ],
+  "first_grasp": true,
+  "physical_acquisitions": 1,
+  "recovery_acquisitions": 0,
+  "automatic_family": [
+    0.3,
+    0.0,
+    180.0,
+    0.0
+  ],
+  "execution_candidate_checks": {
+    "candidates": [
+      {
+        "family": [
+          0.3,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "valid": false,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": "EXECUTION_TIMED_ROUTE:MOTION_PATH_UNAVAILABLE:DANGEROUS_GEOMETRY_COLLISION:gripper_link2:/World/articulated_pose/asset/Geometry/l_world/l_3/abstract_3_2/l_2/tn__l_2_original39_aL/tn__l_2_original39_aL",
+        "return_timed_samples": 12940,
+        "wall_s": 1.7573962090536952
+      },
+      {
+        "family": [
+          0.3,
+          0.0,
+          180.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3421,
+        "approach_timed_samples": 901,
+        "wall_s": 2.6135424920357764
+      },
+      {
+        "family": [
+          -0.3,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 2538,
+        "approach_timed_samples": 901,
+        "wall_s": 2.5342080211266875
+      },
+      {
+        "family": [
+          -0.3,
+          0.0,
+          180.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3364,
+        "approach_timed_samples": 900,
+        "wall_s": 2.7460346568841487
+      },
+      {
+        "family": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 2685,
+        "approach_timed_samples": 901,
+        "wall_s": 2.472155960975215
+      },
+      {
+        "family": [
+          -0.3,
+          -0.009374999906867743,
+          0.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 2567,
+        "approach_timed_samples": 901,
+        "wall_s": 2.507294804090634
+      },
+      {
+        "family": [
+          0.0,
+          0.0,
+          180.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3386,
+        "approach_timed_samples": 901,
+        "wall_s": 2.5848837250377983
+      },
+      {
+        "family": [
+          -0.3,
+          -0.009374999906867743,
+          180.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3356,
+        "approach_timed_samples": 900,
+        "wall_s": 2.5669013019651175
+      },
+      {
+        "family": [
+          0.0,
+          -0.009374999906867743,
+          0.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 2718,
+        "approach_timed_samples": 900,
+        "wall_s": 2.5064900380093604
+      },
+      {
+        "family": [
+          0.3,
+          -0.009374999906867743,
+          180.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3416,
+        "approach_timed_samples": 901,
+        "wall_s": 2.6984600420109928
+      },
+      {
+        "family": [
+          0.0,
+          -0.009374999906867743,
+          180.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3378,
+        "approach_timed_samples": 901,
+        "wall_s": 2.7417091401293874
+      },
+      {
+        "family": [
+          0.3,
+          0.009374999906867743,
+          180.0,
+          0.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3427,
+        "approach_timed_samples": 901,
+        "wall_s": 2.746385364793241
+      },
+      {
+        "family": [
+          0.0,
+          0.0,
+          0.0,
+          -15.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 2657,
+        "approach_timed_samples": 900,
+        "wall_s": 2.6882141169626266
+      },
+      {
+        "family": [
+          0.0,
+          0.0,
+          180.0,
+          15.0
+        ],
+        "valid": true,
+        "return_valid": true,
+        "approach_valid": true,
+        "actual_door_state_rad": -3.700743608425998e-18,
+        "measured_fingers_rad": [
+          0.057757582515478134,
+          0.05775758624076843,
+          0.057757578790187836,
+          0.05775760859251022,
+          0.05775759369134903,
+          0.05775759741663933
+        ],
+        "reason": null,
+        "return_timed_samples": 12940,
+        "preplan_timed_samples": 3356,
+        "approach_timed_samples": 901,
+        "wall_s": 2.5433583969715983
+      }
+    ],
+    "weights_changed": false,
+    "scene": "measured current moving body and released fingers",
+    "native_use": "collision safety only"
+  },
+  "safe_park": {
+    "reached": true,
+    "region": "native_rest",
+    "measured_q": [
+      0.0008333223522640765,
+      -0.5007293224334717,
+      -0.0008404340478591621,
+      1.0011826753616333,
+      0.0020023540128022432,
+      0.5020001530647278,
+      0.00370862171985209
+    ],
+    "command_q": [
+      0.0,
+      -0.5,
+      0.0,
+      1.0,
+      0.0,
+      0.5,
+      0.0
+    ],
+    "joint_cell_error_rad": 0.00370862171985209,
+    "measured_collision_check": {
+      "valid": true,
+      "samples": 2,
+      "measured_fingers_rad": [
+        0.060127489268779755,
+        0.060127489268779755,
+        0.060127489268779755,
+        0.060127485543489456,
+        0.060127489268779755,
+        0.060127489268779755
+      ]
+    },
+    "unloaded": true,
+    "pad_loads_n": [
+      0.0,
+      0.0
+    ],
+    "moving_pose": [
+      [
+        0.996872864813994,
+        -2.6321176578580907e-08,
+        0.07902209436316024,
+        0.48273342847824097
+      ],
+      [
+        0.07902209436316024,
+        -1.0416058571216524e-09,
+        -0.9968728648139942,
+        -0.06919637322425842
+      ],
+      [
+        2.6321176578580907e-08,
+        0.9999999999999998,
+        1.0416058571216524e-09,
+        0.502672553062439
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "door_angle_deg": 4.532356438869551
+  },
+  "hard_stop_samples": 0,
+  "load_warning_samples": 0,
+  "Agent_trace": [
+    {
+      "operation": "evaluate_view",
+      "wall_s": 0.21548631601035595,
+      "unloaded_wait_s": 55.10083860880695,
+      "reason": "Inspected fresh obs00 RGB/depth/local cloud: gripper occludes upper bar, only lower stem/mount visible and no accepted SAM handle. Pixel344,240 is an observed-depth view cue only, not a mask or grasp. Request closer elevated lateral camera framing to reveal full length; no archived camera/grasp coordinates."
+    },
+    {
+      "operation": "move_and_observe",
+      "wall_s": 50.80261499597691,
+      "unloaded_wait_s": 11.547486405121163,
+      "reason": "Execute the just-validated fresh-image framing correction with real arm actuators; inspect newly captured RGB-D before choosing further observation or planning."
+    },
+    {
+      "operation": "evaluate_view",
+      "wall_s": 0.12397472816519439,
+      "unloaded_wait_s": 30.795316596981138,
+      "reason": "Fresh obs01 RGB/SAM/depth/cloud inspected: full bar and both ends recovered, 295.88mm measured length, but only one dominant side surface and hidden rear uncertain. Request opposite lateral view to measure alternate finger support before unchanged robust ranking. Target derives only from current cue cloud/panel, not archived viewpoints."
+    },
+    {
+      "operation": "move_and_observe",
+      "wall_s": 37.63782326201908,
+      "unloaded_wait_s": 0.37638598098419607,
+      "reason": "Execute the validated complementary wrist motion, capture fresh RGB-D and inspect incremental measured support before planning."
+    },
+    {
+      "operation": "build_geometry",
+      "wall_s": 266.96827647602186,
+      "unloaded_wait_s": 55.37836135388352,
+      "reason": "Inspected fresh second-side RGB, complete SAM handle mask, metric depth, local cloud and accumulated semantic support. Both ends retained, 6710 newly measured voxels, 295.90mm cumulative length. Enough independent views for frozen robust native-G1 ranking with uncertain unseen rear; stop scanning and generate current-state execution-feasible grasp automatically, without GT or historical poses."
+    },
+    {
+      "operation": "validate_execution",
+      "wall_s": 2.513951470842585,
+      "unloaded_wait_s": 41.13869465398602,
+      "reason": "Fresh automatic upper-section roll180 plan selected after roll0 timed-route rejection; independently revalidate full return and approach from actual measured view pose/fingers before any physical grasp approval. No saved grasp used."
+    },
+    {
+      "operation": "attempt_grasp_and_probe",
+      "wall_s": 403.4581703362055,
+      "unloaded_wait_s": 70.40050873882137,
+      "reason": "Explicit Agent approval after actual fresh gripper/observed-geometry board inspection and measured-state full-route check. Automatically selected upper-section roll180 follows rejection of collision-invalid roll0, no saved pose. Predicted contacts near pad edges remain uncertainty, not a new veto. Perpendicular radius .425606m implies about5.45deg over three2s plateau cycles at the existing profile mean, so declare5.5deg opening FIT, overlapping reverse to2deg away from the closed stop, then immediately a complete independent sine-profile validation to4.5deg. No optional range expansion before validation. All successors bounded and rechecked; stop/degraded transmission leads to original guarded unload, no loaded Agent wait."
+    },
+    {
+      "operation": "inspect_contact_result",
+      "wall_s": 0.07945414003916085,
+      "unloaded_wait_s": 69.28703297791071,
+      "reason": "All predeclared physical segments reached their targets and safe unloaded native-rest parking is verified. Inspect actual contact/events and final FIT-only parameter stability/held-out prediction before deciding whether any optional information is needed. Hidden parameters remain unread."
+    },
+    {
+      "operation": "finish",
+      "wall_s": 0.07265021116472781,
+      "unloaded_wait_s": 11.663485019933432,
+      "reason": "Agent inspected actual angle/wrist-torque plot and contact events at verified unloaded park. First automatic grasp + original1s hold completed all three predeclared FIT/FIT/VALIDATION targets, measured direction reversal and distinct validation retained. FIT-only estimates stable after reverse, full-rank condition25.15 and complete held-out predictions available; pad-normal threshold crossings did not cause lost transmission. Do not add optional large-angle actions just to maximize range. End all online decisions now, guarded finish/export, then reveal hidden truth independently. No recovery acquisition needed; no hidden values read for this decision."
+    }
+  ],
+  "completion": {
+    "returncode": 0,
+    "wall_including_init_cleanup_s": 1180.2381736519746,
+    "actor_exited": true
+  },
+  "runtime_profile": {
+    "wall_s": 1177.9677956542,
+    "simulation_s": 182.7,
+    "simulation_per_wall_s": 0.15509761869044572,
+    "cost_wall_s": {
+      "initialization": 20.598597837844864,
+      "trajectory_planning": 8.054709629388526,
+      "actuation": 71.19770343485288,
+      "physics_and_contact_callback": 199.3467528007459,
+      "state_and_FT": 74.81950621982105,
+      "collision_and_safety": 26.73879703017883,
+      "buffered_evidence": 37.273927052505314,
+      "RGBD_SAM3_and_incremental_geometry": 77.59890555613674,
+      "IK_and_view_planning": 0.33920320798642933,
+      "grasp_ranking_and_IK": 265.7806239000056,
+      "Pink_IK": 2.719119237270206,
+      "command_collision_queries": 2.736875438131392,
+      "render_and_video": 0.9596731238998473,
+      "export": 0.035376789048314095
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 20.598597837844864,
+      "trajectory_planning": 8.054709629388526,
+      "actuation": 71.19770343485288,
+      "physics_and_contact_callback": 199.3467528007459,
+      "state_and_FT": 74.81950621982105,
+      "collision_and_safety": 26.73879703017883,
+      "buffered_evidence": 37.273927052505314,
+      "RGBD_SAM3_and_incremental_geometry": 77.59890555613674,
+      "IK_and_view_planning": 0.33920320798642933,
+      "grasp_ranking_and_IK": 265.7806239000056,
+      "Pink_IK": 2.719119237270206,
+      "command_collision_queries": 2.736875438131392,
+      "render_and_video": 0.9596731238998473,
+      "export": 0.035376789048314095
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 14,
+      "actuation": 43848,
+      "physics_and_contact_callback": 43848,
+      "state_and_FT": 43848,
+      "collision_and_safety": 43848,
+      "buffered_evidence": 43848,
+      "RGBD_SAM3_and_incremental_geometry": 3,
+      "IK_and_view_planning": 2,
+      "grasp_ranking_and_IK": 1,
+      "Pink_IK": 5450,
+      "command_collision_queries": 681,
+      "render_and_video": 30,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 21.078532458050177,
+      "PREGRASP": 486.94204416987486,
+      "agent_return_to_execution_start": 0.4392440631054342,
+      "APPROACH": 8.553994287271053,
+      "SLOW_CLOSE": 151.5392238337081,
+      "CENTER": 12.749618868809193,
+      "LOW_PRELOAD": 0.7233629021793604,
+      "FORCE_HOLD": 3.1567372921854258,
+      "OPEN_CONTINUE": 45.74203124339692,
+      "RELEASE": 15.048073996324092,
+      "CLEARANCE_RETREAT": 9.344147861003876,
+      "SAFE_PARK_MOTION": 32.882760281907395
+    },
+    "unaccounted_wall_s": 389.76802439638413,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "storage": {
+    "bytes_by_category": {
+      "source_and_metadata": 19044830,
+      "clips": 94526,
+      "numeric": 4397561,
+      "geometry": 8484711,
+      "observations": 12635159
+    },
+    "total_bytes": 44656787,
+    "budget_bytes": 1000000000
+  },
+  "evidence_issues": [
+    [
+      "record_frame",
+      "IndexError('too many indices for array: array is 0-dimensional, but 1 were indexed')"
+    ]
+  ],
+  "prevalidation_snapshot": {
+    "status": "online FIT-only snapshot, frozen before validation admission",
+    "source_sha256": "67f30d94995b19eeabd8dd9165669fa1f6d4360503a87cf52f87f54c8235cf5b",
+    "parameters": [
+      0.11696572720597245,
+      0.354059295211591,
+      0.033455244321605675
+    ],
+    "conditional_std": [
+      0.0004008165787054316,
+      0.0017997194168584468,
+      2.3420907280491722e-05
+    ],
+    "training_bins": 95,
+    "validation_bins": 0,
+    "heldout_torque_rmse_nm": 4.9782602486683446e-05,
+    "heldout_motion": {
+      "VALIDATION_V45_DISTINCT_PROFILE_03#0": {
+        "status": "predicted",
+        "samples": 819,
+        "duration_s": 3.4083333333333314,
+        "angle_rmse_deg": 0.038326948726091194,
+        "final_error_deg": 0.05422030758942834,
+        "velocity_rmse_rad_s": 0.0005035660198374286,
+        "state_trajectory_forcing": false,
+        "supported_inertia": true,
+        "prediction_outside_configured_0_to_20_domain": false,
+        "training_angle_range_deg": [
+          0.3938614066289129,
+          5.252705797468213
+        ],
+        "measured_validation_outside_training_range_fraction": 0.0,
+        "prediction_input": "measured wrist wrench; one initial state only, not a predicted contact force",
+        "actual_training_domain_predicted_trajectory_check": "not supplied by frozen forward integrator; configured-domain flag is not a training-coverage guarantee"
+      }
+    },
+    "evaluation": "complete independent trajectories only; one native initial state; measured F/T input; no future-state correction",
+    "posthoc_relative_error_percent": [
+      0.014926572183004971,
+      4.031444198078771,
+      -0.46627695144345616
+    ]
+  },
+  "truth_access": {
+    "actor_exited": true,
+    "accessed_UTC": "2026-10-19T04:03:08.145856+00:00",
+    "configuration_commitment_matches": true,
+    "online_model_preserved": true
+  },
+  "online_model_sha256": "9c923b1fa0a71bf8247f281b792a5e25a2410126107b62c159f7eec3c5104977",
+  "numeric_integrity": true,
+  "raw_published": false
+}
