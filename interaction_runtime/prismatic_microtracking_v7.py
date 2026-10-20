@@ -59,12 +59,18 @@ def run(r):
                     displacement=amplitude*(fraction if leg=='out' else 1-fraction)
                     goal=origin.copy();goal[:3,3]+=displacement*direction
                     r.cartesian_step(goal,'CONTACT_PRELOAD')
-                r.stop_command();r.hold(.3)
+                r.stop_command()
+                # A predeclared diagnostic dwell may match the existing finite
+                # breakaway loading horizon; it is not a drawer action timeout.
+                dwell=float(r.job.get('microtracking_dwell_s',.3))
+                for _ in range(int(round(dwell/r.dt))):r.cartesian_step(goal,'CONTACT_PRELOAD')
+                r.stop_command()
                 actual=r.tcp();command=r.rows[-1]['command_TCP']
                 samples.append(dict(axis=name,leg=leg,start_sim_s=start,end_sim_s=r.tick*r.dt,
                     requested_displacement_m=amplitude*(1 if leg=='out' else -1),
                     measured_displacement_m=float((actual[:3,3]-first[:3,3])@direction),
                     commanded_FK_displacement_m=float((command[:3,3]-initial_command[:3,3])@direction),
+                    diagnostic_dwell_s=dwell,
                     raw_pad_loads_n=list(r.rows[-1]['forces_n'].values()),
                     reference_world_direction=direction.tolist()))
     finally:r.record.calibration=False

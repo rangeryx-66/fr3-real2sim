@@ -20,6 +20,21 @@ class PrismaticFeedbackRuntime(RuntimeV7):
             raise ValueError('Unvalidated engineering entry cannot launch registered benchmark')
         super().__init__(job)
         self.measured_rail_feedback=bool(job.get('prismatic_measured_ik_feedback',True))
+        self.integrated_measured_feedback=bool(job.get('prismatic_integrated_ik_feedback',False))
+        if self.integrated_measured_feedback and not self.measured_rail_feedback:raise ValueError('INTEGRAL_FEEDBACK_REQUIRES_MEASURED_IK')
+        self.integral_window_s=float(job['shared_execution']['progress_window_s']) if self.integrated_measured_feedback else None
+        self.integral_initial_error=None;self.integral_limited=False
+        if self.integrated_measured_feedback:
+            if not np.isfinite(self.integral_window_s) or self.integral_window_s<=0:raise ValueError('POSITIVE_MEASURED_PROGRESS_WINDOW_REQUIRED')
+            # Explicit passive recorder seam. Keep original FK command channels;
+            # add the distinct physical pose reference and actual drive target.
+            self._coordinate_fields=self.record.coordinate_fields
+            self.record.coordinate_fields=self.reference_fields
+            self.record.metadata['prismatic_integral_feedback']=dict(
+                window_s=self.integral_window_s,robot_gains_or_friction_changed=False,
+                command_TCP_pose='FK of nominal arm command, including accumulated tracking compensation',
+                physical_reference_TCP_pose='bounded Cartesian reference supplied to measured-state IK',
+                implicit_position_target_arm='actual implicit position target including original robot gravity compensation; not motor effort')
         from agent_command_protocol_v12 import atomic_json
         materials={}
         for label,view in [('left_finger',self.scene['finger_views'][0]),('right_finger',self.scene['finger_views'][1])]:
@@ -49,8 +64,24 @@ class PrismaticFeedbackRuntime(RuntimeV7):
 
     def begin_reference(self):
         super().begin_reference()
+        if getattr(self,'integrated_measured_feedback',False):
+            from interaction_reference_handover import seed_pose
+            self.integral_initial_error=(seed_pose(self.solver,self.base,self.qtarget[self.arm])[:3,3]
+                                         -seed_pose(self.solver,self.base,self.seed)[:3,3])
         if getattr(self,'contact_retention',False):
             self.retention_epoch=self.retention.offset.copy() if self.retention is not None else np.zeros(3)
+
+    def reference_fields(self,row):
+        from .compact_v2 import pose7
+        values=self._coordinate_fields(row)
+        def vector(name):
+            value=row.get(name)
+            return np.full(7,np.nan,dtype=np.float32) if value is None else np.asarray(value,np.float32)
+        values.update(physical_reference_TCP_pose=pose7(self.reference_drive.pose) if self.reference_drive is not None else np.full(7,np.nan),
+            implicit_position_target_arm=vector('actuator_position_target_arm'),
+            actuator_gravity_bias_nm=vector('actuator_gravity_bias_nm'),
+            tracking_integral_limited=np.uint8(self.integral_limited))
+        return values
 
     def retention_phase(self,phase):
         return (getattr(self,'contact_retention',False) and self.grasp_reference is not None
@@ -86,7 +117,10 @@ class PrismaticFeedbackRuntime(RuntimeV7):
 
     def cartesian_step(self,goal,phase):
         goal=self.retention_goal(goal,phase)
-        if not self.measured_rail_feedback or self.policy.phase(phase)!='LOADED':
+        active=(self.policy.phase(phase)=='LOADED' or
+                (getattr(self,'integrated_measured_feedback',False) and phase=='FORCE_HOLD' and self.grasp_reference is not None))
+        if not self.measured_rail_feedback or not active:
+            self.integral_limited=False
             return super().cartesian_step(goal,phase)
         from .policy import SafetyStop
         self.ensure_execution_budget(phase);self.g['phase']=phase;self.phase=phase
@@ -95,10 +129,35 @@ class PrismaticFeedbackRuntime(RuntimeV7):
         measured=np.asarray(self.robot.get_joint_positions())[self.arm].copy()
         # A stationary nominal reference must not skip measured-state feedback.
         # Use the same Pink task/cost/gain, not a new force or arm actuator servo.
+        integrated=getattr(self,'integrated_measured_feedback',False)
+        solver_target=target
+        if integrated:
+            from interaction_reference_handover import seed_pose
+            from scipy.spatial.transform import Rotation
+            current=seed_pose(self.solver,self.base,measured)
+            # Pink's task gain is per solve. Convert to the existing physical
+            # progress-window time constant before integrating measured motion.
+            fraction=min(1.,self.dt/(self.integral_window_s*float(self.solver.task.gain)))
+            solver_target=current.copy();solver_target[:3,3]+=fraction*(target[:3,3]-current[:3,3])
+            rotation=Rotation.from_matrix(target[:3,:3]@current[:3,:3].T).as_rotvec()
+            solver_target[:3,:3]=Rotation.from_rotvec(fraction*rotation).as_matrix()@current[:3,:3]
         with self.profile.measure('Pink_IK'):
-            q=self.solver.velocity_step(target,self.base,measured,self.dt)
+            q=self.solver.velocity_step(solver_target,self.base,measured,self.dt)
         if q is None:raise RuntimeError('LOCAL_IK_UNAVAILABLE')
-        requested=q+self.reference_bias;delta=requested-self.qtarget[self.arm]
+        requested=self.qtarget[self.arm]+q-measured if integrated else q+self.reference_bias
+        self.integral_limited=False
+        if integrated:
+            command_pose=seed_pose(self.solver,self.base,self.qtarget[self.arm])
+            next_pose=seed_pose(self.solver,self.base,requested)
+            deficit=command_pose[:3,3]-current[:3,3]-self.integral_initial_error
+            limits=self.policy.motion('LOADED')
+            allowance=limits['speed_m_s']**2/(2*limits['acceleration_m_s2'])+limits['speed_m_s']*self.dt
+            # Conditional integration, not a new abort or expanded authority.
+            # Stop growing a saturated tracking bias; existing acceleration
+            # constraints below still decelerate the command continuously.
+            if np.linalg.norm(deficit)>=allowance and deficit@(next_pose[:3,3]-command_pose[:3,3])>0:
+                requested=self.qtarget[self.arm].copy();self.integral_limited=True
+        delta=requested-self.qtarget[self.arm]
         wanted=delta/self.dt;velocity=np.asarray(self.g['qvelocity'])
         acc=self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(phase)]
         speeds=np.asarray(self.c['arm_speed_limits'])/3

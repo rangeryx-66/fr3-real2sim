@@ -56,3 +56,31 @@ scene; permit Agent-selected safe alternatives within the existing four-acquisit
 four-view, 3600 s wall / 300 s exit-reserve budget. Stop if correction only moves
 the contact problem or the original protections stop motion. Never claim repair
 or restart the benchmark without actual pulling, reversal and independent validation.
+
+### No-contact delivery check before another contact episode
+
+The first robot-only test used an unloaded, current-collision-checked pregrasp
+configuration from 45290's fresh automatic (unexecuted) third plan. No grasp or
+object motion was requested. Native API readback confirmed arm static/dynamic
+friction efforts of 1 N m per joint. The measured-seed, fixed-bias prototype
+commanded ~75 micrometres for a 100 micrometre closing-axis request but delivered
+less than 0.2 micrometres; tangential reversal also failed to follow.
+
+Before testing retention, use `prismatic_integrated_ik_feedback` to integrate
+measured-state IK velocity into the existing command instead of replacing it
+with a new fixed-bias position target. Scale Pink's per-solve pose correction
+to the existing 0.5 s measured-progress window (2/s outer rate), without changing
+Pink costs/gain, robot/gripper gains, friction, effort or speed protections.
+Conditional integration stops growing a saturated incremental command/TCP
+tracking bias at the existing 1.85 mm stopping-distance allowance; original
+acceleration bounds still decelerate it continuously. This is not an extra abort
+or an extended loading timeout. Record physical Cartesian reference, nominal
+command FK and actual implicit drive target separately.
+
+The approximate coupled implicit-drive linearization is a preflight, not proof
+of nonlinear contact stability. Repeat only the short robot-only tracking check
+before proceeding. Include a declared tracking dwell of 4.7 s, derived from the
+existing finite loading allowance/rate plus its two measured settling windows;
+report that extra dwell explicitly rather than claiming a time-matched result.
+If useful small-motion tracking remains unavailable, do not spend another full
+observation/grasp episode on the contact-retention option.
