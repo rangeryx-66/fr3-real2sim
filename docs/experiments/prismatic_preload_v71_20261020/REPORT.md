@@ -166,3 +166,22 @@ image and selects subsequent views through unchanged operations. No archived
 view, joint teleportation, new framing rule or frozen-controller modification is
 introduced. The failed initialization is retained; this is not an unchanged-input
 batch. Hard latches/loaded conditions cannot use the fallback.
+
+### Continuation at interruption
+
+Both original45606 configurations completed fresh first-acquisition bilateral
+grasp, the original one-second hold, approximately20deg opening, reverse FIT and
+complete independent VALIDATION, followed by verified parking and process exit.
+Together with the preserved six earlier results, all eight revolute physical
+slots are closed: six complete VALIDATION and seven verified final parks. The
+earlier46427_0 and45600_0 failures remain unchanged.
+
+The first registered drawer19179_0 captured an initial wrist observation but
+received **zero Agent commands and made zero physical grasp attempts** before
+the conversation was intentionally interrupted. The original bounded Agent
+wait expired; guarded parking succeeded and the actor exited. This is an
+orchestration interruption, not a measured drawer-traction or segmentation
+failure. No automatic retry or next actor was launched. All eight registered
+drawer physical manipulation outcomes remain untested; hidden truth stays
+withheld. See[blind progress snapshot](BLIND_BENCHMARK_PROGRESS.json). The full
+16-episode benchmark is **not complete**.

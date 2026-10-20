@@ -1,5 +1,5 @@
 {
-  "snapshot_UTC": "2026-10-20T09:25:10.599450+00:00",
+  "snapshot_UTC": "2026-10-20T11:07:53.411397+00:00",
   "scope": "blind pre-reveal progress snapshot; independent final evaluation is separate",
   "registered_episodes": 16,
   "truth_still_withheld": true,
@@ -1256,7 +1256,161 @@
       "joint_type": "revolute",
       "configuration_index": 7,
       "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/45606_1",
-      "status": "RUNNING"
+      "status": "SESSION_COMPLETE",
+      "process": {
+        "returncode": 0,
+        "wall_s": 1610.6841625100933,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 1,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 0,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": true,
+      "attempts": [
+        {
+          "family": [
+            -0.3,
+            0.0,
+            180.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 0.00010612364712869748,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.35071248058375204,
+              "joint_coordinate": 0.35081860423088074,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.21252629160881042,
+              "joint_coordinate": 0.1382923126220703,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.14297306537628174,
+              "joint_coordinate": 0.28126537799835205,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.09132705628871918,
+              "joint_coordinate": 0.18993832170963287,
+              "physical_transmission_valid": true
+            }
+          ]
+        }
+      ],
+      "complete_validation": true,
+      "recorded_segments": [
+        {
+          "role": "FIT_V71_REMAINING_OPEN_ACCEL",
+          "target_q": 0.3490658503988659,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.35071248058375204
+        },
+        {
+          "role": "FIT_V71_REMAINING_REVERSE_SLOW",
+          "target_q": 0.13962634015954636,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.21252629160881042
+        },
+        {
+          "role": "FIT_V71_REMAINING_VARIABLE",
+          "target_q": 0.2792526803190927,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.14297306537628174
+        },
+        {
+          "role": "VALIDATION_V71_REMAINING_DISTINCT",
+          "target_q": 0.19198621771937624,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.09132705628871918
+        }
+      ],
+      "online_model": {
+        "sha256": "523a0801b31e0c54ee25f2220d6b0fbc5b10458e632ef7649e3c19669f80dc4e",
+        "status": "updated",
+        "parameters": [
+          0.034976224614760756,
+          0.29205141832397646,
+          0.028696479179336383
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "C_Nm"
+        ],
+        "conditional_std": [
+          0.00030139782659514304,
+          0.00023742838647286812,
+          6.251101704868905e-06
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {
+          "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+            "status": "predicted",
+            "effort_rmse": 4.032143857893998e-05,
+            "coordinate_rmse": 0.0008331301591456896,
+            "velocity_rmse": 0.0010265634435179924,
+            "final_coordinate_error": 0.0010270452924650564,
+            "outside_FIT_support": false,
+            "samples": 673,
+            "duration_s": 2.799999999999983,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "support_intervals_native": [
+          [
+            0.021859805365758284,
+            0.3435073574384054
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 44185575
     },
     {
       "episode_id": "19179_0",
@@ -1264,7 +1418,21 @@
       "joint_type": "prismatic",
       "configuration_index": 8,
       "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/19179_0",
-      "status": "NOT_STARTED"
+      "status": "BOUNDED_AGENT_STOP",
+      "process": {
+        "returncode": 0,
+        "wall_s": 497.9279392817989,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 0,
+      "initial_acquired": false,
+      "failed_action_recovery_acquisitions": 0,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": true,
+      "attempts": [],
+      "complete_validation": false,
+      "recorded_segments": [],
+      "recorded_storage_bytes": 3671748
     },
     {
       "episode_id": "19179_1",
