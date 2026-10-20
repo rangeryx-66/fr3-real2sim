@@ -17,6 +17,7 @@ def summary(folder,plot=True):
     cfg=json.loads((p/'PRELOAD_CONFIGURATION.json').read_text())
     out=dict(preload_request_n=cfg['active_policy']['preload_n'],force_request_is_not_measurement=True,
              actual_motor_effort='unavailable',normal_and_friction_separate=True,segments=[])
+    out['recorded_preload_requests_n']=np.unique(a['preload_request_n']).tolist()
     out['normal_raw_peak_N']=a['pad_load'].max(0).tolist()
     out['measured_aperture_range_m']=[float(a['aperture'].min()),float(a['aperture'].max())]
     hold=np.flatnonzero(phases=='FORCE_HOLD')
@@ -32,6 +33,7 @@ def summary(folder,plot=True):
         x=a['tcp_pose'][ix,:3]@axis;u=a['command_TCP_pose'][ix,:3]@axis;q=a['joint_q'][ix]
         start=int(ix[0]);t=a['t'][ix]-a['t'][start]
         r=dict(id=s['id'],role=s['role'],status=s.get('result',{}).get('status'),
+            recorded_preload_requests_n=np.unique(a['preload_request_n'][ix]).tolist(),
             reason=s.get('result',{}).get('reason'),duration_s=float(t[-1]),
             actual_drawer_gain_m=float(q[-1]-q[0]),actual_TCP_gain_m=float(x[-1]-x[0]),
             command_TCP_gain_m=float(u[-1]-u[0]),incremental_servo_deficit_m=float((u[-1]-u[0])-(x[-1]-x[0])),
@@ -62,6 +64,18 @@ def summary(folder,plot=True):
     result_path=p/'PRELOAD_CONDITION_RESULT.json'
     if result_path.exists():
         r=json.loads(result_path.read_text());out.update(acquired=r.get('acquisition',{}).get('acquired',False),safe_exit=r.get('safe_exit',{}).get('safe',False),error=r.get('error'))
+    trace_path=p/'AGENT_ACTION_TRACE.json'
+    if trace_path.exists():
+        out['Agent_attempts']=[dict(sequence=e['command']['sequence'],
+            requested_preload_n=e['command'].get('native_g1_preload_request_n'),
+            family=e['result'].get('family'),acquisition=e['result'].get('acquisition'),
+            physical_grasp_started=e['result'].get('physical_grasp_started',False),
+            safe_exit=e['result'].get('safe_exit',{}).get('safe',False),
+            error=e['result'].get('error'),
+            segments=[dict(status=s.get('status'),reason=s.get('reason'),role=s.get('role'))
+                      for s in e['result'].get('segments',[])])
+            for e in json.loads(trace_path.read_text())
+            if e['command']['operation']=='attempt_grasp_and_probe']
     out['independent_validation_complete']=any(s['role'].startswith('VALIDATION') and s['status']=='TARGET_REACHED' for s in out['segments'])
     if plot:
         import matplotlib;matplotlib.use('Agg')

@@ -3,12 +3,14 @@ from types import SimpleNamespace
 from unittest.mock import patch
 from interaction_runtime.prismatic_preload_v71 import preload_policy,PreloadOperations
 from interaction_runtime.prismatic_feedback_v7 import PrismaticFeedbackOperations
+from interaction_runtime.prismatic_benchmark_v71 import RegisteredPrismaticRuntimeV71
+from interaction_runtime.prismatic_preload_v71 import PrismaticPreloadRuntime
 
 
 class PreloadPolicyTest(unittest.TestCase):
     def test_only_request_changes(self):
         p=dict(preload_n=.5,finger_effort_limit_n=10,other={'a':1})
-        for value in [.5,.75,1.]:
+        for value in [.5,.75,1.,1.5]:
             q=preload_policy(p,value)
             self.assertEqual(q,{**p,'preload_n':value});self.assertEqual(p['preload_n'],.5)
             self.assertIs(q['other'],p['other'])
@@ -38,6 +40,17 @@ class PreloadPolicyTest(unittest.TestCase):
         with patch.object(PrismaticFeedbackOperations,'attempt',return_value={'acquired':False}) as parent:
             self.assertEqual(o.attempt(command),{'acquired':False});parent.assert_called_once_with(command)
         self.assertEqual(original['preload_n'],.5);self.assertEqual(o.r.closure_policy['preload_n'],.75)
+
+    def test_registered_entry_does_not_accept_engineering_or_fixture(self):
+        valid=dict(experiment='V7_BENCHMARK',benchmark_registration='activation.json',registered_episode_id='example_0')
+        for job in [{},dict(valid,experiment='V7'),dict(valid,preload_fixture='old_pose.json'),dict(valid,engineering_microtracking=True)]:
+            with self.assertRaises(ValueError):RegisteredPrismaticRuntimeV71(job)
+
+    def test_registered_entry_reuses_same_preload_runtime(self):
+        job=dict(experiment='V7_BENCHMARK',benchmark_registration='activation.json',registered_episode_id='example_0')
+        with patch.object(PrismaticPreloadRuntime,'__init__',return_value=None) as parent:
+            RegisteredPrismaticRuntimeV71(job);parent.assert_called_once_with(job)
+        self.assertFalse(PrismaticPreloadRuntime.ALLOW_REGISTERED_PRISMATIC)
 
 
 if __name__=='__main__':unittest.main()

@@ -15,10 +15,11 @@ from .segments import validate_action
 
 
 class PrismaticFeedbackRuntime(RuntimeV7):
+    ALLOW_REGISTERED_PRISMATIC=False
     def __init__(self,job):
         if job['articulation_v7']['joint_type']!='prismatic':
             raise ValueError('Prismatic development entry cannot run revolute cases')
-        if job.get('experiment')=='V7_BENCHMARK' or job.get('benchmark_registration'):
+        if (job.get('experiment')=='V7_BENCHMARK' or job.get('benchmark_registration')) and not self.ALLOW_REGISTERED_PRISMATIC:
             raise ValueError('Unvalidated engineering entry cannot launch registered benchmark')
         super().__init__(job)
         self.measured_rail_feedback=bool(job.get('prismatic_measured_ik_feedback',True))
