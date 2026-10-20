@@ -1,0 +1,1326 @@
+{
+  "snapshot_UTC": "2026-10-20T09:25:10.599450+00:00",
+  "scope": "blind pre-reveal progress snapshot; independent final evaluation is separate",
+  "registered_episodes": 16,
+  "truth_still_withheld": true,
+  "engineering_results_not_pooled": true,
+  "original_six_outcomes_preserved": true,
+  "rows": [
+    {
+      "episode_id": "45936_0",
+      "asset_id": "45936",
+      "joint_type": "revolute",
+      "configuration_index": 0,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/episodes/45936_0",
+      "status": "SESSION_COMPLETE",
+      "process": {
+        "returncode": 0,
+        "wall_s": 3610.710786310956,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 2,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 1,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": true,
+      "attempts": [
+        {
+          "family": [
+            -0.3,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 0.00041531427996233106,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": true,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TRANSMISSION_FAILURE",
+              "reason": "CONTACT_TRANSMISSION_STALL",
+              "gain_native": 0.12550992862088606,
+              "joint_coordinate": 0.1259252429008484,
+              "physical_transmission_valid": false
+            }
+          ]
+        },
+        {
+          "family": [
+            0.3,
+            -0.009374999906867743,
+            180.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 0.1259252429008484,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.07392698153853416,
+              "joint_coordinate": 0.051998261362314224,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.10533520206809044,
+              "joint_coordinate": 0.15733346343040466,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.07061953842639923,
+              "joint_coordinate": 0.08671392500400543,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.2632739990949631,
+              "joint_coordinate": 0.3499879240989685,
+              "physical_transmission_valid": true
+            }
+          ]
+        }
+      ],
+      "complete_validation": true,
+      "recorded_segments": [
+        {
+          "role": "FIT_ACCELERATION_OPEN",
+          "target_q": 0.20943951023931956,
+          "completed": true,
+          "status": "TRANSMISSION_FAILURE",
+          "reason": "CONTACT_TRANSMISSION_STALL",
+          "gain_native": 0.12550992862088606
+        },
+        {
+          "role": "FIT_RECOVERY_REVERSE",
+          "target_q": 0.05235987755982989,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.07392698153853416
+        },
+        {
+          "role": "FIT_RECOVERY_OVERLAP_OPEN",
+          "target_q": 0.15707963267948966,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.10533520206809044
+        },
+        {
+          "role": "VALIDATION_RECOVERY_DISTINCT_PROFILE",
+          "target_q": 0.08726646259971647,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.07061953842639923
+        },
+        {
+          "role": "VALIDATION_OPTIONAL_RANGE_EXPANSION",
+          "target_q": 0.3490658503988659,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.2632739990949631
+        }
+      ],
+      "online_model": {
+        "sha256": "c43063fd1b4d7d0a289a8a25709251b730cd0dbfddba478a3ced05c7190f72b4",
+        "status": "updated",
+        "parameters": [
+          0.1291607268516719,
+          0.23143750770280105,
+          0.02916385413853627,
+          0.0336880198031381,
+          0.04577090702984514,
+          0.002977763315521153
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "nonnegative_resistance_control_0",
+          "nonnegative_resistance_control_1",
+          "nonnegative_resistance_control_2",
+          "nonnegative_resistance_control_3"
+        ],
+        "conditional_std": [
+          0.00043357234415020585,
+          0.0011251669873432097,
+          5.295856823674109e-05,
+          7.445749130232892e-05,
+          0.00020015008686663938,
+          0.0009334999667192723
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {
+          "VALIDATION_RECOVERY_DISTINCT_PROFILE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 2.9720263598286333e-05,
+            "coordinate_rmse": 0.0003900717734939436,
+            "velocity_rmse": 0.0002979493091063455,
+            "final_coordinate_error": -0.00019083964111978047,
+            "outside_FIT_support": false,
+            "samples": 1242,
+            "duration_s": 5.1708333333333485,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "VALIDATION_OPTIONAL_RANGE_EXPANSION_05#0": {
+            "status": "predicted",
+            "effort_rmse": 0.004620612528165314,
+            "coordinate_rmse": 0.1052870285551444,
+            "velocity_rmse": 0.049133231079847184,
+            "final_coordinate_error": 0.34576407062849657,
+            "outside_FIT_support": true,
+            "samples": 2860,
+            "duration_s": 11.912500000000023,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "support_intervals_native": [
+          [
+            0.009281140016882043,
+            0.15497888979457675
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 60373185
+    },
+    {
+      "episode_id": "45936_1",
+      "asset_id": "45936",
+      "joint_type": "revolute",
+      "configuration_index": 1,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/episodes/45936_1",
+      "status": "SESSION_COMPLETE",
+      "process": {
+        "returncode": 0,
+        "wall_s": 2617.3142593149096,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 2,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 1,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": true,
+      "attempts": [
+        {
+          "family": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 0.00021094187104608864,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": true,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TRANSMISSION_FAILURE",
+              "reason": "ADAPTIVE_HORIZON_WITHOUT_HEALTHY_PROGRESS",
+              "gain_native": 0.1638372828165302,
+              "joint_coordinate": 0.1640482246875763,
+              "physical_transmission_valid": false
+            }
+          ]
+        },
+        {
+          "family": [
+            0.0,
+            -0.009374999906867743,
+            180.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 0.16406962275505066,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.09474612772464752,
+              "joint_coordinate": 0.06932349503040314,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.14046664535999298,
+              "joint_coordinate": 0.20979014039039612,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.07084208726882935,
+              "joint_coordinate": 0.13894805312156677,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.2461659014225006,
+              "joint_coordinate": 0.3851139545440674,
+              "physical_transmission_valid": true
+            }
+          ]
+        }
+      ],
+      "complete_validation": true,
+      "recorded_segments": [
+        {
+          "role": "FIT_ACCELERATION_OPEN",
+          "target_q": 0.17453292519943295,
+          "completed": true,
+          "status": "TRANSMISSION_FAILURE",
+          "reason": "ADAPTIVE_HORIZON_WITHOUT_HEALTHY_PROGRESS",
+          "gain_native": 0.1638372828165302
+        },
+        {
+          "role": "FIT_RECOVERY_REVERSE",
+          "target_q": 0.06981317007977318,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.09474612772464752
+        },
+        {
+          "role": "FIT_RECOVERY_VARIABLE_OPEN",
+          "target_q": 0.20943951023931956,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.14046664535999298
+        },
+        {
+          "role": "VALIDATION_RECOVERY_REVERSE",
+          "target_q": 0.13962634015954636,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.07084208726882935
+        },
+        {
+          "role": "VALIDATION_HELDOUT_RANGE_EXPANSION",
+          "target_q": 0.3839724354387525,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.2461659014225006
+        }
+      ],
+      "online_model": {
+        "sha256": "678854aee4bae0060863f6a39ac3ae15cc725a0104d017d4e61c3e6da5c8ad16",
+        "status": "updated",
+        "parameters": [
+          0.11514932076245156,
+          0.13158642821636773,
+          0.024953484797858867
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "C_Nm"
+        ],
+        "conditional_std": [
+          0.00033762417304550617,
+          0.0009354877169568316,
+          1.2944373392469662e-05
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {
+          "VALIDATION_RECOVERY_REVERSE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 4.17847895883965e-05,
+            "coordinate_rmse": 0.00022981858581538181,
+            "velocity_rmse": 0.00033040948842338506,
+            "final_coordinate_error": 0.0005143838888007346,
+            "outside_FIT_support": false,
+            "samples": 1070,
+            "duration_s": 4.4541666666666515,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "VALIDATION_HELDOUT_RANGE_EXPANSION_05#0": {
+            "status": "predicted",
+            "effort_rmse": 4.238145793886094e-05,
+            "coordinate_rmse": 0.0012031142737446055,
+            "velocity_rmse": 0.00028374569433464546,
+            "final_coordinate_error": -0.0022072360371201416,
+            "outside_FIT_support": true,
+            "samples": 2199,
+            "duration_s": 9.158333333333303,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "support_intervals_native": [
+          [
+            0.0055622484704310245,
+            0.20706325251123178
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 62036438
+    },
+    {
+      "episode_id": "46427_0",
+      "asset_id": "46427",
+      "joint_type": "revolute",
+      "configuration_index": 2,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/episodes/46427_0",
+      "status": "SAFE_UNLOADED_BOUNDARY_UNAVAILABLE",
+      "process": {
+        "returncode": 0,
+        "wall_s": 1202.7644298409577,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 1,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 0,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": false,
+      "attempts": [
+        {
+          "family": [
+            0.3,
+            0.009374999906867743,
+            180.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": -7.2566832542975135e-09,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": "SafetyStop('CONTACT_LOST_PAUSE_IN_SAME_SCENE')",
+          "failed_contact_candidate": true,
+          "safe_exit": false,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.34960211049002066,
+              "joint_coordinate": 0.3496021032333374,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.22763557732105255,
+              "joint_coordinate": 0.12196652591228485,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.14002107083797455,
+              "joint_coordinate": 0.2619875967502594,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "SAFETY_STOP",
+              "reason": "CONTACT_LOST_PAUSE_IN_SAME_SCENE",
+              "gain_native": null,
+              "joint_coordinate": null,
+              "physical_transmission_valid": null
+            }
+          ]
+        }
+      ],
+      "complete_validation": false,
+      "recorded_segments": [
+        {
+          "role": "FIT_RANGE_ACCELERATION_OPEN",
+          "target_q": 0.3490658503988659,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.34960211049002066
+        },
+        {
+          "role": "FIT_OVERLAP_REVERSE_SPEED",
+          "target_q": 0.12217304763960307,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.22763557732105255
+        },
+        {
+          "role": "FIT_OVERLAP_VARIABLE_OPEN",
+          "target_q": 0.2617993877991494,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.14002107083797455
+        },
+        {
+          "role": "VALIDATION_DISTINCT_REVERSE",
+          "target_q": 0.17453292519943295,
+          "completed": true,
+          "status": "SAFETY_STOP",
+          "reason": "CONTACT_LOST_PAUSE_IN_SAME_SCENE",
+          "gain_native": null
+        }
+      ],
+      "online_model": {
+        "sha256": "6cfdc374b108ca9a0dfed6752264272143c8e78ebb0331a1099a467ebb0c7f12",
+        "status": "updated",
+        "parameters": [
+          0.38219533932392025,
+          0.28290934539699236,
+          0.022682351873823024
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "C_Nm"
+        ],
+        "conditional_std": [
+          0.0007110060774389975,
+          0.0022874614850800813,
+          1.9577730647551653e-05
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {},
+        "support_intervals_native": [
+          [
+            0.004301509287740503,
+            0.34690670296549797
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 49103798
+    },
+    {
+      "episode_id": "46427_1",
+      "asset_id": "46427",
+      "joint_type": "revolute",
+      "configuration_index": 3,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/episodes/46427_1",
+      "status": "SESSION_COMPLETE",
+      "process": {
+        "returncode": 0,
+        "wall_s": 3870.9080449428875,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 2,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 0,
+      "proactive_additional_acquisitions": 1,
+      "final_safe_park": true,
+      "attempts": [
+        {
+          "family": [
+            0.3,
+            0.009374999906867743,
+            180.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": -6.3141754047535414e-09,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.34960050022210387,
+              "joint_coordinate": 0.34960049390792847,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.2101835161447525,
+              "joint_coordinate": 0.13941697776317596,
+              "physical_transmission_valid": true
+            }
+          ]
+        },
+        {
+          "family": [
+            0.3,
+            0.009374999906867743,
+            0.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 0.13922619819641113,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.14047878980636597,
+              "joint_coordinate": 0.2797049880027771,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.08790405094623566,
+              "joint_coordinate": 0.19180093705654144,
+              "physical_transmission_valid": true
+            }
+          ]
+        }
+      ],
+      "complete_validation": true,
+      "recorded_segments": [
+        {
+          "role": "FIT_RANGE_ACCELERATION_OPEN",
+          "target_q": 0.3490658503988659,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.34960050022210387
+        },
+        {
+          "role": "FIT_OVERLAP_REVERSE_SPEED",
+          "target_q": 0.13962634015954636,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.2101835161447525
+        },
+        {
+          "role": "FIT_REACQUIRED_OVERLAP_ACCELERATION",
+          "target_q": 0.2792526803190927,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.14047878980636597
+        },
+        {
+          "role": "VALIDATION_REACQUIRED_DISTINCT_REVERSE",
+          "target_q": 0.19198621771937624,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.08790405094623566
+        }
+      ],
+      "online_model": {
+        "sha256": "8b3872547e494b312bf57679578f569e7cfad81ac46a53a2631de428e4e9a333",
+        "status": "updated",
+        "parameters": [
+          0.4776681705694094,
+          0.1813981346407541,
+          0.022385103222698398,
+          0.022082292595306502,
+          0.022546797505191677,
+          0.03329876773150886,
+          0.020002830468423376
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "nonnegative_resistance_control_0",
+          "nonnegative_resistance_control_1",
+          "nonnegative_resistance_control_2",
+          "nonnegative_resistance_control_3",
+          "nonnegative_resistance_control_4"
+        ],
+        "conditional_std": [
+          0.000774103881752187,
+          0.002471645169650361,
+          4.778839319832847e-05,
+          4.4850284031604625e-05,
+          3.41641956640213e-05,
+          4.060966957759977e-05,
+          9.504304079000522e-05
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {
+          "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 5.6523906313547954e-05,
+            "coordinate_rmse": 0.0006649315993434359,
+            "velocity_rmse": 0.0004472364538328335,
+            "final_coordinate_error": 0.001667483344377857,
+            "outside_FIT_support": false,
+            "samples": 2622,
+            "duration_s": 10.920833333333348,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "support_intervals_native": [
+          [
+            0.003912708722054958,
+            0.3468587536078233
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 64749649
+    },
+    {
+      "episode_id": "45600_0",
+      "asset_id": "45600",
+      "joint_type": "revolute",
+      "configuration_index": 4,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/episodes/45600_0",
+      "status": "BOUNDED_AGENT_STOP",
+      "process": {
+        "returncode": 0,
+        "wall_s": 1883.3990826529916,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 1,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 0,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": true,
+      "attempts": [
+        {
+          "family": [
+            -0.3,
+            -0.009374999906867743,
+            0.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 4.712007648777217e-05,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.34966274835460354,
+              "joint_coordinate": 0.3497098684310913,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.21045300364494324,
+              "joint_coordinate": 0.13925686478614807,
+              "physical_transmission_valid": true
+            }
+          ]
+        }
+      ],
+      "complete_validation": false,
+      "recorded_segments": [
+        {
+          "role": "FIT_RANGE_ACCELERATION_OPEN",
+          "target_q": 0.3490658503988659,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.34966274835460354
+        },
+        {
+          "role": "FIT_OVERLAP_REVERSE_SPEED",
+          "target_q": 0.13962634015954636,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.21045300364494324
+        }
+      ],
+      "online_model": {
+        "sha256": "5fa1f39b6fe4e2c48a40dc891cc1c2670555f31faac16d5a5bf968af4e76c665",
+        "status": "updated",
+        "parameters": [
+          0.809515438548547,
+          0.20081343018737902,
+          0.02531026266195493
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "C_Nm"
+        ],
+        "conditional_std": [
+          0.01158879773530299,
+          0.036026131858456566,
+          0.0004274853159684271
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {},
+        "support_intervals_native": [
+          [
+            0.004657653444964025,
+            0.34553474658413935
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 54144613
+    },
+    {
+      "episode_id": "45600_1",
+      "asset_id": "45600",
+      "joint_type": "revolute",
+      "configuration_index": 5,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/episodes/45600_1",
+      "status": "SESSION_COMPLETE",
+      "process": {
+        "returncode": 0,
+        "wall_s": 1820.0542891598307,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 1,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 0,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": true,
+      "attempts": [
+        {
+          "family": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": -9.767268771554427e-09,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.3495151498238789,
+              "joint_coordinate": 0.3495151400566101,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.2102225422859192,
+              "joint_coordinate": 0.13929259777069092,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.1054835319519043,
+              "joint_coordinate": 0.24477612972259521,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.07048991322517395,
+              "joint_coordinate": 0.17428621649742126,
+              "physical_transmission_valid": true
+            }
+          ]
+        }
+      ],
+      "complete_validation": true,
+      "recorded_segments": [
+        {
+          "role": "FIT_RANGE_ACCELERATION_OPEN",
+          "target_q": 0.3490658503988659,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.3495151498238789
+        },
+        {
+          "role": "FIT_OVERLAP_REVERSE_SPEED",
+          "target_q": 0.13962634015954636,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.2102225422859192
+        },
+        {
+          "role": "FIT_OVERLAP_VARIABLE_OPEN",
+          "target_q": 0.24434609527920614,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.1054835319519043
+        },
+        {
+          "role": "VALIDATION_DISTINCT_REVERSE",
+          "target_q": 0.17453292519943295,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.07048991322517395
+        }
+      ],
+      "online_model": {
+        "sha256": "011f79f2e7b4981ea31f79546be05529a0e6db9c80f49c23f9436fde3d0e0469",
+        "status": "updated",
+        "parameters": [
+          0.7137002716215477,
+          0.2846656093379689,
+          0.024552070572152526
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "C_Nm"
+        ],
+        "conditional_std": [
+          0.00072291918890684,
+          0.0022584702258348836,
+          2.180125129926961e-05
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_REVERSE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 8.785894099945911e-05,
+            "coordinate_rmse": 0.0011695155934771542,
+            "velocity_rmse": 0.0003340693076151189,
+            "final_coordinate_error": 0.0012462880022850176,
+            "outside_FIT_support": false,
+            "samples": 1976,
+            "duration_s": 8.229166666666657,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "support_intervals_native": [
+          [
+            0.004240592347923666,
+            0.34790927544236183
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 55710222
+    },
+    {
+      "episode_id": "45606_0",
+      "asset_id": "45606",
+      "joint_type": "revolute",
+      "configuration_index": 6,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/45606_0_initfix01",
+      "status": "SESSION_COMPLETE",
+      "process": {
+        "returncode": 0,
+        "wall_s": 1599.5455257280264,
+        "actor_exited": true
+      },
+      "physical_acquisitions": 1,
+      "initial_acquired": true,
+      "failed_action_recovery_acquisitions": 0,
+      "proactive_additional_acquisitions": 0,
+      "final_safe_park": true,
+      "attempts": [
+        {
+          "family": [
+            -0.3,
+            -0.009374999906867743,
+            180.0,
+            0.0
+          ],
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 0.00022407063806895167,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            }
+          },
+          "error": null,
+          "failed_contact_candidate": false,
+          "safe_exit": true,
+          "segments": [
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.3509638141695177,
+              "joint_coordinate": 0.35118788480758667,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.21289563179016113,
+              "joint_coordinate": 0.13829225301742554,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.1432172656059265,
+              "joint_coordinate": 0.28150951862335205,
+              "physical_transmission_valid": true
+            },
+            {
+              "role": null,
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.09159086644649506,
+              "joint_coordinate": 0.189918652176857,
+              "physical_transmission_valid": true
+            }
+          ]
+        }
+      ],
+      "complete_validation": true,
+      "recorded_segments": [
+        {
+          "role": "FIT_V71_REMAINING_OPEN_ACCEL",
+          "target_q": 0.3490658503988659,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.3509638141695177
+        },
+        {
+          "role": "FIT_V71_REMAINING_REVERSE_SLOW",
+          "target_q": 0.13962634015954636,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.21289563179016113
+        },
+        {
+          "role": "FIT_V71_REMAINING_VARIABLE",
+          "target_q": 0.2792526803190927,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.1432172656059265
+        },
+        {
+          "role": "VALIDATION_V71_REMAINING_DISTINCT",
+          "target_q": 0.19198621771937624,
+          "completed": true,
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.09159086644649506
+        }
+      ],
+      "online_model": {
+        "sha256": "de469e8f989a0d333fd1c3d48ce81852dd3aee76633feb1ab9ddbb99ef900c88",
+        "status": "updated",
+        "parameters": [
+          0.03928584504413297,
+          0.11725145981873195,
+          0.030817475286263715,
+          0.023365408391204812,
+          0.05396046504257915,
+          0.05565189094751079
+        ],
+        "parameter_names": [
+          "I_eff_kg_m2",
+          "b_Nm_s_rad",
+          "nonnegative_resistance_control_0",
+          "nonnegative_resistance_control_1",
+          "nonnegative_resistance_control_2",
+          "nonnegative_resistance_control_3"
+        ],
+        "conditional_std": [
+          0.0020955111243111638,
+          0.0034806212073982684,
+          0.0004292572052279871,
+          0.0004657603586731999,
+          0.0012725409254830302,
+          0.0029552176085444076
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          true
+        ],
+        "heldout_motion": {
+          "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.00012386584833248197,
+            "coordinate_rmse": 0.0008886189105641253,
+            "velocity_rmse": 0.0013746283112274005,
+            "final_coordinate_error": 0.002273923591491117,
+            "outside_FIT_support": false,
+            "samples": 659,
+            "duration_s": 2.741666666666646,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "support_intervals_native": [
+          [
+            0.02442198758944869,
+            0.34317076893953175
+          ]
+        ],
+        "hidden_truth_used": false
+      },
+      "recorded_storage_bytes": 42961818
+    },
+    {
+      "episode_id": "45606_1",
+      "asset_id": "45606",
+      "joint_type": "revolute",
+      "configuration_index": 7,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/45606_1",
+      "status": "RUNNING"
+    },
+    {
+      "episode_id": "19179_0",
+      "asset_id": "19179",
+      "joint_type": "prismatic",
+      "configuration_index": 8,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/19179_0",
+      "status": "NOT_STARTED"
+    },
+    {
+      "episode_id": "19179_1",
+      "asset_id": "19179",
+      "joint_type": "prismatic",
+      "configuration_index": 9,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/19179_1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "episode_id": "45290_0",
+      "asset_id": "45290",
+      "joint_type": "prismatic",
+      "configuration_index": 10,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/45290_0",
+      "status": "NOT_STARTED"
+    },
+    {
+      "episode_id": "45290_1",
+      "asset_id": "45290",
+      "joint_type": "prismatic",
+      "configuration_index": 11,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/45290_1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "episode_id": "27044_0",
+      "asset_id": "27044",
+      "joint_type": "prismatic",
+      "configuration_index": 12,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/27044_0",
+      "status": "NOT_STARTED"
+    },
+    {
+      "episode_id": "27044_1",
+      "asset_id": "27044",
+      "joint_type": "prismatic",
+      "configuration_index": 13,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/27044_1",
+      "status": "NOT_STARTED"
+    },
+    {
+      "episode_id": "45746_0",
+      "asset_id": "45746",
+      "joint_type": "prismatic",
+      "configuration_index": 14,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/45746_0",
+      "status": "NOT_STARTED"
+    },
+    {
+      "episode_id": "45746_1",
+      "asset_id": "45746",
+      "joint_type": "prismatic",
+      "configuration_index": 15,
+      "private_result": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_v71_20261020/episodes/45746_1",
+      "status": "NOT_STARTED"
+    }
+  ]
+}
