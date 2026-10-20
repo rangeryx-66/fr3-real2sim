@@ -97,3 +97,23 @@ VALIDATION before any larger exploration. Declare exact targets before execution
 from fresh geometry/current reachability. Do not count a complete held-out action
 as full-duration forward prediction: report the estimator's retained interior
 explicitly and retain uncertainty/parameter biases.
+
+## Preserved 45290 failure and finite follow-up engineering scene
+
+The first fresh45290 scene acquired bilateral contact at1N but stalled after
+1.795mm. It safely parked, reobserved, lost the SAM detection, then recovered a
+complete200.75mm bar through an Agent-selected complementary view. No second
+grasp fit inside its remaining1800s resource envelope. BOUNDED_AGENT_STOP and
+the late, unconsumed finish command are retained; this is not recovery success.
+
+Before the next engineering outcome, allow one fresh45290 follow-up scene with
+3000s wall/900s simulation and180s/90s guarded-exit reserves. Budget includes
+fresh sensing/planning and up to three acquisitions, not indefinite loading;
+all per-contact stall and safety limits remain identical. Start with1.5N legal
+preload request because the observed1N acquisition still developed1.63mm relative
+motion. Measure actual loads; no force cap or stiffness changes. This is a
+fresh automatic-geometry regression, not an exactly matched preload comparison.
+Agent may instead select another fresh existing candidate after inspecting
+contact feedback, with the same current-state executable-candidate checks.
+No cached pose or camera replay. Preserve every failed acquisition. No benchmark
+authorization unless both representative drawers actually pass.
