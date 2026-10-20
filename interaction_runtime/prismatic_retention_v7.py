@@ -12,7 +12,7 @@ import numpy as np
 class PrismaticContactBalance:
     def __init__(self, policy, rail_axis, filter_steps, initial_center_offset, dt=1/240):
         self.policy = policy
-        self.rail = np.asarray(rail_axis, float); self.rail /= np.linalg.norm(self.rail)
+        self.rail = np.asarray(rail_axis, float).copy(); self.rail /= np.linalg.norm(self.rail)
         self.period = max(1, int(filter_steps)); self.last_tick = None
         self.step = min(policy['max_centering_step_m'], policy['max_centering_speed_m_s'] * self.period * dt)
         self.initial = np.asarray(initial_center_offset, float).copy()

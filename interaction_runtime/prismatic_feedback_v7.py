@@ -163,6 +163,9 @@ class PrismaticFeedbackOperations(OperationsV7):
 
 
 def serve_prismatic(r):
+    if r.job.get('engineering_microtracking',False):
+        from .prismatic_microtracking_v7 import run
+        return run(r)
     def check(a):
         validate_action(a)
         from .articulation_v7 import Articulation

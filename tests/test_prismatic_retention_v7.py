@@ -84,5 +84,26 @@ class ContactRetentionTests(unittest.TestCase):
         self.assertIs(r.retention_goal(goal,'RELEASE'),goal)
         self.assertFalse(r.retention_phase('FORCE_HOLD'))
 
+    def test_constant_rail_goal_gets_bounded_transverse_steps_without_accumulating_input(self):
+        from interaction_runtime.prismatic_feedback_v7 import PrismaticFeedbackRuntime
+        r=PrismaticFeedbackRuntime.__new__(PrismaticFeedbackRuntime)
+        r.contact_retention=True;r.grasp_reference=np.eye(4);r.retention=None
+        r.retention_closure=SimpleNamespace(command=np.eye(4),origin=np.eye(4))
+        r.closure_policy=P;r.contact_evidence=SimpleNamespace(axis=[0,1,0])
+        r.filtered_loads=SimpleNamespace(maxlen=19);r.dt=1/240;r.tick=0
+        r.reference_drive=object();r.retention_epoch=np.zeros(3)
+        r.policy=SimpleNamespace(phase=lambda p:'LOADED')
+        r.model=SimpleNamespace(pads={'gripper_link1':np.zeros((2,3)),'gripper_link2':np.zeros((2,3))})
+        r.pad_frames={'left_finger':np.eye(4),'right_finger':np.eye(4)}
+        def pose(name):
+            T=np.eye(4);T[2,3]=.01 if name=='left_finger' else -.01;return T
+        r.pose=pose;r.filtered=lambda:np.array([.8,.1]);r.event=lambda *a,**kw:None
+        goal=np.eye(4);one=r.retention_goal(goal,'CONTACT_PRELOAD');r.tick=1
+        two=r.retention_goal(goal,'CONTACT_PRELOAD')
+        np.testing.assert_allclose(one[:3,3],[0,0,5e-6]);np.testing.assert_array_equal(one,two)
+        np.testing.assert_array_equal(goal,np.eye(4))
+        r.tick=19;three=r.retention_goal(goal,'CONTACT_PRELOAD')
+        np.testing.assert_allclose(three[:3,3],[0,0,1e-5])
+
 
 if __name__ == '__main__':unittest.main()
