@@ -1,0 +1,104 @@
+{
+  "classification": "OFFLINE_REGRESSION_NOT_CONTACT_PASS",
+  "frozen_source_files": 71,
+  "frozen_external_files": 22,
+  "hash_mismatches": [],
+  "unit_tests": 45,
+  "unit_success": true,
+  "unit_output": ".............................................\n----------------------------------------------------------------------\nRan 45 tests in 0.508s\n\nOK\n",
+  "fast_safety": {
+    "legacy_numbers_all_phases_nonfatal": true,
+    "fault_injections": "collision/joint/velocity/actuator/emergency pad/emergency wrist/phase speed stop",
+    "sustained_history_crosses_modes_without_reset": [
+      35,
+      "SUSTAINED_OVERLOAD"
+    ],
+    "independent_rotation_translation_and_acceleration": true,
+    "actual_stop_command_joint_acceleration_rad_s2": 0.8000000000000002,
+    "normal_panel_stop_precedes_separation_and_exceptions_do_not_continue": true,
+    "recoverable_failure_preserves_velocity_for_guarded_release": true,
+    "active_source_audit": true,
+    "FAST_DEV_idle_render_requests": 0,
+    "chunked_native_numeric_contact_roundtrip_records": 513,
+    "protocol": {
+      "physical_actors": 0,
+      "concurrent_commands": 200,
+      "malformed_recoverable": 8,
+      "same_sequence_winners": 1,
+      "actual_owner_bad_then_finish": "PASS",
+      "packet_producer_consumer_order": [
+        "packet0",
+        "packet1"
+      ],
+      "missing_prefix": "EXPLICIT_DIAGNOSTIC_NO_PARTIAL_FIT",
+      "physical_safety_or_control_changed": false
+    }
+  },
+  "adaptive": {
+    "healthy_nominal_sim_s": 111.31666666666666,
+    "healthy_actual_sim_s": 111.3125,
+    "blocked_contact_stop_s": 3.0,
+    "partial_is_not_success": true,
+    "conditional_successor_checked": true,
+    "incomplete_validation": {
+      "action_ok": false,
+      "action_status": "TRANSMISSION_FAILURE",
+      "label": "INCOMPLETE_VALIDATION_EXCLUDED"
+    },
+    "transmitting_prefix": {
+      "action_ok": false,
+      "action_status": "TRANSMISSION_FAILURE",
+      "label": "PREDECLARED_TRANSMITTING_FIT_PREFIX",
+      "declared_intervals_s": [
+        [
+          0.1,
+          3.8
+        ]
+      ],
+      "valid_until_s": 2.8,
+      "excitation": {
+        "duration_s": 2.6999999999999997,
+        "range_rad": 0.0064800000000000005,
+        "velocity_rms_rad_s": 0.0024
+      },
+      "action_remains_failed": true
+    },
+    "checkpoint_no_overwrite": true,
+    "exit_reserve": true,
+    "active_source_audit": true,
+    "ProgressClock_sha256": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f"
+  },
+  "owned_actors": [
+    {
+      "run": "27044_measured_feedback_00",
+      "pid": 1245239,
+      "alive": false
+    },
+    {
+      "run": "27044_measured_feedback_initfix01",
+      "pid": 1456798,
+      "alive": false
+    },
+    {
+      "run": "45290_bidirectional_rank_00",
+      "pid": 3851774,
+      "alive": false
+    },
+    {
+      "run": "45746_baseline_00",
+      "pid": 3045521,
+      "alive": false
+    },
+    {
+      "run": "robot_microtracking_00",
+      "pid": 2383603,
+      "alive": false
+    },
+    {
+      "run": "robot_microtracking_integral_01",
+      "pid": 3519633,
+      "alive": false
+    }
+  ],
+  "actor_lock_acquired": true
+}

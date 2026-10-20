@@ -1,5 +1,5 @@
 {
-  "status": "IN_PROGRESS_NOT_PASS",
+  "status": "NOT_PASS_BENCHMARK_BLOCKED",
   "benchmark_resumed": false,
   "revolute_sources_changed": false,
   "engineering_runs": [
@@ -62,7 +62,7 @@
     },
     {
       "id": "45290_bidirectional_rank_00",
-      "status": "ACTIVE_SAME_SCENE_RECOVERY",
+      "status": "COMPLETED_NOT_PASS",
       "same_original_fixture_physics": true,
       "prismatic_bidirectional_ranking": true,
       "measured_state_IK": true,
@@ -73,9 +73,31 @@
       "first_safe_exit": true,
       "first_relative_drift_max_m": 0.0016703126020729542,
       "first_reverse_and_validation": "NOT_EXECUTED",
-      "Agent_recovery": "Fresh actual wrist RGBD inspected; requested existing pitch15 family infeasible; automatic complete-execution fallback selected opposite bar section+.3, second physical attempt running",
-      "physical_attempts_started": 2
+      "Agent_recovery": "Actual feedback and fresh wrist RGBD inspected; requested existing +15deg pitch candidate failed complete approach; planner continued ranked alternatives and selected opposite section+.3; second physical grasp failed; third fresh roll180 plan was valid but unexecuted.",
+      "physical_attempts_started": 2,
+      "physical_acquisitions": 2,
+      "recovery_acquired": true,
+      "recovery_pull_m": 0.0004218952,
+      "recovery_status": "TRANSMISSION_FAILURE / PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+      "recovery_safe_exit": true,
+      "recovery_relative_drift_max_m": 0.0016542,
+      "reverse_executed": false,
+      "independent_validation": "NOT_EXECUTED",
+      "final_parking": true,
+      "final_status": "BOUNDED_AGENT_STOP",
+      "wall_s": 3201.0418,
+      "simulation_s": 348.2958,
+      "final_drawer_coordinate_m": 0.0004392501,
+      "orchestration_failure": "Agent spent too long on offline analysis after response15 and exceeded360s unloaded wait. Actor safely parked and exited. Late command16 finish was unconsumed. Preserve this as Agent orchestration failure, not physical infeasibility or an acknowledged finish.",
+      "shutdown": "owned PID3851774 absent; cooperative export complete"
     }
   ],
-  "optional_retention_implementation": "OFF_BY_DEFAULT; offline tests only; not deployed in current comparison"
+  "optional_retention_implementation": "OFF_BY_DEFAULT; deterministic tests only; native contact deployment withheld because unloaded microtracking remains insufficient.",
+  "valid_new_contact_acquisitions": 5,
+  "new_contact_episodes": 3,
+  "new_robot_only_diagnostics": 2,
+  "independent_prismatic_validation": "NOT_EXECUTED",
+  "production_promotion": false,
+  "integral_implementation": "ISOLATED_ENGINEERING_ONLY; native robot-only test remains insufficient; no frozen runtime changes.",
+  "reporting_boundary": "Native cooked contact points are manifold reports, not pressure areas. Missing positive normal reports do not prove separation. Known engineering plant C=.3N,b=3N*s/m,m_eff=2kg is separate from unopened blind benchmark truth."
 }

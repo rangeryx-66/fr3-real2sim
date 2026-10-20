@@ -1,10 +1,12 @@
-"""Prismatic-only measured-state IK feedback; frozen revolute path is untouched.
+"""Unvalidated prismatic engineering feedback; frozen revolute path is untouched.
 
 The frozen runtime already preserves the loaded command bias and bounds joint /
 Cartesian speed and acceleration. Its nominal-seed QP does not observe subsequent
 servo deflection. Re-seed that same QP from measured arm state during rail motion,
-retaining the handover bias and all existing command/safety constraints.
-No force command, new gain, object pose or clamp modification is introduced.
+retaining the handover bias and all existing command/safety constraints. The
+optional integral prototype introduces an explicitly declared outer tracking
+time constant; native arm/G1 actuator gains, friction and authority are unchanged.
+Native microtracking remains insufficient; do not promote to the benchmark.
 """
 import numpy as np
 from .probing_v7 import RuntimeV7, OperationsV7

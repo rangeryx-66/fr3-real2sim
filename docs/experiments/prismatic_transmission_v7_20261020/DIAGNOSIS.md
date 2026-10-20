@@ -1,15 +1,17 @@
-# Prismatic contact-transmission investigation (in progress)
+# Prismatic contact-transmission investigation — not resolved
 
 Revolute source/configuration and external robot/camera/closure files are frozen
 in REVOLUTE_FREEZE.json and REVOLUTE_EXTERNAL_FREEZE.json. No original source,
 physical controller, safety threshold or six completed research outcome is edited.
 The registered benchmark remains paused and hidden dynamics remain unread.
 
-Status: **engineering in progress, not PASS**. The optional prismatic-only
-contact-retention implementation is disabled by default and has only offline
-validation at this revision. It is not loaded by the ongoing 45290 comparison.
-Its predeclared conditional native test is in PLAN.md. No original revolute
-source or G1 closure source is edited.
+Status: **NOT PASS; registered benchmark paused**. Three new Agent engineering
+contact episodes produced five physical acquisitions, including two same-scene
+recovery acquisitions. No complete reverse/independent validation was obtained.
+Two subsequent short robot-only diagnostics exposed inadequate small-motion
+execution. The optional retention feature remains off and untested in contact;
+the integral prototype is engineering-only. No production promotion occurred.
+See REPORT.md, ENGINEERING_RESULTS.json and MICROTRACKING_DERIVED.json.
 
 ## What is established before new outcomes
 
@@ -155,3 +157,72 @@ motion; the corrected command used the already inspected plan. The episode ended
 at verified unloaded parking after two physical acquisitions, wall time 3143.04 s.
 The remaining finite resources did not support another observation/planning/
 acquisition cycle. No physical result was retried or erased.
+
+
+## Completed 45290 comparison and orchestration failure
+
+Fresh wrist geometry and the bidirectional candidate feature acquired bilateral
+contact twice. First pull gained 0.0220 mm, recovery 0.4219 mm; actual TCP/drawer
+relative motion reached approximately 1.67/1.65 mm. Both original transmission
+stops were retained, both attempts released and parked safely, and neither reverse
+nor validation ran. The Agent requested an existing pitch-15 candidate from fresh
+observed geometry; complete execution was infeasible. Native fallback continued
+past another low-margin candidate and selected the opposite handle section. It
+was not a manually entered grasp or a repeat of the failed family.
+
+A third fresh automatically generated roll-180 plan existed but was not executed.
+The Agent then spent too long on offline analysis, exceeding the 360 s unloaded
+wait. Actual terminal status is BOUNDED_AGENT_STOP, with verified parking. A late
+finish command was unconsumed. The earlier decision-trace statement that resources
+alone ended the episode is incomplete; the trace is preserved and this correction
+is explicit. Unused feasible candidates remain. This is an orchestration failure,
+not evidence that all recovery is impossible.
+
+## No-contact tracking checks
+
+Both checks used an archived **observed, unexecuted** pregrasp pose solely as a
+robot-only engineering fixture, with fresh native route validation. No grasp,
+handle contact or object command occurred; all pad loads and object travel were
+zero. This fixture is not a fresh Agent perception or benchmark result.
+
+The measured-seed/fixed-bias prototype delivered about -0.12 micrometres for a
++100 micrometre closing-axis request; nominal FK command moved +74.2 micrometres.
+The optional integral version delivered +30.3 micrometres and only -5.0 on the
+return leg. Its command FK moved +900.2/-296.2 micrometres. Tangential actual
+motion improved to +79.2/-73.2 micrometres. Its declared 4.7 s dwell differs from
+the original 0.3 s dwell: this is not a time-matched causal comparison. Neither
+result establishes adequate bidirectional microtracking for contact retention.
+
+Offline FK reconstruction agrees with actual native TCP within 1.14 micrometres
+across these samples, far below the tracking discrepancy. Installed native API
+readback confirms arm static/dynamic friction efforts of 1 N m on all seven
+joints, with unchanged viscous coefficients [10,10,5,5,5,2,2]. Joint offsets of
+approximately tau_c/Kp are consistent with a static-friction deadband. This is
+supporting evidence, not an independently measured motor torque or a uniquely
+identified cause. The deprecated friction-coefficient getter returned zero while
+the installed friction-properties getter returned nonzero effort properties;
+using only the deprecated getter would miss this applied resistance.
+
+The integral anti-windup limit did not activate in the four recorded legs; no
+safety samples fired. Both finite fixtures parked and exited (108.45/145.15 s wall).
+No additional long contact episode was launched with an inadequately delivered
+correction. Native arm/gripper gains, friction, effort limits and object resistance
+were not changed. Explicit effort commands and projected joint reactions are not
+reported as measured drive output.
+
+## Remaining mechanism and next discriminating check
+
+The best supported explanation is a combination: rail-directed traction is
+insufficient despite bilateral acquisition; load migration and small settling
+change the contact; command/actual tracking has a separate stiction-scale deficit.
+The contact scorer's rectangle/cooked-polygon mismatch is real but not proven to
+explain the complete deficit. A unique attribution to gripper material friction,
+mimic mapping, drawer resistance or a timeout is unsupported.
+
+Before promoting retention, a matched native unloaded small-motion check must
+establish delivered transverse correction and reversal without changing robot
+physics/authority. A subsequent fresh-observation engineering trial could then
+test whether measured correction unloads the dominant pad and restores rail
+traction. It must retain current stops and independently qualify reverse motion
+and validation on both drawers. This round did not reach that prerequisite;
+no official benchmark episode or hidden-truth evaluation was started.
