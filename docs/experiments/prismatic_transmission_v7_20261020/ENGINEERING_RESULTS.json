@@ -1,0 +1,81 @@
+{
+  "status": "IN_PROGRESS_NOT_PASS",
+  "benchmark_resumed": false,
+  "revolute_sources_changed": false,
+  "engineering_runs": [
+    {
+      "id": "45746_baseline_00",
+      "stack": "frozen V7, native G1, fresh Agent wrist RGB-D",
+      "physical_acquisitions": 1,
+      "acquired": false,
+      "reason": "BILATERAL_HOLD_NOT_ESTABLISHED",
+      "pull_executed": false,
+      "reverse_executed": false,
+      "validation": "NOT_EXECUTED",
+      "first_failed_acquisition_exit": "verified unloaded native-rest park",
+      "Agent_recovery": "Actual contact plot and fresh RGB-D inspected; candidate reobservation requested; no second physical acquisition occurred",
+      "final_status": "SAFETY_STOP / PHASE_TCP_VELOCITY after episode exit reserve during unloaded view motion",
+      "final_parking": "NOT_VERIFIED",
+      "shutdown": "owned actor exited",
+      "wall_s": 2104.505746732,
+      "root_cause_of_exit_fault": "PREGRASP actual~32mm/s prematurely relabeled RELEASE, whose unchanged stop is30mm/s; corrected in isolated prismatic branch via protected unloaded deceleration before phase change"
+    },
+    {
+      "id": "27044_measured_feedback_00",
+      "valid_physical_attempt": false,
+      "reason": "INITIALIZATION_FAILURE / ONE_PASSIVE_REVOLUTE_PLANT_REQUIRED",
+      "root_cause": "new experiment classification bypassed V7 SI scene factory; fixed input marker to experimentV7 plus separate engineering classification",
+      "retry": "27044_measured_feedback_initfix01; same physics; no prior physical attempt replaced"
+    },
+    {
+      "id": "27044_measured_feedback_initfix01",
+      "status": "COMPLETED_NOT_PASS",
+      "first_acquisition": true,
+      "hold_s": 1.0,
+      "first_requested_pull_m": 0.02,
+      "first_actual_pull_m": 0.0022180556,
+      "first_status": "TRANSMISSION_FAILURE / PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "first_safe_exit": true,
+      "command_TCP_gain_m": 0.0049989546,
+      "measured_TCP_gain_m": 0.0036825401,
+      "incremental_servo_deficit_m": 0.0013164145,
+      "actual_TCP_drawer_relative_rail_gain_m": 0.0014644845,
+      "max_transverse_TCP_drawer_motion_m": 0.0001432003,
+      "max_TCP_rotation_xyz_deg": [
+        0.11840758,
+        0.05314554,
+        0.03197766
+      ],
+      "reverse_and_validation": "NOT_EXECUTED after first failure",
+      "interpretation": "Measured-state seeding alone not a demonstrated repair. Fresh automatic grasp differs from archived pose; no unique causal attribution. Agent inspected actual feedback and fresh wrist RGB-D, opposite view requested for different feasible candidate.",
+      "physical_acquisitions": 2,
+      "recovery_acquired": true,
+      "recovery_actual_pull_m": 1.748139038681984e-05,
+      "recovery_status": "TRANSMISSION_FAILURE / PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+      "recovery_safe_exit": true,
+      "independent_validation": "NOT_EXECUTED",
+      "reverse_executed": false,
+      "final_parking": true,
+      "wall_s": 3143.0366408531554,
+      "shutdown": "owned actor exited cooperatively; PID1456798 absent; exported complete",
+      "protocol_rejection": "seq13 unknown velocity program; no physical action; corrected seq15"
+    },
+    {
+      "id": "45290_bidirectional_rank_00",
+      "status": "ACTIVE_SAME_SCENE_RECOVERY",
+      "same_original_fixture_physics": true,
+      "prismatic_bidirectional_ranking": true,
+      "measured_state_IK": true,
+      "benchmark": false,
+      "first_acquired": true,
+      "first_pull_m": 2.201802113838136e-05,
+      "first_status": "TRANSMISSION_FAILURE / PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+      "first_safe_exit": true,
+      "first_relative_drift_max_m": 0.0016703126020729542,
+      "first_reverse_and_validation": "NOT_EXECUTED",
+      "Agent_recovery": "Fresh actual wrist RGBD inspected; requested existing pitch15 family infeasible; automatic complete-execution fallback selected opposite bar section+.3, second physical attempt running",
+      "physical_attempts_started": 2
+    }
+  ],
+  "optional_retention_implementation": "OFF_BY_DEFAULT; offline tests only; not deployed in current comparison"
+}
