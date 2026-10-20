@@ -1,5 +1,5 @@
 {
-  "status": "IN_PROGRESS_3_OF_8_CLOSED",
+  "status": "IN_PROGRESS_4_OF_8_CLOSED",
   "scope": "Blind partial snapshot, not final benchmark evaluation",
   "lighting_source": "412b9df",
   "activation": "cee2e24",
@@ -88,11 +88,54 @@
         "final_coordinate_error_mm": 4.947052452336682
       },
       "note": "Both initial1N+end-section1.5N pulls genuinely failed with persistent slidingstall (19.248mm, then+35.559mm). Fresh central3rdacquisition reversed29.699mm and completed independently declared openingVALIDATION20.212mm; actualmax54.834mm below80-150mmtarget. Full parked/exported/actor648076dead. HiddenauthoredvaluesUNREAD; no physicalaccuracyclaim."
+    },
+    "45290_1": {
+      "status": "PHYSICAL_VALIDATION_COMPLETE_EXTRA_OBSERVATION_AGENT_TIMEOUT",
+      "physical_acquisitions": 2,
+      "recovery_acquisitions": 1,
+      "proactive_additional_acquisitions": 0,
+      "initial_acquired": true,
+      "maximum_drawer_mm": 80.07264137268066,
+      "reverse_travel_mm": 16.430246643722057,
+      "final_drawer_mm": 80.07264137268066,
+      "complete_validation": true,
+      "final_safe_park": true,
+      "full_runner_status": "BOUNDED_AGENT_STOP",
+      "wall_s": 2984.28537816694,
+      "sim_s": 389.2,
+      "maximum_relative_drift_mm": 1.6651692567393184,
+      "recorded_storage_bytes": 68064998,
+      "run": "results/cross_object_v7_v72_relight_20261020/episodes/45290_1",
+      "online_parameters_blind": [
+        1.9542606554194348,
+        3.545327888593988,
+        0.3603014459350272,
+        0.4503578655348128,
+        0.5224866758311405,
+        0.1027017961809167,
+        1.9436434879304023
+      ],
+      "conditional_std": [
+        0.04153384714328502,
+        0.1282696183410306,
+        0.0015615360458975712,
+        0.0015159019950849507,
+        0.0029420698452238365,
+        0.006531865436277782,
+        0.1679470009442536
+      ],
+      "heldout": {
+        "retained_s": 4.3916666666666515,
+        "effort_rmse_N": 0.000869254879811913,
+        "coordinate_rmse_mm": 0.2154332899688201,
+        "velocity_rmse_mm_s": 0.21986230658968972,
+        "final_coordinate_error_mm": -0.339021284191849
+      },
+      "note": "Initial1N+family+.3 failed21.349mm persistentstall then safepark. FreshsameScenerecovery1.5N-.3 completedreverse16.430mm, independentVAL13.166mm thenoptionalexpansion61.984mmto80.073mm,safepark. Postcompletionproactivefreshobservation captured, butAgentcommand15published491.7safterresponse14, beyondoriginal360sno-loadwait; actor safelyparked/exitedbeforecommand, no thirdacquisition/view3 executed. Preserve orchestrationfailure; no valid-episode retry. CqonlyobservedFITsupport1-79mm; VALonlylowrange; no hiddentruthread."
     }
   },
-  "active_slot": "45290_1",
+  "active_slot": "27044_0",
   "remaining_after_active": [
-    "27044_0",
     "27044_1",
     "45746_0",
     "45746_1"
