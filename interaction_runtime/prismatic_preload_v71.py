@@ -51,7 +51,25 @@ class PrismaticPreloadRuntime(PrismaticFeedbackRuntime):
         return values
 
 
-class PreloadFixtureOperations(PrismaticFeedbackOperations):
+class PreloadOperations(PrismaticFeedbackOperations):
+    def attempt(self,command):
+        # The Agent may choose a different legal preload only before a new
+        # acquisition, at the existing verified unloaded decision boundary.
+        # No loaded force-history clearing or actuator-authority modification.
+        if 'native_g1_preload_request_n' in command:
+            if (self.r.supervisor.latched is not None or self.r.grasp_reference is not None
+                    or max(self.r.filtered())>self.r.policy.data['force']['unloaded_pad_n']
+                    or not self.r.supervisor.force.settled()):
+                return dict(executed=False,recoverable=True,reason='PRELOAD_CHANGE_REQUIRES_VERIFIED_UNLOADED_STATE')
+            self.r.closure_policy=preload_policy(self.r.closure_policy,command['native_g1_preload_request_n'])
+            self.g['policy']=self.r.closure_policy
+            self.r.event('PRISMATIC_PRELOAD_SELECTED',request_n=self.r.closure_policy['preload_n'],
+                         reason=command.get('reason','Agent-selected legal preload before acquisition'),
+                         actuator_authority_changed=False)
+        return super().attempt(command)
+
+
+class PreloadFixtureOperations(PreloadOperations):
     """Matched engineering only: one frozen observed pose, no online GT fallback."""
     def prepare_fixture(self):
         from native_g1_safe_park import route_to_joint
@@ -117,5 +135,11 @@ def serve_preload_fixture(r):
 
 def serve_preload(r):
     if r.job.get('preload_fixture'):return serve_preload_fixture(r)
-    from .prismatic_feedback_v7 import serve_prismatic
-    return serve_prismatic(r)
+    from .probing_v2 import serve
+    from .segments import validate_action
+    from .articulation_v7 import Articulation
+    def check(a):
+        validate_action(a)
+        Articulation('prismatic',(1,0,0),(0,0,0),tuple(r.job['articulation_v7']['limits_native'])).validate_target(a)
+        if not a['role'].startswith(('FIT','VALIDATION')):raise ValueError('Predeclare FIT/VALIDATION')
+    return serve(r,operations_factory=PreloadOperations,action_validator=check)

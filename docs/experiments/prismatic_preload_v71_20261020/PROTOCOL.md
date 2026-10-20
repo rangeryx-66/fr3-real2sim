@@ -52,3 +52,22 @@ Each matched run: wall600s (180s exit reserve), simulation240s (60s exit reserve
 No stale actor/source deployment; owned actors sequential, shared VRAM allowed.
 Only promote/resume benchmark after BOTH drawers demonstrate actual sustained
 pull, meaningful reverse, safe exit and complete independent FIT/VALIDATION.
+
+## Conditional millimetre-scale arm-reference comparison
+
+The completed0.75N contact record has a remaining recorded clock lead of3.183mm
+while actual drawer motion has stopped. A one-QP offline diagnostic using its
+measured joints, initial command bias and reconstructed Cartesian clock goal
+requests only~0.000285mm further command FK with the measured-seed prototype,
+versus~0.332mm with the unchanged frozen nominal-seed path. This is a diagnostic,
+not native proof, and not based on the unloaded100um test.
+
+If1.0N likewise increases load/traction but fails sustained target completion,
+run ONE additional matched1.0N condition with
+`prismatic_measured_ik_feedback=false`. Every other fixture/job/control/physics
+setting remains identical. This reuses the original frozen arm-reference code;
+no integral, new drive gains, new authority, timeout or reference-lead increase.
+Do not switch the backend under load. Original motion/collision/force checks
+remain authoritative. Compare actual command/measurement deficits, relative
+motion and drawer travel before attributing the remaining failure to tracking.
+This engineering A/B cannot substitute for subsequent fresh Agent tests.
