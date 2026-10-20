@@ -1,0 +1,4231 @@
+{
+  "status": "REGISTERED_BATCH_COMPLETE_WITH_FAILURES_NOT_OVERALL_PASS",
+  "registered_slots": 16,
+  "rows": [
+    {
+      "episode_id": "45936_0",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 20.05283093141589,
+      "frozen_reported_maximum_motion": 20.053,
+      "reverse_travel": 8.281905537294175,
+      "motion_unit": "deg",
+      "physical_acquisitions": 2,
+      "recovery_acquisitions": 1,
+      "preload_requests_N": [
+        null,
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "首次传力退化后恢复，完成验证；额外外推误差保留",
+      "wall_s": 3610.710786310956,
+      "simulation_s": 368.15833333333336,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 16186323,
+          "clips": 85247,
+          "numeric": 12058608,
+          "geometry": 7737528,
+          "observations": 24452736
+        },
+        "total_bytes": 60520442,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 8,
+      "Agent_view_moves": 4,
+      "measured_relative_drift_mm": 3.1537553295493126,
+      "raw_pad_peak_N": [
+        1.5234988927841187,
+        1.2376598119735718
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "extended_model",
+      "authored_reference": {
+        "inertial": 0.12932069252714287,
+        "damping": 0.2235610158213845,
+        "resistance_law": {
+          "family": "localized_passive_friction",
+          "base": 0.023780748423434146,
+          "amplitude": 0.013253573992180056,
+          "center": 0.1422968935039847,
+          "width": 0.11616916026026194
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.1291607268516719,
+        0.23143750770280105,
+        0.02916385413853627,
+        0.0336880198031381,
+        0.04577090702984514,
+        0.002977763315521153
+      ],
+      "conditional_std": [
+        0.00043357234415020585,
+        0.0011251669873432097,
+        5.295856823674109e-05,
+        7.445749130232892e-05,
+        0.00020015008686663938,
+        0.0009334999667192723
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 207.08896170725518,
+      "FIT_support": [
+        [
+          0.009281140016882043,
+          0.15497888979457675
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_ACCELERATION_OPEN_01#0",
+          "role": "FIT_ACCELERATION_OPEN_01",
+          "coordinate_range": [
+            0.002067082328721881,
+            0.12541888654232025
+          ],
+          "velocity_RMS": 0.01437041012170038,
+          "acceleration_RMS": 0.016924522888936613,
+          "valid_samples": 2141
+        },
+        {
+          "block": "FIT_RECOVERY_REVERSE_02#0",
+          "role": "FIT_RECOVERY_REVERSE_02",
+          "coordinate_range": [
+            0.051954738795757294,
+            0.12180203199386597
+          ],
+          "velocity_RMS": 0.011691449984577556,
+          "acceleration_RMS": 0.00019030241845354357,
+          "valid_samples": 1260
+        },
+        {
+          "block": "FIT_RECOVERY_OVERLAP_OPEN_03#0",
+          "role": "FIT_RECOVERY_OVERLAP_OPEN_03",
+          "coordinate_range": [
+            0.054892368614673615,
+            0.15733346343040466
+          ],
+          "velocity_RMS": 0.014064482316225833,
+          "acceleration_RMS": 0.00995581035672538,
+          "valid_samples": 1711
+        },
+        {
+          "block": "VALIDATION_RECOVERY_DISTINCT_PROFILE_04#0",
+          "role": "VALIDATION_RECOVERY_DISTINCT_PROFILE_04",
+          "coordinate_range": [
+            0.08668367564678192,
+            0.15733346343040466
+          ],
+          "velocity_RMS": 0.01267017114207283,
+          "acceleration_RMS": 0.0033541222931274114,
+          "valid_samples": 1242
+        },
+        {
+          "block": "VALIDATION_OPTIONAL_RANGE_EXPANSION_05#0",
+          "role": "VALIDATION_OPTIONAL_RANGE_EXPANSION_05",
+          "coordinate_range": [
+            0.0867144763469696,
+            0.3499879240989685
+          ],
+          "velocity_RMS": 0.02144771745722384,
+          "acceleration_RMS": 0.002198862437715782,
+          "valid_samples": 2860
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": -0.00015996567547096885,
+        "inertial_relative_error_pct": -0.12369689053234323,
+        "damping_absolute_error": 0.007876491881416564,
+        "damping_relative_error_pct": 3.523195603883611,
+        "resistance_RMSE_observed_FIT_support": 7.235555987195872e-05,
+        "heldout_motion": {
+          "VALIDATION_RECOVERY_DISTINCT_PROFILE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 2.9720263598286333e-05,
+            "coordinate_rmse": 0.0003900717734939436,
+            "velocity_rmse": 0.0002979493091063455,
+            "final_coordinate_error": -0.00019083964111978047,
+            "outside_FIT_support": false,
+            "samples": 1242,
+            "duration_s": 5.1708333333333485,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "VALIDATION_OPTIONAL_RANGE_EXPANSION_05#0": {
+            "status": "predicted",
+            "effort_rmse": 0.004620612528165314,
+            "coordinate_rmse": 0.1052870285551444,
+            "velocity_rmse": 0.049133231079847184,
+            "final_coordinate_error": 0.34576407062849657,
+            "outside_FIT_support": true,
+            "samples": 2860,
+            "duration_s": 11.912500000000023,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_RECOVERY_DISTINCT_PROFILE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 2.9720263598286333e-05,
+          "coordinate_rmse": 0.0003900717734939436,
+          "velocity_rmse": 0.0002979493091063455,
+          "final_coordinate_error": -0.00019083964111978047,
+          "outside_FIT_support": false,
+          "samples": 1242,
+          "duration_s": 5.1708333333333485,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_RECOVERY_DISTINCT_PROFILE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 2.9720263598286333e-05,
+          "coordinate_rmse": 0.0003900717734939436,
+          "velocity_rmse": 0.0002979493091063455,
+          "final_coordinate_error": -0.00019083964111978047,
+          "outside_FIT_support": false,
+          "samples": 1242,
+          "duration_s": 5.1708333333333485,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        },
+        "VALIDATION_OPTIONAL_RANGE_EXPANSION_05#0": {
+          "status": "predicted",
+          "effort_rmse": 0.004620612528165314,
+          "coordinate_rmse": 0.1052870285551444,
+          "velocity_rmse": 0.049133231079847184,
+          "final_coordinate_error": 0.34576407062849657,
+          "outside_FIT_support": true,
+          "samples": 2860,
+          "duration_s": 11.912500000000023,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.005844932002312134,
+          "inertial_relative_error_pct": -4.519719070546547,
+          "damping_absolute_error": -0.10669065399138257,
+          "damping_relative_error_pct": -47.72328198607924,
+          "resistance_RMSE_observed_FIT_support": 0.002774940812473367,
+          "heldout_motion": {
+            "VALIDATION_RECOVERY_DISTINCT_PROFILE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 0.0013765146049469997,
+              "coordinate_rmse": 0.029187857200242362,
+              "velocity_rmse": 0.01029615090314879,
+              "final_coordinate_error": -0.05109751277828924,
+              "outside_FIT_support": false,
+              "samples": 1242,
+              "duration_s": 5.1708333333333485,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            },
+            "VALIDATION_OPTIONAL_RANGE_EXPANSION_05#0": {
+              "status": "predicted",
+              "effort_rmse": 0.0037235076322216436,
+              "coordinate_rmse": 0.06256513909923628,
+              "velocity_rmse": 0.016677899790184317,
+              "final_coordinate_error": 0.009513373771538547,
+              "outside_FIT_support": true,
+              "samples": 2860,
+              "duration_s": 11.912500000000023,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": -0.00015996567547096885,
+          "inertial_relative_error_pct": -0.12369689053234323,
+          "damping_absolute_error": 0.007876491881416564,
+          "damping_relative_error_pct": 3.523195603883611,
+          "resistance_RMSE_observed_FIT_support": 7.235555987195872e-05,
+          "heldout_motion": {
+            "VALIDATION_RECOVERY_DISTINCT_PROFILE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 2.9720263598286333e-05,
+              "coordinate_rmse": 0.0003900717734939436,
+              "velocity_rmse": 0.0002979493091063455,
+              "final_coordinate_error": -0.00019083964111978047,
+              "outside_FIT_support": false,
+              "samples": 1242,
+              "duration_s": 5.1708333333333485,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            },
+            "VALIDATION_OPTIONAL_RANGE_EXPANSION_05#0": {
+              "status": "predicted",
+              "effort_rmse": 0.004620612528165314,
+              "coordinate_rmse": 0.1052870285551444,
+              "velocity_rmse": 0.049133231079847184,
+              "final_coordinate_error": 0.34576407062849657,
+              "outside_FIT_support": true,
+              "samples": 2860,
+              "duration_s": 11.912500000000023,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "c43063fd1b4d7d0a289a8a25709251b730cd0dbfddba478a3ced05c7190f72b4",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.1892531500197947,
+          "unloaded_wait_s": 100.88637529313564
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 43.821683685993776,
+          "unloaded_wait_s": 19.38744727615267
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.11498881108127534,
+          "unloaded_wait_s": 96.05116165103391
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 39.713621428003535,
+          "unloaded_wait_s": 41.520065549062565
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 341.78301688306965,
+          "unloaded_wait_s": 64.70413116784766
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.2492683329619467,
+          "unloaded_wait_s": 56.557017595972866
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 378.7370627350174,
+          "unloaded_wait_s": 122.49921185802668
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.122114387108013,
+          "unloaded_wait_s": 119.26317655178718
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 59.808604173129424,
+          "unloaded_wait_s": 91.98184220097028
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.13822741201147437,
+          "unloaded_wait_s": 77.96239792695269
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 42.32893698499538,
+          "unloaded_wait_s": 59.45686090691015
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.17801824398338795,
+          "unloaded_wait_s": 158.60829186509363
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 45.257128045195714,
+          "unloaded_wait_s": 42.11929375282489
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 254.4255368548911,
+          "unloaded_wait_s": 123.13730464410037
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.4955573990009725,
+          "unloaded_wait_s": 31.240138420136645
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 100.55173582979478,
+          "unloaded_wait_s": 112.60783603508025
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.704382433788851,
+          "unloaded_wait_s": 42.58972460706718
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 491.6268547240179,
+          "unloaded_wait_s": 178.08186472812667
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.8904282860457897,
+          "unloaded_wait_s": 118.02180724800564
+        },
+        {
+          "operation": "finish",
+          "wall_s": 0.062367076985538006,
+          "unloaded_wait_s": 40.961100035812706
+        }
+      ]
+    },
+    {
+      "episode_id": "45936_1",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 22.06540422696809,
+      "frozen_reported_maximum_motion": 22.066,
+      "reverse_travel": 9.487493903400075,
+      "motion_unit": "deg",
+      "physical_acquisitions": 2,
+      "recovery_acquisitions": 1,
+      "preload_requests_N": [
+        null,
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "首次传力退化后恢复，完成验证",
+      "wall_s": 2617.3142593149096,
+      "simulation_s": 373.8333333333333,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 16041172,
+          "clips": 86535,
+          "numeric": 12767015,
+          "geometry": 8543286,
+          "observations": 24756875
+        },
+        "total_bytes": 62194883,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 8,
+      "Agent_view_moves": 4,
+      "measured_relative_drift_mm": 2.814346458762884,
+      "raw_pad_peak_N": [
+        1.462804913520813,
+        1.3584692478179932
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 0.11539833663820398,
+        "damping": 0.12307717509733723,
+        "resistance_law": {
+          "family": "constant",
+          "base": 0.025045124276704002,
+          "amplitude": 0.0,
+          "center": 0.1939326786511113,
+          "width": 0.06895687302919316
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.11514932076245156,
+        0.13158642821636773,
+        0.024953484797858867
+      ],
+      "conditional_std": [
+        0.00033762417304550617,
+        0.0009354877169568316,
+        1.2944373392469662e-05
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 53.47137681447339,
+      "FIT_support": [
+        [
+          0.0055622484704310245,
+          0.20706325251123178
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_ACCELERATION_OPEN_01#0",
+          "role": "FIT_ACCELERATION_OPEN_01",
+          "coordinate_range": [
+            0.0012394033838063478,
+            0.16058075428009033
+          ],
+          "velocity_RMS": 0.01302575368526919,
+          "acceleration_RMS": 0.011299140186386888,
+          "valid_samples": 2931
+        },
+        {
+          "block": "FIT_RECOVERY_REVERSE_02#0",
+          "role": "FIT_RECOVERY_REVERSE_02",
+          "coordinate_range": [
+            0.06930718570947647,
+            0.1589164137840271
+          ],
+          "velocity_RMS": 0.012946921800279164,
+          "acceleration_RMS": 0.00017355779619566495,
+          "valid_samples": 1495
+        },
+        {
+          "block": "FIT_RECOVERY_VARIABLE_OPEN_03#0",
+          "role": "FIT_RECOVERY_VARIABLE_OPEN_03",
+          "coordinate_range": [
+            0.07332468032836914,
+            0.20979207754135132
+          ],
+          "velocity_RMS": 0.014951178996381072,
+          "acceleration_RMS": 0.007324370259434754,
+          "valid_samples": 2121
+        },
+        {
+          "block": "VALIDATION_RECOVERY_REVERSE_04#0",
+          "role": "VALIDATION_RECOVERY_REVERSE_04",
+          "coordinate_range": [
+            0.13891270756721497,
+            0.2097899317741394
+          ],
+          "velocity_RMS": 0.014531727226196528,
+          "acceleration_RMS": 0.006239988001103595,
+          "valid_samples": 1070
+        },
+        {
+          "block": "VALIDATION_HELDOUT_RANGE_EXPANSION_05#0",
+          "role": "VALIDATION_HELDOUT_RANGE_EXPANSION_05",
+          "coordinate_range": [
+            0.13894805312156677,
+            0.3851139545440674
+          ],
+          "velocity_RMS": 0.025748806030141205,
+          "acceleration_RMS": 0.0019368210760529077,
+          "valid_samples": 2199
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": -0.00024901587575242023,
+        "inertial_relative_error_pct": -0.21578809799757126,
+        "damping_absolute_error": 0.008509253119030502,
+        "damping_relative_error_pct": 6.913754002154215,
+        "resistance_RMSE_observed_FIT_support": 9.163947884513468e-05,
+        "heldout_motion": {
+          "VALIDATION_RECOVERY_REVERSE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 4.17847895883965e-05,
+            "coordinate_rmse": 0.00022981858581538181,
+            "velocity_rmse": 0.00033040948842338506,
+            "final_coordinate_error": 0.0005143838888007346,
+            "outside_FIT_support": false,
+            "samples": 1070,
+            "duration_s": 4.4541666666666515,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "VALIDATION_HELDOUT_RANGE_EXPANSION_05#0": {
+            "status": "predicted",
+            "effort_rmse": 4.238145793886094e-05,
+            "coordinate_rmse": 0.0012031142737446055,
+            "velocity_rmse": 0.00028374569433464546,
+            "final_coordinate_error": -0.0022072360371201416,
+            "outside_FIT_support": true,
+            "samples": 2199,
+            "duration_s": 9.158333333333303,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_RECOVERY_REVERSE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 4.17847895883965e-05,
+          "coordinate_rmse": 0.00022981858581538181,
+          "velocity_rmse": 0.00033040948842338506,
+          "final_coordinate_error": 0.0005143838888007346,
+          "outside_FIT_support": false,
+          "samples": 1070,
+          "duration_s": 4.4541666666666515,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_RECOVERY_REVERSE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 4.17847895883965e-05,
+          "coordinate_rmse": 0.00022981858581538181,
+          "velocity_rmse": 0.00033040948842338506,
+          "final_coordinate_error": 0.0005143838888007346,
+          "outside_FIT_support": false,
+          "samples": 1070,
+          "duration_s": 4.4541666666666515,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        },
+        "VALIDATION_HELDOUT_RANGE_EXPANSION_05#0": {
+          "status": "predicted",
+          "effort_rmse": 4.238145793886094e-05,
+          "coordinate_rmse": 0.0012031142737446055,
+          "velocity_rmse": 0.00028374569433464546,
+          "final_coordinate_error": -0.0022072360371201416,
+          "outside_FIT_support": true,
+          "samples": 2199,
+          "duration_s": 9.158333333333303,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.00024901587575242023,
+          "inertial_relative_error_pct": -0.21578809799757126,
+          "damping_absolute_error": 0.008509253119030502,
+          "damping_relative_error_pct": 6.913754002154215,
+          "resistance_RMSE_observed_FIT_support": 9.163947884513468e-05,
+          "heldout_motion": {
+            "VALIDATION_RECOVERY_REVERSE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 4.17847895883965e-05,
+              "coordinate_rmse": 0.00022981858581538181,
+              "velocity_rmse": 0.00033040948842338506,
+              "final_coordinate_error": 0.0005143838888007346,
+              "outside_FIT_support": false,
+              "samples": 1070,
+              "duration_s": 4.4541666666666515,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            },
+            "VALIDATION_HELDOUT_RANGE_EXPANSION_05#0": {
+              "status": "predicted",
+              "effort_rmse": 4.238145793886094e-05,
+              "coordinate_rmse": 0.0012031142737446055,
+              "velocity_rmse": 0.00028374569433464546,
+              "final_coordinate_error": -0.0022072360371201416,
+              "outside_FIT_support": true,
+              "samples": 2199,
+              "duration_s": 9.158333333333303,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": -0.0002668993975585565,
+          "inertial_relative_error_pct": -0.23128530733969033,
+          "damping_absolute_error": 0.008813470469355988,
+          "damping_relative_error_pct": 7.160930093159634,
+          "resistance_RMSE_observed_FIT_support": 9.749264252793443e-05,
+          "heldout_motion": {
+            "VALIDATION_RECOVERY_REVERSE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 5.333802594936296e-05,
+              "coordinate_rmse": 0.0003513466496564108,
+              "velocity_rmse": 0.00038873780129598464,
+              "final_coordinate_error": 0.0008257799167733504,
+              "outside_FIT_support": false,
+              "samples": 1070,
+              "duration_s": 4.4541666666666515,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            },
+            "VALIDATION_HELDOUT_RANGE_EXPANSION_05#0": {
+              "status": "predicted",
+              "effort_rmse": 0.00045814944349483074,
+              "coordinate_rmse": 0.003916641835505378,
+              "velocity_rmse": 0.00268446528507621,
+              "final_coordinate_error": 0.013614974621641629,
+              "outside_FIT_support": true,
+              "samples": 2199,
+              "duration_s": 9.158333333333303,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "678854aee4bae0060863f6a39ac3ae15cc725a0104d017d4e61c3e6da5c8ad16",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.1477091759443283,
+          "unloaded_wait_s": 86.27096513705328
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 46.410939822904766,
+          "unloaded_wait_s": 11.05770046217367
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.1498082431498915,
+          "unloaded_wait_s": 36.262165230931714
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 37.83890241011977,
+          "unloaded_wait_s": 8.362505143973976
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 259.3304760400206,
+          "unloaded_wait_s": 37.38143002893776
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.1725203099194914,
+          "unloaded_wait_s": 75.66272192401811
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 400.2027532970533,
+          "unloaded_wait_s": 39.54004786396399
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.4589499151334167,
+          "unloaded_wait_s": 24.373459049034864
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 62.698317244881764,
+          "unloaded_wait_s": 18.174910670146346
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.18834689515642822,
+          "unloaded_wait_s": 25.226684578927234
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 76.96624610293657,
+          "unloaded_wait_s": 12.183988847071305
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.15106076397933066,
+          "unloaded_wait_s": 76.04397286800668
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 45.5758678491693,
+          "unloaded_wait_s": 12.656121328938752
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 277.8386240808759,
+          "unloaded_wait_s": 39.22358218417503
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 131.23001098795794,
+          "unloaded_wait_s": 41.935829570982605
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.4366856070701033,
+          "unloaded_wait_s": 9.037650244077668
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 497.30169248301536,
+          "unloaded_wait_s": 41.74765974213369
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.225017914082855,
+          "unloaded_wait_s": 67.82050915807486
+        },
+        {
+          "operation": "finish",
+          "wall_s": 0.07700054789893329,
+          "unloaded_wait_s": 20.950717653147876
+        }
+      ]
+    },
+    {
+      "episode_id": "46427_0",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 20.033916430056834,
+      "frozen_reported_maximum_motion": 20.031,
+      "reverse_travel": 13.469880095205616,
+      "motion_unit": "deg",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": false,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": false,
+      "status": "SAFE_UNLOADED_BOUNDARY_UNAVAILABLE",
+      "outcome": "VALIDATION期间CONTACT_LOST硬停止",
+      "wall_s": 1202.7644298409577,
+      "simulation_s": 248.9625,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 17957735,
+          "clips": 67654,
+          "numeric": 16443579,
+          "geometry": 5280835,
+          "observations": 9685700
+        },
+        "total_bytes": 49435503,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 4,
+      "Agent_view_moves": 2,
+      "measured_relative_drift_mm": 11.207343079149723,
+      "raw_pad_peak_N": [
+        1.1020663976669312,
+        1.421415090560913
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 0.3823675102988827,
+        "damping": 0.25932502468681223,
+        "resistance_law": {
+          "family": "constant",
+          "base": 0.022834282307803863,
+          "amplitude": 0.0,
+          "center": 0.33289850908882346,
+          "width": 0.12648679516104105
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.38219533932392025,
+        0.28290934539699236,
+        0.022682351873823024
+      ],
+      "conditional_std": [
+        0.0007110060774389975,
+        0.0022874614850800813,
+        1.9577730647551653e-05
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 69.3348186059157,
+      "FIT_support": [
+        [
+          0.004301509287740503,
+          0.34690670296549797
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_RANGE_ACCELERATION_OPEN_01#0",
+          "role": "FIT_RANGE_ACCELERATION_OPEN_01",
+          "coordinate_range": [
+            0.0020319209434092045,
+            0.3496021032333374
+          ],
+          "velocity_RMS": 0.01003982753006832,
+          "acceleration_RMS": 0.00964807066595312,
+          "valid_samples": 8764
+        },
+        {
+          "block": "FIT_OVERLAP_REVERSE_SPEED_02#0",
+          "role": "FIT_OVERLAP_REVERSE_SPEED_02",
+          "coordinate_range": [
+            0.1218198612332344,
+            0.34754201769828796
+          ],
+          "velocity_RMS": 0.007989012852964694,
+          "acceleration_RMS": 0.0002773319877031229,
+          "valid_samples": 6561
+        },
+        {
+          "block": "FIT_OVERLAP_VARIABLE_OPEN_03#0",
+          "role": "FIT_OVERLAP_VARIABLE_OPEN_03",
+          "coordinate_range": [
+            0.12356888502836227,
+            0.2619875967502594
+          ],
+          "velocity_RMS": null,
+          "acceleration_RMS": null,
+          "valid_samples": 0
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": -0.00017217097496247113,
+        "inertial_relative_error_pct": -0.04502761618734308,
+        "damping_absolute_error": 0.02358432071018013,
+        "damping_relative_error_pct": 9.09450244482306,
+        "resistance_RMSE_observed_FIT_support": 0.00015193043398083886,
+        "heldout_motion": {}
+      },
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.00017217097496247113,
+          "inertial_relative_error_pct": -0.04502761618734308,
+          "damping_absolute_error": 0.02358432071018013,
+          "damping_relative_error_pct": 9.09450244482306,
+          "resistance_RMSE_observed_FIT_support": 0.00015193043398083886,
+          "heldout_motion": {}
+        },
+        "extended_model": {
+          "inertial_absolute_error": -0.00022681419205267117,
+          "inertial_relative_error_pct": -0.05931837458558187,
+          "damping_absolute_error": 0.023857181512290326,
+          "damping_relative_error_pct": 9.199722063500326,
+          "resistance_RMSE_observed_FIT_support": 0.00015473014586164538,
+          "heldout_motion": {}
+        }
+      },
+      "online_model_sha256": "6cfdc374b108ca9a0dfed6752264272143c8e78ebb0331a1099a467ebb0c7f12",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.12267682910896838,
+          "unloaded_wait_s": 43.897289087064564
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 40.11267775599845,
+          "unloaded_wait_s": 15.333345910999924
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.20157699310220778,
+          "unloaded_wait_s": 57.55644049379043
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 41.603323022136465,
+          "unloaded_wait_s": 10.594336715061218
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 152.2823709929362,
+          "unloaded_wait_s": 61.320256719132885
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.2249032699037343,
+          "unloaded_wait_s": 76.67311213118955
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 546.6573771871626,
+          "unloaded_wait_s": 25.233215788844973
+        }
+      ]
+    },
+    {
+      "episode_id": "46427_1",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 20.03430404329223,
+      "frozen_reported_maximum_motion": 20.031,
+      "reverse_travel": 17.079251727190186,
+      "motion_unit": "deg",
+      "physical_acquisitions": 2,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        null,
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "更换抓取后完成验证",
+      "wall_s": 3870.9080449428875,
+      "simulation_s": 550.3333333333334,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 18706607,
+          "clips": 83358,
+          "numeric": 19405621,
+          "geometry": 5377357,
+          "observations": 21324468
+        },
+        "total_bytes": 64897411,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 8,
+      "Agent_view_moves": 4,
+      "measured_relative_drift_mm": 4.642160143703222,
+      "raw_pad_peak_N": [
+        1.0015445947647095,
+        1.1237019300460815
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "extended_model",
+      "authored_reference": {
+        "inertial": 0.4780096841135838,
+        "damping": 0.15441116793337226,
+        "resistance_law": {
+          "family": "localized_passive_friction",
+          "base": 0.022349070518279713,
+          "amplitude": 0.007164487237683671,
+          "center": 0.3734752259354627,
+          "width": 0.11661430292363195
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.4776681705694094,
+        0.1813981346407541,
+        0.022385103222698398,
+        0.022082292595306502,
+        0.022546797505191677,
+        0.03329876773150886,
+        0.020002830468423376
+      ],
+      "conditional_std": [
+        0.000774103881752187,
+        0.002471645169650361,
+        4.778839319832847e-05,
+        4.4850284031604625e-05,
+        3.41641956640213e-05,
+        4.060966957759977e-05,
+        9.504304079000522e-05
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 87.19820271180198,
+      "FIT_support": [
+        [
+          0.003912708722054958,
+          0.3468587536078233
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_RANGE_ACCELERATION_OPEN_01#0",
+          "role": "FIT_RANGE_ACCELERATION_OPEN_01",
+          "coordinate_range": [
+            0.0015693682944402099,
+            0.34960049390792847
+          ],
+          "velocity_RMS": 0.0099644968218412,
+          "acceleration_RMS": 0.009428482722601087,
+          "valid_samples": 8828
+        },
+        {
+          "block": "FIT_OVERLAP_REVERSE_SPEED_02#0",
+          "role": "FIT_OVERLAP_REVERSE_SPEED_02",
+          "coordinate_range": [
+            0.1392834484577179,
+            0.34756219387054443
+          ],
+          "velocity_RMS": 0.007998030275424,
+          "acceleration_RMS": 0.00035586429179321335,
+          "valid_samples": 6043
+        },
+        {
+          "block": "FIT_REACQUIRED_OVERLAP_ACCELERATION_03#0",
+          "role": "FIT_REACQUIRED_OVERLAP_ACCELERATION_03",
+          "coordinate_range": [
+            0.14067724347114563,
+            0.2797917425632477
+          ],
+          "velocity_RMS": 0.00900760480353461,
+          "acceleration_RMS": 0.005874301160768566,
+          "valid_samples": 3744
+        },
+        {
+          "block": "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04#0",
+          "role": "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04",
+          "coordinate_range": [
+            0.19178493320941925,
+            0.27970463037490845
+          ],
+          "velocity_RMS": 0.007925221818469956,
+          "acceleration_RMS": 0.00371014866474476,
+          "valid_samples": 2622
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": -0.00034151354417438773,
+        "inertial_relative_error_pct": -0.07144490070482012,
+        "damping_absolute_error": 0.02698696670738185,
+        "damping_relative_error_pct": 17.477341223807464,
+        "resistance_RMSE_observed_FIT_support": 0.00019236225130801282,
+        "heldout_motion": {
+          "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 5.6523906313547954e-05,
+            "coordinate_rmse": 0.0006649315993434359,
+            "velocity_rmse": 0.0004472364538328335,
+            "final_coordinate_error": 0.001667483344377857,
+            "outside_FIT_support": false,
+            "samples": 2622,
+            "duration_s": 10.920833333333348,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 5.6523906313547954e-05,
+          "coordinate_rmse": 0.0006649315993434359,
+          "velocity_rmse": 0.0004472364538328335,
+          "final_coordinate_error": 0.001667483344377857,
+          "outside_FIT_support": false,
+          "samples": 2622,
+          "duration_s": 10.920833333333348,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 5.6523906313547954e-05,
+          "coordinate_rmse": 0.0006649315993434359,
+          "velocity_rmse": 0.0004472364538328335,
+          "final_coordinate_error": 0.001667483344377857,
+          "outside_FIT_support": false,
+          "samples": 2622,
+          "duration_s": 10.920833333333348,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.00366899776199181,
+          "inertial_relative_error_pct": -0.7675572031130673,
+          "damping_absolute_error": -0.10931850984341533,
+          "damping_relative_error_pct": -70.79702284914119,
+          "resistance_RMSE_observed_FIT_support": 0.002816616175375758,
+          "heldout_motion": {
+            "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 0.0009618511798741409,
+              "coordinate_rmse": 0.043816364848842236,
+              "velocity_rmse": 0.007070410272565948,
+              "final_coordinate_error": -0.07186846183407401,
+              "outside_FIT_support": false,
+              "samples": 2622,
+              "duration_s": 10.920833333333348,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": -0.00034151354417438773,
+          "inertial_relative_error_pct": -0.07144490070482012,
+          "damping_absolute_error": 0.02698696670738185,
+          "damping_relative_error_pct": 17.477341223807464,
+          "resistance_RMSE_observed_FIT_support": 0.00019236225130801282,
+          "heldout_motion": {
+            "VALIDATION_REACQUIRED_DISTINCT_REVERSE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 5.6523906313547954e-05,
+              "coordinate_rmse": 0.0006649315993434359,
+              "velocity_rmse": 0.0004472364538328335,
+              "final_coordinate_error": 0.001667483344377857,
+              "outside_FIT_support": false,
+              "samples": 2622,
+              "duration_s": 10.920833333333348,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "8b3872547e494b312bf57679578f569e7cfad81ac46a53a2631de428e4e9a333",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.09888429706916213,
+          "unloaded_wait_s": 288.4127838339191
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 40.999178224941716,
+          "unloaded_wait_s": 17.309966320870444
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.2188950339332223,
+          "unloaded_wait_s": 58.495109101058915
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 40.20077388593927,
+          "unloaded_wait_s": 13.568424900062382
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 107.24580649496056,
+          "unloaded_wait_s": 56.65012054215185
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.1114107379689813,
+          "unloaded_wait_s": 52.281173889990896
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 520.2045022789389,
+          "unloaded_wait_s": 49.21820778097026
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 3.5978568240534514,
+          "unloaded_wait_s": 42.643748318077996
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 53.8001127098687,
+          "unloaded_wait_s": 293.634209580021
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.1885692379437387,
+          "unloaded_wait_s": 70.51846886100248
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 43.293563639046624,
+          "unloaded_wait_s": 13.779572673141956
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.13496887893415987,
+          "unloaded_wait_s": 72.63223733520135
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.14232653379440308,
+          "unloaded_wait_s": 52.21899976604618
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 40.79167703096755,
+          "unloaded_wait_s": 12.831560824997723
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 140.0510523649864,
+          "unloaded_wait_s": 79.10740645881742
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 235.66295108594932,
+          "unloaded_wait_s": 83.62555102189071
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.919175790855661,
+          "unloaded_wait_s": 14.565857633948326
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 230.46770935109816,
+          "unloaded_wait_s": 24.913963390048593
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.021241009933874,
+          "unloaded_wait_s": 35.82245192001574
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 117.49646732304245,
+          "unloaded_wait_s": 79.2006172540132
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 3.4585127390455455,
+          "unloaded_wait_s": 7.024774611927569
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 638.671340247849,
+          "unloaded_wait_s": 65.2552485850174
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 1.9630218180827796,
+          "unloaded_wait_s": 25.742196602048352
+        },
+        {
+          "operation": "finish",
+          "wall_s": 0.07505624601617455,
+          "unloaded_wait_s": 55.7798698078841
+        }
+      ]
+    },
+    {
+      "episode_id": "45600_0",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 20.042636874079648,
+      "frozen_reported_maximum_motion": 20.037,
+      "reverse_travel": 12.058034743760729,
+      "motion_unit": "deg",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "BOUNDED_AGENT_STOP",
+      "outcome": "Agent无载等待超时，未执行VALIDATION",
+      "wall_s": 1883.3990826529916,
+      "simulation_s": 217.1125,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 17693881,
+          "clips": 82494,
+          "numeric": 10353227,
+          "geometry": 9116835,
+          "observations": 17200650
+        },
+        "total_bytes": 54447087,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 5,
+      "Agent_view_moves": 3,
+      "measured_relative_drift_mm": 1.775372656993568,
+      "raw_pad_peak_N": [
+        1.148762822151184,
+        1.482525110244751
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 0.8145162637581129,
+        "damping": 0.18400712350015874,
+        "resistance_law": {
+          "family": "localized_passive_friction",
+          "base": 0.02012380045888441,
+          "amplitude": 0.006584938462704686,
+          "center": 0.1900808621526862,
+          "width": 0.12995188401564592
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.809515438548547,
+        0.20081343018737902,
+        0.02531026266195493
+      ],
+      "conditional_std": [
+        0.01158879773530299,
+        0.036026131858456566,
+        0.0004274853159684271
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 54.3250129492861,
+      "FIT_support": [
+        [
+          0.004657653444964025,
+          0.34553474658413935
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_RANGE_ACCELERATION_OPEN_01#0",
+          "role": "FIT_RANGE_ACCELERATION_OPEN_01",
+          "coordinate_range": [
+            0.0012165489606559277,
+            0.34981000423431396
+          ],
+          "velocity_RMS": 0.012381202429519145,
+          "acceleration_RMS": 0.012009863130934757,
+          "valid_samples": 7093
+        },
+        {
+          "block": "FIT_OVERLAP_REVERSE_SPEED_02#0",
+          "role": "FIT_OVERLAP_REVERSE_SPEED_02",
+          "coordinate_range": [
+            0.13919369876384735,
+            0.34821945428848267
+          ],
+          "velocity_RMS": 0.011215047619822078,
+          "acceleration_RMS": 0.000317514018089019,
+          "valid_samples": 4311
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": -0.005000825209565907,
+        "inertial_relative_error_pct": -0.6139625974431184,
+        "damping_absolute_error": 0.016806306687220274,
+        "damping_relative_error_pct": 9.133508729191009,
+        "resistance_RMSE_observed_FIT_support": 0.0012551489853806688,
+        "heldout_motion": {}
+      },
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.005000825209565907,
+          "inertial_relative_error_pct": -0.6139625974431184,
+          "damping_absolute_error": 0.016806306687220274,
+          "damping_relative_error_pct": 9.133508729191009,
+          "resistance_RMSE_observed_FIT_support": 0.0012551489853806688,
+          "heldout_motion": {}
+        },
+        "extended_model": {
+          "inertial_absolute_error": 0.000306810547579639,
+          "inertial_relative_error_pct": 0.03766782337335517,
+          "damping_absolute_error": 0.030940277832981644,
+          "damping_relative_error_pct": 16.814717411173994,
+          "resistance_RMSE_observed_FIT_support": 0.00026145442589529586,
+          "heldout_motion": {}
+        }
+      },
+      "online_model_sha256": "5fa1f39b6fe4e2c48a40dc891cc1c2670555f31faac16d5a5bf968af4e76c665",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.11121448408812284,
+          "unloaded_wait_s": 76.32436586194672
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 38.319187093060464,
+          "unloaded_wait_s": 16.817903036018834
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.09405950806103647,
+          "unloaded_wait_s": 109.66145816701464
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 30.815336202038452,
+          "unloaded_wait_s": 20.122372304089367
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.19942201185040176,
+          "unloaded_wait_s": 117.3098281279672
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 37.75780148105696,
+          "unloaded_wait_s": 22.245446667075157
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 225.95346085191704,
+          "unloaded_wait_s": 109.28133228304796
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.9396070619113743,
+          "unloaded_wait_s": 90.19871700718068
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 473.69736765907146,
+          "unloaded_wait_s": 68.07712091784924
+        }
+      ]
+    },
+    {
+      "episode_id": "45600_1",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 20.032886779039455,
+      "frozen_reported_maximum_motion": 20.025,
+      "reverse_travel": 16.08400693398106,
+      "motion_unit": "deg",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "完成验证",
+      "wall_s": 1820.0542891598307,
+      "simulation_s": 233.6625,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 18317518,
+          "clips": 83075,
+          "numeric": 14863634,
+          "geometry": 9537917,
+          "observations": 13015237
+        },
+        "total_bytes": 55817381,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 4,
+      "Agent_view_moves": 2,
+      "measured_relative_drift_mm": 2.137179719284177,
+      "raw_pad_peak_N": [
+        1.534171223640442,
+        1.1234583854675293
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 0.7151817511979519,
+        "damping": 0.25311220817946767,
+        "resistance_law": {
+          "family": "constant",
+          "base": 0.024765858540737744,
+          "amplitude": 0.0,
+          "center": 0.4041804514188281,
+          "width": 0.11589734770110112
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.7137002716215477,
+        0.2846656093379689,
+        0.024552070572152526
+      ],
+      "conditional_std": [
+        0.00072291918890684,
+        0.0022584702258348836,
+        2.180125129926961e-05
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 65.37072631564035,
+      "FIT_support": [
+        [
+          0.004240592347923666,
+          0.34790927544236183
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_RANGE_ACCELERATION_OPEN_01#0",
+          "role": "FIT_RANGE_ACCELERATION_OPEN_01",
+          "coordinate_range": [
+            0.001032466534525156,
+            0.3495151400566101
+          ],
+          "velocity_RMS": 0.010317074888701656,
+          "acceleration_RMS": 0.010095447743615366,
+          "valid_samples": 8595
+        },
+        {
+          "block": "FIT_OVERLAP_REVERSE_SPEED_02#0",
+          "role": "FIT_OVERLAP_REVERSE_SPEED_02",
+          "coordinate_range": [
+            0.1392708718776703,
+            0.34793999791145325
+          ],
+          "velocity_RMS": 0.00938901717147707,
+          "acceleration_RMS": 0.00035623416994971975,
+          "valid_samples": 5177
+        },
+        {
+          "block": "FIT_OVERLAP_VARIABLE_OPEN_03#0",
+          "role": "FIT_OVERLAP_VARIABLE_OPEN_03",
+          "coordinate_range": [
+            0.1401788890361786,
+            0.24477612972259521
+          ],
+          "velocity_RMS": 0.009077528577490605,
+          "acceleration_RMS": 0.00476391852745018,
+          "valid_samples": 2742
+        },
+        {
+          "block": "VALIDATION_DISTINCT_REVERSE_04#0",
+          "role": "VALIDATION_DISTINCT_REVERSE_04",
+          "coordinate_range": [
+            0.17428068816661835,
+            0.24486328661441803
+          ],
+          "velocity_RMS": 0.00843557987690454,
+          "acceleration_RMS": 0.003986691531684414,
+          "valid_samples": 1976
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": -0.00148147957640421,
+        "inertial_relative_error_pct": -0.20714728443821384,
+        "damping_absolute_error": 0.03155340115850125,
+        "damping_relative_error_pct": 12.466171183702258,
+        "resistance_RMSE_observed_FIT_support": 0.00021378796858521898,
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_REVERSE_04#0": {
+            "status": "predicted",
+            "effort_rmse": 8.785894099945911e-05,
+            "coordinate_rmse": 0.0011695155934771542,
+            "velocity_rmse": 0.0003340693076151189,
+            "final_coordinate_error": 0.0012462880022850176,
+            "outside_FIT_support": false,
+            "samples": 1976,
+            "duration_s": 8.229166666666657,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_DISTINCT_REVERSE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 8.785894099945911e-05,
+          "coordinate_rmse": 0.0011695155934771542,
+          "velocity_rmse": 0.0003340693076151189,
+          "final_coordinate_error": 0.0012462880022850176,
+          "outside_FIT_support": false,
+          "samples": 1976,
+          "duration_s": 8.229166666666657,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_DISTINCT_REVERSE_04#0": {
+          "status": "predicted",
+          "effort_rmse": 8.785894099945911e-05,
+          "coordinate_rmse": 0.0011695155934771542,
+          "velocity_rmse": 0.0003340693076151189,
+          "final_coordinate_error": 0.0012462880022850176,
+          "outside_FIT_support": false,
+          "samples": 1976,
+          "duration_s": 8.229166666666657,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.00148147957640421,
+          "inertial_relative_error_pct": -0.20714728443821384,
+          "damping_absolute_error": 0.03155340115850125,
+          "damping_relative_error_pct": 12.466171183702258,
+          "resistance_RMSE_observed_FIT_support": 0.00021378796858521898,
+          "heldout_motion": {
+            "VALIDATION_DISTINCT_REVERSE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 8.785894099945911e-05,
+              "coordinate_rmse": 0.0011695155934771542,
+              "velocity_rmse": 0.0003340693076151189,
+              "final_coordinate_error": 0.0012462880022850176,
+              "outside_FIT_support": false,
+              "samples": 1976,
+              "duration_s": 8.229166666666657,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": -0.001478503741768833,
+          "inertial_relative_error_pct": -0.206731189560172,
+          "damping_absolute_error": 0.031616859538121544,
+          "damping_relative_error_pct": 12.491242427826243,
+          "resistance_RMSE_observed_FIT_support": 0.00021466590574744545,
+          "heldout_motion": {
+            "VALIDATION_DISTINCT_REVERSE_04#0": {
+              "status": "predicted",
+              "effort_rmse": 8.784310251239307e-05,
+              "coordinate_rmse": 0.0011711234181064967,
+              "velocity_rmse": 0.0003342942782542138,
+              "final_coordinate_error": 0.0012468396568970364,
+              "outside_FIT_support": false,
+              "samples": 1976,
+              "duration_s": 8.229166666666657,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "011f79f2e7b4981ea31f79546be05529a0e6db9c80f49c23f9436fde3d0e0469",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.18396762595511973,
+          "unloaded_wait_s": 77.01035446114838
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 39.32754187704995,
+          "unloaded_wait_s": 20.835886073997244
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.13287794613279402,
+          "unloaded_wait_s": 75.40543608297594
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 32.36153108114377,
+          "unloaded_wait_s": 23.70159298297949
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 229.30926969996653,
+          "unloaded_wait_s": 104.2974210740067
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.642191088059917,
+          "unloaded_wait_s": 276.3445898669306
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 527.3930678640027,
+          "unloaded_wait_s": 59.57040995801799
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.4105973390396684,
+          "unloaded_wait_s": 0.0018266630358994007
+        },
+        {
+          "operation": "finish",
+          "wall_s": 0.09708462283015251,
+          "unloaded_wait_s": 211.20665999106131
+        }
+      ]
+    },
+    {
+      "episode_id": "45606_0",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 20.122932577962317,
+      "frozen_reported_maximum_motion": 20.109,
+      "reverse_travel": 17.445791267677983,
+      "motion_unit": "deg",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "完成验证",
+      "wall_s": 1599.5455257280264,
+      "simulation_s": 179.68333333333334,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 18009981,
+          "clips": 86306,
+          "numeric": 7342354,
+          "geometry": 7747252,
+          "observations": 9903883
+        },
+        "total_bytes": 43089776,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 5,
+      "Agent_view_moves": 3,
+      "measured_relative_drift_mm": 1.1891492176800966,
+      "raw_pad_peak_N": [
+        6.458489418029785,
+        1.51695716381073
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "extended_model",
+      "authored_reference": {
+        "inertial": 0.03710558095560173,
+        "damping": 0.11257513629650259,
+        "resistance_law": {
+          "family": "localized_passive_friction",
+          "base": 0.028658385313468784,
+          "amplitude": 0.015612095734167206,
+          "center": 0.38290115494501187,
+          "width": 0.12040617317265206
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.03928584504413297,
+        0.11725145981873195,
+        0.030817475286263715,
+        0.023365408391204812,
+        0.05396046504257915,
+        0.05565189094751079
+      ],
+      "conditional_std": [
+        0.0020955111243111638,
+        0.0034806212073982684,
+        0.0004292572052279871,
+        0.0004657603586731999,
+        0.0012725409254830302,
+        0.0029552176085444076
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 80.98302261440418,
+      "FIT_support": [
+        [
+          0.02442198758944869,
+          0.34317076893953175
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_V71_REMAINING_OPEN_ACCEL_01#0",
+          "role": "FIT_V71_REMAINING_OPEN_ACCEL_01",
+          "coordinate_range": [
+            0.009513295255601406,
+            0.35118788480758667
+          ],
+          "velocity_RMS": 0.029672279736725322,
+          "acceleration_RMS": 0.0001711308341540557,
+          "valid_samples": 2589
+        },
+        {
+          "block": "FIT_V71_REMAINING_REVERSE_SLOW_02#0",
+          "role": "FIT_V71_REMAINING_REVERSE_SLOW_02",
+          "coordinate_range": [
+            0.13829225301742554,
+            0.3468097448348999
+          ],
+          "velocity_RMS": 0.01961446949080227,
+          "acceleration_RMS": 0.00015570300293115492,
+          "valid_samples": 2378
+        },
+        {
+          "block": "FIT_V71_REMAINING_VARIABLE_03#0",
+          "role": "FIT_V71_REMAINING_VARIABLE_03",
+          "coordinate_range": [
+            0.14715978503227234,
+            0.28150951862335205
+          ],
+          "velocity_RMS": 0.03071669231341187,
+          "acceleration_RMS": 0.015668941465854857,
+          "valid_samples": 911
+        },
+        {
+          "block": "VALIDATION_V71_REMAINING_DISTINCT_04#0",
+          "role": "VALIDATION_V71_REMAINING_DISTINCT_04",
+          "coordinate_range": [
+            0.189918652176857,
+            0.28150951862335205
+          ],
+          "velocity_RMS": 0.028521905502505947,
+          "acceleration_RMS": 0.007811510990426054,
+          "valid_samples": 659
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": 0.002180264088531239,
+        "inertial_relative_error_pct": 5.875838707767467,
+        "damping_absolute_error": 0.004676323522229353,
+        "damping_relative_error_pct": 4.153957682016718,
+        "resistance_RMSE_observed_FIT_support": 0.00024062539856134442,
+        "heldout_motion": {
+          "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.00012386584833248197,
+            "coordinate_rmse": 0.0008886189105641253,
+            "velocity_rmse": 0.0013746283112274005,
+            "final_coordinate_error": 0.002273923591491117,
+            "outside_FIT_support": false,
+            "samples": 659,
+            "duration_s": 2.741666666666646,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+          "status": "predicted",
+          "effort_rmse": 0.00012386584833248197,
+          "coordinate_rmse": 0.0008886189105641253,
+          "velocity_rmse": 0.0013746283112274005,
+          "final_coordinate_error": 0.002273923591491117,
+          "outside_FIT_support": false,
+          "samples": 659,
+          "duration_s": 2.741666666666646,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+          "status": "predicted",
+          "effort_rmse": 0.00012386584833248197,
+          "coordinate_rmse": 0.0008886189105641253,
+          "velocity_rmse": 0.0013746283112274005,
+          "final_coordinate_error": 0.002273923591491117,
+          "outside_FIT_support": false,
+          "samples": 659,
+          "duration_s": 2.741666666666646,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": 0.0300284227011575,
+          "inertial_relative_error_pct": 80.926970897148,
+          "damping_absolute_error": -0.11257513626475062,
+          "damping_relative_error_pct": -99.99999997179486,
+          "resistance_RMSE_observed_FIT_support": 0.006254206319964333,
+          "heldout_motion": {
+            "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+              "status": "predicted",
+              "effort_rmse": 0.0020607486362244393,
+              "coordinate_rmse": 0.06081138202841031,
+              "velocity_rmse": 0.04525330738396977,
+              "final_coordinate_error": -0.1162624841625066,
+              "outside_FIT_support": false,
+              "samples": 659,
+              "duration_s": 2.741666666666646,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": 0.002180264088531239,
+          "inertial_relative_error_pct": 5.875838707767467,
+          "damping_absolute_error": 0.004676323522229353,
+          "damping_relative_error_pct": 4.153957682016718,
+          "resistance_RMSE_observed_FIT_support": 0.00024062539856134442,
+          "heldout_motion": {
+            "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+              "status": "predicted",
+              "effort_rmse": 0.00012386584833248197,
+              "coordinate_rmse": 0.0008886189105641253,
+              "velocity_rmse": 0.0013746283112274005,
+              "final_coordinate_error": 0.002273923591491117,
+              "outside_FIT_support": false,
+              "samples": 659,
+              "duration_s": 2.741666666666646,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "de469e8f989a0d333fd1c3d48ce81852dd3aee76633feb1ab9ddbb99ef900c88",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.16935197007842362,
+          "unloaded_wait_s": 109.44937809789553
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 45.21120039001107,
+          "unloaded_wait_s": 0.0013915379531681538
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.11800570320338011,
+          "unloaded_wait_s": 93.10155931091867
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 2.0183855667710304e-05,
+          "unloaded_wait_s": 0.002392543014138937
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.06394900102168322,
+          "unloaded_wait_s": 122.87499603396282
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 34.0251089411322,
+          "unloaded_wait_s": 0.001681813970208168
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.10294005600735545,
+          "unloaded_wait_s": 128.13074106210843
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 34.56950876303017,
+          "unloaded_wait_s": 0.0015492411330342293
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 225.94792182114907,
+          "unloaded_wait_s": 73.0565520268865
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.9502564559224993,
+          "unloaded_wait_s": 0.009849929017946124
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 499.16106777987443,
+          "unloaded_wait_s": 111.90729453903623
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.034123295918107,
+          "unloaded_wait_s": 0.002199971117079258
+        },
+        {
+          "operation": "finish",
+          "wall_s": 0.038670938927680254,
+          "unloaded_wait_s": 57.69148106407374
+        }
+      ]
+    },
+    {
+      "episode_id": "45606_1",
+      "joint_type": "revolute",
+      "initial_grasp_success": true,
+      "maximum_motion": 20.100425397099833,
+      "frozen_reported_maximum_motion": 20.095,
+      "reverse_travel": 17.40951442544875,
+      "motion_unit": "deg",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        null
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "完成验证",
+      "wall_s": 1610.6841625100933,
+      "simulation_s": 181.9625,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 17827958,
+          "clips": 88447,
+          "numeric": 7254029,
+          "geometry": 8472831,
+          "observations": 10660857
+        },
+        "total_bytes": 44304122,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 5,
+      "Agent_view_moves": 3,
+      "measured_relative_drift_mm": 0.773733772803098,
+      "raw_pad_peak_N": [
+        1.2877253293991089,
+        1.2465903759002686
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 0.03490949583299816,
+        "damping": 0.28857653016234597,
+        "resistance_law": {
+          "family": "constant",
+          "base": 0.02875559865291831,
+          "amplitude": 0.0,
+          "center": 0.27397040850867993,
+          "width": 0.1170747788307138
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        0.034976224614760756,
+        0.29205141832397646,
+        0.028696479179336383
+      ],
+      "conditional_std": [
+        0.00030139782659514304,
+        0.00023742838647286812,
+        6.251101704868905e-06
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 40.269889225265395,
+      "FIT_support": [
+        [
+          0.021859805365758284,
+          0.3435073574384054
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_V71_REMAINING_OPEN_ACCEL_01#0",
+          "role": "FIT_V71_REMAINING_OPEN_ACCEL_01",
+          "coordinate_range": [
+            0.007883510552346706,
+            0.35081860423088074
+          ],
+          "velocity_RMS": 0.027354736763324623,
+          "acceleration_RMS": 0.00020273408648022108,
+          "valid_samples": 2837
+        },
+        {
+          "block": "FIT_V71_REMAINING_REVERSE_SLOW_02#0",
+          "role": "FIT_V71_REMAINING_REVERSE_SLOW_02",
+          "coordinate_range": [
+            0.1382923126220703,
+            0.3447255790233612
+          ],
+          "velocity_RMS": 0.019444606653442432,
+          "acceleration_RMS": 0.0003083477674175743,
+          "valid_samples": 2360
+        },
+        {
+          "block": "FIT_V71_REMAINING_VARIABLE_03#0",
+          "role": "FIT_V71_REMAINING_VARIABLE_03",
+          "coordinate_range": [
+            0.1462167352437973,
+            0.28126537799835205
+          ],
+          "velocity_RMS": 0.02827526001337594,
+          "acceleration_RMS": 0.01255767089601285,
+          "valid_samples": 997
+        },
+        {
+          "block": "VALIDATION_V71_REMAINING_DISTINCT_04#0",
+          "role": "VALIDATION_V71_REMAINING_DISTINCT_04",
+          "coordinate_range": [
+            0.18993832170963287,
+            0.28126537799835205
+          ],
+          "velocity_RMS": 0.028062666100207242,
+          "acceleration_RMS": 0.007463016966322334,
+          "valid_samples": 673
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": 6.672878176259417e-05,
+        "inertial_relative_error_pct": 0.19114793889265513,
+        "damping_absolute_error": 0.003474888161630496,
+        "damping_relative_error_pct": 1.2041478770555614,
+        "resistance_RMSE_observed_FIT_support": 5.911947358192699e-05,
+        "heldout_motion": {
+          "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+            "status": "predicted",
+            "effort_rmse": 4.032143857893998e-05,
+            "coordinate_rmse": 0.0008331301591456896,
+            "velocity_rmse": 0.0010265634435179924,
+            "final_coordinate_error": 0.0010270452924650564,
+            "outside_FIT_support": false,
+            "samples": 673,
+            "duration_s": 2.799999999999983,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+          "status": "predicted",
+          "effort_rmse": 4.032143857893998e-05,
+          "coordinate_rmse": 0.0008331301591456896,
+          "velocity_rmse": 0.0010265634435179924,
+          "final_coordinate_error": 0.0010270452924650564,
+          "outside_FIT_support": false,
+          "samples": 673,
+          "duration_s": 2.799999999999983,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+          "status": "predicted",
+          "effort_rmse": 4.032143857893998e-05,
+          "coordinate_rmse": 0.0008331301591456896,
+          "velocity_rmse": 0.0010265634435179924,
+          "final_coordinate_error": 0.0010270452924650564,
+          "outside_FIT_support": false,
+          "samples": 673,
+          "duration_s": 2.799999999999983,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": 6.672878176259417e-05,
+          "inertial_relative_error_pct": 0.19114793889265513,
+          "damping_absolute_error": 0.003474888161630496,
+          "damping_relative_error_pct": 1.2041478770555614,
+          "resistance_RMSE_observed_FIT_support": 5.911947358192699e-05,
+          "heldout_motion": {
+            "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+              "status": "predicted",
+              "effort_rmse": 4.032143857893998e-05,
+              "coordinate_rmse": 0.0008331301591456896,
+              "velocity_rmse": 0.0010265634435179924,
+              "final_coordinate_error": 0.0010270452924650564,
+              "outside_FIT_support": false,
+              "samples": 673,
+              "duration_s": 2.799999999999983,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": 1.8457404044831816e-05,
+          "inertial_relative_error_pct": 0.05287215871900841,
+          "damping_absolute_error": 0.0036292386266728593,
+          "damping_relative_error_pct": 1.2576347163891555,
+          "resistance_RMSE_observed_FIT_support": 6.33851495764464e-05,
+          "heldout_motion": {
+            "VALIDATION_V71_REMAINING_DISTINCT_04#0": {
+              "status": "predicted",
+              "effort_rmse": 4.323921285077256e-05,
+              "coordinate_rmse": 0.0008486951289682143,
+              "velocity_rmse": 0.0010279532602854766,
+              "final_coordinate_error": 0.0010551412461014265,
+              "outside_FIT_support": false,
+              "samples": 673,
+              "duration_s": 2.799999999999983,
+              "units": {
+                "coordinate": "rad",
+                "effort": "N m",
+                "inertial": "kg m^2",
+                "damping": "N m s/rad"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "523a0801b31e0c54ee25f2220d6b0fbc5b10458e632ef7649e3c19669f80dc4e",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.17148961313068867,
+          "unloaded_wait_s": 73.52673641499132
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 47.60438188188709,
+          "unloaded_wait_s": 0.0018857310060411692
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.09229556587524712,
+          "unloaded_wait_s": 148.29670788510703
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 38.297558814054355,
+          "unloaded_wait_s": 0.001564500853419304
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.07388861989602447,
+          "unloaded_wait_s": 100.03021453111432
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 37.17624311987311,
+          "unloaded_wait_s": 0.0026736839208751917
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 230.13163221813738,
+          "unloaded_wait_s": 134.92296466091648
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.9536382670048624,
+          "unloaded_wait_s": 0.0015821901615709066
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 491.0519941218663,
+          "unloaded_wait_s": 180.2010881130118
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 1.1981192019302398,
+          "unloaded_wait_s": 0.02413324103690684
+        },
+        {
+          "operation": "finish",
+          "wall_s": 0.045056031085550785,
+          "unloaded_wait_s": 65.41661152103916
+        }
+      ]
+    },
+    {
+      "episode_id": "19179_0",
+      "joint_type": "prismatic",
+      "initial_grasp_success": true,
+      "maximum_motion": 47.3976694047451,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 0,
+      "motion_unit": "mm",
+      "physical_acquisitions": 2,
+      "recovery_acquisitions": 1,
+      "preload_requests_N": [
+        1,
+        1.5
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": false,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": false,
+      "status": "SAFE_UNLOADED_BOUNDARY_UNAVAILABLE",
+      "outcome": "恢复拉动后COMMAND_JOINT_MARGIN硬停止",
+      "wall_s": 1990.8477582251653,
+      "simulation_s": 316.9625,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 24199282,
+          "numeric": 10342443,
+          "geometry": 6335421,
+          "observations": 24137333
+        },
+        "total_bytes": 65014479,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 6,
+      "Agent_view_moves": 2,
+      "measured_relative_drift_mm": 1.6250794287770987,
+      "raw_pad_peak_N": [
+        3.535027027130127,
+        3.0861895084381104
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": null,
+      "authored_reference": {
+        "inertial": 1.5179057023271674,
+        "damping": 5.472253140587784,
+        "resistance_law": {
+          "family": "localized_passive_friction",
+          "base": 0.43808602256275786,
+          "amplitude": 0.2008552301462989,
+          "center": 0.037113723722521766,
+          "width": 0.02550758023219148
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": null,
+      "conditional_std": null,
+      "conditionally_supported": null,
+      "scaled_condition": null,
+      "FIT_support": null,
+      "excitation": [],
+      "selected_posthoc_errors": null,
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": null,
+      "online_model_sha256": "79663ab99fa8c1e62f5fea89ec10069465e1eddf4bd54f0e25c9745a9ab7835f",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.20656634587794542,
+          "unloaded_wait_s": 49.96673687710427
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 44.439516314072534,
+          "unloaded_wait_s": 23.939793780911714
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 196.8313867179677,
+          "unloaded_wait_s": 60.586085624061525
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.7245849510654807,
+          "unloaded_wait_s": 78.77024625288323
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 360.7945775769185,
+          "unloaded_wait_s": 55.835896810051054
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 1.476154627976939,
+          "unloaded_wait_s": 0.0015609168913215399
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 62.2872520359233,
+          "unloaded_wait_s": 112.58534309803508
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.13598872884176672,
+          "unloaded_wait_s": 34.97960781096481
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 42.75968215614557,
+          "unloaded_wait_s": 18.799696987960488
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 196.27859444590285,
+          "unloaded_wait_s": 56.66885316791013
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.925269525963813,
+          "unloaded_wait_s": 57.93302569910884
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 397.94478576187976,
+          "unloaded_wait_s": 45.13470819219947
+        }
+      ]
+    },
+    {
+      "episode_id": "19179_1",
+      "joint_type": "prismatic",
+      "initial_grasp_success": true,
+      "maximum_motion": 30.08030727505684,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 22.11413811892271,
+      "motion_unit": "mm",
+      "physical_acquisitions": 2,
+      "recovery_acquisitions": 1,
+      "preload_requests_N": [
+        1,
+        1.5
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": false,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": false,
+      "status": "SAFE_UNLOADED_BOUNDARY_UNAVAILABLE",
+      "outcome": "恢复后拉/推成功，再次拉动SUSTAINED_OVERLOAD硬停止",
+      "wall_s": 1987.586321891984,
+      "simulation_s": 320.00416666666666,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 25236710,
+          "numeric": 11072597,
+          "geometry": 6347888,
+          "observations": 24004600
+        },
+        "total_bytes": 66661795,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 6,
+      "Agent_view_moves": 2,
+      "measured_relative_drift_mm": 1.6557055059820414,
+      "raw_pad_peak_N": [
+        3.928628444671631,
+        2.735231399536133
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 1.598918554385175,
+        "damping": 1.4586443622352354,
+        "resistance_law": {
+          "family": "constant",
+          "base": 0.4223160872991163,
+          "amplitude": 0.0,
+          "center": 0.06738285597206747,
+          "width": 0.0372725563108113
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        1.6265946410000618,
+        1.5496202595490414,
+        0.4221200072064966
+      ],
+      "conditional_std": [
+        0.028339878628540836,
+        0.06497731505367609,
+        0.00014236855781389146
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 246.52604652883795,
+      "FIT_support": [
+        [
+          0.0008206348616762885,
+          0.001144331773199762
+        ],
+        [
+          0.003090372832957655,
+          0.029332119897007944
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_OPEN_ACCEL_01#0",
+          "role": "FIT_OPEN_ACCEL_01",
+          "coordinate_range": [
+            0.00023012343444861472,
+            0.001747923088259995
+          ],
+          "velocity_RMS": 0.001070757002922484,
+          "acceleration_RMS": 0.00216253413749129,
+          "valid_samples": 119
+        },
+        {
+          "block": "FIT_OPEN_ACCEL_RECOVERY_02#0",
+          "role": "FIT_OPEN_ACCEL_RECOVERY_02",
+          "coordinate_range": [
+            0.0021858736872673035,
+            0.030077708885073662
+          ],
+          "velocity_RMS": 0.0025159363429392684,
+          "acceleration_RMS": 0.0012540460256462533,
+          "valid_samples": 2545
+        },
+        {
+          "block": "FIT_REVERSE_SLOW_RECOVERY_03#0",
+          "role": "FIT_REVERSE_SLOW_RECOVERY_03",
+          "coordinate_range": [
+            0.00796359684318304,
+            0.02971448190510273
+          ],
+          "velocity_RMS": 0.0012495672189043988,
+          "acceleration_RMS": 0.0002414184935697566,
+          "valid_samples": 4390
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": 0.027676086614886852,
+        "inertial_relative_error_pct": 1.7309253519500967,
+        "damping_absolute_error": 0.09097589731380595,
+        "damping_relative_error_pct": 6.237017032335013,
+        "resistance_RMSE_observed_FIT_support": 0.00019608009261967704,
+        "heldout_motion": {}
+      },
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": 0.027676086614886852,
+          "inertial_relative_error_pct": 1.7309253519500967,
+          "damping_absolute_error": 0.09097589731380595,
+          "damping_relative_error_pct": 6.237017032335013,
+          "resistance_RMSE_observed_FIT_support": 0.00019608009261967704,
+          "heldout_motion": {}
+        },
+        "extended_model": {
+          "inertial_absolute_error": 0.023887262924132235,
+          "inertial_relative_error_pct": 1.4939637080712664,
+          "damping_absolute_error": 0.10142391756843239,
+          "damping_relative_error_pct": 6.953299940295921,
+          "resistance_RMSE_observed_FIT_support": 0.0002545197645472758,
+          "heldout_motion": {}
+        }
+      },
+      "online_model_sha256": "36bbdddac3e6a0fb865dae288cb4264cfcfe6858894c4ea5c8f80f104f367aa2",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.20909423916600645,
+          "unloaded_wait_s": 99.58173715695739
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 43.56002045702189,
+          "unloaded_wait_s": 20.358940684003755
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 199.1541963610798,
+          "unloaded_wait_s": 60.84745762590319
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.613982817158103,
+          "unloaded_wait_s": 97.38609807100147
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 337.2279264139943,
+          "unloaded_wait_s": 40.52456058911048
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 1.6752743979450315,
+          "unloaded_wait_s": 0.002116129035130143
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 60.024281166959554,
+          "unloaded_wait_s": 76.77925933501683
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.12650001188740134,
+          "unloaded_wait_s": 65.98027235013433
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 43.20175322308205,
+          "unloaded_wait_s": 22.62749662087299
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 178.62550511793233,
+          "unloaded_wait_s": 67.10695813503116
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 1.8682598369196057,
+          "unloaded_wait_s": 46.87379038799554
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 391.8465276870411,
+          "unloaded_wait_s": 38.053786762058735
+        }
+      ]
+    },
+    {
+      "episode_id": "45290_0",
+      "joint_type": "prismatic",
+      "initial_grasp_success": true,
+      "maximum_motion": 54.83417585492134,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 29.698088765144348,
+      "motion_unit": "mm",
+      "physical_acquisitions": 3,
+      "recovery_acquisitions": 2,
+      "preload_requests_N": [
+        1,
+        1.5,
+        1.5
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "两次传力停滞后恢复，完成验证，最大行程未达80mm",
+      "wall_s": 4835.284838967957,
+      "simulation_s": 523.1791666666667,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 26463470,
+          "numeric": 14882377,
+          "geometry": 5881687,
+          "observations": 41017151
+        },
+        "total_bytes": 88244685,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 12,
+      "Agent_view_moves": 4,
+      "measured_relative_drift_mm": 1.8319976516067982,
+      "raw_pad_peak_N": [
+        2.7573800086975098,
+        3.3608548641204834
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 2.35745151002541,
+        "damping": 4.126269147203543,
+        "resistance_law": {
+          "family": "constant",
+          "base": 0.2691681357820071,
+          "amplitude": 0.0,
+          "center": 0.11200912764011019,
+          "width": 0.025312483284631277
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        4.639282359112282,
+        5.792662225141626,
+        0.25981077920898643
+      ],
+      "conditional_std": [
+        0.4511488644757668,
+        1.6652680890283211,
+        0.005233794630782303
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 88.9533410570998,
+      "FIT_support": [
+        [
+          0.0010300984577042982,
+          0.01797323615755886
+        ],
+        [
+          0.01973215982850109,
+          0.05412589324017366
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_OPEN_ACCEL_01#0",
+          "role": "FIT_OPEN_ACCEL_01",
+          "coordinate_range": [
+            0.00032571557676419616,
+            0.01898825913667679
+          ],
+          "velocity_RMS": 0.0028944593119296655,
+          "acceleration_RMS": 0.0023657434087417124,
+          "valid_samples": 1488
+        },
+        {
+          "block": "FIT_OPEN_ACCEL_02#0",
+          "role": "FIT_OPEN_ACCEL_02",
+          "coordinate_range": [
+            0.01932711899280548,
+            0.05418702960014343
+          ],
+          "velocity_RMS": 0.0034282197552509795,
+          "acceleration_RMS": 0.00809096016159404,
+          "valid_samples": 3190
+        },
+        {
+          "block": "FIT_REVERSE_SPEED_03#0",
+          "role": "FIT_REVERSE_SPEED_03",
+          "coordinate_range": [
+            0.024890363216400146,
+            0.05438987910747528
+          ],
+          "velocity_RMS": 0.0020308886056679765,
+          "acceleration_RMS": 0.0018103058779637758,
+          "valid_samples": 3534
+        },
+        {
+          "block": "VALIDATION_DISTINCT_OPEN_04#0",
+          "role": "VALIDATION_DISTINCT_OPEN_04",
+          "coordinate_range": [
+            0.025336572900414467,
+            0.04510264843702316
+          ],
+          "velocity_RMS": 0.0026874751682857013,
+          "acceleration_RMS": 0.0015362078120516017,
+          "valid_samples": 1701
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": 2.2818308490868717,
+        "inertial_relative_error_pct": 96.79227077982515,
+        "damping_absolute_error": 1.666393077938083,
+        "damping_relative_error_pct": 40.384982619648824,
+        "resistance_RMSE_observed_FIT_support": 0.009357356573020668,
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_OPEN_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.005627001156641601,
+            "coordinate_rmse": 0.0025580901190625834,
+            "velocity_rmse": 0.0008085748225845984,
+            "final_coordinate_error": 0.004947052452336682,
+            "outside_FIT_support": false,
+            "samples": 1701,
+            "duration_s": 7.083333333333314,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_DISTINCT_OPEN_04#0": {
+          "status": "predicted",
+          "effort_rmse": 0.005627001156641601,
+          "coordinate_rmse": 0.0025580901190625834,
+          "velocity_rmse": 0.0008085748225845984,
+          "final_coordinate_error": 0.004947052452336682,
+          "outside_FIT_support": false,
+          "samples": 1701,
+          "duration_s": 7.083333333333314,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_DISTINCT_OPEN_04#0": {
+          "status": "predicted",
+          "effort_rmse": 0.005627001156641601,
+          "coordinate_rmse": 0.0025580901190625834,
+          "velocity_rmse": 0.0008085748225845984,
+          "final_coordinate_error": 0.004947052452336682,
+          "outside_FIT_support": false,
+          "samples": 1701,
+          "duration_s": 7.083333333333314,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": 2.2818308490868717,
+          "inertial_relative_error_pct": 96.79227077982515,
+          "damping_absolute_error": 1.666393077938083,
+          "damping_relative_error_pct": 40.384982619648824,
+          "resistance_RMSE_observed_FIT_support": 0.009357356573020668,
+          "heldout_motion": {
+            "VALIDATION_DISTINCT_OPEN_04#0": {
+              "status": "predicted",
+              "effort_rmse": 0.005627001156641601,
+              "coordinate_rmse": 0.0025580901190625834,
+              "velocity_rmse": 0.0008085748225845984,
+              "final_coordinate_error": 0.004947052452336682,
+              "outside_FIT_support": false,
+              "samples": 1701,
+              "duration_s": 7.083333333333314,
+              "units": {
+                "coordinate": "m",
+                "effort": "N",
+                "inertial": "kg",
+                "damping": "N s/m"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": 2.2624500361737296,
+          "inertial_relative_error_pct": 95.97016212432482,
+          "damping_absolute_error": 0.5614661433728578,
+          "damping_relative_error_pct": 13.607113916778179,
+          "resistance_RMSE_observed_FIT_support": 0.00608155347011716,
+          "heldout_motion": {
+            "VALIDATION_DISTINCT_OPEN_04#0": {
+              "status": "predicted",
+              "effort_rmse": 0.0056707736826410275,
+              "coordinate_rmse": 0.0017769386989591126,
+              "velocity_rmse": 0.0010036328837004609,
+              "final_coordinate_error": 0.004748132649048491,
+              "outside_FIT_support": false,
+              "samples": 1701,
+              "duration_s": 7.083333333333314,
+              "units": {
+                "coordinate": "m",
+                "effort": "N",
+                "inertial": "kg",
+                "damping": "N s/m"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "af985fc7849fc1d95777cab249c0830b4f25dd3922eeff3a73c9404b85922f9a",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.29352775611914694,
+          "unloaded_wait_s": 109.99141264287755
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 51.43013347196393,
+          "unloaded_wait_s": 23.870814740890637
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 79.27693364908919,
+          "unloaded_wait_s": 79.81822011992335
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 157.27953077899292,
+          "unloaded_wait_s": 250.0590778470505
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.16540217283181846,
+          "unloaded_wait_s": 31.185538105200976
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 39.41457772208378,
+          "unloaded_wait_s": 22.970026378054172
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 94.06885002390482,
+          "unloaded_wait_s": 63.4984016509261
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 47.353769606910646,
+          "unloaded_wait_s": 66.72012222721241
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.25409277295693755,
+          "unloaded_wait_s": 67.47224144404754
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 41.763102574972436,
+          "unloaded_wait_s": 26.7428740139585
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 196.62615341390483,
+          "unloaded_wait_s": 45.23585744109005
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 3.3420269859489053,
+          "unloaded_wait_s": 28.220440206117928
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 375.1845046770759,
+          "unloaded_wait_s": 56.40756367589347
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.3505210410803556,
+          "unloaded_wait_s": 0.01981187891215086
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 60.54928523814306,
+          "unloaded_wait_s": 77.27085039485246
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 29.236991662997752,
+          "unloaded_wait_s": 93.4218369119335
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.2237587769050151,
+          "unloaded_wait_s": 65.2596768559888
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 42.39119693799876,
+          "unloaded_wait_s": 29.21603126800619
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 208.71736475313082,
+          "unloaded_wait_s": 50.06486363499425
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.9390416459646076,
+          "unloaded_wait_s": 62.56989994319156
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 388.6448887968436,
+          "unloaded_wait_s": 54.08514835918322
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 3.118090588133782,
+          "unloaded_wait_s": 0.004517422057688236
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 60.09789648116566,
+          "unloaded_wait_s": 228.01573529699817
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 206.90148226404563,
+          "unloaded_wait_s": 130.50103459507227
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.679205693071708,
+          "unloaded_wait_s": 351.5963300750591
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 377.44279720494524,
+          "unloaded_wait_s": 136.76149437599815
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.2531896519940346,
+          "unloaded_wait_s": 0.0014692340046167374
+        },
+        {
+          "operation": "finish",
+          "wall_s": 0.7473229949828237,
+          "unloaded_wait_s": 75.99789748596959
+        }
+      ]
+    },
+    {
+      "episode_id": "45290_1",
+      "joint_type": "prismatic",
+      "initial_grasp_success": true,
+      "maximum_motion": 80.07264137268066,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 16.430255956947803,
+      "motion_unit": "mm",
+      "physical_acquisitions": 2,
+      "recovery_acquisitions": 1,
+      "preload_requests_N": [
+        1,
+        1.5
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": true,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": false,
+      "status": "BOUNDED_AGENT_STOP",
+      "outcome": "恢复后完成验证及80mm拉出，额外观测Agent超时",
+      "wall_s": 2984.28537816694,
+      "simulation_s": 389.3,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 24160663,
+          "numeric": 12723623,
+          "geometry": 4679603,
+          "observations": 26548658
+        },
+        "total_bytes": 68112547,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 8,
+      "Agent_view_moves": 2,
+      "measured_relative_drift_mm": 1.6651692567393184,
+      "raw_pad_peak_N": [
+        1.9308613538742065,
+        2.270327091217041
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "extended_model",
+      "authored_reference": {
+        "inertial": 1.9281310812629338,
+        "damping": 3.3923218307553284,
+        "resistance_law": {
+          "family": "localized_passive_friction",
+          "base": 0.2791626474076899,
+          "amplitude": 0.1813780128475775,
+          "center": 0.03543548102094141,
+          "width": 0.03244851410179461
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        1.9542606554194348,
+        3.545327888593988,
+        0.3603014459350272,
+        0.4503578655348128,
+        0.5224866758311405,
+        0.1027017961809167,
+        1.9436434879304023
+      ],
+      "conditional_std": [
+        0.04153384714328502,
+        0.1282696183410306,
+        0.0015615360458975712,
+        0.0015159019950849507,
+        0.0029420698452238365,
+        0.006531865436277782,
+        0.1679470009442536
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 598.0709689440156,
+      "FIT_support": [
+        [
+          0.0010275345902252746,
+          0.07919543153709835
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_OPEN_ACCEL_01#0",
+          "role": "FIT_OPEN_ACCEL_01",
+          "coordinate_range": [
+            0.00023974657233338803,
+            0.020953752100467682
+          ],
+          "velocity_RMS": 0.003210152085446944,
+          "acceleration_RMS": 0.0031797614207726135,
+          "valid_samples": 1489
+        },
+        {
+          "block": "FIT_REVERSE_SPEED_02#0",
+          "role": "FIT_REVERSE_SPEED_02",
+          "coordinate_range": [
+            0.004922528751194477,
+            0.02089059352874756
+          ],
+          "velocity_RMS": 0.0019974621276758176,
+          "acceleration_RMS": 0.0019066431962585077,
+          "valid_samples": 1867
+        },
+        {
+          "block": "VALIDATION_DISTINCT_OPEN_03#0",
+          "role": "VALIDATION_DISTINCT_OPEN_03",
+          "coordinate_range": [
+            0.005034648347645998,
+            0.01808886229991913
+          ],
+          "velocity_RMS": 0.002844573698788396,
+          "acceleration_RMS": 0.0019733408027015247,
+          "valid_samples": 1055
+        },
+        {
+          "block": "FIT_OPTIONAL_EXPANSION_AFTER_VALIDATION_04#0",
+          "role": "FIT_OPTIONAL_EXPANSION_AFTER_VALIDATION_04",
+          "coordinate_range": [
+            0.018576618283987045,
+            0.08007260411977768
+          ],
+          "velocity_RMS": 0.0034718803863407737,
+          "acceleration_RMS": 0.0030949162543482517,
+          "valid_samples": 4378
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": 0.02612957415650108,
+        "inertial_relative_error_pct": 1.3551762331109884,
+        "damping_absolute_error": 0.15300605783865961,
+        "damping_relative_error_pct": 4.510363859097399,
+        "resistance_RMSE_observed_FIT_support": 0.0013699013407126,
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_OPEN_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.000869254879811913,
+            "coordinate_rmse": 0.00021543328996882012,
+            "velocity_rmse": 0.00021986230658968973,
+            "final_coordinate_error": -0.000339021284191849,
+            "outside_FIT_support": false,
+            "samples": 1055,
+            "duration_s": 4.3916666666666515,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      "primary_independent_validation": {
+        "VALIDATION_DISTINCT_OPEN_03#0": {
+          "status": "predicted",
+          "effort_rmse": 0.000869254879811913,
+          "coordinate_rmse": 0.00021543328996882012,
+          "velocity_rmse": 0.00021986230658968973,
+          "final_coordinate_error": -0.000339021284191849,
+          "outside_FIT_support": false,
+          "samples": 1055,
+          "duration_s": 4.3916666666666515,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "all_heldout_predictions": {
+        "VALIDATION_DISTINCT_OPEN_03#0": {
+          "status": "predicted",
+          "effort_rmse": 0.000869254879811913,
+          "coordinate_rmse": 0.00021543328996882012,
+          "velocity_rmse": 0.00021986230658968973,
+          "final_coordinate_error": -0.000339021284191849,
+          "outside_FIT_support": false,
+          "samples": 1055,
+          "duration_s": 4.3916666666666515,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.18039347283581542,
+          "inertial_relative_error_pct": -9.355871838218432,
+          "damping_absolute_error": -0.05496543235916862,
+          "damping_relative_error_pct": -1.620289438957212,
+          "resistance_RMSE_observed_FIT_support": 0.03139198551202743,
+          "heldout_motion": {
+            "VALIDATION_DISTINCT_OPEN_03#0": {
+              "status": "predicted",
+              "effort_rmse": 0.012706783182361226,
+              "coordinate_rmse": 0.005910665678299658,
+              "velocity_rmse": 0.0022884415473485966,
+              "final_coordinate_error": -0.007241843722458849,
+              "outside_FIT_support": false,
+              "samples": 1055,
+              "duration_s": 4.3916666666666515,
+              "units": {
+                "coordinate": "m",
+                "effort": "N",
+                "inertial": "kg",
+                "damping": "N s/m"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        },
+        "extended_model": {
+          "inertial_absolute_error": 0.02612957415650108,
+          "inertial_relative_error_pct": 1.3551762331109884,
+          "damping_absolute_error": 0.15300605783865961,
+          "damping_relative_error_pct": 4.510363859097399,
+          "resistance_RMSE_observed_FIT_support": 0.0013699013407126,
+          "heldout_motion": {
+            "VALIDATION_DISTINCT_OPEN_03#0": {
+              "status": "predicted",
+              "effort_rmse": 0.000869254879811913,
+              "coordinate_rmse": 0.00021543328996882012,
+              "velocity_rmse": 0.00021986230658968973,
+              "final_coordinate_error": -0.000339021284191849,
+              "outside_FIT_support": false,
+              "samples": 1055,
+              "duration_s": 4.3916666666666515,
+              "units": {
+                "coordinate": "m",
+                "effort": "N",
+                "inertial": "kg",
+                "damping": "N s/m"
+              },
+              "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+            }
+          }
+        }
+      },
+      "online_model_sha256": "67fa22ea81a69362059651ba4dfaa2c0e0164ad636a1b93548bbb9fdc4e58eeb",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 27.47229111380875,
+          "unloaded_wait_s": 84.06195501517504
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.23205173201858997,
+          "unloaded_wait_s": 89.95067782793194
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 39.03710638079792,
+          "unloaded_wait_s": 39.87043521506712
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 197.69618898886256,
+          "unloaded_wait_s": 83.02813052199781
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.9880982709582895,
+          "unloaded_wait_s": 102.77580752409995
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 365.89038343704306,
+          "unloaded_wait_s": 47.27413806505501
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 2.2281688519287854,
+          "unloaded_wait_s": 0.002610884141176939
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 60.70846249489114,
+          "unloaded_wait_s": 261.7146668341011
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.3246762570925057,
+          "unloaded_wait_s": 39.41627076594159
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 40.099481735844165,
+          "unloaded_wait_s": 49.81060417997651
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 115.49407844198868,
+          "unloaded_wait_s": 61.288129579043016
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.8696971980389208,
+          "unloaded_wait_s": 55.519337475067005
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 462.5011617920827,
+          "unloaded_wait_s": 68.69717135606334
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 4.191234266851097,
+          "unloaded_wait_s": 0.0019210961181670427
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 63.03463884303346,
+          "unloaded_wait_s": 118.33920749183744
+        }
+      ]
+    },
+    {
+      "episode_id": "27044_0",
+      "joint_type": "prismatic",
+      "initial_grasp_success": true,
+      "maximum_motion": 56.920379400253296,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 0,
+      "motion_unit": "mm",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        1
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": false,
+      "status": "BOUNDED_AGENT_STOP",
+      "outcome": "拉出后传力停滞，恢复计划未执行即Agent超时",
+      "wall_s": 2243.9440515271854,
+      "simulation_s": 235.15833333333333,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 21169861,
+          "numeric": 6180586,
+          "geometry": 4297585,
+          "observations": 17653015
+        },
+        "total_bytes": 49301047,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 6,
+      "Agent_view_moves": 3,
+      "measured_relative_drift_mm": 1.8190296832472086,
+      "raw_pad_peak_N": [
+        1.6963398456573486,
+        1.9070707559585571
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": "constant_model",
+      "authored_reference": {
+        "inertial": 2.009301854173853,
+        "damping": 5.852076547486243,
+        "resistance_law": {
+          "family": "constant",
+          "base": 0.34960244196850304,
+          "amplitude": 0.0,
+          "center": 0.03155730439896979,
+          "width": 0.024578708498143875
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": [
+        1.8417470959078963,
+        6.673677293813882,
+        0.34708878943062876
+      ],
+      "conditional_std": [
+        0.1273382632825319,
+        0.6624835353408087,
+        0.0020467819692710568
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "scaled_condition": 141.32677906438596,
+      "FIT_support": [
+        [
+          0.0006550941311399496,
+          0.05621883273124695
+        ]
+      ],
+      "excitation": [
+        {
+          "block": "FIT_OPEN_ACCEL_01#0",
+          "role": "FIT_OPEN_ACCEL_01",
+          "coordinate_range": [
+            0.00023991515627130866,
+            0.05691438540816307
+          ],
+          "velocity_RMS": 0.002921198558356527,
+          "acceleration_RMS": 0.0024280382145424376,
+          "valid_samples": 4799
+        }
+      ],
+      "selected_posthoc_errors": {
+        "inertial_absolute_error": -0.1675547582659569,
+        "inertial_relative_error_pct": -8.33895404604844,
+        "damping_absolute_error": 0.8216007463276389,
+        "damping_relative_error_pct": 14.039473675042014,
+        "resistance_RMSE_observed_FIT_support": 0.0025136525378742776,
+        "heldout_motion": {}
+      },
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": {
+        "constant_model": {
+          "inertial_absolute_error": -0.1675547582659569,
+          "inertial_relative_error_pct": -8.33895404604844,
+          "damping_absolute_error": 0.8216007463276389,
+          "damping_relative_error_pct": 14.039473675042014,
+          "resistance_RMSE_observed_FIT_support": 0.0025136525378742776,
+          "heldout_motion": {}
+        }
+      },
+      "online_model_sha256": "21e5af8050a0a7df8c566de1a5b6362db8b2a858238b9528be2ce599e9f8e811",
+      "online_model_unchanged": true,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.2513302769511938,
+          "unloaded_wait_s": 78.24010824598372
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 50.99760749004781,
+          "unloaded_wait_s": 39.413250071927905
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.15048377704806626,
+          "unloaded_wait_s": 70.22912252484821
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 36.44682518695481,
+          "unloaded_wait_s": 194.56593286711723
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 152.62775129894726,
+          "unloaded_wait_s": 82.86928732716478
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.152233701897785,
+          "unloaded_wait_s": 48.68488958990201
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 424.3938685611356,
+          "unloaded_wait_s": 52.00315256300382
+        },
+        {
+          "operation": "inspect_contact_result",
+          "wall_s": 3.9887270811013877,
+          "unloaded_wait_s": 0.0019516409374773502
+        },
+        {
+          "operation": "reobserve_and_replan",
+          "wall_s": 61.18923544813879,
+          "unloaded_wait_s": 106.82491770689376
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.24240334890782833,
+          "unloaded_wait_s": 60.6310272871051
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 49.87144975294359,
+          "unloaded_wait_s": 38.67031029704958
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 122.31035854388028,
+          "unloaded_wait_s": 82.18552509718575
+        }
+      ]
+    },
+    {
+      "episode_id": "27044_1",
+      "joint_type": "prismatic",
+      "initial_grasp_success": false,
+      "maximum_motion": 0.0,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 0,
+      "motion_unit": "mm",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [
+        1
+      ],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": false,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": false,
+      "status": "SAFE_UNLOADED_BOUNDARY_UNAVAILABLE",
+      "outcome": "闭合CENTER中gripper_link2/original15碰撞停止，未建立双侧抓取",
+      "wall_s": 1055.3541838640813,
+      "simulation_s": 139.03333333333333,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 17380927,
+          "numeric": 1618304,
+          "geometry": 2155812,
+          "observations": 8950004
+        },
+        "total_bytes": 30105047,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 3,
+      "Agent_view_moves": 1,
+      "measured_relative_drift_mm": 0,
+      "raw_pad_peak_N": [
+        0.07300771027803421,
+        0.0
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": null,
+      "authored_reference": {
+        "inertial": 1.5941090052741385,
+        "damping": 3.5748141132440665,
+        "resistance_law": {
+          "family": "localized_passive_friction",
+          "base": 0.2822191006036451,
+          "amplitude": 0.15872265648791797,
+          "center": 0.06359586161688509,
+          "width": 0.02391134778102798
+        },
+        "additional_unrandomized_moving_bodies": [],
+        "inertial_reference": "authored randomized rigid-body combination, not independently verified PhysX effective inertia/mass; additional moving masses require separate audit"
+      },
+      "parameters": null,
+      "conditional_std": null,
+      "conditionally_supported": null,
+      "scaled_condition": null,
+      "FIT_support": null,
+      "excitation": [],
+      "selected_posthoc_errors": null,
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": null,
+      "online_model_sha256": null,
+      "online_model_unchanged": null,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.22612781403586268,
+          "unloaded_wait_s": 80.90861020912416
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 50.6451363901142,
+          "unloaded_wait_s": 33.445906325941905
+        },
+        {
+          "operation": "build_geometry",
+          "wall_s": 161.78211995284073,
+          "unloaded_wait_s": 183.6407574431505
+        },
+        {
+          "operation": "validate_execution",
+          "wall_s": 2.0264275779481977,
+          "unloaded_wait_s": 0.0019235860090702772
+        },
+        {
+          "operation": "attempt_grasp_and_probe",
+          "wall_s": 290.62330556684174,
+          "unloaded_wait_s": 163.847269826103
+        }
+      ]
+    },
+    {
+      "episode_id": "45746_0",
+      "joint_type": "prismatic",
+      "initial_grasp_success": false,
+      "maximum_motion": 0.0,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 0,
+      "motion_unit": "mm",
+      "physical_acquisitions": 0,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "四次换视角后仍无有效SAM目标，零物理抓取",
+      "wall_s": 802.6168199069798,
+      "simulation_s": 49.270833333333336,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 864813,
+          "numeric": 355423,
+          "observations": 18003415
+        },
+        "total_bytes": 19223651,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 5,
+      "Agent_view_moves": 4,
+      "measured_relative_drift_mm": 0,
+      "raw_pad_peak_N": [
+        0.0,
+        0.0
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": null,
+      "authored_reference": null,
+      "parameters": null,
+      "conditional_std": null,
+      "conditionally_supported": null,
+      "scaled_condition": null,
+      "FIT_support": null,
+      "excitation": null,
+      "selected_posthoc_errors": null,
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": null,
+      "online_model_sha256": null,
+      "online_model_unchanged": null,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.1679264830891043,
+          "unloaded_wait_s": 68.50980062177405
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 40.498956590890884,
+          "unloaded_wait_s": 22.540557532105595
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.06617453787475824,
+          "unloaded_wait_s": 82.91154725197703
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.1273960981052369,
+          "unloaded_wait_s": 44.082652418874204
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.11071335291489959,
+          "unloaded_wait_s": 50.76744206319563
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.12720134877599776,
+          "unloaded_wait_s": 27.772899923147634
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 30.210742118069902,
+          "unloaded_wait_s": 15.460069241933525
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.09179772203788161,
+          "unloaded_wait_s": 38.18858544412069
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 33.807060269173235,
+          "unloaded_wait_s": 16.554424539906904
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.1705508299637586,
+          "unloaded_wait_s": 109.40335235302337
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 33.41994211520068,
+          "unloaded_wait_s": 17.309804582968354
+        },
+        {
+          "operation": "finish",
+          "wall_s": 46.51738322107121,
+          "unloaded_wait_s": 38.98942617001012
+        }
+      ]
+    },
+    {
+      "episode_id": "45746_1",
+      "joint_type": "prismatic",
+      "initial_grasp_success": false,
+      "maximum_motion": 0.0,
+      "frozen_reported_maximum_motion": null,
+      "reverse_travel": 0,
+      "motion_unit": "mm",
+      "physical_acquisitions": 0,
+      "recovery_acquisitions": 0,
+      "preload_requests_N": [],
+      "requested_preload_is_not_measured_load": true,
+      "complete_validation": false,
+      "verified_final_safe_park": true,
+      "safe_park_evidence": "EPISODE_RESULT.safe_exit",
+      "frozen_evaluator_park": true,
+      "status": "SESSION_COMPLETE",
+      "outcome": "四次换视角后仍无有效SAM目标，零物理抓取",
+      "wall_s": 647.7582474921364,
+      "simulation_s": 47.854166666666664,
+      "storage": {
+        "bytes_by_category": {
+          "source_and_metadata": 852955,
+          "numeric": 340451,
+          "observations": 16274916
+        },
+        "total_bytes": 17468322,
+        "budget_bytes": 1000000000
+      },
+      "observed_checkpoints": 5,
+      "Agent_view_moves": 4,
+      "measured_relative_drift_mm": 0,
+      "raw_pad_peak_N": [
+        0.0,
+        0.0
+      ],
+      "numeric_chunks_intact": true,
+      "selected_model": null,
+      "authored_reference": null,
+      "parameters": null,
+      "conditional_std": null,
+      "conditionally_supported": null,
+      "scaled_condition": null,
+      "FIT_support": null,
+      "excitation": null,
+      "selected_posthoc_errors": null,
+      "primary_independent_validation": {},
+      "all_heldout_predictions": {},
+      "constant_vs_extended_errors": null,
+      "online_model_sha256": null,
+      "online_model_unchanged": null,
+      "operation_timing": [
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.24433887307532132,
+          "unloaded_wait_s": 47.57855171710253
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 40.63232677290216,
+          "unloaded_wait_s": 13.742210131138563
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.131405808031559,
+          "unloaded_wait_s": 56.858443533070385
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 32.47103813593276,
+          "unloaded_wait_s": 16.46314613893628
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.16267198999412358,
+          "unloaded_wait_s": 83.71177643514238
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 38.30418992997147,
+          "unloaded_wait_s": 48.18347679893486
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.12295429105870426,
+          "unloaded_wait_s": 36.72886282694526
+        },
+        {
+          "operation": "evaluate_view",
+          "wall_s": 0.06245370698161423,
+          "unloaded_wait_s": 20.12214256892912
+        },
+        {
+          "operation": "move_and_observe",
+          "wall_s": 29.401828940026462,
+          "unloaded_wait_s": 16.665032102027908
+        },
+        {
+          "operation": "finish",
+          "wall_s": 40.887671874137595,
+          "unloaded_wait_s": 41.18948821001686
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "revolute": {
+      "denominator": 8,
+      "initial_grasp": 8,
+      "physical_progress": 8,
+      "range_goal": 8,
+      "meaningful_reverse": 8,
+      "complete_validation": 6,
+      "safe_park": 7,
+      "acquisitions": 11,
+      "recoveries": 2,
+      "model_available": 8,
+      "wall_minutes": {
+        "n": 8,
+        "mean": 37.94870954262636,
+        "median": 30.86211143177352,
+        "min": 20.04607383068263,
+        "max": 64.51513408238146,
+        "population_std": 15.428785270036721
+      },
+      "storage_MB": {
+        "n": 8,
+        "mean": 54.338325625,
+        "median": 55.132234,
+        "min": 43.089776,
+        "max": 64.897411,
+        "population_std": 7.623078079117057
+      },
+      "inertial_abs_error_pct": {
+        "n": 8,
+        "mean": 0.9180067542454415,
+        "median": 0.1991476116654345,
+        "min": 0.04502761618734308,
+        "max": 5.875838707767467,
+        "population_std": 1.8811228096554995
+      },
+      "damping_abs_error_pct": {
+        "n": 8,
+        "mean": 7.9958223433292375,
+        "median": 8.004128223488639,
+        "min": 1.2041478770555614,
+        "max": 17.477341223807464,
+        "population_std": 4.930094766971222
+      },
+      "primary_position_RMSE_native": {
+        "n": 6,
+        "mean": 0.0006960144369732884,
+        "median": 0.0007490308792445627,
+        "min": 0.00022981858581538181,
+        "max": 0.0011695155934771542,
+        "population_std": 0.0003141141452543871
+      }
+    },
+    "prismatic": {
+      "denominator": 8,
+      "initial_grasp": 5,
+      "physical_progress": 5,
+      "range_goal": 1,
+      "meaningful_reverse": 3,
+      "complete_validation": 2,
+      "safe_park": 5,
+      "acquisitions": 11,
+      "recoveries": 5,
+      "model_available": 4,
+      "wall_minutes": {
+        "n": 8,
+        "mean": 34.474328333421724,
+        "median": 33.15361733430958,
+        "min": 10.795970791535607,
+        "max": 80.58808064946594,
+        "population_std": 21.39618873277024
+      },
+      "storage_MB": {
+        "n": 8,
+        "mean": 50.516446625,
+        "median": 57.157762999999996,
+        "min": 17.468322,
+        "max": 88.244685,
+        "population_std": 24.22144702103389
+      },
+      "inertial_abs_error_pct": {
+        "n": 4,
+        "mean": 27.05433160273367,
+        "median": 5.034939698999269,
+        "min": 1.3551762331109884,
+        "max": 96.79227077982515,
+        "population_std": 40.3589116819669
+      },
+      "damping_abs_error_pct": {
+        "n": 4,
+        "mean": 16.292959296530814,
+        "median": 10.138245353688514,
+        "min": 4.510363859097399,
+        "max": 40.384982619648824,
+        "population_std": 14.365369080804928
+      },
+      "primary_position_RMSE_native": {
+        "n": 2,
+        "mean": 0.0013867617045157017,
+        "median": 0.0013867617045157017,
+        "min": 0.00021543328996882012,
+        "max": 0.0025580901190625834,
+        "population_std": 0.0011713284145468818
+      }
+    },
+    "combined": {
+      "denominator": 16,
+      "initial_grasp": 13,
+      "physical_progress": 13,
+      "range_goal": 9,
+      "meaningful_reverse": 11,
+      "complete_validation": 8,
+      "safe_park": 12,
+      "acquisitions": 22,
+      "recoveries": 7,
+      "model_available": 12,
+      "wall_minutes": {
+        "n": 16,
+        "mean": 36.21151893802404,
+        "median": 32.258211704541466,
+        "min": 10.795970791535607,
+        "max": 80.58808064946594,
+        "population_std": 18.73339223940319
+      },
+      "storage_MB": {
+        "n": 16,
+        "mean": 52.427386125,
+        "median": 55.132234,
+        "min": 17.468322,
+        "max": 88.244685,
+        "population_std": 18.056760433953635
+      },
+      "inertial_abs_error_pct": {
+        "n": 12,
+        "mean": 9.63011503707485,
+        "median": 0.41487534772034484,
+        "min": 0.04502761618734308,
+        "max": 96.79227077982515,
+        "population_std": 26.4028027716332
+      },
+      "damping_abs_error_pct": {
+        "n": 12,
+        "mean": 10.761534661063095,
+        "median": 8.004128223488639,
+        "min": 1.2041478770555614,
+        "max": 40.384982619648824,
+        "population_std": 10.014497580960134
+      },
+      "primary_position_RMSE_native": null
+    }
+  },
+  "all_online_actions_finished_before_truth": true,
+  "no_post_truth_refit": true,
+  "thresholds_for_descriptive_stage_counts": {
+    "revolute_progress_deg": 2,
+    "prismatic_progress_mm": 5,
+    "revolute_range_deg": 20,
+    "prismatic_range_mm": 80,
+    "no_new_runtime_gates": true
+  },
+  "caveats": [
+    "Authored mass/inertia is not independently measured PhysX effective dynamics.",
+    "Conditional uncertainty excludes contact, compensation and model-selection systematics.",
+    "Primary validation is the first complete predeclared trajectory, not the best held-out result.",
+    "Filtering trims endpoint samples; reported retained prediction horizon is preserved.",
+    "Extra extrapolation results remain in all_heldout_predictions.",
+    "Two timeout final parks are verified by EPISODE_RESULT.safe_exit, absent from last trace command.",
+    "Lighting input changed for prismatic slots under explicit authorization; dark records preserved.",
+    "Engineering tests are excluded; some objects were prior development objects."
+  ]
+}

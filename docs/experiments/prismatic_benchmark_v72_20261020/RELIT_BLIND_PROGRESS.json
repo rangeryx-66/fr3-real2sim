@@ -1,9 +1,9 @@
 {
-  "status": "IN_PROGRESS_6_OF_8_CLOSED",
+  "status": "ALL_8_CLOSED_POSTHOC_EVALUATION_COMPLETE",
   "scope": "Blind partial snapshot, not final benchmark evaluation",
   "lighting_source": "412b9df",
   "activation": "cee2e24",
-  "hidden_truth_read": false,
+  "hidden_truth_read": true,
   "old_dark_records_preserved": true,
   "revolute_slots_unchanged": 8,
   "completed": {
@@ -180,11 +180,35 @@
       "stop": "COMMAND_COLLISION:DANGEROUS_GEOMETRY_COLLISION:gripper_link2/original15",
       "run": "results/cross_object_v7_v72_relight_20261020/episodes/27044_1_orchestration_resume02",
       "note": "Fresh automatic +.3/depth9.375mm grasp passed unloaded approach checks, then native collision stop during SLOW_CLOSE/CENTER before GRASP_VERIFIED. No pull/hold/VALIDATION. Hard stop preserved; no retry. Earlier two orchestration interruptions had zero physical acquisitions and remain archived under same registered config13. Private stdio transport repaired latency and terminal input truncation without changing actor/watchdog/control/physics."
+    },
+    "45746_0": {
+      "status": "SESSION_COMPLETE",
+      "physical_acquisitions": 0,
+      "initial_grasp_success": false,
+      "maximum_motion": 0.0,
+      "reverse_travel": 0,
+      "complete_validation": false,
+      "verified_final_safe_park": true,
+      "wall_s": 802.6168199069798,
+      "outcome": "四次换视角后仍无有效SAM目标，零物理抓取"
+    },
+    "45746_1": {
+      "status": "SESSION_COMPLETE",
+      "physical_acquisitions": 0,
+      "initial_grasp_success": false,
+      "maximum_motion": 0.0,
+      "reverse_travel": 0,
+      "complete_validation": false,
+      "verified_final_safe_park": true,
+      "wall_s": 647.7582474921364,
+      "outcome": "四次换视角后仍无有效SAM目标，零物理抓取"
     }
   },
-  "active_slot": "45746_0",
-  "remaining_after_active": [
-    "45746_1"
-  ],
-  "raw_published": false
+  "active_slot": null,
+  "remaining_after_active": [],
+  "raw_published": false,
+  "truth_access_after_all_online": true,
+  "final_report": "REPORT.md",
+  "final_results": "FINAL_RESULTS.json",
+  "no_valid_physical_retry": true
 }
