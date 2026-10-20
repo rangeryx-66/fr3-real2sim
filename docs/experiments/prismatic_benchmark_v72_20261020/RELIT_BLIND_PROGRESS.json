@@ -1,5 +1,5 @@
 {
-  "status": "IN_PROGRESS_2_OF_8_CLOSED",
+  "status": "IN_PROGRESS_3_OF_8_CLOSED",
   "scope": "Blind partial snapshot, not final benchmark evaluation",
   "lighting_source": "412b9df",
   "activation": "cee2e24",
@@ -54,11 +54,44 @@
         "wrist_n": 3.9255362455161786,
         "duration_s": 0.15
       }
+    },
+    "45290_0": {
+      "status": "COMPLETE_VALIDATION_AFTER_TWO_RECOVERIES_RANGE_BELOW_TARGET",
+      "physical_acquisitions": 3,
+      "recovery_acquisitions": 2,
+      "initial_acquired": true,
+      "maximum_drawer_mm": 54.83417585492134,
+      "reverse_travel_mm": 29.698621481657028,
+      "final_drawer_mm": 45.10265216231346,
+      "complete_validation": true,
+      "final_safe_park": true,
+      "wall_s": 4835.284838967957,
+      "sim_s": 523.1,
+      "maximum_relative_drift_mm": 1.8319976516067982,
+      "recorded_storage_bytes": 88178421,
+      "run": "results/cross_object_v7_v72_relight_20261020/episodes/45290_0",
+      "online_parameters_blind": [
+        4.639282359112282,
+        5.792662225141626,
+        0.25981077920898643
+      ],
+      "conditional_std": [
+        0.4511488644757668,
+        1.6652680890283211,
+        0.005233794630782303
+      ],
+      "heldout": {
+        "retained_s": 7.083333333333314,
+        "effort_rmse_N": 0.005627001156641601,
+        "coordinate_rmse_mm": 2.5580901190625833,
+        "velocity_rmse_mm_s": 0.8085748225845985,
+        "final_coordinate_error_mm": 4.947052452336682
+      },
+      "note": "Both initial1N+end-section1.5N pulls genuinely failed with persistent slidingstall (19.248mm, then+35.559mm). Fresh central3rdacquisition reversed29.699mm and completed independently declared openingVALIDATION20.212mm; actualmax54.834mm below80-150mmtarget. Full parked/exported/actor648076dead. HiddenauthoredvaluesUNREAD; no physicalaccuracyclaim."
     }
   },
-  "active_slot": "45290_0",
+  "active_slot": "45290_1",
   "remaining_after_active": [
-    "45290_1",
     "27044_0",
     "27044_1",
     "45746_0",
