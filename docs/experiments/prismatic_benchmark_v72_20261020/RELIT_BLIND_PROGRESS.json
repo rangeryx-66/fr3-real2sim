@@ -1,5 +1,5 @@
 {
-  "status": "IN_PROGRESS_5_OF_8_CLOSED",
+  "status": "IN_PROGRESS_6_OF_8_CLOSED",
   "scope": "Blind partial snapshot, not final benchmark evaluation",
   "lighting_source": "412b9df",
   "activation": "cee2e24",
@@ -161,11 +161,29 @@
       ],
       "heldout": null,
       "note": "Initial1N freshgrasp[-.3,.009375,0,0] acquired+1shold,pulled56.920mm thenpersistentstall, originalsafepark. FreshsameScenereobserve/realraisedview producedalternative180rollplan, but validate12published368.24safterresponse11,beyondoriginal360sAgentwait; noACK/no secondacquisition. Preserve failure and N/Avalidation, no rerun, no hiddentruthread."
+    },
+    "27044_1": {
+      "status": "FAIL_NATIVE_COLLISION_DURING_CLOSURE",
+      "physical_acquisitions": 1,
+      "recovery_acquisitions": 0,
+      "initial_acquired": false,
+      "maximum_drawer_mm": 0,
+      "reverse_travel_mm": 0,
+      "complete_validation": false,
+      "final_safe_park": false,
+      "wall_s": 1055.3541838640813,
+      "sim_s": 139.03333333333333,
+      "raw_pad_peaks_N": [
+        0.07300771027803421,
+        0.0
+      ],
+      "stop": "COMMAND_COLLISION:DANGEROUS_GEOMETRY_COLLISION:gripper_link2/original15",
+      "run": "results/cross_object_v7_v72_relight_20261020/episodes/27044_1_orchestration_resume02",
+      "note": "Fresh automatic +.3/depth9.375mm grasp passed unloaded approach checks, then native collision stop during SLOW_CLOSE/CENTER before GRASP_VERIFIED. No pull/hold/VALIDATION. Hard stop preserved; no retry. Earlier two orchestration interruptions had zero physical acquisitions and remain archived under same registered config13. Private stdio transport repaired latency and terminal input truncation without changing actor/watchdog/control/physics."
     }
   },
-  "active_slot": "27044_1",
+  "active_slot": "45746_0",
   "remaining_after_active": [
-    "45746_0",
     "45746_1"
   ],
   "raw_published": false
