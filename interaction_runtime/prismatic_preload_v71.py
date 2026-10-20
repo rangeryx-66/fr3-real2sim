@@ -4,7 +4,7 @@ The preload value is the original closure's requested normal-load setpoint,
 NOT a measured force nor a new effort cap. The existing master-position mapping
 and nonlinear aperture Jacobian remain owned by Operations.acquire/NativeDrive.
 """
-import json
+import json,hashlib
 from pathlib import Path
 import numpy as np
 from agent_command_protocol_v12 import atomic_json
@@ -27,12 +27,15 @@ class PrismaticPreloadRuntime(PrismaticFeedbackRuntime):
         super().__init__(job)
         self.optional_recording_disabled=True # checkpoint RGB-D remains active
         original=self.closure_policy
-        self.closure_policy=preload_policy(original,job.get('native_g1_preload_request_n',original['preload_n']))
+        path=self.root/'configs/prismatic_preload_v71.json'
+        defaults=json.loads(path.read_text())
+        self.closure_policy=preload_policy(original,job.get('native_g1_preload_request_n',defaults['preload_request_n']))
         self.g['policy']=self.closure_policy
         atomic_json(self.output/'PRELOAD_CONFIGURATION.json',dict(
             baseline_policy=original,active_policy=self.closure_policy,
             semantics='original closure normal-load request, translated to finite master position bias; not commanded motor force',
             actuator_caps_gains_or_physics_changed=False,hard_safety_policy_sha256=self.policy.sha256,
+            prismatic_configuration_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
             motor_drive_output='unavailable; explicit zero effort and projected reaction are not motor output',
             reference=job.get('preload_fixture'),engineering=bool(job.get('preload_fixture'))))
         self.preload_record_fields=self.record.coordinate_fields
