@@ -12,6 +12,7 @@ from .prismatic_feedback_v7 import PrismaticFeedbackRuntime,PrismaticFeedbackOpe
 
 
 def preload_policy(original,value):
+    if isinstance(value,(bool,np.bool_)):raise ValueError('Numeric preload required, not a boolean')
     value=float(value)
     if not np.isfinite(value) or value<=0 or value>original['finger_effort_limit_n']:
         raise ValueError('Preload must be finite, positive and within existing closure request authority')
@@ -24,6 +25,7 @@ class PrismaticPreloadRuntime(PrismaticFeedbackRuntime):
         if job.get('prismatic_integrated_ik_feedback') or job.get('prismatic_contact_retention'):
             raise ValueError('Isolate preload from unvalidated integral/retention prototypes')
         super().__init__(job)
+        self.optional_recording_disabled=True # checkpoint RGB-D remains active
         original=self.closure_policy
         self.closure_policy=preload_policy(original,job.get('native_g1_preload_request_n',original['preload_n']))
         self.g['policy']=self.closure_policy

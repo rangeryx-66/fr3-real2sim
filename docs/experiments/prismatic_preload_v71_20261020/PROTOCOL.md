@@ -71,3 +71,29 @@ Do not switch the backend under load. Original motion/collision/force checks
 remain authoritative. Compare actual command/measurement deficits, relative
 motion and drawer travel before attributing the remaining failure to tracking.
 This engineering A/B cannot substitute for subsequent fresh Agent tests.
+
+## Matched result and fresh Agent validation freeze
+
+All four original segments completed at1.0N: +12.098/-8.133/+6.096/-4.121mm,
+with safe parking. The conditional original-reference comparison is therefore
+NOT triggered; no fourth matched run and no arm-controller change. The same
+measured-seed backend remains active. The successful same-pose preload contrast
+is separate from fresh visual/Agent transfer.
+
+Use one fresh Agent scene per27044/45290, same shared default request1.0N,
+unchanged frozen robust ranking (bidirectional experimental re-ranking OFF),
+original closure, one-second hold and the same arm/safety/physics. No fixture,
+old grasp or successful camera-view input. Codex inspects actual fresh wrist
+RGB/SAM/depth/cloud, chooses views and plans, then finite trajectories. Existing
+four view adjustments/four acquisitions are maximum resources, not required
+retries. After failure: original safe exit, fresh feedback/image inspection,
+new automatic candidates/current-state checks and Agent-chosen legal preload.
+Never clear a hard latch or wait for Agent while unstable/loaded.
+
+Bound each scene to1800s wall (180s exit reserve),900s simulation (90s reserve),
+40 Agent operations and original360s unloaded wait. Prefer the proven12–16mm
+initial pull, useful reverse, overlapping variable-speed FIT and distinct reverse
+VALIDATION before any larger exploration. Declare exact targets before execution
+from fresh geometry/current reachability. Do not count a complete held-out action
+as full-duration forward prediction: report the estimator's retained interior
+explicitly and retain uncertainty/parameter biases.

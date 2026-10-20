@@ -14,7 +14,7 @@ class PreloadPolicyTest(unittest.TestCase):
             self.assertIs(q['other'],p['other'])
 
     def test_original_request_authority(self):
-        for value in [0,-1,float('nan'),float('inf'),10.1]:
+        for value in [0,-1,float('nan'),float('inf'),10.1,True,False]:
             with self.assertRaises(ValueError):preload_policy(dict(finger_effort_limit_n=10),value)
 
     def operation(self,latched=None,reference=None,loads=(0.,0.),settled=True):
