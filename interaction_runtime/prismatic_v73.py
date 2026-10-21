@@ -47,7 +47,8 @@ class PrismaticRuntimeV73(PrismaticPreloadRuntime):
             candidate=self.g.get('chosen',{})
             measured=np.asarray(self.robot.get_joint_positions())[self.arm]
             audit=closing_envelope(self.g,measured,predicted_aperture(candidate),policy)
-            atomic_json(self.output/('CLOSING_REVALIDATION_%02d.json'%self.g.get('physical_grasps_started',0)),audit)
+            audit.update(measured_arm_q=measured.tolist(),measured_TCP=np.asarray(T).tolist(),refined_target_TCP=np.asarray(self.g['T']).tolist(),selected_family=[candidate.get(k) for k in ('section_fraction','insertion_m','roll_deg','pitch_deg')])
+            atomic_json(self.output/('CLOSING_REVALIDATION_%02d.json'%len(self.g['contact_attempts'])),audit)
             if not audit['valid']:raise RuntimeError('PRECONTACT_CLOSING_ROUTE_UNAVAILABLE:'+audit['reason'])
             return original(T,policy)
         self.Closure=checked_closure
@@ -147,6 +148,10 @@ class PrismaticOperationsV73(PreloadOperations):
     def attempt(self,command):
         requested=command.get('native_g1_preload_request_n',self.r.closure_policy['preload_n'])
         if isinstance(requested,bool) or requested not in (.5,.75,1.,1.5):return dict(executed=False,reason='V71_TESTED_PRELOAD_MENU_ONLY',recoverable=True)
+        if self.current_plan_ready:
+            selected=json.loads((self.r.output/'visual_plan.json').read_text());keys=['T','T_grasp','section_fraction','insertion_m','roll_deg','pitch_deg','preplan','approach','contact_geometry_audit','contact_score_surface_source']
+            folder=self.r.output/'attempt_inputs';folder.mkdir(exist_ok=True)
+            atomic_json(folder/('%02d.json'%len(self.g['contact_attempts'])),dict(selected={k:selected[k] for k in keys if k in selected},requested_preload_n=requested,measured_start_q=self.r.actual(),observations=[r['folder'] for r in self.g['agent_observations']],GT_grasp_used=False))
         result=super().attempt(command)
         try:result['contact_inspection']=self.feedback().get('contact_feedback')
         except Exception as e:result['contact_inspection_error']=repr(e)
@@ -176,6 +181,8 @@ class PrismaticOperationsV73(PreloadOperations):
         model=json.loads(model_path.read_text()) if model_path.exists() else {};quality=json.loads(quality_path.read_text()) if quality_path.exists() else {}
         selected=model.get('selected',{})
         model_summary=dict(status=model.get('status','pending'),parameters=selected.get('parameters'),conditional_std=selected.get('conditional_std'),condition=selected.get('scaled_condition'),validation_bins=model.get('validation_bins'),between_FIT_parameter_range=quality.get('between_FIT_parameter_range'),FIT_groups=[{k:r.get(k) for k in ('segment','parameters','conditional_std','velocity_rms_m_s','acceleration_rms_m_s2')} for r in quality.get('groups',[])])
+        execution_path=self.r.output/'EXECUTION_CANDIDATE_AUDIT.json';execution=json.loads(execution_path.read_text()) if execution_path.exists() else {}
+        execution_summary=[{k:v.get(k) for k in ('family','valid','reason','actual_joint_coordinate_m')} for v in execution.get('candidates',[])][-8:]
         summary=None if result is None else {k:result[k] for k in ('reason','status','plan','geometry','executed','acquisition','safe_exit','candidate_family','segments','failed_contact_candidate') if k in result}
         if summary and isinstance(summary.get('safe_exit'),dict):summary['safe_exit']={k:summary['safe_exit'][k] for k in ('safe','reason') if k in summary['safe_exit']}
         if summary and 'segments' in summary:summary['segments']=[{k:s[k] for k in ('status','reason','joint_coordinate','gain_native','elapsed_sim_s','requested_target_reached') if k in s} for s in summary['segments']]
@@ -183,7 +190,7 @@ class PrismaticOperationsV73(PreloadOperations):
             remaining_resources=self.r.episode_budget.remaining(self.r.tick*self.r.dt),preload_request_n=self.r.closure_policy['preload_n'],legal_preloads_n=[.5,.75,1.,1.5],
             fresh_rgb=str(folder/'rgb.png') if folder else None,RGBD_board=str(folder/'agent_inspection.png') if folder else None,
             contact_board=str(self.r.output/'CONTACT_FEEDBACK.png'),contact_geometry=str(self.r.output/'CONTACT_GEOMETRY.png'),plan_board=str(self.r.output/'AGENT_GRASP_PLAN_INSPECTION.png'),
-            candidate_catalog_sha256=catalog.get('catalog_sha256'),eligible_candidates=[x for x in catalog.get('candidates',[]) if x['eligible']][:4],
+            candidate_catalog_sha256=catalog.get('catalog_sha256'),eligible_candidates=[x for x in catalog.get('candidates',[]) if x['eligible']][:4],execution_candidate_diagnostics=execution_summary,
             last_result=summary,model_summary=model_summary,model_reference=str(model_path),FIT_consistency_reference=str(quality_path),events=self.r.events[-8:],hard_latch=self.r.supervisor.latched,
             instruction='Inspect fresh images and feedback, choose feasible recovery promptly; low-level safety remains authoritative. No unobserved GT pose.'))
 
