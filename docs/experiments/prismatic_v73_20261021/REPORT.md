@@ -95,6 +95,30 @@ later interrupted FIT prefix, beyond the simple constant single-DOF model. The
 archives lack full moving-link pose and non-pad guide/frame reaction history;
 contact compliance, off-axis constraint loading and solver effects cannot be
 uniquely separated. Missing positive-normal reports are not proof of separation.
+A further controlled diagnosis identified that the original eligibility test
+checks filtered velocity, allowing the SG kernel to span native sticking/reversal
+while its center remains classified as sliding. The isolated prismatic worker
+now requires the FULL existing support (radius62samples) to have one resolved
+native velocity direction above the EXISTING1e−4m/s threshold. Torque, acceleration,
+velocity and sign filtering, regularization and single tool compensation remain
+unchanged. This is a FIT data-quality rule, not an execution gate. VALIDATION
+masks remain byte-identical and failed actions keep their original status.
+
+On45290_0 this removes1181/3190 previously eligible samples from the bad FIT
+trajectory and changes the diagnostic pooled mass to2.32342kg (−1.44% versus
+post-hoc authored reference), damping4.15588N s/m and Coulomb0.269089N. The
+correction was specified from the sliding-model assumption and existing kernel
+support/velocity resolution, not from minimizing error against hidden truth.
+The45290_1 selected extended-model mass remains1.95379kg, consistent with the
+original1.95426kg; fresh45746 replay changes mass/damping/C to1.99807/3.02460/0.299965.
+On identical complete validation samples,45290_0 effort/position RMSE changes
+from0.005627N/2.558mm to0.0000755N/0.00951mm.45290_1 stays0.000869N/0.215mm;
+fresh45746 stays approximately0.1538mm position RMSE (slightly worse than the
+original0.1515mm), despite the better mass estimate. Validation was not used to
+choose the rule. These are separate labelled replays, not replacements of previous
+online results.
+The new worker is activated only in subsequent versioned engineering scenes.
+
 The new passive recorder retains measured moving-link pose without extra scene
 queries. A separate FIT-only consistency packet exposes per-trajectory/local fits,
 leave-one-FIT-out spread and excitation beside the unchanged production model.
@@ -104,6 +128,8 @@ Complete VALIDATION alone did not certify parameters: the original45290_0 forwar
 position RMSE was2.558mm despite+96.79% authored-mass error. The selected extended
 45290_1 result differs from its diagnostic constant replay; those are labelled
 separately rather than conflated. See the compact derived bias plot and metrics.
+
+![Contact-state transition and separate tracking errors](figures/45290_contact_transition.png)
 
 ## Engineering evidence
 
@@ -115,7 +141,7 @@ Finite action sequences predeclare FIT and independent VALIDATION before motion.
 | Engineering attempt | Actual acquisitions | Pull / reverse / independent VAL travel | Termination |
 |---|---:|---|---|
 |45746_fresh_00|0|N/A|Precontact strict joint-margin stop caused by command precision; preserved, no reset|
-|45746_fresh_01|1|20.018 /16.063 /12.124mm; all TARGET_REACHED|Guarded release and parking verified; finish requested, receipt/final cleanup awaiting SSH recovery|
+|45746_fresh_01|1|20.018 /16.063 /12.124mm; all TARGET_REACHED|Guarded release/parking verified; later unloaded SSH timeout; actor exit confirmed|
 |27044,19179,45290 fresh tests|not launched|N/A|Pending server access; no replacement or invented outcomes|
 
 45746_fresh_01 used fresh full-bar wrist geometry, common1.0N requested preload,
@@ -134,8 +160,10 @@ The complete independent VALIDATION action took7.729s simulation and moved
 was4.713s/1132samples, with effort RMSE0.002678N, free position RMSE0.15145mm,
 velocity RMSE0.41558mm/s and final position error−0.56577mm. The action was fully
 executed; derivative boundaries/startup exclusions are not relabelled FIT.
-Authored mass comparison awaits post-episode readback; no true mass is inferred
-from agreement between the two FIT estimates. Engineering C/b references were
+Post-episode authored moving-body masses sum to2.0kg; the original online mass
+estimate differs by−6.65%. Agreement between two FIT estimates alone was not used
+to infer the true mass. Authored mass remains distinct from independently verified
+effective PhysX dynamics. Engineering C/b references were
 0.3N/3N s/m, giving−0.35%/+14.89% respective estimate differences.
 
 After this test's safe park, the attempted finish command and existing SSH multiplex
@@ -146,9 +174,10 @@ confirming owned-process cleanup. This is an infrastructure blocker, not a
 The hung local publisher/SCP clients were identified and stopped so stale commands
 cannot be silently delivered later. The original finite unloaded-decision deadline
 and launcher watchdog remain the server-side termination fallback; their execution
-cannot be claimed verified until access returns.
+was subsequently verified: actor exited normally after1369.29s wall. Its runner status is ORCHESTRATION_TIMEOUT, separate from the completed physical targets. Access recovered after closing the stale local multiplex session; the remaining tests continued sequentially.
 
-39 deterministic prismatic regressions passed, including exact reproduction of
+39 original/new deterministic prismatic regressions passed before the first contact
+validation; six additional FIT-qualification regressions subsequently passed, including exact reproduction of
 the float32 boundary crossing, preserved native collision rejection, CENTER bound
 and command-bias reachability. The actual native45746 test subsequently passed
 the previously failing precontact transition. No full revolute episode was run;

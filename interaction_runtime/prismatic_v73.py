@@ -61,6 +61,7 @@ class PrismaticRuntimeV73(PrismaticPreloadRuntime):
 
 
 class PrismaticOperationsV73(PreloadOperations):
+    worker_script='scripts/update_prismatic_v73_model.py'
     def observe(self):
         result=super().observe();row=self.g['agent_observations'][-1];folder=Path(row['folder'])
         if not row['accepted_for_geometry']:

@@ -14,6 +14,12 @@ from xarm_ft_v7_estimator import samples,fit
 
 def quality(folder):
     pieces,settings,provenance=load_segments(Path(folder),True)
+    model_file=Path(folder)/'model/estimate.json'
+    production=json.loads(model_file.read_text()) if model_file.exists() else {}
+    qualification=bool(production.get('FIT_qualification_v73'))
+    if qualification:
+        from update_prismatic_v73_model import qualify
+        for d in pieces:qualify(d)
     c=settings['estimation'];rows=[];groups=[]
     for d in pieces:
         if not d['segments'][0].startswith('FIT'):continue
@@ -29,7 +35,7 @@ def quality(folder):
             if len(r)>=8:
                 f=fit(r,c);local.append(dict(relative_interval_s=[float(start),float(start+2)],parameters=f['parameters'],conditional_std=f['conditional_std'],condition=f['scaled_condition']))
         groups.append(dict(segment=d['block_id'],bins=len(rr),parameters=m['parameters'],conditional_std=m['conditional_std'],condition=m['scaled_condition'],velocity_rms_m_s=float(np.sqrt(np.mean(d['qd'][d['valid']]**2))),acceleration_rms_m_s2=float(np.sqrt(np.mean(d['qdd'][d['valid']]**2))),local_FIT_diagnostics=local))
-    result=dict(schema='prismatic-FIT-consistency-v73',production_estimate_modified=False,hidden_truth_used=False,validation_used=False,groups=groups,FIT_bins=len(rows),meaning='conditional fit uncertainty does not include changing contact/constraint loads; empirical spread below is diagnostic, not calibrated confidence')
+    result=dict(schema='prismatic-FIT-consistency-v73',production_estimate_modified=False,hidden_truth_used=False,validation_used=False,production_sliding_support_qualification=qualification,groups=groups,FIT_bins=len(rows),meaning='conditional uncertainty excludes changing contact/constraint loads; constant-model cross-FIT spread can also reflect real position-dependent resistance or excitation differences, not calibrated confidence or an execution veto')
     if len(rows)>=8:
         full=fit(rows,c);leave=[]
         for name in dict.fromkeys(r['segment'] for r in rows):

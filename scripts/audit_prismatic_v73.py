@@ -9,12 +9,21 @@ def digest(path):return hashlib.sha256(path.read_bytes()).hexdigest()
 def read(path):return json.loads(path.read_text()) if path.exists() else {}
 
 def audit(root):
-    baseline=read(ROOT/'docs/experiments/prismatic_benchmark_v72_20261020/FINAL_PROVENANCE.json');bad=[];checked=0
+    baseline_path=ROOT/'docs/experiments/prismatic_benchmark_v72_20261020/FINAL_PROVENANCE.json'
+    if not baseline_path.exists():baseline_path=root/'BASELINE_V72_PROVENANCE.json'
+    baseline=read(baseline_path)
+    if 'runs' not in baseline:raise ValueError('Original V7.2 provenance manifest required; do not infer baseline hashes from current files')
+    bad=[];checked=0
     for name,files in baseline['runs'].items():
         for f,expected in files.items():
             p=ROOT/'results/cross_object_v7_final_v72_20261021/episodes'/name/f;checked+=1
             if not p.exists() or digest(p)!=expected:bad.append(str(p))
-    result=dict(frozen_revolute=audit_frozen(ROOT),V72=dict(episodes=len(baseline['runs']),hashes_checked=checked,mismatch=bad),engineering_attempts=[])
+    expected_models=read(root/'BASELINE_V72_MODEL_HASHES.json');model_bad=[];model_checked=0
+    for name,h in expected_models.items():
+        if not h:continue
+        p=ROOT/'results/cross_object_v7_final_v72_20261021/episodes'/name/'model/estimate.json';model_checked+=1
+        if not p.exists() or digest(p)!=h:model_bad.append(name)
+    result=dict(frozen_revolute=audit_frozen(ROOT),V72=dict(original_manifest_sha256=digest(baseline_path),episodes=len(baseline['runs']),hashes_checked=checked,mismatch=bad,online_models_checked=model_checked,online_model_mismatch=model_bad),engineering_attempts=[])
     for p in sorted((root/'episodes').glob('*')):
         if not p.is_dir():continue
         end=read(p/'PROCESS_COMPLETION.json')

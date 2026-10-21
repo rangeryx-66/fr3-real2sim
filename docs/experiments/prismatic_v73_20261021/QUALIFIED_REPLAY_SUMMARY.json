@@ -1,0 +1,355 @@
+[
+  {
+    "case": "45290_0",
+    "original": {
+      "parameters": [
+        4.639282359112282,
+        5.792662225141626,
+        0.25981077920898643
+      ],
+      "conditional_std": [
+        0.4511488644757668,
+        1.6652680890283211,
+        0.005233794630782303
+      ],
+      "scaled_condition": 88.9533410570998,
+      "heldout_motion": {
+        "VALIDATION_DISTINCT_OPEN_04#0": {
+          "status": "predicted",
+          "effort_rmse": 0.005627001156641601,
+          "coordinate_rmse": 0.0025580901190625834,
+          "velocity_rmse": 0.0008085748225845984,
+          "final_coordinate_error": 0.004947052452336682,
+          "outside_FIT_support": false,
+          "samples": 1701,
+          "duration_s": 7.083333333333314,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    },
+    "qualified": {
+      "parameters": [
+        2.3234168004575886,
+        4.1558846601544195,
+        0.26908868422993376
+      ],
+      "conditional_std": [
+        0.012271290555554796,
+        0.013995787502898347,
+        3.2185024113624676e-05
+      ],
+      "scaled_condition": 108.67677708337001,
+      "heldout_motion": {
+        "VALIDATION_DISTINCT_OPEN_04#0": {
+          "status": "predicted",
+          "effort_rmse": 7.552084191752686e-05,
+          "coordinate_rmse": 9.509533305342875e-06,
+          "velocity_rmse": 9.732228405199461e-05,
+          "final_coordinate_error": 9.51143578096364e-06,
+          "outside_FIT_support": false,
+          "samples": 1701,
+          "duration_s": 7.083333333333314,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    },
+    "qualification": {
+      "rule": "existing velocity resolution across complete unchanged SG support",
+      "segments": [
+        {
+          "applied": true,
+          "block": "FIT_OPEN_ACCEL_01#0",
+          "original_valid_samples": 1488,
+          "qualified_samples": 1488,
+          "excluded_samples": 0,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        },
+        {
+          "applied": true,
+          "block": "FIT_OPEN_ACCEL_02#0",
+          "original_valid_samples": 3190,
+          "qualified_samples": 2009,
+          "excluded_samples": 1181,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        },
+        {
+          "applied": true,
+          "block": "FIT_REVERSE_SPEED_03#0",
+          "original_valid_samples": 3534,
+          "qualified_samples": 3530,
+          "excluded_samples": 4,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        },
+        {
+          "applied": false,
+          "reason": "complete independent VALIDATION unchanged"
+        }
+      ],
+      "validation_mask_unchanged": true,
+      "filter_math_changed": false,
+      "tool_compensation_count": 1,
+      "hidden_truth_used": false
+    },
+    "original_validation_bins": 72,
+    "qualified_validation_bins": 72,
+    "wall_s": 4.125671105924994
+  },
+  {
+    "case": "45290_1",
+    "original": {
+      "parameters": [
+        1.9542606554194348,
+        3.545327888593988,
+        0.3603014459350272,
+        0.4503578655348128,
+        0.5224866758311405,
+        0.1027017961809167,
+        1.9436434879304023
+      ],
+      "conditional_std": [
+        0.04153384714328502,
+        0.1282696183410306,
+        0.0015615360458975712,
+        0.0015159019950849507,
+        0.0029420698452238365,
+        0.006531865436277782,
+        0.1679470009442536
+      ],
+      "scaled_condition": 598.0709689440156,
+      "heldout_motion": {
+        "VALIDATION_DISTINCT_OPEN_03#0": {
+          "status": "predicted",
+          "effort_rmse": 0.000869254879811913,
+          "coordinate_rmse": 0.00021543328996882012,
+          "velocity_rmse": 0.00021986230658968973,
+          "final_coordinate_error": -0.000339021284191849,
+          "outside_FIT_support": false,
+          "samples": 1055,
+          "duration_s": 4.3916666666666515,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    },
+    "qualified": {
+      "parameters": [
+        1.95379125697308,
+        3.5448507836597507,
+        0.36030116654687344,
+        0.45035865505939743,
+        0.5224918373807699,
+        0.10269141112466139,
+        1.9440319141198659
+      ],
+      "conditional_std": [
+        0.04153585584178845,
+        0.12827851403456478,
+        0.0015625688022186607,
+        0.0015170318941287145,
+        0.002943785713079708,
+        0.006537781164375054,
+        0.1682877721970132
+      ],
+      "scaled_condition": 598.9945642959801,
+      "heldout_motion": {
+        "VALIDATION_DISTINCT_OPEN_03#0": {
+          "status": "predicted",
+          "effort_rmse": 0.0008686283227071601,
+          "coordinate_rmse": 0.0002152590889685766,
+          "velocity_rmse": 0.00021982939747086782,
+          "final_coordinate_error": -0.00033878335025989276,
+          "outside_FIT_support": false,
+          "samples": 1055,
+          "duration_s": 4.3916666666666515,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    },
+    "qualification": {
+      "rule": "existing velocity resolution across complete unchanged SG support",
+      "segments": [
+        {
+          "applied": true,
+          "block": "FIT_OPEN_ACCEL_01#0",
+          "original_valid_samples": 1489,
+          "qualified_samples": 1489,
+          "excluded_samples": 0,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        },
+        {
+          "applied": true,
+          "block": "FIT_REVERSE_SPEED_02#0",
+          "original_valid_samples": 1867,
+          "qualified_samples": 1858,
+          "excluded_samples": 9,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        },
+        {
+          "applied": false,
+          "reason": "complete independent VALIDATION unchanged"
+        },
+        {
+          "applied": true,
+          "block": "FIT_OPTIONAL_EXPANSION_AFTER_VALIDATION_04#0",
+          "original_valid_samples": 4378,
+          "qualified_samples": 4371,
+          "excluded_samples": 7,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        }
+      ],
+      "validation_mask_unchanged": true,
+      "filter_math_changed": false,
+      "tool_compensation_count": 1,
+      "hidden_truth_used": false
+    },
+    "original_validation_bins": 45,
+    "qualified_validation_bins": 45,
+    "wall_s": 3.6643995239865035
+  },
+  {
+    "case": "45746",
+    "original": {
+      "parameters": [
+        1.8670986778737169,
+        3.446653312690425,
+        0.2989527194025474
+      ],
+      "conditional_std": [
+        0.21404478119272155,
+        0.29635661275464564,
+        0.0006673619649667379
+      ],
+      "scaled_condition": 170.2950382629182,
+      "heldout_motion": {
+        "VALIDATION_DISTINCT_03_03#0": {
+          "status": "predicted",
+          "effort_rmse": 0.002677592133881494,
+          "coordinate_rmse": 0.0001514500659822535,
+          "velocity_rmse": 0.0004155820608406152,
+          "final_coordinate_error": -0.0005657667901066976,
+          "outside_FIT_support": false,
+          "samples": 1132,
+          "duration_s": 4.712500000000006,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    },
+    "qualified": {
+      "parameters": [
+        1.9980729331118918,
+        3.0246015477333565,
+        0.29996477696175755
+      ],
+      "conditional_std": [
+        0.0065784775438593015,
+        0.013178215807428898,
+        2.354401397283614e-05
+      ],
+      "scaled_condition": 168.89575732065182,
+      "heldout_motion": {
+        "VALIDATION_DISTINCT_03_03#0": {
+          "status": "predicted",
+          "effort_rmse": 0.002823355826069731,
+          "coordinate_rmse": 0.00015380566657897046,
+          "velocity_rmse": 0.0004410104261049181,
+          "final_coordinate_error": -0.0005730041301943746,
+          "outside_FIT_support": false,
+          "samples": 1132,
+          "duration_s": 4.712500000000006,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    },
+    "qualification": {
+      "rule": "existing velocity resolution across complete unchanged SG support",
+      "segments": [
+        {
+          "applied": true,
+          "block": "FIT_OPEN_ACCEL_01_01#0",
+          "original_valid_samples": 3234,
+          "qualified_samples": 2842,
+          "excluded_samples": 392,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        },
+        {
+          "applied": true,
+          "block": "FIT_REVERSE_SPEED_02_02#0",
+          "original_valid_samples": 1842,
+          "qualified_samples": 1797,
+          "excluded_samples": 45,
+          "native_velocity_resolution": 0.0001,
+          "filter_support_radius_samples": 62,
+          "tag": "complete SG support must contain resolved sliding in one direction",
+          "execution_status_unchanged": true
+        },
+        {
+          "applied": false,
+          "reason": "complete independent VALIDATION unchanged"
+        }
+      ],
+      "validation_mask_unchanged": true,
+      "filter_math_changed": false,
+      "tool_compensation_count": 1,
+      "hidden_truth_used": false
+    },
+    "original_validation_bins": 48,
+    "qualified_validation_bins": 48,
+    "wall_s": 2.6310528211761266
+  }
+]
