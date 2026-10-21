@@ -1,4 +1,4 @@
-# Next independent prismatic benchmark — DRAFT, NOT LAUNCHED
+# Next independent prismatic benchmark — PREPARED, NOT LAUNCHED
 
 V7.2's sixteen slots, including all failures, remain immutable. V7.3 trials are
 engineering development and cannot be used as a new unbiased success rate.
@@ -50,3 +50,39 @@ Keep essential240Hz numerical evidence and sparse wrist RGB-D privately with
 under100MB/episode as target, source hashes and a compact Agent trace. Publish
 derived tables/plots and failures. No passive external-camera or GT geometry
 enters online observations, grasp generation, scoring, fitting or Agent decisions.
+
+
+V7.3 readiness was reviewed after all four engineering scenes exited. It supports
+short-range independent dynamics testing; it does not establish80–150mm robustness
+or newly exercise the physical failed-pull/regrasp branch. See READINESS_REVIEW.json.
+
+New registration uses eight NEW identifiers, four development objects × two fresh
+blind configurations. One constant and one smooth localized passive resistance
+family per object have shuffled hidden assignment. All hidden seeds and values
+remain server-side in scene_private; the public record contains only a SHA256
+commitment and the family prior. No old slot or outcome is overwritten.
+
+Metrics are frozen before outcomes: native pull/reverse displacement (m), first
+acquisition versus recovery completion, complete target/stopped-state VALIDATION,
+release and measured unloaded collision-checked parking. Relative parameter error
+is100*(estimate/reference−1), reported separately for mass and damping; resistance
+curve RMSE is evaluated ONLY on observed FIT support. Report constant and extended
+models on identical held-out samples, conditional uncertainty and between-FIT
+spread, algebraic rank/conditioning and actual measured acceleration/velocity.
+Effort RMSE is inN, free coordinate/velocity RMSE inm andm/s; additionally normalize
+by held-out measured effort RMS, displacement and velocity RMS where nonzero.
+No new numerical accuracy cutoff becomes a physical execution or safety gate.
+Weakly supported parameters count as unidentified, not as accurate successes.
+
+Use at least three distinct eligible FIT trajectories before allowing the existing
+FIT-only extension-selection rule; with fewer, retain the constant model and label
+state dependence unsupported. Obtain a predeclared complete distinct-profile
+VALIDATION immediately after the minimum informative bidirectional FIT block.
+Do not let optional range expansion displace this validation. The finite action
+menu/targets remain chosen by Agent from fresh observed feasibility and feedback.
+
+The current V7.3 executable deliberately rejects registered benchmark jobs. This
+registration is data-only and never launches Isaac. A separately authorized thin
+registered entry must verify the frozen implementation and hidden commitment
+before running; it must not relabel official trials as engineering to bypass
+that scope guard. No such entry was activated in this task.

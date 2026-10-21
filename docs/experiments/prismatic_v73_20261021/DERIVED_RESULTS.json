@@ -1,0 +1,4105 @@
+{
+  "schema": "prismatic-v73-engineering-derived",
+  "frozen_revolute": {
+    "REVOLUTE_FREEZE.json": {
+      "count": 71,
+      "mismatch": []
+    },
+    "REVOLUTE_EXTERNAL_FREEZE.json": {
+      "count": 22,
+      "mismatch": []
+    }
+  },
+  "V72": {
+    "original_manifest_sha256": "6a370b4dd4abf8982cb29ed4a307ed05273e1c7e4317a648b3ac895b5836fa8a",
+    "episodes": 16,
+    "hashes_checked": 64,
+    "mismatch": [],
+    "online_models_checked": 13,
+    "online_model_mismatch": []
+  },
+  "cases": [
+    {
+      "id": "19179_fresh_00",
+      "terminal_status": "SESSION_COMPLETE",
+      "actor_exited": true,
+      "wall_s": 1491.6654973300174,
+      "storage_bytes": 45554088,
+      "authored_reference_post_episode": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "friction_N": 0.3
+      },
+      "attempts": [
+        {
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": -3.1320560034409084e-10,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            }
+          },
+          "requested_preload_n": 1.0,
+          "family": [
+            0.3,
+            0.009374999906867743,
+            0.0,
+            0.0
+          ],
+          "physical_grasp_started": true,
+          "error": null,
+          "actions_declared_before_execution": [
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_OPEN_ACCEL_01",
+              "target_q": 0.03,
+              "velocity_program": "plateaus",
+              "reference_speed_m_s": 0.006,
+              "reference_acceleration_m_s2": 0.018,
+              "low_speed_fraction": 0.25,
+              "ramp_s": 0.4,
+              "plateau_s": 0.6,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  40
+                ]
+              ],
+              "allow_target_truncation": true
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_REVERSE_SPEED_02",
+              "target_q": 0.005,
+              "velocity_program": "constant",
+              "reference_speed_m_s": 0.0035,
+              "reference_acceleration_m_s2": 0.01,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  40
+                ]
+              ],
+              "allow_target_truncation": true,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "VALIDATION_DISTINCT_03",
+              "target_q": 0.015,
+              "velocity_program": "sine",
+              "reference_speed_m_s": 0.0045,
+              "reference_acceleration_m_s2": 0.012,
+              "low_speed_fraction": 0.4,
+              "period_s": 2.5,
+              "allow_target_truncation": false,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.030051064059419513,
+              "joint_coordinate": 0.030051063746213913,
+              "elapsed_sim_s": 13.125000000000014,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.002386555404106372
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.025134404189884663,
+              "joint_coordinate": 0.00491665955632925,
+              "elapsed_sim_s": 10.004166666666663,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.002081236003207852
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.01010514423251152,
+              "joint_coordinate": 0.01502180378884077,
+              "elapsed_sim_s": 9.712500000000006,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.0025563013470628997
+            }
+          ],
+          "safe_exit": true,
+          "parked": true,
+          "final_pad_loads_N": [
+            0.0,
+            0.0
+          ],
+          "final_joint_q": [
+            0.0008331682183779776,
+            -0.49927109479904175,
+            -0.000839355809148401,
+            0.998816728591919,
+            0.0020024708937853575,
+            0.5020024180412292,
+            -0.003719198051840067
+          ],
+          "final_drawer_m": 0.015021920204162598
+        }
+      ],
+      "source_sha256": {
+        "interaction_runtime/._prismatic_benchmark_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._recovery_v44.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/estimator_v31.py": "30e247c92d21cd8dcd24ed0b940c670bb2b3b292c6dafd8835cc770b4366c55e",
+        "interaction_runtime/probing_v5.py": "529baea5842d4b447c3c12a23505909c5562e7a3690399723453d39a1a0a5829",
+        "interaction_runtime/probing_v2.py": "a74773275bacf0603e30fd29b610d80ae40233fa2b6d5d6dd39760343c77d366",
+        "interaction_runtime/recovery_candidates_v7.py": "f458e924136145347a951c8ea4911f7ffedaeb7f7109a0de3b888323dc23e9f2",
+        "interaction_runtime/prismatic_retention_v7.py": "96005dbdbfb81df1fc5bf6d97d36e83c5939c38f3aa0826bc815f3950ebdb763",
+        "interaction_runtime/prismatic_lighting_v72.py": "06d4331949a74941c9fb197c7a4deb6e7e0e55e20d51184eee3d0149b01bbce3",
+        "interaction_runtime/recovery_v44.py": "b071097dfb6694bab494a03df575a3da253b56e6e1188acb57d7f872fdd59065",
+        "interaction_runtime/compact_v2.py": "751475f454cb9d766b58179464198c0f8c50479c48d57a98adee71389f2138a1",
+        "interaction_runtime/kinematics.py": "a4021461e8e97280d3000788392bc7f2791f4a7ade05d0b13dafaf1df2ed72aa",
+        "interaction_runtime/prismatic_preload_v71.py": "c729c0c1ff4b06bdc4e65d73fb1cf6c1e6a1799b193420f7be3be2b591da464f",
+        "interaction_runtime/prismatic_feedback_v7.py": "a022d43847bda68d5569cf4ea3162a666a69a03c7d993e6dc7d38d10709abf3b",
+        "interaction_runtime/session.py": "9fb65831bd5cc373024d21e308196e35c1d10dc8c70695048f69205c2c80e01f",
+        "interaction_runtime/probing_v6.py": "daf55cb59c0cc1cf055d06e70f99fcc16820b784d6fbebdca6bc29a8cfa28fce",
+        "interaction_runtime/passive_rgbd_v6.py": "01859bcda67a09f1386d645d469fdaec3b58a9100e3b3fade79c5aeaa179c9c3",
+        "interaction_runtime/._segments.py": "627093cc20769c580bf587ec6f4832168eb592379afb369e2d03cfff3330e596",
+        "interaction_runtime/policy.py": "39bd1399af5feefb589bdd1bb5601a580f800b182356f969b24e763292e77620",
+        "interaction_runtime/._registered_observation_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/operations.py": "657f44e9b70fbdf21430a8fa74f51b3f962fc42b00e3b7a87f8dc94654938390",
+        "interaction_runtime/._operations.py": "f43738e4e74abff0a5a37e8db351806e8c8be0891e1c2fc959d28ba4642e8a15",
+        "interaction_runtime/prismatic_v73.py": "39d5c8136061c7bb02ee03bc65529be85ea82d6a610202978bd78989521705c8",
+        "interaction_runtime/passive_clock_v6.py": "7f74a2b7edf5c4773108383964ce0f8e5768bf292747423dd51bef99514a6581",
+        "interaction_runtime/probing_v7.py": "c4eb8e99cef5e76a29d4a2f686a2f423ea76c2b699fd4d5b8542554f0d548b32",
+        "interaction_runtime/segments.py": "9d7eb700c83924c0dc44259b1028a92931f7b8b7dcd5617062a47893f824c99f",
+        "interaction_runtime/progress.py": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f",
+        "interaction_runtime/probing_profiles_v3.py": "a24fd2a2c1b58ce8b7b8c82ad07415e1e89a9c0cf92565abc05f3f4d993f5a00",
+        "interaction_runtime/motion.py": "284a88d37f76bdbbe288b2bacfac13e3d2c0e59df9a1f18074c3f0b124aa5a2b",
+        "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b",
+        "interaction_runtime/checkpoints.py": "41acb59b819694a689f04d0113d84dab59cb8ca8aa40589f1304b6950349355f",
+        "interaction_runtime/sensor_lighting_v1.py": "ebe636fa7397c6c503d817403684cebdb733555152ce889a8017fe68ad6663a5",
+        "interaction_runtime/serialization.py": "cd4af3fea6076e83399683e59a3fd513c61e6e1d811dc7738d6b8edb5ef7bf39",
+        "interaction_runtime/._prismatic_feedback_v7.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._sensor_lighting_v1.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/runtime.py": "f2d333a28466780907a83431b91ef3e4cf2227c511188657aeb8b878b8504826",
+        "interaction_runtime/__init__.py": "b4ea43a6d6d65ad90f82162143b78fbebf116d4aff9ec3f9ab1ced81e66dbc36",
+        "interaction_runtime/prismatic_startup.py": "5912a178391bfdca6fae729790064d54911d74777b6995c13384d115f5af5d26",
+        "interaction_runtime/evidence.py": "7265be5a40e17cb6ad2dbda4789c67e6cf2d8549615399f92ea4e940b829e4ba",
+        "interaction_runtime/native_scene.py": "41fc33e512d365f4b48c94edbc382bba2aabe3a554f8b4ffcc3696fa5690299e",
+        "interaction_runtime/registered_observation_v71.py": "133161b6ea11413d114154560aeb35041d3e9e868c391defeb80ce266acce3da",
+        "interaction_runtime/contact_evidence_v7.py": "6c111579785ae8ac771999bdc9dcf55baf47a0802c122db00c5f67957fba874b",
+        "interaction_runtime/prismatic_microtracking_v7.py": "2b9e734dda85c067a15153f2a8bb460a74bc23878d14d602d85c37565b6fc4bb",
+        "interaction_runtime/prismatic_benchmark_v71.py": "1ecc0834e59f6b0233794161c8a5dad565b0eae48aa6ae7337907b1d572b6327",
+        "interaction_runtime/guard_regression.py": "ac55190f7f8ac62ce044852176dc0c688302189dd2a1ff996cd165ec71ad3323",
+        "interaction_runtime/articulation_v7.py": "7828daa2f71b5ed4e46675d6adfa340c06b6e73fa6eb4d855f3d0b75cb5fbfbe",
+        "interaction_runtime/fixture.py": "7ae1b0d171512fc42b3f11e37a364adba4d72926010beb749577f744cb30a4ca",
+        "interaction_runtime/prismatic_planning_v73.py": "b48708b0f8000af5921b06fda2d066b2211ac33c4ef2d7d992cac7181208014a",
+        "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+        "configs/interaction_runtime_v1.json": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+        "configs/efficient_probing_v2.json": "a56d02cd5f22cca3eed3ce74610ddd8636ff678b7a1051c8ad8700aab50b9bc2",
+        "scripts/update_probing_v2_model.py": "f64b058d15ee093877495958096f0fd5a06af6d9049efa75e126cab85d6fd24e",
+        "scripts/run_efficient_probing_v2.py": "921ab6d9f812a18f8d7be98de3c41a42584040039cf800cded9765d6a470df5c",
+        "scripts/update_probing_v31_model.py": "01cc3021e562965193daf8ee8ddf192b402f8f9dc99faa74935bb0715f93f6cc",
+        "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+        "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b",
+        "scripts/xarm_wrist_ft.py": "0c85ccc6b5499b8a5a74e5adb1d4d09630c95cef1e1961be648d9a4f27b032d0",
+        "scripts/diagnose_probing_v3.py": "097293bab679aa388f8df6e65ca714923ceeaf51fcd8d687ccbbc77ad1a102c8",
+        "scripts/run_informative_probing_v31.py": "d35ba55cf5d2f6d73c16e62f3a7fe89c3d86de389dc3e93780dbc48c38966616",
+        "scripts/native_g1_wrist_input.py": "e9df8658fd790d8b3ed1964a70d39fa38551a7b612fd310661a0ad5617df83c3",
+        "scripts/agent_command_protocol_v12.py": "815f7dc664fb16f476bb64ae7c3651aa797b1e5e0bca6eba0c7045ffce957dd1",
+        "scripts/route_probing_approach_v3.py": "5e415446780ed21656ffe5eeeb6528129bf805eacaf2f7cbaa2e06345f82825d",
+        "configs/informative_probing_v3.json": "9781101491f8ea4b7160b3d837edf72a283da50574fdf7a10077c379a4d827bf",
+        "scripts/update_probing_v5_model.py": "32bac209bb5caea4bea55b03fc1fe62eed15a39c19c8ca4735209f31f3e87d45",
+        "scripts/xarm_ft_v5_estimator.py": "8923e927ed09f94f7a4e8813a07e546c592f959f65d934f79f4048f3bcf59e4c",
+        "scripts/xarm_ft_v1_scene.py": "118195d3466de150e688cbc115d4cde87b42ec1b257cf28a220025bd821570ca",
+        "scripts/run_angle_resistance_v5.py": "42cc2caa9ff1b38efaad3702ded54ad31badbd0684425e2cd646ba45d6644990",
+        "scripts/native_g1_execution_candidates.py": "82374cf63ce85f308aa88636c869f7bcf58c38c473961f0c676ca4944db5b70d",
+        "scripts/native_g1_agent_execution.py": "5ab279337794a2cb5c281c214a699628267ef01d3bca9b6d88f829048dee5bde",
+        "scripts/native_g1_panel_support.py": "ab9df98efe27faf94bfd5764a2530a3bf60f60d7b1a39a988fa718d261b9a4bf",
+        "scripts/native_g1_visual_input.py": "c5a61d06fcf1ebb69a0bc7f0a074189f3bbb89615734eb91cbb4d856c4753ca8",
+        "scripts/xarm7_native_planning.py": "3878e9b7478f80e3ad9357e8cefc2ad2cbe3ffc94c12f6c5b9cc1b4aa64448be",
+        "scripts/plan_shared_door_skill.py": "5121ceb128f544f2f29fb388c02537cd1977e6411527a1abe72051156b4fb2c2",
+        "scripts/xarm_ft_v7_scene.py": "6641027d779d50f0e01ba7f69e7eb560cbe982d29c7ac0d88360ee0ef17738f7",
+        "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+        "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+        "scripts/native_g1_prismatic_ranking.py": "4a2d5a515f55a454c6ce9d5fcd018c7bf707742176c90ae4e57617e8c674a600",
+        "scripts/prismatic_visual_v73.py": "b652b47b832dc12822e8dbf40f17fc0af3d1230510e2c6ac5dd345271924d1b8",
+        "scripts/run_prismatic_v73.py": "abc46f31c28f7c83fd08609bb2b3a95033a867259ed6f347318fb6402edaa821",
+        "scripts/launch_prismatic_v73.py": "80d645d6e2b28d892fe7e3b3d76ecfa2990b862d8c555d3296826bc822a6e272",
+        "scripts/prismatic_quality_v73.py": "2cfbd6a497f4f7569c0a107a8fcbcea0a0c84ae6d6665b2cc1602e8a1afdf122",
+        "scripts/prismatic_inspection_v73.py": "096c51e7bc3a501c769560d1fb7450f73b5ba77e0c79fc1a609374f9f277784d",
+        "scripts/update_prismatic_v73_model.py": "b451426b212f791a8e20f1cadf636f17afff6a958effb487908a3759a9c5b2f0",
+        "configs/prismatic_preload_v71.json": "3a57a0ec1286ef2acd92cf854478bd2b00c3c88ba12ae13e3f95ec09b1560ff8",
+        "configs/sensor_lighting_v1.json": "d0ebafb28b968e1bf823676be961b9f19618bbfc22d88731adfcf5e2545d70b4"
+      },
+      "private_evidence_index": {
+        "telemetry/index.json": "d80a83f8a28c368fd698c791c356529b3fe2739855cbe35831c4f128061c5092",
+        "EPISODE_RESULT.json": "2bec619cd179f17fc05a7e2bb1c8faf6bfaaf7bc9860488a83c190a11d29bf98",
+        "SOURCE_PROVENANCE.json": "ff71ec4308bf1be0ff1eeb36ce80edb8ec087f58b645c558711042d4a106d4ce",
+        "model/estimate.json": "bb21e970878fc33f78c6a41b5ecd375a1ea0e1b5add0bfe36f411e4e0a362815"
+      },
+      "model_online": {
+        "parameters": [
+          2.006801377898198,
+          3.085188888533677,
+          0.29977113629282853
+        ],
+        "parameter_names": [
+          "m_eff_kg",
+          "b_N_s_m",
+          "F_c_N"
+        ],
+        "conditional_std": [
+          0.005963409575506647,
+          0.012489116931145855,
+          3.622622751653525e-05
+        ],
+        "scaled_condition": 149.63328887295614,
+        "support_intervals_native": [
+          [
+            0.0017697815617014254,
+            0.029630803650147038
+          ]
+        ],
+        "mass_relative_error_percent": 0.3400688949098951,
+        "damping_relative_error_percent": 2.83962961778923,
+        "constant_friction_relative_error_percent": -0.07628790239048167,
+        "heldout": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.003358103278977624,
+            "coordinate_rmse": 0.0005282656209253906,
+            "velocity_rmse": 0.00033530035921976127,
+            "final_coordinate_error": -0.00039982955228533637,
+            "outside_FIT_support": false,
+            "samples": 1728,
+            "duration_s": 7.195833333333326,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "unfiltered_input_sensitivity": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.03177304431049737,
+            "coordinate_rmse": 0.00018225805420195646,
+            "velocity_rmse": 6.398579661274042e-05,
+            "final_coordinate_error": 0.0003452901245368078,
+            "outside_FIT_support": false,
+            "samples": 1728,
+            "duration_s": 7.195833333333326,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "FIT_qualification": {
+          "rule": "existing velocity resolution across complete unchanged SG support",
+          "segments": [
+            {
+              "applied": true,
+              "block": "FIT_OPEN_ACCEL_01_01#0",
+              "original_valid_samples": 2764,
+              "qualified_samples": 2607,
+              "excluded_samples": 157,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": true,
+              "block": "FIT_REVERSE_SPEED_02_02#0",
+              "original_valid_samples": 1798,
+              "qualified_samples": 1791,
+              "excluded_samples": 7,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": false,
+              "reason": "complete independent VALIDATION unchanged"
+            }
+          ],
+          "validation_mask_unchanged": true,
+          "filter_math_changed": false,
+          "tool_compensation_count": 1,
+          "hidden_truth_used": false
+        },
+        "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+        "validation_used_for_fitting": false
+      },
+      "worker": {
+        "worker_script": "scripts/update_prismatic_v73_model.py",
+        "worker_sha256": "b451426b212f791a8e20f1cadf636f17afff6a958effb487908a3759a9c5b2f0",
+        "returncode": 0,
+        "estimator_ready": true,
+        "loaded_sources": {
+          "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+          "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+          "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+          "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b",
+          "scripts/update_prismatic_v73_model.py": "b451426b212f791a8e20f1cadf636f17afff6a958effb487908a3759a9c5b2f0"
+        },
+        "wall_s": 5.194238029886037
+      },
+      "Agent_operations": [
+        {
+          "sequence": 0,
+          "operation": "evaluate_view"
+        },
+        {
+          "sequence": 1,
+          "operation": "move_and_observe"
+        },
+        {
+          "sequence": 2,
+          "operation": "build_geometry"
+        },
+        {
+          "sequence": 3,
+          "operation": "validate_execution"
+        },
+        {
+          "sequence": 4,
+          "operation": "attempt_grasp_and_probe"
+        },
+        {
+          "sequence": 5,
+          "operation": "finish"
+        }
+      ],
+      "Agent_decisions": [
+        {
+          "sequence": 0,
+          "command": {
+            "operation": "evaluate_view",
+            "target": {
+              "eye_world_m": [
+                0.62,
+                -0.93,
+                0.2
+              ],
+              "look_at_world_m": [
+                0.48,
+                -0.37,
+                0.22
+              ]
+            },
+            "reason": "Fresh RGB/depth inspected: lower rectangular handle is complete but SAM emphasizes white front; black underside/rear clearance is uncertain. Request modest right-oblique view at similar safe height to expose side/underside support and panel gap; targets derived from observed handle, not GT or historical viewpoints."
+          },
+          "missing": "underside/rear support of flat-front handle",
+          "expected": "complementary measured surfaces for closing/retention support",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 1,
+          "command": {
+            "operation": "move_and_observe",
+            "evaluated_command": 0,
+            "reason": "Modest right-oblique view preserves all observed handle points and passes direct native IK/collision route with0.578rad margin. Execute actual arm motion to inspect underside/panel clearance before grasp planning."
+          },
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 2,
+          "command": {
+            "operation": "build_geometry",
+            "observed_handle_hypothesis": {
+              "source": "SAM3",
+              "id": "candidate_00_000",
+              "sha256": "22f2714b3f9c2d0c1d085dddfbda779d2d989bd12ec6c2859539366a2b05dbed",
+              "reason": "Agent inspected actual fresh view: choose lower handle at pixels512:783,455:494, corresponding to initial lower drawer; slightly higher-score upper handle belongs to another drawer."
+            },
+            "reason": "Associate independently observed lower-handle surfaces across two real wrist poses, not maximum SAM score alone. Unknown underside/rear remains uncertain. Generate unchanged native-G1 ranking with current-state closing/collision feasibility."
+          },
+          "missing": "unobserved rear remains prior",
+          "actual": "two handles separated; Agent chooses visually associated lower mask",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 3,
+          "command": {
+            "operation": "validate_execution",
+            "reason": "Agent inspected fused LOWER handle and native fingers: existing right-of-center9.375mm insertion selected automatically; complete native closing/CENTER envelope accepted. Check observation-return and full current-state approach before finite30mm-class probing."
+          },
+          "missing": "actual preload/traction and motion reachability after acquisition",
+          "inspected_private_images": [
+            {
+              "reference": "AGENT_GRASP_PLAN_INSPECTION.png",
+              "retained": true,
+              "sha256": "af9858bc683b3f4a270a5b5e984af743e0755f541676759ff28a15f1d580fdfa"
+            },
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 4,
+          "command": {
+            "operation": "attempt_grasp_and_probe",
+            "native_g1_preload_request_n": 1.0,
+            "segments": [
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_OPEN_ACCEL_01",
+                "target_q": 0.03,
+                "velocity_program": "plateaus",
+                "reference_speed_m_s": 0.006,
+                "reference_acceleration_m_s2": 0.018,
+                "low_speed_fraction": 0.25,
+                "ramp_s": 0.4,
+                "plateau_s": 0.6,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    40
+                  ]
+                ],
+                "allow_target_truncation": true
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_REVERSE_SPEED_02",
+                "target_q": 0.005,
+                "velocity_program": "constant",
+                "reference_speed_m_s": 0.0035,
+                "reference_acceleration_m_s2": 0.01,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    40
+                  ]
+                ],
+                "allow_target_truncation": true,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "VALIDATION_DISTINCT_03",
+                "target_q": 0.015,
+                "velocity_program": "sine",
+                "reference_speed_m_s": 0.0045,
+                "reference_acceleration_m_s2": 0.012,
+                "low_speed_fraction": 0.4,
+                "period_s": 2.5,
+                "allow_target_truncation": false,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              }
+            ],
+            "reason": "Fresh measured lower-handle fusion and automatic right-of-center grasp inspected. Complete current-state return/approach and native CENTER sweep valid. Choose bounded30mm FIT, reverse to5mm and conservative distinct15mm VALIDATION target inside overlap; actual loaded path/bias preflight may stop FIT at a safe prefix before a joint limit. Initial1N request, no grip/physics change. New FIT-only full-support qualification is frozen before execution."
+          },
+          "inspected_private_images": [
+            {
+              "reference": "AGENT_GRASP_PLAN_INSPECTION.png",
+              "retained": true,
+              "sha256": "af9858bc683b3f4a270a5b5e984af743e0755f541676759ff28a15f1d580fdfa"
+            },
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 5,
+          "command": {
+            "operation": "finish",
+            "reason": "Agent inspected actual contact/motion feedback:30.051mm pull,25.134mm reverse,10.105mm complete independent VALIDATION and verified release/park. No joint-margin/overload stop or recovery needed. Narrow pad-edge margins and up to1.998mm drift are retained as limitations; no additional exploratory motion is justified for this bounded regression."
+          },
+          "result": "three targets reached; safe park",
+          "inspected_private_images": [
+            {
+              "reference": "CONTACT_FEEDBACK.png",
+              "retained": true,
+              "sha256": "2db4b2a2aa3690ca50f3ea074acb5750c41b574672abc09e0be125da222b0636"
+            }
+          ]
+        }
+      ],
+      "simulation_s": 169.65416666666667,
+      "numeric_records": 12710,
+      "observation_count": 2,
+      "motion_diagnostics": [
+        {
+          "block": "FIT_OPEN_ACCEL_01_01#0",
+          "coordinate_range_m": [
+            0.0002677225274965167,
+            0.030051063746213913
+          ],
+          "qualified_samples": 2607,
+          "velocity_rms_m_s": 0.002712329634778892,
+          "acceleration_rms_m_s2": 0.0031505211281322625,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.0006075694661086082,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0008264464622711419,
+          "command_measured_tracking_delta_m": 0.0006214270503837049,
+          "measured_TCP_drawer_relative_delta_m": 0.0009722549385903778,
+          "pad_load_peak_N": [
+            0.6412389874458313,
+            2.635714530944824
+          ],
+          "native_normal_rail_mean_N": -0.00039344776296376205,
+          "native_friction_rail_mean_N": 0.30780510044802095,
+          "wrist_force_rms_N": 0.3075825712155457,
+          "wrist_minus_native_rail_traction_RMS_N": 6.886478717044849e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "FIT_REVERSE_SPEED_02_02#0",
+          "coordinate_range_m": [
+            0.00491665955632925,
+            0.0297870896756649
+          ],
+          "qualified_samples": 1791,
+          "velocity_rms_m_s": 0.003157834511148145,
+          "acceleration_rms_m_s2": 0.0009217079150545941,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 4.514403841145928e-05,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0005301366940566848,
+          "command_measured_tracking_delta_m": 6.29490258975407e-05,
+          "measured_TCP_drawer_relative_delta_m": -0.0005429556056606444,
+          "pad_load_peak_N": [
+            1.9542515277862549,
+            1.1525275707244873
+          ],
+          "native_normal_rail_mean_N": -0.00035822143291792323,
+          "native_friction_rail_mean_N": -0.3095676512241631,
+          "wrist_force_rms_N": 0.30981309736400503,
+          "wrist_minus_native_rail_traction_RMS_N": 6.695271059694045e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "VALIDATION_DISTINCT_03_03#0",
+          "coordinate_range_m": [
+            0.005484952591359615,
+            0.01502180378884077
+          ],
+          "qualified_samples": 1728,
+          "velocity_rms_m_s": 0.0012412160815612997,
+          "acceleration_rms_m_s2": 0.0013067352362525343,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.00016943561384860805,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0012561770345489395,
+          "command_measured_tracking_delta_m": 0.0002022213821452623,
+          "measured_TCP_drawer_relative_delta_m": 0.0013749438091439914,
+          "pad_load_peak_N": [
+            0.7830237150192261,
+            2.8502109050750732
+          ],
+          "native_normal_rail_mean_N": -0.0003925557950217152,
+          "native_friction_rail_mean_N": 0.3030158752549648,
+          "wrist_force_rms_N": 0.30268816053250563,
+          "wrist_minus_native_rail_traction_RMS_N": 0.00010628396640717503,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "FIT_consistency": {
+        "schema": "prismatic-FIT-consistency-v73",
+        "production_estimate_modified": false,
+        "hidden_truth_used": false,
+        "validation_used": false,
+        "production_sliding_support_qualification": true,
+        "groups": [
+          {
+            "segment": "FIT_OPEN_ACCEL_01_01#0",
+            "bins": 109,
+            "parameters": [
+              2.001853293160166,
+              3.1099135245708194,
+              0.29972286803479053
+            ],
+            "conditional_std": [
+              0.003877793819002503,
+              0.015254234093365286,
+              4.135506107655787e-05
+            ],
+            "condition": 127.28488563063677,
+            "velocity_rms_m_s": 0.002712329634778892,
+            "acceleration_rms_m_s2": 0.0031505211281322625,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  2.023695672803821,
+                  3.1414794218089623,
+                  0.29970069446638636
+                ],
+                "conditional_std": [
+                  0.02242094186030003,
+                  0.09829302394412467,
+                  0.000309723038224222
+                ],
+                "condition": 180.0461338509256
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  2.001269491329899,
+                  3.0978854731556305,
+                  0.2997475064485692
+                ],
+                "conditional_std": [
+                  0.008918107860194022,
+                  0.03832239260374081,
+                  0.00010247933069844507
+                ],
+                "condition": 122.33573580620987
+              },
+              {
+                "relative_interval_s": [
+                  4.0,
+                  6.0
+                ],
+                "parameters": [
+                  2.0017304447677895,
+                  3.1113589684118654,
+                  0.29970421275861764
+                ],
+                "conditional_std": [
+                  0.009115177347944302,
+                  0.03626651175539368,
+                  9.413169372874334e-05
+                ],
+                "condition": 120.2097642682578
+              },
+              {
+                "relative_interval_s": [
+                  6.0,
+                  8.0
+                ],
+                "parameters": [
+                  2.002062884814739,
+                  3.105913832351132,
+                  0.29971853131419385
+                ],
+                "conditional_std": [
+                  0.009443522386015367,
+                  0.03592519333266248,
+                  9.409685416081337e-05
+                ],
+                "condition": 122.10720745676346
+              },
+              {
+                "relative_interval_s": [
+                  8.0,
+                  10.0
+                ],
+                "parameters": [
+                  1.9986717144744655,
+                  3.106866013234966,
+                  0.2997262639751329
+                ],
+                "conditional_std": [
+                  0.009765045273307264,
+                  0.03615406669919935,
+                  9.4617791357215e-05
+                ],
+                "condition": 127.79538452023762
+              },
+              {
+                "relative_interval_s": [
+                  10.0,
+                  12.0
+                ],
+                "parameters": [
+                  1.9965114078634105,
+                  3.117760813760001,
+                  0.299705558334956
+                ],
+                "conditional_std": [
+                  0.009315958008643838,
+                  0.035627060692103134,
+                  8.981477239963057e-05
+                ],
+                "condition": 135.79918733675086
+              }
+            ]
+          },
+          {
+            "segment": "FIT_REVERSE_SPEED_02_02#0",
+            "bins": 75,
+            "parameters": [
+              2.078729618587679,
+              2.9515043988421845,
+              0.30015692713090697
+            ],
+            "conditional_std": [
+              0.05905481848931809,
+              0.49071403224386734,
+              0.0015562021681967582
+            ],
+            "condition": 3389.8602450535536,
+            "velocity_rms_m_s": 0.003157834511148145,
+            "acceleration_rms_m_s2": 0.0009217079150545941,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  2.0831790993190076,
+                  3.007625517350342,
+                  0.2999907958985693
+                ],
+                "conditional_std": [
+                  0.05925389020877509,
+                  0.505097039441547,
+                  0.0015945180514080654
+                ],
+                "condition": 1628.9324082797214
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  0.28563973136929866,
+                  0.1457811028377442,
+                  0.3090661976922829
+                ],
+                "conditional_std": [
+                  0.2003150826478226,
+                  0.05024494101254344,
+                  0.00015967162654337264
+                ],
+                "condition": 30513.0573189176
+              },
+              {
+                "relative_interval_s": [
+                  4.0,
+                  6.0
+                ],
+                "parameters": [
+                  1.5712319986921828,
+                  0.5356138738189047,
+                  0.307804731809177
+                ],
+                "conditional_std": [
+                  0.2904437509110394,
+                  0.2684772806638578,
+                  0.0008567280451988897
+                ],
+                "condition": 8989.18691776537
+              },
+              {
+                "relative_interval_s": [
+                  6.0,
+                  8.0
+                ],
+                "parameters": [
+                  0.26746934193349314,
+                  0.20696059630125047,
+                  0.3088961279052489
+                ],
+                "conditional_std": [
+                  0.176994065482803,
+                  0.068801998415683,
+                  0.00022281806730263976
+                ],
+                "condition": 25266.749028710074
+              }
+            ]
+          }
+        ],
+        "FIT_bins": 184,
+        "meaning": "conditional uncertainty excludes changing contact/constraint loads; constant-model cross-FIT spread can also reflect real position-dependent resistance or excitation differences, not calibrated confidence or an execution veto",
+        "pooled_constant_diagnostic": {
+          "intervals": 0,
+          "active_controls": [
+            0
+          ],
+          "domain_native": [
+            -0.003,
+            0.22499999999999998
+          ],
+          "joint_type": "prismatic",
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "parameters": [
+            2.006801377898198,
+            3.085188888533677,
+            0.29977113629282853
+          ],
+          "conditional_covariance": [
+            [
+              3.556225376524437e-05,
+              -2.025556117214238e-05,
+              7.81027962386634e-08
+            ],
+            [
+              -2.025556117214238e-05,
+              0.00015597804171983405,
+              -3.3059199323231475e-07
+            ],
+            [
+              7.81027962386634e-08,
+              -3.3059199323231475e-07,
+              1.3123395600797755e-09
+            ]
+          ],
+          "conditional_std": [
+            0.005963409575506647,
+            0.012489116931145855,
+            3.622622751653525e-05
+          ],
+          "algebraic_rank": 3,
+          "scaled_singular_values": [
+            13.570061554509813,
+            0.16663297898910673,
+            0.09068878761350535
+          ],
+          "scaled_condition": 149.63328887295614,
+          "support_intervals_native": [
+            [
+              0.0017697815617014254,
+              0.029630803650147038
+            ]
+          ],
+          "FIT_rmse": 0.00011240971439944055,
+          "smoothness": 0,
+          "validation_used": false,
+          "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+          "parameter_names": [
+            "m_eff_kg",
+            "b_N_s_m",
+            "F_c_N"
+          ],
+          "conditionally_supported": [
+            true,
+            true,
+            true
+          ],
+          "inertial_sensitivity_after_velocity_and_friction_projection": 0.03331043757272015,
+          "uncalibrated_total_physical_accuracy": true
+        },
+        "leave_one_FIT_out": [
+          {
+            "omitted": "FIT_OPEN_ACCEL_01_01",
+            "parameters": [
+              2.078729618587679,
+              2.9515043988421845,
+              0.30015692713090697
+            ]
+          },
+          {
+            "omitted": "FIT_REVERSE_SPEED_02_02",
+            "parameters": [
+              2.001853293160166,
+              3.1099135245708194,
+              0.29972286803479053
+            ]
+          }
+        ],
+        "between_FIT_parameter_range": [
+          0.07687632542751288,
+          0.15840912572863486,
+          0.0004340590961164348
+        ],
+        "between_FIT_parameter_std": [
+          0.03843816271375644,
+          0.07920456286431743,
+          0.0002170295480582174
+        ],
+        "interpretation": "Compare between-FIT/local spread to conditional uncertainty and contact history before claiming parameter accuracy. A complete VAL trajectory alone does not establish parameter identifiability."
+      }
+    },
+    {
+      "id": "27044_fresh_00",
+      "terminal_status": "SESSION_COMPLETE",
+      "actor_exited": true,
+      "wall_s": 1410.7293774329592,
+      "storage_bytes": 37752765,
+      "authored_reference_post_episode": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "friction_N": 0.3
+      },
+      "attempts": [
+        {
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": 3.771195267177063e-08,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            }
+          },
+          "requested_preload_n": 1.0,
+          "family": [
+            0.0,
+            0.009374999906867743,
+            0.0,
+            0.0
+          ],
+          "physical_grasp_started": true,
+          "error": null,
+          "actions_declared_before_execution": [
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_OPEN_ACCEL_01",
+              "target_q": 0.02,
+              "velocity_program": "plateaus",
+              "reference_speed_m_s": 0.005,
+              "reference_acceleration_m_s2": 0.012,
+              "low_speed_fraction": 0.2,
+              "ramp_s": 0.4,
+              "plateau_s": 0.6,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  30
+                ]
+              ],
+              "allow_target_truncation": true
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_REVERSE_SPEED_02",
+              "target_q": 0.004,
+              "velocity_program": "constant",
+              "reference_speed_m_s": 0.003,
+              "reference_acceleration_m_s2": 0.008,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  30
+                ]
+              ],
+              "allow_target_truncation": true,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "VALIDATION_DISTINCT_03",
+              "target_q": 0.016,
+              "velocity_program": "sine",
+              "reference_speed_m_s": 0.004,
+              "reference_acceleration_m_s2": 0.01,
+              "low_speed_fraction": 0.35,
+              "period_s": 2.3,
+              "allow_target_truncation": false,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.020103832247759357,
+              "joint_coordinate": 0.02010386995971203,
+              "elapsed_sim_s": 10.570833333333326,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.002435929452452818
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.016197431832551956,
+              "joint_coordinate": 0.003906438127160072,
+              "elapsed_sim_s": 8.320833333333326,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.002494234834114605
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.012171085923910141,
+              "joint_coordinate": 0.016077524051070213,
+              "elapsed_sim_s": 8.145833333333343,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.0029479799526743664
+            }
+          ],
+          "safe_exit": true,
+          "parked": true,
+          "final_pad_loads_N": [
+            0.0,
+            0.0
+          ],
+          "final_joint_q": [
+            0.0008332688012160361,
+            -0.5007229447364807,
+            -0.0008403753163293004,
+            0.9988214373588562,
+            0.0020023954566568136,
+            0.5020015239715576,
+            0.003721054643392563
+          ],
+          "final_drawer_m": 0.01607794128358364
+        }
+      ],
+      "source_sha256": {
+        "interaction_runtime/._prismatic_benchmark_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._recovery_v44.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/estimator_v31.py": "30e247c92d21cd8dcd24ed0b940c670bb2b3b292c6dafd8835cc770b4366c55e",
+        "interaction_runtime/probing_v5.py": "529baea5842d4b447c3c12a23505909c5562e7a3690399723453d39a1a0a5829",
+        "interaction_runtime/probing_v2.py": "a74773275bacf0603e30fd29b610d80ae40233fa2b6d5d6dd39760343c77d366",
+        "interaction_runtime/recovery_candidates_v7.py": "f458e924136145347a951c8ea4911f7ffedaeb7f7109a0de3b888323dc23e9f2",
+        "interaction_runtime/prismatic_retention_v7.py": "96005dbdbfb81df1fc5bf6d97d36e83c5939c38f3aa0826bc815f3950ebdb763",
+        "interaction_runtime/prismatic_lighting_v72.py": "06d4331949a74941c9fb197c7a4deb6e7e0e55e20d51184eee3d0149b01bbce3",
+        "interaction_runtime/recovery_v44.py": "b071097dfb6694bab494a03df575a3da253b56e6e1188acb57d7f872fdd59065",
+        "interaction_runtime/compact_v2.py": "751475f454cb9d766b58179464198c0f8c50479c48d57a98adee71389f2138a1",
+        "interaction_runtime/kinematics.py": "a4021461e8e97280d3000788392bc7f2791f4a7ade05d0b13dafaf1df2ed72aa",
+        "interaction_runtime/prismatic_preload_v71.py": "c729c0c1ff4b06bdc4e65d73fb1cf6c1e6a1799b193420f7be3be2b591da464f",
+        "interaction_runtime/prismatic_feedback_v7.py": "a022d43847bda68d5569cf4ea3162a666a69a03c7d993e6dc7d38d10709abf3b",
+        "interaction_runtime/session.py": "9fb65831bd5cc373024d21e308196e35c1d10dc8c70695048f69205c2c80e01f",
+        "interaction_runtime/probing_v6.py": "daf55cb59c0cc1cf055d06e70f99fcc16820b784d6fbebdca6bc29a8cfa28fce",
+        "interaction_runtime/passive_rgbd_v6.py": "01859bcda67a09f1386d645d469fdaec3b58a9100e3b3fade79c5aeaa179c9c3",
+        "interaction_runtime/._segments.py": "627093cc20769c580bf587ec6f4832168eb592379afb369e2d03cfff3330e596",
+        "interaction_runtime/policy.py": "39bd1399af5feefb589bdd1bb5601a580f800b182356f969b24e763292e77620",
+        "interaction_runtime/._registered_observation_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/operations.py": "657f44e9b70fbdf21430a8fa74f51b3f962fc42b00e3b7a87f8dc94654938390",
+        "interaction_runtime/._operations.py": "f43738e4e74abff0a5a37e8db351806e8c8be0891e1c2fc959d28ba4642e8a15",
+        "interaction_runtime/prismatic_v73.py": "17d999848f736b2a5697b0e34eef8f764ac59c1c7d166f574878ec67df682708",
+        "interaction_runtime/passive_clock_v6.py": "7f74a2b7edf5c4773108383964ce0f8e5768bf292747423dd51bef99514a6581",
+        "interaction_runtime/probing_v7.py": "c4eb8e99cef5e76a29d4a2f686a2f423ea76c2b699fd4d5b8542554f0d548b32",
+        "interaction_runtime/segments.py": "9d7eb700c83924c0dc44259b1028a92931f7b8b7dcd5617062a47893f824c99f",
+        "interaction_runtime/progress.py": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f",
+        "interaction_runtime/probing_profiles_v3.py": "a24fd2a2c1b58ce8b7b8c82ad07415e1e89a9c0cf92565abc05f3f4d993f5a00",
+        "interaction_runtime/motion.py": "284a88d37f76bdbbe288b2bacfac13e3d2c0e59df9a1f18074c3f0b124aa5a2b",
+        "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b",
+        "interaction_runtime/checkpoints.py": "41acb59b819694a689f04d0113d84dab59cb8ca8aa40589f1304b6950349355f",
+        "interaction_runtime/sensor_lighting_v1.py": "ebe636fa7397c6c503d817403684cebdb733555152ce889a8017fe68ad6663a5",
+        "interaction_runtime/serialization.py": "cd4af3fea6076e83399683e59a3fd513c61e6e1d811dc7738d6b8edb5ef7bf39",
+        "interaction_runtime/._prismatic_feedback_v7.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._sensor_lighting_v1.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/runtime.py": "f2d333a28466780907a83431b91ef3e4cf2227c511188657aeb8b878b8504826",
+        "interaction_runtime/__init__.py": "b4ea43a6d6d65ad90f82162143b78fbebf116d4aff9ec3f9ab1ced81e66dbc36",
+        "interaction_runtime/prismatic_startup.py": "5912a178391bfdca6fae729790064d54911d74777b6995c13384d115f5af5d26",
+        "interaction_runtime/evidence.py": "7265be5a40e17cb6ad2dbda4789c67e6cf2d8549615399f92ea4e940b829e4ba",
+        "interaction_runtime/native_scene.py": "41fc33e512d365f4b48c94edbc382bba2aabe3a554f8b4ffcc3696fa5690299e",
+        "interaction_runtime/registered_observation_v71.py": "133161b6ea11413d114154560aeb35041d3e9e868c391defeb80ce266acce3da",
+        "interaction_runtime/contact_evidence_v7.py": "6c111579785ae8ac771999bdc9dcf55baf47a0802c122db00c5f67957fba874b",
+        "interaction_runtime/prismatic_microtracking_v7.py": "2b9e734dda85c067a15153f2a8bb460a74bc23878d14d602d85c37565b6fc4bb",
+        "interaction_runtime/prismatic_benchmark_v71.py": "1ecc0834e59f6b0233794161c8a5dad565b0eae48aa6ae7337907b1d572b6327",
+        "interaction_runtime/guard_regression.py": "ac55190f7f8ac62ce044852176dc0c688302189dd2a1ff996cd165ec71ad3323",
+        "interaction_runtime/articulation_v7.py": "7828daa2f71b5ed4e46675d6adfa340c06b6e73fa6eb4d855f3d0b75cb5fbfbe",
+        "interaction_runtime/fixture.py": "7ae1b0d171512fc42b3f11e37a364adba4d72926010beb749577f744cb30a4ca",
+        "interaction_runtime/prismatic_planning_v73.py": "b48708b0f8000af5921b06fda2d066b2211ac33c4ef2d7d992cac7181208014a",
+        "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+        "configs/interaction_runtime_v1.json": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+        "configs/efficient_probing_v2.json": "a56d02cd5f22cca3eed3ce74610ddd8636ff678b7a1051c8ad8700aab50b9bc2",
+        "scripts/update_probing_v2_model.py": "f64b058d15ee093877495958096f0fd5a06af6d9049efa75e126cab85d6fd24e",
+        "scripts/run_efficient_probing_v2.py": "921ab6d9f812a18f8d7be98de3c41a42584040039cf800cded9765d6a470df5c",
+        "scripts/update_probing_v31_model.py": "01cc3021e562965193daf8ee8ddf192b402f8f9dc99faa74935bb0715f93f6cc",
+        "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+        "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b",
+        "scripts/xarm_wrist_ft.py": "0c85ccc6b5499b8a5a74e5adb1d4d09630c95cef1e1961be648d9a4f27b032d0",
+        "scripts/diagnose_probing_v3.py": "097293bab679aa388f8df6e65ca714923ceeaf51fcd8d687ccbbc77ad1a102c8",
+        "scripts/run_informative_probing_v31.py": "d35ba55cf5d2f6d73c16e62f3a7fe89c3d86de389dc3e93780dbc48c38966616",
+        "scripts/native_g1_wrist_input.py": "e9df8658fd790d8b3ed1964a70d39fa38551a7b612fd310661a0ad5617df83c3",
+        "scripts/agent_command_protocol_v12.py": "815f7dc664fb16f476bb64ae7c3651aa797b1e5e0bca6eba0c7045ffce957dd1",
+        "scripts/route_probing_approach_v3.py": "5e415446780ed21656ffe5eeeb6528129bf805eacaf2f7cbaa2e06345f82825d",
+        "configs/informative_probing_v3.json": "9781101491f8ea4b7160b3d837edf72a283da50574fdf7a10077c379a4d827bf",
+        "scripts/update_probing_v5_model.py": "32bac209bb5caea4bea55b03fc1fe62eed15a39c19c8ca4735209f31f3e87d45",
+        "scripts/xarm_ft_v5_estimator.py": "8923e927ed09f94f7a4e8813a07e546c592f959f65d934f79f4048f3bcf59e4c",
+        "scripts/xarm_ft_v1_scene.py": "118195d3466de150e688cbc115d4cde87b42ec1b257cf28a220025bd821570ca",
+        "scripts/run_angle_resistance_v5.py": "42cc2caa9ff1b38efaad3702ded54ad31badbd0684425e2cd646ba45d6644990",
+        "scripts/native_g1_execution_candidates.py": "82374cf63ce85f308aa88636c869f7bcf58c38c473961f0c676ca4944db5b70d",
+        "scripts/native_g1_agent_execution.py": "5ab279337794a2cb5c281c214a699628267ef01d3bca9b6d88f829048dee5bde",
+        "scripts/native_g1_panel_support.py": "ab9df98efe27faf94bfd5764a2530a3bf60f60d7b1a39a988fa718d261b9a4bf",
+        "scripts/native_g1_visual_input.py": "c5a61d06fcf1ebb69a0bc7f0a074189f3bbb89615734eb91cbb4d856c4753ca8",
+        "scripts/xarm7_native_planning.py": "3878e9b7478f80e3ad9357e8cefc2ad2cbe3ffc94c12f6c5b9cc1b4aa64448be",
+        "scripts/plan_shared_door_skill.py": "5121ceb128f544f2f29fb388c02537cd1977e6411527a1abe72051156b4fb2c2",
+        "scripts/xarm_ft_v7_scene.py": "6641027d779d50f0e01ba7f69e7eb560cbe982d29c7ac0d88360ee0ef17738f7",
+        "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+        "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+        "scripts/native_g1_prismatic_ranking.py": "4a2d5a515f55a454c6ce9d5fcd018c7bf707742176c90ae4e57617e8c674a600",
+        "scripts/prismatic_visual_v73.py": "b652b47b832dc12822e8dbf40f17fc0af3d1230510e2c6ac5dd345271924d1b8",
+        "scripts/run_prismatic_v73.py": "31caf971004548e0f844eda41050e5d79ce613c6b9c07cf3b586ca8b57389f56",
+        "scripts/launch_prismatic_v73.py": "80d645d6e2b28d892fe7e3b3d76ecfa2990b862d8c555d3296826bc822a6e272",
+        "scripts/prismatic_quality_v73.py": "f858386a8000299d9dc31ed41b377b057816aa8988d7d741b55675aab437f3f8",
+        "scripts/prismatic_inspection_v73.py": "096c51e7bc3a501c769560d1fb7450f73b5ba77e0c79fc1a609374f9f277784d",
+        "configs/prismatic_preload_v71.json": "3a57a0ec1286ef2acd92cf854478bd2b00c3c88ba12ae13e3f95ec09b1560ff8",
+        "configs/sensor_lighting_v1.json": "d0ebafb28b968e1bf823676be961b9f19618bbfc22d88731adfcf5e2545d70b4"
+      },
+      "private_evidence_index": {
+        "telemetry/index.json": "57d2d48737b465e4005fe05535b989c55b2933513110a95a87866e053a849277",
+        "EPISODE_RESULT.json": "1a49e2584ce50cd70335e1343eef50e075d4ed8ff5343f361c70e25da4fae083",
+        "SOURCE_PROVENANCE.json": "ba866f22c39bbe89cf47e0663976137ada81afd088821186bbd55aa97486c686",
+        "model/estimate.json": "8c343e2a792cc40ce2e8fada0a471e8bd7bacd803104b65e2c04679167d6660c"
+      },
+      "model_online": {
+        "parameters": [
+          1.9906540744248369,
+          3.3397002741849615,
+          0.2990462680475497
+        ],
+        "parameter_names": [
+          "m_eff_kg",
+          "b_N_s_m",
+          "F_c_N"
+        ],
+        "conditional_std": [
+          0.021481231495122825,
+          0.2123634077000117,
+          0.0006242902127107042
+        ],
+        "scaled_condition": 109.73060131700238,
+        "support_intervals_native": [
+          [
+            0.00038293396471999585,
+            0.01927013469061681
+          ]
+        ],
+        "mass_relative_error_percent": -0.4672962787581558,
+        "damping_relative_error_percent": 11.323342472832042,
+        "constant_friction_relative_error_percent": -0.31791065081676617,
+        "heldout": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.004152476792866719,
+            "coordinate_rmse": 0.0008130884821377961,
+            "velocity_rmse": 0.00046540885618360925,
+            "final_coordinate_error": -0.0006895438781058718,
+            "outside_FIT_support": false,
+            "samples": 1232,
+            "duration_s": 5.129166666666691,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "unfiltered_input_sensitivity": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.027391983339207268,
+            "coordinate_rmse": 0.0002036185481049801,
+            "velocity_rmse": 7.731613882671778e-05,
+            "final_coordinate_error": 0.0003964036762623517,
+            "outside_FIT_support": false,
+            "samples": 1232,
+            "duration_s": 5.129166666666691,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "FIT_qualification": null,
+        "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+        "validation_used_for_fitting": false
+      },
+      "worker": {
+        "worker_script": "scripts/update_probing_v7_model.py",
+        "worker_sha256": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+        "returncode": 0,
+        "estimator_ready": true,
+        "loaded_sources": {
+          "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+          "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+          "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+          "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b"
+        },
+        "wall_s": 4.878812248120084
+      },
+      "Agent_operations": [
+        {
+          "sequence": 0,
+          "operation": "evaluate_view"
+        },
+        {
+          "sequence": 1,
+          "operation": "move_and_observe"
+        },
+        {
+          "sequence": 2,
+          "operation": "build_geometry"
+        },
+        {
+          "sequence": 3,
+          "operation": "validate_execution"
+        },
+        {
+          "sequence": 4,
+          "operation": "attempt_grasp_and_probe"
+        },
+        {
+          "sequence": 5,
+          "operation": "finish"
+        }
+      ],
+      "Agent_decisions": [
+        {
+          "sequence": 0,
+          "command": {
+            "operation": "evaluate_view",
+            "target": {
+              "eye_world_m": [
+                0.52,
+                -0.9,
+                0.36
+              ],
+              "look_world_m": [
+                0.5,
+                -0.27,
+                0.52
+              ]
+            },
+            "reason": "Fresh RGB/depth inspected: camera sees lower open shelving; drawer front/handle is clipped above top image boundary. Request elevated upward-looking view of observed upper front, not another segmentation retry on an absent handle. IK/collision validation required."
+          },
+          "missing": "upper handle outside frame",
+          "expected": "bring upper drawer handle fully into wrist view",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 1,
+          "command": {
+            "operation": "move_and_observe",
+            "evaluated_command": 0,
+            "reason": "Agent requests elevated view to recover handle clipped above initial image; DIRECT actuator route valid with0.468rad minimum margin. Capture fresh wrist RGB-D after measured arrival."
+          },
+          "expected": "observe upper drawer front and full handle",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 2,
+          "command": {
+            "operation": "build_geometry",
+            "reason": "Agent inspected new elevated RGB/SAM/depth/cloud: full horizontal handle and both mounts now visible, isolated from panel. Build automatic native-G1 plan from measured patches; require closing/CENTER collision envelope and eligible-candidate fallback, not old grasp reuse."
+          },
+          "actual": "elevated real wrist motion recovered full handle",
+          "missing": "physical contact/traction unknown",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 4,
+          "command": {
+            "operation": "attempt_grasp_and_probe",
+            "native_g1_preload_request_n": 1.0,
+            "segments": [
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_OPEN_ACCEL_01",
+                "target_q": 0.02,
+                "velocity_program": "plateaus",
+                "reference_speed_m_s": 0.005,
+                "reference_acceleration_m_s2": 0.012,
+                "low_speed_fraction": 0.2,
+                "ramp_s": 0.4,
+                "plateau_s": 0.6,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    30
+                  ]
+                ],
+                "allow_target_truncation": true
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_REVERSE_SPEED_02",
+                "target_q": 0.004,
+                "velocity_program": "constant",
+                "reference_speed_m_s": 0.003,
+                "reference_acceleration_m_s2": 0.008,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    30
+                  ]
+                ],
+                "allow_target_truncation": true,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "VALIDATION_DISTINCT_03",
+                "target_q": 0.016,
+                "velocity_program": "sine",
+                "reference_speed_m_s": 0.004,
+                "reference_acceleration_m_s2": 0.01,
+                "low_speed_fraction": 0.35,
+                "period_s": 2.3,
+                "allow_target_truncation": false,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              }
+            ],
+            "reason": "Agent inspected new RGB-D and measured central-bar plan. Native envelope rejected off-center mount-collision candidate and automatically selected feasible central9.375mm insertion; complete route valid. Approve20mm FIT pull,16mm reverse and independent12mm motion to16mm target. Keep original authority/protections; no GT or cached grasp."
+          },
+          "actual": "native closing envelope candidate fallback rejected original17 collision",
+          "inspected_private_images": [
+            {
+              "reference": "AGENT_GRASP_PLAN_INSPECTION.png",
+              "retained": true,
+              "sha256": "814f3d6648b59a647a8ec9d1798bc5d16847980d00139bcf738b6283edba95d1"
+            },
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 5,
+          "command": {
+            "operation": "finish",
+            "reason": "Agent inspected actual contact/transmission plot: fresh central alternative grasp acquired,20.104mm pull,16.197mm reverse and12.171mm distinct independent validation all complete; original guards normal, release and park verified. No failed acquisition requiring recovery; finish this bounded regression."
+          },
+          "result": "TARGET_REACHED for all3 segments, safe park",
+          "inspected_private_images": [
+            {
+              "reference": "CONTACT_FEEDBACK.png",
+              "retained": true,
+              "sha256": "10bde066bffcc299b178c20fd390ec908712f186153c0d2a8099d761b5aaf2b5"
+            }
+          ]
+        }
+      ],
+      "simulation_s": 178.05,
+      "numeric_records": 11882,
+      "observation_count": 2,
+      "motion_diagnostics": [
+        {
+          "block": "FIT_OPEN_ACCEL_01_01#0",
+          "coordinate_range_m": [
+            0.0001692662772256881,
+            0.02010386995971203
+          ],
+          "qualified_samples": 2054,
+          "velocity_rms_m_s": 0.0024805750527709036,
+          "acceleration_rms_m_s2": 0.004077386004908844,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.0005812691546008534,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.000401351733272155,
+          "command_measured_tracking_delta_m": 0.0005427239644427706,
+          "measured_TCP_drawer_relative_delta_m": 0.00041929835966336704,
+          "pad_load_peak_N": [
+            1.8777410984039307,
+            1.2711005210876465
+          ],
+          "native_normal_rail_mean_N": -0.002016341674584576,
+          "native_friction_rail_mean_N": 0.309128144199161,
+          "wrist_force_rms_N": 0.307373539996768,
+          "wrist_minus_native_rail_traction_RMS_N": 8.906775631714168e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "FIT_REVERSE_SPEED_02_02#0",
+          "coordinate_range_m": [
+            0.003906438127160072,
+            0.0198346097022295
+          ],
+          "qualified_samples": 1154,
+          "velocity_rms_m_s": 0.0029872259923848584,
+          "acceleration_rms_m_s2": 0.0002544180183395877,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 6.5819681461883e-05,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 1.774569096844747e-05,
+          "command_measured_tracking_delta_m": 0.0001446029510051572,
+          "measured_TCP_drawer_relative_delta_m": -4.942724376677532e-06,
+          "pad_load_peak_N": [
+            1.4591302871704102,
+            1.275325894355774
+          ],
+          "native_normal_rail_mean_N": 0.0033645562989398367,
+          "native_friction_rail_mean_N": -0.31248750285837845,
+          "wrist_force_rms_N": 0.3091173289277815,
+          "wrist_minus_native_rail_traction_RMS_N": 7.899497468180324e-06,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "VALIDATION_DISTINCT_03_03#0",
+          "coordinate_range_m": [
+            0.004146470222622156,
+            0.016077524051070213
+          ],
+          "qualified_samples": 1232,
+          "velocity_rms_m_s": 0.002253013913235415,
+          "acceleration_rms_m_s2": 0.0021678527545230275,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.000257507697117522,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0005700218090125954,
+          "command_measured_tracking_delta_m": 0.00022120510458251141,
+          "measured_TCP_drawer_relative_delta_m": 0.0006646552131588934,
+          "pad_load_peak_N": [
+            1.736313819885254,
+            1.2301818132400513
+          ],
+          "native_normal_rail_mean_N": -0.0014167661240396948,
+          "native_friction_rail_mean_N": 0.30860349817304306,
+          "wrist_force_rms_N": 0.3066482962556034,
+          "wrist_minus_native_rail_traction_RMS_N": 3.466568112475377e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "FIT_consistency": {
+        "schema": "prismatic-FIT-consistency-v73",
+        "production_estimate_modified": false,
+        "hidden_truth_used": false,
+        "validation_used": false,
+        "groups": [
+          {
+            "segment": "FIT_OPEN_ACCEL_01_01#0",
+            "bins": 86,
+            "parameters": [
+              1.9899786892424087,
+              3.3612097502763074,
+              0.29902823451315697
+            ],
+            "conditional_std": [
+              0.027079487820970704,
+              0.2169832426083475,
+              0.0006274576915394369
+            ],
+            "condition": 94.97981722603474,
+            "velocity_rms_m_s": 0.0024805750527709036,
+            "acceleration_rms_m_s2": 0.004077386004908844,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  2.007337320521395,
+                  4.38417818528018,
+                  0.2961548322660253
+                ],
+                "conditional_std": [
+                  0.11778225361449035,
+                  0.5802861243549224,
+                  0.0016165187815360485
+                ],
+                "condition": 93.7412150936028
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  2.001587582538289,
+                  3.106196578458949,
+                  0.2997500944880168
+                ],
+                "conditional_std": [
+                  0.008179110512356903,
+                  0.030905651110036028,
+                  8.049356647067065e-05
+                ],
+                "condition": 95.47082926115064
+              },
+              {
+                "relative_interval_s": [
+                  4.0,
+                  6.0
+                ],
+                "parameters": [
+                  1.9996629495347118,
+                  3.104579758383217,
+                  0.29975541851096693
+                ],
+                "conditional_std": [
+                  0.009311106661853629,
+                  0.035387836079494556,
+                  9.176047311979748e-05
+                ],
+                "condition": 96.86053030673601
+              },
+              {
+                "relative_interval_s": [
+                  6.0,
+                  8.0
+                ],
+                "parameters": [
+                  1.9984908936442118,
+                  3.094145664422607,
+                  0.29977973265212715
+                ],
+                "conditional_std": [
+                  0.009446689056793491,
+                  0.03560888774963385,
+                  9.16567607764561e-05
+                ],
+                "condition": 97.53824287471585
+              }
+            ]
+          },
+          {
+            "segment": "FIT_REVERSE_SPEED_02_02#0",
+            "bins": 49,
+            "parameters": [
+              1.689608896100622,
+              1.9155570656625551,
+              0.3032670817151915
+            ],
+            "conditional_std": [
+              0.11595881339427058,
+              0.36123831954948193,
+              0.0010922059237208229
+            ],
+            "condition": 3762.622241706215,
+            "velocity_rms_m_s": 0.0029872259923848584,
+            "acceleration_rms_m_s2": 0.0002544180183395877,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  1.4064579741634444,
+                  0.9730880251228147,
+                  0.3060950111184058
+                ],
+                "conditional_std": [
+                  0.25209770982423824,
+                  0.7798032921943504,
+                  0.0023585557429646993
+                ],
+                "condition": 4131.063776388513
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  0.007315886200949105,
+                  0.08278851685692007,
+                  0.3088217288066153
+                ],
+                "conditional_std": [
+                  0.004027146944132935,
+                  0.006520107893306733,
+                  1.9798000693719356e-05
+                ],
+                "condition": 217421.36420465723
+              }
+            ]
+          }
+        ],
+        "FIT_bins": 135,
+        "meaning": "conditional fit uncertainty does not include changing contact/constraint loads; empirical spread below is diagnostic, not calibrated confidence",
+        "pooled_constant_diagnostic": {
+          "intervals": 0,
+          "active_controls": [
+            0
+          ],
+          "domain_native": [
+            -0.003,
+            0.22499999999999998
+          ],
+          "joint_type": "prismatic",
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "parameters": [
+            1.9906540744248369,
+            3.3397002741849615,
+            0.2990462680475497
+          ],
+          "conditional_covariance": [
+            [
+              0.0004614433065470568,
+              -0.001560161644777257,
+              4.581832672727622e-06
+            ],
+            [
+              -0.001560161644777257,
+              0.04509821692996139,
+              -0.00013247389434744954
+            ],
+            [
+              4.581832672727622e-06,
+              -0.00013247389434744956,
+              3.897382696863762e-07
+            ]
+          ],
+          "conditional_std": [
+            0.021481231495122825,
+            0.2123634077000117,
+            0.0006242902127107042
+          ],
+          "algebraic_rank": 3,
+          "scaled_singular_values": [
+            11.622634041257976,
+            0.18595996058272246,
+            0.10591971520944439
+          ],
+          "scaled_condition": 109.73060131700238,
+          "support_intervals_native": [
+            [
+              0.00038293396471999585,
+              0.01927013469061681
+            ]
+          ],
+          "FIT_rmse": 0.000788744751427099,
+          "smoothness": 0,
+          "validation_used": false,
+          "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+          "parameter_names": [
+            "m_eff_kg",
+            "b_N_s_m",
+            "F_c_N"
+          ],
+          "conditionally_supported": [
+            true,
+            true,
+            true
+          ],
+          "inertial_sensitivity_after_velocity_and_friction_projection": 0.03713167508364762,
+          "uncalibrated_total_physical_accuracy": true
+        },
+        "leave_one_FIT_out": [
+          {
+            "omitted": "FIT_OPEN_ACCEL_01_01",
+            "parameters": [
+              1.689608896100622,
+              1.9155570656625551,
+              0.3032670817151915
+            ]
+          },
+          {
+            "omitted": "FIT_REVERSE_SPEED_02_02",
+            "parameters": [
+              1.9899786892424087,
+              3.3612097502763074,
+              0.29902823451315697
+            ]
+          }
+        ],
+        "between_FIT_parameter_range": [
+          0.3003697931417868,
+          1.4456526846137523,
+          0.004238847202034546
+        ],
+        "between_FIT_parameter_std": [
+          0.1501848965708934,
+          0.7228263423068761,
+          0.002119423601017273
+        ],
+        "interpretation": "Compare between-FIT/local spread to conditional uncertainty and contact history before claiming parameter accuracy. A complete VAL trajectory alone does not establish parameter identifiability."
+      },
+      "qualified_offline_replay_not_online_replacement": {
+        "parameters": [
+          2.001609665238688,
+          3.094192115995242,
+          0.29976458044195364
+        ],
+        "parameter_names": [
+          "m_eff_kg",
+          "b_N_s_m",
+          "F_c_N"
+        ],
+        "conditional_std": [
+          0.0036087698926470973,
+          0.013431359764235587,
+          3.2888109503333356e-05
+        ],
+        "scaled_condition": 113.8635747515782,
+        "support_intervals_native": [
+          [
+            0.0006342755514197052,
+            0.01924329325556755
+          ]
+        ],
+        "mass_relative_error_percent": 0.08048326193439426,
+        "damping_relative_error_percent": 3.139737199841397,
+        "constant_friction_relative_error_percent": -0.07847318601544861,
+        "heldout": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.004235699406898716,
+            "coordinate_rmse": 0.0009736884445694258,
+            "velocity_rmse": 0.00048538807493771777,
+            "final_coordinate_error": -0.0010025648168553464,
+            "outside_FIT_support": false,
+            "samples": 1232,
+            "duration_s": 5.129166666666691,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "unfiltered_input_sensitivity": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.02739253340255598,
+            "coordinate_rmse": 7.82972678735613e-05,
+            "velocity_rmse": 5.291160774980186e-05,
+            "final_coordinate_error": 0.00015442042111309118,
+            "outside_FIT_support": false,
+            "samples": 1232,
+            "duration_s": 5.129166666666691,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "FIT_qualification": {
+          "rule": "existing velocity resolution across complete unchanged SG support",
+          "segments": [
+            {
+              "applied": true,
+              "block": "FIT_OPEN_ACCEL_01_01#0",
+              "original_valid_samples": 2054,
+              "qualified_samples": 1968,
+              "excluded_samples": 86,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": true,
+              "block": "FIT_REVERSE_SPEED_02_02#0",
+              "original_valid_samples": 1154,
+              "qualified_samples": 1148,
+              "excluded_samples": 6,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": false,
+              "reason": "complete independent VALIDATION unchanged"
+            }
+          ],
+          "validation_mask_unchanged": true,
+          "filter_math_changed": false,
+          "tool_compensation_count": 1,
+          "hidden_truth_used": false
+        },
+        "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+        "validation_used_for_fitting": false
+      },
+      "qualified_offline_replay_sha256": "8e5b36eadf66058c94e89226fef5e1b51b6a4ee1c46786ec92cfceb7d6d5ac98"
+    },
+    {
+      "id": "45290_fresh_00",
+      "terminal_status": "SESSION_COMPLETE",
+      "actor_exited": true,
+      "wall_s": 1529.1114174039103,
+      "storage_bytes": 41657052,
+      "authored_reference_post_episode": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "friction_N": 0.3
+      },
+      "attempts": [
+        {
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": -3.2972359065297496e-08,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            }
+          },
+          "requested_preload_n": 1.0,
+          "family": [
+            0.0,
+            0.0,
+            0.0,
+            15.0
+          ],
+          "physical_grasp_started": true,
+          "error": null,
+          "actions_declared_before_execution": [
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_OPEN_ACCEL_01",
+              "target_q": 0.02,
+              "velocity_program": "plateaus",
+              "reference_speed_m_s": 0.006,
+              "reference_acceleration_m_s2": 0.018,
+              "low_speed_fraction": 0.25,
+              "ramp_s": 0.4,
+              "plateau_s": 0.6,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  40
+                ]
+              ],
+              "allow_target_truncation": true
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_REVERSE_SPEED_02",
+              "target_q": 0.004,
+              "velocity_program": "constant",
+              "reference_speed_m_s": 0.0035,
+              "reference_acceleration_m_s2": 0.01,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  40
+                ]
+              ],
+              "allow_target_truncation": true,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "VALIDATION_DISTINCT_03",
+              "target_q": 0.015,
+              "velocity_program": "sine",
+              "reference_speed_m_s": 0.0045,
+              "reference_acceleration_m_s2": 0.012,
+              "low_speed_fraction": 0.4,
+              "period_s": 2.5,
+              "allow_target_truncation": false,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.020055114667677287,
+              "joint_coordinate": 0.020055081695318222,
+              "elapsed_sim_s": 9.375,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.0021884271373308027
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.01613274123519659,
+              "joint_coordinate": 0.003922340460121632,
+              "elapsed_sim_s": 8.016666666666652,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.002820569791318583
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.011205439455807209,
+              "joint_coordinate": 0.01512777991592884,
+              "elapsed_sim_s": 5.700000000000017,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.002311270765837918
+            }
+          ],
+          "safe_exit": true,
+          "parked": true,
+          "final_pad_loads_N": [
+            0.0,
+            0.0
+          ],
+          "final_joint_q": [
+            0.0008331392309628427,
+            -0.5007238388061523,
+            -0.0008398634381592274,
+            0.998821496963501,
+            0.0020024552941322327,
+            0.5020014643669128,
+            -0.0037155563477426767
+          ],
+          "final_drawer_m": 0.015127778053283691
+        }
+      ],
+      "source_sha256": {
+        "interaction_runtime/._prismatic_benchmark_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._recovery_v44.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/estimator_v31.py": "30e247c92d21cd8dcd24ed0b940c670bb2b3b292c6dafd8835cc770b4366c55e",
+        "interaction_runtime/probing_v5.py": "529baea5842d4b447c3c12a23505909c5562e7a3690399723453d39a1a0a5829",
+        "interaction_runtime/probing_v2.py": "a74773275bacf0603e30fd29b610d80ae40233fa2b6d5d6dd39760343c77d366",
+        "interaction_runtime/recovery_candidates_v7.py": "f458e924136145347a951c8ea4911f7ffedaeb7f7109a0de3b888323dc23e9f2",
+        "interaction_runtime/prismatic_retention_v7.py": "96005dbdbfb81df1fc5bf6d97d36e83c5939c38f3aa0826bc815f3950ebdb763",
+        "interaction_runtime/prismatic_lighting_v72.py": "06d4331949a74941c9fb197c7a4deb6e7e0e55e20d51184eee3d0149b01bbce3",
+        "interaction_runtime/recovery_v44.py": "b071097dfb6694bab494a03df575a3da253b56e6e1188acb57d7f872fdd59065",
+        "interaction_runtime/compact_v2.py": "751475f454cb9d766b58179464198c0f8c50479c48d57a98adee71389f2138a1",
+        "interaction_runtime/kinematics.py": "a4021461e8e97280d3000788392bc7f2791f4a7ade05d0b13dafaf1df2ed72aa",
+        "interaction_runtime/prismatic_preload_v71.py": "c729c0c1ff4b06bdc4e65d73fb1cf6c1e6a1799b193420f7be3be2b591da464f",
+        "interaction_runtime/prismatic_feedback_v7.py": "a022d43847bda68d5569cf4ea3162a666a69a03c7d993e6dc7d38d10709abf3b",
+        "interaction_runtime/session.py": "9fb65831bd5cc373024d21e308196e35c1d10dc8c70695048f69205c2c80e01f",
+        "interaction_runtime/probing_v6.py": "daf55cb59c0cc1cf055d06e70f99fcc16820b784d6fbebdca6bc29a8cfa28fce",
+        "interaction_runtime/passive_rgbd_v6.py": "01859bcda67a09f1386d645d469fdaec3b58a9100e3b3fade79c5aeaa179c9c3",
+        "interaction_runtime/._segments.py": "627093cc20769c580bf587ec6f4832168eb592379afb369e2d03cfff3330e596",
+        "interaction_runtime/policy.py": "39bd1399af5feefb589bdd1bb5601a580f800b182356f969b24e763292e77620",
+        "interaction_runtime/._registered_observation_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/operations.py": "657f44e9b70fbdf21430a8fa74f51b3f962fc42b00e3b7a87f8dc94654938390",
+        "interaction_runtime/._operations.py": "f43738e4e74abff0a5a37e8db351806e8c8be0891e1c2fc959d28ba4642e8a15",
+        "interaction_runtime/prismatic_v73.py": "39d5c8136061c7bb02ee03bc65529be85ea82d6a610202978bd78989521705c8",
+        "interaction_runtime/passive_clock_v6.py": "7f74a2b7edf5c4773108383964ce0f8e5768bf292747423dd51bef99514a6581",
+        "interaction_runtime/probing_v7.py": "c4eb8e99cef5e76a29d4a2f686a2f423ea76c2b699fd4d5b8542554f0d548b32",
+        "interaction_runtime/segments.py": "9d7eb700c83924c0dc44259b1028a92931f7b8b7dcd5617062a47893f824c99f",
+        "interaction_runtime/progress.py": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f",
+        "interaction_runtime/probing_profiles_v3.py": "a24fd2a2c1b58ce8b7b8c82ad07415e1e89a9c0cf92565abc05f3f4d993f5a00",
+        "interaction_runtime/motion.py": "284a88d37f76bdbbe288b2bacfac13e3d2c0e59df9a1f18074c3f0b124aa5a2b",
+        "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b",
+        "interaction_runtime/checkpoints.py": "41acb59b819694a689f04d0113d84dab59cb8ca8aa40589f1304b6950349355f",
+        "interaction_runtime/sensor_lighting_v1.py": "ebe636fa7397c6c503d817403684cebdb733555152ce889a8017fe68ad6663a5",
+        "interaction_runtime/serialization.py": "cd4af3fea6076e83399683e59a3fd513c61e6e1d811dc7738d6b8edb5ef7bf39",
+        "interaction_runtime/._prismatic_feedback_v7.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._sensor_lighting_v1.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/runtime.py": "f2d333a28466780907a83431b91ef3e4cf2227c511188657aeb8b878b8504826",
+        "interaction_runtime/__init__.py": "b4ea43a6d6d65ad90f82162143b78fbebf116d4aff9ec3f9ab1ced81e66dbc36",
+        "interaction_runtime/prismatic_startup.py": "5912a178391bfdca6fae729790064d54911d74777b6995c13384d115f5af5d26",
+        "interaction_runtime/evidence.py": "7265be5a40e17cb6ad2dbda4789c67e6cf2d8549615399f92ea4e940b829e4ba",
+        "interaction_runtime/native_scene.py": "41fc33e512d365f4b48c94edbc382bba2aabe3a554f8b4ffcc3696fa5690299e",
+        "interaction_runtime/registered_observation_v71.py": "133161b6ea11413d114154560aeb35041d3e9e868c391defeb80ce266acce3da",
+        "interaction_runtime/contact_evidence_v7.py": "6c111579785ae8ac771999bdc9dcf55baf47a0802c122db00c5f67957fba874b",
+        "interaction_runtime/prismatic_microtracking_v7.py": "2b9e734dda85c067a15153f2a8bb460a74bc23878d14d602d85c37565b6fc4bb",
+        "interaction_runtime/prismatic_benchmark_v71.py": "1ecc0834e59f6b0233794161c8a5dad565b0eae48aa6ae7337907b1d572b6327",
+        "interaction_runtime/guard_regression.py": "ac55190f7f8ac62ce044852176dc0c688302189dd2a1ff996cd165ec71ad3323",
+        "interaction_runtime/articulation_v7.py": "7828daa2f71b5ed4e46675d6adfa340c06b6e73fa6eb4d855f3d0b75cb5fbfbe",
+        "interaction_runtime/fixture.py": "7ae1b0d171512fc42b3f11e37a364adba4d72926010beb749577f744cb30a4ca",
+        "interaction_runtime/prismatic_planning_v73.py": "b48708b0f8000af5921b06fda2d066b2211ac33c4ef2d7d992cac7181208014a",
+        "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+        "configs/interaction_runtime_v1.json": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+        "configs/efficient_probing_v2.json": "a56d02cd5f22cca3eed3ce74610ddd8636ff678b7a1051c8ad8700aab50b9bc2",
+        "scripts/update_probing_v2_model.py": "f64b058d15ee093877495958096f0fd5a06af6d9049efa75e126cab85d6fd24e",
+        "scripts/run_efficient_probing_v2.py": "921ab6d9f812a18f8d7be98de3c41a42584040039cf800cded9765d6a470df5c",
+        "scripts/update_probing_v31_model.py": "01cc3021e562965193daf8ee8ddf192b402f8f9dc99faa74935bb0715f93f6cc",
+        "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+        "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b",
+        "scripts/xarm_wrist_ft.py": "0c85ccc6b5499b8a5a74e5adb1d4d09630c95cef1e1961be648d9a4f27b032d0",
+        "scripts/diagnose_probing_v3.py": "097293bab679aa388f8df6e65ca714923ceeaf51fcd8d687ccbbc77ad1a102c8",
+        "scripts/run_informative_probing_v31.py": "d35ba55cf5d2f6d73c16e62f3a7fe89c3d86de389dc3e93780dbc48c38966616",
+        "scripts/native_g1_wrist_input.py": "e9df8658fd790d8b3ed1964a70d39fa38551a7b612fd310661a0ad5617df83c3",
+        "scripts/agent_command_protocol_v12.py": "815f7dc664fb16f476bb64ae7c3651aa797b1e5e0bca6eba0c7045ffce957dd1",
+        "scripts/route_probing_approach_v3.py": "5e415446780ed21656ffe5eeeb6528129bf805eacaf2f7cbaa2e06345f82825d",
+        "configs/informative_probing_v3.json": "9781101491f8ea4b7160b3d837edf72a283da50574fdf7a10077c379a4d827bf",
+        "scripts/update_probing_v5_model.py": "32bac209bb5caea4bea55b03fc1fe62eed15a39c19c8ca4735209f31f3e87d45",
+        "scripts/xarm_ft_v5_estimator.py": "8923e927ed09f94f7a4e8813a07e546c592f959f65d934f79f4048f3bcf59e4c",
+        "scripts/xarm_ft_v1_scene.py": "118195d3466de150e688cbc115d4cde87b42ec1b257cf28a220025bd821570ca",
+        "scripts/run_angle_resistance_v5.py": "42cc2caa9ff1b38efaad3702ded54ad31badbd0684425e2cd646ba45d6644990",
+        "scripts/native_g1_execution_candidates.py": "82374cf63ce85f308aa88636c869f7bcf58c38c473961f0c676ca4944db5b70d",
+        "scripts/native_g1_agent_execution.py": "5ab279337794a2cb5c281c214a699628267ef01d3bca9b6d88f829048dee5bde",
+        "scripts/native_g1_panel_support.py": "ab9df98efe27faf94bfd5764a2530a3bf60f60d7b1a39a988fa718d261b9a4bf",
+        "scripts/native_g1_visual_input.py": "c5a61d06fcf1ebb69a0bc7f0a074189f3bbb89615734eb91cbb4d856c4753ca8",
+        "scripts/xarm7_native_planning.py": "3878e9b7478f80e3ad9357e8cefc2ad2cbe3ffc94c12f6c5b9cc1b4aa64448be",
+        "scripts/plan_shared_door_skill.py": "5121ceb128f544f2f29fb388c02537cd1977e6411527a1abe72051156b4fb2c2",
+        "scripts/xarm_ft_v7_scene.py": "6641027d779d50f0e01ba7f69e7eb560cbe982d29c7ac0d88360ee0ef17738f7",
+        "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+        "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+        "scripts/native_g1_prismatic_ranking.py": "4a2d5a515f55a454c6ce9d5fcd018c7bf707742176c90ae4e57617e8c674a600",
+        "scripts/prismatic_visual_v73.py": "b652b47b832dc12822e8dbf40f17fc0af3d1230510e2c6ac5dd345271924d1b8",
+        "scripts/run_prismatic_v73.py": "abc46f31c28f7c83fd08609bb2b3a95033a867259ed6f347318fb6402edaa821",
+        "scripts/launch_prismatic_v73.py": "80d645d6e2b28d892fe7e3b3d76ecfa2990b862d8c555d3296826bc822a6e272",
+        "scripts/prismatic_quality_v73.py": "2cfbd6a497f4f7569c0a107a8fcbcea0a0c84ae6d6665b2cc1602e8a1afdf122",
+        "scripts/prismatic_inspection_v73.py": "096c51e7bc3a501c769560d1fb7450f73b5ba77e0c79fc1a609374f9f277784d",
+        "scripts/update_prismatic_v73_model.py": "b451426b212f791a8e20f1cadf636f17afff6a958effb487908a3759a9c5b2f0",
+        "configs/prismatic_preload_v71.json": "3a57a0ec1286ef2acd92cf854478bd2b00c3c88ba12ae13e3f95ec09b1560ff8",
+        "configs/sensor_lighting_v1.json": "d0ebafb28b968e1bf823676be961b9f19618bbfc22d88731adfcf5e2545d70b4"
+      },
+      "private_evidence_index": {
+        "telemetry/index.json": "5f32993405b8f72db8c6804cbec09dac59f45b14dc33f7c1e2c04e74cf6d5b1a",
+        "EPISODE_RESULT.json": "c6d59c1f4702e47cefdcf001792df818ff7238480656d2764060c473ff7455c5",
+        "SOURCE_PROVENANCE.json": "ff71ec4308bf1be0ff1eeb36ce80edb8ec087f58b645c558711042d4a106d4ce",
+        "model/estimate.json": "5f0e70822055337abfd9f21f51269a4d4961b1cf9e29fa6c825b5a3f432c1105"
+      },
+      "model_online": {
+        "parameters": [
+          2.00226336150719,
+          3.0991728956394065,
+          0.29975301631556345
+        ],
+        "parameter_names": [
+          "m_eff_kg",
+          "b_N_s_m",
+          "F_c_N"
+        ],
+        "conditional_std": [
+          0.004345084696111839,
+          0.015314080273745447,
+          3.920778548156364e-05
+        ],
+        "scaled_condition": 163.42285218981874,
+        "support_intervals_native": [
+          [
+            0.0013051339871405314,
+            0.019322740224500496
+          ]
+        ],
+        "mass_relative_error_percent": 0.11316807535950435,
+        "damping_relative_error_percent": 3.305763187980215,
+        "constant_friction_relative_error_percent": -0.08232789481218417,
+        "heldout": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 7.770129894425651e-05,
+            "coordinate_rmse": 3.2597886223012035e-05,
+            "velocity_rmse": 0.00011745219395918618,
+            "final_coordinate_error": -5.371796618954677e-05,
+            "outside_FIT_support": false,
+            "samples": 765,
+            "duration_s": 3.183333333333337,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "unfiltered_input_sensitivity": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.015065824595424588,
+            "coordinate_rmse": 1.007861746486182e-05,
+            "velocity_rmse": 3.322924615791189e-05,
+            "final_coordinate_error": -2.482227757234952e-05,
+            "outside_FIT_support": false,
+            "samples": 765,
+            "duration_s": 3.183333333333337,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "FIT_qualification": {
+          "rule": "existing velocity resolution across complete unchanged SG support",
+          "segments": [
+            {
+              "applied": true,
+              "block": "FIT_OPEN_ACCEL_01_01#0",
+              "original_valid_samples": 1734,
+              "qualified_samples": 1636,
+              "excluded_samples": 98,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": true,
+              "block": "FIT_REVERSE_SPEED_02_02#0",
+              "original_valid_samples": 1321,
+              "qualified_samples": 1314,
+              "excluded_samples": 7,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": false,
+              "reason": "complete independent VALIDATION unchanged"
+            }
+          ],
+          "validation_mask_unchanged": true,
+          "filter_math_changed": false,
+          "tool_compensation_count": 1,
+          "hidden_truth_used": false
+        },
+        "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+        "validation_used_for_fitting": false
+      },
+      "worker": {
+        "worker_script": "scripts/update_prismatic_v73_model.py",
+        "worker_sha256": "b451426b212f791a8e20f1cadf636f17afff6a958effb487908a3759a9c5b2f0",
+        "returncode": 0,
+        "estimator_ready": true,
+        "loaded_sources": {
+          "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+          "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+          "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+          "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b",
+          "scripts/update_prismatic_v73_model.py": "b451426b212f791a8e20f1cadf636f17afff6a958effb487908a3759a9c5b2f0"
+        },
+        "wall_s": 4.5086809690110385
+      },
+      "Agent_operations": [
+        {
+          "sequence": 0,
+          "operation": "evaluate_view"
+        },
+        {
+          "sequence": 1,
+          "operation": "move_and_observe"
+        },
+        {
+          "sequence": 2,
+          "operation": "reobserve_and_replan"
+        },
+        {
+          "sequence": 3,
+          "operation": "build_geometry"
+        },
+        {
+          "sequence": 4,
+          "operation": "validate_execution"
+        },
+        {
+          "sequence": 5,
+          "operation": "attempt_grasp_and_probe"
+        },
+        {
+          "sequence": 6,
+          "operation": "finish"
+        }
+      ],
+      "Agent_decisions": [
+        {
+          "sequence": 0,
+          "command": {
+            "operation": "evaluate_view",
+            "target": {
+              "eye_world_m": [
+                0.61,
+                -0.91,
+                0.26
+              ],
+              "look_at_world_m": [
+                0.4973,
+                -0.3624,
+                0.2798
+              ]
+            },
+            "reason": "Agent inspected actual RGB/depth: lower drawer/handle is fully framed; higher-score upper handle lies near image top on another drawer. Lower observed mask centroid is(.4973,-.3624,.2798)m. Request modest right-oblique wrist view to improve side/stand-off evidence of the lower target, not historical pose or GT correction."
+          },
+          "missing": "rear and mount support, target association ambiguity",
+          "expected": "complementary lower handle view",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 2,
+          "command": {
+            "operation": "reobserve_and_replan",
+            "reason": "Agent inspected both fresh views: initial highest SAM seed was upper drawer, while desired fully framed target is lower. New view confirms lower handle (candidate2) but first-seed association would retain upper target. At verified unloaded state, begin a fresh observation generation IN THE SAME SCENE, preserve old views, then explicitly select lower SAM hypothesis BEFORE fusion. No object reset, grasp, teleport or GT input."
+          },
+          "diagnosis": "wrong initial semantic target association",
+          "chosen_recovery": "same-scene fresh observed hypothesis, no physical acquisition yet",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 3,
+          "command": {
+            "operation": "build_geometry",
+            "observed_handle_hypothesis": {
+              "source": "SAM3",
+              "id": "candidate_00_001",
+              "sha256": "17feb7109ca96f4b994b62e380d90ab4f2bfb00ebd37d1dc78e2bf9d00bf80f8",
+              "reason": "Fresh generation1 RGB/depth inspected: lower drawer handle and mounts are fully visible; candidate1 covers lower assembly while candidates2/3 are upper drawer. Cast shadow is panel depth and must remain excluded by existing observed-panel separation."
+            },
+            "reason": "Explicitly anchor fresh generation to lower observed handle before fusion/planning; no old upper seed or saved grasp. Use existing panel/depth separation and unchanged native ranking/closing feasibility."
+          },
+          "actual": "same scene target-association recovery, zero acquisitions",
+          "missing": "rear surfaces remain uncertain",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_01_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 5,
+          "command": {
+            "operation": "attempt_grasp_and_probe",
+            "native_g1_preload_request_n": 1.0,
+            "segments": [
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_OPEN_ACCEL_01",
+                "target_q": 0.02,
+                "velocity_program": "plateaus",
+                "reference_speed_m_s": 0.006,
+                "reference_acceleration_m_s2": 0.018,
+                "low_speed_fraction": 0.25,
+                "ramp_s": 0.4,
+                "plateau_s": 0.6,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    40
+                  ]
+                ],
+                "allow_target_truncation": true
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_REVERSE_SPEED_02",
+                "target_q": 0.004,
+                "velocity_program": "constant",
+                "reference_speed_m_s": 0.0035,
+                "reference_acceleration_m_s2": 0.01,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    40
+                  ]
+                ],
+                "allow_target_truncation": true,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "VALIDATION_DISTINCT_03",
+                "target_q": 0.015,
+                "velocity_program": "sine",
+                "reference_speed_m_s": 0.0045,
+                "reference_acceleration_m_s2": 0.012,
+                "low_speed_fraction": 0.4,
+                "period_s": 2.5,
+                "allow_target_truncation": false,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              }
+            ],
+            "reason": "Agent inspected regenerated LOWER-handle surfaces and automatic central pitch15deg grasp. Complete current-state route and native closing/CENTER envelope valid. With finite remaining resources prioritize20mm acceleration-rich FIT, reverse4mm and complete distinct15mm VALIDATION before expansion. Initial1N request, same physical scene, no GT/saved grasp or increased drive authority."
+          },
+          "actual": "same-scene observed target recovery before first acquisition",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_01_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            },
+            {
+              "reference": "AGENT_GRASP_PLAN_INSPECTION.png",
+              "retained": true,
+              "sha256": "25f6333f9b44358ff52b5b614a71b61b254ff606215abe3dd4efe5126b927e2f"
+            }
+          ]
+        },
+        {
+          "sequence": 6,
+          "command": {
+            "operation": "finish",
+            "reason": "Agent inspected actual contact/load/aperture/TCP/drawer feedback:20.055mm pull,16.133mm reverse,11.205mm complete distinct VALIDATION; verified release/park. Same-scene visual target recovery succeeded before first acquisition. No physical regrasp needed and no extra probing justified. Preserve asymmetric contact and all peaks; end bounded four-object engineering validation."
+          },
+          "result": "three physical targets complete, safe release/park",
+          "inspected_private_images": [
+            {
+              "reference": "CONTACT_FEEDBACK.png",
+              "retained": true,
+              "sha256": "f236317315cb87e14eb122b52aa4f876b21ee434c504daf9b54b2630eb43066e"
+            }
+          ]
+        }
+      ],
+      "simulation_s": 173.9125,
+      "numeric_records": 11617,
+      "observation_count": 3,
+      "motion_diagnostics": [
+        {
+          "block": "FIT_OPEN_ACCEL_01_01#0",
+          "coordinate_range_m": [
+            0.0002545668394304812,
+            0.020055081695318222
+          ],
+          "qualified_samples": 1636,
+          "velocity_rms_m_s": 0.0028213756524438473,
+          "acceleration_rms_m_s2": 0.0029512778581916583,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.0002711734719933414,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0007551405378687565,
+          "command_measured_tracking_delta_m": 0.0002939560901877303,
+          "measured_TCP_drawer_relative_delta_m": 0.0008022315051625095,
+          "pad_load_peak_N": [
+            1.6794075965881348,
+            1.1975613832473755
+          ],
+          "native_normal_rail_mean_N": 0.13730970546967533,
+          "native_friction_rail_mean_N": 0.17079982441829514,
+          "wrist_force_rms_N": 0.30808517218931974,
+          "wrist_minus_native_rail_traction_RMS_N": 6.739713797202738e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "FIT_REVERSE_SPEED_02_02#0",
+          "coordinate_range_m": [
+            0.003922340460121632,
+            0.019697126001119614
+          ],
+          "qualified_samples": 1314,
+          "velocity_rms_m_s": 0.0026337842693538336,
+          "acceleration_rms_m_s2": 0.0009036475016055003,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.0006034279932875516,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0005714100674645229,
+          "command_measured_tracking_delta_m": -0.0005657662382797524,
+          "measured_TCP_drawer_relative_delta_m": -0.000658491796948546,
+          "pad_load_peak_N": [
+            1.4365766048431396,
+            1.4065847396850586
+          ],
+          "native_normal_rail_mean_N": 0.13493582861472483,
+          "native_friction_rail_mean_N": -0.44312748466044255,
+          "wrist_force_rms_N": 0.3080892080303515,
+          "wrist_minus_native_rail_traction_RMS_N": 3.490144673724858e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "VALIDATION_DISTINCT_03_03#0",
+          "coordinate_range_m": [
+            0.004169874358922243,
+            0.01512777991592884
+          ],
+          "qualified_samples": 765,
+          "velocity_rms_m_s": 0.003030053230864301,
+          "acceleration_rms_m_s2": 0.002444506568404249,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.00026688389281612245,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 3.6637269506210976e-05,
+          "command_measured_tracking_delta_m": 0.000324564047952447,
+          "measured_TCP_drawer_relative_delta_m": 2.0850366509228557e-05,
+          "pad_load_peak_N": [
+            2.093470573425293,
+            0.9096388220787048
+          ],
+          "native_normal_rail_mean_N": 0.16063820269762302,
+          "native_friction_rail_mean_N": 0.1493481133467962,
+          "wrist_force_rms_N": 0.30994750852287384,
+          "wrist_minus_native_rail_traction_RMS_N": 4.895567098992596e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "FIT_consistency": {
+        "schema": "prismatic-FIT-consistency-v73",
+        "production_estimate_modified": false,
+        "hidden_truth_used": false,
+        "validation_used": false,
+        "production_sliding_support_qualification": true,
+        "groups": [
+          {
+            "segment": "FIT_OPEN_ACCEL_01_01#0",
+            "bins": 68,
+            "parameters": [
+              1.9998644061880668,
+              3.1059177125375053,
+              0.2997305985482543
+            ],
+            "conditional_std": [
+              0.004718195893476425,
+              0.016998113157594603,
+              4.793740777588015e-05
+            ],
+            "condition": 124.22838760528295,
+            "velocity_rms_m_s": 0.0028213756524438473,
+            "acceleration_rms_m_s2": 0.0029512778581916583,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  1.9810560697650397,
+                  3.1785042547673603,
+                  0.2994581100220876
+                ],
+                "conditional_std": [
+                  0.03707300063482234,
+                  0.24206427086386978,
+                  0.0008437954601025488
+                ],
+                "condition": 479.5147743161987
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  2.0050728431291893,
+                  3.11562745206085,
+                  0.29969961152333646
+                ],
+                "conditional_std": [
+                  0.009191079127740398,
+                  0.03486041702845832,
+                  9.505550811292114e-05
+                ],
+                "condition": 122.8670833457735
+              },
+              {
+                "relative_interval_s": [
+                  4.0,
+                  6.0
+                ],
+                "parameters": [
+                  2.0032967256142906,
+                  3.11171447618218,
+                  0.2997053053139524
+                ],
+                "conditional_std": [
+                  0.008288483787176872,
+                  0.03239474633263044,
+                  8.704461860929313e-05
+                ],
+                "condition": 125.49621179097569
+              },
+              {
+                "relative_interval_s": [
+                  6.0,
+                  8.0
+                ],
+                "parameters": [
+                  2.0059778602450473,
+                  3.114398763098994,
+                  0.29970597384762576
+                ],
+                "conditional_std": [
+                  0.011439807129281972,
+                  0.0331406839424581,
+                  8.87543198809388e-05
+                ],
+                "condition": 123.59253857390968
+              }
+            ]
+          },
+          {
+            "segment": "FIT_REVERSE_SPEED_02_02#0",
+            "bins": 56,
+            "parameters": [
+              2.024407510239377,
+              2.973054514280764,
+              0.30008607582959623
+            ],
+            "conditional_std": [
+              0.01748114013370841,
+              0.05761510482724646,
+              0.00015515842888185412
+            ],
+            "condition": 511.22205235566037,
+            "velocity_rms_m_s": 0.0026337842693538336,
+            "acceleration_rms_m_s2": 0.0009036475016055003,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  2.0201708652132813,
+                  3.0880560168361075,
+                  0.29983752136406766
+                ],
+                "conditional_std": [
+                  0.01610247132546115,
+                  0.06615442838876391,
+                  0.0001599719913592272
+                ],
+                "condition": 381.7826410024968
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  1.348345506121342,
+                  0.3001475941152955,
+                  0.30729360190783406
+                ],
+                "conditional_std": [
+                  0.2762683214251236,
+                  0.1708685591095539,
+                  0.0004565640813591387
+                ],
+                "condition": 15385.120450387623
+              },
+              {
+                "relative_interval_s": [
+                  4.0,
+                  6.0
+                ],
+                "parameters": [
+                  0.7539819223863248,
+                  0.6468747433629323,
+                  0.3064246053055751
+                ],
+                "conditional_std": [
+                  0.26927119072182193,
+                  0.2695729819453716,
+                  0.0007378063351413614
+                ],
+                "condition": 11673.68687535143
+              }
+            ]
+          }
+        ],
+        "FIT_bins": 124,
+        "meaning": "conditional uncertainty excludes changing contact/constraint loads; constant-model cross-FIT spread can also reflect real position-dependent resistance or excitation differences, not calibrated confidence or an execution veto",
+        "pooled_constant_diagnostic": {
+          "intervals": 0,
+          "active_controls": [
+            0
+          ],
+          "domain_native": [
+            -0.003,
+            0.22499999999999998
+          ],
+          "joint_type": "prismatic",
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "parameters": [
+            2.00226336150719,
+            3.0991728956394065,
+            0.29975301631556345
+          ],
+          "conditional_covariance": [
+            [
+              1.8879761016385312e-05,
+              -9.770835728405164e-06,
+              3.140455943207048e-08
+            ],
+            [
+              -9.770835728405162e-06,
+              0.00023452105463071945,
+              -5.902373184816699e-07
+            ],
+            [
+              3.140455943207048e-08,
+              -5.902373184816699e-07,
+              1.5372504423683125e-09
+            ]
+          ],
+          "conditional_std": [
+            0.004345084696111839,
+            0.015314080273745447,
+            3.920778548156364e-05
+          ],
+          "algebraic_rank": 3,
+          "scaled_singular_values": [
+            11.139488945709662,
+            0.12476048909915138,
+            0.06816359399217274
+          ],
+          "scaled_condition": 163.42285218981874,
+          "support_intervals_native": [
+            [
+              0.0013051339871405314,
+              0.019322740224500496
+            ]
+          ],
+          "FIT_rmse": 9.001739140654317e-05,
+          "smoothness": 0,
+          "validation_used": false,
+          "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+          "parameter_names": [
+            "m_eff_kg",
+            "b_N_s_m",
+            "F_c_N"
+          ],
+          "conditionally_supported": [
+            true,
+            true,
+            true
+          ],
+          "inertial_sensitivity_after_velocity_and_friction_projection": 0.024948706221904145,
+          "uncalibrated_total_physical_accuracy": true
+        },
+        "leave_one_FIT_out": [
+          {
+            "omitted": "FIT_OPEN_ACCEL_01_01",
+            "parameters": [
+              2.024407510239377,
+              2.973054514280764,
+              0.30008607582959623
+            ]
+          },
+          {
+            "omitted": "FIT_REVERSE_SPEED_02_02",
+            "parameters": [
+              1.9998644061880668,
+              3.1059177125375053,
+              0.2997305985482543
+            ]
+          }
+        ],
+        "between_FIT_parameter_range": [
+          0.024543104051310216,
+          0.1328631982567412,
+          0.0003554772813419427
+        ],
+        "between_FIT_parameter_std": [
+          0.012271552025655108,
+          0.0664315991283706,
+          0.00017773864067097134
+        ],
+        "interpretation": "Compare between-FIT/local spread to conditional uncertainty and contact history before claiming parameter accuracy. A complete VAL trajectory alone does not establish parameter identifiability."
+      }
+    },
+    {
+      "id": "45746_fresh_00",
+      "terminal_status": "HARD_STOP_OR_NO_SAFE_DECISION_BOUNDARY",
+      "actor_exited": true,
+      "wall_s": 1326.9997128618415,
+      "storage_bytes": 27884400,
+      "authored_reference_post_episode": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "friction_N": 0.3
+      },
+      "attempts": [
+        {
+          "acquisition": null,
+          "requested_preload_n": 1.0,
+          "family": [
+            0.0,
+            0.0,
+            180.0,
+            0.0
+          ],
+          "physical_grasp_started": false,
+          "error": "SafetyStop('COMMAND_JOINT_MARGIN')",
+          "actions_declared_before_execution": [
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_OPEN_ACCEL_01",
+              "target_q": 0.02,
+              "velocity_program": "plateaus",
+              "reference_speed_m_s": 0.005,
+              "reference_acceleration_m_s2": 0.012,
+              "low_speed_fraction": 0.2,
+              "ramp_s": 0.4,
+              "plateau_s": 0.6,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  30
+                ]
+              ],
+              "allow_target_truncation": true
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_REVERSE_SPEED_02",
+              "target_q": 0.004,
+              "velocity_program": "constant",
+              "reference_speed_m_s": 0.003,
+              "reference_acceleration_m_s2": 0.008,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  30
+                ]
+              ],
+              "allow_target_truncation": true,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "VALIDATION_DISTINCT_03",
+              "target_q": 0.016,
+              "velocity_program": "sine",
+              "reference_speed_m_s": 0.004,
+              "reference_acceleration_m_s2": 0.01,
+              "low_speed_fraction": 0.35,
+              "period_s": 2.3,
+              "allow_target_truncation": false,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "status": "SAFETY_STOP",
+              "reason": "COMMAND_JOINT_MARGIN",
+              "gain_native": null,
+              "joint_coordinate": null,
+              "elapsed_sim_s": null,
+              "requested_target_reached": null,
+              "physical_transmission_valid": null,
+              "final_tracking_lag_native": null
+            }
+          ],
+          "safe_exit": false,
+          "parked": null,
+          "final_pad_loads_N": null,
+          "final_joint_q": null,
+          "final_drawer_m": null
+        }
+      ],
+      "source_sha256": {
+        "interaction_runtime/._prismatic_benchmark_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._recovery_v44.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/estimator_v31.py": "30e247c92d21cd8dcd24ed0b940c670bb2b3b292c6dafd8835cc770b4366c55e",
+        "interaction_runtime/probing_v5.py": "529baea5842d4b447c3c12a23505909c5562e7a3690399723453d39a1a0a5829",
+        "interaction_runtime/probing_v2.py": "a74773275bacf0603e30fd29b610d80ae40233fa2b6d5d6dd39760343c77d366",
+        "interaction_runtime/recovery_candidates_v7.py": "f458e924136145347a951c8ea4911f7ffedaeb7f7109a0de3b888323dc23e9f2",
+        "interaction_runtime/prismatic_retention_v7.py": "96005dbdbfb81df1fc5bf6d97d36e83c5939c38f3aa0826bc815f3950ebdb763",
+        "interaction_runtime/prismatic_lighting_v72.py": "06d4331949a74941c9fb197c7a4deb6e7e0e55e20d51184eee3d0149b01bbce3",
+        "interaction_runtime/recovery_v44.py": "b071097dfb6694bab494a03df575a3da253b56e6e1188acb57d7f872fdd59065",
+        "interaction_runtime/compact_v2.py": "751475f454cb9d766b58179464198c0f8c50479c48d57a98adee71389f2138a1",
+        "interaction_runtime/kinematics.py": "a4021461e8e97280d3000788392bc7f2791f4a7ade05d0b13dafaf1df2ed72aa",
+        "interaction_runtime/prismatic_preload_v71.py": "c729c0c1ff4b06bdc4e65d73fb1cf6c1e6a1799b193420f7be3be2b591da464f",
+        "interaction_runtime/prismatic_feedback_v7.py": "a022d43847bda68d5569cf4ea3162a666a69a03c7d993e6dc7d38d10709abf3b",
+        "interaction_runtime/session.py": "9fb65831bd5cc373024d21e308196e35c1d10dc8c70695048f69205c2c80e01f",
+        "interaction_runtime/probing_v6.py": "daf55cb59c0cc1cf055d06e70f99fcc16820b784d6fbebdca6bc29a8cfa28fce",
+        "interaction_runtime/passive_rgbd_v6.py": "01859bcda67a09f1386d645d469fdaec3b58a9100e3b3fade79c5aeaa179c9c3",
+        "interaction_runtime/._segments.py": "627093cc20769c580bf587ec6f4832168eb592379afb369e2d03cfff3330e596",
+        "interaction_runtime/policy.py": "39bd1399af5feefb589bdd1bb5601a580f800b182356f969b24e763292e77620",
+        "interaction_runtime/._registered_observation_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/operations.py": "657f44e9b70fbdf21430a8fa74f51b3f962fc42b00e3b7a87f8dc94654938390",
+        "interaction_runtime/._operations.py": "f43738e4e74abff0a5a37e8db351806e8c8be0891e1c2fc959d28ba4642e8a15",
+        "interaction_runtime/prismatic_v73.py": "9db98ff7fff4cd199299ef64ed45e2c9ed9570b0f1affac3c03be83a75de8841",
+        "interaction_runtime/passive_clock_v6.py": "7f74a2b7edf5c4773108383964ce0f8e5768bf292747423dd51bef99514a6581",
+        "interaction_runtime/probing_v7.py": "c4eb8e99cef5e76a29d4a2f686a2f423ea76c2b699fd4d5b8542554f0d548b32",
+        "interaction_runtime/segments.py": "9d7eb700c83924c0dc44259b1028a92931f7b8b7dcd5617062a47893f824c99f",
+        "interaction_runtime/progress.py": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f",
+        "interaction_runtime/probing_profiles_v3.py": "a24fd2a2c1b58ce8b7b8c82ad07415e1e89a9c0cf92565abc05f3f4d993f5a00",
+        "interaction_runtime/motion.py": "284a88d37f76bdbbe288b2bacfac13e3d2c0e59df9a1f18074c3f0b124aa5a2b",
+        "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b",
+        "interaction_runtime/checkpoints.py": "41acb59b819694a689f04d0113d84dab59cb8ca8aa40589f1304b6950349355f",
+        "interaction_runtime/sensor_lighting_v1.py": "ebe636fa7397c6c503d817403684cebdb733555152ce889a8017fe68ad6663a5",
+        "interaction_runtime/serialization.py": "cd4af3fea6076e83399683e59a3fd513c61e6e1d811dc7738d6b8edb5ef7bf39",
+        "interaction_runtime/._prismatic_feedback_v7.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._sensor_lighting_v1.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/runtime.py": "f2d333a28466780907a83431b91ef3e4cf2227c511188657aeb8b878b8504826",
+        "interaction_runtime/__init__.py": "b4ea43a6d6d65ad90f82162143b78fbebf116d4aff9ec3f9ab1ced81e66dbc36",
+        "interaction_runtime/prismatic_startup.py": "5912a178391bfdca6fae729790064d54911d74777b6995c13384d115f5af5d26",
+        "interaction_runtime/evidence.py": "7265be5a40e17cb6ad2dbda4789c67e6cf2d8549615399f92ea4e940b829e4ba",
+        "interaction_runtime/native_scene.py": "41fc33e512d365f4b48c94edbc382bba2aabe3a554f8b4ffcc3696fa5690299e",
+        "interaction_runtime/registered_observation_v71.py": "133161b6ea11413d114154560aeb35041d3e9e868c391defeb80ce266acce3da",
+        "interaction_runtime/contact_evidence_v7.py": "6c111579785ae8ac771999bdc9dcf55baf47a0802c122db00c5f67957fba874b",
+        "interaction_runtime/prismatic_microtracking_v7.py": "2b9e734dda85c067a15153f2a8bb460a74bc23878d14d602d85c37565b6fc4bb",
+        "interaction_runtime/prismatic_benchmark_v71.py": "1ecc0834e59f6b0233794161c8a5dad565b0eae48aa6ae7337907b1d572b6327",
+        "interaction_runtime/guard_regression.py": "ac55190f7f8ac62ce044852176dc0c688302189dd2a1ff996cd165ec71ad3323",
+        "interaction_runtime/articulation_v7.py": "7828daa2f71b5ed4e46675d6adfa340c06b6e73fa6eb4d855f3d0b75cb5fbfbe",
+        "interaction_runtime/fixture.py": "7ae1b0d171512fc42b3f11e37a364adba4d72926010beb749577f744cb30a4ca",
+        "interaction_runtime/prismatic_planning_v73.py": "b17ad6fc6e4c2d09c185119be4e890f3a1059099cdc11ad22a44cf0a8d4e2fa3",
+        "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+        "configs/interaction_runtime_v1.json": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+        "configs/efficient_probing_v2.json": "a56d02cd5f22cca3eed3ce74610ddd8636ff678b7a1051c8ad8700aab50b9bc2",
+        "scripts/update_probing_v2_model.py": "f64b058d15ee093877495958096f0fd5a06af6d9049efa75e126cab85d6fd24e",
+        "scripts/run_efficient_probing_v2.py": "921ab6d9f812a18f8d7be98de3c41a42584040039cf800cded9765d6a470df5c",
+        "scripts/update_probing_v31_model.py": "01cc3021e562965193daf8ee8ddf192b402f8f9dc99faa74935bb0715f93f6cc",
+        "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+        "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b",
+        "scripts/xarm_wrist_ft.py": "0c85ccc6b5499b8a5a74e5adb1d4d09630c95cef1e1961be648d9a4f27b032d0",
+        "scripts/diagnose_probing_v3.py": "097293bab679aa388f8df6e65ca714923ceeaf51fcd8d687ccbbc77ad1a102c8",
+        "scripts/run_informative_probing_v31.py": "d35ba55cf5d2f6d73c16e62f3a7fe89c3d86de389dc3e93780dbc48c38966616",
+        "scripts/native_g1_wrist_input.py": "e9df8658fd790d8b3ed1964a70d39fa38551a7b612fd310661a0ad5617df83c3",
+        "scripts/agent_command_protocol_v12.py": "815f7dc664fb16f476bb64ae7c3651aa797b1e5e0bca6eba0c7045ffce957dd1",
+        "scripts/route_probing_approach_v3.py": "5e415446780ed21656ffe5eeeb6528129bf805eacaf2f7cbaa2e06345f82825d",
+        "configs/informative_probing_v3.json": "9781101491f8ea4b7160b3d837edf72a283da50574fdf7a10077c379a4d827bf",
+        "scripts/update_probing_v5_model.py": "32bac209bb5caea4bea55b03fc1fe62eed15a39c19c8ca4735209f31f3e87d45",
+        "scripts/xarm_ft_v5_estimator.py": "8923e927ed09f94f7a4e8813a07e546c592f959f65d934f79f4048f3bcf59e4c",
+        "scripts/xarm_ft_v1_scene.py": "118195d3466de150e688cbc115d4cde87b42ec1b257cf28a220025bd821570ca",
+        "scripts/run_angle_resistance_v5.py": "42cc2caa9ff1b38efaad3702ded54ad31badbd0684425e2cd646ba45d6644990",
+        "scripts/native_g1_execution_candidates.py": "82374cf63ce85f308aa88636c869f7bcf58c38c473961f0c676ca4944db5b70d",
+        "scripts/native_g1_agent_execution.py": "5ab279337794a2cb5c281c214a699628267ef01d3bca9b6d88f829048dee5bde",
+        "scripts/native_g1_panel_support.py": "ab9df98efe27faf94bfd5764a2530a3bf60f60d7b1a39a988fa718d261b9a4bf",
+        "scripts/native_g1_visual_input.py": "c5a61d06fcf1ebb69a0bc7f0a074189f3bbb89615734eb91cbb4d856c4753ca8",
+        "scripts/xarm7_native_planning.py": "3878e9b7478f80e3ad9357e8cefc2ad2cbe3ffc94c12f6c5b9cc1b4aa64448be",
+        "scripts/plan_shared_door_skill.py": "5121ceb128f544f2f29fb388c02537cd1977e6411527a1abe72051156b4fb2c2",
+        "scripts/xarm_ft_v7_scene.py": "6641027d779d50f0e01ba7f69e7eb560cbe982d29c7ac0d88360ee0ef17738f7",
+        "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+        "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+        "scripts/native_g1_prismatic_ranking.py": "4a2d5a515f55a454c6ce9d5fcd018c7bf707742176c90ae4e57617e8c674a600",
+        "scripts/prismatic_visual_v73.py": "b652b47b832dc12822e8dbf40f17fc0af3d1230510e2c6ac5dd345271924d1b8",
+        "scripts/run_prismatic_v73.py": "bae62fb6c22a5909a8416359591e72e4a8281af9d425d3e1391fd0a1f0fe94ae",
+        "scripts/launch_prismatic_v73.py": "80d645d6e2b28d892fe7e3b3d76ecfa2990b862d8c555d3296826bc822a6e272",
+        "configs/prismatic_preload_v71.json": "3a57a0ec1286ef2acd92cf854478bd2b00c3c88ba12ae13e3f95ec09b1560ff8",
+        "configs/sensor_lighting_v1.json": "d0ebafb28b968e1bf823676be961b9f19618bbfc22d88731adfcf5e2545d70b4"
+      },
+      "private_evidence_index": {
+        "telemetry/index.json": "aba2058daf9a6af0a3c7f46e684b2c6bccfb6c8606b46bd563cf94b7cad54f41",
+        "EPISODE_RESULT.json": "0c7d72cca5a5c62f39be10cc1923513aa55266105800c4f0bd0f2bb0bd2b827c",
+        "SOURCE_PROVENANCE.json": "ad31d8768727c67ece2165a641649ad69cdc917755966993982feb0dd1033aed"
+      },
+      "model_online": null,
+      "worker": {},
+      "Agent_operations": [
+        {
+          "sequence": 0,
+          "operation": "evaluate_view"
+        },
+        {
+          "sequence": 1,
+          "operation": "evaluate_view"
+        },
+        {
+          "sequence": 2,
+          "operation": "move_and_observe"
+        },
+        {
+          "sequence": 3,
+          "operation": "build_geometry"
+        },
+        {
+          "sequence": 4,
+          "operation": "validate_execution"
+        },
+        {
+          "sequence": 5,
+          "operation": "attempt_grasp_and_probe"
+        }
+      ],
+      "Agent_decisions": [
+        {
+          "sequence": 0,
+          "interpretation": "Inspected fresh RGB/mask/depth/cloud: complete thin horizontal handle, front/underside support retained; seek upper oblique view to resolve bar-to-panel gap and mounts.",
+          "GT_used": false,
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            },
+            {
+              "reference": "incremental_feedback/00/semantic_surfaces.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 1,
+          "interpretation": "Higher view was rejected NO_IK without motion. Reduce elevation change and add modest lateral parallax from current measured camera; handle remains fully framed, seek complementary near-front cross-section.",
+          "prior_feedback": "000 NO_IK",
+          "GT_used": false,
+          "inspected_private_images": []
+        },
+        {
+          "sequence": 2,
+          "interpretation": "Agent-approved smaller complementary view; direct native IK/collision route feasible, minimum joint margin0.482rad and complete observed points remain framed.",
+          "expected_benefit": "additional upper/lateral measured handle surface",
+          "GT_used": false,
+          "inspected_private_images": []
+        },
+        {
+          "sequence": 3,
+          "command": {
+            "operation": "build_geometry",
+            "reason": "Inspected fresh view1 RGB/mask/depth/cloud: both bars visible; highest-score upper bar is a different drawer from initial lower bar. Existing cross-view association excludes this unmatched surface; plan only from confirmed initial lower-bar measured surfaces, not upper candidate. No further view required before candidate feasibility assessment."
+          },
+          "missing": "unseen rear remains uncertain; upper bar association rejected",
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 5,
+          "command": {
+            "operation": "attempt_grasp_and_probe",
+            "native_g1_preload_request_n": 1.0,
+            "segments": [
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_OPEN_ACCEL_01",
+                "target_q": 0.02,
+                "velocity_program": "plateaus",
+                "reference_speed_m_s": 0.005,
+                "reference_acceleration_m_s2": 0.012,
+                "low_speed_fraction": 0.2,
+                "ramp_s": 0.4,
+                "plateau_s": 0.6,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    30
+                  ]
+                ],
+                "allow_target_truncation": true
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_REVERSE_SPEED_02",
+                "target_q": 0.004,
+                "velocity_program": "constant",
+                "reference_speed_m_s": 0.003,
+                "reference_acceleration_m_s2": 0.008,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    30
+                  ]
+                ],
+                "allow_target_truncation": true,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "VALIDATION_DISTINCT_03",
+                "target_q": 0.016,
+                "velocity_program": "sine",
+                "reference_speed_m_s": 0.004,
+                "reference_acceleration_m_s2": 0.01,
+                "low_speed_fraction": 0.35,
+                "period_s": 2.3,
+                "allow_target_truncation": false,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              }
+            ],
+            "reason": "Agent inspected fresh RGB-D and measured central-bar native-G1 pose: opposing pads straddle lower handle, unknown rear explicit. Complete return/approach and native CENTER envelope pass. Approve one short 20mm FIT pull, overlapping reverse to4mm and independent distinct-profile16mm VALIDATION under original guards; no 80mm target or force increase."
+          },
+          "missing": "actual physical traction and mass identifiability unknown",
+          "inspected_private_images": [
+            {
+              "reference": "AGENT_GRASP_PLAN_INSPECTION.png",
+              "retained": true,
+              "sha256": "3dd0a85172167dee821e305badb26bb7c1cb6ac7d170349eee12f3507585b7d3"
+            },
+            {
+              "reference": "rgbd/generation_00_agent_01/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        }
+      ],
+      "simulation_s": 49.34583333333333,
+      "numeric_records": 494,
+      "observation_count": 2
+    },
+    {
+      "id": "45746_fresh_01",
+      "terminal_status": "ORCHESTRATION_TIMEOUT",
+      "actor_exited": true,
+      "wall_s": 1369.2902193579357,
+      "storage_bytes": 39524829,
+      "authored_reference_post_episode": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "friction_N": 0.3
+      },
+      "attempts": [
+        {
+          "acquisition": {
+            "acquired": true,
+            "hold_s": 1.0,
+            "joint_coordinate": -9.575620296686793e-09,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            }
+          },
+          "requested_preload_n": 1.0,
+          "family": [
+            0.0,
+            0.0,
+            180.0,
+            0.0
+          ],
+          "physical_grasp_started": true,
+          "error": null,
+          "actions_declared_before_execution": [
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_OPEN_ACCEL_01",
+              "target_q": 0.02,
+              "velocity_program": "plateaus",
+              "reference_speed_m_s": 0.005,
+              "reference_acceleration_m_s2": 0.012,
+              "low_speed_fraction": 0.2,
+              "ramp_s": 0.4,
+              "plateau_s": 0.6,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  30
+                ]
+              ],
+              "allow_target_truncation": true
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "FIT_REVERSE_SPEED_02",
+              "target_q": 0.004,
+              "velocity_program": "constant",
+              "reference_speed_m_s": 0.003,
+              "reference_acceleration_m_s2": 0.008,
+              "fit_intervals_s": [
+                [
+                  0.6,
+                  30
+                ]
+              ],
+              "allow_target_truncation": true,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            },
+            {
+              "coordinate_unit": "m",
+              "profile": "constant",
+              "hold": true,
+              "role": "VALIDATION_DISTINCT_03",
+              "target_q": 0.016,
+              "velocity_program": "sine",
+              "reference_speed_m_s": 0.004,
+              "reference_acceleration_m_s2": 0.01,
+              "low_speed_fraction": 0.35,
+              "period_s": 2.3,
+              "allow_target_truncation": false,
+              "continue_after": [
+                "SAFE_PARTIAL_PROGRESS"
+              ]
+            }
+          ],
+          "segments": [
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.020017890522018078,
+              "joint_coordinate": 0.02001788094639778,
+              "elapsed_sim_s": 16.48750000000001,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.0024352136301663205
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": -0.016063170973211527,
+              "joint_coordinate": 0.0039547099731862545,
+              "elapsed_sim_s": 10.6875,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.003154626033370639
+            },
+            {
+              "status": "TARGET_REACHED",
+              "reason": null,
+              "gain_native": 0.012123952154070139,
+              "joint_coordinate": 0.016078662127256393,
+              "elapsed_sim_s": 7.729166666666657,
+              "requested_target_reached": true,
+              "physical_transmission_valid": true,
+              "final_tracking_lag_native": 0.003006459084676699
+            }
+          ],
+          "safe_exit": true,
+          "parked": true,
+          "final_pad_loads_N": [
+            0.0,
+            0.0
+          ],
+          "final_joint_q": [
+            0.0008332516881637275,
+            -0.5007224678993225,
+            -0.0008395345066674054,
+            0.9988217949867249,
+            -0.00200158404186368,
+            0.5020012855529785,
+            -0.0037220644298940897
+          ],
+          "final_drawer_m": 0.016078706830739975
+        }
+      ],
+      "source_sha256": {
+        "interaction_runtime/._prismatic_benchmark_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._recovery_v44.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/estimator_v31.py": "30e247c92d21cd8dcd24ed0b940c670bb2b3b292c6dafd8835cc770b4366c55e",
+        "interaction_runtime/probing_v5.py": "529baea5842d4b447c3c12a23505909c5562e7a3690399723453d39a1a0a5829",
+        "interaction_runtime/probing_v2.py": "a74773275bacf0603e30fd29b610d80ae40233fa2b6d5d6dd39760343c77d366",
+        "interaction_runtime/recovery_candidates_v7.py": "f458e924136145347a951c8ea4911f7ffedaeb7f7109a0de3b888323dc23e9f2",
+        "interaction_runtime/prismatic_retention_v7.py": "96005dbdbfb81df1fc5bf6d97d36e83c5939c38f3aa0826bc815f3950ebdb763",
+        "interaction_runtime/prismatic_lighting_v72.py": "06d4331949a74941c9fb197c7a4deb6e7e0e55e20d51184eee3d0149b01bbce3",
+        "interaction_runtime/recovery_v44.py": "b071097dfb6694bab494a03df575a3da253b56e6e1188acb57d7f872fdd59065",
+        "interaction_runtime/compact_v2.py": "751475f454cb9d766b58179464198c0f8c50479c48d57a98adee71389f2138a1",
+        "interaction_runtime/kinematics.py": "a4021461e8e97280d3000788392bc7f2791f4a7ade05d0b13dafaf1df2ed72aa",
+        "interaction_runtime/prismatic_preload_v71.py": "c729c0c1ff4b06bdc4e65d73fb1cf6c1e6a1799b193420f7be3be2b591da464f",
+        "interaction_runtime/prismatic_feedback_v7.py": "a022d43847bda68d5569cf4ea3162a666a69a03c7d993e6dc7d38d10709abf3b",
+        "interaction_runtime/session.py": "9fb65831bd5cc373024d21e308196e35c1d10dc8c70695048f69205c2c80e01f",
+        "interaction_runtime/probing_v6.py": "daf55cb59c0cc1cf055d06e70f99fcc16820b784d6fbebdca6bc29a8cfa28fce",
+        "interaction_runtime/passive_rgbd_v6.py": "01859bcda67a09f1386d645d469fdaec3b58a9100e3b3fade79c5aeaa179c9c3",
+        "interaction_runtime/._segments.py": "627093cc20769c580bf587ec6f4832168eb592379afb369e2d03cfff3330e596",
+        "interaction_runtime/policy.py": "39bd1399af5feefb589bdd1bb5601a580f800b182356f969b24e763292e77620",
+        "interaction_runtime/._registered_observation_v71.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/operations.py": "657f44e9b70fbdf21430a8fa74f51b3f962fc42b00e3b7a87f8dc94654938390",
+        "interaction_runtime/._operations.py": "f43738e4e74abff0a5a37e8db351806e8c8be0891e1c2fc959d28ba4642e8a15",
+        "interaction_runtime/prismatic_v73.py": "7ff6184830dd95d046db2311d72ec67dbc1d6bf938ebf6146c47037a85618542",
+        "interaction_runtime/passive_clock_v6.py": "7f74a2b7edf5c4773108383964ce0f8e5768bf292747423dd51bef99514a6581",
+        "interaction_runtime/probing_v7.py": "c4eb8e99cef5e76a29d4a2f686a2f423ea76c2b699fd4d5b8542554f0d548b32",
+        "interaction_runtime/segments.py": "9d7eb700c83924c0dc44259b1028a92931f7b8b7dcd5617062a47893f824c99f",
+        "interaction_runtime/progress.py": "ad83a8b04831809966da6b17062d443c98bc2852c043a42ea3dd4316f412238f",
+        "interaction_runtime/probing_profiles_v3.py": "a24fd2a2c1b58ce8b7b8c82ad07415e1e89a9c0cf92565abc05f3f4d993f5a00",
+        "interaction_runtime/motion.py": "284a88d37f76bdbbe288b2bacfac13e3d2c0e59df9a1f18074c3f0b124aa5a2b",
+        "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b",
+        "interaction_runtime/checkpoints.py": "41acb59b819694a689f04d0113d84dab59cb8ca8aa40589f1304b6950349355f",
+        "interaction_runtime/sensor_lighting_v1.py": "ebe636fa7397c6c503d817403684cebdb733555152ce889a8017fe68ad6663a5",
+        "interaction_runtime/serialization.py": "cd4af3fea6076e83399683e59a3fd513c61e6e1d811dc7738d6b8edb5ef7bf39",
+        "interaction_runtime/._prismatic_feedback_v7.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/._sensor_lighting_v1.py": "8d36097cf14656c7c77a7c33ac106c826339e2234005a6b85d38fb7cd7ae2418",
+        "interaction_runtime/runtime.py": "f2d333a28466780907a83431b91ef3e4cf2227c511188657aeb8b878b8504826",
+        "interaction_runtime/__init__.py": "b4ea43a6d6d65ad90f82162143b78fbebf116d4aff9ec3f9ab1ced81e66dbc36",
+        "interaction_runtime/prismatic_startup.py": "5912a178391bfdca6fae729790064d54911d74777b6995c13384d115f5af5d26",
+        "interaction_runtime/evidence.py": "7265be5a40e17cb6ad2dbda4789c67e6cf2d8549615399f92ea4e940b829e4ba",
+        "interaction_runtime/native_scene.py": "41fc33e512d365f4b48c94edbc382bba2aabe3a554f8b4ffcc3696fa5690299e",
+        "interaction_runtime/registered_observation_v71.py": "133161b6ea11413d114154560aeb35041d3e9e868c391defeb80ce266acce3da",
+        "interaction_runtime/contact_evidence_v7.py": "6c111579785ae8ac771999bdc9dcf55baf47a0802c122db00c5f67957fba874b",
+        "interaction_runtime/prismatic_microtracking_v7.py": "2b9e734dda85c067a15153f2a8bb460a74bc23878d14d602d85c37565b6fc4bb",
+        "interaction_runtime/prismatic_benchmark_v71.py": "1ecc0834e59f6b0233794161c8a5dad565b0eae48aa6ae7337907b1d572b6327",
+        "interaction_runtime/guard_regression.py": "ac55190f7f8ac62ce044852176dc0c688302189dd2a1ff996cd165ec71ad3323",
+        "interaction_runtime/articulation_v7.py": "7828daa2f71b5ed4e46675d6adfa340c06b6e73fa6eb4d855f3d0b75cb5fbfbe",
+        "interaction_runtime/fixture.py": "7ae1b0d171512fc42b3f11e37a364adba4d72926010beb749577f744cb30a4ca",
+        "interaction_runtime/prismatic_planning_v73.py": "b48708b0f8000af5921b06fda2d066b2211ac33c4ef2d7d992cac7181208014a",
+        "interaction_runtime/probing_v3.py": "8040d5143dc6df49fa8cedbf348859d403a072cc933f995621c280dcab071aa3",
+        "configs/interaction_runtime_v1.json": "9ef5bd91047d46b56d3ba61b5bb704272bbd302eccbd14fdb3673e05183a8ee9",
+        "configs/efficient_probing_v2.json": "a56d02cd5f22cca3eed3ce74610ddd8636ff678b7a1051c8ad8700aab50b9bc2",
+        "scripts/update_probing_v2_model.py": "f64b058d15ee093877495958096f0fd5a06af6d9049efa75e126cab85d6fd24e",
+        "scripts/run_efficient_probing_v2.py": "921ab6d9f812a18f8d7be98de3c41a42584040039cf800cded9765d6a470df5c",
+        "scripts/update_probing_v31_model.py": "01cc3021e562965193daf8ee8ddf192b402f8f9dc99faa74935bb0715f93f6cc",
+        "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+        "scripts/xarm_ft_v1_estimator.py": "97447fefd75b007b0afb43cb6071c7cf485073c84f5edd0007a9730f15b8c01b",
+        "scripts/xarm_wrist_ft.py": "0c85ccc6b5499b8a5a74e5adb1d4d09630c95cef1e1961be648d9a4f27b032d0",
+        "scripts/diagnose_probing_v3.py": "097293bab679aa388f8df6e65ca714923ceeaf51fcd8d687ccbbc77ad1a102c8",
+        "scripts/run_informative_probing_v31.py": "d35ba55cf5d2f6d73c16e62f3a7fe89c3d86de389dc3e93780dbc48c38966616",
+        "scripts/native_g1_wrist_input.py": "e9df8658fd790d8b3ed1964a70d39fa38551a7b612fd310661a0ad5617df83c3",
+        "scripts/agent_command_protocol_v12.py": "815f7dc664fb16f476bb64ae7c3651aa797b1e5e0bca6eba0c7045ffce957dd1",
+        "scripts/route_probing_approach_v3.py": "5e415446780ed21656ffe5eeeb6528129bf805eacaf2f7cbaa2e06345f82825d",
+        "configs/informative_probing_v3.json": "9781101491f8ea4b7160b3d837edf72a283da50574fdf7a10077c379a4d827bf",
+        "scripts/update_probing_v5_model.py": "32bac209bb5caea4bea55b03fc1fe62eed15a39c19c8ca4735209f31f3e87d45",
+        "scripts/xarm_ft_v5_estimator.py": "8923e927ed09f94f7a4e8813a07e546c592f959f65d934f79f4048f3bcf59e4c",
+        "scripts/xarm_ft_v1_scene.py": "118195d3466de150e688cbc115d4cde87b42ec1b257cf28a220025bd821570ca",
+        "scripts/run_angle_resistance_v5.py": "42cc2caa9ff1b38efaad3702ded54ad31badbd0684425e2cd646ba45d6644990",
+        "scripts/native_g1_execution_candidates.py": "82374cf63ce85f308aa88636c869f7bcf58c38c473961f0c676ca4944db5b70d",
+        "scripts/native_g1_agent_execution.py": "5ab279337794a2cb5c281c214a699628267ef01d3bca9b6d88f829048dee5bde",
+        "scripts/native_g1_panel_support.py": "ab9df98efe27faf94bfd5764a2530a3bf60f60d7b1a39a988fa718d261b9a4bf",
+        "scripts/native_g1_visual_input.py": "c5a61d06fcf1ebb69a0bc7f0a074189f3bbb89615734eb91cbb4d856c4753ca8",
+        "scripts/xarm7_native_planning.py": "3878e9b7478f80e3ad9357e8cefc2ad2cbe3ffc94c12f6c5b9cc1b4aa64448be",
+        "scripts/plan_shared_door_skill.py": "5121ceb128f544f2f29fb388c02537cd1977e6411527a1abe72051156b4fb2c2",
+        "scripts/xarm_ft_v7_scene.py": "6641027d779d50f0e01ba7f69e7eb560cbe982d29c7ac0d88360ee0ef17738f7",
+        "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+        "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+        "scripts/native_g1_prismatic_ranking.py": "4a2d5a515f55a454c6ce9d5fcd018c7bf707742176c90ae4e57617e8c674a600",
+        "scripts/prismatic_visual_v73.py": "b652b47b832dc12822e8dbf40f17fc0af3d1230510e2c6ac5dd345271924d1b8",
+        "scripts/run_prismatic_v73.py": "31caf971004548e0f844eda41050e5d79ce613c6b9c07cf3b586ca8b57389f56",
+        "scripts/launch_prismatic_v73.py": "80d645d6e2b28d892fe7e3b3d76ecfa2990b862d8c555d3296826bc822a6e272",
+        "scripts/prismatic_quality_v73.py": "f858386a8000299d9dc31ed41b377b057816aa8988d7d741b55675aab437f3f8",
+        "scripts/prismatic_inspection_v73.py": "096c51e7bc3a501c769560d1fb7450f73b5ba77e0c79fc1a609374f9f277784d",
+        "configs/prismatic_preload_v71.json": "3a57a0ec1286ef2acd92cf854478bd2b00c3c88ba12ae13e3f95ec09b1560ff8",
+        "configs/sensor_lighting_v1.json": "d0ebafb28b968e1bf823676be961b9f19618bbfc22d88731adfcf5e2545d70b4"
+      },
+      "private_evidence_index": {
+        "telemetry/index.json": "60425b3bc6da23ccc64eb4bdfa4e33d97ea1d444896299a739e50e6496d06c7f",
+        "EPISODE_RESULT.json": "ee72e07d88a0613b34637d4da783861b399b4f93dee139a725913ae2fb82c3f4",
+        "SOURCE_PROVENANCE.json": "915ace9f381a970cf30aeb709151a96da9ab4cf8e7755b705acf4ac297d23e66",
+        "model/estimate.json": "543c6bd25b58802316b6aadb97b4f8a43d80ed5f0faa0b6436e9a637ac059223"
+      },
+      "model_online": {
+        "parameters": [
+          1.8670986778737169,
+          3.446653312690425,
+          0.2989527194025474
+        ],
+        "parameter_names": [
+          "m_eff_kg",
+          "b_N_s_m",
+          "F_c_N"
+        ],
+        "conditional_std": [
+          0.21404478119272155,
+          0.29635661275464564,
+          0.0006673619649667379
+        ],
+        "scaled_condition": 170.2950382629182,
+        "support_intervals_native": [
+          [
+            0.001071114427759312,
+            0.019734994024038315
+          ]
+        ],
+        "mass_relative_error_percent": -6.645066106314157,
+        "damping_relative_error_percent": 14.888443756347503,
+        "constant_friction_relative_error_percent": -0.3490935324841904,
+        "heldout": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.002677592133881494,
+            "coordinate_rmse": 0.0001514500659822535,
+            "velocity_rmse": 0.0004155820608406152,
+            "final_coordinate_error": -0.0005657667901066976,
+            "outside_FIT_support": false,
+            "samples": 1132,
+            "duration_s": 4.712500000000006,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "unfiltered_input_sensitivity": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.023879129090766543,
+            "coordinate_rmse": 3.552643183332267e-05,
+            "velocity_rmse": 6.307853776472238e-05,
+            "final_coordinate_error": -3.084763150042538e-05,
+            "outside_FIT_support": false,
+            "samples": 1132,
+            "duration_s": 4.712500000000006,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "FIT_qualification": null,
+        "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+        "validation_used_for_fitting": false
+      },
+      "worker": {
+        "worker_script": "scripts/update_probing_v7_model.py",
+        "worker_sha256": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+        "returncode": 0,
+        "estimator_ready": true,
+        "loaded_sources": {
+          "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+          "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+          "scripts/xarm_ft_v31_estimator.py": "09133820a6d376ec2b3cd173d91abb657db1e78c9c1fce8be95cb6191980f128",
+          "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b"
+        },
+        "wall_s": 5.227388157974929
+      },
+      "Agent_operations": [
+        {
+          "sequence": 0,
+          "operation": "build_geometry"
+        },
+        {
+          "sequence": 1,
+          "operation": "validate_execution"
+        },
+        {
+          "sequence": 2,
+          "operation": "attempt_grasp_and_probe"
+        }
+      ],
+      "Agent_decisions": [
+        {
+          "sequence": 0,
+          "command": {
+            "operation": "build_geometry",
+            "reason": "Inspected fresh initial RGB/SAM/depth/local cloud: complete isolated horizontal bar and both mounts, no clipped end or semantic ambiguity in this view. Build measured-patch candidates now; unseen rear remains uncertain, no additional view justified before testing plan feasibility."
+          },
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            }
+          ]
+        },
+        {
+          "sequence": 2,
+          "command": {
+            "operation": "attempt_grasp_and_probe",
+            "native_g1_preload_request_n": 1.0,
+            "segments": [
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_OPEN_ACCEL_01",
+                "target_q": 0.02,
+                "velocity_program": "plateaus",
+                "reference_speed_m_s": 0.005,
+                "reference_acceleration_m_s2": 0.012,
+                "low_speed_fraction": 0.2,
+                "ramp_s": 0.4,
+                "plateau_s": 0.6,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    30
+                  ]
+                ],
+                "allow_target_truncation": true
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "FIT_REVERSE_SPEED_02",
+                "target_q": 0.004,
+                "velocity_program": "constant",
+                "reference_speed_m_s": 0.003,
+                "reference_acceleration_m_s2": 0.008,
+                "fit_intervals_s": [
+                  [
+                    0.6,
+                    30
+                  ]
+                ],
+                "allow_target_truncation": true,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              },
+              {
+                "coordinate_unit": "m",
+                "profile": "constant",
+                "hold": true,
+                "role": "VALIDATION_DISTINCT_03",
+                "target_q": 0.016,
+                "velocity_program": "sine",
+                "reference_speed_m_s": 0.004,
+                "reference_acceleration_m_s2": 0.01,
+                "low_speed_fraction": 0.35,
+                "period_s": 2.3,
+                "allow_target_truncation": false,
+                "continue_after": [
+                  "SAFE_PARTIAL_PROGRESS"
+                ]
+              }
+            ],
+            "reason": "Inspected fresh RGB-D and new central bar plan. Validated current-state route and native closure/CENTER sweep. Approve short20mm acceleration-rich FIT, reverse4mm and distinct complete16mm VALIDATION; no force/physics changes. Prior precontact precision stop preserved separately."
+          },
+          "inspected_private_images": [
+            {
+              "reference": "rgbd/generation_00_agent_00/agent_inspection.png",
+              "retained": false,
+              "sha256": null
+            },
+            {
+              "reference": "AGENT_GRASP_PLAN_INSPECTION.png",
+              "retained": true,
+              "sha256": "1672a25330e76034219a532209f7358ba69b2de6387579f6c7cf0d1df136abc9"
+            }
+          ]
+        }
+      ],
+      "simulation_s": 186.22916666666666,
+      "numeric_records": 15465,
+      "observation_count": 1,
+      "motion_diagnostics": [
+        {
+          "block": "FIT_OPEN_ACCEL_01_01#0",
+          "coordinate_range_m": [
+            0.0005346983671188354,
+            0.02001788094639778
+          ],
+          "qualified_samples": 3234,
+          "velocity_rms_m_s": 0.0015131151577976302,
+          "acceleration_rms_m_s2": 0.0018928936466774224,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.00017700564084061228,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0005879277097799821,
+          "command_measured_tracking_delta_m": 7.832141017338756e-05,
+          "measured_TCP_drawer_relative_delta_m": 0.0008426189277954688,
+          "pad_load_peak_N": [
+            3.1532769203186035,
+            0.025528820231556892
+          ],
+          "native_normal_rail_mean_N": -0.004311622869688153,
+          "native_friction_rail_mean_N": 0.308000399659681,
+          "wrist_force_rms_N": 0.30372392747345406,
+          "wrist_minus_native_rail_traction_RMS_N": 5.5264774527949146e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "FIT_REVERSE_SPEED_02_02#0",
+          "coordinate_range_m": [
+            0.0039547099731862545,
+            0.01985357701778412
+          ],
+          "qualified_samples": 1842,
+          "velocity_rms_m_s": 0.0020263969795235753,
+          "acceleration_rms_m_s2": 0.0007879557334486616,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.0003239002175770692,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.0005957436032638264,
+          "command_measured_tracking_delta_m": -0.00020368194921338567,
+          "measured_TCP_drawer_relative_delta_m": -0.000679388716651963,
+          "pad_load_peak_N": [
+            2.4718375205993652,
+            0.500911295413971
+          ],
+          "native_normal_rail_mean_N": -0.0001367955392770218,
+          "native_friction_rail_mean_N": -0.30563661964947964,
+          "wrist_force_rms_N": 0.3059569006256752,
+          "wrist_minus_native_rail_traction_RMS_N": 3.0382570864834653e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        },
+        {
+          "block": "VALIDATION_DISTINCT_03_03#0",
+          "coordinate_range_m": [
+            0.004150478634983301,
+            0.016078662127256393
+          ],
+          "qualified_samples": 1132,
+          "velocity_rms_m_s": 0.002421573392467331,
+          "acceleration_rms_m_s2": 0.002324002007139812,
+          "incremental_command_to_measured_TCP_rail_RMS_m": 0.00024710000634709374,
+          "incremental_measured_TCP_to_drawer_rail_RMS_m": 0.00036002549577421485,
+          "command_measured_tracking_delta_m": 0.00017536184639488361,
+          "measured_TCP_drawer_relative_delta_m": 0.0006650268958194872,
+          "pad_load_peak_N": [
+            3.440401792526245,
+            0.0
+          ],
+          "native_normal_rail_mean_N": 0.01206879728093625,
+          "native_friction_rail_mean_N": 0.2945142716379975,
+          "wrist_force_rms_N": 0.30665832809422106,
+          "wrist_minus_native_rail_traction_RMS_N": 5.133473798596987e-05,
+          "friction_API_valid_fraction": [
+            1.0,
+            1.0
+          ]
+        }
+      ],
+      "FIT_consistency": {
+        "schema": "prismatic-FIT-consistency-v73",
+        "production_estimate_modified": false,
+        "hidden_truth_used": false,
+        "validation_used": false,
+        "groups": [
+          {
+            "segment": "FIT_OPEN_ACCEL_01_01#0",
+            "bins": 135,
+            "parameters": [
+              1.869294410846289,
+              3.3802964538913454,
+              0.29896565871021374
+            ],
+            "conditional_std": [
+              0.23335108794382978,
+              0.3107323145986466,
+              0.0006841138973733041
+            ],
+            "condition": 170.19520282777745,
+            "velocity_rms_m_s": 0.0015131151577976302,
+            "acceleration_rms_m_s2": 0.0018928936466774224,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  1.491074751010976,
+                  6.9845796650101,
+                  0.28919451538183705
+                ],
+                "conditional_std": [
+                  0.1562128258922743,
+                  0.765986323078384,
+                  0.0017216656689809707
+                ],
+                "condition": 125.31605917912452
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  2.0025721278518365,
+                  3.1108385706755257,
+                  0.2997650476754692
+                ],
+                "conditional_std": [
+                  0.008823493962496792,
+                  0.03531746263736759,
+                  7.546811594900829e-05
+                ],
+                "condition": 128.6996881005841
+              },
+              {
+                "relative_interval_s": [
+                  4.0,
+                  6.0
+                ],
+                "parameters": [
+                  2.786852059411214,
+                  1.9168267605773373,
+                  0.29994175042814625
+                ],
+                "conditional_std": [
+                  0.39521577706329586,
+                  2.3396908370331513,
+                  0.0029642214588276893
+                ],
+                "condition": 348.47975519747916
+              },
+              {
+                "relative_interval_s": [
+                  6.0,
+                  8.0
+                ],
+                "parameters": [
+                  1.9899526483368308,
+                  2.958683631169614,
+                  0.3000606006395964
+                ],
+                "conditional_std": [
+                  0.014193096031049639,
+                  0.08969892315616977,
+                  0.00010449206457095484
+                ],
+                "condition": 1103.6758360827223
+              },
+              {
+                "relative_interval_s": [
+                  8.0,
+                  10.0
+                ],
+                "parameters": [
+                  1.9902982264430207,
+                  2.9389161194582476,
+                  0.30008370560803166
+                ],
+                "conditional_std": [
+                  0.015526146376410935,
+                  0.10088773916395506,
+                  0.00011708408789251589
+                ],
+                "condition": 1169.533979378042
+              },
+              {
+                "relative_interval_s": [
+                  10.0,
+                  12.0
+                ],
+                "parameters": [
+                  1.9843065362938335,
+                  2.9157747699941803,
+                  0.30011086281292093
+                ],
+                "conditional_std": [
+                  0.01660271048758077,
+                  0.11240344203191585,
+                  0.00012901360739901786
+                ],
+                "condition": 1244.417898075195
+              },
+              {
+                "relative_interval_s": [
+                  12.0,
+                  14.0
+                ],
+                "parameters": [
+                  1.9750401889197844,
+                  2.887792823912857,
+                  0.30014422876822217
+                ],
+                "conditional_std": [
+                  0.02610332708204835,
+                  0.13590608025631143,
+                  0.00015638886513164214
+                ],
+                "condition": 1302.148147102521
+              }
+            ]
+          },
+          {
+            "segment": "FIT_REVERSE_SPEED_02_02#0",
+            "bins": 77,
+            "parameters": [
+              1.8513108507622629,
+              3.046112233920727,
+              0.299892180547551
+            ],
+            "conditional_std": [
+              0.061787859990418914,
+              0.03982064972468133,
+              8.065902786508757e-05
+            ],
+            "condition": 300.75769659896326,
+            "velocity_rms_m_s": 0.0020263969795235753,
+            "acceleration_rms_m_s2": 0.0007879557334486616,
+            "local_FIT_diagnostics": [
+              {
+                "relative_interval_s": [
+                  0.0,
+                  2.0
+                ],
+                "parameters": [
+                  1.76394236215659,
+                  2.921831907187547,
+                  0.30025537298268606
+                ],
+                "conditional_std": [
+                  0.08149803565727415,
+                  0.3878629976952547,
+                  0.0009392007722113316
+                ],
+                "condition": 726.8633969904294
+              },
+              {
+                "relative_interval_s": [
+                  2.0,
+                  4.0
+                ],
+                "parameters": [
+                  1.964674913633231,
+                  2.927495769536408,
+                  0.30016826234097677
+                ],
+                "conditional_std": [
+                  0.014684231203563325,
+                  0.04647503472920966,
+                  0.0001051708436764636
+                ],
+                "condition": 416.33012299961007
+              },
+              {
+                "relative_interval_s": [
+                  4.0,
+                  6.0
+                ],
+                "parameters": [
+                  1.9415567031237184,
+                  2.6922653345578746,
+                  0.3005771399985264
+                ],
+                "conditional_std": [
+                  0.04929576899804193,
+                  0.09230663377830446,
+                  0.00017339249748003668
+                ],
+                "condition": 1148.7662739982209
+              },
+              {
+                "relative_interval_s": [
+                  6.0,
+                  8.0
+                ],
+                "parameters": [
+                  1.9191401868293143,
+                  2.7511210744198165,
+                  0.300392379700752
+                ],
+                "conditional_std": [
+                  0.05944319742906951,
+                  0.14506414168013257,
+                  0.0002271227945256425
+                ],
+                "condition": 1363.7744350350326
+              }
+            ]
+          }
+        ],
+        "FIT_bins": 212,
+        "meaning": "conditional fit uncertainty does not include changing contact/constraint loads; empirical spread below is diagnostic, not calibrated confidence",
+        "pooled_constant_diagnostic": {
+          "intervals": 0,
+          "active_controls": [
+            0
+          ],
+          "domain_native": [
+            -0.003,
+            0.22499999999999998
+          ],
+          "joint_type": "prismatic",
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "parameters": [
+            1.8670986778737169,
+            3.446653312690425,
+            0.2989527194025474
+          ],
+          "conditional_covariance": [
+            [
+              0.04581516835584005,
+              -0.02840844625186388,
+              5.7869017329572704e-05
+            ],
+            [
+              -0.028408446251863877,
+              0.08782724192340699,
+              -0.00019657184395996207
+            ],
+            [
+              5.7869017329572704e-05,
+              -0.00019657184395996207,
+              4.453719922842655e-07
+            ]
+          ],
+          "conditional_std": [
+            0.21404478119272155,
+            0.29635661275464564,
+            0.0006673619649667379
+          ],
+          "algebraic_rank": 3,
+          "scaled_singular_values": [
+            14.562112253291044,
+            0.11227713519575154,
+            0.08551107772622608
+          ],
+          "scaled_condition": 170.2950382629182,
+          "support_intervals_native": [
+            [
+              0.001071114427759312,
+              0.019734994024038315
+            ]
+          ],
+          "FIT_rmse": 0.0016814775351316623,
+          "smoothness": 0,
+          "validation_used": false,
+          "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+          "parameter_names": [
+            "m_eff_kg",
+            "b_N_s_m",
+            "F_c_N"
+          ],
+          "conditionally_supported": [
+            true,
+            true,
+            true
+          ],
+          "inertial_sensitivity_after_velocity_and_friction_projection": 0.022455413415401703,
+          "uncalibrated_total_physical_accuracy": true
+        },
+        "leave_one_FIT_out": [
+          {
+            "omitted": "FIT_OPEN_ACCEL_01_01",
+            "parameters": [
+              1.8513108507622629,
+              3.046112233920727,
+              0.299892180547551
+            ]
+          },
+          {
+            "omitted": "FIT_REVERSE_SPEED_02_02",
+            "parameters": [
+              1.869294410846289,
+              3.3802964538913454,
+              0.29896565871021374
+            ]
+          }
+        ],
+        "between_FIT_parameter_range": [
+          0.01798356008402613,
+          0.3341842199706182,
+          0.0009265218373372686
+        ],
+        "between_FIT_parameter_std": [
+          0.008991780042013064,
+          0.1670921099853091,
+          0.0004632609186686343
+        ],
+        "interpretation": "Compare between-FIT/local spread to conditional uncertainty and contact history before claiming parameter accuracy. A complete VAL trajectory alone does not establish parameter identifiability."
+      },
+      "qualified_offline_replay_not_online_replacement": {
+        "parameters": [
+          1.9980729331118918,
+          3.0246015477333565,
+          0.29996477696175755
+        ],
+        "parameter_names": [
+          "m_eff_kg",
+          "b_N_s_m",
+          "F_c_N"
+        ],
+        "conditional_std": [
+          0.0065784775438593015,
+          0.013178215807428898,
+          2.354401397283614e-05
+        ],
+        "scaled_condition": 168.89575732065182,
+        "support_intervals_native": [
+          [
+            0.0020262648423130694,
+            0.01971537323997301
+          ]
+        ],
+        "mass_relative_error_percent": -0.09635334440540877,
+        "damping_relative_error_percent": 0.8200515911118922,
+        "constant_friction_relative_error_percent": -0.011741012747479296,
+        "heldout": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.002823355826069731,
+            "coordinate_rmse": 0.00015380566657897046,
+            "velocity_rmse": 0.0004410104261049181,
+            "final_coordinate_error": -0.0005730041301943746,
+            "outside_FIT_support": false,
+            "samples": 1132,
+            "duration_s": 4.712500000000006,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "unfiltered_input_sensitivity": {
+          "VALIDATION_DISTINCT_03_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.023892430554976044,
+            "coordinate_rmse": 2.40298209242501e-05,
+            "velocity_rmse": 4.474594198356079e-05,
+            "final_coordinate_error": -6.602154826458421e-05,
+            "outside_FIT_support": false,
+            "samples": 1132,
+            "duration_s": 4.712500000000006,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "FIT_qualification": {
+          "rule": "existing velocity resolution across complete unchanged SG support",
+          "segments": [
+            {
+              "applied": true,
+              "block": "FIT_OPEN_ACCEL_01_01#0",
+              "original_valid_samples": 3234,
+              "qualified_samples": 2842,
+              "excluded_samples": 392,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": true,
+              "block": "FIT_REVERSE_SPEED_02_02#0",
+              "original_valid_samples": 1842,
+              "qualified_samples": 1797,
+              "excluded_samples": 45,
+              "native_velocity_resolution": 0.0001,
+              "filter_support_radius_samples": 62,
+              "tag": "complete SG support must contain resolved sliding in one direction",
+              "execution_status_unchanged": true
+            },
+            {
+              "applied": false,
+              "reason": "complete independent VALIDATION unchanged"
+            }
+          ],
+          "validation_mask_unchanged": true,
+          "filter_math_changed": false,
+          "tool_compensation_count": 1,
+          "hidden_truth_used": false
+        },
+        "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+        "validation_used_for_fitting": false
+      },
+      "qualified_offline_replay_sha256": "7deadd2bfa97aacff0584c8fe2066b2635ca4ccda989f39583f0950886749e90"
+    }
+  ],
+  "interpretation": "All attempts preserved; selected engineering successes are not an unbiased benchmark rate. Authored references are not independently measured effective PhysX dynamics."
+}
