@@ -66,6 +66,25 @@ def plot(batch):
             t,q,qp=forward(d,m);ax.plot(t,q*1000,c='k',label='Measured');ax.plot(t,qp*1000,'--',label='Free forward, one initial state');ax.text(.02,.02,f'{t[-1]:.3f}s / {len(t)} samples',transform=ax.transAxes,fontsize=7)
         ax.grid(alpha=.2);ax.legend(fontsize=7)
     fig.suptitle('Independent held-out wrist-effort-driven predictions; no later state correction; SG boundaries excluded');fig.tight_layout();fig.savefig(out/'heldout_forward.png',dpi=150);plt.close(fig)
+    # Raw numeric samples are drawn directly; brief normal-load peaks are not
+    # averaged away. This is a derived figure, not a second telemetry archive.
+    from diagnose_probing_v3 import columns
+    fig,axes=plt.subplots(4,2,figsize=(13,12))
+    for r,ax in zip(rows,axes.flat):
+        a,index=columns(batch/'episodes'/r['episode_id']);t=a['t']-a['t'][0]
+        ax.plot(t,a['joint_q']*1000,c='k',lw=.8,label='Actual drawer')
+        right=ax.twinx();right.plot(t,a['pad_load'][:,0],c='tab:blue',lw=.45,label='L raw normal')
+        right.plot(t,a['pad_load'][:,1],c='tab:orange',lw=.45,label='R raw normal')
+        for s in index['segments']:
+            ix=np.flatnonzero(a['segment']==s['id'])
+            if not len(ix):continue
+            ok=(s.get('result')or{}).get('status')=='TARGET_REACHED'
+            ax.axvspan(t[ix[0]],t[ix[-1]],color=('tab:green' if s['role'].startswith('VALIDATION') else 'tab:blue') if ok else 'tab:red',alpha=.10)
+        ax.set(title=r['episode_id'],xlabel='Actual simulation time (s)',ylabel='Drawer (mm)');right.set_ylabel('Pad normal reports (N)');ax.grid(alpha=.2)
+        if ax is axes.flat[0]:
+            h,l=ax.get_legend_handles_labels();hh,ll=right.get_legend_handles_labels();ax.legend(h+hh,l+ll,fontsize=6,loc='upper left')
+    fig.suptitle('All attempts: measured motion and raw pad normals | shaded FIT / VALIDATION / interrupted\nNo positive normal report does not prove separation; normals are not a complete wrench',fontsize=11)
+    fig.tight_layout();fig.savefig(out/'contact_recovery.png',dpi=140);plt.close(fig)
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('batch',type=Path);plot(p.parse_args().batch)

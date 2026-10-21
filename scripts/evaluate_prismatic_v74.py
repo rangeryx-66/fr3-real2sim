@@ -68,6 +68,9 @@ def evaluate(batch,registration,private):
     rows=[]
     for e in reg['episodes']:
         p=batch/'episodes'/e['episode_id'];case=cases[e['configuration_index']];trace=read(p/'AGENT_ACTION_TRACE.json') if (p/'AGENT_ACTION_TRACE.json').exists() else []
+        # Registered launchers keep jobs in the batch, not inside each episode.
+        job_path=batch/'jobs'/(e['episode_id']+'.json');job=read(job_path)
+        if sha(job_path)!=read(p/'PROCESS.json')['job_sha256']:raise ValueError('Executed job changed')
         attempts=[x for x in trace if x.get('command',{}).get('operation')=='attempt_grasp_and_probe']
         physical=[x for x in attempts if x['result'].get('physical_grasp_started')]
         results=[x['result'] for x in attempts];segments=[dict(s,role=a['command']['segments'][i]['role']) for a in attempts for i,s in enumerate(a['result'].get('segments',[]))]
@@ -131,7 +134,7 @@ def evaluate(batch,registration,private):
             row['cross_FIT_consistency']={k:c.get(k) for k in ('between_FIT_parameter_range','between_FIT_parameter_std','leave_one_FIT_out','meaning')}
             row['cross_FIT_consistency']['groups']=[{k:g.get(k) for k in ('segment','parameters','conditional_std','condition','velocity_rms_m_s','acceleration_rms_m_s2')} for g in c.get('groups',[])]
         if f.exists() and read(f).get('selected'):
-            model=read(f);authored=read(p/'HIDDEN_AUTHORED_PHYSICS.json');job=read(p/'job.json')
+            model=read(f);authored=read(p/'HIDDEN_AUTHORED_PHYSICS.json')
             if authored['configuration']!=case:raise ValueError('Scene used a different registered configuration')
             mass,extra=authored_inertial_reference(authored,job['asset_root'],'prismatic')
             row['authored']=dict(mass_kg=mass,damping_N_s_m=case['b'],resistance_law=case['law'],unrandomized_moving_bodies=extra,reference='authored rigid-body combination; not independently measured PhysX effective mass')
@@ -157,7 +160,7 @@ def evaluate(batch,registration,private):
                     heldout_motion={d['block_id']:heldout_metrics(d,m) for d in pieces if d['segments'][0].startswith('VALIDATION')})
             if sha(f)!=row['online_model_sha256']:raise ValueError('Evaluator modified online result')
         elif (p/'HIDDEN_AUTHORED_PHYSICS.json').exists():
-            truth=read(p/'HIDDEN_AUTHORED_PHYSICS.json');mass,extra=authored_inertial_reference(truth,read(p/'job.json')['asset_root'],'prismatic');row['authored']=dict(mass_kg=mass,damping_N_s_m=case['b'],resistance_law=case['law'],unrandomized_moving_bodies=extra)
+            truth=read(p/'HIDDEN_AUTHORED_PHYSICS.json');mass,extra=authored_inertial_reference(truth,job['asset_root'],'prismatic');row['authored']=dict(mass_kg=mass,damping_N_s_m=case['b'],resistance_law=case['law'],unrandomized_moving_bodies=extra)
         rows.append(row)
     summary={k:dict(successes=sum(bool(r.get(k)) for r in rows),denominator=8) for k in ('initial_grasp','physical_pull_observed','physical_reverse_observed','pull_target_complete','reverse_target_complete','complete_validation','safe_park')}
     out=dict(schema='v74-sealed-blind-evaluation',registered_episodes=8,configuration_commitment=reg['hidden_configuration_sha256'],truth_reveal_UTC=reveal_UTC,online_models_modified=False,rows=rows,stage_rates=summary,scope='four development objects, fresh independent dynamics; not unseen-object transfer or a V7.2 rerun')
