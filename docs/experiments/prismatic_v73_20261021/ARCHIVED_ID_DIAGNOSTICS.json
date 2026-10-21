@@ -1,0 +1,448 @@
+{
+  "45290_0": {
+    "hidden_truth_used": false,
+    "production_outputs_modified": false,
+    "FIT_bins": 345,
+    "VALIDATION_bins": 72,
+    "regressor_correlation": [
+      [
+        0.9999999999999998,
+        0.00683735979195779,
+        0.04182966621151147
+      ],
+      [
+        0.00683735979195779,
+        1.0,
+        0.90861156370765
+      ],
+      [
+        0.04182966621151147,
+        0.9086115637076501,
+        1.0
+      ]
+    ],
+    "measurement_stage_unconstrained_coefficients": {
+      "sensor_world": [
+        5.432437544522817,
+        5.7420788228901,
+        0.25991809216045525
+      ],
+      "tool_gravity": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "tool_inertia": [
+        -0.7931317290742868,
+        0.05072534439520611,
+        -0.00010765320652680876
+      ]
+    },
+    "leave_one_FIT_trajectory_out": [
+      {
+        "removed": "FIT_OPEN_ACCEL_01",
+        "parameters": [
+          4.732526895108461,
+          5.5900089134516975,
+          0.2591828439476252
+        ],
+        "condition": 85.05213048206996,
+        "heldout": {
+          "VALIDATION_DISTINCT_OPEN_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.006596141011702563,
+            "coordinate_rmse": 0.0032998355941298275,
+            "velocity_rmse": 0.0010041842255664327,
+            "final_coordinate_error": 0.006351135989075919,
+            "outside_FIT_support": false,
+            "samples": 1701,
+            "duration_s": 7.083333333333314,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      {
+        "removed": "FIT_OPEN_ACCEL_02",
+        "parameters": [
+          2.355590194508637,
+          4.180938468897667,
+          0.26904932835007966
+        ],
+        "condition": 132.6635778440602,
+        "heldout": {
+          "VALIDATION_DISTINCT_OPEN_04#0": {
+            "status": "predicted",
+            "effort_rmse": 5.434185498689731e-05,
+            "coordinate_rmse": 3.1423452217543665e-05,
+            "velocity_rmse": 9.87128417649157e-05,
+            "final_coordinate_error": -4.080858598821263e-05,
+            "outside_FIT_support": false,
+            "samples": 1701,
+            "duration_s": 7.083333333333314,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      {
+        "removed": "FIT_REVERSE_SPEED_03",
+        "parameters": [
+          4.8508561209821135,
+          8.325035571198343,
+          0.24810173828164261
+        ],
+        "condition": 76.7473629377675,
+        "heldout": {
+          "VALIDATION_DISTINCT_OPEN_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.010495494702075111,
+            "coordinate_rmse": 0.004074684979622184,
+            "velocity_rmse": 0.0011505864135088954,
+            "final_coordinate_error": 0.00756167991717651,
+            "outside_FIT_support": false,
+            "samples": 1701,
+            "duration_s": 7.083333333333314,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      }
+    ],
+    "diagnostic_per_trajectory_offset": {
+      "parameters": [
+        3.720017372371053,
+        8.002612816790469,
+        0.3756412884859829
+      ],
+      "offsets": {
+        "FIT_OPEN_ACCEL_01": -0.11726473315036735,
+        "FIT_OPEN_ACCEL_02": -0.1275864441804141,
+        "FIT_REVERSE_SPEED_03": 0.11401477206886666
+      },
+      "rank": 6,
+      "columns": 6,
+      "FIT_rmse_N": 0.017278672146329235,
+      "not_a_production_model": true
+    },
+    "complete_validation_original": {
+      "VALIDATION_DISTINCT_OPEN_04#0": {
+        "status": "predicted",
+        "effort_rmse": 0.005627001156641601,
+        "coordinate_rmse": 0.0025580901190625834,
+        "velocity_rmse": 0.0008085748225845984,
+        "final_coordinate_error": 0.004947052452336682,
+        "outside_FIT_support": false,
+        "samples": 1701,
+        "duration_s": 7.083333333333314,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        },
+        "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+      }
+    },
+    "segments": [
+      {
+        "block": "FIT_OPEN_ACCEL_01#0",
+        "FIT": true,
+        "velocity_rms_m_s": 0.0028738498787810457,
+        "acceleration_rms_m_s2": 0.0023657434087417124,
+        "command_measured_tracking_delta_m": 0.000271054065905163,
+        "measured_TCP_drawer_relative_delta_m": 0.0012338788595293027,
+        "wrist_minus_native_traction_rms_N": 6.5355880532458e-05,
+        "own_diagnostic_parameters": [
+          2.3441833309922364,
+          4.201604614358591,
+          0.2689681421047601
+        ],
+        "scaled_condition": 133.47333958377752
+      },
+      {
+        "block": "FIT_OPEN_ACCEL_02#0",
+        "FIT": true,
+        "velocity_rms_m_s": 0.0029978002254175576,
+        "acceleration_rms_m_s2": 0.00809096016159404,
+        "command_measured_tracking_delta_m": 0.00022568838897729648,
+        "measured_TCP_drawer_relative_delta_m": 0.001485736493012424,
+        "wrist_minus_native_traction_rms_N": 0.00027861583102952586,
+        "own_diagnostic_parameters": [
+          4.9937934256648795,
+          8.744221220671545,
+          0.24219728854114914
+        ],
+        "scaled_condition": 66.36092821452748
+      },
+      {
+        "block": "FIT_REVERSE_SPEED_03#0",
+        "FIT": true,
+        "velocity_rms_m_s": 0.0020236080561743725,
+        "acceleration_rms_m_s2": 0.0018103058779637758,
+        "command_measured_tracking_delta_m": 9.041760840394764e-05,
+        "measured_TCP_drawer_relative_delta_m": -5.664870037069836e-05,
+        "wrist_minus_native_traction_rms_N": 2.630819191134412e-05,
+        "own_diagnostic_parameters": [
+          2.3635237869830403,
+          4.190699878135597,
+          0.26904069001818554
+        ],
+        "scaled_condition": 165.94190128586214
+      },
+      {
+        "block": "VALIDATION_DISTINCT_OPEN_04#0",
+        "FIT": false,
+        "velocity_rms_m_s": 0.0026814946588117473,
+        "acceleration_rms_m_s2": 0.0015362078120516017,
+        "command_measured_tracking_delta_m": 0.000531386881877205,
+        "measured_TCP_drawer_relative_delta_m": 0.0002410677838099451,
+        "wrist_minus_native_traction_rms_N": 3.35869569495796e-05,
+        "own_diagnostic_parameters": [
+          2.3617552700269826,
+          4.152130041306787,
+          0.2691043306493213
+        ],
+        "scaled_condition": 146.99169603922084
+      }
+    ]
+  },
+  "45290_1": {
+    "hidden_truth_used": false,
+    "production_outputs_modified": false,
+    "FIT_bins": 324,
+    "VALIDATION_bins": 45,
+    "regressor_correlation": [
+      [
+        1.0,
+        0.028200261351285193,
+        0.03730831433762448
+      ],
+      [
+        0.028200261351285193,
+        0.9999999999999998,
+        0.9180382566705413
+      ],
+      [
+        0.03730831433762448,
+        0.9180382566705414,
+        1.0
+      ]
+    ],
+    "measurement_stage_unconstrained_coefficients": {
+      "sensor_world": [
+        2.47053700762051,
+        3.340617377222319,
+        0.4235359861395002
+      ],
+      "tool_gravity": [
+        2.4744250815099775e-15,
+        3.779857398337867e-12,
+        -6.094365788571622e-15
+      ],
+      "tool_inertia": [
+        -0.7227720617404344,
+        -0.0031783694439373044,
+        -1.1131572205486017e-06
+      ]
+    },
+    "leave_one_FIT_trajectory_out": [
+      {
+        "removed": "FIT_OPEN_ACCEL_01",
+        "parameters": [
+          2.029503280873404,
+          3.793716855547844,
+          0.4245975867489612
+        ],
+        "condition": 88.06715462748272,
+        "heldout": {
+          "VALIDATION_DISTINCT_OPEN_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.014329074504220128,
+            "coordinate_rmse": 0.006104193559987018,
+            "velocity_rmse": 0.0022832202394385552,
+            "final_coordinate_error": -0.008237525970953528,
+            "outside_FIT_support": true,
+            "samples": 1055,
+            "duration_s": 4.3916666666666515,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      {
+        "removed": "FIT_REVERSE_SPEED_02",
+        "parameters": [
+          1.6636200592881651,
+          2.0548079411014144,
+          0.4285130977561775
+        ],
+        "condition": 97.60868116601256,
+        "heldout": {
+          "VALIDATION_DISTINCT_OPEN_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.013609029603371878,
+            "coordinate_rmse": 0.0062375477374193855,
+            "velocity_rmse": 0.0023554404721747024,
+            "final_coordinate_error": -0.008332630835618103,
+            "outside_FIT_support": false,
+            "samples": 1055,
+            "duration_s": 4.3916666666666515,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      },
+      {
+        "removed": "FIT_OPTIONAL_EXPANSION_AFTER_VALIDATION_04",
+        "parameters": [
+          1.3130793212402767,
+          1.1350526317195087,
+          0.42296363099383827
+        ],
+        "condition": 103.54673399789338,
+        "heldout": {
+          "VALIDATION_DISTINCT_OPEN_03#0": {
+            "status": "predicted",
+            "effort_rmse": 0.010590804242411982,
+            "coordinate_rmse": 0.005293900968148949,
+            "velocity_rmse": 0.0033274735500385447,
+            "final_coordinate_error": -0.002539071301180265,
+            "outside_FIT_support": false,
+            "samples": 1055,
+            "duration_s": 4.3916666666666515,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        }
+      }
+    ],
+    "diagnostic_per_trajectory_offset": {
+      "parameters": [
+        1.768916639815658,
+        1.7786172988001279,
+        562.5267119966719
+      ],
+      "offsets": {
+        "FIT_OPEN_ACCEL_01": -562.1084198779181,
+        "FIT_REVERSE_SPEED_02": 562.1025853966689,
+        "FIT_OPTIONAL_EXPANSION_AFTER_VALIDATION_04": -562.0934963383634
+      },
+      "rank": 6,
+      "columns": 6,
+      "FIT_rmse_N": 0.026730601968401747,
+      "not_a_production_model": true
+    },
+    "complete_validation_original": {
+      "VALIDATION_DISTINCT_OPEN_03#0": {
+        "status": "predicted",
+        "effort_rmse": 0.012706783182361226,
+        "coordinate_rmse": 0.005910665678299658,
+        "velocity_rmse": 0.0022884415473485966,
+        "final_coordinate_error": -0.007241843722458849,
+        "outside_FIT_support": false,
+        "samples": 1055,
+        "duration_s": 4.3916666666666515,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        },
+        "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+      }
+    },
+    "segments": [
+      {
+        "block": "FIT_OPEN_ACCEL_01#0",
+        "FIT": true,
+        "velocity_rms_m_s": 0.003190538040985325,
+        "acceleration_rms_m_s2": 0.0031797614207726135,
+        "command_measured_tracking_delta_m": 0.0002511492718488273,
+        "measured_TCP_drawer_relative_delta_m": 0.0009477013821776459,
+        "wrist_minus_native_traction_rms_N": 6.870122929987475e-05,
+        "own_diagnostic_parameters": [
+          0.8039190520465902,
+          2.363149367467516,
+          0.4166015134511305
+        ],
+        "scaled_condition": 105.9498746676232
+      },
+      {
+        "block": "FIT_REVERSE_SPEED_02#0",
+        "FIT": true,
+        "velocity_rms_m_s": 0.001990138653480645,
+        "acceleration_rms_m_s2": 0.0019066431962585077,
+        "command_measured_tracking_delta_m": 8.315668384617503e-05,
+        "measured_TCP_drawer_relative_delta_m": -2.507066649837242e-07,
+        "wrist_minus_native_traction_rms_N": 3.3241698699175505e-05,
+        "own_diagnostic_parameters": [
+          2.4583131274248857,
+          5.274650828410437,
+          0.41714664131182067
+        ],
+        "scaled_condition": 161.67274891795105
+      },
+      {
+        "block": "VALIDATION_DISTINCT_OPEN_03#0",
+        "FIT": false,
+        "velocity_rms_m_s": 0.0028292086336883324,
+        "acceleration_rms_m_s2": 0.0019733408027015247,
+        "command_measured_tracking_delta_m": 0.0003802577087704817,
+        "measured_TCP_drawer_relative_delta_m": 0.00023287306183483736,
+        "wrist_minus_native_traction_rms_N": 0.00011820533271255866,
+        "own_diagnostic_parameters": [
+          0.38697165336744654,
+          4.815001623423722,
+          0.41335642243088744
+        ],
+        "scaled_condition": 152.17934439790815
+      },
+      {
+        "block": "FIT_OPTIONAL_EXPANSION_AFTER_VALIDATION_04#0",
+        "FIT": true,
+        "velocity_rms_m_s": 0.0034557337476322655,
+        "acceleration_rms_m_s2": 0.0030949162543482517,
+        "command_measured_tracking_delta_m": 2.5054963796733443e-05,
+        "measured_TCP_drawer_relative_delta_m": 1.5512436764231197e-05,
+        "wrist_minus_native_traction_rms_N": 4.8539394104485554e-05,
+        "own_diagnostic_parameters": [
+          1.9617211166694033,
+          1.0478340027117305,
+          0.4356020699351752
+        ],
+        "scaled_condition": 95.92008097601163
+      }
+    ]
+  }
+}

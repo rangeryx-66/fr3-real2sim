@@ -1,6 +1,7 @@
 # V7.3 — isolated prismatic engineering
 
-Status: IN PROGRESS; no new blind benchmark launched. V7.2 remains unchanged.
+Status: NOT READY; engineering in progress, no new blind benchmark launched.
+V7.2 remains unchanged. Three cross-object physical regressions remain outstanding.
 
 ## Scope and baseline
 
@@ -110,6 +111,48 @@ All attempts, including precontact failures, will be tabulated here. No selected
 engineering success rate is presented as a population benchmark. Each fresh scene
 uses wrist RGB-D, automatic observed-geometry grasping and actual native contacts.
 Finite action sequences predeclare FIT and independent VALIDATION before motion.
+
+| Engineering attempt | Actual acquisitions | Pull / reverse / independent VAL travel | Termination |
+|---|---:|---|---|
+|45746_fresh_00|0|N/A|Precontact strict joint-margin stop caused by command precision; preserved, no reset|
+|45746_fresh_01|1|20.018 /16.063 /12.124mm; all TARGET_REACHED|Guarded release and parking verified; finish requested, receipt/final cleanup awaiting SSH recovery|
+|27044,19179,45290 fresh tests|not launched|N/A|Pending server access; no replacement or invented outcomes|
+
+45746_fresh_01 used fresh full-bar wrist geometry, common1.0N requested preload,
+an automatically selected central grasp and original one-second hold. Measured
+native normal peaks during the final contact inspection were3.440/1.298N, not
+the requested preload. Final validation included absent right-pad positive-normal
+reports while actual progress continued; no new unilateral-contact veto was added.
+The selected production constant estimate was mass1.86710±0.21404kg,
+damping3.44665±0.29636N s/m and Coulomb0.298953±0.000667N (conditional standard
+errors, not a complete uncertainty budget). The two individual FIT masses were
+1.86929 and1.85131kg; damping3.38030 and3.04611N s/m. FIT conditioning remained
+170–301, so velocity/damping separation remains a limitation.
+
+The complete independent VALIDATION action took7.729s simulation and moved
+12.124mm. Its eligible segment-local derivative-supported prediction interval
+was4.713s/1132samples, with effort RMSE0.002678N, free position RMSE0.15145mm,
+velocity RMSE0.41558mm/s and final position error−0.56577mm. The action was fully
+executed; derivative boundaries/startup exclusions are not relabelled FIT.
+Authored mass comparison awaits post-episode readback; no true mass is inferred
+from agreement between the two FIT estimates. Engineering C/b references were
+0.3N/3N s/m, giving−0.35%/+14.89% respective estimate differences.
+
+After this test's safe park, the attempted finish command and existing SSH multiplex
+channel stopped responding. Independent fresh SSH connections to the configured
+entry also timed out during banner exchange. No next actor is launched without
+confirming owned-process cleanup. This is an infrastructure blocker, not a
+27044/19179/45290 physical failure or a completed cross-object validation.
+The hung local publisher/SCP clients were identified and stopped so stale commands
+cannot be silently delivered later. The original finite unloaded-decision deadline
+and launcher watchdog remain the server-side termination fallback; their execution
+cannot be claimed verified until access returns.
+
+39 deterministic prismatic regressions passed, including exact reproduction of
+the float32 boundary crossing, preserved native collision rejection, CENTER bound
+and command-bias reachability. The actual native45746 test subsequently passed
+the previously failing precontact transition. No full revolute episode was run;
+preservation is audited through71+22 original hashes and isolated activation.
 
 ## Readiness and limitations
 

@@ -171,6 +171,10 @@ class PrismaticOperationsV73(PreloadOperations):
         """Small precomputed references instead of repeating expensive inspection."""
         folder=Path(self.g['agent_observations'][-1]['folder']) if self.g['agent_observations'] else None
         catalog=self.g.get('recovery_candidate_catalog',{})
+        model_path=self.r.output/'model/estimate.json';quality_path=self.r.output/'model/FIT_CONSISTENCY_V73.json'
+        model=json.loads(model_path.read_text()) if model_path.exists() else {};quality=json.loads(quality_path.read_text()) if quality_path.exists() else {}
+        selected=model.get('selected',{})
+        model_summary=dict(status=model.get('status','pending'),parameters=selected.get('parameters'),conditional_std=selected.get('conditional_std'),condition=selected.get('scaled_condition'),validation_bins=model.get('validation_bins'),between_FIT_parameter_range=quality.get('between_FIT_parameter_range'),FIT_groups=[{k:r.get(k) for k in ('segment','parameters','conditional_std','velocity_rms_m_s','acceleration_rms_m_s2')} for r in quality.get('groups',[])])
         summary=None if result is None else {k:result[k] for k in ('reason','status','plan','geometry','executed','acquisition','safe_exit','candidate_family','segments','failed_contact_candidate') if k in result}
         if summary and isinstance(summary.get('safe_exit'),dict):summary['safe_exit']={k:summary['safe_exit'][k] for k in ('safe','reason') if k in summary['safe_exit']}
         if summary and 'segments' in summary:summary['segments']=[{k:s[k] for k in ('status','reason','joint_coordinate','gain_native','elapsed_sim_s','requested_target_reached') if k in s} for s in summary['segments']]
@@ -179,7 +183,7 @@ class PrismaticOperationsV73(PreloadOperations):
             fresh_rgb=str(folder/'rgb.png') if folder else None,RGBD_board=str(folder/'agent_inspection.png') if folder else None,
             contact_board=str(self.r.output/'CONTACT_FEEDBACK.png'),contact_geometry=str(self.r.output/'CONTACT_GEOMETRY.png'),plan_board=str(self.r.output/'AGENT_GRASP_PLAN_INSPECTION.png'),
             candidate_catalog_sha256=catalog.get('catalog_sha256'),eligible_candidates=[x for x in catalog.get('candidates',[]) if x['eligible']][:4],
-            last_result=summary,model_reference=str(self.r.output/'model/estimate.json'),FIT_consistency_reference=str(self.r.output/'model/FIT_CONSISTENCY_V73.json'),events=self.r.events[-8:],hard_latch=self.r.supervisor.latched,
+            last_result=summary,model_summary=model_summary,model_reference=str(model_path),FIT_consistency_reference=str(quality_path),events=self.r.events[-8:],hard_latch=self.r.supervisor.latched,
             instruction='Inspect fresh images and feedback, choose feasible recovery promptly; low-level safety remains authoritative. No unobserved GT pose.'))
 
 
