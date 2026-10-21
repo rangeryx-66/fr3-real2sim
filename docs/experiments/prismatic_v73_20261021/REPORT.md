@@ -318,3 +318,9 @@ Retained private evidence:1084 files,192,373,134bytes across all five engineerin
 records, including the precontact failure; private index SHA256
 `46f0399499688ef4fd205693889a5d87ecf038165d81507bac447fb19f6ace6a`.
 See [integrity/cleanup summary](EVIDENCE_INTEGRITY_SUMMARY.json).
+
+New data-only registration: [eight NEW V7.4 slots](../prismatic_v74_registration_20261021/README.md),
+public implementation `aa265c9d312d9f6c8b6b26cecb63667f861dc69b` with identical executable
+source hashes to the preserved initial private registration commit. Hidden commitment:
+`03fe71771eef18fcb8fb22ccbfb4e6cb1b1d261bc104c6fac30314d7c546bc29`.
+No seed/value was exported and no registered actor/episode was launched.
