@@ -55,6 +55,10 @@ def evaluate(batch,registration,private):
         if Path('/proc') .joinpath(str(pid)).exists():raise ValueError('Owned actor still alive')
     if sha(private)!=reg['hidden_configuration_sha256']:raise ValueError('Hidden commitment changed')
     # First access to parameter values occurs below, after the full-batch guard.
+    access=batch/'TRUTH_ACCESS.json'
+    reveal_UTC=(read(access)['accessed_UTC'] if access.exists() else datetime.datetime.now(datetime.timezone.utc).isoformat())
+    atomic_json(access,dict(accessed_UTC=reveal_UTC,all_eight_online_seals_verified=True,
+        hidden_truth_used_for_online_decisions=False,evaluation_complete=False))
     cases=read(private)
     from evaluate_cross_object_v7 import authored_inertial_reference
     from diagnose_probing_v3 import columns
@@ -156,8 +160,8 @@ def evaluate(batch,registration,private):
             truth=read(p/'HIDDEN_AUTHORED_PHYSICS.json');mass,extra=authored_inertial_reference(truth,read(p/'job.json')['asset_root'],'prismatic');row['authored']=dict(mass_kg=mass,damping_N_s_m=case['b'],resistance_law=case['law'],unrandomized_moving_bodies=extra)
         rows.append(row)
     summary={k:dict(successes=sum(bool(r.get(k)) for r in rows),denominator=8) for k in ('initial_grasp','physical_pull_observed','physical_reverse_observed','pull_target_complete','reverse_target_complete','complete_validation','safe_park')}
-    out=dict(schema='v74-sealed-blind-evaluation',registered_episodes=8,configuration_commitment=reg['hidden_configuration_sha256'],truth_reveal_UTC=datetime.datetime.now(datetime.timezone.utc).isoformat(),online_models_modified=False,rows=rows,stage_rates=summary,scope='four development objects, fresh independent dynamics; not unseen-object transfer or a V7.2 rerun')
-    (batch/'public_derived').mkdir(exist_ok=True);atomic_json(batch/'public_derived/METRICS.json',result_packet(out));atomic_json(batch/'TRUTH_ACCESS.json',dict(accessed_UTC=out['truth_reveal_UTC'],all_eight_online_seals_verified=True,hidden_truth_used_for_online_decisions=False));return out
+    out=dict(schema='v74-sealed-blind-evaluation',registered_episodes=8,configuration_commitment=reg['hidden_configuration_sha256'],truth_reveal_UTC=reveal_UTC,online_models_modified=False,rows=rows,stage_rates=summary,scope='four development objects, fresh independent dynamics; not unseen-object transfer or a V7.2 rerun')
+    (batch/'public_derived').mkdir(exist_ok=True);atomic_json(batch/'public_derived/METRICS.json',result_packet(out));atomic_json(access,dict(accessed_UTC=reveal_UTC,all_eight_online_seals_verified=True,hidden_truth_used_for_online_decisions=False,evaluation_complete=True));return out
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--batch',type=Path,required=True);p.add_argument('--registration',type=Path,required=True);p.add_argument('--private',type=Path,required=True);a=p.parse_args();r=evaluate(a.batch,a.registration,a.private);print(json.dumps(r['stage_rates']))
