@@ -26,7 +26,8 @@ def author(stage, output, root='/World/Piper', base_body='link_base'):
     fixed=[p for p in stage.Traverse() if str(p.GetPath()).startswith(root+'/')
            and p.IsA(UsdPhysics.FixedJoint)
            and list(UsdPhysics.Joint(p).GetBody1Rel().GetTargets())==[link.GetPath()]
-           and not UsdPhysics.Joint(p).GetBody0Rel().GetTargets()]
+           and all(str(t)==root and not stage.GetPrimAtPath(t).HasAPI(UsdPhysics.RigidBodyAPI)
+                   for t in UsdPhysics.Joint(p).GetBody0Rel().GetTargets())]
     if len(fixed)!=1:raise RuntimeError('UNIQUE_WORLD_BASE_MOUNT_REQUIRED')
     W=np.asarray(cache.GetLocalToWorldTransform(link)).T
     parent=np.asarray(cache.GetLocalToWorldTransform(stage.GetPrimAtPath(root))).T
