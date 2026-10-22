@@ -15,6 +15,14 @@ def runtime_class(original):
             def assemble(stage,g,case,output):
                 audit=original_author(stage,g,case,output)
                 author(stage,output)
+                # This object was wrapped before the mount existed and cached
+                # /Geometry/world as its tensor root. Reinitialize the SAME
+                # scene-registered wrapper before the first world.reset(),
+                # without position/orientation or xform reset. All caller and
+                # Scene references retain the one explicit robot object.
+                from isaacsim.core.prims import SingleArticulation
+                SingleArticulation.__init__(g['robot'],prim_path='/World/Piper',
+                    name='piper',reset_xform_properties=False)
                 return audit
             # Explicit constructor-only bindings: never hot-swap an active actor.
             # NativeDrive still owns every arm/G1 command and its exact caps.
