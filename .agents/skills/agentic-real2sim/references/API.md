@@ -4,6 +4,10 @@ Transport: CLI `command --episode DIR --sequence N --json FILE`. Atomic JSON pub
 
 All operations use `{"operation":"NAME", ...}`.
 
+After a plan completes, render its actual observed points and native fingers without historical configuration reads:
+`python -m agentic_interaction_v8.inspect_plan --episode OUTPUT`.
+Inspect `AGENT_GRASP_PLAN_INSPECTION.png`; its provenance binds current plan/point-cloud hashes and episode robot IO. This read-only helper does not approve execution.
+
 | Operation | Inputs / preconditions | Output / meaning |
 |---|---|---|
 | observe | unloaded, no hard latch | fresh RGB-D/SAM, inspection board, generation and measured camera/robot state |

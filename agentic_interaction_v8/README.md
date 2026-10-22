@@ -11,3 +11,5 @@ Reproducible Agent IO/packaging around the **unchanged** xArm7/native-G1 physica
 - Package audits, smoke outcomes and portability limits: [V8 report](../docs/experiments/skill_v80_20261023/REPORT.md). Paper evaluation remains [a draft](../docs/experiments/skill_v80_20261023/PAPER_PROTOCOL_DRAFT.md), not a launch instruction.
 
 This is known-kinematics/state, registered-station simulation with ideal virtual F/T and an unverified simulated wrist mount. Native contact diagnostics are not full measured wrenches/pressure areas or hardware safety evidence. Short-stroke reproduction cannot establish full-range physical-twin accuracy. No passive-camera/hidden-dynamics input to Agent decisions is authorized; research role separation is not an adversarial security boundary.
+
+The frozen scene assembler still creates its diagnostic overview RGB camera. It is not a handle-depth source or an Agent observation. The two passive reconstruction cameras belong to a different owner and are not instantiated by the packaged factories. Initial survey additionally uses coarse cabinet bounds/front orientation; this dependency is explicit in the runbook.

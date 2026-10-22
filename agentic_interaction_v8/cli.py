@@ -15,6 +15,9 @@ FREEZE = ROOT/'agentic_interaction_v8/BEHAVIOR.json'
 
 def audit(bundle=None):
     m = json.loads(FREEZE.read_text()); failures = []
+    release=json.loads((ROOT/'agentic_interaction_v8/RELEASE_SOURCES.json').read_text())
+    for name,expected in release['sha256'].items():
+        if not (ROOT/name).is_file() or digest(ROOT/name)!=expected:failures.append('V8_RELEASE:'+name)
     for name, expected in m['source_sha256'].items():
         if not (ROOT/name).is_file() or digest(ROOT/name) != expected: failures.append(name)
     for name,row in m['execution_directory_snapshot'].items():
@@ -28,6 +31,7 @@ def audit(bundle=None):
         if digest(ROOT/name) != expected: failures.append('REVOLUTE:'+name)
     result = dict(version='8.0.0', physical_source_files=len(m['source_sha256']),
                   frozen_revolute_source_files=len(source), failures=failures,
+                  release_source_files=len(release['sha256']),
                   historical_execution_profiles=m['historical_execution_profiles'])
     if bundle:
         b = verify_bundle(bundle); ext = json.loads((ROOT/'docs/experiments/prismatic_transmission_v7_20261020/REVOLUTE_EXTERNAL_FREEZE.json').read_text())['external_robot_camera_closure_uncertainty_sha256']

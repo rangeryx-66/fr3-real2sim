@@ -2,9 +2,11 @@
 
 ## Explicit prerequisites
 
-Linux NVIDIA GPU + Isaac Sim **6.0.1.0**, Python 3.11, torch 2.11.0+cu128, numpy 2.3.1, scipy 1.17.0, pin 3.9.0, pin-pink 3.3.0, python-fcl 0.7.0.11, trimesh 4.11.1, daqp 0.8.5, Pillow 12.2.0. Full tested environment is recorded with the reproduction results. These are tested versions, not a claim that pip alone provisions Isaac/Omniverse or every GPU driver.
+Linux NVIDIA GPU + Isaac Sim **6.0.1.0**, Python **3.12.14**, torch 2.11.0+cu128, numpy 2.3.1, scipy 1.17.0, pin 3.9.0, pin-pink 3.3.0, python-fcl 0.7.0.11, trimesh 4.11.1, daqp 0.8.5, Pillow 12.2.0. Full tested environment is recorded in `docs/experiments/skill_v80_20261023/ENVIRONMENT_LOCK.json`. These are tested versions, not a claim that pip alone provisions Isaac/Omniverse or every GPU driver. A clean OS/container installation is not verified by reusing this installed stack.
 
 Obtain licensed assets, official robot meshes, SAM3 source/overlay/checkpoint and existing F/T calibration from the operator. Large/private resources are not in Git. The environment profile gives absolute paths, exact source/checkpoint hashes, Python/SAM executables, ffmpeg directory, shared physics/perception GPUs, bundle/output/lock paths. A missing resource is an explicit error, not permission to recover a pose from old results.
+
+The preserved initial survey additionally uses the library cabinet's broad static bounds/front orientation to propose its first coarse view. Later Agent views use fresh wrist evidence. This is an explicit known-model initialization dependency, not handle GT for grasp scoring or an image-only initial station estimator.
 
 One-time migration (operator, not the online Agent):
 
