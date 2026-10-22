@@ -6,11 +6,11 @@ from interaction_runtime.prismatic_v73 import audit_frozen
 from agent_command_protocol_v12 import atomic_json
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--job',type=Path,required=True);a=p.parse_args();job=json.loads(a.job.read_text())
+    p=argparse.ArgumentParser();p.add_argument('--job',type=Path,required=True);p.add_argument('--registration',type=Path,default=ROOT/'docs/experiments/prismatic_v751_20261022/REGISTRATION_A.json');a=p.parse_args();job=json.loads(a.job.read_text())
     if job.get('experiment')!='V7' or job.get('run_classification')!='PRISMATIC_ENGINEERING' or job.get('benchmark_registration') or job.get('preload_fixture'):raise ValueError('New engineering job required')
     if job['articulation_v7']['joint_type']!='prismatic' or job.get('prismatic_version')!='V7.5':raise ValueError('Explicit V7.5 prismatic engineering only')
     if job.get('engineering_revision')!='V7.5.1':raise ValueError('Explicit separately registered V7.5.1 engineering only')
-    registration=json.loads((ROOT/'docs/experiments/prismatic_v751_20261022/REGISTRATION_A.json').read_text())
+    registration=json.loads(a.registration.read_text())
     for name,digest in registration['source_sha256'].items():
         if hashlib.sha256((ROOT/name).read_bytes()).hexdigest()!=digest:raise ValueError('V751_SOURCE_COMMITMENT:'+name)
     if hashlib.sha256(a.job.read_bytes()).hexdigest()!=registration['job_sha256']:raise ValueError('V751_JOB_COMMITMENT')
