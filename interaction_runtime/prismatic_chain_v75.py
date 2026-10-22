@@ -10,6 +10,36 @@ from types import SimpleNamespace
 import numpy as np
 
 
+def rail_lead_offsets(policy,dt):
+    """Same two finite allowances used by PrismaticStartup.clock_feedback.
+
+    The commanded robot can lead the actual drawer; translating both by the
+    reference amount silently erased this relative collision envelope in R1.
+    No lead allowance, controller or physical safety margin is changed here.
+    """
+    m=policy.motion('LOADED');one=m['speed_m_s']**2/(2*m['acceleration_m_s2'])+m['speed_m_s']*dt
+    return [0.,-2*one,2*one]
+
+
+def relative_lead_check(g,goal,seed,moving,finger_options,policy,solver,bias):
+    axis=np.asarray(g['v75_motion_prior']['axis_world'],float);axis/=np.linalg.norm(axis)
+    checked=0
+    for lead in rail_lead_offsets(policy,g['dt']):
+        if lead==0:continue
+        target=np.array(goal,copy=True);target[:3,3]+=lead*axis
+        q=solver.solve(target,g['base'],seed,starts=1)
+        if q is None:return dict(valid=False,reason='RELATIVE_LEAD_IK',rail_lead_m=lead,checked=checked)
+        for command in (q,q+bias):
+            if g['model'].margin(command)<=policy.data['joint_margin_rad']:
+                return dict(valid=False,reason='RELATIVE_LEAD_JOINT_MARGIN',rail_lead_m=lead,checked=checked)
+            for option in finger_options:
+                poses=g['model'].poses(command,g['base'],**option)
+                ok,why=g['collision'].check(poses,moving,True);checked+=1
+                if not ok:return dict(valid=False,reason='RELATIVE_LEAD_NATIVE_COLLISION:'+why,rail_lead_m=lead,checked=checked)
+    return dict(valid=True,checked=checked,rail_lead_offsets_m=rail_lead_offsets(policy,g['dt']),
+        object_pose_not_moved_with_command_lead=True)
+
+
 def evaluate_chain(g,candidate,actions,policy,config,solver):
     from .articulation_v7 import Articulation
     from .segments import validate_action
@@ -53,6 +83,9 @@ def evaluate_chain(g,candidate,actions,policy,config,solver):
                     for width in widths:
                         ok,why=g['collision'].check(model.poses(q,base,width=width),delta@M,True);checked+=1
                         if not ok:return dict(valid=False,reason='CHAIN_NATIVE_COLLISION:'+why,role=action['role'],center_m=center,coordinate_m=float(value),checked=checked)
+                relative=relative_lead_check(g,goal,seed,delta@M,[dict(width=w)for w in widths],policy,solver,bias)
+                checked+=relative['checked']
+                if not relative['valid']:return dict(valid=False,reason=relative['reason'],role=action['role'],center_m=center,coordinate_m=float(value),relative_lead=relative,checked=checked)
                 # Exact stopped target is reconstructed after the envelope.
                 if abs(value-target)<1e-9:last_q=seed.copy()
             delta=motion.delta(target-start);goal=delta@T;goal[:3,3]+=center*jaw_axis

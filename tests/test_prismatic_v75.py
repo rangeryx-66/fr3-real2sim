@@ -55,6 +55,30 @@ class EvidenceIdentityTest(unittest.TestCase):
 
 
 class JointAndBudgetTest(unittest.TestCase):
+    def test_relative_reference_lead_does_not_move_drawer_with_robot(self):
+        from types import SimpleNamespace
+        from interaction_runtime.prismatic_chain_v75 import relative_lead_check,rail_lead_offsets
+        from interaction_runtime.policy import Policy
+        policy=Policy.load(Path(__file__).resolve().parents[1]/'configs/interaction_runtime_v1.json')
+        model=SimpleNamespace(margin=lambda q:1.,poses=lambda q,base,**kw:float(q[0]))
+        scene=SimpleNamespace(check=lambda pose,moving,allow:(pose-moving[0,3]>=-.002,'moving panel'))
+        solver=SimpleNamespace(solve=lambda target,base,seed,starts:np.array([target[0,3]]))
+        g=dict(model=model,collision=scene,base=None,dt=1/240,v75_motion_prior=dict(axis_world=[1.,0.,0.]))
+        goal=np.eye(4);goal[0,3]=.02;moving=goal.copy()
+        self.assertTrue(scene.check(.02,moving,True)[0])  # the R1 co-moving check
+        r=relative_lead_check(g,goal,np.array([.02]),moving,[dict(width=.02)],policy,solver,np.zeros(1))
+        self.assertFalse(r['valid']);self.assertIn('NATIVE_COLLISION',r['reason'])
+        self.assertAlmostEqual(rail_lead_offsets(policy,1/240)[1],-.0037)
+
+    def test_contact_plot_focus_excludes_unloaded_route_but_keeps_contact_peaks(self):
+        from render_prismatic_feedback_v75 import contact_focus
+        phases=['PREGRASP','SLOW_CLOSE','FORCE_HOLD','OPEN_CONTINUE','RELEASE','SAFE_PARK_MOTION']
+        a=dict(t=np.arange(600)/240,phase=np.repeat(np.arange(6),100),pad_load=np.zeros((600,2)))
+        a['pad_load'][220:400]=1.;a['pad_load'][250]=7.
+        first,last=contact_focus(a,np.arange(600),dict(phases=phases))
+        self.assertLessEqual(first,220);self.assertGreater(last,399);self.assertLess(last,600)
+        self.assertEqual(a['pad_load'][first:last].max(),7.)
+
     def test_session_preserves_protocol_and_safety_control_flow(self):
         import ast
         root=Path(__file__).resolve().parents[1]

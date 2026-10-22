@@ -91,6 +91,7 @@ def run(out):
         hidden_real_dynamics_used=False,scenario_seed=7501,specification='AI1500 stated quantization is not Gaussian SD or full hardware noise',
         spec_source='https://docs.accessories.ufactory.cc/6_Axis_Force_Torque_Sensor/5.Technical_Specifications.html',
         control_or_production_estimator_changed=False,plants={})
+    report['diagnostic_estimation_configuration']=copy.deepcopy(CONFIG)
     roles=[('FIT_ACCEL',1,.0025,3.1),('FIT_REVERSE',-1,.002,2.5),('FIT_SLOW',1,.0015,4.3),('VALIDATION_DISTINCT',-1,.0022,2.1)]
     for plant in ('constant','static_kinetic','asymmetric'):
         raw=[raw_fixture(role,sign,speed,period,plant)for role,sign,speed,period in roles]
@@ -118,4 +119,8 @@ def qualify_copy(d):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('output',type=Path);run(p.parse_args().output)
+    p=argparse.ArgumentParser();p.add_argument('output',type=Path)
+    p.add_argument('--production-regularization',action='store_true',help='Use existing prismatic ridge and parameter scales; no truth-based tuning')
+    a=p.parse_args()
+    if a.production_regularization:CONFIG.update(ridge=.001,parameter_scales=[5.,10.,1.])
+    run(a.output)

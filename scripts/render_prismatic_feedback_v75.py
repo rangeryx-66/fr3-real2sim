@@ -12,6 +12,23 @@ from interaction_runtime.prismatic_lifecycle_v75 import attempt_indices,provenan
 from interaction_runtime.serialization import result_packet
 
 
+def contact_focus(a, ix, metadata):
+    """Presentation window only; never changes recording or FIT eligibility."""
+    phases=np.asarray(metadata['phases'])[a['phase'][ix]]
+    driving=np.flatnonzero(np.isin(phases,['OPEN_CONTINUE','TRANSMISSION_PROBE']))
+    contact=np.flatnonzero(np.any(a['pad_load'][ix]>0,axis=1))
+    if len(driving):
+        first=int(min(driving[0],contact[0]if len(contact)else driving[0]))
+        last=int(driving[-1])
+    elif len(contact):first,last=int(contact[0]),int(contact[-1])
+    else:
+        closing=np.flatnonzero(np.isin(phases,['SLOW_CLOSE','CLOSE','CENTER','GRASP_VERIFY','HOLD']))
+        first,last=(int(closing[0]),int(closing[-1]))if len(closing)else(0,len(ix)-1)
+    t=a['t'][ix]
+    start=int(np.searchsorted(t,t[first]-.5));end=min(len(ix),int(np.searchsorted(t,t[last]+.5,side='right')))
+    return start,end
+
+
 def contact_geometry(folder, destination, identity):
     """Only the requested attempt AND time interval; absent points stay absent."""
     import matplotlib.pyplot as plt
@@ -77,6 +94,7 @@ def render(folder, identity):
         offset=np.array([r['wrist_ft']['T_world_sensor'][:3,3]for r in rr])-settings['prior']['origin_world_m']
         inertia[:,3:]-=np.cross(offset,inertia[:,:3])
         interior=run[121:-121];full[interior]=gravity[interior]-inertia[121:-121]
+    focus_start,focus_end=contact_focus(a,ix,index['metadata'])
     t=a['t'][ix]-a['t'][ix[0]];fig,ax=plt.subplots(8,1,figsize=(10,14),sharex=True)
     for j,name in enumerate(['L raw normal','R raw normal']):ax[0].plot(t,a['pad_load'][ix,j],label=name,lw=.7)
     ax[0].set_ylabel('Pad (N)')
@@ -86,7 +104,7 @@ def render(folder, identity):
     if 'command_TCP_pose' in a:
         measured=a['tcp_pose'][ix,:3]@axis;command=a['command_TCP_pose'][ix,:3]@axis
         ax[3].plot(t,(command-measured)*1000,label='command - measured TCP, rail')
-        ax[3].plot(t,((measured-measured[0])-(a['joint_q'][ix]-a['joint_q'][ix[0]]))*1000,label='measured TCP - drawer travel')
+        ax[3].plot(t,((measured-measured[focus_start])-(a['joint_q'][ix]-a['joint_q'][ix[focus_start]]))*1000,label='measured TCP - drawer travel, contact-window zero')
     ax[3].set_ylabel('Two errors (mm)')
     for label,w in [('raw',world_raw),('bias+gravity',gravity),('full dynamic (offline)',full)]:
         rail=w[:,:3]@axis;trans=w[:,:3]-rail[:,None]*axis
@@ -103,11 +121,37 @@ def render(folder, identity):
     ax[7].set_ylabel('Diagnostic traction (N)');ax[7].set_xlabel('Seconds from THIS attempt start')
     for panel in ax:
         panel.grid(alpha=.2)
+        panel.set_xlim(t[focus_start],t[focus_end-1])
         if panel.get_legend_handles_labels()[0]:panel.legend(fontsize=7)
-    fig.suptitle('Attempt %d / observation generation %d | raw native-rate peaks retained\nFull compensation is offline only; missing normal reports do not prove separation'%(identity['attempt_id'],identity['observation_generation']))
+    # Set y limits from the displayed native samples, not the hundreds of mm of
+    # unloaded approach/return. No averaging, decimation or clipping of peaks.
+    for panel in ax:
+        values=[]
+        for line in panel.lines:
+            y=np.asarray(line.get_ydata())[focus_start:focus_end];values.extend(y[np.isfinite(y)])
+        if len(values):
+            lo,hi=float(min(values)),float(max(values));pad=max((hi-lo)*.06,1e-6)
+            panel.set_ylim(lo-pad,hi+pad)
+    fig.suptitle('Attempt %d / observation generation %d | acquisition/loaded window, all native samples\nFull compensation is offline only; missing normal reports do not prove separation'%(identity['attempt_id'],identity['observation_generation']))
     fig.tight_layout();path=destination/'CONTACT_FEEDBACK.png';fig.savefig(path,dpi=110);plt.close(fig)
     geometry=contact_geometry(folder,destination,identity)
+    diagnostics=[]
+    for segment in index.get('segments',[]):
+        jj=np.flatnonzero((a['step'][ix]>=segment['first_step'])&(a['step'][ix]<segment.get('last_step',identity['last_step_exclusive'])))
+        if len(jj)<2:continue
+        start,end=jj[0],jj[-1];q=a['joint_q'][ix]
+        row=dict(role=segment['role'],status=segment.get('result',{}).get('status'),
+            measured_drawer_travel_m=float(q[end]-q[start]),duration_s=float(t[end]-t[start]),
+            last_pad_normal_mean_n=a['pad_load'][ix[jj[-36:]]].mean(0).tolist())
+        if 'command_TCP_pose'in a:
+            tcp=a['tcp_pose'][ix,:3]@axis;cmd=a['command_TCP_pose'][ix,:3]@axis
+            row.update(command_TCP_travel_m=float(cmd[end]-cmd[start]),measured_TCP_travel_m=float(tcp[end]-tcp[start]),
+                command_to_measured_TCP_error_change_m=float((cmd[end]-tcp[end])-(cmd[start]-tcp[start])),
+                measured_TCP_to_drawer_relative_travel_m=float((tcp[end]-tcp[start])-(q[end]-q[start])))
+        diagnostics.append(row)
     result=dict(meta,available=True,path=str(path),contact_geometry=geometry,measured_only=True,
+        displayed_window_relative_s=[float(t[focus_start]),float(t[focus_end-1])],
+        presentation_only_no_recording_or_FIT_changes=True,segment_motion_diagnostics=diagnostics,
         raw_normal_peaks_n=a['pad_load'][ix].max(0).tolist(),joint_travel_m=float(np.ptp(a['joint_q'][ix])),
         full_compensation_samples=int(np.isfinite(full[:,0]).sum()),
         origin='instantaneous sensor origin; world-oriented six-axis wrench',

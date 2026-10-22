@@ -1,8 +1,8 @@
 """Prismatic-only live evidence adapter; frozen execution/safety are inherited.
 
-This repairs evidence identity, not the unresolved physical load calibration.
-No new task limit, wrench processing, actuator command or parking policy enters
-the execution path. Instantiate explicitly in a V7.5 engineering entry only.
+This repairs evidence identity and conditional whole-chain safety/admission.
+No task load limit, wrench compensation or actuator authority is increased.
+Instantiate explicitly in a V7.5 engineering entry only.
 """
 import json, threading
 import numpy as np
@@ -141,6 +141,28 @@ class PrismaticEvidenceOperationsV75(PrismaticOperationsV73):
 
     def rotate_segment(self,*args,**kwargs):
         from .prismatic_load_v75 import PrismaticLoadMarginStop
+        # Recheck the existing finite robot/drawer relative reference envelope
+        # with ACTUAL coupled finger state at every segment boundary. A nominal
+        # co-moving robot/object prediction misses inward command lead on reverse.
+        from .prismatic_chain_v75 import relative_lead_check
+        motion=kwargs.get('articulation');target=kwargs.get('target_q')
+        if motion is not None and motion.joint_type=='prismatic':
+            j=np.asarray(self.r.robot.get_joint_positions());seed=j[self.r.arm];fingers=j[self.r.fingers]
+            start=self.r.actual();T=self.r.tcp().copy();M=self.r.moving().copy();bias=self.r.qtarget[self.r.arm]-seed
+            boundary=dict(valid=True)
+            for value in np.linspace(start,target,max(2,int(np.ceil(abs(target-start)/.001))+1)):
+                D=motion.delta(float(value)-start);goal=D@T;q=self.r.solver.solve(goal,self.r.base,seed,starts=1)
+                if q is None:boundary=dict(valid=False,reason='MEASURED_CHAIN_IK');break
+                boundary=relative_lead_check(self.g,goal,q,D@M,[dict(finger_q=fingers)],self.r.policy,self.r.solver,bias)
+                if not boundary['valid']:break
+                seed=q
+            from agent_command_protocol_v12 import atomic_json
+            atomic_json(self.r.output/('RELATIVE_LEAD_PREFLIGHT_%02d.json'%len(self.r.record.segments)),boundary)
+            if not boundary['valid']:
+                self.r.stop_command()
+                return dict(ok=False,status='SAFE_PARTIAL_PROGRESS',reason='CURRENT_RELATIVE_LEAD_ROUTE_UNAVAILABLE',
+                    requested_target_reached=False,safely_stopped=True,physical_transmission_valid=False,
+                    planning=dict(coordinate_unit='m',relative_lead=boundary),gain_native=0.,joint_coordinate=self.r.actual())
         try:return super().rotate_segment(*args,**kwargs)
         except PrismaticLoadMarginStop as error:
             # Original bounded deceleration/settling and original hard guards.
@@ -162,7 +184,9 @@ class PrismaticEvidenceOperationsV75(PrismaticOperationsV73):
             last=attempts[-1];number=len(attempts)
             try:
                 # A bounded disk barrier, not a PhysX hold or loaded Agent wait.
-                if self.g['recovery_state']!='UNLOADED_OBSERVATION' and self.r.supervisor.latched is None:
+                terminal=(last.get('operation_status')=='SAFETY_STOP' and
+                    last.get('safe_exit',{}).get('reason')=='HARD_STOP_NO_AUTOMATIC_CONTINUATION')
+                if self.g['recovery_state']!='UNLOADED_OBSERVATION' and self.r.supervisor.latched is None and not terminal:
                     raise RuntimeError('POST_OPERATION_DIAGNOSTIC_REQUIRES_SAFE_BOUNDARY')
                 generation=self.g['v75_attempt_generations'][number]
                 identity=evidence_identity(self.r.job.get('episode_id',self.r.output.name),number,generation,
@@ -174,6 +198,7 @@ class PrismaticEvidenceOperationsV75(PrismaticOperationsV73):
                 if self.r.contact_evidence is not None:self.r.contact_evidence.flush()
                 from render_prismatic_feedback_v75 import render
                 contact=render(self.r.output,identity)
+                contact['terminal_hard_stop_diagnostic_only']=terminal
             except Exception as error:
                 contact=dict(available=False,reason=repr(error),attempt_id=number,previous_attempt_fallback=False)
         self.g['v75_current_contact_feedback']=contact
