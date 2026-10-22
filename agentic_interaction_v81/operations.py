@@ -1,5 +1,6 @@
 """High-level station extension; frozen observation/contact operations retained."""
 import json
+from contextlib import nullcontext
 from pathlib import Path
 from unittest.mock import patch
 
@@ -40,14 +41,24 @@ def operations_class(original):
             return super().interact(target,max_sim_s,action)
 
         def feedback(self):
-            result=super().feedback();p=self.r.output/'model/FIT_READINESS_V81.json'
+            if self.r.job['articulation_v7']['joint_type']=='revolute' and self.g['contact_attempts']:
+                from functools import partial
+                import render_contact_feedback_v7 as display
+                from .feedback import render
+                with patch.object(display,'render',partial(render,attempt=self.g['contact_attempts'][-1],
+                    attempt_id=len(self.g['contact_attempts']))):
+                    result=super().feedback()
+            else:result=super().feedback()
+            p=self.r.output/'model/FIT_READINESS_V81.json'
             result['FIT_readiness_v81']=json.loads(p.read_text()) if p.exists() else dict(status='pending')
             return result
 
         def attempt(self,command):
             if command.get('segments')!=getattr(self,'_v81_declared_chain',None):
                 return dict(executed=False,recoverable=True,reason='DECLARE_AND_VALIDATE_THIS_CHAIN_BEFORE_ACQUISITION')
+            generation=len(self.g['observation_generations'])
             result=super().attempt(command)
+            result['observation_generation_v81']=generation
             self._last_contact_finished_world_s=float(self.r.world.current_time)
             result['station_generation']=self.r.base_generation
             return result
@@ -76,7 +87,11 @@ def operations_class(original):
                 moved=at_base(export,self.r.initial_base,self.r.base)
                 return original_export(moved,moving_link,moving_pose)
             from .performance import cached_planning_fk
-            with patch.object(executable,'current_export',current), cached_planning_fk():
+            memory_scope=nullcontext()
+            if self.r.job['articulation_v7']['joint_type']=='prismatic':
+                from .recovery_memory import task_memory
+                memory_scope=task_memory(self,command)
+            with patch.object(executable,'current_export',current), cached_planning_fk(), memory_scope:
                 result=super().request_plan(command)
             result.update(planning_horizon_native=horizon,
                 executable_first_target_native=actions[0]['target_q'],
