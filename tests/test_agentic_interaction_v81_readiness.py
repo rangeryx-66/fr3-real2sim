@@ -6,7 +6,7 @@ from agentic_interaction_v81.operations import operations_class
 
 
 class ReadinessTests(unittest.TestCase):
-    def exercise(self,change=None,alter_model=False):
+    def exercise(self,change=None,alter_model=False,last_complete=True):
         class Owner:
             def interact(self,*args):return dict(executed=True,original_owner_called=True)
         with tempfile.TemporaryDirectory() as folder:
@@ -20,7 +20,7 @@ class ReadinessTests(unittest.TestCase):
             if alter_model:(m/'estimate.json').write_text('{}')
             ops=operations_class(Owner)();ops.actions=[dict(role='VALIDATION_NEW',target_q=.03)]
             ops.r=SimpleNamespace(output=p,job=dict(episode_id='new_scene'),actual=lambda:.04,
-                record=SimpleNamespace(segments=[dict(id=1,role='FIT_A',completed=True),dict(id=2,role='FIT_B',completed=True)]))
+                record=SimpleNamespace(segments=[dict(id=1,role='FIT_A',completed=True),dict(id=2,role='FIT_B',completed=last_complete)]))
             result=ops.interact(.03)
             return result,list((p/'validation_model_seals').glob('*.json'))
 
@@ -39,6 +39,12 @@ class ReadinessTests(unittest.TestCase):
     def test_producer_race_fails_closed_without_a_loaded_wait(self):
         result,seals=self.exercise(alter_model=True)
         self.assertFalse(result['executed']);self.assertEqual(seals,[])
+
+    def test_freshness_is_not_a_target_reached_gate(self):
+        # Safe partial FIT is admitted only by the unchanged worker. Its ID
+        # still identifies the newest measurement packet, not an older model.
+        result,seals=self.exercise(last_complete=False)
+        self.assertTrue(result['original_owner_called']);self.assertEqual(len(seals),1)
 
 
 if __name__=='__main__':unittest.main()

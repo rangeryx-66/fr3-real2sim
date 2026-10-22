@@ -18,8 +18,10 @@ def evaluate(folder):
     for segment in index['segments']:
         ix=np.flatnonzero(arrays['segment']==segment['id'])
         q=arrays['joint_q'][ix];q=q[np.isfinite(q)]
-        movement.append(dict(id=segment['id'],role=segment['role'],completed=segment['completed'],
-            result=segment.get('result'),start=float(q[0]) if len(q) else None,
+        outcome=segment.get('result',{})
+        movement.append(dict(id=segment['id'],role=segment['role'],record_closed=segment['completed'],
+            target_reached=outcome.get('status')=='TARGET_REACHED' and bool(outcome.get('requested_target_reached')),
+            result=outcome,start=float(q[0]) if len(q) else None,
             end=float(q[-1]) if len(q) else None,maximum=float(q.max()) if len(q) else None,
             minimum=float(q.min()) if len(q) else None,records=len(ix)))
     trace=json.loads((folder/'AGENT_ACTION_TRACE.json').read_text())

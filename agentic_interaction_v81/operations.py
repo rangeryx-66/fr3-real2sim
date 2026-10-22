@@ -15,7 +15,10 @@ def operations_class(original):
                 folder=self.r.output/'model';m=folder/'estimate.json';f=folder/'FIT_READINESS_V81.json'
                 ready=json.loads(f.read_text()) if f.exists() else {}
                 model_bytes=m.read_bytes() if m.exists() else None
-                expected=max((s['id'] for s in self.r.record.segments if s['role'].startswith('FIT') and s['completed']),default=0)
+                # Freshness covers every finished FIT action record, including
+                # a safely interrupted one. Eligibility remains the frozen
+                # production qualification, never the action's role/status.
+                expected=max((s['id'] for s in self.r.record.segments if s['role'].startswith('FIT')),default=0)
                 valid=(model_bytes is not None and ready.get('model_sha256')==hashlib.sha256(model_bytes).hexdigest()
                        and expected>0 and ready.get('episode_id')==self.r.job['episode_id']
                        and ready.get('latest_completed_FIT_id')==expected and ready.get('qualified_bidirectional')
