@@ -3,6 +3,7 @@ import copy
 import numpy as np
 from articulated_interaction.physical_baseline import PhysicalScene
 from piper_mobile_demo.owned_scene import Shape,meshes,intersects
+from xarm7_native_execution import mapped_export
 
 
 class MobileScene:
@@ -13,7 +14,7 @@ class MobileScene:
         support=[s for s in e['shapes'] if 'r1a7_pedestal' in s['path']]
         if not support:raise ValueError('NATIVE_SUPPORT_COLLIDER_REQUIRED')
         e['shapes']=[s for s in e['shapes'] if s not in support]
-        self.inner=PhysicalScene(e,model,allowed)
+        self.inner=PhysicalScene(mapped_export(e),model,allowed)
         self.support=[]
         for s in support:
             for mesh in meshes(s):
