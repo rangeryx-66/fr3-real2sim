@@ -15,7 +15,11 @@ def main():
     from .cli import audit,FREEZE
     audit()
     excluded=json.loads(FREEZE.read_text())['execution_directory_snapshot']
+    forbidden=tuple(job['v8_forbidden_history_roots'])
     def prevent_legacy_import(event,args):
+        if event=='open' and isinstance(args[0],(str,bytes)):
+            path=str(args[0])
+            if path.startswith(forbidden):raise RuntimeError('UNDECLARED_HISTORICAL_IO:'+path)
         if event=='exec':
             filename=Path(args[0].co_filename)
             if filename.is_absolute() and filename.is_relative_to(ROOT):

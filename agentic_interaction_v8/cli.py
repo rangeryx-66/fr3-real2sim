@@ -83,6 +83,7 @@ def prepare(specfile, profile):
                agent_wait_timeout_s=float(spec.get('agent_wait_s',360)),
                safe_exit_wall_reserve_s=300,safe_exit_sim_reserve_s=120,
                package_version='8.0.0',package_purpose=spec['purpose'],
+               v8_forbidden_history_roots=m['legacy_result_roots'],
                gpu=int(p['physics_gpu']),visual_gpu=int(p['perception_gpu']),
                wrist_experiment={'sam3':{'python':p['sam_python'],'pythonpath':p['sam_pythonpath'],'checkpoint':p['sam_checkpoint']}},
                v8_robot_io=str(out/'robot_io'))
