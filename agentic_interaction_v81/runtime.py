@@ -71,12 +71,20 @@ def runtime_class(original):
             unloaded=self.grasp_reference is None and max(self.filtered())<=self.policy.data['force']['unloaded_pad_n'] and self.supervisor.force.settled()
             released=float(self.rows[-1]['aperture_m'])>=.083
             velocity=float(self.rows[-1].get('joint_coordinate_velocity',0.))
-            return Boundary(self.job['episode_id'],self.base_generation,len(self.g['observation_generations']),
+            boundary=Boundary(self.job['episode_id'],self.base_generation,len(self.g['observation_generations']),
                 float(self.world.current_time),tuple(self.base),tuple(q[self.arm]),tuple(q[self.fingers]),
                 self.actual(),'m' if self.job['articulation_v7']['joint_type']=='prismatic' else 'rad',
                 bool(stationary),abs(velocity)<1e-4,bool(released),bool(unloaded),
                 bool(parked or stationary),None if self.supervisor.latched is None else str(self.supervisor.latched),
                 digest(self.output/'cooked_initial.json'))
+            from dataclasses import asdict
+            (self.output/'V81_STATION_BOUNDARY.json').write_text(json.dumps(dict(
+                boundary=asdict(boundary),arm_velocity_rad_s=dq[self.arm].tolist(),
+                measured_aperture_m=float(self.rows[-1]['aperture_m']),
+                object_velocity_native_s=velocity,pad_loads_n=self.filtered().tolist(),
+                grasp_reference_present=self.grasp_reference is not None,
+                force_history_settled=bool(self.supervisor.force.settled()))))
+            return boundary
 
         def evaluate_station(self,target):
             import numpy as np

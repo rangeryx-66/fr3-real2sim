@@ -43,9 +43,11 @@ class Boundary:
     def check(self):
         if self.safety_latch is not None:
             raise ValueError('HARD_STOP_AUTHORITATIVE')
-        if not all((self.robot_stationary, self.object_stationary, self.released,
-                    self.unloaded_verified, self.clearance_verified)):
-            raise ValueError('VERIFIED_STOPPED_UNLOADED_CLEARANCE_REQUIRED')
+        conditions={name:getattr(self,name) for name in (
+            'robot_stationary','object_stationary','released','unloaded_verified','clearance_verified')}
+        if not all(conditions.values()):
+            raise ValueError('VERIFIED_STOPPED_UNLOADED_CLEARANCE_REQUIRED:'+','.join(
+                name for name,valid in conditions.items() if not valid))
         values=(*self.base_xyzyaw, *self.arm_q, *self.finger_q,
                 self.object_coordinate, self.simulation_timestamp_s)
         if not all(math.isfinite(x) for x in values):
