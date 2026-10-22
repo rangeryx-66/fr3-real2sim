@@ -6,6 +6,13 @@ from agentic_interaction_v81.mobile_mount import drive_class,BASE_MAX_EFFORT_N,B
 
 
 class NumericTests(unittest.TestCase):
+    def test_native_float32_boundary_commitment(self):
+        from agentic_interaction_v81.station import Boundary
+        b=Boundary('native',0,0,np.float32(1),tuple(np.zeros(4,np.float32)),
+            tuple(np.zeros(7,np.float32)),tuple(np.zeros(6,np.float32)),np.float32(.01),'m',
+            True,True,True,True,True,None,'a'*64)
+        self.assertEqual(len(b.commitment()),64)
+
     def test_profile_variation_adds_independent_acceleration_opportunity(self):
         m=dict(speed_m_s=.012,acceleration_m_s2=.04,angular_speed_rad_s=.08,angular_acceleration_rad_s2=.2)
         a=dict(role='FIT_TEST',reference_speed_m_s=.008,reference_acceleration_m_s2=.02)

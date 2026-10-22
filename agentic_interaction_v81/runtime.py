@@ -65,6 +65,8 @@ def runtime_class(original):
             # Also usable at the normal initialized native rest for the short
             # interface check; it is not an arbitrary released observation pose.
             home=np.asarray(self.c['home_q']) if 'home_q' in self.c else np.array([0,-.5,0,1.,0,.5,0])
+            if parked and self.g.get('last_exit_plan'):
+                home=np.asarray(self.g['last_exit_plan']['parking_q'])
             stationary=np.max(abs(q[self.arm]-home))<=.025 and np.max(abs(dq[self.arm]))<.01
             unloaded=self.grasp_reference is None and max(self.filtered())<=self.policy.data['force']['unloaded_pad_n'] and self.supervisor.force.settled()
             released=float(self.rows[-1]['aperture_m'])>=.083
@@ -81,6 +83,12 @@ def runtime_class(original):
             from .station import evaluate_station
             b=self.station_boundary();b.check();motion=self.policy.motion('SAFE_PARK_MOTION')
             if len(target)==2:target=(*target,*b.base_xyzyaw[2:])
+            goal=np.asarray(self.robot.get_joint_positions())[self.base_indices]+np.asarray(target[:2])-np.asarray(b.base_xyzyaw[:2])
+            stop_margin=motion['speed_m_s']**2/(2*motion['acceleration_m_s2'])+motion['speed_m_s']*self.dt
+            lo,hi=self.mount['native_limits_m']
+            if np.any(goal<lo+stop_margin) or np.any(goal>hi-stop_margin):
+                return dict(valid=False,reason='NATIVE_CARRIAGE_LIMIT_WITH_STOP_RESERVE',target=list(target),
+                    goal_joints=goal.tolist(),stop_margin_m=stop_margin)
             M=self.moving().copy()
             def sweep(state,path):
                 for p in path:
@@ -98,6 +106,7 @@ def runtime_class(original):
             import numpy as np
             from .policy_checks import require_station_actuation
             require_station_actuation(self)
+            self.ensure_execution_budget('PREGRASP')
             plan=self.evaluate_station(target)  # always revalidate actual measured state
             if not plan['valid']:return plan
             before=self.base.copy();initial_joints=np.asarray(self.robot.get_joint_positions())[self.base_indices].copy()
@@ -105,6 +114,7 @@ def runtime_class(original):
             self.base_active=True
             try:
                 for sample in path[1:]:
+                    self.ensure_execution_budget('PREGRASP')
                     require_station_actuation(self)
                     self.base_goal=initial_joints+np.asarray(sample['base'][:2])-before[:2]
                     self.base_velocity=np.asarray(sample['velocity_xy'])

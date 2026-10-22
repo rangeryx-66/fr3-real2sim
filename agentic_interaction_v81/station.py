@@ -32,6 +32,14 @@ class Boundary:
     safety_latch: str | None
     native_scene_sha256: str
 
+    def __post_init__(self):
+        # Native state arrays are commonly float32. Commit the measured values
+        # as JSON-native scalars, with no rounding or precision claim.
+        for name in ('base_xyzyaw','arm_q','finger_q'):
+            object.__setattr__(self,name,tuple(float(x) for x in getattr(self,name)))
+        for name in ('simulation_timestamp_s','object_coordinate'):
+            object.__setattr__(self,name,float(getattr(self,name)))
+
     def check(self):
         if self.safety_latch is not None:
             raise ValueError('HARD_STOP_AUTHORITATIVE')
