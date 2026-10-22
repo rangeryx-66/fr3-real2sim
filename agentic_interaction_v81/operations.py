@@ -98,6 +98,9 @@ def operations_class(original):
             target=command['target_xy_m']
             if len(target)!=2:raise ValueError('XY_TARGET_ONLY')
             result=self.r.evaluate_station(target)
+            if result.get('valid') and 'task_horizon_q' in command:
+                from .station_forecast import forecast
+                result['task_forecast']=forecast(self,target,float(command['task_horizon_q']))
             result['Agent_reason']=command['reason']
             result['inspected_image_sha256']=command['inspected_image_sha256']
             return result

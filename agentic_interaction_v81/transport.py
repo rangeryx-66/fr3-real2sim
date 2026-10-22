@@ -19,13 +19,17 @@ def validate(command,sequence):
     original_validate(dict(command,operation='inspect'),sequence)
     common={'operation','protocol_version','sequence','reason'}
     if op=='evaluate_station':
-        if set(command)-common-{'target_xy_m','inspected_image_sha256'}:raise ProtocolError('unknown station fields')
+        if set(command)-common-{'target_xy_m','inspected_image_sha256','task_horizon_q'}:raise ProtocolError('unknown station fields')
         xy=command.get('target_xy_m')
         if not isinstance(xy,list) or len(xy)!=2 or not all(type(x) in (int,float) and math.isfinite(x) for x in xy):
             raise ProtocolError('finite XY target required')
         h=command.get('inspected_image_sha256')
         if not isinstance(h,str) or len(h)!=64 or any(c not in '0123456789abcdef' for c in h):
             raise ProtocolError('current wrist image SHA256 required')
+        if 'task_horizon_q' in command:
+            value=command['task_horizon_q']
+            if type(value) not in (int,float) or not math.isfinite(value):
+                raise ProtocolError('finite native-coordinate task horizon required')
     else:
         if set(command)-common-{'evaluated_command'}:raise ProtocolError('unknown station fields')
         n=command.get('evaluated_command')

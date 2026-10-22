@@ -56,7 +56,7 @@ def runtime_class(original):
             self.record.metadata['v81_base']=dict(joint_indices=self.base_indices.tolist(),joint_names=self.mount['joint_names'],
                 moving_only_when_verified_unloaded=True,kind='simulated driven XY carriage; not wheels')
 
-        def station_boundary(self):
+        def station_boundary(self,record=True):
             import numpy as np
             from .station import Boundary
             from agentic_interaction_v8.resources import digest
@@ -78,18 +78,22 @@ def runtime_class(original):
                 bool(parked or stationary),None if self.supervisor.latched is None else str(self.supervisor.latched),
                 digest(self.output/'cooked_initial.json'))
             from dataclasses import asdict
-            (self.output/'V81_STATION_BOUNDARY.json').write_text(json.dumps(dict(
-                boundary=asdict(boundary),arm_velocity_rad_s=dq[self.arm].tolist(),
-                measured_aperture_m=float(self.rows[-1]['aperture_m']),
-                object_velocity_native_s=velocity,pad_loads_n=self.filtered().tolist(),
-                grasp_reference_present=self.grasp_reference is not None,
-                force_history_settled=bool(self.supervisor.force.settled()))))
+            if record:
+                (self.output/'V81_STATION_BOUNDARY.json').write_text(json.dumps(dict(
+                    boundary=asdict(boundary),arm_velocity_rad_s=dq[self.arm].tolist(),
+                    measured_aperture_m=float(self.rows[-1]['aperture_m']),
+                    object_velocity_native_s=velocity,pad_loads_n=self.filtered().tolist(),
+                    grasp_reference_present=self.grasp_reference is not None,
+                    force_history_settled=bool(self.supervisor.force.settled()))))
             return boundary
 
         def evaluate_station(self,target):
             import numpy as np
             from .station import evaluate_station
-            b=self.station_boundary();b.check();motion=self.policy.motion('SAFE_PARK_MOTION')
+            from .policy_checks import settle_station
+            try:b=settle_station(self)
+            finally:self.station_boundary()  # preserve the actual refusal, too
+            b.check();motion=self.policy.motion('SAFE_PARK_MOTION')
             if len(target)==2:target=(*target,*b.base_xyzyaw[2:])
             goal=np.asarray(self.robot.get_joint_positions())[self.base_indices]+np.asarray(target[:2])-np.asarray(b.base_xyzyaw[:2])
             stop_margin=motion['speed_m_s']**2/(2*motion['acceleration_m_s2'])+motion['speed_m_s']*self.dt

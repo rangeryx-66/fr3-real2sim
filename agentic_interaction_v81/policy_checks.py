@@ -1,6 +1,36 @@
 """Additional relocation preconditions, never replacing frozen safety guards."""
 
 
+def settle_station(r,maximum_s=2.,stable_s=.3):
+    """Finite unloaded hold; observe the same strict bounds continuously.
+
+    Original parking position tolerance alone does not imply low joint speed.
+    Do not drive back from outside the verified cell or wait under contact.
+    Every hold step still executes the original collision/force/joint guards.
+    """
+    import math
+    b=r.station_boundary(record=False)
+    target=r.g.get('last_exit_plan',{}).get('parking_q',r.c['home_q'])
+    def in_cell(state):
+        return len(target)==len(state.arm_q) and max(abs(x-y) for x,y in zip(state.arm_q,target))<=.025
+    if not in_cell(b):
+        raise ValueError('STATION_SETTLE_REQUIRES_MEASURED_PARK_CELL')
+    def unloaded(state):
+        return state.safety_latch is None and state.released and state.unloaded_verified and state.clearance_verified
+    if not unloaded(b):
+        b.check()  # no new hold/contact motion; preserve the original refusal
+    stable=0.
+    for _ in range(math.ceil(maximum_s/r.dt)):
+        r.ensure_execution_budget('PREGRASP')  # never spend exit reserve
+        r.hold(r.dt)
+        b=r.station_boundary(record=False)
+        if not unloaded(b):b.check()
+        if not in_cell(b):raise ValueError('STATION_SETTLE_LEFT_MEASURED_PARK_CELL')
+        stable=stable+r.dt if b.robot_stationary and b.object_stationary else 0.
+        if stable>=stable_s-1e-12:return b
+    raise ValueError('STATION_STABLE_DWELL_NOT_OBSERVED_WITHIN_FINITE_HOLD')
+
+
 def require_station_actuation(r):
     import numpy as np
     from interaction_runtime.policy import SafetyStop
