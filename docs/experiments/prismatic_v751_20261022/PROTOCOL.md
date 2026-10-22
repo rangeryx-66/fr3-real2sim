@@ -1,0 +1,15 @@
+# V7.5.1 bounded engineering development
+
+Reference: 9349083. Preserve V7.5 and all 71+22 revolute hashes. No benchmark rerun.
+
+A first: one fresh 45290 engineering scene using the unchanged, previously revealed R2/R3 native dynamics configuration. Fresh wrist perception, automatic candidate generation, Agent inspection and conditional candidate selection. Initial request 1 N; the existing legal menu and finite maximum three acquisitions apply. No cached grasp/view input. Predeclare three FIT trajectories and a distinct complete VALIDATION before each acquisition, using measured reachable ranges. No fitting on VALIDATION or retroactive trajectory success.
+
+The archive establishes net jaw-axis loading, a 0.335 mm measured transverse TCP/rail offset and 0.469 mm aperture drift during the second R3 segment. At its causal stop window wrist F=[0.985,-0.593,-3.642] N agrees with independent native reaction [0.985,-0.593,-3.642] N. The nominal command itself changes transverse Z by -0.121 mm; actual tracking adds another -0.214 mm. This supports a combination of command/servo deflection and contact load redistribution, not a sensor-only explanation. The two prior grasps and preload differed, so those runs do not isolate a unique cause.
+
+First prefer a feasible alternative automatic grasp. At a verified unloaded boundary, the Agent may explicitly select a bounded transverse unloading trajectory for an acquisition. This is an experimental prismatic-only extension: use the existing causal trailing F/T load window, only the measured jaw-centre axis perpendicular to the rail, original closure centering slope, at most one original 5 um centering step per 19 native frames, and the original 2 mm combined closure/correction ball. No rail correction, jaw request feedback, integral IK or altered gain/drive authority. Existing full-chain +/- centering envelope, collision checks, load forecast, .6 Nm sustained guard, native emergency protections and exit reserves remain authoritative. This extension is not considered validated until measured contact response and complete lifecycle pass. It may fail and must then be reported.
+
+B: separate short unloaded native-actuator validation of a previously difficult observation-state exit, with freshly checked outbound route, actual measured state at return, original collision predicates and final park verification. Do not teleport to a terminal fixture. Offline solutions alone are not physical passes.
+
+C: 19855 is a separate round-handle geometry milestone. Inspect archived and fresh cap/stem/panel observations, generate mechanically appropriate observed-geometry families and run at most one bounded fresh physical scene. Do not insert GT or saved poses. Its result cannot substitute for A.
+
+Only after engineering repair passes: freeze and separately preregister new hidden dynamics for a prospective transfer check. No new full benchmark. All failures retained; compact raw evidence private; final owned actors closed. Parameter estimation remains V3.1 with V7.3 full-window sliding eligibility and independent VAL isolation.
