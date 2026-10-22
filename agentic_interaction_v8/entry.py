@@ -8,6 +8,19 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 
+def finish_before_shutdown(runtime, serve, finalize):
+    """Freeze loaded-source provenance before Isaac may fast-exit Python."""
+    try:return serve(runtime)
+    finally:
+        original_error=sys.exc_info()[1]
+        try:finalize()
+        except Exception as error:
+            if original_error is None:raise
+            # Preserve the authoritative operation/safety exception even if
+            # the filesystem also fails while recording its provenance.
+            original_error.add_note('Source provenance finalization failed: '+repr(error))
+
+
 def main():
     p=argparse.ArgumentParser();p.add_argument('--job',required=True,type=Path)
     args=p.parse_args();job=json.loads(args.job.read_text())
@@ -27,7 +40,10 @@ def main():
                     raise RuntimeError('UNFROZEN_LEGACY_EXECUTION:'+str(filename))
     sys.addaudithook(prevent_legacy_import)
     import atexit
+    audit_written=False
     def loaded_source_audit():
+        nonlocal audit_written
+        if audit_written:return
         from .resources import digest,dump
         files={}
         for module in list(sys.modules.values()):
@@ -39,6 +55,7 @@ def main():
         dump(Path(job['output'])/'V8_LOADED_SOURCES.json',dict(sources=files,
              historical_result_reads_forbidden=True,excluded_legacy_imports_forbidden=True,
              scope='actor Python sources; child workers have frozen entry/source commitments; not OS isolation'))
+        audit_written=True
     atexit.register(loaded_source_audit)
     # IO locator is bound before any planning module imports OUT by value.
     # All geometry/controller classes/functions retain original source bytes.
@@ -50,10 +67,12 @@ def main():
     if job['articulation_v7']['joint_type']=='revolute':
         from interaction_runtime.probing_v7 import RuntimeV7
         from interaction_runtime.registered_observation_v71 import serve_registered
-        return run(RuntimeV7,serve_registered,extra_sources=common)
+        from functools import partial
+        return run(RuntimeV7,partial(finish_before_shutdown,serve=serve_registered,finalize=loaded_source_audit),extra_sources=common)
     from interaction_runtime.prismatic_v751 import PrismaticRuntimeV751
     from interaction_runtime.prismatic_radial_session_v751 import serve_radial_v751
-    return run(PrismaticRuntimeV751,serve_radial_v751,extra_sources=common+(
+    from functools import partial
+    return run(PrismaticRuntimeV751,partial(finish_before_shutdown,serve=serve_radial_v751,finalize=loaded_source_audit),extra_sources=common+(
         'scripts/native_g1_radial_families_v751.py','scripts/prismatic_visual_v73.py',
         'scripts/prismatic_quality_v73.py','scripts/update_prismatic_v73_model.py'))
 

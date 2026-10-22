@@ -19,7 +19,7 @@ The descriptor declares native robot config, active closure, uncertainty, wrist/
 Fresh checkout and source audit:
 
 ```
-git clone --branch codex/agentic-interaction-v8 REPOSITORY FRESH_CHECKOUT
+git clone --branch agentic-interaction-v8.0.0 REPOSITORY FRESH_CHECKOUT
 cd FRESH_CHECKOUT
 python3 -m unittest discover -s tests -p test_agentic_interaction_v8.py
 python3 -m agentic_interaction_v8.cli audit --bundle NEW_PRIVATE_BUNDLE
@@ -38,6 +38,8 @@ python3 -m agentic_interaction_v8.cli command --episode OUTPUT --sequence 0 --js
 ```
 
 Watch acknowledgments and completion before the next command. Keep decisions concise within the finite unloaded window. If interaction cannot continue, publish `finish`; if transport fails use the owned scene's `STOP_AND_EXPORT` marker. Allow guarded exit reserve. Inspect process completion and GPU/PID release. Do not kill unrelated jobs.
+
+The release writes `V8_LOADED_SOURCES.json` synchronously when the session returns, before the frozen runner closes Isaac. Do not depend on `atexit` for simulator evidence. `V8_PRELAUNCH.json`, `SOURCE_PROVENANCE.json`, the release source lock and resource commitments remain separate checks. Missing provenance is an audit failure to report, not a reason to recreate a purported loaded-module ledger after process exit.
 
 ## Outputs and claims
 

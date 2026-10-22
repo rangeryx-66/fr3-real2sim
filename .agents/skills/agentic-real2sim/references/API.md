@@ -26,6 +26,8 @@ Drawer `build_geometry` also accepts `grasp_family:"existing_bar"|"compact_radia
 
 When SAM is incomplete, inspect semantic/depth hypothesis boards. `observed_handle_hypothesis:{source:"SAM3"|"OBSERVED_DEPTH",id:...,sha256:...,reason:...}` explicitly approves a current observed hypothesis. Obtain exact ID/hash from current packet. Optional alternative `candidate_request` must use current catalog SHA/ID/reason; never hand a saved transform to the planner. Inspect source implementations for the exact current catalog fields if needed.
 
+If a fresh SAM hypothesis is contaminated/associated with another bar and metric alternatives are not yet present, expose the existing frozen image/depth-only proposals with `python scripts/prismatic_visual_v73.py CURRENT_WRIST_FOLDER` (omit `--checkpoint` for depth-only proposals). Inspect its proposal board, then approve one current `OBSERVED_DEPTH` hypothesis through `build_geometry` with ID/hash/reason. This prepares observation hypotheses only; it neither executes contact nor grants a GT crop, manual mask or pose correction.
+
 Segment example (SI native coordinate):
 
 ```json

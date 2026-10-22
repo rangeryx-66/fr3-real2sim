@@ -1,6 +1,8 @@
 """Packaging invariants; no mock claim of physical contact or hardware portability."""
 import hashlib
 import json
+import subprocess
+import sys
 import tempfile
 import unittest
 from pathlib import Path
@@ -10,6 +12,23 @@ from agentic_interaction_v8.cli import audit,prepare
 
 
 class V8Packaging(unittest.TestCase):
+    def test_provenance_survives_runner_fast_exit_before_atexit(self):
+        with tempfile.TemporaryDirectory()as t:
+            path=Path(t)/'sources.json'
+            code='from agentic_interaction_v8.entry import finish_before_shutdown\nfrom pathlib import Path\nimport os\nfinish_before_shutdown(None,lambda r:42,lambda:Path('+repr(str(path))+').write_text("recorded"))\nos._exit(0)\n'
+            subprocess.run([sys.executable,'-c',code],check=True)
+            self.assertEqual(path.read_text(),'recorded')
+            from agentic_interaction_v8.entry import finish_before_shutdown
+            calls=[]
+            def failure(r):raise ValueError('original failure')
+            with self.assertRaisesRegex(ValueError,'original failure'):
+                finish_before_shutdown(None,failure,lambda:calls.append('finalized'))
+            self.assertEqual(calls,['finalized'])
+            def disk_failure():raise OSError('disk unavailable')
+            with self.assertRaisesRegex(ValueError,'original failure')as c:
+                finish_before_shutdown(None,failure,disk_failure)
+            self.assertIn('disk unavailable',str(c.exception.__notes__))
+
     def test_frozen_actual_sources_and_historical_variants(self):
         a=audit();self.assertEqual(a['frozen_revolute_source_files'],71)
         self.assertFalse(a['failures'])
