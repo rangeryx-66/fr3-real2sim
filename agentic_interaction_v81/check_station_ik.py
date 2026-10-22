@@ -36,6 +36,7 @@ def run(episode,bases,goal):
         result=check_arc(motion,np.asarray(plan['T']),np.eye(4),base,
             float(plan['path'][0]['state']),goal,float(plan['contact_geometry_audit']['physical_aperture_m']),
             solver,lambda *a,**k:{},SimpleNamespace(check=lambda *a:(True,'NO_COLLISION_CHECK')))
+        result.update(collision_checked=False,native_geometry_use='none; robot IK only')
         results.append(dict(base_xy_m=xy,**result))
     return dict(scope='IK_ONLY_DIAGNOSTIC_NOT_COLLISION_OR_EXECUTION',results=results,
         source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),

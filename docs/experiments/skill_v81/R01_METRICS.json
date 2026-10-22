@@ -1,0 +1,195 @@
+{
+  "episode_id": "v81_engineering_revolute_01",
+  "status": "FULL_RANGE_ENGINEERING_INCOMPLETE_NOT_PASS",
+  "phase": "engineering_not_independent_repetition",
+  "source_commit": "d4d63b20dab27ade0fabc9f67523da262c93fe78",
+  "baseline": "agentic-interaction-v8.0.0",
+  "joint_type": "revolute",
+  "maximum_actual_coordinate_rad": 0.20088651776313782,
+  "goal_coordinate_rad": 1.5707963267948966,
+  "actual_acquisitions": 2,
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_ACCEL_OPEN",
+      "status": "TARGET_REACHED",
+      "gain_native": 0.20088269477973464,
+      "final_coordinate": 0.200882688164711,
+      "elapsed_sim_s": 14.100000000000023
+    },
+    {
+      "id": 2,
+      "role": "FIT_SLOW_REVERSE",
+      "status": "TARGET_REACHED",
+      "gain_native": -0.12158507108688354,
+      "final_coordinate": 0.07929761707782745,
+      "elapsed_sim_s": 10.695833333333326
+    },
+    {
+      "id": 3,
+      "role": "FIT_FAST_REOPEN",
+      "status": "TARGET_REACHED",
+      "gain_native": 0.0921361893415451,
+      "final_coordinate": 0.17143380641937256,
+      "elapsed_sim_s": 5.974999999999994
+    },
+    {
+      "id": 4,
+      "role": "VALIDATION_DISTINCT_REVERSE",
+      "status": "TARGET_REACHED",
+      "gain_native": -0.10711323469877243,
+      "final_coordinate": 0.06430300325155258,
+      "elapsed_sim_s": 8.008333333333326
+    }
+  ],
+  "base_relocations": [
+    {
+      "reached": true,
+      "initial_base": [
+        0.19605375826358795,
+        -0.5328198075294495,
+        -0.10000000149011612,
+        -0.7952486758187507
+      ],
+      "actual_base": [
+        0.30000001192092896,
+        -0.8200000524520874,
+        -0.09999991953372955,
+        -0.7952486758187507
+      ],
+      "position_error_m": 5.378968326179636e-08,
+      "object_coordinate": 0.06430757790803909
+    }
+  ],
+  "complete_independent_validation_segments": 1,
+  "prevalidation_model": {
+    "seal_file": "agent_predeclared_chain2.json",
+    "model_sha256": "e110fec07276a4fba27c53c594822a5f1df673f854ab5160e1e1a038d3e12322",
+    "parameters": [
+      0.12913107100909327,
+      0.2354519746458147,
+      0.027931098300763842,
+      0.0369988651257457,
+      0.039195591050856605,
+      0.020047519005501873
+    ],
+    "conditional_std": [
+      0.001368381900145034,
+      0.003866061264022916,
+      0.0003128313792738142,
+      0.00015344071129755454,
+      0.00018175562427167997,
+      0.00022532783779790285
+    ],
+    "heldout": {
+      "VALIDATION_DISTINCT_REVERSE_04#0": {
+        "status": "predicted",
+        "effort_rmse": 0.00017803379895242236,
+        "coordinate_rmse": 0.0010697094672550795,
+        "velocity_rmse": 0.0005547987105062312,
+        "final_coordinate_error": -0.00016245944828542636,
+        "outside_FIT_support": false,
+        "samples": 1680,
+        "duration_s": 6.995833333333337,
+        "units": {
+          "coordinate": "rad",
+          "effort": "N m",
+          "inertial": "kg m^2",
+          "damping": "N m s/rad"
+        },
+        "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+      }
+    },
+    "validation_used_for_fit": false
+  },
+  "safety_stop_records": 0,
+  "informational_warning_records": 3383,
+  "final_safe_park": true,
+  "process": {
+    "returncode": 0,
+    "wall_s": 4511.914879967924,
+    "actor_exited": true
+  },
+  "profile": {
+    "wall_s": 4508.383149371948,
+    "simulation_s": 425.22499999999997,
+    "simulation_per_wall_s": 0.0943187359883636,
+    "cost_wall_s": {
+      "initialization": 19.132365968078375,
+      "trajectory_planning": 19.80204099905677,
+      "actuation": 155.98455053311773,
+      "physics_and_contact_callback": 406.0136018337216,
+      "state_and_FT": 212.50159665569663,
+      "collision_and_safety": 60.9434465020895,
+      "buffered_evidence": 90.49171892623417,
+      "RGBD_SAM3_and_incremental_geometry": 192.06694576493464,
+      "IK_and_view_planning": 0.9260015380568802,
+      "grasp_ranking_and_IK": 909.5678752348758,
+      "Pink_IK": 4.58760183560662,
+      "command_collision_queries": 6.176358539611101,
+      "render_and_video": 0.8867286359891295,
+      "export": 0.04190577077679336
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 19.132365968078375,
+      "trajectory_planning": 19.80204099905677,
+      "actuation": 155.98455053311773,
+      "physics_and_contact_callback": 406.0136018337216,
+      "state_and_FT": 212.50159665569663,
+      "collision_and_safety": 60.9434465020895,
+      "buffered_evidence": 90.49171892623417,
+      "RGBD_SAM3_and_incremental_geometry": 192.06694576493464,
+      "IK_and_view_planning": 0.9260015380568802,
+      "grasp_ranking_and_IK": 909.5678752348758,
+      "Pink_IK": 4.58760183560662,
+      "command_collision_queries": 6.176358539611101,
+      "render_and_video": 0.8867286359891295,
+      "export": 0.04190577077679336
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 32,
+      "actuation": 102054,
+      "physics_and_contact_callback": 102054,
+      "state_and_FT": 102054,
+      "collision_and_safety": 102054,
+      "buffered_evidence": 102054,
+      "RGBD_SAM3_and_incremental_geometry": 8,
+      "IK_and_view_planning": 5,
+      "grasp_ranking_and_IK": 4,
+      "Pink_IK": 12083,
+      "command_collision_queries": 1511,
+      "render_and_video": 30,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 19.5794670060277,
+      "PREGRASP": 1372.8291946290992,
+      "agent_return_to_execution_start": 0.916249489877373,
+      "APPROACH": 17.773414690745994,
+      "SLOW_CLOSE": 297.86677652061917,
+      "CENTER": 25.68213888676837,
+      "LOW_PRELOAD": 2.170072848442942,
+      "FORCE_HOLD": 5.565223837969825,
+      "OPEN_CONTINUE": 101.42629757151008,
+      "RELEASE": 31.987347665941343,
+      "CLEARANCE_RETREAT": 34.31157229910605,
+      "SAFE_PARK_MOTION": 168.11838905187324,
+      "agent_wrist_motion": 0.8965942398644984
+    },
+    "unaccounted_wall_s": 2429.2604106341023,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "unloaded_agent_wait_total_wall_s": 2205.105695451377,
+  "storage_bytes_before_private_index": 93904755,
+  "private_evidence_index_sha256": "ea06281aaea33789ae482055a3a38df34732a4e958760accbb28792c92fdefbe",
+  "authored_truth_not_revealed_in_this_report": true,
+  "limitations": [
+    "known hinge/state",
+    "ideal virtual wrist FT",
+    "simulated wrist mount",
+    "simulated driven XY base stage, not wheels",
+    "development object and unchanged engineering dynamics",
+    "No actual opening beyond11.51deg in this scene; planned reach is not physical motion"
+  ]
+}
