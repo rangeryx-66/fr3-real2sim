@@ -17,7 +17,10 @@ def operations_class(original):
                 model_bytes=m.read_bytes() if m.exists() else None
                 expected=max((s['id'] for s in self.r.record.segments if s['role'].startswith('FIT') and s['completed']),default=0)
                 valid=(model_bytes is not None and ready.get('model_sha256')==hashlib.sha256(model_bytes).hexdigest()
-                       and ready.get('latest_completed_FIT_id')==expected and ready.get('qualified_bidirectional'))
+                       and expected>0 and ready.get('episode_id')==self.r.job['episode_id']
+                       and ready.get('latest_completed_FIT_id')==expected and ready.get('qualified_bidirectional')
+                       and ready.get('positive_bins',0)>=8 and ready.get('negative_bins',0)>=8
+                       and ready.get('distinct_eligible_trajectories',0)>=2)
                 if not valid:
                     # No waiting for workers or Agent inference while loaded.
                     # End this finite block and use the original release/park.

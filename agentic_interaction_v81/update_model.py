@@ -41,6 +41,8 @@ def update(folder,output=None,allow_interrupted_fit=False):
     trajectories={r['segment'] for r in rows}
     completed=[s['id'] for s in result['segments'] if s['role'].startswith('FIT') and s['quality'].get('action_status') is not None]
     ready=dict(schema='v81-measured-FIT-readiness',estimator_version=result['estimator_version'],
+        episode_id=json.loads((folder/'job.json').read_text())['episode_id'],
+        numeric_index_sha256=hashlib.sha256((folder/'telemetry/index.json').read_bytes()).hexdigest(),
         model_sha256=hashlib.sha256((out/'estimate.json').read_bytes()).hexdigest(),
         latest_completed_FIT_id=max(completed,default=0),groups=groups,
         positive_bins=positive,negative_bins=negative,distinct_eligible_trajectories=len(trajectories),
