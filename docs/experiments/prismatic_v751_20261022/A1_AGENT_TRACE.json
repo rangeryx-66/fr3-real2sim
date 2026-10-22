@@ -1,0 +1,623 @@
+{
+  "episode": "v751_45290_transfer_01_interface_repair",
+  "trace_sha256": "fea4b61f366b1577522c674f3483b444d50652fa06c7fb118113177a1fd697b9",
+  "raw_images_and_telemetry_private": true,
+  "decisions": [
+    {
+      "sequence": 0,
+      "operation": "evaluate_view",
+      "Agent_reason": "Inspected this scene fresh RGB/depth/cloud and candidate_00_002 lower target handle overlay. Request upper oblique side view to observe cross-section and distinguish real support from unknown rear. No archived viewpoint used.",
+      "operation_wall_s": 0.13186200615018606,
+      "unloaded_wait_s": 58.16942104185,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": false,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 1,
+      "operation": "evaluate_view",
+      "Agent_reason": "Higher-side view was NO_IK; reduce elevation and use the opposite lateral side based on current observed lower-bar centre. Original collision/IK checks remain authoritative.",
+      "operation_wall_s": 0.149430510122329,
+      "unloaded_wait_s": 18.59359088889323,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": true,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 2,
+      "operation": "move_and_observe",
+      "Agent_reason": "Execute the validated smaller upper-left oblique view through native arm actuation; inspect fresh cross-section before choosing a grasp.",
+      "operation_wall_s": 31.592303630895913,
+      "unloaded_wait_s": 15.033886878052726,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 3,
+      "operation": "reobserve_and_replan",
+      "Agent_reason": "Fresh oblique board shows lower target bar and shadow/panel ambiguity. Initial automatically accepted view belonged to upper handle; incremental association correctly refuses unrelated lower surface. Start a fresh same-scene observation generation, explicitly select lower current SAM before accumulating views. No object reset or grasp has occurred.",
+      "operation_wall_s": 31.23224945203401,
+      "unloaded_wait_s": 68.0896739771124,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 4,
+      "operation": "build_geometry",
+      "Agent_reason": "Select current measured lower bar before accumulation. Generate existing families and whole-chain checked candidates; inspect alternative depth/pitch before physical acquisition. Keep initial 1 N request; transverse correction disabled for first contact comparison.",
+      "operation_wall_s": 121.08162256982177,
+      "unloaded_wait_s": 67.34809431503527,
+      "requested_preload_N": 1,
+      "transverse_unloading": false,
+      "observation_hypothesis": {
+        "source": "SAM3",
+        "id": "candidate_00_000",
+        "sha256": "8538cdac1f3f6d27e527485be12541e124cae21200086fefd72d7661eccfdd72",
+        "reason": "Inspected current generation 01 RGB/depth/cloud and candidate_00_000 overlay: actual lower moving drawer bar, excluding shadow/panel strip in the larger semantic mask."
+      },
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {
+        "gripper_link2": 0.009876899999999994,
+        "gripper_link1": 0.007817925000000003
+      },
+      "plan": true,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 5,
+      "operation": "build_geometry",
+      "Agent_reason": "Agent-inspected new RGB-D, semantic-support board and generated plan. Test an existing pitched contact family before adding bounded unloading.",
+      "operation_wall_s": 0.0001184090506285429,
+      "unloaded_wait_s": 136.85903488914482,
+      "requested_preload_N": 1,
+      "transverse_unloading": false,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {},
+      "plan": false,
+      "valid": null,
+      "feasible": null,
+      "reason": "CHANGED_RECOVERY_CONDITIONS_REQUIRE_NEW_AUTOMATIC_CATALOG",
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 6,
+      "operation": "build_geometry",
+      "Agent_reason": "Agent-inspected new RGB-D, semantic-support board and generated plan. Test an existing pitched contact family before adding bounded unloading. Numeric request normalized to float for the preserved recovery-condition fingerprint; preceding rejected command performed no robot action.",
+      "operation_wall_s": 176.7493514039088,
+      "unloaded_wait_s": 96.87748792208731,
+      "requested_preload_N": 1.0,
+      "transverse_unloading": false,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {
+        "gripper_link2": 0.009876899999999994,
+        "gripper_link1": 0.007817925000000003
+      },
+      "plan": true,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 7,
+      "operation": "validate_execution",
+      "Agent_reason": "Pitched request failed physical-route feasibility; accept the original checker fallback only after current-state full return/approach validation. Fresh measured lower-bar surfaces and selected same-centre plan inspected; no pose override.",
+      "operation_wall_s": 3.098255316959694,
+      "unloaded_wait_s": 23.965317499125376,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": true,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 8,
+      "operation": "attempt_grasp_and_probe",
+      "Agent_reason": "Explicit Agent approval after fresh RGB-D/mask/cloud, semantic measured-support board, selected grasp visualization and full current return/approach checks (104/144 states). Existing pitched candidate was infeasible, so execute checked automatic fallback at unchanged 1.0 N request, unloading disabled. Preserve any first failure; no manual pose, GT correction or safety relaxation.",
+      "operation_wall_s": 372.13668972300366,
+      "unloaded_wait_s": 47.02776128007099,
+      "requested_preload_N": 1.0,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": -1.157374196480987e-09,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        }
+      },
+      "physical_grasp_started": true,
+      "physical_segments": [
+        {
+          "status": "TRANSMISSION_FAILURE",
+          "reason": "PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+          "gain_native": 2.3615637970930692e-05,
+          "joint_coordinate": 2.361448059673421e-05,
+          "elapsed_sim_s": 5.308333333333337,
+          "physical_transmission_valid": false
+        }
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    },
+    {
+      "sequence": 9,
+      "operation": "reobserve_and_replan",
+      "Agent_reason": "Inspected attempt 1 current contact curve and point map: bilateral acquisition/1 s hold succeeded, only 0.0236 mm drawer motion with growing measured TCP/drawer slip and native anchor traction below breakaway. Safe release and full park verified, no HARD latch. Obtain fresh current wrist evidence before a changed legal preload/contact-trajectory acquisition; preserve first failure.",
+      "operation_wall_s": 60.38429888896644,
+      "unloaded_wait_s": 75.55632766592316,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 10,
+      "operation": "build_geometry",
+      "Agent_reason": "Attempt 1 achieved bilateral hold but sustained actual TCP/drawer slip and inadequate rail traction. At verified parked unloaded state select tested 1.5 N request and the preregistered rail-orthogonal bounded unloading trajectory to address previously measured jaw-axis constraint load. Generate all eligible existing families and enforce current full closing/reverse/release/exit checks. No saved pose, drive-cap change or safety relaxation; two changed factors are not an isolated preload AB.",
+      "operation_wall_s": 156.53838889696635,
+      "unloaded_wait_s": 101.14409668114968,
+      "requested_preload_N": 1.5,
+      "transverse_unloading": true,
+      "observation_hypothesis": {
+        "source": "SAM3",
+        "id": "candidate_00_000",
+        "sha256": "8c3adea78572b049d219c97f578b7495f3aed6526f099a1799f9076357221a33",
+        "reason": "Inspected fresh generation 02 actual RGB, metric depth and cloud and independent lower-handle SAM overlay after prior safe release. Current lower bar and mounts belong to target; higher-scored upper handle rejected."
+      },
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {
+        "gripper_link2": 0.009876899999999994,
+        "gripper_link1": 0.007817925000000003
+      },
+      "plan": true,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 11,
+      "operation": "validate_execution",
+      "Agent_reason": "Inspected fresh recovery geometry/uncertain-surface and automatic plan boards: centre grasp roll 0 (different native arm branch from first roll 180), legal 1.5 N request, bounded transverse unloading explicitly enabled. Validate full measured-state transition before second acquisition; no manual candidate coordinates.",
+      "operation_wall_s": 2.365526136942208,
+      "unloaded_wait_s": 46.97754432214424,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": true,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 12,
+      "operation": "attempt_grasp_and_probe",
+      "Agent_reason": "Explicit second acquisition approval after current generation 02 fresh wrist images/depth/mask/cloud, measured versus uncertain support and automatic roll-0 grasp inspection. Return93/approach84 states pass, minimum approach margin .68175 rad. First failure and safe full park retained. Execute legal 1.5 N request with previously frozen bounded rail-transverse unloading; original closure/hold/guards and complete predeclared FIT/VALIDATION chain unchanged. No manual pose correction or hidden-dynamics control.",
+      "operation_wall_s": 478.3264496040065,
+      "unloaded_wait_s": 27.7788408419583,
+      "requested_preload_N": 1.5,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": -2.9395248901664672e-08,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        }
+      },
+      "physical_grasp_started": true,
+      "physical_segments": [
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.020087128098037255,
+          "joint_coordinate": 0.020087098702788353,
+          "elapsed_sim_s": 10.09166666666664,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.014203839004039764,
+          "joint_coordinate": 0.0058832596987485886,
+          "elapsed_sim_s": 9.020833333333371,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.011152144521474838,
+          "joint_coordinate": 0.017035404220223427,
+          "elapsed_sim_s": 7.6749999999999545,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.007083341479301453,
+          "joint_coordinate": 0.009952062740921974,
+          "elapsed_sim_s": 7.337500000000034,
+          "physical_transmission_valid": true
+        }
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    },
+    {
+      "sequence": 13,
+      "operation": "finish",
+      "Agent_reason": "Inspected current attempt-02 raw load/aperture/TCP-drawer/F-T/contact plots and online worker results. Recovery completed measured +20.087/-14.204/+11.152/-7.083 mm, all three predeclared FIT and separate complete VALIDATION TARGET_REACHED; original 1 s hold and final measured full park verified. Minimum informative objective achieved; no third acquisition or optional range expansion. Seal online estimates and end this engineering scene without erasing first failure.",
+      "operation_wall_s": 0.7404840090312064,
+      "unloaded_wait_s": 100.89008216699585,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": true,
+      "verified_park": true
+    }
+  ]
+}

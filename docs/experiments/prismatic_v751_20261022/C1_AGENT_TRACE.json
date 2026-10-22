@@ -1,0 +1,270 @@
+{
+  "episode": "v751_round_cap_19855_01_callback_repair",
+  "trace_sha256": "661ae967940d757450ed2637d95bde0c06c8e05e27288bc5d6ba38acafb3cdca",
+  "raw_images_and_telemetry_private": true,
+  "decisions": [
+    {
+      "sequence": 0,
+      "operation": "evaluate_view",
+      "Agent_reason": "Inspected fresh repaired-scene actual RGB/depth/cloud: only table legs/lower brace, cap remains above frame. Request upper/farther view derived anew from this capture upper-structure depth boundary and measured camera pose; no saved camera coordinates or handle GT. Reject lower-brace/leg proposals as target.",
+      "operation_wall_s": 0.20573021098971367,
+      "unloaded_wait_s": 80.08020375692286,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": true,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 1,
+      "operation": "move_and_observe",
+      "Agent_reason": "Execute the validated view derived from the inspected fresh upper visible structure to reveal the missing cap.",
+      "operation_wall_s": 48.634752759942785,
+      "unloaded_wait_s": 275.3332132678479,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 2,
+      "operation": "build_geometry",
+      "Agent_reason": "Fresh wrist evidence supports a compact circular cap. Evaluate existing depth budget and radial jaw orientations with unchanged scoring and current-state native collision feasibility; require current radial generation nonce, no bar fallback.",
+      "operation_wall_s": 232.06077892403118,
+      "unloaded_wait_s": 53.50779620488174,
+      "requested_preload_N": 1,
+      "transverse_unloading": false,
+      "observation_hypothesis": {
+        "source": "OBSERVED_DEPTH",
+        "id": "3",
+        "sha256": "9e593bd62d90003d1e5b130d1992355f3a1f2a575907972832568c7b3d536d65",
+        "reason": "Inspected fresh RGB, mask, depth and proposal overlay. Compact front cap #3 is distinct from shallower #4 rear/stem/panel ambiguity; reject table edge and legs. Use radial centre-only family, unknown rear remains uncertain."
+      },
+      "grasp_family": "compact_radial_cap",
+      "candidate_family": [
+        0.0,
+        0.018749999813735485,
+        225.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_CAP_V751_01",
+          "target_q": 0.014,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_CAP_V751_02",
+          "target_q": 0.004,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_CAP_V751_03",
+          "target_q": 0.012,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_CAP_DISTINCT_V751_04",
+          "target_q": 0.007,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {
+        "gripper_link1": 0.0181128,
+        "gripper_link2": 0.0181128
+      },
+      "plan": true,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 3,
+      "operation": "validate_execution",
+      "Agent_reason": "Inspected actual radial plan board, cap support vs uncertain rear, selected centre-only 225deg family with current nonce. Validate current observation-to-home route and complete timed approach/closing/short bidirectional chain against measured state before any contact.",
+      "operation_wall_s": 2.154470139881596,
+      "unloaded_wait_s": 60.538904786109924,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": true,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 4,
+      "operation": "attempt_grasp_and_probe",
+      "Agent_reason": "Explicit Agent approval of ONE cap acquisition at inspected fresh radial candidate [centre,+18.75mm,225deg,0pitch]; current return134/approach91 states and2636 timed samples validated, minimum approach margin1.192rad. Predicted first contact18.11mm, rear uncertainty and low robust support remain diagnostic concerns, not GT corrections. Original closure/hold, four declared FIT/VALIDATION actions, all original guards and guarded exit; preserve failure.",
+      "operation_wall_s": 449.1837225679774,
+      "unloaded_wait_s": 20.82647366914898,
+      "requested_preload_N": 1,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.018749999813735485,
+        225.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_CAP_V751_01",
+          "target_q": 0.014,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_CAP_V751_02",
+          "target_q": 0.004,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_CAP_V751_03",
+          "target_q": 0.012,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_CAP_DISTINCT_V751_04",
+          "target_q": 0.007,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": -2.5721186958094222e-08,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        }
+      },
+      "physical_grasp_started": true,
+      "physical_segments": [
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.014059973524803482,
+          "joint_coordinate": 0.014059947803616524,
+          "elapsed_sim_s": 14.51666666666668,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.010215477785095572,
+          "joint_coordinate": 0.0038444700185209513,
+          "elapsed_sim_s": 6.4541666666666515,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.00827532703988254,
+          "joint_coordinate": 0.012119797058403492,
+          "elapsed_sim_s": 6.200000000000017,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.005276874173432589,
+          "joint_coordinate": 0.006842922884970903,
+          "elapsed_sim_s": 5.974999999999994,
+          "physical_transmission_valid": true
+        }
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    },
+    {
+      "sequence": 5,
+      "operation": "finish",
+      "Agent_reason": "Inspected current cap contact/motion board: actual14.06mm pull,10.22mm reversal, all three FIT and complete distinct VALIDATION reached; no further acquisition useful within this bounded scene. Geometry contact-point reconstruction unavailable remains explicit. Online model high condition and limited support require uncertainty/posthoc evaluation; do not tune. Full safe park verified; finish/export.",
+      "operation_wall_s": 0.7865789118222892,
+      "unloaded_wait_s": 42.6761271271389,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": true,
+      "verified_park": true
+    }
+  ]
+}

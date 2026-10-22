@@ -1,0 +1,421 @@
+{
+  "episode": "v751_prospective_45290_00",
+  "trace_sha256": "25e4ccd3f9e4e0dd6b605c408cb42cffc8feb94c15c7dcb215660b5b94a9aaf5",
+  "raw_images_and_telemetry_private": true,
+  "decisions": [
+    {
+      "sequence": 0,
+      "operation": "build_geometry",
+      "Agent_reason": "Fresh lower handle fully visible, no additional viewpoint required before automatic planning. Start legal1N request. Explicitly enable frozen bounded rail-orthogonal unloading to address observed contact-loading risk from prior engineering mechanism, not hidden plant values. Keep original scoring/current-state complete collision feasibility and full declared FIT/VAL chain.",
+      "operation_wall_s": 154.00360642094165,
+      "unloaded_wait_s": 97.89242152799852,
+      "requested_preload_N": 1,
+      "transverse_unloading": true,
+      "observation_hypothesis": {
+        "source": "SAM3",
+        "id": "candidate_00_000",
+        "reason": "Fresh actual wrist RGB/depth/cloud and candidate000 overlay inspected: complete lower drawer bar, distinct from higher-score upper adjacent drawer handle. Accept lower observed front strip; uncertain backside remains separate.",
+        "sha256": "89af41bafcc0e17e56e8bf210fbf29ac8bf8d7ddaa5f517ce2736fb7016fe254"
+      },
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {
+        "gripper_link1": 0.009876899999999994,
+        "gripper_link2": 0.007817925000000003
+      },
+      "plan": true,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 1,
+      "operation": "validate_execution",
+      "Agent_reason": "Inspected fresh measured lower-bar geometry and selected automatic roll180 plan, measured/uncertain surfaces remain separate. Validate current-state complete return and timed approach, closing envelope, short bidirectional path and exit; original guards authoritative. No saved grasp or hidden dynamics.",
+      "operation_wall_s": 2.8621170930564404,
+      "unloaded_wait_s": 55.216589741874486,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": true,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 2,
+      "operation": "attempt_grasp_and_probe",
+      "Agent_reason": "Explicit Agent approval: inspected fresh lower-handle geometry/uncertainty and automatic current-state candidate. Validated return93 states, approach144 states min0.11878rad and complete timed route. Attempt legal initial1N acquisition with frozen bounded rail-orthogonal unloading and original one-second hold, then declared three FIT and immediate complete distinct VALIDATION. Original contact/force/collision/joint stops and measured parking remain authoritative; blind dynamics remain unread.",
+      "operation_wall_s": 396.19331965898164,
+      "unloaded_wait_s": 29.583662838907912,
+      "requested_preload_N": 1,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_ACCEL_V751_01",
+          "target_q": 0.02,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_REVERSE_V751_02",
+          "target_q": 0.006,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_VARIED_V751_03",
+          "target_q": 0.017,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_DISTINCT_V751_04",
+          "target_q": 0.01,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": -3.689686778329815e-08,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        }
+      },
+      "physical_grasp_started": true,
+      "physical_segments": [
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.0200599763707352,
+          "joint_coordinate": 0.020059939473867416,
+          "elapsed_sim_s": 11.137500000000003,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TRANSMISSION_FAILURE",
+          "reason": "SUSTAINED_LOW_TRANSMISSION",
+          "gain_native": -0.003571541979908943,
+          "joint_coordinate": 0.016488397493958473,
+          "elapsed_sim_s": 7.808333333333337,
+          "physical_transmission_valid": false
+        }
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    },
+    {
+      "sequence": 3,
+      "operation": "reobserve_and_replan",
+      "Agent_reason": "Inspected this attempt actual load/aperture/rail-motion and native contact-location boards. Opening20.06mm succeeded; reverse stalled after3.57mm: command/TCP deficit0.694mm vs actual TCP/drawer relative change1.438mm, sustained low transmission ratio.0865. Both pads reported during reverse; no hard latch, no claim of separation. Verified released and fully parked. Request fresh wrist observations at actual16.49mm state to choose another feasible jaw orientation/arm branch and legal preload; no object reset or unchanged retry.",
+      "operation_wall_s": 54.1210912510287,
+      "unloaded_wait_s": 52.38445546897128,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 4,
+      "operation": "build_geometry",
+      "Agent_reason": "Reverse failed with increasing actual TCP/drawer relative motion after successful20mm pull, despite both normal reports; choose legal1.5N request for new acquisition and let fresh current-state native-collision planner select another eligible family/arm branch. Keep bounded unloading. Predeclare acceleration-rich closing to test failed direction over measured overlap, different-speed opening, reverse FIT, then immediate complete distinct-profile opening VALIDATION. No hidden physics/saved pose; failed family remains in episode memory.",
+      "operation_wall_s": 173.75619958899915,
+      "unloaded_wait_s": 130.9157058519777,
+      "requested_preload_N": 1.5,
+      "transverse_unloading": true,
+      "observation_hypothesis": {
+        "source": "SAM3",
+        "id": "candidate_00_000",
+        "reason": "Inspected fresh generation1 RGB, masks, metric depth/cloud and lower candidate000 overlay at actual16.49mm state. Select lower bar front strip, exclude the higher adjacent handle and preserve uncertain mounts/rear.",
+        "sha256": "740db1d5a52c392b184a892816f40b92a39b258090417f7b83dd5ee2a16a9f57"
+      },
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_RECOVERY_REVERSE_ACCEL_V751_01",
+          "target_q": 0.008,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_RECOVERY_OPEN_SLOW_V751_02",
+          "target_q": 0.022,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_RECOVERY_REVERSE_VARIED_V751_03",
+          "target_q": 0.011,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_RECOVERY_OPEN_DISTINCT_V751_04",
+          "target_q": 0.018,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {
+        "gripper_link1": 0.009876899999999994,
+        "gripper_link2": 0.009876899999999994
+      },
+      "plan": true,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 5,
+      "operation": "validate_execution",
+      "Agent_reason": "Inspected fresh generation1 lower-handle recovery grasp board. Native search rejected several closing-envelope collisions and low-margin branches; selected existing centre roll0 family with different arm branch and minimum planned margin0.703rad. Validate actual current robot/door/fingers, complete timed approach, declared reverse-first FIT/VAL chain and safe exit. Prior failed candidate remains documented; no hidden dynamics or manual pose.",
+      "operation_wall_s": 2.3260980118066072,
+      "unloaded_wait_s": 29.75498919119127,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": true,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": null,
+      "verified_park": null
+    },
+    {
+      "sequence": 6,
+      "operation": "attempt_grasp_and_probe",
+      "Agent_reason": "Explicit Agent approval of second acquisition after inspected fresh wrist and different automatic roll0/current arm branch. Validate/execute original closure+one-second hold; legal1.5N request and frozen bounded rail-orthogonal unloading. Reverse-first acceleration FIT tests observed failed direction, then opening/reverse varied FIT and immediate complete opening VALIDATION. Reuse actual16.49mm state, no door reset, no hidden dynamics; hard stops/guarded park authoritative.",
+      "operation_wall_s": 451.37307330803014,
+      "unloaded_wait_s": 20.578026382019743,
+      "requested_preload_N": 1.5,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "planned_segments": [
+        {
+          "role": "FIT_RECOVERY_REVERSE_ACCEL_V751_01",
+          "target_q": 0.008,
+          "reference_speed_m_s": 0.0035,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus"
+        },
+        {
+          "role": "FIT_RECOVERY_OPEN_SLOW_V751_02",
+          "target_q": 0.022,
+          "reference_speed_m_s": 0.0022,
+          "reference_acceleration_m_s2": 0.01,
+          "velocity_program": null
+        },
+        {
+          "role": "FIT_RECOVERY_REVERSE_VARIED_V751_03",
+          "target_q": 0.011,
+          "reference_speed_m_s": 0.003,
+          "reference_acceleration_m_s2": 0.014,
+          "velocity_program": "sine"
+        },
+        {
+          "role": "VALIDATION_RECOVERY_OPEN_DISTINCT_V751_04",
+          "target_q": 0.018,
+          "reference_speed_m_s": 0.0018,
+          "reference_acceleration_m_s2": 0.009,
+          "velocity_program": "sine"
+        }
+      ],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": 0.0163844246417284,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        }
+      },
+      "physical_grasp_started": true,
+      "physical_segments": [
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.008416691794991493,
+          "joint_coordinate": 0.007967732846736908,
+          "elapsed_sim_s": 4.46666666666664,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.014119388535618782,
+          "joint_coordinate": 0.02208712138235569,
+          "elapsed_sim_s": 8.429166666666674,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.011138217523694038,
+          "joint_coordinate": 0.010948903858661652,
+          "elapsed_sim_s": 7.22083333333336,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.007149647921323776,
+          "joint_coordinate": 0.018098551779985428,
+          "elapsed_sim_s": 6.995833333333337,
+          "physical_transmission_valid": true
+        }
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    },
+    {
+      "sequence": 7,
+      "operation": "finish",
+      "Agent_reason": "Inspected current attempt2 contact/load/motion and native-location boards. Reverse-first8.42mm, opening14.12mm, reverse11.14mm and complete distinct validation7.15mm all reached. Full safe park verified; no additional acquisition or range expansion needed. Online212FIT/46VAL bins, stable conditional I/m,b,C and independent free prediction available, but no authored truth read yet. Preserve first reverse failure, freeze online result, finish/export.",
+      "operation_wall_s": 0.7800885681062937,
+      "unloaded_wait_s": 62.77537306398153,
+      "requested_preload_N": null,
+      "transverse_unloading": null,
+      "observation_hypothesis": null,
+      "grasp_family": null,
+      "candidate_family": null,
+      "planned_segments": [],
+      "predicted_first_contact_m": {},
+      "plan": null,
+      "valid": null,
+      "feasible": null,
+      "reason": null,
+      "error": null,
+      "physical_acquisition": null,
+      "physical_grasp_started": null,
+      "physical_segments": [],
+      "safe_exit": true,
+      "verified_park": true
+    }
+  ]
+}

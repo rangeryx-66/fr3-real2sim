@@ -59,10 +59,24 @@ def run(episode,output):
     reference=dict(mass_kg=sum(x['mass_kg']for x in truth['bodies']),
                    damping_N_s_m=truth['configuration']['b'],friction_N=truth['configuration']['tau_c'],law=truth['law'])
     result['post_episode_authored_reference']=reference
+    result['hidden_truth_read']=True
+    result['hidden_truth_read_only_after_online_seal']=True
     result['independently_verified_effective_PhysX_parameters']=False
+    result['parameter_relative_errors_percent']=None
     if selected:
         beta=selected['parameters'];ref=[reference['mass_kg'],reference['damping_N_s_m'],reference['friction_N']]
         result['parameter_relative_errors_percent']=[100*(x/y-1)for x,y in zip(beta,ref)]if selected['intervals']==0 else None
+        result['mass_damping_relative_errors_percent']=[100*(x/y-1)for x,y in zip(beta[:2],ref[:2])]
+        support=selected.get('support_intervals_native',[])
+        if support:
+            grid=np.concatenate([np.linspace(lo,hi,201)for lo,hi in support])
+            if selected['intervals']==0:pred=np.full_like(grid,beta[2])
+            else:
+                from xarm_ft_v7_estimator import basis
+                pred=basis(grid,selected['domain_native'],selected['intervals'])[:,selected['active_controls']]@np.asarray(beta[2:])
+            law=reference['law'];actual=law['base']+law.get('amplitude',0.)*np.exp(-.5*((grid-law.get('center',0.))/law.get('width',1.))**2)
+            result['resistance_error_observed_support']=dict(rmse_N=float(np.sqrt(np.mean((pred-actual)**2))),maximum_abs_N=float(abs(pred-actual).max()),
+                evaluation='uniform grid within each frozen FIT-supported interval only; post-seal diagnostic, no refit',full_stroke_or_unseen_peak_validated=False)
     for name,digest in seal['sha256'].items():assert hashlib.sha256((p/name).read_bytes()).hexdigest()==digest
     out=Path(output);out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(result,indent=2)+'\n')
     return result

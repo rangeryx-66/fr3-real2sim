@@ -1,0 +1,319 @@
+{
+  "episode": "v751_round_cap_19855_01_callback_repair",
+  "classification": "engineering; not a benchmark rate",
+  "status": "SESSION_COMPLETE",
+  "safe_exit": true,
+  "verified_park": true,
+  "physical_attempt_operations": 1,
+  "observations": 2,
+  "requested_preloads_N": [
+    1
+  ],
+  "segments": [
+    {
+      "role": "FIT_ACCEL_CAP_V751_01",
+      "status": "TARGET_REACHED",
+      "travel_m": 0.014059973524803482,
+      "end_coordinate_m": 0.014059947803616524,
+      "physical_duration_s": 14.516666666666667,
+      "requested_target_reached": true,
+      "transmission_valid": true,
+      "reason": null
+    },
+    {
+      "role": "FIT_REVERSE_CAP_V751_02",
+      "status": "TARGET_REACHED",
+      "travel_m": -0.010215477785095572,
+      "end_coordinate_m": 0.0038444700185209513,
+      "physical_duration_s": 6.454166666666667,
+      "requested_target_reached": true,
+      "transmission_valid": true,
+      "reason": null
+    },
+    {
+      "role": "FIT_VARIED_CAP_V751_03",
+      "status": "TARGET_REACHED",
+      "travel_m": 0.00827532703988254,
+      "end_coordinate_m": 0.012119797058403492,
+      "physical_duration_s": 6.2,
+      "requested_target_reached": true,
+      "transmission_valid": true,
+      "reason": null
+    },
+    {
+      "role": "VALIDATION_CAP_DISTINCT_V751_04",
+      "status": "TARGET_REACHED",
+      "travel_m": -0.005276874173432589,
+      "end_coordinate_m": 0.006842922884970903,
+      "physical_duration_s": 5.975,
+      "requested_target_reached": true,
+      "transmission_valid": true,
+      "reason": null
+    }
+  ],
+  "online_model": {
+    "parameters": [
+      1.5459102371778823,
+      4.340269246617634,
+      0.2546184578461211,
+      0.25745842503819055,
+      0.27152781552557903,
+      0.34811341301994597
+    ],
+    "conditional_std": [
+      0.0053083690958254165,
+      0.0039193211861281345,
+      0.00015722811414610978,
+      0.0002625482289592678,
+      0.0010648128236913303,
+      0.006735984098505337
+    ],
+    "scaled_condition": 1134.7825954776974,
+    "support_intervals_native": [
+      [
+        0.0014118507304894073,
+        0.003759362021810375
+      ],
+      [
+        0.004471331834793091,
+        0.013777151455481846
+      ]
+    ],
+    "conditionally_supported": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "uncalibrated_total_physical_accuracy": true,
+    "FIT_rmse": 2.6949354941937772e-05,
+    "heldout_motion": {
+      "VALIDATION_CAP_DISTINCT_V751_04_04#0": {
+        "status": "predicted",
+        "effort_rmse": 0.01141682743768959,
+        "coordinate_rmse": 0.000455835408260773,
+        "velocity_rmse": 0.00020341980030607639,
+        "final_coordinate_error": 0.0006446843320768395,
+        "outside_FIT_support": false,
+        "samples": 951,
+        "duration_s": 3.9583333333333144,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        },
+        "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+      }
+    },
+    "worker_wall_s": 2.243863619863987,
+    "model_sha256": "db2045deabcb2b4a0586709bef27208b752250e85cd31765fcb56738a2828edf",
+    "validation_used_for_fit_or_selection": false,
+    "tool_compensation_count": 1
+  },
+  "launcher_wall_s": 1354.6235815959517,
+  "bytes_by_category": {
+    "source_and_metadata": 19399253,
+    "numeric": 7147742,
+    "geometry": 1575641,
+    "RGBD_checkpoints": 7129999
+  },
+  "total_bytes": 35252635,
+  "index_sha256": "ec22b029a5befb6a45c4999589d121b87ac39319afbc85f83621a89b4bcb4b9a",
+  "raw_data_exported": false,
+  "hidden_truth_read": true,
+  "attempts": [
+    {
+      "requested_preload_N": 1,
+      "family": [
+        0.0,
+        0.018749999813735485,
+        225.0,
+        0.0
+      ],
+      "physical_grasp_started": true,
+      "acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": -2.5721186958094222e-08,
+        "units": {
+          "coordinate": "m",
+          "effort": "N",
+          "inertial": "kg",
+          "damping": "N s/m"
+        }
+      },
+      "segments": [
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.014059973524803482,
+          "joint_coordinate": 0.014059947803616524,
+          "elapsed_sim_s": 14.51666666666668,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.010215477785095572,
+          "joint_coordinate": 0.0038444700185209513,
+          "elapsed_sim_s": 6.4541666666666515,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": 0.00827532703988254,
+          "joint_coordinate": 0.012119797058403492,
+          "elapsed_sim_s": 6.200000000000017,
+          "physical_transmission_valid": true
+        },
+        {
+          "status": "TARGET_REACHED",
+          "reason": null,
+          "gain_native": -0.005276874173432589,
+          "joint_coordinate": 0.006842922884970903,
+          "elapsed_sim_s": 5.974999999999994,
+          "physical_transmission_valid": true
+        }
+      ],
+      "safe_exit": true,
+      "verified_park": true,
+      "error": null
+    }
+  ],
+  "maximum_coordinate_mm": 14.061848632991314,
+  "simulation_s": 174.19166666666666,
+  "observations_all_generations": 2,
+  "intentional_Agent_view_motions": 1,
+  "safety_stop_recorded": false,
+  "raw_normal_peak_N": [
+    1.394874095916748,
+    1.5108964443206787
+  ],
+  "frozen_online_selection": 8,
+  "model_status": "updated",
+  "FIT_bins": 187,
+  "VALIDATION_bins": 40,
+  "heldout_unfiltered_input_sensitivity": {
+    "VALIDATION_CAP_DISTINCT_V751_04_04#0": {
+      "status": "predicted",
+      "effort_rmse": 0.01852347146368217,
+      "coordinate_rmse": 7.575508671347915e-05,
+      "velocity_rmse": 2.424369589082688e-05,
+      "final_coordinate_error": 0.00011619953395714065,
+      "outside_FIT_support": false,
+      "samples": 951,
+      "duration_s": 3.9583333333333144,
+      "units": {
+        "coordinate": "m",
+        "effort": "N",
+        "inertial": "kg",
+        "damping": "N s/m"
+      },
+      "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+    }
+  },
+  "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+  "FIT_trajectory_CV": [
+    {
+      "segment": "FIT_ACCEL_CAP_V751_01_01",
+      "rmse": 5.0369335794699804e-05
+    },
+    {
+      "segment": "FIT_REVERSE_CAP_V751_02_02",
+      "rmse": 4.045594448924659e-05
+    },
+    {
+      "segment": "FIT_VARIED_CAP_V751_03_03",
+      "rmse": 4.803322810758304e-05
+    }
+  ],
+  "segment_loads": [
+    {
+      "role": "FIT_ACCEL_CAP_V751_01",
+      "status": "TARGET_REACHED",
+      "moving_samples": 3294,
+      "rail_RMS_N": 0.26491326091341505,
+      "moving_transverse_mean_N": 0.5357849489881817,
+      "maximum_causal_sensor_moment_Nm": 0.1561437640801288,
+      "raw_pad_peak_N": [
+        1.394874095916748,
+        1.0666215419769287
+      ],
+      "load_compensation": "same causal bias + tool gravity; full dynamic compensation remains in the estimator"
+    },
+    {
+      "role": "FIT_REVERSE_CAP_V751_02",
+      "status": "TARGET_REACHED",
+      "moving_samples": 1395,
+      "rail_RMS_N": 0.2695899921588047,
+      "moving_transverse_mean_N": 0.4315931526711253,
+      "maximum_causal_sensor_moment_Nm": 0.15822806173880627,
+      "raw_pad_peak_N": [
+        1.207149624824524,
+        1.397361159324646
+      ],
+      "load_compensation": "same causal bias + tool gravity; full dynamic compensation remains in the estimator"
+    },
+    {
+      "role": "FIT_VARIED_CAP_V751_03",
+      "status": "TARGET_REACHED",
+      "moving_samples": 1306,
+      "rail_RMS_N": 0.26710349998133964,
+      "moving_transverse_mean_N": 0.49522743280953263,
+      "maximum_causal_sensor_moment_Nm": 0.18129431634888504,
+      "raw_pad_peak_N": [
+        1.1808576583862305,
+        1.3192416429519653
+      ],
+      "load_compensation": "same causal bias + tool gravity; full dynamic compensation remains in the estimator"
+    },
+    {
+      "role": "VALIDATION_CAP_DISTINCT_V751_04",
+      "status": "TARGET_REACHED",
+      "moving_samples": 1212,
+      "rail_RMS_N": 0.26624636390462264,
+      "moving_transverse_mean_N": 0.49279265956962814,
+      "maximum_causal_sensor_moment_Nm": 0.1861284901122492,
+      "raw_pad_peak_N": [
+        1.0788538455963135,
+        1.4360947608947754
+      ],
+      "load_compensation": "same causal bias + tool gravity; full dynamic compensation remains in the estimator"
+    }
+  ],
+  "unloading": {
+    "updates": 0,
+    "maximum_offset_mm": 0.0,
+    "maximum_abs_rail_correction_m": 0.0,
+    "normal_load_symmetry_is_not_a_gate": true
+  },
+  "post_episode_authored_reference": {
+    "mass_kg": 1.540885201941519,
+    "damping_N_s_m": 4.3245417486074995,
+    "friction_N": 0.2505479345495437,
+    "law": {
+      "family": "localized_passive_friction",
+      "base": 0.2505479345495437,
+      "amplitude": 0.14621090352596458,
+      "center": 0.08067172792903143,
+      "width": 0.031109941880734123
+    }
+  },
+  "hidden_truth_read_only_after_online_seal": true,
+  "independently_verified_effective_PhysX_parameters": false,
+  "parameter_relative_errors_percent": null,
+  "mass_damping_relative_errors_percent": [
+    0.3261135372078172,
+    0.3636801058793937
+  ],
+  "resistance_error_observed_support": {
+    "rmse_N": 1.7078713932525563e-05,
+    "maximum_abs_N": 2.836832716895943e-05,
+    "evaluation": "uniform grid within each frozen FIT-supported interval only; post-seal diagnostic, no refit",
+    "full_stroke_or_unseen_peak_validated": false
+  }
+}
