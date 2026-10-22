@@ -10,7 +10,11 @@ sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 
 def main():
-    p=argparse.ArgumentParser();p.add_argument('--job',required=True,type=Path);a=p.parse_args()
+    p=argparse.ArgumentParser();p.add_argument('--job',required=True,type=Path)
+    p.add_argument('--move-xy',nargs=2,type=float,help='Short engineering fixture only, <=30 mm displacement')
+    a=p.parse_args()
+    if a.move_xy and (not all(__import__('math').isfinite(v) for v in a.move_xy) or __import__('math').hypot(*a.move_xy)>.03):
+        raise ValueError('BOUNDED_UNLOADED_INTERFACE_MOTION_ONLY')
     job=json.loads(a.job.read_text())
     from agentic_interaction_v8.cli import audit
     audit()
@@ -34,6 +38,15 @@ def main():
             acquisitions=0,object_joint_commands=False,base_motion_executed=False)
         atomic_json(r.output/'V81_STATIONARY_MOUNT_CHECK.json',result)
         if delta>.001:raise RuntimeError('MOUNT_FK_INCONSISTENT')
+        if a.move_xy:
+            initial=r.base.copy();target=initial[:2]+np.asarray(a.move_xy)
+            forward=r.move_station(target)
+            if not forward.get('reached'):raise RuntimeError('CHECKED_BASE_FORWARD_NOT_REACHED:'+str(forward.get('status')))
+            reverse=r.move_station(initial[:2])
+            if not reverse.get('reached'):raise RuntimeError('CHECKED_BASE_RETURN_NOT_REACHED')
+            result.update(status='UNLOADED_BASE_ROUND_TRIP_CHECK',forward=forward,reverse=reverse,
+                base_motion_executed=True,actual_outward_distance_m=float(np.linalg.norm(np.asarray(forward['actual_base'])[:2]-initial[:2])))
+            atomic_json(r.output/'V81_BASE_ROUND_TRIP_CHECK.json',result)
         return result
     # Retain the original full-loop owner and normal structured shutdown.
     sys.argv=[sys.argv[0],'--job',str(a.job)]
