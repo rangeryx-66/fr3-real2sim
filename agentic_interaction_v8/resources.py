@@ -122,6 +122,7 @@ def export_bundle(repo, descriptor, output):
                     original_sha256=original, original_to_bundle=mapping,
                     frozen_external_to_bundle=relocated, robot=robot, resources=resources, scenes=scenes,
                     legacy_result_roots=sorted({x.split('/results/')[0]+'/results/' for x in original if '/results/'in x}
+                        | {str(x).split('/results/')[0]+'/results/'for x in descriptor.values()if isinstance(x,str)and '/results/'in x}
                         | {str(row['asset_root']).split('/results/')[0]+'/results/'for row in descriptor['scenes'].values()if '/results/'in str(row['asset_root'])}),
                     files=inventory(output))
     dump(output/'BUNDLE.json', manifest)

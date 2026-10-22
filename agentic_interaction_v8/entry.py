@@ -26,6 +26,20 @@ def main():
                 if str(filename.relative_to(ROOT)) in excluded:
                     raise RuntimeError('UNFROZEN_LEGACY_EXECUTION:'+str(filename))
     sys.addaudithook(prevent_legacy_import)
+    import atexit
+    def loaded_source_audit():
+        from .resources import digest,dump
+        files={}
+        for module in list(sys.modules.values()):
+            f=getattr(module,'__file__',None)
+            if not f:continue
+            path=Path(f)
+            if path.suffix=='.py'and path.is_file()and path.is_relative_to(ROOT):
+                files[str(path.relative_to(ROOT))]=digest(path)
+        dump(Path(job['output'])/'V8_LOADED_SOURCES.json',dict(sources=files,
+             historical_result_reads_forbidden=True,excluded_legacy_imports_forbidden=True,
+             scope='actor Python sources; child workers have frozen entry/source commitments; not OS isolation'))
+    atexit.register(loaded_source_audit)
     # IO locator is bound before any planning module imports OUT by value.
     # All geometry/controller classes/functions retain original source bytes.
     import xarm7_native_gripper
