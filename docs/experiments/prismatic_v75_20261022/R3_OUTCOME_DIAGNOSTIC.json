@@ -1,0 +1,148 @@
+{
+  "episode": "v75_45290_R3_recovery_00",
+  "analysis_only": true,
+  "physical_attempts": [
+    {
+      "attempt": 1,
+      "request_N": 1.0,
+      "family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "acquired": true,
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+      "measured_segment_travel_mm": 0.08445651714517055,
+      "tracking_deficit_change_mm": 0.802495245568632,
+      "TCP_drawer_relative_change_mm": 1.6028375959539711,
+      "raw_reported_normal_peak_N": [
+        1.4736032485961914,
+        2.243847370147705
+      ],
+      "safe_release_and_park": true,
+      "first_positive_pad_reports": [
+        {
+          "aperture_mm": 12.167734146118164,
+          "load_N": 0.0007010265835560858,
+          "definition": "first strictly positive aggregate normal report; not a calibrated geometric contact threshold"
+        },
+        {
+          "aperture_mm": 10.897323608398438,
+          "load_N": 0.03557548299431801,
+          "definition": "first strictly positive aggregate normal report; not a calibrated geometric contact threshold"
+        }
+      ],
+      "pregrasp_refinement_translation_mm": 0.8621488313587765
+    },
+    {
+      "attempt": 2,
+      "request_N": 1.5,
+      "family": [
+        0.0,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "acquired": true,
+      "status": "SAFE_PARTIAL_PROGRESS",
+      "reason": "PREDICTED_LOAD_MARGIN_REQUIRES_UNLOAD",
+      "measured_segment_travel_mm": 7.640198537121501,
+      "tracking_deficit_change_mm": 0.36359337070508696,
+      "TCP_drawer_relative_change_mm": 0.33401178114910934,
+      "raw_reported_normal_peak_N": [
+        3.6949284076690674,
+        3.032609462738037
+      ],
+      "safe_release_and_park": true,
+      "first_positive_pad_reports": [
+        {
+          "aperture_mm": 10.930870056152344,
+          "load_N": 0.14198531210422516,
+          "definition": "first strictly positive aggregate normal report; not a calibrated geometric contact threshold"
+        },
+        {
+          "aperture_mm": 11.822908401489258,
+          "load_N": 0.003442239249125123,
+          "definition": "first strictly positive aggregate normal report; not a calibrated geometric contact threshold"
+        }
+      ],
+      "pregrasp_refinement_translation_mm": 0.3212882306495341,
+      "original_forecast_event": {
+        "reason": "PREDICTED_LOAD_MARGIN_REQUIRES_UNLOAD",
+        "t": 289.98333333333335,
+        "channels": [
+          "pad_N",
+          "wrist_force_N",
+          "sensor_origin_torque_Nm"
+        ],
+        "affected": [
+          2
+        ],
+        "causal_window_mean": [
+          3.6437439711865003,
+          3.8196053577943956,
+          0.5834591344770268
+        ],
+        "causal_window_slope_per_s": [
+          0.4485678892655672,
+          0.5182797809701931,
+          0.08195145520004915
+        ],
+        "stopping_horizon_s": 0.19356936840892827,
+        "current_measured_norms": [
+          3.679743135150594,
+          3.860461238101985,
+          0.5900318180700993
+        ],
+        "forecast": "same causal guard window at stopping horizon; linear raw-load continuation",
+        "projected_window_mean": [
+          3.73487960487282,
+          3.924166461179571,
+          0.600105017771772
+        ],
+        "unchanged_sustained_limits": [
+          4.0,
+          8.0,
+          0.6
+        ],
+        "projection_is_not_a_safety_guarantee": true,
+        "hard_guard_authoritative": true
+      },
+      "late_guard_window": {
+        "samples": 36,
+        "signed_rail_force_mean_N": 0.5928239416642938,
+        "transverse_force_norm_mean_N": 3.7733182203370097,
+        "sensor_origin_moment_norm_mean_Nm": 0.5834591344770269,
+        "TCP_origin_moment_norm_mean_Nm": 0.08179031095669284,
+        "compensation": "bias + tool gravity; exactly the causal protection convention, not centered inertia compensation"
+      }
+    }
+  ],
+  "source_sha256": "159378a1b6b562505b53661cd6578ee010dd80a1eaf14861ddbacbdaf3f7dd5e",
+  "index_sha256": "62fab0b8146c41f57435bb9ae323a2d48d5108f26b5408d0ae5a0d5d73f2d7ac",
+  "frozen_online_model_sha256": "ea913714de0ffa7fb259755abe9e6bbde6726934a2b3fdf52ade205cbb85f1c4",
+  "online_model_status": "insufficient informative FIT",
+  "eligible_FIT_bins": 0,
+  "validation_bins": 0,
+  "parameter_estimates": null,
+  "parameter_errors": null,
+  "heldout_prediction_errors": null,
+  "posthoc_authored_reference": {
+    "moving_mass_kg": 1.5521243726046707,
+    "damping_Ns_m": 2.8783599699352003,
+    "friction_N": 0.5830505688170928,
+    "law": {
+      "family": "constant",
+      "base": 0.5830505688170928,
+      "amplitude": 0.0,
+      "center": 0.09585044121720915,
+      "width": 0.029818718700639953
+    },
+    "not_independently_measured_effective_PhysX_dynamics": true
+  },
+  "maximum_measured_coordinate_mm": 7.6402160339057446,
+  "complete_independent_VALIDATION": false,
+  "not_a_matched_preload_AB": true
+}

@@ -1,0 +1,66 @@
+{
+  "episode": "v75_45290_R3_recovery_00",
+  "classification": "engineering; not a benchmark rate",
+  "status": "ORCHESTRATION_TIMEOUT",
+  "safe_exit": true,
+  "verified_park": true,
+  "physical_attempt_operations": 2,
+  "observations": 2,
+  "requested_preloads_N": [
+    1.0,
+    1.5
+  ],
+  "segments": [
+    {
+      "role": "FIT_ACCEL_PROSPECTIVE_01",
+      "status": "TRANSMISSION_FAILURE",
+      "travel_m": 8.445490519104482e-05,
+      "end_coordinate_m": 8.444964623777196e-05,
+      "physical_duration_s": 5.308333333333334,
+      "requested_target_reached": false,
+      "transmission_valid": false,
+      "reason": "PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE"
+    },
+    {
+      "role": "FIT_ACCEL_PROSPECTIVE_01",
+      "status": "SAFE_PARTIAL_PROGRESS",
+      "travel_m": null,
+      "end_coordinate_m": 0.007640197407454252,
+      "physical_duration_s": 4.645833333333333,
+      "requested_target_reached": false,
+      "transmission_valid": false,
+      "reason": "PREDICTED_LOAD_MARGIN_REQUIRES_UNLOAD"
+    }
+  ],
+  "online_model": {
+    "parameters": null,
+    "conditional_std": null,
+    "scaled_condition": null,
+    "support_intervals_native": null,
+    "conditionally_supported": null,
+    "uncalibrated_total_physical_accuracy": null,
+    "FIT_rmse": null,
+    "heldout_motion": {},
+    "worker_wall_s": 0.08289328380487859,
+    "model_sha256": "ea913714de0ffa7fb259755abe9e6bbde6726934a2b3fdf52ade205cbb85f1c4",
+    "validation_used_for_fit_or_selection": false,
+    "tool_compensation_count": 1
+  },
+  "launcher_wall_s": 2152.559427462984,
+  "bytes_by_category": {
+    "source_and_metadata": 19616508,
+    "numeric": 11007730,
+    "geometry": 2480329,
+    "RGBD_checkpoints": 13935456
+  },
+  "total_bytes": 47040023,
+  "index_sha256": "62fab0b8146c41f57435bb9ae323a2d48d5108f26b5408d0ae5a0d5d73f2d7ac",
+  "raw_data_exported": false,
+  "hidden_truth_read": false,
+  "observations_last_generation_only": 1,
+  "observation_count_convention": "all generation_*_agent_* checkpoint folders; pregrasp refinements excluded",
+  "engineering_outcome": "FAIL_INDEPENDENT_VALIDATION_NOT_COMPLETED",
+  "complete_independent_validation": false,
+  "protocol_timeout_after_verified_park": true,
+  "online_parameter_estimates_available": false
+}

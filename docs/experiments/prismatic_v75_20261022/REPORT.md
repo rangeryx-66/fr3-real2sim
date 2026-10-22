@@ -1,8 +1,14 @@
 # V7.5 — prismatic lifecycle, loads and model applicability
 
-**Engineering development; readiness is not yet established.** This is not a new
+**Final assessment: NOT READY for a new formal benchmark.** This is not a new
 benchmark and does not replace any V7.2–V7.4 outcome. Fresh native-contact results
 are reported individually, including unsuccessful acquisitions and recovery.
+
+Four local R2 drawers completed short pull/reverse/independent VALIDATION/park.
+Both subsequent prospective checks failed to complete VALIDATION. The one
+registered R3 development recovery improved pulling to **7.640 mm**, but increasing
+non-task load caused guarded early unloading before reversal/VALIDATION. These
+results cannot be combined into an unbiased benchmark success rate.
 
 ## What the archived failures actually show
 
@@ -182,7 +188,7 @@ Physical VALIDATION duration, retained derivative-supported prediction horizon,
 support interval and parameter availability are separate fields. A small free
 trajectory RMSE does not validate every parameter or unobserved friction peaks.
 
-## Fresh engineering validation — remaining cases in progress
+## Fresh engineering validation — all bounded scenes ended
 
 R1 source freeze: `23a30b2`, with `SOURCE_FREEZE_R1.json`. In its continuous 19179
 scene, first automatic grasp and original 1-second hold succeeded;
@@ -378,3 +384,129 @@ restoration. [R3 registration](R3_REGISTRATION.json) permits **one** fresh 45290
 engineering scene on the same still-unrevealed committed dynamics, initial 1 N,
 at most two acquisitions and minimum three FIT plus complete VAL/park. It cannot
 establish independent generalization or erase either R2 prospective failure.
+
+## R3 actual recovery: better traction, incomplete identification
+
+Frozen physical revision: **a75f15a**; post-result analysis does not change any
+of its 628 registered files. One continuous fresh scene, two acquisitions, two
+Agent observation checkpoints, no additional Agent-selected wrist adjustments.
+The Agent inspected each actual RGB/depth/cloud/mask, current native-contact
+plots and measured/uncertain surfaces. It selected the lower handle rather than
+the higher-scoring neighbouring drawer. Initial requested preload was 1.0 N.
+
+| R3 stage | Actual result | Termination / next step |
+|---|---|---|
+| First acquisition and original 1 s hold | bilateral verified; +0.08445 mm pull | original startup transmission failure; guarded release and full park succeeded |
+| Agent recovery | fresh same-scene observation, automatic existing roll-180 family, tested 1.5 N request | complete native current-state route/closing/lead/chain checks passed; second acquisition approved |
+| Recovery acquisition and original 1 s hold | bilateral verified; **+7.64020 mm** actual pull | SAFE_PARTIAL_PROGRESS; causal load-margin forecast requested unload |
+| Reverse / three eligible FIT / complete VAL | **not executed/completed** | no retrospective FIT qualification; zero training/validation bins |
+| Final release and park | verified native rest; pad reports [0,0] N | original joint-cell error 0.003718 rad; actor exited |
+| Final Agent protocol | unloaded decision window expired following session interruption | separate ORCHESTRATION_TIMEOUT, after physical stop and successful park |
+
+The recovery's planning pose changes **0.091 mm /179.997 degrees** and requested
+preload changes from 1.0 to 1.5 N. This is **not an isolated preload A/B**. The
+reconsidered old family was available under R3, but the final automatic choice
+was the other roll family; this episode does not uniquely attribute improvement
+to the failure-memory correction. That correction's direct evidence remains
+condition tests and the archived native-feasibility counterfactual. No old grasp
+transform was supplied to execution. Slight drawer motion during reacquisition
+is part of the same physical scene; no joint reset or direct object actuation.
+
+Measured peak reported pad normals were [1.474,2.244] N first and [3.695,3.033] N
+on recovery. Requests are not measured clamp forces or motor output. First pull:
+command/measured TCP/drawer motion 2.490/1.687/0.084 mm, separating 0.802 mm tracking
+deficit from 1.603 mm TCP/drawer relative motion. Recovery end-of-segment changes
+were 0.364 mm tracking deficit and 0.334 mm relative motion. These are separate
+signals, not proof of one unique friction/compliance mechanism.
+
+At the recovery forecast, the actual causal 150 ms mean sensor-origin moment
+was **0.583459 N m**, current moment 0.590032 N m, projected mean 0.600105 N m at
+a 0.19357 s stopping horizon. Original sustained band remains 0.6 N m. The
+corresponding window had **0.592824 N rail force versus 3.773318 N transverse
+force**. Exact wrench-origin transformation gives 0.081790 N m at TCP; this
+does not remove a channel from protection or measure a contact pressure couple.
+The controller stopped, released and parked without a hard overload latch.
+**This is a forecast-triggered conservative interruption, not proof that a real
+jam or hard overload would have occurred had motion continued.** Useful traction
+improved; task-irrelevant loading and the applicability of the historical
+engineering moment band remain unresolved. Raising the band from this peak is
+not justified by the calibration fixtures.
+
+![Preserved R3 failure and recovery partial progress](R3_CONTACT_AND_LOAD.png)
+
+The derived plot preserves all native samples in the physical segments. It masks
+inactive references: the legacy clock field can retain its previous value during
+closure, which is not an active motion command. Original private boards/records
+remain unchanged; all plotted measurements belong to the indicated attempt.
+Native point plots show contact near lateral pad edges with substantial separate
+longitudinal margin; neither edge proximity nor missing positive reports alone
+establishes slip or separation. Predicted first apertures versus first strictly
+positive aggregate reports are in [the diagnostic](R3_OUTCOME_DIAGNOSTIC.json);
+the latter is an observability convention, not a calibrated geometric threshold.
+
+Online model remained **insufficient informative FIT**, with zero eligible FIT
+and VALIDATION bins. Mass/damping/resistance estimates, parameter errors and
+held-out predictions are **N/A**, not zero error. Both original interrupted
+segments and all 240 Hz data are retained; neither is silently promoted into
+training or independent validation. No post-hoc model was fitted.
+
+Only after all three actors, decisions and workers ended were online models,
+trace and telemetry-index hashes sealed and authored parameters revealed.
+45290's unchanged configuration is **1.552124 kg authored moving mass,
+2.878360 N s/m damping, 0.583051 N constant passive resistance**. These are authored
+references/readbacks, not independently measured effective PhysX coefficients.
+19855 has a localized passive-resistance law but no useful interaction data;
+its unvisited resistance profile was not identified. No filter, model or action
+was changed after reveal.
+
+R3 launcher wall time: **2152.56 s**, including the final finite unloaded timeout.
+Storage: **47.040 MB** (source/metadata 19.617, essential numeric 11.008, geometry
+2.480, RGB-D 13.935 MB). Both R2 prospective scenes occupy 40.236 /45.935 MB.
+All nine engineering/orchestration scene folders are individually <100 MB;
+the entire private V7.5 study, including calibration and derived diagnostics,
+occupies approximately **461.7 MB**. No continuous video or duplicate raw archive
+was generated. Observation totals are counted across generations in the final
+integrity summary, not only from the last generation's observation list.
+
+## Answers and readiness boundary
+
+1. **Contact/planning:** native closing/CENTER and relative-reference geometry,
+   target association, coupled contact/load migration and return representation
+   explain distinct failures. Drawer resistance alone is not the common cause.
+   Load forecasts and original task-level moment bands also limit otherwise
+   transmitting motion; their hardware applicability is uncalibrated.
+2. **Load policy:** no band or actuator authority was increased. Known six-axis
+   loads, unloaded motion, original overload response, native collision failures
+   and the real R3 forecast/unload branch provide evidence. They do not certify
+   every jam, every wrist posture or a higher hardware-safe task band.
+3. **Recovery:** R2 demonstrated perception/planning recovery through VAL; R3
+   demonstrated fresh feedback-guided physical regrasp and useful pulling plus
+   safe exit, **but not physical recovery through independent VAL**. R1 and all
+   prospective failures and orchestration costs remain in the record.
+4. **Identification:** full SG-support qualification, same-sample controls,
+   integral cross-checks and same-family stability diagnostics improve supported
+   sliding-data interpretation. Tiny excitation, assumed sensor/state errors,
+   strongly correlated damping/friction and nonmatching resistance laws can
+   invalidate parameters even with small position RMSE. Unknown stays unknown;
+   short local support does not identify unobserved travel or resistance peaks.
+5. **Preservation / next benchmark:** all 71+22 revolute hashes and call paths,
+   R2's 20 files, prospective 620 files and R3's 628 files match. Recorded raw
+   chunk hashes pass, and sealed models remain unchanged after reveal. All owned
+   actors exited and the owned lock is free. Historical missing models for the
+   original V7.2 27044_1/45746_0/45746_1 are expected pre-identification N/A, not
+   deleted recordings. **No new formal benchmark is launched or declared ready.**
+
+The next prerequisite is a general contact/load-distribution investigation with
+posture-matched normal versus constrained loading, and a physically verified
+complete exit from difficult unloaded observation poses. The recorded 19855
+joint-return solution remains offline only. Preserve the existing benchmark
+denominators and predeclare geometry scope, new dynamics, interaction/VAL/exit
+and parameter-support metrics before any future blind evaluation. Do not use
+the present failures to choose easier configurations or claim population rates.
+
+Known joint/state, registered station, original native safety collision model,
+simulated wrist mounting, ideal F/T and approximate actuators remain explicit
+dependencies. Raw RGB-D, contact/F/T and telemetry are private on labserver_inschool.
+See [final integrity/storage](FINAL_INTEGRITY_AND_STORAGE.json),
+[R2 prospective outcomes](PROSPECTIVE_METRICS_R2.json) and
+[R3 metrics](R3_METRICS.json). Stop after this bounded study.
