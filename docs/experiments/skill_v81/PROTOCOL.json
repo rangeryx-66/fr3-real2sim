@@ -1,0 +1,77 @@
+{
+  "schema": "agentic-interaction-v81-development",
+  "baseline_tag": "agentic-interaction-v8.0.0",
+  "baseline_commit": "2f021639aea65e6ae859bac9a3385d49db10212f",
+  "status": "ENGINEERING_NOT_YET_COMPLETE; independent repetitions gated",
+  "scenarios": {
+    "revolute": {
+      "asset": "45936",
+      "development_object": true,
+      "scene": "cabinet_bar",
+      "physics_commitment": "ef92278ff59b4df57dbffd8e784e5eab56c51637f97cbf44830d920a023d523e",
+      "unchanged_existing_physics": true,
+      "goal_coordinate_rad": 1.5707963267948966,
+      "minimum_single_reverse_travel_rad": 0.39269908169872414,
+      "known_native_limits_rad": [0.0, 1.7453292519943295]
+    },
+    "prismatic": {
+      "asset": "45290",
+      "development_object": true,
+      "scene": "drawer_bar",
+      "physics_commitment": "24be80a6afa509669defaa97da17b1d0640fe3a15e732546998f449605fe6e43",
+      "unchanged_existing_physics": true,
+      "minimum_outward_travel_m": 0.15,
+      "minimum_single_reverse_travel_m": 0.0375,
+      "prefer_native_full_travel_only_if_safe": true,
+      "known_native_limits_m": [0.0, 0.378412895770898]
+    }
+  },
+  "sequence": [
+    {"id": "v81_engineering_revolute_00", "phase": "engineering", "joint": "revolute"},
+    {"id": "v81_engineering_prismatic_00", "phase": "engineering", "joint": "prismatic"},
+    {"id": "v81_independent_revolute_01", "phase": "after_shared_freeze", "joint": "revolute"},
+    {"id": "v81_independent_prismatic_01", "phase": "after_shared_freeze", "joint": "prismatic"},
+    {"id": "v81_independent_revolute_02", "phase": "after_shared_freeze", "joint": "revolute"},
+    {"id": "v81_independent_prismatic_02", "phase": "after_shared_freeze", "joint": "prismatic"}
+  ],
+  "interpretation": "Fresh continuous scenes and fresh Agent decisions, same original physics/development objects; not new blind dynamics or held-out geometry. Engineering iterations remain separately numbered if a shared repair is required; no replacement of valid independent failures.",
+  "resources_per_episode": {
+    "wall_budget_s": 5400,
+    "simulation_budget_s": 2400,
+    "wall_exit_reserve_s": 300,
+    "simulation_exit_reserve_s": 120,
+    "maximum_acquisitions": 6,
+    "maximum_agent_operations": 100,
+    "maximum_view_adjustments_per_generation": 4,
+    "unloaded_decision_window_s": 360
+  },
+  "agent_policy": "Fresh wrist RGB-D/SAM and measured geometry/contact/F-T/robot feedback choose useful views, candidate, legal preload, target/profile and XY station. No fixed relocation schedule or archived pose. Release and fully validate unloaded base route; remeasure base, invalidate geometry/route approvals and reobserve before regrasp.",
+  "known_boundaries": [
+    "Known hinge/rail/state and initial registered station remain explicit",
+    "Simulated driven XY carriage, not wheeled-base or hardware validation",
+    "Arm/G1/object physics and original safety remain frozen",
+    "Ideal virtual wrist F/T, raw contacts are diagnostics",
+    "Intentional panel mode unavailable until mobile-support collision validation is implemented; handle reversal is available"
+  ],
+  "identification": {
+    "production_estimator_changed": false,
+    "filter": "V3.1 common SG121; single tool compensation",
+    "FIT": "Predeclare intervals covering the planned finite action including startup allowance. Loader still excludes non-sliding phases. Before authorizing VALIDATION inspect actual worker-qualified signed motion, not role labels or nominal duration.",
+    "minimum_qualified_directions": 2,
+    "position_dependent_extension_minimum_distinct_FIT_trajectories": 3,
+    "validation": "Declare distinct complete trajectory after qualified bidirectional FIT; exclude from fitting/model selection. Report complete physical duration separately from retained prediction horizon.",
+    "desired_retained_prediction_horizon_s": 3.0,
+    "unknown_parameters_remain_unknown": true,
+    "parameter_errors": "Post-episode original authored references; not independently verified effective PhysX parameters",
+    "model_domain": "Expand declared estimation domain to native kinematic limits, coefficients/regularization/filtering unchanged"
+  },
+  "outcomes": [
+    "actual absolute coordinate and post-acquisition gains; maximum and longest reverse travel",
+    "all failed plans/acquisitions/actions, Agent choices, relocations and same-scene regrasps",
+    "qualified FIT support, signed speed and independent acceleration, regressor conditioning, parameter uncertainty",
+    "complete independent VALIDATION, effort and uncorrected forward coordinate/velocity prediction",
+    "original safety stops, release/clearance and measured final parking",
+    "wall/profile time per useful interaction, source commitments and compact private evidence bytes"
+  ],
+  "freeze_gate": "Both full engineering lifecycles must be physically demonstrated before ENGINEERING_READINESS.json and a V8.1 frozen release are committed. Only then run the four independent repetitions. No full paper benchmark is authorized here."
+}

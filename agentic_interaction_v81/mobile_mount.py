@@ -91,7 +91,14 @@ def drive_class(original):
             self.base_indices=np.array([self.names.index(n) for n in ['mobile_x','mobile_y']])
             self.caps[self.base_indices]=BASE_MAX_EFFORT_N
             self.robot._articulation_view.set_max_efforts(self.caps.reshape(1,-1))
+            speeds=self.robot._articulation_view.get_max_joint_velocities().copy()
+            speeds[...,self.base_indices]=.08  # unchanged FREE travel policy
+            self.robot._articulation_view.set_max_joint_velocities(speeds)
             self._base_gains()
+            Path(output,'V81_DRIVE_INTERFACE.json').write_text(json.dumps(dict(
+                native_joint_order=self.names,base_indices=self.base_indices.tolist(),
+                actual_max_efforts=self.caps.tolist(),base_max_velocity_m_s=.08,
+                arm_G1_caps_unchanged=True,base_authority_source='continuous_contact_scene.py existing XY stage')))
         def _base_gains(self):
             kp,kd=self.raw.get_gains();kp=kp.copy();kd=kd.copy()
             kp[self.base_indices]=BASE_KP;kd[self.base_indices]=BASE_KD

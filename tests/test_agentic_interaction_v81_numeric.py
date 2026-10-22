@@ -43,8 +43,10 @@ class NumericTests(unittest.TestCase):
             def get_gains(self):return self.kp.copy(),self.kd.copy()
             def set_gains(self,kps,kds,**kw):self.kp=kps.copy();self.kd=kds.copy()
         class Robot:
-            def __init__(self):self._articulation_view=self
+            def __init__(self):self._articulation_view=self;self.speeds=np.ones((1,10))
             def set_max_efforts(self,c):self.cap=c.copy()
+            def get_max_joint_velocities(self):return self.speeds.copy()
+            def set_max_joint_velocities(self,v):self.speeds=v.copy()
         class Driver:
             def __init__(self,robot,c,output):
                 self.robot=robot;self.names=[f'joint{i}' for i in range(7)]+['drive_joint','mobile_x','mobile_y']
@@ -53,7 +55,11 @@ class NumericTests(unittest.TestCase):
                 self.caps[7]=width;self.robot._articulation_view.set_max_efforts(self.caps.reshape(1,-1))
             def set_gains(self,*args,**kw):
                 self.raw.set_gains(np.arange(10,dtype=float),np.arange(10,dtype=float)+.5)
-        robot=Robot();d=drive_class(Driver)(robot,{},None)
+        import tempfile
+        robot=Robot()
+        with tempfile.TemporaryDirectory() as folder:d=drive_class(Driver)(robot,{},folder)
+        np.testing.assert_array_equal(robot.speeds[0,:8],np.ones(8))
+        np.testing.assert_array_equal(robot.speeds[0,8:],[.08,.08])
         for width in [.1,.8,.25]:
             d.command_width(width)
             np.testing.assert_array_equal(robot.cap[0,:7],[50,50,30,30,30,20,20])
