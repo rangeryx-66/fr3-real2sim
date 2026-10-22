@@ -20,6 +20,12 @@ diagnostic cross-checks only; identification still uses robot-side six-axis F/T.
 PiPER and G1 results are not matched physical controls. Revolute torque and
 prismatic force are not compared numerically without task geometry/virtual work.
 
+R1's fresh failure further identifies `original10` as part of the **moving
+drawer panel**, not a stationary frame. At its last accepted reverse command,
+native clearance was 7.31 micrometres; the next command was rejected. Reverse
+command/actual TCP/drawer travel were 3.208/2.149/1.859 mm respectively. Useful
+opposite-direction traction existed before the geometric command stop.
+
 ## Load-channel audit and calibration
 
 The active original policy uses per-pad maximum positive normal load, the norm of
@@ -29,6 +35,15 @@ compensated. Downstream inertia remains in this conservative causal protection
 channel. The estimator separately compensates tool inertia exactly once and
 applies common SG121 filtering after a segment is complete. Centered estimation
 operators never feed protection.
+
+On the same earlier reliable native window of archived 19179_0, full tool
+inertia compensation changes moment mean norm from 0.396969 to 0.397077 N m:
+0.000108 N m cannot explain the subsequent overload. Full centered compensation
+at the final stop boundary is unavailable, not extrapolated. The final guard
+window's exact wrench-origin transform gives 0.604644 N m at the sensor versus
+0.092339 N m at TCP, with a 172 mm lever and 0.670642 N m lever-force moment.
+Vector norms do not add linearly. TCP moment is not a measured contact couple;
+none of these transformations removes a component from online protection.
 
 | Channel | Informational warning | Trailing 150 ms sustained stop | Immediate emergency |
 |---|---:|---:|---:|
@@ -123,6 +138,16 @@ retains 16,063/16,796 samples; V7.2 45290_0 retains 7,027/8,212. The momentum
 diagnostic integrates unfiltered, fully compensated effort over complete sliding
 windows with endpoint velocity/displacement and the same friction basis. It is
 an independent diagnostic, not a hidden replacement for the production result.
+Here `original` in diagnostic JSON means the old **eligibility ablation**, not
+the original V7.4 online estimate (which already uses V7.3 qualification).
+
+![Same-data eligibility comparison](eligibility_comparison.png)
+
+For V7.2 45290_0 the rule retains 85.57% of samples but only 20.40% of the old
+apparent acceleration energy; much of the removed excitation lay in invalid
+static/reversal filter support. V7.4 45290_0 retains 99.57% of samples and 99.53%
+of acceleration energy. The qualification is therefore not a free improvement
+in information: insufficient retained excitation must remain unknown.
 
 Same-family leave-one-FIT-out and 1-second contiguous-block bootstrap supplement
 conditional covariance. Raw-input scenarios cover bias, quantization, independent
@@ -133,7 +158,9 @@ proof that every statistically detectable micro-newton residual invalidates mass
 
 Analytical raw-wrench fixtures are explicitly **not native physics**. With the
 production ridge 0.001, the ideal constant plant [2 kg,3 N s/m,0.3 N] gives
-[1.999705,2.999489,0.300001]. An asymmetric opening/closing resistance plant
+[1.999916,2.999872,0.3000003] using the installed [5,10,1] parameter scales.
+The earlier separate diagnostic using [3,5,0.5] scales remains preserved.
+An asymmetric opening/closing resistance plant
 does not have one true Coulomb coefficient: the constant fit absorbs mismatch
 into mass (1.622 kg) while the integral formulation disagrees. That model is
 flagged, not presented as successful recovery of a nonexistent parameter set.
@@ -141,14 +168,24 @@ AI1500-resolution quantization destroys the small excitation's mass information;
 10 micrometre position-noise scenarios can leave insufficient qualified data.
 Ideal native-velocity accuracy therefore does not establish hardware generality.
 
+An additional audit catches a limitation of the initial residual warning itself:
+ridge bias can create statistically repeatable tiny grouped residuals even for
+an exact same-law plant. `prismatic_applicability_v75.py` separately reports
+production residual and same-**global**-family lack of fit after isolating the
+known penalty/constraint effect. It never replaces production coefficients,
+uses no VALIDATION or truth and does not fit independent direction masses.
+Exact-law tests no longer spuriously blame physics for ridge bias; asymmetric
+resistance remains flagged, and rank-deficient data remains unknown. This is a
+diagnostic, not a calibrated confidence bound or a new execution gate.
+
 Physical VALIDATION duration, retained derivative-supported prediction horizon,
 support interval and parameter availability are separate fields. A small free
 trajectory RMSE does not validate every parameter or unobserved friction peaks.
 
-## Fresh engineering validation — in progress
+## Fresh engineering validation — remaining cases in progress
 
-R1 source freeze: `23a30b2`, with `SOURCE_FREEZE_R1.json`. One continuous 19179
-scene has begun. First automatic grasp and original 1-second hold succeeded;
+R1 source freeze: `23a30b2`, with `SOURCE_FREEZE_R1.json`. In its continuous 19179
+scene, first automatic grasp and original 1-second hold succeeded;
 pull stopped at 1.373 mm under original persistent sliding-stall logic, then
 guarded release and verified parking succeeded. Commanded TCP moved 3.510 mm,
 measured TCP 3.185 mm, drawer 1.373 mm: added tracking error was 0.325 mm versus
@@ -161,7 +198,31 @@ current contact curves and native contact locations. In the same scene it chose
 an opposite oblique view, a newly generated shallower/changed-section candidate,
 and a tested 1.5 N requested preload at the unloaded boundary. This changes both
 pose and preload and is **not** an isolated preload A/B experiment. Full recovery
-chain and current-state transition passed preflight; actual outcome is pending.
+chain and current-state transition passed preflight. Actual recovery reached
+12.124 mm but reverse motion triggered original command collision after 1.859 mm;
+VALIDATION and final parking were not completed. No hard stop was reset.
+
+R2 `bc81d50` addresses the demonstrated missing robot/drawer relative-reference
+envelope, as registered in `REVISION_R2.md`. It uses the existing two finite
+startup allowances (total 3.7 mm), moving the robot relative to the object during
+native safety checking instead of incorrectly translating both together. Actual
+coupled fingers and command bias are rechecked at each segment boundary.
+
+In fresh `v75_19179_fresh_01_R2`, the Agent inspected new RGB-D, chose a new
+left-oblique view, and approved the automatic plan after five collision-invalid
+candidates were skipped. Initial requested preload stayed **1.0 N**. Actual
+completed travels were +14.072 / -10.139 / +8.135 mm FIT and -5.111 mm independent
+VALIDATION; original one-second hold and verified unloaded native-rest parking
+both completed. All four statuses are TARGET_REACHED. No recovery was needed in
+this separate R2 scene; it does not erase R1 or form an unbiased success rate.
+
+Frozen online model: mass 1.979746 kg, damping 3.101726 N s/m, resistance
+0.299792 N; conditional standard deviations [0.006023 kg,0.016997 N s/m,
+0.000038 N]. Scaled condition 136.1. Complete physical VALIDATION lasts 6.013 s;
+retained independent prediction lasts 3.004 s, with effort RMSE 0.001945 N,
+position RMSE 0.593 mm and velocity RMSE 0.478 mm/s. These conditional uncertainty
+numbers exclude sensor/contact systematic error. Authored-reference evaluation
+is separate from online action choices and final model fitting.
 
 No prospective slots or new benchmark have been launched. Readiness and final
 engineering outcomes must be completed before any reliability claim.

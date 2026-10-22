@@ -1,0 +1,1571 @@
+{
+  "kind": "analytical raw-input diagnostic, NOT native physics",
+  "hidden_real_dynamics_used": false,
+  "scenario_seed": 7501,
+  "specification": "AI1500 stated quantization is not Gaussian SD or full hardware noise",
+  "spec_source": "https://docs.accessories.ufactory.cc/6_Axis_Force_Torque_Sensor/5.Technical_Specifications.html",
+  "control_or_production_estimator_changed": false,
+  "diagnostic_estimation_configuration": {
+    "domain_native": [
+      0.0,
+      0.15
+    ],
+    "intervals": [
+      2
+    ],
+    "joint_type": "prismatic",
+    "units": {
+      "coordinate": "m",
+      "effort": "N",
+      "inertial": "kg",
+      "damping": "N s/m"
+    },
+    "parameter_scales": [
+      5.0,
+      10.0,
+      1.0
+    ],
+    "ridge": 0.001
+  },
+  "plants": {
+    "constant": {
+      "analytical_parameters_evaluation_only": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "kinetic_open_N": 0.3,
+        "kinetic_close_N": 0.3,
+        "static_hold_force_N": 0.0
+      },
+      "model": {
+        "parameters": [
+          1.999915874200054,
+          2.99987167699063,
+          0.30000025831766697
+        ],
+        "conditional_std": [
+          1.9959475717091658e-05,
+          2.7168070712326322e-05,
+          5.3409140121112586e-08
+        ],
+        "scaled_condition": 151.56085045302135
+      },
+      "integral_parameters": [
+        1.9993612144498942,
+        2.999240142200636,
+        0.3000014863044535
+      ],
+      "scenarios": {
+        "ideal": {
+          "assumptions": {},
+          "parameters": [
+            1.999915874200054,
+            2.99987167699063,
+            0.30000025831766697
+          ],
+          "conditional_std": [
+            1.9959475717091658e-05,
+            2.7168070712326322e-05,
+            5.3409140121112586e-08
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -0.004206289997299439,
+            -0.004277433645671902,
+            8.610588899671257e-05
+          ]
+        },
+        "bias_force_plus_10mN": {
+          "assumptions": {
+            "bias_sensor": [
+              0.01,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            2.0626082200833897,
+            2.969821595681588,
+            0.3033767545149355
+          ],
+          "conditional_std": [
+            0.8730690016391576,
+            1.2765678456410812,
+            0.0028475062941173326
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.013253008842485953,
+            "coordinate_rmse": 0.015815401037417447,
+            "velocity_rmse": 0.0022790772901118026,
+            "final_coordinate_error": 0.028079401559181042,
+            "outside_FIT_support": false,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            3.1304110041694866,
+            -1.0059468106137337,
+            1.1255848383118439
+          ]
+        },
+        "bias_force_minus_10mN": {
+          "assumptions": {
+            "bias_sensor": [
+              -0.01,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.9372235283167083,
+            3.029921758299703,
+            0.2966237621203984
+          ],
+          "conditional_std": [
+            0.8730665761053287,
+            1.2765573265871126,
+            0.002847500236086022
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -3.138823584164585,
+            0.9973919433234224,
+            -1.1254126265338504
+          ]
+        },
+        "bias_torque_plus_1mNm": {
+          "assumptions": {
+            "bias_sensor": [
+              0,
+              0,
+              0,
+              0,
+              0.001,
+              0
+            ]
+          },
+          "parameters": [
+            1.999915874200054,
+            2.99987167699063,
+            0.30000025831766697
+          ],
+          "conditional_std": [
+            1.9959475717091658e-05,
+            2.7168070712326322e-05,
+            5.3409140121112586e-08
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -0.004206289997299439,
+            -0.004277433645671902,
+            8.610588899671257e-05
+          ]
+        },
+        "AI1500_stated_resolution_quantization": {
+          "assumptions": {
+            "quantum_sensor": [
+              0.4,
+              0.4,
+              0.4,
+              0.01,
+              0.01,
+              0.01
+            ]
+          },
+          "parameters": [
+            1.8848378583678207e-10,
+            0.09352047993591127,
+            0.39762626956752906
+          ],
+          "conditional_std": [
+            0.1862259800069864,
+            0.27352234110478785,
+            0.0005828684505382708
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "unsupported inertial term"
+          },
+          "relative_parameter_error_percent": [
+            -99.9999999905758,
+            -96.88265066880297,
+            32.54208985584302
+          ]
+        },
+        "assumed_noise_1mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.001,
+              0.001,
+              0.001,
+              0.0001,
+              0.0001,
+              0.0001
+            ]
+          },
+          "parameters": [
+            2.0028314065851327,
+            2.9778505876579504,
+            0.30005637533805174
+          ],
+          "conditional_std": [
+            0.006339978575667187,
+            0.011188095226729554,
+            2.2899137221091605e-05
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            0.14157032925663504,
+            -0.7383137447349863,
+            0.01879177935057985
+          ]
+        },
+        "assumed_noise_10mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.01,
+              0.01,
+              0.01,
+              0.001,
+              0.001,
+              0.001
+            ]
+          },
+          "parameters": [
+            2.0290711980508807,
+            2.7796607836635223,
+            0.3005614285215147
+          ],
+          "conditional_std": [
+            0.06339135119762489,
+            0.11190771919465069,
+            0.00022898638816184203
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            1.4535599025440327,
+            -7.344640544549252,
+            0.18714284050489471
+          ]
+        },
+        "assumed_noise_50mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.05,
+              0.05,
+              0.05,
+              0.005,
+              0.005,
+              0.005
+            ]
+          },
+          "parameters": [
+            2.1456924934542076,
+            1.8988172103551337,
+            0.30280610933690527
+          ],
+          "conditional_std": [
+            0.3169531302005772,
+            0.5595506201082109,
+            0.0011449299698122139
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.0045150178151224145,
+            "coordinate_rmse": 0.0012466431810279504,
+            "velocity_rmse": 0.0006694870524244349,
+            "final_coordinate_error": 0.0012485394340375664,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            7.2846246727103825,
+            -36.70609298816221,
+            0.9353697789684201
+          ]
+        },
+        "assumed_delay_one_240Hz_sample": {
+          "assumptions": {
+            "delay_samples": 1
+          },
+          "parameters": [
+            1.9872022730328143,
+            3.0364473400362995,
+            0.29992763286110125
+          ],
+          "conditional_std": [
+            0.0014361034305199103,
+            0.002999601390298075,
+            7.354306207986554e-06
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -0.6398863483592865,
+            1.2149113345433227,
+            -0.02412237963291819
+          ]
+        },
+        "assumed_delay_two_240Hz_samples": {
+          "assumptions": {
+            "delay_samples": 2
+          },
+          "parameters": [
+            1.9742510200155066,
+            3.0728559588314486,
+            0.299855324435913
+          ],
+          "conditional_std": [
+            0.002867081564233264,
+            0.005992993169496025,
+            1.468867104506091e-05
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -1.2874489992246718,
+            2.428531961048286,
+            -0.048225188028994115
+          ]
+        },
+        "tool_mass_plus_one_percent": {
+          "assumptions": {
+            "tool_mass_scale": 1.01
+          },
+          "parameters": [
+            1.9919165991315766,
+            2.9998767204232295,
+            0.3000002518283397
+          ],
+          "conditional_std": [
+            3.36355111825609e-05,
+            5.6900434472485774e-05,
+            1.1900661068256272e-07
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -0.40417004342117036,
+            -0.004109319225686914,
+            8.394277990486643e-05
+          ]
+        },
+        "tool_mass_minus_one_percent": {
+          "assumptions": {
+            "tool_mass_scale": 0.99
+          },
+          "parameters": [
+            2.0079151492685328,
+            2.999866633558256,
+            0.30000026480699415
+          ],
+          "conditional_std": [
+            3.383827553804726e-05,
+            5.586243388105627e-05,
+            1.1880641561023067e-07
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            0.3957574634266381,
+            -0.004445548058129578,
+            8.826899806635424e-05
+          ]
+        },
+        "tool_COM_plus_one_mm": {
+          "assumptions": {
+            "tool_com_offset_body_m": [
+              0.001,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.9999189838051994,
+            2.9999220499067634,
+            0.3000001935094168
+          ],
+          "conditional_std": [
+            0.0002726529078232662,
+            0.0004954263575721993,
+            1.0638412602036213e-06
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -0.00405080974003047,
+            -0.0025983364412174303,
+            6.450313894124093e-05
+          ]
+        },
+        "tool_COM_minus_one_mm": {
+          "assumptions": {
+            "tool_com_offset_body_m": [
+              -0.001,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.9999127645948804,
+            2.9998213040745636,
+            0.3000003231259175
+          ],
+          "conditional_std": [
+            0.000272799046378794,
+            0.0004942028563152375,
+            1.063542034930312e-06
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            -0.004361770255978392,
+            -0.005956530847883723,
+            0.00010770863918541096
+          ]
+        },
+        "assumed_position_quantization_100um": {
+          "assumptions": {
+            "q_quantum_m": 0.0001,
+            "velocity_from_position": true
+          },
+          "parameters": null,
+          "conditional_std": null,
+          "bins": 0,
+          "status": "unknown: insufficient qualified samples",
+          "heldout": null,
+          "relative_parameter_error_percent": null
+        },
+        "assumed_position_noise_10um": {
+          "assumptions": {
+            "q_noise_sd_m": 1e-05,
+            "velocity_from_position": true
+          },
+          "parameters": null,
+          "conditional_std": null,
+          "bins": 6,
+          "status": "unknown: insufficient qualified samples",
+          "heldout": null,
+          "relative_parameter_error_percent": null
+        }
+      }
+    },
+    "static_kinetic": {
+      "analytical_parameters_evaluation_only": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "kinetic_open_N": 0.3,
+        "kinetic_close_N": 0.3,
+        "static_hold_force_N": 0.12
+      },
+      "model": {
+        "parameters": [
+          1.9999221439279857,
+          3.0049363889358314,
+          0.2999902612087609
+        ],
+        "conditional_std": [
+          0.00022232224893001053,
+          0.0004473784135210658,
+          1.1081362429540608e-06
+        ],
+        "scaled_condition": 151.7278006069121
+      },
+      "integral_parameters": [
+        1.9929766309594283,
+        3.0039280038717417,
+        0.2999920602750267
+      ],
+      "scenarios": {
+        "ideal": {
+          "assumptions": {},
+          "parameters": [
+            1.9999221439279857,
+            3.0049363889358314,
+            0.2999902612087609
+          ],
+          "conditional_std": [
+            0.00022232224893001053,
+            0.0004473784135210658,
+            1.1081362429540608e-06
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04583696773159486,
+            "coordinate_rmse": 0.0017205973051249459,
+            "velocity_rmse": 0.0006031270902634285,
+            "final_coordinate_error": 0.0026360349808140357,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            -0.0038928036007135347,
+            0.1645462978610457,
+            -0.0032462637463703814
+          ]
+        },
+        "bias_force_plus_10mN": {
+          "assumptions": {
+            "bias_sensor": [
+              0.01,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.994774244310646,
+            2.9109631901556376,
+            0.3034923511119886
+          ],
+          "conditional_std": [
+            0.9501594579760825,
+            1.3709984168247897,
+            0.003048539425450047
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.05138769088891355,
+            "coordinate_rmse": 0.012806815964743421,
+            "velocity_rmse": 0.002098366261697279,
+            "final_coordinate_error": 0.02376379680440258,
+            "outside_FIT_support": false,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            -0.26128778446770085,
+            -2.967893661478749,
+            1.1641170373295262
+          ]
+        },
+        "bias_force_minus_10mN": {
+          "assumptions": {
+            "bias_sensor": [
+              -0.01,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            2.0050700435453384,
+            3.0989095877160033,
+            0.2964881713055332
+          ],
+          "conditional_std": [
+            0.9502749303799835,
+            1.3708870770708321,
+            0.003047317201202887
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": [
+            0.2535021772669177,
+            3.2969862572001185,
+            -1.170609564822267
+          ]
+        },
+        "bias_torque_plus_1mNm": {
+          "assumptions": {
+            "bias_sensor": [
+              0,
+              0,
+              0,
+              0,
+              0.001,
+              0
+            ]
+          },
+          "parameters": [
+            1.9999221439279857,
+            3.0049363889358314,
+            0.2999902612087609
+          ],
+          "conditional_std": [
+            0.00022232224893001053,
+            0.0004473784135210658,
+            1.1081362429540608e-06
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04583696773159486,
+            "coordinate_rmse": 0.0017205973051249459,
+            "velocity_rmse": 0.0006031270902634285,
+            "final_coordinate_error": 0.0026360349808140357,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            -0.0038928036007135347,
+            0.1645462978610457,
+            -0.0032462637463703814
+          ]
+        },
+        "AI1500_stated_resolution_quantization": {
+          "assumptions": {
+            "quantum_sensor": [
+              0.4,
+              0.4,
+              0.4,
+              0.01,
+              0.01,
+              0.01
+            ]
+          },
+          "parameters": [
+            1.9756014059482154e-10,
+            0.16691365521235577,
+            0.3971142010456054
+          ],
+          "conditional_std": [
+            0.2032698952753182,
+            0.29573614385717445,
+            0.0006006541797909517
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "unsupported inertial term"
+          },
+          "relative_parameter_error_percent": [
+            -99.99999999012199,
+            -94.43621149292147,
+            32.37140034853514
+          ]
+        },
+        "assumed_noise_1mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.001,
+              0.001,
+              0.001,
+              0.0001,
+              0.0001,
+              0.0001
+            ]
+          },
+          "parameters": [
+            2.002981106420931,
+            2.9806180068438084,
+            0.30005277179098067
+          ],
+          "conditional_std": [
+            0.0070458620588384245,
+            0.012238207030491227,
+            2.400100457359554e-05
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04583861033430254,
+            "coordinate_rmse": 0.0017374645003977983,
+            "velocity_rmse": 0.0006059360561984838,
+            "final_coordinate_error": 0.0026606853811642454,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            0.14905532104654284,
+            -0.6460664385397163,
+            0.017590596993555252
+          ]
+        },
+        "assumed_noise_10mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.01,
+              0.01,
+              0.01,
+              0.001,
+              0.001,
+              0.001
+            ]
+          },
+          "parameters": [
+            2.0305117688573446,
+            2.7617525680159365,
+            0.3006153670309579
+          ],
+          "conditional_std": [
+            0.0704479885518844,
+            0.12212556942308885,
+            0.0002399730638497946
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04586146996553194,
+            "coordinate_rmse": 0.0019032130364227502,
+            "velocity_rmse": 0.000642531418243929,
+            "final_coordinate_error": 0.002903532451185727,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            1.5255884428672317,
+            -7.94158106613545,
+            0.2051223436526417
+          ]
+        },
+        "assumed_noise_50mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.05,
+              0.05,
+              0.05,
+              0.005,
+              0.005,
+              0.005
+            ]
+          },
+          "parameters": [
+            2.1528702685747225,
+            1.7890172843363226,
+            0.303115790319746
+          ],
+          "conditional_std": [
+            0.35224896854070525,
+            0.6105458432732502,
+            0.0011999491737995048
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04613813252024056,
+            "coordinate_rmse": 0.002426773194654923,
+            "velocity_rmse": 0.0009279948179171249,
+            "final_coordinate_error": 0.003576914445259715,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            7.643513428736126,
+            -40.366090522122576,
+            1.0385967732486678
+          ]
+        },
+        "assumed_delay_one_240Hz_sample": {
+          "assumptions": {
+            "delay_samples": 1
+          },
+          "parameters": [
+            1.9878030187687274,
+            3.040572971306208,
+            0.29991990900227583
+          ],
+          "conditional_std": [
+            0.0017829553455580903,
+            0.0036275855884786387,
+            8.948300000684647e-06
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04588666448587962,
+            "coordinate_rmse": 0.0017117867813643954,
+            "velocity_rmse": 0.0005991348204930333,
+            "final_coordinate_error": 0.0026264137138609644,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            -0.6098490615636276,
+            1.3524323768735913,
+            -0.026696999241382358
+          ]
+        },
+        "assumed_delay_two_240Hz_samples": {
+          "assumptions": {
+            "delay_samples": 2
+          },
+          "parameters": [
+            1.975443927535657,
+            3.0760408750863877,
+            0.2998498804005478
+          ],
+          "conditional_std": [
+            0.003337772819628778,
+            0.006793857115632672,
+            1.675415282461424e-05
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.045956896347584035,
+            "coordinate_rmse": 0.001702998950369894,
+            "velocity_rmse": 0.0005952432515266804,
+            "final_coordinate_error": 0.0026168012825617554,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            -1.2278036232171496,
+            2.53469583621293,
+            -0.0500398664840751
+          ]
+        },
+        "tool_mass_plus_one_percent": {
+          "assumptions": {
+            "tool_mass_scale": 1.01
+          },
+          "parameters": [
+            1.991910200473082,
+            3.004986147719015,
+            0.2999901421979831
+          ],
+          "conditional_std": [
+            0.0002283619234275496,
+            0.0004543253062760933,
+            1.1166798796471334e-06
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04583716909505022,
+            "coordinate_rmse": 0.0017167514140122183,
+            "velocity_rmse": 0.0006026333694158028,
+            "final_coordinate_error": 0.00262926666152348,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            -0.4044899763459009,
+            0.16620492396717257,
+            -0.0032859340056368147
+          ]
+        },
+        "tool_mass_minus_one_percent": {
+          "assumptions": {
+            "tool_mass_scale": 0.99
+          },
+          "parameters": [
+            2.0079340873829055,
+            3.0048866301526256,
+            0.2999903802195382
+          ],
+          "conditional_std": [
+            0.00022002041914775697,
+            0.0004465836234536297,
+            1.1108662765452625e-06
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.045836766370805006,
+            "coordinate_rmse": 0.0017244414307126413,
+            "velocity_rmse": 0.0006036212784405793,
+            "final_coordinate_error": 0.002642805886808257,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            0.3967043691452732,
+            0.16288767175418606,
+            -0.0032065934872593793
+          ]
+        },
+        "tool_COM_plus_one_mm": {
+          "assumptions": {
+            "tool_com_offset_body_m": [
+              0.001,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.9997898624324946,
+            3.0049231954465485,
+            0.29999007929436033
+          ],
+          "conditional_std": [
+            0.0003767639470101115,
+            0.0006859256314807683,
+            1.51784653478206e-06
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.04583841842001393,
+            "coordinate_rmse": 0.001718104185149931,
+            "velocity_rmse": 0.0006031160502673685,
+            "final_coordinate_error": 0.00263267629918755,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            -0.010506878375271533,
+            0.164106514884943,
+            -0.003306901879884805
+          ]
+        },
+        "tool_COM_minus_one_mm": {
+          "assumptions": {
+            "tool_com_offset_body_m": [
+              -0.001,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            2.0000544254234796,
+            3.0049495824250396,
+            0.29999044312316187
+          ],
+          "conditional_std": [
+            0.0003524132982609944,
+            0.000694171980131144,
+            1.6340719460721113e-06
+          ],
+          "bins": 318,
+          "status": null,
+          "heldout": {
+            "status": "predicted",
+            "effort_rmse": 0.045835517223373534,
+            "coordinate_rmse": 0.0017230909604914466,
+            "velocity_rmse": 0.0006031390966711086,
+            "final_coordinate_error": 0.00263939362962215,
+            "outside_FIT_support": true,
+            "samples": 3118,
+            "duration_s": 12.9875,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "relative_parameter_error_percent": [
+            0.0027212711739776907,
+            0.16498608083466149,
+            -0.003185625612711629
+          ]
+        },
+        "assumed_position_quantization_100um": {
+          "assumptions": {
+            "q_quantum_m": 0.0001,
+            "velocity_from_position": true
+          },
+          "parameters": null,
+          "conditional_std": null,
+          "bins": 0,
+          "status": "unknown: insufficient qualified samples",
+          "heldout": null,
+          "relative_parameter_error_percent": null
+        },
+        "assumed_position_noise_10um": {
+          "assumptions": {
+            "q_noise_sd_m": 1e-05,
+            "velocity_from_position": true
+          },
+          "parameters": null,
+          "conditional_std": null,
+          "bins": 4,
+          "status": "unknown: insufficient qualified samples",
+          "heldout": null,
+          "relative_parameter_error_percent": null
+        }
+      }
+    },
+    "asymmetric": {
+      "analytical_parameters_evaluation_only": {
+        "mass_kg": 2.0,
+        "damping_N_s_m": 3.0,
+        "kinetic_open_N": 0.3,
+        "kinetic_close_N": 0.42,
+        "static_hold_force_N": 0.0
+      },
+      "model": {
+        "parameters": [
+          1.6217763649372428,
+          3.184968076852487,
+          0.33962199640107626
+        ],
+        "conditional_std": [
+          5.268022193309471,
+          7.700856077293999,
+          0.017179330951959677
+        ],
+        "scaled_condition": 151.56085045302135
+      },
+      "integral_parameters": [
+        2.7489943578629807,
+        3.0731518642082474,
+        0.3398603975039852
+      ],
+      "scenarios": {
+        "ideal": {
+          "assumptions": {},
+          "parameters": [
+            1.6217763649372428,
+            3.184968076852487,
+            0.33962199640107626
+          ],
+          "conditional_std": [
+            5.268022193309471,
+            7.700856077293999,
+            0.017179330951959677
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "bias_force_plus_10mN": {
+          "assumptions": {
+            "bias_sensor": [
+              0.01,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.6844687108205785,
+            3.154917995543506,
+            0.34299849259834436
+          ],
+          "conditional_std": [
+            4.394962338791817,
+            6.4243113641885605,
+            0.014331864783554664
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "bias_force_minus_10mN": {
+          "assumptions": {
+            "bias_sensor": [
+              -0.01,
+              0,
+              0,
+              0,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.5590840190539044,
+            3.215018158161501,
+            0.33624550020380817
+          ],
+          "conditional_std": [
+            6.141084303780768,
+            8.97740587327216,
+            0.020026807669313355
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "bias_torque_plus_1mNm": {
+          "assumptions": {
+            "bias_sensor": [
+              0,
+              0,
+              0,
+              0,
+              0.001,
+              0
+            ]
+          },
+          "parameters": [
+            1.6217763649372428,
+            3.184968076852487,
+            0.33962199640107626
+          ],
+          "conditional_std": [
+            5.268022193309471,
+            7.700856077293999,
+            0.017179330951959677
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "AI1500_stated_resolution_quantization": {
+          "assumptions": {
+            "quantum_sensor": [
+              0.4,
+              0.4,
+              0.4,
+              0.01,
+              0.01,
+              0.01
+            ]
+          },
+          "parameters": [
+            1.8848378583678207e-10,
+            0.09352047993591127,
+            0.39762626956752906
+          ],
+          "conditional_std": [
+            0.1862259800069864,
+            0.27352234110478785,
+            0.0005828684505382708
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "unsupported inertial term"
+          },
+          "relative_parameter_error_percent": null
+        },
+        "assumed_noise_1mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.001,
+              0.001,
+              0.001,
+              0.0001,
+              0.0001,
+              0.0001
+            ]
+          },
+          "parameters": [
+            1.624691897322328,
+            3.1629469875197485,
+            0.33967811342146104
+          ],
+          "conditional_std": [
+            5.268177194604369,
+            7.703386997682886,
+            0.017184103662530332
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "assumed_noise_10mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.01,
+              0.01,
+              0.01,
+              0.001,
+              0.001,
+              0.001
+            ]
+          },
+          "parameters": [
+            1.6509316887880743,
+            2.9647571835253586,
+            0.340183166604924
+          ],
+          "conditional_std": [
+            5.269915140530631,
+            7.726857385861823,
+            0.017228368185061595
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "assumed_noise_50mN": {
+          "assumptions": {
+            "noise_sd_sensor": [
+              0.05,
+              0.05,
+              0.05,
+              0.005,
+              0.005,
+              0.005
+            ]
+          },
+          "parameters": [
+            1.7675529841913988,
+            2.0839136102169777,
+            0.34242784742031407
+          ],
+          "conditional_std": [
+            5.2850887974062974,
+            7.845977837452397,
+            0.017453205854219198
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "assumed_delay_one_240Hz_sample": {
+          "assumptions": {
+            "delay_samples": 1
+          },
+          "parameters": [
+            1.6090627803472233,
+            3.221543697760782,
+            0.3395493700291481
+          ],
+          "conditional_std": [
+            5.268412982028746,
+            7.700578704821509,
+            0.01717555656359765
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "assumed_delay_two_240Hz_samples": {
+          "assumptions": {
+            "delay_samples": 2
+          },
+          "parameters": [
+            1.5961115771647223,
+            3.2579521898906054,
+            0.3394770588582152
+          ],
+          "conditional_std": [
+            5.26880201654677,
+            7.700303554566097,
+            0.017171801382424707
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "tool_mass_plus_one_percent": {
+          "assumptions": {
+            "tool_mass_scale": 1.01
+          },
+          "parameters": [
+            1.6137770898687704,
+            3.1849731202849236,
+            0.33962198991174947
+          ],
+          "conditional_std": [
+            5.26802228025697,
+            7.700853831957144,
+            0.01717932828373355
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "tool_mass_minus_one_percent": {
+          "assumptions": {
+            "tool_mass_scale": 0.99
+          },
+          "parameters": [
+            1.6297756400057195,
+            3.1849630334199714,
+            0.339622002890403
+          ],
+          "conditional_std": [
+            5.268022106502412,
+            7.700858322947139,
+            0.017179333620842275
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "tool_COM_plus_one_mm": {
+          "assumptions": {
+            "tool_com_offset_body_m": [
+              0.001,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.6217794745423917,
+            3.1850184497684375,
+            0.33962193159282567
+          ],
+          "conditional_std": [
+            5.268023076077844,
+            7.700833632092322,
+            0.017179304295689687
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "tool_COM_minus_one_mm": {
+          "assumptions": {
+            "tool_com_offset_body_m": [
+              -0.001,
+              0,
+              0
+            ]
+          },
+          "parameters": [
+            1.6217732553320734,
+            3.184917703936379,
+            0.3396220612093268
+          ],
+          "conditional_std": [
+            5.268021324584392,
+            7.700878554128371,
+            0.017179357673882567
+          ],
+          "bins": 390,
+          "status": null,
+          "heldout": {
+            "status": "prediction left declared domain; no state correction",
+            "outside_FIT_support": true
+          },
+          "relative_parameter_error_percent": null
+        },
+        "assumed_position_quantization_100um": {
+          "assumptions": {
+            "q_quantum_m": 0.0001,
+            "velocity_from_position": true
+          },
+          "parameters": null,
+          "conditional_std": null,
+          "bins": 0,
+          "status": "unknown: insufficient qualified samples",
+          "heldout": null,
+          "relative_parameter_error_percent": null
+        },
+        "assumed_position_noise_10um": {
+          "assumptions": {
+            "q_noise_sd_m": 1e-05,
+            "velocity_from_position": true
+          },
+          "parameters": null,
+          "conditional_std": null,
+          "bins": 6,
+          "status": "unknown: insufficient qualified samples",
+          "heldout": null,
+          "relative_parameter_error_percent": null
+        }
+      }
+    }
+  }
+}
