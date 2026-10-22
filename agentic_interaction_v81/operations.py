@@ -6,6 +6,38 @@ from unittest.mock import patch
 
 def operations_class(original):
     class StationOperations(original):
+        worker_script='agentic_interaction_v81/update_model.py'
+
+        def interact(self,target,max_sim_s=None,action=None):
+            proposed=self.actions[0] if self.actions else action
+            if proposed and proposed['role'].startswith('VALIDATION'):
+                import hashlib
+                folder=self.r.output/'model';m=folder/'estimate.json';f=folder/'FIT_READINESS_V81.json'
+                ready=json.loads(f.read_text()) if f.exists() else {}
+                model_bytes=m.read_bytes() if m.exists() else None
+                expected=max((s['id'] for s in self.r.record.segments if s['role'].startswith('FIT') and s['completed']),default=0)
+                valid=(model_bytes is not None and ready.get('model_sha256')==hashlib.sha256(model_bytes).hexdigest()
+                       and ready.get('latest_completed_FIT_id')==expected and ready.get('qualified_bidirectional'))
+                if not valid:
+                    # No waiting for workers or Agent inference while loaded.
+                    # End this finite block and use the original release/park.
+                    if self.actions:self.actions.pop(0)
+                    return dict(ok=False,status='VALIDATION_DEFERRED',executed=False,
+                        reason='QUALIFIED_BIDIRECTIONAL_FIT_NOT_YET_READY',readiness=ready,
+                        requested_target_reached=False,complete_independent_validation=False)
+                model=json.loads(model_bytes);seal=self.r.output/'validation_model_seals'
+                seal.mkdir(exist_ok=True)
+                (seal/('%02d.json'%(len(self.r.record.segments)+1))).write_text(json.dumps(dict(
+                    declared_action=proposed,model_sha256=ready['model_sha256'],
+                    selected=model.get('selected'),configuration=model.get('configuration'),
+                    readiness=ready,object_coordinate=self.r.actual()),indent=2))
+            return super().interact(target,max_sim_s,action)
+
+        def feedback(self):
+            result=super().feedback();p=self.r.output/'model/FIT_READINESS_V81.json'
+            result['FIT_readiness_v81']=json.loads(p.read_text()) if p.exists() else dict(status='pending')
+            return result
+
         def attempt(self,command):
             if command.get('segments')!=getattr(self,'_v81_declared_chain',None):
                 return dict(executed=False,recoverable=True,reason='DECLARE_AND_VALIDATE_THIS_CHAIN_BEFORE_ACQUISITION')
