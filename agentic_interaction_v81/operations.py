@@ -69,7 +69,8 @@ def operations_class(original):
                 # transform is the original current-state safety update.
                 moved=at_base(export,self.r.initial_base,self.r.base)
                 return original_export(moved,moving_link,moving_pose)
-            with patch.object(executable,'current_export',current):
+            from .performance import cached_planning_fk
+            with patch.object(executable,'current_export',current), cached_planning_fk():
                 return super().request_plan(command)
 
         def evaluate_station(self,command):
