@@ -9,6 +9,10 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    if op=='build_geometry' and 'planning_target_q' in command:
+        value=command['planning_target_q']
+        if type(value) not in (int,float) or not math.isfinite(value):
+            raise ProtocolError('finite native-coordinate planning horizon required')
     if op not in ('evaluate_station','relocate_station'):return original_validate(command,sequence)
     # Preserve original protocol-version/sequence/type checks. Additional
     # operations cannot smuggle hand-written joint/grasp/object-state fields.

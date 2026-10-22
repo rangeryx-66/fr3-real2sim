@@ -59,10 +59,13 @@ def operations_class(original):
                 return dict(plan=False,reason='PREDECLARE_FINITE_NATIVE_COORDINATE_CHAIN',recoverable=True)
             for action in actions:validate_action(action);self.articulation().validate_target(action)
             self._v81_declared_chain=actions
-            # The old fixed planning target is an input alias, not a controller
-            # limit. Plan the Agent's next declared native-coordinate action.
-            # Subsequent transitions retain the original current-state checker.
-            self.r.job['benchmark_goal_rad']=float(actions[0]['target_q'])
+            # A short first probe need not hide a later workspace limitation.
+            # The Agent may request a separate known-kinematics planning horizon;
+            # it is never an extra executable action or a physical success claim.
+            horizon=float(command.get('planning_target_q',actions[0]['target_q']))
+            self.articulation().validate_target(dict(target_q=horizon,
+                coordinate_unit=actions[0]['coordinate_unit']))
+            self.r.job['benchmark_goal_rad']=horizon
             import native_g1_execution_candidates as executable
             from interactive_twin_recovery.mobile import at_base
             original_export=executable.current_export
@@ -74,7 +77,11 @@ def operations_class(original):
                 return original_export(moved,moving_link,moving_pose)
             from .performance import cached_planning_fk
             with patch.object(executable,'current_export',current), cached_planning_fk():
-                return super().request_plan(command)
+                result=super().request_plan(command)
+            result.update(planning_horizon_native=horizon,
+                executable_first_target_native=actions[0]['target_q'],
+                planning_horizon_is_not_motion=True)
+            return result
 
         def evaluate_station(self,command):
             if not command.get('reason') or not command.get('inspected_image_sha256'):

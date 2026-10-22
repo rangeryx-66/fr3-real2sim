@@ -39,5 +39,12 @@ class TransportTests(unittest.TestCase):
         self.assertEqual(validate(dict(operation='relocate_station',protocol_version=1,sequence=1,
             evaluated_command=0,reason='move'),1)['evaluated_command'],0)
 
+    def test_planning_horizon_is_finite_numeric_not_a_manual_pose(self):
+        for value in [True,'90',float('nan'),float('inf')]:
+            with self.subTest(value=value),self.assertRaises(ProtocolError):
+                validate(dict(operation='build_geometry',protocol_version=1,sequence=0,planning_target_q=value),0)
+        command=dict(operation='build_geometry',protocol_version=1,sequence=0,planning_target_q=1.57)
+        self.assertEqual(validate(command,0),command)
+
 
 if __name__=='__main__':unittest.main()
