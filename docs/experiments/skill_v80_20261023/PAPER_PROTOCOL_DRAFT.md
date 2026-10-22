@@ -1,0 +1,33 @@
+# Ready-to-register protocol — NOT authorized for execution
+
+Status: draft. Registration remains pending the V8 reproducibility evidence and final immutable package commit. No hidden seed/configuration is generated or paper episode launched by this document.
+
+## Population, splits and blinding
+
+Two strata: ordinary vertical-axis revolute cabinets and horizontal prismatic drawers. Maintain an explicit list of all previously studied development objects (including 45936, 46427, 45600, 45606, 45671, 27044, 45290, 19179, 45746 and 19855); verify library/history inventory before designating any object genuinely unseen. Previously revealed V7.5.1 physics is development only. Different handle geometry includes bars and compact caps, with cap support claims limited to tested joint/family combinations.
+
+Proposed evaluation: 12 genuinely held-out assets (6/joint type), 2 independent physically consistent dynamics configurations each, 24 episodes. Eligibility screen uses inexpensive visual/URDF/native-collision/IK checks only; record every excluded asset/reason before outcomes. No loaded grasp simulation or favorable GT contact score for selection. Freeze IDs/order, seeds and encrypted/private configuration commitments before execution. If fewer suitable unseen objects exist, revise and register denominator before any physical outcome; do not silently substitute development objects.
+
+Known hinge/rail and dynamic state, registered station, native collision safety model, simulated wrist mount and ideal six-axis cut sensor are retained limitations. Hidden mass/inertia, damping and passive-resistance law are scene-generator/evaluator only. Online Agent has fresh wrist RGB-D/SAM, observed geometry, robot/contact and measured F/T; never passive geometry cameras, GT grasp geometry or authored effort. Reveal truth only after actor/actions and online model are sealed. This role separation is not adversarial OS isolation.
+
+## Frozen interventions and budget
+
+Full Skill plus two predeclared ablations on matched independent configurations: (1) feedback/regrasp disabled after first acquisition, deterministic safe termination still active; (2) fixed bounded excitation menu/order instead of evidence-selected active probing. Keep perception, controller, safety, estimator, starting station and total wall/acquisition budgets identical. These are separate experimental arms; failures remain in their arm's denominator, not recycled into the main arm. Freeze exact arm implementation/hashes before launch; power/cost justification and final total trial count must be registered explicitly, not inferred from 24 main-arm episodes.
+
+Agent selects feasible views/candidates/targets, initial drawer requested preload1 N with existing legal choices at unloaded boundaries. Max4 observation adjustments/generation, max3 acquisitions/episode, finite60min wall/30min simulation, ≥5min wall/2min simulation guarded exit reserve (final budgets verified from V8 cost distributions before registration). No hard-stop reset, retry after valid failure, object replacement, GT correction, stronger actuator or post-outcome tuning. Init/interface-invalid runs are recorded separately with exact no-acquisition evidence.
+
+## Outcomes and analysis fixed before execution
+
+Per-stage numerator/denominator across every registered slot: accepted observed target; automatically executable plan; physical acquisition; sustained task motion; meaningful reverse travel; ≥3 distinct qualified bidirectional FIT trajectories when selecting state dependence; complete independent VALIDATION; unloaded release/clearance; actual SAFE_PARK_REACHED; full lifecycle. Do not use symmetric loads or continuous bilateral normal reports as new gates.
+
+Primary identification endpoint: independently declared complete held-out trajectory and free generalized position/velocity prediction initialized once and driven by measured F/T. Report full physical duration and actual derivative-supported retained horizon separately. No future state correction. Common SG121, one tool-inertia compensation, segment-local processing, full-window sliding eligibility, FIT-only model selection. Constant vs position-dependent resistance evaluated on identical held-out data; ≥3 distinct eligible FIT trajectories for extension. Report model unavailability and weak identifiability, not just successful-fit averages.
+
+Parameter outcomes: absolute/relative inertia or mass, damping, resistance errors against post-hoc authored references; label authored inertia separately from independently measured effective PhysX dynamics. Resistance error only on observed support; include curve-integrated/peak errors and supported intervals. Conditional uncertainty plus perturbation sensitivity; near-zero denominators use absolute errors. Held-out effort RMSE, free position/velocity RMSE/final error, cross-FIT stability, excitation RMS/singular values/conditioning. Short strokes cannot establish unobserved resistance peaks or full-travel dynamics.
+
+Interaction range is continuous reported progress/fraction of valid travel. Predeclare both short-stroke identification endpoint and secondary large-range endpoint (doors20–30°, drawers80–150mm when feasible); never relabel shorter completion as the old long-range target. Report safety stops, collision/force/joint events, recovery counts/outcomes, total/Agent/sensing/planning/execution time, token/API cost when measured, bytes and final cleanup.
+
+Aggregate revolute, prismatic and combined, by object/configuration and handle family. Include all failed slots, unavailable metrics and stage denominators. Median/IQR and mean/SD for available continuous metrics alongside availability fraction; hierarchical bootstrap by object for uncertainty, do not treat two configurations as independent objects. Report complete cases and failure-aware summaries separately. No population claims from engineering smokes. Raw frames/F/T/telemetry stay private; publish derived per-slot data, hashes, failure categories and script versions.
+
+## Freeze gate
+
+Before registration: reproducibility smokes and audit concluded; final release behavioral/package/config/resource manifests immutable; model/app/Agent instructions/version frozen; held-out asset history screen, all seeds, action/validation declaration rules, budgets, ablation implementations and analysis scripts committed. Any later repair creates a new version/cohort and preserves prior failures. The present task stops before this quantitative evaluation.
