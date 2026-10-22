@@ -224,5 +224,97 @@ position RMSE 0.593 mm and velocity RMSE 0.478 mm/s. These conditional uncertain
 numbers exclude sensor/contact systematic error. Authored-reference evaluation
 is separate from online action choices and final model fitting.
 
-No prospective slots or new benchmark have been launched. Readiness and final
-engineering outcomes must be completed before any reliability claim.
+The same frozen R2 implementation then completed fresh 27044 and 45746 local
+engineering lifecycles. These are deliberately short identification trajectories,
+**not** completion of the old 80–150 mm task or a new blind success rate.
+
+| R2 fresh object | First pull / reverse FIT (mm) | Third FIT / independent VAL travel (mm) | Complete physical VAL / retained prediction (s) | Held-out force RMSE (N) | Free position / velocity RMSE (mm; mm/s) | Final verified park |
+|---|---:|---:|---:|---:|---:|---|
+| 19179 | +14.072 / -10.139 | +8.135 / -5.111 | 6.013 / 3.004 | 0.001945 | 0.593 / 0.478 | yes |
+| 27044 | +14.121 / -10.184 | +8.154 / -5.119 | 5.888 / 2.379 | 0.0000810 | 0.0193 / 0.0247 | yes |
+| 45746 | +14.054 / -10.108 | +8.156 / -5.135 | 6.108 / 3.100 | 0.001094 | 0.412 / 0.295 | yes |
+| 45290 | +14.099 / -10.166 | +8.153 / -5.127 | 5.733 / 2.717 | 0.0001210 | 0.0304 / 0.311 | yes |
+
+All sixteen R2 physical segments reached their declared targets. Each scene used one
+acquisition, the original one-second hold and initial **1.0 N requested** preload;
+that request is not measured clamp force. Native pad-load asymmetry and missing
+positive reports did not create a new veto. No load limit was raised.
+
+27044's first actual image lacked the handle; an observation-driven upward view
+recovered it, then an opposite oblique added measured geometry. Closing-envelope
+candidate fallback rejected unsafe alternatives before the successful acquisition.
+On 45746 the first bar was detected, but the second view lacked accepted SAM
+output. The Agent inspected actual RGB/depth proposals and selected the complete
+lower bar from measured depth, rejecting another drawer and mounting fragments.
+No GT mask, cached grasp or threshold reduction supplied either plan.
+
+The 45746 fresh route reached the ordinary winding-zero rest region. It **did not
+physically exercise** the alternative joint-winding route needed by the older
+difficult terminal state; that branch's evidence remains offline only. Likewise,
+the load-forecast early-unload branch was not triggered by these complete R2
+trajectories. R1's same-scene recovery remains useful-pull evidence followed by
+collision stop, not recovery-to-validation success.
+
+Frozen online [mass kg, damping N s/m, Coulomb N] and conditional standard deviations:
+
+| Object | Online parameters | Conditional standard deviations | Scaled condition |
+|---|---|---|---:|
+| 19179 | [1.979746, 3.101726, 0.299792] | [0.006023, 0.016997, 0.0000380] | 136.1 |
+| 27044 | [2.000407, 3.107848, 0.299766] | [0.003592, 0.015779, 0.0000379] | 141.4 |
+| 45746 | [2.000581, 3.091850, 0.299815] | [0.003537, 0.014788, 0.0000320] | 163.2 |
+| 45290 | [1.995978, 3.104080, 0.299771] | [0.003412, 0.013552, 0.0000323] | 142.3 |
+
+The FIT-only applicability diagnostic exactly reproduces these production
+coefficients. 19179 has a repeatable closing residual mean of about 12 micro-N;
+its physical materiality is unknown without an independent error model. It is
+not proof of a wrong mass. The other two have no detected same-family grouped
+lack of fit, which also does not calibrate total physical accuracy.
+
+Launcher wall time was 949 /1426 /1559 /1940 s. Essential data plus checkpoint images,
+source and metadata for the first three occupy approximately 45.8 /43.7 /47.1 MB; no continuous video
+or duplicate raw archive was added. All failure and calibration records are
+additional and are included separately in final accounting.
+
+45290's initial no-command unloaded orchestration timeout and separately
+registered same-configuration continuation are documented in
+[ORCHESTRATION_CONTINUATION.md](ORCHESTRATION_CONTINUATION.md). They must not be
+silently dropped from cost/latency reporting.
+
+The continuation initially associated an adjacent drawer's bar. Both automatically
+generated plans were rejected at zero progress by native collisions with the
+nonselected `l_3` surfaces (`original53/54`), **not by drawer resistance**. The
+generic top-level error said approach IK exhausted, but its detailed native arc
+audit showed the actual blocker. The Agent inspected fresh masks/depth and
+requested complementary/lower views, then isolated a new observation generation
+for the correct lower handle. A fresh complete-mask selection produced a feasible
+automatic grasp and all four physical segments plus park. This is real same-scene
+perception/planning recovery to VALIDATION, with zero failed physical acquisitions
+and no physical regrasp. Earlier rejected plans and observation history remain.
+
+The additional predeclared matched-unloaded fixture completed 55.508 simulation
+seconds /138.42 launcher wall seconds, with zero object motion and pad force,
+and verified final parking. Two measured references were translated 40 mm away
+using the **observed** normal, with identical requested timing/orientation. Actual
+free-space TCP tracking RMS was 1.138 /0.747 mm; it is not an exact replay of loaded
+tool dynamics. Reliable full-inertia-compensated rail residual RMS was
+7.137 /7.000 mN before common filtering, 0.362 /0.363 mN for 100 ms means, and
+0.0769 /0.0414 mN under the production common SG121 operator. All six components,
+raw/gravity/full compensation and source hashes remain in the compact diagnostic.
+No parameter, bias or filter was tuned against these values. This ideal virtual
+measurement check cannot calibrate hardware accuracy or explain all loaded bias.
+
+Post-episode engineering references are authored/readback moving mass **2 kg**,
+damping **3 N s/m**, constant resistance **0.3 N**, for all four local scenes.
+Mass errors range -1.013% to +0.029%; damping remains +3.06% to +3.59%, and Coulomb
+error -0.078% to -0.062%. This common small damping discrepancy is outside some
+conditional intervals; those intervals omit sensor/contact/solver systematic
+error. A nominal coefficient readback is not independently verified effective
+PhysX dynamics, and small held-out position error does not settle the distinction.
+
+Only two small prospective checks are now preregistered in
+[PROSPECTIVE_PROTOCOL.md](PROSPECTIVE_PROTOCOL.md) and
+[PROSPECTIVE_REGISTRATION.json](PROSPECTIVE_REGISTRATION.json): known geometry
+with fresh blind dynamics, then an untuned ordinary round-knob drawer as an
+explicit geometry-domain boundary. Their physical outcomes are still pending.
+The unchanged R2 runtime is frozen before those results; no new eight-slot or
+formal benchmark is authorized or launched.

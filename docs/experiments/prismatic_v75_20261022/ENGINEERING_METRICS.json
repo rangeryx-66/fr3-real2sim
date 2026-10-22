@@ -1,0 +1,584 @@
+{
+  "episodes": [
+    {
+      "episode": "v75_19179_fresh_00",
+      "classification": "engineering; not a benchmark rate",
+      "status": "HARD_STOP_OR_NO_SAFE_DECISION_BOUNDARY",
+      "safe_exit": false,
+      "verified_park": false,
+      "physical_attempt_operations": 2,
+      "observations": 2,
+      "requested_preloads_N": [
+        1.0,
+        1.5
+      ],
+      "segments": [
+        {
+          "role": "FIT_ACCEL_V75_01",
+          "status": "TRANSMISSION_FAILURE",
+          "travel_m": 0.0013727330324653786,
+          "end_coordinate_m": 0.001372732687741518,
+          "physical_duration_s": 4.308333333333334,
+          "requested_target_reached": false,
+          "transmission_valid": false,
+          "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL"
+        },
+        {
+          "role": "FIT_RECOVERY_ACCEL_V75_05",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.010935105849057436,
+          "end_coordinate_m": 0.012124469503760338,
+          "physical_duration_s": 6.245833333333334,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_RECOVERY_REVERSE_V75_06",
+          "status": "SAFETY_STOP",
+          "travel_m": null,
+          "end_coordinate_m": null,
+          "physical_duration_s": 2.6041666666666665,
+          "requested_target_reached": false,
+          "transmission_valid": false,
+          "reason": "COMMAND_COLLISION:DANGEROUS_GEOMETRY_COLLISION:gripper_link1:/World/articulated_pose/asset/Geometry/l_world/l_6/abstract_6_0/l_0/tn__l_0_original10_aL/tn__l_0_original10_aL"
+        }
+      ],
+      "online_model": {
+        "parameters": [
+          2.001755878763974,
+          3.1201313288227026,
+          0.2997422992514865
+        ],
+        "conditional_std": [
+          0.012637801431559017,
+          0.030352417123461976,
+          7.265246614192541e-05
+        ],
+        "scaled_condition": 105.3467863212266,
+        "support_intervals_native": [
+          [
+            0.0024221419201542935,
+            0.011105165943842043
+          ]
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "uncalibrated_total_physical_accuracy": true,
+        "FIT_rmse": 0.00017774296194912996,
+        "heldout_motion": {},
+        "worker_wall_s": 0.5163251191843301,
+        "model_sha256": "125f8a074df00f854120447e63c35f9726de4edcf14dd671670f260e79df6f74",
+        "validation_used_for_fit_or_selection": false,
+        "tool_compensation_count": 1
+      },
+      "launcher_wall_s": 2465.0890171220526,
+      "bytes_by_category": {
+        "source_and_metadata": 19326929,
+        "numeric": 8529611,
+        "geometry": 6248910,
+        "RGBD_checkpoints": 23695693
+      },
+      "total_bytes": 57801143,
+      "index_sha256": "3e9b9f0859e6ccf9b2b70302057524136ee728881a8a26d697f394d8b3ce2197",
+      "raw_data_exported": false,
+      "hidden_truth_read": false
+    },
+    {
+      "episode": "v75_19179_fresh_01_R2",
+      "classification": "engineering; not a benchmark rate",
+      "status": "SESSION_COMPLETE",
+      "safe_exit": true,
+      "verified_park": true,
+      "physical_attempt_operations": 1,
+      "observations": 2,
+      "requested_preloads_N": [
+        1.0
+      ],
+      "segments": [
+        {
+          "role": "FIT_ACCEL_R2_01",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.014072489552687029,
+          "end_coordinate_m": 0.014072488993406296,
+          "physical_duration_s": 7.720833333333333,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_REVERSE_R2_02",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.010138619225472212,
+          "end_coordinate_m": 0.003933869767934084,
+          "physical_duration_s": 7.025,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_VARIED_R2_03",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.008135125506669283,
+          "end_coordinate_m": 0.012068995274603367,
+          "physical_duration_s": 6.2,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "VALIDATION_DISTINCT_R2_04",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.005111385136842728,
+          "end_coordinate_m": 0.006957610137760639,
+          "physical_duration_s": 6.020833333333333,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        }
+      ],
+      "online_model": {
+        "parameters": [
+          1.9797455048570423,
+          3.101726318799235,
+          0.29979228645010314
+        ],
+        "conditional_std": [
+          0.006023405486575571,
+          0.016996663093512443,
+          3.80389232293903e-05
+        ],
+        "scaled_condition": 136.10377652753036,
+        "support_intervals_native": [
+          [
+            0.0007285592332482338,
+            0.013204825468934499
+          ]
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "uncalibrated_total_physical_accuracy": true,
+        "FIT_rmse": 0.00011723757325382626,
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_R2_04_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.0019445799346254234,
+            "coordinate_rmse": 0.0005931552641767166,
+            "velocity_rmse": 0.000478462310664695,
+            "final_coordinate_error": 0.0007839167538311251,
+            "outside_FIT_support": false,
+            "samples": 722,
+            "duration_s": 3.004166666666663,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "worker_wall_s": 1.5966724241152406,
+        "model_sha256": "30654f0a4ab993c63d04df730713cc9f2da9026f2a6fd846367b0ad974368832",
+        "validation_used_for_fit_or_selection": false,
+        "tool_compensation_count": 1
+      },
+      "launcher_wall_s": 949.0513635519892,
+      "bytes_by_category": {
+        "source_and_metadata": 18342907,
+        "numeric": 9695635,
+        "geometry": 6064701,
+        "RGBD_checkpoints": 11702032
+      },
+      "total_bytes": 45805275,
+      "index_sha256": "72e849f545ac03ee7d0b8abd594bb744eef8a6d0a365b64c1597b79875c54ebe",
+      "raw_data_exported": false,
+      "hidden_truth_read": false
+    },
+    {
+      "episode": "v75_27044_fresh_00_R2",
+      "classification": "engineering; not a benchmark rate",
+      "status": "SESSION_COMPLETE",
+      "safe_exit": true,
+      "verified_park": true,
+      "physical_attempt_operations": 1,
+      "observations": 3,
+      "requested_preloads_N": [
+        1.0
+      ],
+      "segments": [
+        {
+          "role": "FIT_ACCEL_ENGINEERING_01",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.014120611182647735,
+          "end_coordinate_m": 0.01412097830325365,
+          "physical_duration_s": 8.4,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_REVERSE_ENGINEERING_02",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.010184139013290405,
+          "end_coordinate_m": 0.003936839289963245,
+          "physical_duration_s": 7.279166666666667,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_VARIED_ENGINEERING_03",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.008154074661433697,
+          "end_coordinate_m": 0.012090913951396942,
+          "physical_duration_s": 6.2625,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "VALIDATION_DISTINCT_ENGINEERING_04",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.005119364708662033,
+          "end_coordinate_m": 0.006971549242734909,
+          "physical_duration_s": 5.895833333333333,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        }
+      ],
+      "online_model": {
+        "parameters": [
+          2.000407435228391,
+          3.1078477451852384,
+          0.29976554696782093
+        ],
+        "conditional_std": [
+          0.003591537152921214,
+          0.01577923642520013,
+          3.786548878930811e-05
+        ],
+        "scaled_condition": 141.38145287324184,
+        "support_intervals_native": [
+          [
+            0.0012743687111651525,
+            0.013124165084698925
+          ]
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "uncalibrated_total_physical_accuracy": true,
+        "FIT_rmse": 8.821188504762694e-05,
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_ENGINEERING_04_04#0": {
+            "status": "predicted",
+            "effort_rmse": 8.101092976348402e-05,
+            "coordinate_rmse": 1.9282999106225106e-05,
+            "velocity_rmse": 2.466709072462709e-05,
+            "final_coordinate_error": -3.3940393374502775e-05,
+            "outside_FIT_support": false,
+            "samples": 572,
+            "duration_s": 2.379166666666663,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "worker_wall_s": 1.701111325994134,
+        "model_sha256": "95f61e4c2baa8c80dbb2492e5dd92d88e969b99bdff89bc8812d9f1b9ddee08c",
+        "validation_used_for_fit_or_selection": false,
+        "tool_compensation_count": 1
+      },
+      "launcher_wall_s": 1426.3649400458671,
+      "bytes_by_category": {
+        "source_and_metadata": 18518644,
+        "numeric": 8539294,
+        "geometry": 4577865,
+        "RGBD_checkpoints": 12092242
+      },
+      "total_bytes": 43728045,
+      "index_sha256": "7fd4e838d78458f893ffb7fa9097edad4d169f159da326a0a577e95bf66bc00d",
+      "raw_data_exported": false,
+      "hidden_truth_read": false
+    },
+    {
+      "episode": "v75_45746_fresh_00_R2",
+      "classification": "engineering; not a benchmark rate",
+      "status": "SESSION_COMPLETE",
+      "safe_exit": true,
+      "verified_park": true,
+      "physical_attempt_operations": 1,
+      "observations": 2,
+      "requested_preloads_N": [
+        1.0
+      ],
+      "segments": [
+        {
+          "role": "FIT_ACCEL_ENGINEERING_01",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.014053587475032714,
+          "end_coordinate_m": 0.014053571037948132,
+          "physical_duration_s": 8.8625,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_REVERSE_ENGINEERING_02",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.010108282789587975,
+          "end_coordinate_m": 0.003945288248360157,
+          "physical_duration_s": 7.741666666666666,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_VARIED_ENGINEERING_03",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.008156507275998592,
+          "end_coordinate_m": 0.01210179552435875,
+          "physical_duration_s": 7.391666666666667,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "VALIDATION_DISTINCT_ENGINEERING_04",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.005134905222803354,
+          "end_coordinate_m": 0.006966890301555395,
+          "physical_duration_s": 6.116666666666666,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        }
+      ],
+      "online_model": {
+        "parameters": [
+          2.0005805125279332,
+          3.0918502907396372,
+          0.2998146565661706
+        ],
+        "conditional_std": [
+          0.0035370036079820427,
+          0.014787796245968817,
+          3.198400426895152e-05
+        ],
+        "scaled_condition": 163.2066786457871,
+        "support_intervals_native": [
+          [
+            0.0012157157645560801,
+            0.013312820810824633
+          ]
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "uncalibrated_total_physical_accuracy": true,
+        "FIT_rmse": 7.70750233651911e-05,
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_ENGINEERING_04_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.0010937278061565075,
+            "coordinate_rmse": 0.00041214485246753355,
+            "velocity_rmse": 0.0002952813976277652,
+            "final_coordinate_error": 0.00048270727954772847,
+            "outside_FIT_support": false,
+            "samples": 745,
+            "duration_s": 3.0999999999999943,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "worker_wall_s": 1.7695416749920696,
+        "model_sha256": "63f57f7a8b609e196578e75e18fb3f18a5d9af253facdb016f8e7b7fe94a8612",
+        "validation_used_for_fit_or_selection": false,
+        "tool_compensation_count": 1
+      },
+      "launcher_wall_s": 1558.9788065669127,
+      "bytes_by_category": {
+        "source_and_metadata": 18560095,
+        "numeric": 10462774,
+        "geometry": 6704439,
+        "RGBD_checkpoints": 11346911
+      },
+      "total_bytes": 47074219,
+      "index_sha256": "2f5b5d697959c59369387b58900427678f538a1263adbd4218d00e72515f92e1",
+      "raw_data_exported": false,
+      "hidden_truth_read": false
+    },
+    {
+      "episode": "v75_45290_fresh_00_R2",
+      "classification": "engineering; not a benchmark rate",
+      "status": "ORCHESTRATION_TIMEOUT",
+      "safe_exit": true,
+      "verified_park": true,
+      "physical_attempt_operations": 0,
+      "observations": 1,
+      "requested_preloads_N": [],
+      "segments": [],
+      "online_model": {
+        "parameters": null,
+        "conditional_std": null,
+        "scaled_condition": null,
+        "support_intervals_native": null,
+        "conditionally_supported": null,
+        "uncalibrated_total_physical_accuracy": null,
+        "FIT_rmse": null,
+        "heldout_motion": {},
+        "worker_wall_s": null,
+        "model_sha256": null,
+        "validation_used_for_fit_or_selection": null,
+        "tool_compensation_count": null
+      },
+      "launcher_wall_s": 549.5482761941385,
+      "bytes_by_category": {
+        "source_and_metadata": 850891,
+        "numeric": 265705,
+        "RGBD_checkpoints": 2601230
+      },
+      "total_bytes": 3717826,
+      "index_sha256": "af4fddc6842e99015ccd2e92837096a4926f216e27c6f5286cc1c4712b575444",
+      "raw_data_exported": false,
+      "hidden_truth_read": false
+    },
+    {
+      "episode": "v75_45290_fresh_01_R2_orchestration_continuation",
+      "classification": "engineering; not a benchmark rate",
+      "status": "SESSION_COMPLETE",
+      "safe_exit": true,
+      "verified_park": true,
+      "physical_attempt_operations": 1,
+      "observations": 1,
+      "requested_preloads_N": [
+        1.0
+      ],
+      "segments": [
+        {
+          "role": "FIT_ACCEL_ENGINEERING_01",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.014098643924445542,
+          "end_coordinate_m": 0.014098643325269222,
+          "physical_duration_s": 8.1875,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_REVERSE_ENGINEERING_02",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.010165645275264978,
+          "end_coordinate_m": 0.003932998050004244,
+          "physical_duration_s": 6.845833333333333,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "FIT_VARIED_ENGINEERING_03",
+          "status": "TARGET_REACHED",
+          "travel_m": 0.008153253700584173,
+          "end_coordinate_m": 0.012086251750588417,
+          "physical_duration_s": 6.429166666666666,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        },
+        {
+          "role": "VALIDATION_DISTINCT_ENGINEERING_04",
+          "status": "TARGET_REACHED",
+          "travel_m": -0.0051265982910990715,
+          "end_coordinate_m": 0.0069596534594893456,
+          "physical_duration_s": 5.733333333333333,
+          "requested_target_reached": true,
+          "transmission_valid": true,
+          "reason": null
+        }
+      ],
+      "online_model": {
+        "parameters": [
+          1.9959779519235334,
+          3.104079503334506,
+          0.2997707770719669
+        ],
+        "conditional_std": [
+          0.0034124087765092037,
+          0.013552469113587484,
+          3.2314642914357686e-05
+        ],
+        "scaled_condition": 142.25136107503897,
+        "support_intervals_native": [
+          [
+            0.0006979667561371689,
+            0.013273020274937153
+          ]
+        ],
+        "conditionally_supported": [
+          true,
+          true,
+          true
+        ],
+        "uncalibrated_total_physical_accuracy": true,
+        "FIT_rmse": 8.269431947846552e-05,
+        "heldout_motion": {
+          "VALIDATION_DISTINCT_ENGINEERING_04_04#0": {
+            "status": "predicted",
+            "effort_rmse": 0.0001210051794860999,
+            "coordinate_rmse": 3.0393891692869372e-05,
+            "velocity_rmse": 0.000311443608084376,
+            "final_coordinate_error": -5.3922773243804574e-05,
+            "outside_FIT_support": false,
+            "samples": 653,
+            "duration_s": 2.7166666666666686,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          }
+        },
+        "worker_wall_s": 1.5965548041276634,
+        "model_sha256": "f24c1f90affce523b5f00b5a0997152135b3ac3299117ef050959d5531dec52d",
+        "validation_used_for_fit_or_selection": false,
+        "tool_compensation_count": 1
+      },
+      "launcher_wall_s": 1939.9410256000701,
+      "bytes_by_category": {
+        "source_and_metadata": 18518658,
+        "numeric": 9306461,
+        "geometry": 5351075,
+        "RGBD_checkpoints": 18748961
+      },
+      "total_bytes": 51925155,
+      "index_sha256": "4eb5dd5a950e826b5b50bf89b3fb9fe6206ec2aa5a0c41c7b2b3940256f92fce",
+      "raw_data_exported": false,
+      "hidden_truth_read": false
+    }
+  ],
+  "units": "SI",
+  "not_unbiased_benchmark": true
+}
