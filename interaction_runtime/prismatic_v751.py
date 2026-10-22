@@ -45,6 +45,12 @@ class PrismaticRuntimeV751(PrismaticEvidenceRuntimeV75):
 
 class PrismaticOperationsV751(PrismaticOperationsV75R3):
     def request_plan(self,command):
+        # JSON 1 and 1.0 are the same legal request. Normalize before the
+        # preserved R3 condition fingerprint, without changing old evidence.
+        command=dict(command)
+        request=command.get('native_g1_preload_request_n')
+        if type(request)in(int,float)and request in(.5,.75,1.,1.5):
+            command['native_g1_preload_request_n']=float(request)
         enabled=command.get('transverse_unloading',False)
         if type(enabled)is not bool:return dict(plan=False,reason='BOOLEAN_UNLOADING_SELECTION_REQUIRED')
         if self.g['recovery_state']!='UNLOADED_OBSERVATION'or self.r.supervisor.latched is not None:

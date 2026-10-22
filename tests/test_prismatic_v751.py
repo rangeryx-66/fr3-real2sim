@@ -1,5 +1,7 @@
 import unittest
 import numpy as np
+from types import SimpleNamespace
+from unittest.mock import patch
 from interaction_runtime.prismatic_unloading_v751 import TransverseUnloading,causal_world_wrench
 
 
@@ -29,6 +31,20 @@ class UnloadingTest(unittest.TestCase):
     def test_single_causal_compensation_no_future_or_native_impulses(self):
         r=dict(wrist_ft=dict(T_world_sensor=np.eye(4),raw_wrench_sensor=[1,2,3,4,5,6],tool_gravity_wrench_world=[0,0,7,0,0,0]))
         np.testing.assert_allclose(causal_world_wrench(r,[1,0,0,0,0,0]),[0,2,10,4,5,6])
+
+    def test_numeric_preload_has_one_condition_fingerprint(self):
+        from interaction_runtime.prismatic_v751 import PrismaticOperationsV751
+        from interaction_runtime.prismatic_operations_v75_r3 import PrismaticOperationsV75R3
+        seen=[];ops=PrismaticOperationsV751.__new__(PrismaticOperationsV751)
+        ops.g=dict(recovery_state='UNLOADED_OBSERVATION')
+        ops.r=SimpleNamespace(supervisor=SimpleNamespace(latched=None),event=lambda *a,**kw:None)
+        def parent(c):seen.append(c['native_g1_preload_request_n']);return dict(plan=True)
+        with patch.object(PrismaticOperationsV75R3,'request_plan',side_effect=parent):
+            for request in [1,1.0]:
+                command=dict(native_g1_preload_request_n=request)
+                self.assertTrue(ops.request_plan(command)['plan'])
+                self.assertIs(type(command['native_g1_preload_request_n']),type(request))
+        self.assertEqual(seen,[1.,1.]);self.assertTrue(all(type(v)is float for v in seen))
 
 
 if __name__=='__main__':unittest.main()
