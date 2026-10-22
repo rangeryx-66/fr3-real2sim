@@ -91,9 +91,10 @@ def drive_class(original):
             self.base_indices=np.array([self.names.index(n) for n in ['mobile_x','mobile_y']])
             self.caps[self.base_indices]=BASE_MAX_EFFORT_N
             self.robot._articulation_view.set_max_efforts(self.caps.reshape(1,-1))
-            speeds=self.robot._articulation_view.get_max_joint_velocities().copy()
-            speeds[...,self.base_indices]=.08  # unchanged FREE travel policy
-            self.robot._articulation_view.set_max_joint_velocities(speeds)
+            # Installed Isaac API supports an indexed setter. Updating only
+            # these two joints preserves every existing arm/G1 velocity cap.
+            self.robot._articulation_view.set_max_joint_velocities(
+                np.full((1,2),.08),joint_indices=self.base_indices)
             self._base_gains()
             Path(output,'V81_DRIVE_INTERFACE.json').write_text(json.dumps(dict(
                 native_joint_order=self.names,base_indices=self.base_indices.tolist(),

@@ -45,8 +45,7 @@ class NumericTests(unittest.TestCase):
         class Robot:
             def __init__(self):self._articulation_view=self;self.speeds=np.ones((1,10))
             def set_max_efforts(self,c):self.cap=c.copy()
-            def get_max_joint_velocities(self):return self.speeds.copy()
-            def set_max_joint_velocities(self,v):self.speeds=v.copy()
+            def set_max_joint_velocities(self,v,joint_indices):self.speeds[:,joint_indices]=v
         class Driver:
             def __init__(self,robot,c,output):
                 self.robot=robot;self.names=[f'joint{i}' for i in range(7)]+['drive_joint','mobile_x','mobile_y']

@@ -1,6 +1,7 @@
 """Finite Agent session with station requests at verified unloaded boundaries."""
 import json,time
-from agent_command_protocol_v12 import atomic_json,receive,complete
+from agent_command_protocol_v12 import atomic_json
+from .transport import receive,complete
 from interaction_runtime.serialization import result_packet
 from interaction_runtime.policy import SafetyStop
 from interaction_runtime.segments import ExecutionBudgetExhausted,validate_action
