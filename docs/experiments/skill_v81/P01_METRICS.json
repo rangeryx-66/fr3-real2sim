@@ -1,0 +1,218 @@
+{
+  "episode_id": "v81_engineering_prismatic_01",
+  "status": "FULL_LIFECYCLE_ENGINEERING_INCOMPLETE_NOT_PASS",
+  "phase": "engineering_not_independent_repetition",
+  "source_commit": "cecd2b5d7958c1604b8e1062f39c96c37e5ac0ce",
+  "baseline": "agentic-interaction-v8.0.0",
+  "joint_type": "prismatic",
+  "maximum_actual_coordinate_m": 0.16037487983703613,
+  "minimum_goal_m": 0.15,
+  "actual_acquisitions": 3,
+  "observations": 7,
+  "base_relocations": [],
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_ACCEL_PULL",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "start": -9.492837627078643e-09,
+      "end": 0.0555601567029953,
+      "actual_net_travel_m": 0.05556016619583293,
+      "target_reached": false
+    },
+    {
+      "id": 2,
+      "role": "FIT_RECOVERY_ACCEL_PULL",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start": 0.055512867867946625,
+      "end": 0.16037337481975555,
+      "actual_net_travel_m": 0.10486050695180893,
+      "target_reached": true
+    },
+    {
+      "id": 3,
+      "role": "FIT_RECOVERY_SLOW_REVERSE",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "start": 0.16037335991859436,
+      "end": 0.15856169164180756,
+      "actual_net_travel_m": -0.0018116682767868042,
+      "target_reached": false
+    },
+    {
+      "id": 4,
+      "role": "FIT_REGRASP_FAST_REVERSE",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start": 0.15826119482517242,
+      "end": 0.07484613358974457,
+      "actual_net_travel_m": -0.08341506123542786,
+      "target_reached": true
+    },
+    {
+      "id": 5,
+      "role": "FIT_REGRASP_SLOW_PULL",
+      "status": "SAFE_PARTIAL_PROGRESS",
+      "reason": "PREDICTED_LOAD_MARGIN_REQUIRES_UNLOAD",
+      "start": 0.07484573870897293,
+      "end": 0.0812326967716217,
+      "actual_net_travel_m": 0.006386958062648773,
+      "target_reached": false
+    }
+  ],
+  "complete_independent_validation_segments": 0,
+  "heldout_prediction": null,
+  "final_safe_park": true,
+  "safety_stop_records": 0,
+  "informational_warning_records": 5627,
+  "online_model": {
+    "parameter_names": [
+      "m_eff_kg",
+      "b_N_s_m",
+      "F_c_N"
+    ],
+    "parameters": [
+      1.5780279178855525,
+      5.620765525978275,
+      0.27339690023448526
+    ],
+    "conditional_std": [
+      0.0026997831284116362,
+      0.0077343360986455055,
+      3.675389123476505e-05
+    ],
+    "conditionally_supported": [
+      true,
+      true,
+      true
+    ],
+    "authored_error": null,
+    "conditional_uncertainty_excludes_systematic_error": true
+  },
+  "qualified_FIT": {
+    "positive_bins": 314,
+    "negative_bins": 166,
+    "distinct_eligible_trajectories": 3,
+    "information": {
+      "samples": 480,
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        21.933632587476655,
+        0.22708441183783992,
+        0.17606294294872915
+      ],
+      "scaled_condition": 124.57835942151605,
+      "acceleration_rms_native": 0.002075586741465328,
+      "independent_acceleration_rms_native": 0.0020725596441203034,
+      "velocity_rms_native": 0.00481989636935105,
+      "velocity_p05_p95_native": [
+        -0.00488319438984059,
+        0.0062687098942554205
+      ],
+      "direction_counts": {
+        "positive": 314,
+        "negative": 166
+      },
+      "estimated_parameters": null,
+      "hidden_dynamics_used": false,
+      "interpretation": "Regressor opportunity only. Compare measured acceleration sensitivity with phase-matched compensated F/T residual; rank alone cannot establish physical parameter accuracy."
+    }
+  },
+  "request_preloads_n": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "process": {
+    "returncode": 0,
+    "wall_s": 4976.326720497105,
+    "actor_exited": true
+  },
+  "profile": {
+    "wall_s": 4972.854414039059,
+    "simulation_s": 545.1666666666666,
+    "simulation_per_wall_s": 0.10962851941283168,
+    "cost_wall_s": {
+      "initialization": 22.539704703027382,
+      "trajectory_planning": 24.781841587508097,
+      "actuation": 208.27481807838194,
+      "physics_and_contact_callback": 548.6075980940368,
+      "state_and_FT": 305.4545858714264,
+      "collision_and_safety": 105.75587226916105,
+      "buffered_evidence": 135.96642848593183,
+      "RGBD_SAM3_and_incremental_geometry": 173.75273125735112,
+      "IK_and_view_planning": 0.6759652988985181,
+      "grasp_ranking_and_IK": 1180.9825380120892,
+      "Pink_IK": 9.828928370261565,
+      "command_collision_queries": 15.364095931872725,
+      "export": 0.055088312830775976
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 22.539704703027382,
+      "trajectory_planning": 24.781841587508097,
+      "actuation": 208.27481807838194,
+      "physics_and_contact_callback": 548.6075980940368,
+      "state_and_FT": 305.4545858714264,
+      "collision_and_safety": 105.75587226916105,
+      "buffered_evidence": 135.96642848593183,
+      "RGBD_SAM3_and_incremental_geometry": 173.75273125735112,
+      "IK_and_view_planning": 0.6759652988985181,
+      "grasp_ranking_and_IK": 1180.9825380120892,
+      "Pink_IK": 9.828928370261565,
+      "command_collision_queries": 15.364095931872725,
+      "export": 0.055088312830775976
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 29,
+      "actuation": 130840,
+      "physics_and_contact_callback": 130840,
+      "state_and_FT": 130840,
+      "collision_and_safety": 130840,
+      "buffered_evidence": 130840,
+      "RGBD_SAM3_and_incremental_geometry": 7,
+      "IK_and_view_planning": 3,
+      "grasp_ranking_and_IK": 6,
+      "Pink_IK": 22205,
+      "command_collision_queries": 2775,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 23.146181936142966,
+      "PREGRASP": 1660.2105156439357,
+      "agent_return_to_execution_start": 1.820459771901369,
+      "APPROACH": 25.52564748423174,
+      "SLOW_CLOSE": 488.60031832545064,
+      "CENTER": 47.6347729137633,
+      "LOW_PRELOAD": 7.998549418523908,
+      "FORCE_HOLD": 8.135563083691522,
+      "CONTACT_PRELOAD": 28.157140399795026,
+      "OPEN_CONTINUE": 184.774434318766,
+      "RELEASE": 73.27577662258409,
+      "CLEARANCE_RETREAT": 36.155535037163645,
+      "SAFE_PARK_MOTION": 146.60530131682754
+    },
+    "unaccounted_wall_s": 2240.814217766281,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "unloaded_agent_wait_total_wall_s": 1726.8786737625487,
+  "storage_bytes_before_private_index": 87737783,
+  "private_evidence_index_sha256": "c290e1a36234b32a5171db672e69b381fb7dbfb93288ea4088240d5a37436836",
+  "authored_truth_not_revealed_in_this_report": true,
+  "recovery": [
+    "Fresh observed SAM alternative selected for the moving lower bar; wrong static-bar plans rejected before acquisition",
+    "First acquisition pulled55.56mm, then persistent sliding stall; guarded exit",
+    "Fresh second family pitch15 at same1.0N pulled160.37mm; reverse stalled after1.81mm; guarded exit",
+    "Fresh RGB-D depth protrusion hypothesis, new roll180 family and existing bounded transverse unloading:83.42mm reverse target completed; next positive FIT proactively unloaded on predicted load margin",
+    "Fresh validation-only planning exhausted current feasible candidates; insufficient remaining work for another acquisition, no stale-plan execution; safe finish"
+  ],
+  "limitations": [
+    "Known rail/state and registered initial station",
+    "Ideal virtual wrist FT and simulated wrist camera",
+    "Same development physics, not an independent blind configuration",
+    "No complete VALIDATION; held-out prediction and parameter errors remain unavailable",
+    "New grasp family and transverse unloading were changed together; no isolated causal attribution"
+  ]
+}

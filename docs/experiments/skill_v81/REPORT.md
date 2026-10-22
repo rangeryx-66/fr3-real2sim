@@ -9,6 +9,7 @@ The 90° revolute and ≥150 mm prismatic engineering lifecycles are not yet com
 | Revolute engineering 00 | Installed native speed API mismatch during initialization; no grasp | Infrastructure failure retained; indexed setter repaired without changing arm/G1 caps |
 | Revolute engineering 01, source `d4d63b2` | Maximum actual opening 11.51°; largest single closing 6.97° | Two acquired grasps and original 1 s holds; three qualified FIT actions; one complete independent VALIDATION; verified release/parking |
 | Prismatic engineering 00, source `cecd2b5` | Two fresh wrist observations, then unloaded Agent-command timeout | **Zero physical acquisitions**, no FIT/VALIDATION; guarded parking and process exit succeeded. Orchestration interruption, not evidence of failed drawer traction |
+| Prismatic engineering 01, source `cecd2b5` | Maximum actual pull **160.375 mm**; complete reverse FIT **83.415 mm** | Three acquired grasps/1 s holds and fresh same-scene recoveries; qualified bidirectional FIT; **no complete VALIDATION**; all guarded exits and final parking succeeded |
 
 Revolute engineering 01 used one continuous scene. Native actuators moved the base from approximately `(0.1961, -0.5328)` m to `(0.3000, -0.8200)` m after release/parking, with a measured endpoint error of `5.38e-8` m. The door was not reset. Old observations and executable routes were invalidated; fresh wrist geometry supplied the next plan. These are simulated XY-carriage results, not wheeled-base or hardware validation.
 
@@ -20,7 +21,19 @@ The first three FIT actions all reached their measured targets. Production proce
 
 Independent reverse VALIDATION physically completed in **8.008 s**. Sealed-model forward prediction retained **6.996 s**, initialized once from measured state, with no later state correction: angle RMSE **0.0613°**, angular-velocity RMSE **0.000555 rad/s**, effort RMSE **0.178 mN m**. It remained within the small-angle FIT support. This does not validate 90° dynamics or establish authored-parameter accuracy. Full derived numbers and the private evidence-index commitment are in [R01_METRICS.json](R01_METRICS.json).
 
-## Shared engineering corrections after that scene
+## Prismatic engineering 01: recovery worked, lifecycle incomplete
+
+The first acquisition pulled 55.56 mm before a persistent sliding stall. Fresh wrist observations and a different automatic candidate at the same 1.0 N requested preload reached 160.37 mm, but its reverse action stalled after 1.81 mm. Both failures remained recorded and both used guarded release/parking. Requested preload is not measured pad force.
+
+At that measured open state, the rest-position wrist image contained the gripper/floor, not the handle. Codex inspected it, proposed a new view, accepted the nearer alternative after the farther proposal failed native IK, and inspected the new RGB/depth/protrusion-hypothesis images. SAM supplied no candidate there; the existing observed-depth hypothesis covered the visible bar. No threshold, GT crop, pose correction or camera teleportation was used.
+
+The third automatic candidate used a 180° roll and the already validated V8 prismatic rail-orthogonal unloading branch, still at a 1.0 N request. It completed **83.415 mm reverse FIT**. The subsequent positive FIT safely stopped after 6.39 mm on `PREDICTED_LOAD_MARGIN_REQUIRES_UNLOAD`; it was not relabeled complete. Because grasp orientation and trajectory unloading changed together, this does not isolate which caused the improved reverse transmission.
+
+The production worker retained 314 positive and 166 negative regression bins across the qualified FIT data. A fresh validation-only candidate search subsequently exhausted feasible alternatives under the current recovery conditions. Remaining work resources did not support another complete observation/plan/acquisition/validation, so Codex finished with the exit reserve intact. **Independent prediction and authored-parameter error are N/A**, not inferred from the FIT. Original physics remains unrevealed during ongoing V8.1 actions. See [P01_METRICS.json](P01_METRICS.json).
+
+Wall time was **4976.3 s**, including engineering/Agent decisions and rejected plans. The compact episode occupied **87.74 MB** before its private integrity index; zero hard-stop records, three verified guarded exits and final parking were recorded. This is useful contact/recovery evidence, but neither an efficient complete lifecycle nor a V8.1 PASS. Revolute engineering 02 is a separate fresh engineering scene; no independent repetition has begun.
+
+## Shared engineering corrections after revolute engineering 01
 
 * Keep the same strict station limits, but require a finite, continuously measured unloaded settling interval. Original parking position tolerance alone did not guarantee low joint velocity: the nearest retained sample to the first station refusal had `0.0387 rad/s` maximum arm velocity versus the new station condition's `0.01 rad/s`. Exact refusal flags were not captured in the old actor; new sidecars expose every flag and measurement. No hard stop or force history is cleared.
 * Separate the Agent's long planning horizon from its finite executable probe. A short first FIT need not hide a later workspace limitation. The horizon does not command physical motion.
