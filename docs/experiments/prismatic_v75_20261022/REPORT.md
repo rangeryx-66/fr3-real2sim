@@ -267,7 +267,7 @@ Frozen online [mass kg, damping N s/m, Coulomb N] and conditional standard devia
 The FIT-only applicability diagnostic exactly reproduces these production
 coefficients. 19179 has a repeatable closing residual mean of about 12 micro-N;
 its physical materiality is unknown without an independent error model. It is
-not proof of a wrong mass. The other two have no detected same-family grouped
+not proof of a wrong mass. The other three have no detected same-family grouped
 lack of fit, which also does not calibrate total physical accuracy.
 
 Launcher wall time was 949 /1426 /1559 /1940 s. Essential data plus checkpoint images,
@@ -315,6 +315,66 @@ Only two small prospective checks are now preregistered in
 [PROSPECTIVE_PROTOCOL.md](PROSPECTIVE_PROTOCOL.md) and
 [PROSPECTIVE_REGISTRATION.json](PROSPECTIVE_REGISTRATION.json): known geometry
 with fresh blind dynamics, then an untuned ordinary round-knob drawer as an
-explicit geometry-domain boundary. Their physical outcomes are still pending.
+explicit geometry-domain boundary. Both R2 prospective scenes have now ended;
+neither completed physical VALIDATION. Their unchanged R2 outcomes remain below.
 The unchanged R2 runtime is frozen before those results; no new eight-slot or
 formal benchmark is authorized or launched.
+
+![Four local engineering trajectories and conditional identification](local_engineering_motion.png)
+
+The figure shows actual 240 Hz motion, complete physical VALIDATION intervals,
+and conditional parameter errors for the four local engineering scenes. It is
+not a blind success-rate plot. Strong damping/friction anticorrelation remains
+(approximately -0.961 to -0.988). Complete physical VALIDATION lasts longer than
+the retained derivative-supported forward-prediction horizon reported above.
+
+## Preserved R2 prospective failures and bounded R3 repair
+
+45290 with new blind dynamics acquired bilateral contact but moved only
+**0.03895 mm**. Its original startup monitor reported tangential-slip evidence;
+command-to-measured tracking deficit and measured-TCP/drawer relative motion were
+both present. Guarded release and full parking succeeded. The Agent inspected
+current force/motion/RGB-D, chose a legal different 1.5 N request, reobserved and
+requested another complementary wrist view. Native CENTER/mount, joint and free
+route failures rejected the other families. A generic **family-only failure
+memory** also incorrectly excluded the previously feasible family despite the
+changed request. No second acquisition or VALIDATION occurred. Wall: 2104.71 s.
+
+Untuned round-knob 19855 required three actual Agent wrist adjustments before
+an existing pitched automatic family passed the full native chain. Original
+closure did **not** establish bilateral holding (right normal peak 1.04468 N;
+left positive-normal peak zero, not proof of separation). No useful pull/FIT or
+VALIDATION occurred. Post-failure release and parking succeeded. The Agent then
+inspected its current contact board and fresh wrist depth; a fourth actual view
+still showed a compact cap and uncertain stem, and a higher proposed view was
+rejected by original IK. Remaining active wall budget 586.95 s was below recent
+planning 365.16 s plus original closure/hold cost alone (101 sim s ×2.755 wall/sim),
+before complete FIT/VAL/exit. No budget-infeasible second acquisition was started.
+
+Its **final** observation-to-park attempt returned SAFE_EXIT_UNAVAILABLE: all
+eight required Cartesian backoffs had no IK. This final parking failure is not
+erased by the earlier successful post-grasp park or the process's clean exit.
+Wall: 2796.51 s. Offline at the exact recorded native terminal state, an unchanged
+predicate joint-space return reaches an original shoulder-rest cell in 0.586 s;
+the deliberately blocked route is rejected. This new exit branch is offline
+evidence only at this terminal pose, not a physically completed exit.
+
+R3 is a **post-failure development repair**, not a replacement blind result.
+All 620 registered source hashes, 20 R2 hashes and 71+22 revolute hashes matched
+after both R2 actors exited. New isolated modules condition candidate memory on
+verified prior unloaded parking, recoverable acquired-contact transmission
+failure and a different provenanced legal preload request. Same failed request,
+unknown conditions and hard stops remain excluded; no old pose or failure flag
+is changed. Native closing/CENTER/relative-lead/IK/whole-chain/cost checks remain.
+Explicit Agent catalogue selections use the same condition identity and reject
+stale catalogues. R3 also permits original bounded joint routing to the same rest
+cells when already unloaded/free and the old Cartesian exit search fails;
+complete no-waiver collision checks and original measured parking verification
+remain mandatory. No load band, actuator, estimator or physics change.
+
+Thirty R2/R3 software checks passed, including hard-latch preservation, blocked
+route rejection, unchanged safety/protocol control-flow AST and exception-scope
+restoration. [R3 registration](R3_REGISTRATION.json) permits **one** fresh 45290
+engineering scene on the same still-unrevealed committed dynamics, initial 1 N,
+at most two acquisitions and minimum three FIT plus complete VAL/park. It cannot
+establish independent generalization or erase either R2 prospective failure.
