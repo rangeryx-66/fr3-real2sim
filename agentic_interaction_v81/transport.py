@@ -50,6 +50,14 @@ def validate(command,sequence):
         value=command['recovery_search_round']
         if type(value) is not int or value not in (0,1):
             raise ProtocolError('bounded recovery search round 0 or 1 required')
+    if op=='build_geometry' and 'decline_current_plan' in command:
+        item=command['decline_current_plan']
+        if (command.get('recovery_search_round')!=1 or not isinstance(item,dict)
+                or set(item)!={'image_sha256','reason'}
+                or not isinstance(item['image_sha256'],str) or len(item['image_sha256'])!=64
+                or any(c not in '0123456789abcdef'for c in item['image_sha256'])
+                or not isinstance(item['reason'],str) or not item['reason'].strip()):
+            raise ProtocolError('explicit inspected current-plan rejection required')
     if op not in ('evaluate_station','relocate_station'):return original_validate(command,sequence)
     # Preserve original protocol-version/sequence/type checks. Additional
     # operations cannot smuggle hand-written joint/grasp/object-state fields.

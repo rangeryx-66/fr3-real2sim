@@ -48,6 +48,25 @@ def check(ops,command):
     if not command.get('reason') or not wrist_evidence(ops,command):
         raise ValueError('FRESH_INSPECTED_WRIST_RECOVERY_REASON_REQUIRED')
     prior=getattr(ops,'_v81_failed_search',None)
+    decline=command.get('decline_current_plan')
+    if decline is not None:
+        if (not isinstance(decline,dict) or set(decline)!={'image_sha256','reason'}
+                or not isinstance(decline['reason'],str) or not decline['reason'].strip()
+                or not ops.current_plan_ready or not getattr(ops,'_v81_plan_ticket',None)):
+            raise ValueError('CURRENT_INSPECTED_PLAN_REJECTION_REQUIRED')
+        from .action_declaration import ticket
+        output=ops.r.output;provenance=output/'V8_PLAN_INSPECTION_PROVENANCE.json'
+        image=output/'AGENT_GRASP_PLAN_INSPECTION.png'
+        if not provenance.exists() or not image.exists() or ticket(ops)!=ops._v81_plan_ticket:
+            raise ValueError('STALE_DECLINED_PLAN')
+        record=json.loads(provenance.read_text())
+        if (record.get('plan_sha256')!=ops._v81_plan_ticket['plan_sha256']
+                or record.get('sha256')!=decline['image_sha256']
+                or record.get('sha256')!=hashlib.sha256(image.read_bytes()).hexdigest()):
+            raise ValueError('STALE_DECLINED_PLAN_IMAGE')
+        if getattr(ops,'_v81_current_search_round',0)!=0:
+            raise ValueError('BOUNDED_RECOVERY_SEARCH_ROUND_REQUIRED')
+        return 1
     if (not prior or prior['round']!=0
             or prior['reason']!='BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED'
             or prior['identity']!=observation_identity(ops)):
@@ -101,6 +120,7 @@ def skip_dominated_checks():
 
 
 def complete(ops,index,result):
+    ops._v81_current_search_round=index
     reason=result.get('reason')
     code='BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED'
     if reason==repr(RuntimeError(code)):reason=code
@@ -134,5 +154,6 @@ def current_packet(ops,packet):
         and prior['reason']=='BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED'
         and prior['identity']==observation_identity(ops) else None)
     packet['recovery_search']=dict(next_round=next_round,
-        maximum_rounds=2,explicit_Agent_request_required=True)
+        maximum_rounds=2,explicit_Agent_request_required=True,
+        inspected_plan_rejection_available=bool(ready and getattr(ops,'_v81_current_search_round',0)==0))
     return packet

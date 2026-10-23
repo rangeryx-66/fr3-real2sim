@@ -95,5 +95,23 @@ class RecoverySearchTests(unittest.TestCase):
         self.assertEqual(best['id'],expected);self.assertEqual(checker.calls,[0,1,4,5])
         self.assertIs(Checker.__call__,original)
 
+    def test_agent_can_decline_a_current_plan_but_cannot_replay_its_image(self):
+        with tempfile.TemporaryDirectory()as d:
+            p=Path(d);image=p/'AGENT_GRASP_PLAN_INSPECTION.png';image.write_bytes(b'fresh plan')
+            h=hashlib.sha256(image.read_bytes()).hexdigest();ticket={'plan_sha256':'current plan hash'}
+            (p/'V8_PLAN_INSPECTION_PROVENANCE.json').write_text(json.dumps(dict(plan_sha256=ticket['plan_sha256'],sha256=h)))
+            ops=SimpleNamespace(r=SimpleNamespace(output=p,job={'articulation_v7':{'joint_type':'prismatic'}},
+                supervisor=SimpleNamespace(latched=None)),g={'recovery_state':'UNLOADED_OBSERVATION'},
+                current_plan_ready=True,_v81_plan_ticket=ticket)
+            command=dict(recovery_search_round=1,reason='seek more measured alternatives',
+                decline_current_plan=dict(image_sha256=h,reason='observed fingertip-only support'))
+            with patch('agentic_interaction_v81.boundary_operations.wrist_evidence',return_value=True), \
+                 patch('agentic_interaction_v81.action_declaration.ticket',return_value=ticket):
+                self.assertEqual(check(ops,command),1)
+                image.write_bytes(b'replaced picture')
+                with self.assertRaises(ValueError):check(ops,command)
+                image.write_bytes(b'fresh plan');ops._v81_current_search_round=1
+                with self.assertRaises(ValueError):check(ops,command)
+
 
 if __name__=='__main__':unittest.main()

@@ -18,6 +18,14 @@ previous search identity. This is candidate search, not physical recovery or a
 claim that the complete grasp manifold was exhausted. Revolute planning has no
 second-batch override.
 
+If a first-batch plan is native-feasible but the Agent declines it after
+inspection, the same second round accepts `decline_current_plan` with
+`image_sha256` and `reason`, in addition to the current wrist-image provenance.
+The actual plan ticket, image bytes, station, observations and acquisition count
+must still match. This enables informed candidate choice without a new contact
+score threshold or approval of a mechanically weak plan. It does not allow a
+third batch or a pose supplied by the Agent.
+
 Prismatic planning retires stale plan/image files by moving them into
 `plan_history` and exposes `current_plan_ready` explicitly. Failed recovery
 packets cannot offer an old grasp board as current. Physical approval remains a
