@@ -12,6 +12,11 @@ def measured_costs(ops):
         if op=='attempt_grasp_and_probe' and not result.get('acquisition',{}).get('acquired'):continue
         if isinstance(row.get('wall_s'),(int,float)):
             latest[op]=max(latest.get(op,0),float(row['wall_s']))
+    # A fresh initial actuator-executed view is a measured observation cost even
+    # before the first relocation; do not disable admission merely because the
+    # spelling of the prior observation operation differs.
+    views=[latest[n]for n in ('reobserve_and_replan','observe_view','observe')if n in latest]
+    if views:latest['reobserve_and_replan']=max(views)
     names=['reobserve_and_replan','prepare_grasp','attempt_grasp_and_probe']
     available=all(n in latest for n in names)
     lower=(sum(latest[n]for n in names)+latest.get('evaluate_station',0)

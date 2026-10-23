@@ -113,6 +113,13 @@ def publish(directory,sequence,command):
             raise ProtocolError('STALE_OR_CLOSED_AGENT_DECISION_WINDOW')
     with (directory/'.publisher.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX)
+        state_path=directory.parent/'AGENT_SESSION_STATUS.json'
+        if directory.name=='agent_commands' and state_path.exists():
+            state=json.loads(state_path.read_text())
+            if state.get('state')!='WAITING' or state.get('sequence')!=sequence:
+                raise ProtocolError('AGENT_SESSION_BUSY_OR_CLOSED:'+str(state.get('state')))
+            if not state.get('unloaded') or time.time()>=state.get('deadline_unix_s',0):
+                raise ProtocolError('STALE_OR_LOADED_AGENT_DECISION_WINDOW')
         result=atomic_publish(directory,sequence,value)
     return dict(result,protocol_version=VERSION,sequence=sequence,acknowledgment='pending',
         extension='V81_STATION',publication_is_not_execution=True)

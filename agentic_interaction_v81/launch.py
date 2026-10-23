@@ -12,7 +12,7 @@ def launch(specfile,profile):
     baseline_audit()
     spec=json.loads(Path(specfile).read_text())
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
-             'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison'}
+             'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile'}
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     if phase not in ('engineering','independent_repetition'):raise ValueError('V81_DEVELOPMENT_PHASE_REQUIRED')
@@ -35,11 +35,14 @@ def launch(specfile,profile):
     # V8 prepare remains intact as the exact resource/IO/plant-commitment layer.
     # Its three-acquisition smoke ceiling is a compatibility input only. The
     # separately authorized V8.1 runtime budget is explicit in the new record.
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison')}
+    from .debug_budget import apply as debug_budget
+    debug_budget(spec,{})  # reject inconsistent resources before creating output
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
     job=json.loads((out/'job.json').read_text())
+    debug_budget(spec,job)
     job.update(v81_phase=phase,v81_frozen_release_commit=spec.get('frozen_release_commit'),
         runtime_acquisition_budget=budget,maximum_agent_operations=100,research_reference='agentic-interaction-v8.0.0')
     if comparison is not None:
@@ -55,6 +58,7 @@ def launch(specfile,profile):
     sources={str(f.relative_to(ROOT)):digest(f) for f in sorted((ROOT/'agentic_interaction_v81').glob('*.py'))}
     dump(out/'V81_PRELAUNCH.json',dict(spec=spec,spec_sha256=digest(specfile),job_sha256=digest(out/'job.json'),
         source_commit=commit,source_sha256=sources,baseline_audit=baseline_audit(),
+        effective_resources={k:job[k]for k in ('episode_wall_budget_s','episode_sim_budget_s','agent_wait_timeout_s','safe_exit_wall_reserve_s','safe_exit_sim_reserve_s')},
         simulation_mount='existing-authority XY carriage adapted to xArm; not wheeled hardware',
         estimator_domain_prior_only=dict(previous=old_domain,current=job['estimation_v7']['domain_native']),
         original_controller_and_safety_sources_unchanged=True))

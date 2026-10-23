@@ -84,6 +84,27 @@ Every live wait exposes `deadline_unix_s`. The publisher rejects closed or
 ended episode windows before creating a command file. A published command is
 still pending until its actual ACK; publication never implies robot execution.
 
+Recovery-gate engineering jobs may explicitly set
+`debug_budget_profile:"recovery_gate_debug_v1"`, `wall_budget_s:3600`,
+`sim_budget_s:1800`, `agent_wait_s:600`. Conflicting values are rejected before
+creating an episode. The effective job reserves600 wall seconds and120 simulation
+seconds for original guarded exit; normal work therefore has at most3000 wall
+seconds and1680 simulation seconds. The absolute deadline includes initialization.
+The outer launcher retains only its bounded export/shutdown grace, not extra
+manipulation time. Worker subprocess limits and estimator mathematics are unchanged.
+
+`AGENT_SESSION_STATUS.json` is authoritative for WAITING/ACCEPTING/RUNNING/
+COMPLETED/FINALIZING/CLOSED, current sequence, station/observation generations,
+remaining work and reserved exit resources. A five-second unloaded heartbeat
+updates status without stepping/faking loaded physics, resetting deadlines or
+restarting planning. `WAITING_FOR_AGENT.json` is historical evidence once state
+changes. Publishers reject stale/busy/closed states explicitly; a timely pending
+command still needs actual acceptance and completion. Agent reasoning belongs
+only at verified unloaded boundaries, within both the600-second window and
+remaining normal-work budget. Recovery admission uses measured same-episode
+observation, planning and acquired-operation costs; these are estimates, not
+guarantees or exemptions from runtime exit reserves.
+
 Prismatic `contact_following:"rate_consistent"` with explicit
 `transverse_unloading:true` is an **experimental** alternative to the default
 `legacy_window`. It preserves the original causal load filter, correction
