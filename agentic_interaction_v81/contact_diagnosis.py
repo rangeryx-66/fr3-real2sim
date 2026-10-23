@@ -33,7 +33,16 @@ def analyze(folder):
     from diagnose_probing_v3 import columns
     folder=Path(folder);a,index=columns(folder)
     bodies=[b['name'] for b in index['metadata']['body_properties']]
-    body=transform(a['moving_link_pose'])
+    if 'moving_link_pose' in a:
+        body=transform(a['moving_link_pose'])
+        body_source='measured native rigid-body pose'
+    else:
+        from interaction_runtime.articulation_v7 import Articulation
+        prior=json.loads((folder/'identification_input.json').read_text())['prior']
+        motion=Articulation(prior['joint_type'],tuple(prior['axis_world']),
+            tuple(prior['origin_world_m']),(-1e6,1e6))
+        body=np.array([motion.delta(float(q-a['joint_q'][0]))for q in a['joint_q']])
+        body_source='explicit known-articulation prior plus measured state; arbitrary initial frame, not independently observed geometry'
     fingers=[transform(a['tool_poses'][:,bodies.index(n)]) for n in ('left_finger','right_finger')]
     ci=folder/'contact_evidence/index.json'
     points={};anchors={}
@@ -111,6 +120,7 @@ def analyze(folder):
             reported_tangent_to_normal_ratio=[stats(reported_ratio[:,j][np.linalg.norm(normal[:,j],axis=1)>.05])for j in (0,1)],
             points=pd))
     return dict(episode=folder.name,segments=result,
+        object_motion_source=body_source,native_point_records_available=bool(points),
         coordinate_unit='m' if index['metadata']['articulation']['joint_type']=='prismatic' else 'rad',
         native_rate_Hz=240,hidden_truth_used=False,normal_absence_is_not_separation=True,
         contact_centroids_are_not_material_point_tracks=True,

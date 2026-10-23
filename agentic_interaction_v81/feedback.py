@@ -125,6 +125,11 @@ def render(folder, *, attempt=None, attempt_id=None):
         values = np.asarray(values)
         finite = values[np.isfinite(values)]
         return float(finite.max()) if len(finite) else None
+    geometry=dict(available=False,reason='No current-attempt native point record; no prior-attempt fallback')
+    if (folder/'contact_evidence/index.json').exists():
+        from render_prismatic_feedback_v75 import contact_geometry
+        geometry=contact_geometry(folder,out,dict(attempt_id=attempt_id,native_point_attempt_id=attempt_id,
+            first_step=first,last_step_exclusive=last))
     result = dict(available=True, path=str(image), signature=signature, **lineage,
         segment=sid, plot_samples=len(ix), measured_only=True, previous_attempt_fallback=False,
         legacy_revolute_rail_panel_replaced=True,
@@ -135,8 +140,7 @@ def render(folder, *, attempt=None, attempt_id=None):
         max_rigid_arc_residual_m=maximum(relative[anchor:]),
         max_relative_drift_m=maximum(relative[anchor:]),
         joint_travel_native=float(np.ptp(a['joint_q'][active])),
-        contact_geometry=dict(available=False,
-            reason='this display does not reconstruct lineage-verified point contacts; no prior-attempt geometry fallback'))
+        contact_geometry=geometry)
     atomic_json(manifest, result)
     return result
 

@@ -43,6 +43,18 @@ def runtime_class(original):
             self.v81_contact_following_mode='legacy_window'
             from .motion_dwell import MotionDwell
             self.station_motion=MotionDwell(self.dt)
+            if job['articulation_v7']['joint_type']=='revolute':
+                from .contact_measurement import body_pose_field
+                previous_fields=self.record.coordinate_fields
+                self.record.coordinate_fields=lambda row:body_pose_field(previous_fields,row)
+                self.contact_evidence.record_points=True
+                self.contact_evidence.failures['legacy_revolute_point_velocity_field']='Per-point legacy rail velocity field is invalid for rotation; recompute from recorded body/finger poses. V81 scalar diagnostic uses full rigid motion.'
+                self.record.metadata['v81_contact_diagnostics']=dict(
+                    scalar_tangent_velocity='full measured rigid-point relative velocity; pre-integration alignment',
+                    legacy_per_point_velocity='invalid for revolute; do not use',
+                    normal_and_friction_measurements_unchanged=True,
+                    feeds_protection_controller_or_estimator=False,
+                    moving_link_pose='known-state supervision, must be evaluation-only in the future unknown-geometry stage')
             self.read_base()
             from .collision import MobileScene
             self.mobile_collision=MobileScene(self.export,self.model,self.allowed,self.initial_base)
@@ -182,6 +194,7 @@ def runtime_class(original):
             return B
 
         def enrich_measurement(self,row,pre_contact_poses):
+            previous_fingers=dict(self.contact_evidence.previous) if hasattr(self,'contact_evidence') else {}
             if hasattr(self,'base_view'):
                 B=self.read_base()
                 row['measured_base_xyzyaw']=self.base.copy()
@@ -191,7 +204,19 @@ def runtime_class(original):
                         measured_joint_positions_m=row['q'][self.base_indices].tolist()))
                 if hasattr(self,'station_motion'):
                     self.station_motion.update(row['t'],row['q'][self.arm],row['T_tcp'],self.actual())
-            return super().enrich_measurement(row,pre_contact_poses)
+            result=super().enrich_measurement(row,pre_contact_poses)
+            if (self.job['articulation_v7']['joint_type']=='revolute'
+                    and 'contact_diagnostic' in row):
+                from .contact_measurement import relative_contact_speed
+                speed=None
+                if len(self.rows)>=2:
+                    speed=relative_contact_speed(previous_fingers,pre_contact_poses,
+                        self.rows[-2]['T_moving_link'],self.rows[-1]['T_moving_link'],
+                        row['contacts'],self.rows[-1]['t']-self.rows[-2]['t'])
+                row['contact_diagnostic'].update(relative_tangent_speed_m_s=float('nan') if speed is None else speed,
+                    slip_velocity_available=speed is not None,
+                    tangent_velocity_source='V81 full measured rigid-point velocity; diagnostic only')
+            return result
 
         def close(self):
             (self.output/'V81_BASE_TRACE.json').write_text(json.dumps(self.base_trace))

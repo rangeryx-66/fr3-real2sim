@@ -37,6 +37,8 @@ class FollowingTests(unittest.TestCase):
         self.assertEqual(selection({},'revolute'),'legacy_window')
         with self.assertRaises(ValueError):selection(dict(contact_following='rate_consistent'),'prismatic')
         with self.assertRaises(ValueError):selection(dict(contact_following='rate_consistent',transverse_unloading=True),'revolute')
+        with self.assertRaisesRegex(ValueError,'NOT_APPROVED'):
+            selection(dict(contact_following='rate_consistent',transverse_unloading=True),'prismatic')
 
 
 if __name__=='__main__':unittest.main()

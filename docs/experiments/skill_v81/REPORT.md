@@ -96,6 +96,81 @@ The next isolated interface adds a no-motion `redeclare_actions` operation: a ne
 
 P02 then exercised the new no-motion operation against the actual native scene: measured return/approach validation passed in **2.61 s**. Its following acquisition request was nevertheless refused **before any grasp or robot motion** because the old prismatic owner retained its separate original action declaration. This is an interface refusal, not a failed physical acquisition. The active actor was not patched: Codex restored the originally checked action chain through the explicit interface and continued in the same scene. The next source corrects the handshake by synchronizing both declarations after revalidation, while retaining the frozen owner's whole-chain/closing/admission/preload checks. Three additional regressions cover this exact omission, a missing owner declaration and revolute isolation. The full software count is now **64 V8.1 + 7 V8**, with a separate real-owner software preflight; native changed-chain acceptance remains to be confirmed in a subsequent fresh source snapshot.
 
+## Paused-evidence contact repair: matched native comparisons
+
+Four preregistered one-factor diagnostic conditions ran with source
+`a9b1082042b548c7530e90ca834cbd0c3cb70736`, the same normal closed plant,
+observed P03 failed-attempt grasp, motion profiles, colliders and actuator caps.
+These deliberately cached, observed **diagnostic fixtures are not fresh Agent
+episodes or independent repetitions**. Pregrasp refinement was disabled only
+for this matched comparison. Original native full closing/CENTER/chain checks,
+one-second hold, live protections and guarded exit remained active.
+
+| Condition | Actual contact-driven motion | Outcome | Verified park | Wall s |
+|---|---|---|---|---:|
+| A: 1.0 N request, selected insertion, legacy following | +39.50 mm | Persistent sliding stall | yes | 424.13 |
+| B: 1.5 N request only | +50.24 / −45.45 / +29.23 mm | Reopening low transmission | yes | 540.42 |
+| C: per-step following cadence only | +23.32 mm | Persistent sliding stall | yes | 416.47 |
+| D: same observed section, zero-insertion family only | +50.11 / −45.26 / +16.46 mm | Reopening persistent sliding stall | yes | 532.93 |
+
+Raw normal peaks were A **1.984/1.701**, B **2.183/3.071**, C
+**2.009/1.701**, D **1.810/3.430 N**. They remain normal-only measurements,
+not complete contact wrenches or hardware safety evidence. All four actors
+exited; their original failures remain. Two earlier zero-acquisition
+infrastructure-invalid fixture starts are separately preserved: empty sensor
+history during pure declaration validation, then the full Agent's legitimate
+`PERCEPTION_COST_NOT_MEASURED` admission refusal. The repaired finite fixture
+does not fabricate SAM timings or bypass that admission for full Agent runs.
+
+The controlled results support both preload and contact placement influencing
+the **first** bidirectional block, but neither solves repeated transmission.
+D moved actual longitudinal pad contacts from approximately 50–52 mm to
+41–43 mm, farther from the 60 mm pad end, yet reopening still failed. The
+existing family formula uses **positive insertion outward**: the old +9.375 mm
+member is shallower, not deeper; zero insertion is more inward. Earlier
+descriptive use of “deeper” for positive insertion was wrong; numerical poses
+and archived outcomes are unchanged.
+
+Failure has a measurable contact component independent of arm tracking: B's
+failed reopen had approximately 1.7 mm TCP-to-drawer relative travel while its
+incremental servo error decreased. D's failed reopen had a transient aperture
+rise to 11.658 mm but ended near 10.78 mm with approximately 0.97 N each pad,
+after roughly 1.56 mm relative drift. Balanced positive normals and restored
+aperture therefore do not establish effective traction. Pose-derived native
+material-point sliding has short peaks up to about 5.4 mm/s in D; reported
+contact-centroid motion is not itself a material slip measurement. Normal
+manifold points lie near a pad side edge, while friction anchors span much of
+the pad: no claim is made that the complete pressure patch is edge-only.
+
+The faster following ablation C reduced jaw-axis load imbalance but failed
+earlier. Its class and fixture are retained for reproducibility; **full Agent
+planning now rejects it**, and the original default remains unchanged. No
+force increase, friction change, new symmetry gate or enlarged slip allowance
+was used. Fresh recovery must use measured mechanical evidence and new
+automatic candidates rather than repeating the failed pose unchanged.
+
+[MATCHED_CONTACT_METRICS.json](MATCHED_CONTACT_METRICS.json) contains compact
+per-segment motion, aperture, relative-motion, native contact, raw peaks,
+storage and private-artifact hashes. Total private footprint is approximately
+67.3 MB, including derived diagnostic boards, without duplicate raw archives.
+
+Cheap complete declaration checks now precede reconstruction/IK; a missing
+VALIDATION declaration cannot waste a full geometric search. Two optional
+deterministic batches combine view-check/move/capture and
+plan/board/measured-state execution validation. The Agent still inspects fresh
+images and separately approves physical contact. Passive revolute diagnostics
+will record actual moving-body poses and native contact points; old R04/R05
+missing native point records remain unavailable. The old revolute rail-speed
+diagnostic mixed angular and linear units and is not valid evidence of slip;
+new diagnostics use full rigid-body material velocities and do not feed any
+controller, protection or estimator. Fresh native confirmation is pending.
+
+The [unknown-articulation next-stage protocol](UNKNOWN_ARTICULATION_NEXT_STAGE.md)
+is prepared only. It excludes native axes, coordinates and moving-link poses
+from future online inputs; no hinge/rail estimation benchmark has launched.
+Both full-range engineering lifecycles and all four independent repetitions
+remain incomplete. The readiness gate stays closed.
+
 ## Efficiency and remaining work
 
 R05 (`bf09af9`) is **NOT PASS**: fresh-image-selected, actuator-executed relocation reached **(0.55,-0.79) m**, keeping the door closed. New frontal observations retained **295.89 mm** after an earlier SAM result selected only a mounting block. A complete **90.24° native plan** was obtained, but the first central grasp physically transmitted only **0.149°** before `SUSTAINED_LOW_TRANSMISSION`. Absolute servo error was about **0.45 mm**, versus about **3.3 mm** deviation from the rigid hinge arc, with one-sided load migration and aperture growth. Safe release/parking succeeded. No absence of a positive-normal report was called proof of separation.

@@ -13,6 +13,14 @@ def operations_class(original):
             from .execution_return import direct_return
             with direct_return(self.r):return super().validate_execution()
 
+        def prepare_grasp(self,command):
+            from .boundary_operations import prepare_grasp
+            return prepare_grasp(self,command)
+
+        def observe_view(self,command):
+            from .boundary_operations import observe_view
+            return observe_view(self,command)
+
         def release_park(self):
             from .exit_routes import release_park
             return release_park(self.r,super().release_park)

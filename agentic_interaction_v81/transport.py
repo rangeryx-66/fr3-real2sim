@@ -9,6 +9,9 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    if op in ('prepare_grasp','observe_view'):
+        validate(dict(command,operation='build_geometry' if op=='prepare_grasp' else 'evaluate_view'),sequence)
+        return command
     if op=='build_geometry' and 'exploratory_task_reconsideration' in command:
         value=command['exploratory_task_reconsideration']
         if type(value) is not bool:raise ProtocolError('boolean task reconsideration required')

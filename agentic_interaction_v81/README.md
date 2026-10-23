@@ -1,5 +1,36 @@
 # V8.1 engineering extension
 
+## Contact-repair engineering interface (not a validated release)
+
+`prepare_grasp` takes the same inputs as `build_geometry`. It first validates the
+complete finite FIT/VALIDATION declaration using the actual execution protocol
+and native unit/limit checks, before any geometry/IK search. It then performs
+the existing automatic planning, renders the current observed-support/native
+finger board and validates the measured-state return/approach. Its result is
+ready for **Agent review**, never physical approval. The Agent must actually
+inspect the returned board and separately authorize `attempt_grasp_and_probe`.
+
+`observe_view` takes `target`, current `inspected_image_sha256` and `reason`.
+It combines the existing deterministic view feasibility check with actuator
+motion/capture only when that same route is feasible. Stale pre-contact evidence
+is rejected. Neither operation invents a view, pose or high-level decision.
+
+Prismatic `contact_following:"rate_consistent"` with explicit
+`transverse_unloading:true` is an **experimental** alternative to the default
+`legacy_window`. It preserves the original causal load filter, correction
+direction/gain, 2 mm total closure/centering ball, 5 micrometre per-native-step
+cap and all original speed/acceleration/collision/force guards. Only correction
+integration cadence changes; requested jaw force and actuator authority do not.
+Its matched native test stopped at 23.32 mm, earlier than the 39.50 mm baseline;
+it is now rejected by the full Agent planning interface. The explicit matched
+fixture remains reproducible, but this negative ablation is not a repair.
+The preregistered engineering comparisons are separate from fresh Agent episodes
+and independent repetitions; no cached fixture is an online grasp fallback.
+
+The unknown-articulation stage is only a
+[prepared protocol](../docs/experiments/skill_v81/UNKNOWN_ARTICULATION_NEXT_STAGE.md).
+Current known-axis/state results do not validate that future capability.
+
 Start from the frozen [V8 Skill runbook](../.agents/skills/agentic-real2sim/references/RUNBOOK.md) and its explicit private environment/resource bundle. The original controllers, object/robot physics, actuator caps, safety policies and production estimation sources remain byte-frozen. Read the current [engineering report](../docs/experiments/skill_v81/REPORT.md): a full-range release is **not yet ready**, and independent repetitions are gated.
 
 The separate launcher is `python -m agentic_interaction_v81.launch --spec JOB.json --environment ENVIRONMENT.json`. Its strict job schema is `agentic-interaction/v81`, with explicit `phase:engineering` or a gated `independent_repetition`, scene and opaque physics-file commitment, finite wall/simulation/acquisition/Agent budgets. Never edit the checkout loaded by an active actor. Source hashes, actual job bytes, loaded modules and completion are recorded independently.

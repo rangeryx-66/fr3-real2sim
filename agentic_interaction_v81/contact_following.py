@@ -23,4 +23,9 @@ def selection(command,joint_type):
         raise ValueError('CONTACT_FOLLOWING_EXPERIMENT_IS_PRISMATIC_ONLY')
     if mode=='rate_consistent' and not command.get('transverse_unloading',False):
         raise ValueError('CONTACT_FOLLOWING_REQUIRES_EXPLICIT_UNLOADING_SELECTION')
+    if mode=='rate_consistent':
+        # Retain the committed engineering ablation for reproducibility, but
+        # its native matched result was worse than the baseline. The fixture
+        # selects it explicitly without this full-Agent admission interface.
+        raise ValueError('MATCHED_NATIVE_FOLLOWING_ABLATION_NOT_APPROVED_FOR_AGENT_EXECUTION')
     return mode

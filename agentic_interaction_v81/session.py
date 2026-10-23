@@ -48,6 +48,8 @@ def serve(r):
                 elif op=='evaluate_view':result=ops.evaluate_view(command['target']);ops.cache[seq]=result
                 elif op=='move_and_observe':result=ops.move_and_observe(ops.cache.get(command['evaluated_command'],{}))
                 elif op=='build_geometry':result=ops.request_plan(command)
+                elif op=='prepare_grasp':result=ops.prepare_grasp(command)
+                elif op=='observe_view':result=ops.observe_view(command)
                 elif op=='redeclare_actions':result=ops.redeclare_actions(command)
                 elif op=='validate_execution':result=ops.validate_execution()
                 elif op=='attempt_grasp_and_probe':result=ops.attempt(command)
