@@ -86,9 +86,25 @@ def serve(r):
             full_original_approach_closing_chain_and_exit_checks=True,
             fresh_perception_or_Agent_generalization_claim=False,
             object_state_reset_within_scene=False,physical_parameters_changed=False))
-        result=ops.attempt(dict(segments=actions,contact_following=config['following'],
-            native_g1_preload_request_n=float(config['requested_preload_n']),
-            reason='Explicit preregistered short matched contact engineering comparison'))
+        # This is NOT an Agent acquisition/recovery decision and does not run
+        # SAM. Do not fabricate a measured SAM cost to pass the full Agent's
+        # perception-cost admission. Check its EXACT native whole chain here,
+        # then use the original finite operation owner. Per-step resource,
+        # force, collision, joint and actuator guards remain authoritative.
+        from interaction_runtime.prismatic_candidate_v75 import PrismaticCandidateCheckV75
+        candidate=json.loads((r.output/'visual_plan.json').read_text())
+        native=PrismaticCandidateCheckV75(r.g,r.policy,r.c,r.solver)(candidate)
+        atomic_json(r.output/'MATCHED_NATIVE_CHAIN_CHECK.json',native)
+        if not native['valid']:
+            return dict(status='MATCHED_NATIVE_PREFLIGHT_REJECTED',physical_acquisitions=0,
+                        check=native,safe_exit=ops.release_park())
+        ops.actions=list(actions)
+        from interaction_runtime.operations import Operations
+        result=Operations.attempt(ops,dict(segments=actions,
+            reason='Preregistered one-acquisition engineering fixture, no SAM-cost claim'))
+        result.update(contact_following_v81=config['following'],
+            resource_admission='registered finite low-level fixture; full Agent perception-cost admission not invoked',
+            original_native_whole_chain_check=native['valid'])
         atomic_json(r.output/'MATCHED_CONTACT_RESULT.json',result)
         return dict(status='MATCHED_CONTACT_COMPARISON_ENDED',result=result,
                     benchmark=False,fresh_Agent_outcome=False)
