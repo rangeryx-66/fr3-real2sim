@@ -13,6 +13,7 @@ def main():
     p=argparse.ArgumentParser();p.add_argument('--job',required=True,type=Path)
     p.add_argument('--move-xy',nargs=2,type=float,help='Short engineering fixture only, <=30 mm displacement')
     p.add_argument('--dwell-diagnostics',action='store_true',help='Two seconds of actual unloaded240Hz joint/pose samples before any base motion')
+    p.add_argument('--exercise-arm-return',action='store_true',help='Short native-checked unloaded arm excursion and return, not an archived observation or grasp')
     a=p.parse_args()
     if a.move_xy and (not all(__import__('math').isfinite(v) for v in a.move_xy) or __import__('math').hypot(*a.move_xy)>.03):
         raise ValueError('BOUNDED_UNLOADED_INTERFACE_MOTION_ONLY')
@@ -39,6 +40,16 @@ def main():
             acquisitions=0,object_joint_commands=False,base_motion_executed=False)
         atomic_json(r.output/'V81_STATIONARY_MOUNT_CHECK.json',result)
         if delta>.001:raise RuntimeError('MOUNT_FK_INCONSISTENT')
+        if a.exercise_arm_return:
+            start=r.qtarget[r.arm].copy()
+            target=start+np.array([.2,0.,-.15,0.,.1,0.,.15])
+            r.move_path([target],'SAFE_PARK_MOTION')
+            r.move_path([start],'SAFE_PARK_MOTION');r.hold(.3)
+            atomic_json(r.output/'UNLOADED_ARM_RETURN_FIXTURE.json',dict(
+                starting_command_q=start.tolist(),excursion_command_q=target.tolist(),
+                returned_command_q=r.qtarget[r.arm].tolist(),
+                full_original_timed_native_collision_validation=True,
+                archived_view_or_grasp_used=False,object_joint_commands=False,acquisitions=0))
         if a.dwell_diagnostics:
             rows=[]
             for _ in range(round(2/r.dt)):
