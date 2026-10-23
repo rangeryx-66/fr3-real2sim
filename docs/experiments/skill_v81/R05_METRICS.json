@@ -1,0 +1,224 @@
+{
+  "episode_id": "v81_engineering_revolute_05",
+  "source_commit": "bf09af9806804d3987f55ba0acee070baa85bb9c",
+  "status": "NOT_PASS",
+  "maximum_actual_opening_deg": 15.063650950288377,
+  "meaningful_reverse_deg": 0.0,
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_FULL_ARC_ACCEL_OPEN",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "SUSTAINED_LOW_TRANSMISSION",
+      "start_deg": 3.0798341174994776e-05,
+      "end_deg": 0.14900115037299674,
+      "max_deg": 0.14905257689497017,
+      "target_reached": false,
+      "physical_transmission_valid": false
+    },
+    {
+      "id": 2,
+      "role": "FIT_FULL_ARC_ACCEL_OPEN",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "SUSTAINED_LOW_TRANSMISSION",
+      "start_deg": 0.07867260013986628,
+      "end_deg": 15.062187582258701,
+      "max_deg": 15.062416393595896,
+      "target_reached": false,
+      "physical_transmission_valid": false
+    }
+  ],
+  "physical_acquisitions": 2,
+  "recovery_acquisitions": 1,
+  "attempts": [
+    {
+      "family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": 5.353335836844053e-07,
+        "units": {
+          "coordinate": "rad",
+          "effort": "N m",
+          "inertial": "kg m^2",
+          "damping": "N m s/rad"
+        }
+      },
+      "safe": true,
+      "exit_reason": null
+    },
+    {
+      "family": [
+        -0.3,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "acquisition": {
+        "acquired": true,
+        "hold_s": 1.0,
+        "joint_coordinate": 0.0013734512031078339,
+        "units": {
+          "coordinate": "rad",
+          "effort": "N m",
+          "inertial": "kg m^2",
+          "damping": "N m s/rad"
+        }
+      },
+      "safe": false,
+      "exit_reason": "RuntimeError('MOTION_PATH_UNAVAILABLE:DANGEROUS_GEOMETRY_COLLISION:gripper_link1:/World/articulated_pose/asset/Geometry/l_world/l_3/abstract_3_2/l_2/tn__l_2_original39_aL/tn__l_2_original39_aL')"
+    }
+  ],
+  "base_relocations": [
+    {
+      "reached": true,
+      "actual_base": [
+        0.550000011920929,
+        -0.7900000214576721,
+        -0.09999993443489075,
+        -0.7952486758187507
+      ],
+      "initial_base": [
+        0.19605375826358795,
+        -0.5328198075294495,
+        -0.10000000149011612,
+        -0.7952486758187507
+      ],
+      "object_coordinate": 0.0,
+      "position_error_m": 2.454669503907022e-08
+    }
+  ],
+  "qualified_FIT": {
+    "schema": "v81-measured-FIT-readiness",
+    "estimator_version": "V7-SI-common-SG121",
+    "episode_id": "v81_engineering_revolute_05",
+    "numeric_index_sha256": "f431a5c8f45a6bf67284668ee5c1cd452a5ae1672d60bd1b65e119b2847f2c84",
+    "model_sha256": "b3574090c142008e1919f8a7ace85c6f0bbe692eafca9267e34b4eb8acc74af0",
+    "latest_completed_FIT_id": 2,
+    "groups": [
+      {
+        "block": "FIT_FULL_ARC_ACCEL_OPEN_01#0",
+        "eligible_samples": 119,
+        "regression_bins": 5,
+        "positive_bins": 5,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.0006661784718744457,
+          0.0026014582253992558
+        ]
+      },
+      {
+        "block": "FIT_FULL_ARC_ACCEL_OPEN_02#0",
+        "eligible_samples": 4079,
+        "regression_bins": 171,
+        "positive_bins": 171,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.005676768720149994,
+          0.2558715045452118
+        ]
+      }
+    ],
+    "positive_bins": 176,
+    "negative_bins": 0,
+    "distinct_eligible_trajectories": 2,
+    "qualified_bidirectional": false,
+    "rule": "At least eight production regression bins in each measured velocity direction and two distinct FIT trajectories; experimental readiness, not a physical safety threshold",
+    "validation_used": false,
+    "production_coefficients_modified": false,
+    "raw_data_loaded_twice": false,
+    "processing_wall_s": 2.0847844160161912,
+    "information": {
+      "samples": 176,
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        0.5980030431901335,
+        0.3018128023595495,
+        0.015323939426681657
+      ],
+      "scaled_condition": 39.02410643498797,
+      "acceleration_rms_native": 0.022764685636250392,
+      "independent_acceleration_rms_native": 0.022743165726144127,
+      "velocity_rms_native": 0.01522758762418028,
+      "velocity_p05_p95_native": [
+        0.008245727162823513,
+        0.021031796156418557
+      ],
+      "direction_counts": {
+        "positive": 176,
+        "negative": 0
+      },
+      "estimated_parameters": null,
+      "hidden_dynamics_used": false,
+      "interpretation": "Regressor opportunity only. Compare measured acceleration sensitivity with phase-matched compensated F/T residual; rank alone cannot establish physical parameter accuracy."
+    }
+  },
+  "online_model": {
+    "parameters": [
+      0.1331903846315716,
+      0.34405529187075107,
+      0.03289137207219589
+    ],
+    "parameter_names": [
+      "I_eff_kg_m2",
+      "b_Nm_s_rad",
+      "C_Nm"
+    ],
+    "conditional_std": [
+      0.010136202113381655,
+      0.07872004601840073,
+      0.0012078668617041832
+    ],
+    "conditionally_supported": [
+      true,
+      true,
+      true
+    ]
+  },
+  "independent_VALIDATION_complete": false,
+  "heldout_prediction": null,
+  "authored_errors": null,
+  "hidden_truth_revealed": false,
+  "final_released_aperture_m": 0.08400312066078186,
+  "final_pad_loads_n": [
+    0.0,
+    0.0
+  ],
+  "final_safe_park": false,
+  "process": {
+    "returncode": 0,
+    "wall_s": 2960.167728408007,
+    "actor_exited": true
+  },
+  "unloaded_Agent_protocol_wait_s": 1214.5416652872227,
+  "raw_normal_peaks_n": [
+    1.7819217443466187,
+    1.2523202896118164
+  ],
+  "safety_stop_records": 0,
+  "storage_bytes_by_category": {
+    "root": 24180164,
+    "visual_planning": 4611130,
+    "robot_io": 37029,
+    "sensor_assembly": 37881,
+    "plot_cache": 121541,
+    "asset": 734953,
+    "telemetry": 8714819,
+    "agent_commands": 16627,
+    "agent_geometry": 4916045,
+    "agent_responses": 7608137,
+    "station": 229,
+    "model": 82384,
+    "rgbd": 26795138,
+    "station_states": 973,
+    "source": 514637,
+    "contact_feedback_v81": 248094
+  },
+  "total_storage_bytes": 78619781,
+  "private_evidence_index_sha256": "14aa538fc7e21743af539f1e5263e65658e4dc9ab780042f80d4114347e30853"
+}
