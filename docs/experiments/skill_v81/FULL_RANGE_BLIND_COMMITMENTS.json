@@ -1,0 +1,53 @@
+{
+  "schema": "v81-full-range-blind-integration",
+  "priors": {
+    "mass_scale": [
+      0.75,
+      1.25
+    ],
+    "density_gradient": [
+      -0.3,
+      0.3
+    ],
+    "revolute": {
+      "coulomb_nm": [
+        0.018,
+        0.03
+      ],
+      "viscous_nm_s_rad": [
+        0.1,
+        0.35
+      ]
+    },
+    "prismatic": {
+      "coulomb_n": [
+        0.2,
+        0.6
+      ],
+      "viscous_n_s_m": [
+        1.0,
+        6.0
+      ]
+    },
+    "resistance_family": "constant native passive friction; no spring or joint drive"
+  },
+  "truth_reveal": "only after actor exit, all online decisions and model sealing",
+  "episodes": [
+    {
+      "episode_id": "v81_full_range_blind_revolute_01",
+      "joint_type": "revolute",
+      "asset": "45936",
+      "scene": "cabinet_bar",
+      "physics_sha256": "f234c4ce272cdde1224580e838bf9c7c89c7a5e1c17a92bf01e64d114ef0ca50",
+      "spec_sha256": "aefa06c5b2839659add179201ecaf4c52c3b2dba631e2c1c3e05c0f287d88881"
+    },
+    {
+      "episode_id": "v81_full_range_blind_prismatic_01",
+      "joint_type": "prismatic",
+      "asset": "45290",
+      "scene": "drawer_bar",
+      "physics_sha256": "72259bb52cf82eb5f24a1be3fb58dc49ae4f3af44c4bb9787e157628ba272215",
+      "spec_sha256": "e45558b443e12b678e6dd739d7b87aa69660907bea6b323f12f360d6283f7195"
+    }
+  ]
+}
