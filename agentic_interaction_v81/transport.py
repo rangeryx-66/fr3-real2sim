@@ -46,6 +46,10 @@ def validate(command,sequence):
         value=command['planning_target_q']
         if type(value) not in (int,float) or not math.isfinite(value):
             raise ProtocolError('finite native-coordinate planning horizon required')
+    if op=='build_geometry' and 'recovery_search_round' in command:
+        value=command['recovery_search_round']
+        if type(value) is not int or value not in (0,1):
+            raise ProtocolError('bounded recovery search round 0 or 1 required')
     if op not in ('evaluate_station','relocate_station'):return original_validate(command,sequence)
     # Preserve original protocol-version/sequence/type checks. Additional
     # operations cannot smuggle hand-written joint/grasp/object-state fields.

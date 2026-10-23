@@ -1,5 +1,30 @@
 # V8.1 engineering extension
 
+## Recovery-first stop gate (2026-10-23)
+
+Full 90-degree / 150-mm experiments and independent repetitions are stopped.
+The next permitted physical test is one short fresh-scene recovery sequence:
+actual release/park, validated native base motion, fresh wrist observation and
+automatic new grasp, physical regrasp, measured pull/reverse, then safe parking.
+Only after that branch passes may the registered matched legal-preload comparison
+run. No object/actuator/guard changes are authorized by these interfaces.
+
+After a current prismatic first-batch native planning failure, the Agent may
+request `recovery_search_round:1` on `prepare_grasp`, with the same current
+inspected observation and a reason. It evaluates the next **18 disjoint existing
+families** using the unchanged ranker and full native checks. It is bounded to
+two batches total; a new view, mask, station or acquisition invalidates the
+previous search identity. This is candidate search, not physical recovery or a
+claim that the complete grasp manifold was exhausted. Revolute planning has no
+second-batch override.
+
+Prismatic planning retires stale plan/image files by moving them into
+`plan_history` and exposes `current_plan_ready` explicitly. Failed recovery
+packets cannot offer an old grasp board as current. Physical approval remains a
+separate Agent operation. Repeated native checks are skipped only when their
+**exact fine-path utility** cannot beat an already fully native-validated winner,
+matching the frozen planner's strict comparison. No collision result is invented.
+
 ## Contact-repair engineering interface (not a validated release)
 
 `prepare_grasp` takes the same inputs as `build_geometry`. It first validates the

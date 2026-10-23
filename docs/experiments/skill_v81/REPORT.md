@@ -1,5 +1,54 @@
 # V8.1 engineering progress — NOT PASS
 
+## Recovery-first stop and P06 diagnosis (2026-10-23)
+
+Full-range testing is stopped by the user's newer instruction. No new 90°/
+150-mm experiment or independent repetition is authorized by the recovery
+work below. The next physical test and conditional preload comparison are
+bounded in [RECOVERY_BRANCH_PROTOCOL.json](RECOVERY_BRANCH_PROTOCOL.json).
+
+P06 (`869ee5a`) ended with **one physical acquisition, 41.727 mm actual pull,
+no completed reverse or independent validation**. Persistent sliding
+transmission failure was retained. Original guarded release/parking succeeded;
+the same scene executed a verified **41.73-mm base relocation** and captured
+new wrist views. Three subsequent planning requests failed; none was a physical
+regrasp. A finite unloaded Agent timeout then ended the scene. Final parking
+was verified, both pad loads were zero and the actor exited with rc=0. Wall
+time **3248.14 s**, completed-operation Agent waiting **1367.99 s**, episode
+storage **60.20 MB**. No owned actor remains. See
+[P06_RECOVERY_DIAGNOSIS_METRICS.json](P06_RECOVERY_DIAGNOSIS_METRICS.json).
+
+Offline replay distinguishes genuine rejection from incomplete search:
+
+- The measured-base camera record is consistent, and archived measured TCP
+  agrees with robot FK to **0.313 micrometres**. The object remained at its
+  actual 41.727-mm state. This argues against a gross robot-base transform
+  error; the original initial cooked export was not retained, so an exact
+  before/after export comparison is unavailable and is not claimed.
+- The frozen ranker received **108 observed families** but shortlisted 18.
+  Only **2** shortlisted families passed this offline static native closure
+  check; **19 omitted families** passed it. Off-centre high-ranked candidates
+  truly hit native `original35/36` geometry during the full CENTER envelope;
+  other IK branches truly lacked joint margin. Those stops remain unchanged.
+- A disjoint second batch, regenerated from the same measured geometry with
+  the same scores/weights, found **six complete native-feasible candidates**.
+  The selected central neutral family passed timed return/approach, native
+  closure/CENTER, short reverse/forward chain, release and parking prediction.
+  Offline wall time was **234.62 s**. This proves the first search was not
+  exhaustive; it is **not physical recovery evidence**. No stored successful
+  pose was inserted and no hidden dynamics were read.
+
+The isolated prismatic interface now supports one explicitly Agent-requested
+second batch after an unchanged-observation first-batch failure. New masks,
+views, station/acquisition identity or hard stops invalidate that request.
+Stale plan pictures are retired rather than offered as current after rejection.
+An exact-utility pruning seam avoids redundant full native checks only after a
+verified winner exists; it preserves the frozen strict winner comparison. All
+**120 software tests** pass; fresh native branch validation is still pending.
+The original physical source, scoring coefficients, controller, object physics,
+actuator authority and protections remain unchanged. Preload comparison and
+full-range resumption remain gated, not declared complete.
+
 ## User-requested pause (2026-10-23)
 
 All physical testing is paused. P03 (`ea25407`) finished through the original guarded release/parking operation, actor return code 0; its owned actor is no longer running. R06 was prepared but **not launched**. No V8.1 tag or independent repetition has been activated; the engineering readiness gate remains closed.

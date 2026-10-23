@@ -1,0 +1,30 @@
+{
+  "version": "V8.1-recovery-first-20261023",
+  "scope": "engineering only; no full-range episode or independent repetition",
+  "frozen_physics_and_safety": true,
+  "baseline": "agentic-interaction-v8.0.0",
+  "offline_gate": ["current-base/FK and articulated-state audit", "missing observed-family coverage", "original native closing, short bidirectional chain and guarded exit", "frozen-source and software regression"],
+  "fresh_recovery_test": {
+    "scene": "existing drawer_bar development plant, unchanged private commitment",
+    "episodes": 1,
+    "maximum_physical_acquisitions": 2,
+    "maximum_requested_joint_coordinate_m": 0.04,
+    "wall_budget_s": 1800,
+    "sim_budget_s": 900,
+    "Agent_wait_s": 180,
+    "requirements": ["fresh inspected wrist RGB-D before each planning generation", "actual validated unloaded base relocation", "fresh current-state automatic candidate and separate Agent approval", "physical regrasp in same scene", "at least 5 mm actual pulling and 5 mm actual reversal after regrasp", "original one-second hold and all physical guards", "verified release and parking"],
+    "preload_request_n": 1.0,
+    "negative_result": "Preserve failure; no automatic restart or expanded range."
+  },
+  "conditional_matched_preload": {
+    "enabled_only_after_fresh_recovery_branch_pass": true,
+    "conditions_n": [1.0, 1.5],
+    "same_observed_grasp_and_motion_profile": true,
+    "maximum_joint_coordinate_m": 0.03,
+    "pull_reverse_cycles_per_condition": 2,
+    "actuator_authority_changed": false,
+    "measure": ["requested versus actual pad loads", "normal and native tangential task-axis traction", "transverse load", "aperture and coupled-finger drift", "object-relative material motion", "command-to-measured TCP tracking", "actual travel and protection events"],
+    "stop_escalation": "If actual gripping load rises without improved retention, do not increase preload further. Analyze contact placement and load distribution."
+  },
+  "full_range_resume_gate": "fresh physical recovery AND repeated transmission must pass; no automatic resumption in this task"
+}

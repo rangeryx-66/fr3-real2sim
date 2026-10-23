@@ -9,6 +9,12 @@ def operations_class(original):
     class StationOperations(original):
         worker_script='agentic_interaction_v81/update_model.py'
 
+        def decision_packet(self,sequence,result=None):
+            packet=super().decision_packet(sequence,result)
+            if self.r.job['articulation_v7']['joint_type']!='prismatic':return packet
+            from .recovery_search import current_packet
+            return current_packet(self,packet)
+
         def validate_execution(self):
             from .execution_return import direct_return
             with direct_return(self.r):return super().validate_execution()
@@ -90,6 +96,8 @@ def operations_class(original):
             try:
                 check(actions,self.articulation())
                 following=selection(command,self.r.job['articulation_v7']['joint_type'])
+                from .recovery_search import check as search_check
+                search_round=search_check(self,command)
             except (ValueError,TypeError,KeyError) as error:
                 return dict(plan=False,recoverable=True,
                     reason='DECLARATION_PREFLIGHT:'+str(error),
@@ -104,6 +112,9 @@ def operations_class(original):
             if command.get('exploratory_task_reconsideration') and self.r.job['articulation_v7']['joint_type']!='prismatic':
                 return dict(plan=False,reason='TASK_RECONSIDERATION_IS_PRISMATIC_ONLY',recoverable=True)
             self._v81_declared_chain=actions
+            if self.r.job['articulation_v7']['joint_type']=='prismatic':
+                from .recovery_search import retire_plan
+                retire_plan(self)
             # A short first probe need not hide a later workspace limitation.
             # The Agent may request a separate known-kinematics planning horizon;
             # it is never an extra executable action or a physical success claim.
@@ -125,8 +136,13 @@ def operations_class(original):
             if self.r.job['articulation_v7']['joint_type']=='prismatic':
                 from .recovery_memory import task_memory
                 memory_scope=task_memory(self,command)
-            with patch.object(executable,'current_export',current), cached_planning_fk(), memory_scope:
+            from .recovery_search import scope as search_scope,complete as search_complete,skip_dominated_checks
+            prismatic=self.r.job['articulation_v7']['joint_type']=='prismatic'
+            search_context=search_scope(self,search_round) if prismatic else nullcontext()
+            prune_context=skip_dominated_checks() if prismatic else nullcontext()
+            with patch.object(executable,'current_export',current), cached_planning_fk(), memory_scope, search_context, prune_context:
                 result=super().request_plan(command)
+            if self.r.job['articulation_v7']['joint_type']=='prismatic':search_complete(self,search_round,result)
             result.update(planning_horizon_native=horizon,
                 executable_first_target_native=actions[0]['target_q'],
                 planning_horizon_is_not_motion=True)
