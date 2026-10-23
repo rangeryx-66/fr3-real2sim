@@ -13,6 +13,10 @@ def operations_class(original):
             from .execution_return import direct_return
             with direct_return(self.r):return super().validate_execution()
 
+        def release_park(self):
+            from .exit_routes import release_park
+            return release_park(self.r,super().release_park)
+
         def interact(self,target,max_sim_s=None,action=None):
             proposed=self.actions[0] if self.actions else action
             if proposed and proposed['role'].startswith('VALIDATION'):

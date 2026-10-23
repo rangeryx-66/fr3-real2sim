@@ -15,6 +15,7 @@ def main():
     p.add_argument('--dwell-diagnostics',action='store_true',help='Two seconds of actual unloaded240Hz joint/pose samples before any base motion')
     p.add_argument('--exercise-arm-return',action='store_true',help='Short native-checked unloaded arm excursion and return, not an archived observation or grasp')
     p.add_argument('--wrist-render-fixture',action='store_true',help='Install the original wrist camera and execute its eight observation render calls; no SAM or manipulation decision')
+    p.add_argument('--exercise-exit-replan',action='store_true',help='One software planning refusal while unloaded, followed by an actual original guarded exit; not a contact failure')
     a=p.parse_args()
     if a.move_xy and (not all(__import__('math').isfinite(v) for v in a.move_xy) or __import__('math').hypot(*a.move_xy)>.03):
         raise ValueError('BOUNDED_UNLOADED_INTERFACE_MOTION_ONLY')
@@ -82,6 +83,21 @@ def main():
             result.update(status='UNLOADED_BASE_ROUND_TRIP_CHECK',forward=forward,reverse=reverse,
                 base_motion_executed=True,actual_outward_distance_m=float(np.linalg.norm(np.asarray(forward['actual_base'])[:2]-initial[:2])))
             atomic_json(r.output/'V81_BASE_ROUND_TRIP_CHECK.json',result)
+        if a.exercise_exit_replan:
+            from types import SimpleNamespace
+            from interaction_runtime.operations import Operations
+            from .exit_routes import release_park
+            calls=[0];start_coordinate=r.actual()
+            def original_exit():
+                calls[0]+=1
+                if calls[0]==1:return dict(safe=False,reason='TIMED_RETURN_ROUTE_UNAVAILABLE:ENGINEERING_SOFTWARE_REFUSAL')
+                return Operations.release_park(SimpleNamespace(r=r,g=r.g))
+            exited=release_park(r,original_exit)
+            atomic_json(r.output/'V81_UNLOADED_EXIT_CHECK.json',dict(result=exited,
+                software_refusal_injection_no_physical_collision=True,
+                actual_guarded_exit_executed=True,acquisitions=0,
+                object_coordinates=[start_coordinate,r.actual()]))
+            if not exited.get('safe'):raise RuntimeError('UNLOADED_EXIT_CHECK_FAILED')
         return result
     # Retain the original full-loop owner and normal structured shutdown.
     sys.argv=[sys.argv[0],'--job',str(a.job)]
