@@ -9,6 +9,15 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    if op=='build_geometry' and 'exploratory_task_reconsideration' in command:
+        value=command['exploratory_task_reconsideration']
+        if type(value) is not bool:raise ProtocolError('boolean task reconsideration required')
+        if value:
+            h=command.get('inspected_image_sha256')
+            if not isinstance(h,str) or len(h)!=64 or any(c not in '0123456789abcdef' for c in h):
+                raise ProtocolError('current inspected wrist image SHA256 required')
+            if not isinstance(command.get('reason'),str) or not command['reason'].strip():
+                raise ProtocolError('explicit Agent changed-task reason required')
     if op=='redeclare_actions':
         allowed={'operation','protocol_version','sequence','reason','segments','inspected_image_sha256'}
         if set(command)-allowed:raise ProtocolError('action declaration cannot modify a pose or preload')

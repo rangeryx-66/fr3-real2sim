@@ -1,0 +1,388 @@
+{
+  "episode_id": "v81_engineering_prismatic_02",
+  "status": "ENGINEERING_INCOMPLETE_NOT_PASS",
+  "source_commit": "940a91cf7a83b83b7e30da9db1673392df55ca90",
+  "joint_type": "prismatic",
+  "maximum_actual_coordinate_m": 0.11933448910713196,
+  "goal_m": 0.15,
+  "largest_completed_reverse_m": 0.05927775427699089,
+  "physical_acquisitions": 3,
+  "attempts": [
+    {
+      "attempt": 1,
+      "family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "requested_preload_n": 1,
+      "acquired": true,
+      "hold_s": 1.0,
+      "motion": [
+        {
+          "role": "FIT_ACCEL_PULL",
+          "status": "TRANSMISSION_FAILURE",
+          "measured_drawer_travel_m": 0.05694801019139106,
+          "duration_s": 15.299999999999997,
+          "last_pad_normal_mean_n": [
+            0.9962234497070312,
+            0.9949279427528381
+          ],
+          "command_TCP_travel_m": 0.05944858125987851,
+          "measured_TCP_travel_m": 0.05855664004571054,
+          "command_to_measured_TCP_error_change_m": 0.0008919412141679683,
+          "measured_TCP_to_drawer_relative_travel_m": 0.0016086298543194766
+        }
+      ],
+      "raw_normal_peaks_n": [
+        1.796190619468689,
+        2.3202598094940186
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    },
+    {
+      "attempt": 2,
+      "family": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "requested_preload_n": 1.5,
+      "acquired": true,
+      "hold_s": 1.0,
+      "motion": [
+        {
+          "role": "FIT_RECOVERY_ACCEL_PULL",
+          "status": "TRANSMISSION_FAILURE",
+          "measured_drawer_travel_m": 0.062479451298713684,
+          "duration_s": 41.80000000000001,
+          "last_pad_normal_mean_n": [
+            0.9096408486366272,
+            1.9626564979553223
+          ],
+          "command_TCP_travel_m": 0.06468256736359279,
+          "measured_TCP_travel_m": 0.06418922153209772,
+          "command_to_measured_TCP_error_change_m": 0.0004933458314950734,
+          "measured_TCP_to_drawer_relative_travel_m": 0.0017097702333840337
+        }
+      ],
+      "raw_normal_peaks_n": [
+        2.389949083328247,
+        2.8229169845581055
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    },
+    {
+      "attempt": 3,
+      "family": [
+        0.0,
+        0.0,
+        180.0,
+        0.0
+      ],
+      "requested_preload_n": 1,
+      "acquired": true,
+      "hold_s": 1.0,
+      "motion": [
+        {
+          "role": "FIT_REORIENTED_REVERSE",
+          "status": "TARGET_REACHED",
+          "measured_drawer_travel_m": -0.05927740037441254,
+          "duration_s": 15.387499999999989,
+          "last_pad_normal_mean_n": [
+            1.0299973487854004,
+            0.9427490234375
+          ],
+          "command_TCP_travel_m": -0.060053432475670854,
+          "measured_TCP_travel_m": -0.059519150820846245,
+          "command_to_measured_TCP_error_change_m": -0.0005342816548246088,
+          "measured_TCP_to_drawer_relative_travel_m": -0.00024175044643370835
+        },
+        {
+          "role": "FIT_REORIENTED_ACCEL_PULL",
+          "status": "SAFE_PARTIAL_PROGRESS",
+          "measured_drawer_travel_m": 0.0018787644803524017,
+          "duration_s": 2.783333333333303,
+          "last_pad_normal_mean_n": [
+            3.1423707008361816,
+            0.0
+          ],
+          "command_TCP_travel_m": 0.003251461279018264,
+          "measured_TCP_travel_m": 0.002065190887645618,
+          "command_to_measured_TCP_error_change_m": 0.0011862703913726458,
+          "measured_TCP_to_drawer_relative_travel_m": 0.00018642640729321647
+        }
+      ],
+      "raw_normal_peaks_n": [
+        3.3248143196105957,
+        1.8914415836334229
+      ],
+      "safe_exit": true,
+      "verified_park": true
+    }
+  ],
+  "interface_refusals": [
+    {
+      "sequence": 2,
+      "reason": "DECLARE_AND_REVALIDATE_CHANGED_CHAIN_BEFORE_ACQUISITION",
+      "physical_acquisition": false
+    }
+  ],
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_ACCEL_PULL",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "start_m": -5.6192348552031035e-08,
+      "end_m": 0.0569479763507843,
+      "net_m": 0.056948032543132854,
+      "target_reached": false
+    },
+    {
+      "id": 2,
+      "role": "FIT_RECOVERY_ACCEL_PULL",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "start_m": 0.056854963302612305,
+      "end_m": 0.11933442205190659,
+      "net_m": 0.06247945874929428,
+      "target_reached": false
+    },
+    {
+      "id": 3,
+      "role": "FIT_REORIENTED_REVERSE",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start_m": 0.11911091953516006,
+      "end_m": 0.059833165258169174,
+      "net_m": -0.05927775427699089,
+      "target_reached": true
+    },
+    {
+      "id": 4,
+      "role": "FIT_REORIENTED_ACCEL_PULL",
+      "status": "SAFE_PARTIAL_PROGRESS",
+      "reason": "PREDICTED_LOAD_MARGIN_REQUIRES_UNLOAD",
+      "start_m": 0.05983284115791321,
+      "end_m": 0.0617116242647171,
+      "net_m": 0.001878783106803894,
+      "target_reached": false
+    }
+  ],
+  "qualified_FIT": {
+    "schema": "v81-measured-FIT-readiness",
+    "estimator_version": "V7-SI-common-SG121",
+    "episode_id": "v81_engineering_prismatic_02",
+    "numeric_index_sha256": "a4f3b757c1fb870bdbd5be85d6f05750606803e0cf0039ddf761c20bb4d7bd6a",
+    "model_sha256": "cc7fef0726e99bd7ce8ae6976ffb3e790f09711b81a4787e29d059f9ed479d61",
+    "latest_completed_FIT_id": 4,
+    "groups": [
+      {
+        "block": "FIT_ACCEL_PULL_01#0",
+        "eligible_samples": 2624,
+        "regression_bins": 110,
+        "positive_bins": 110,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.0018845456652343273,
+          0.05656452104449272
+        ]
+      },
+      {
+        "block": "FIT_RECOVERY_ACCEL_PULL_02#0",
+        "eligible_samples": 9118,
+        "regression_bins": 381,
+        "positive_bins": 381,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.05843662470579147,
+          0.11887363344430923
+        ]
+      },
+      {
+        "block": "FIT_REORIENTED_REVERSE_03#0",
+        "eligible_samples": 3084,
+        "regression_bins": 129,
+        "positive_bins": 0,
+        "negative_bins": 129,
+        "coordinate_support_native": [
+          0.061100054532289505,
+          0.11739145964384079
+        ]
+      }
+    ],
+    "positive_bins": 491,
+    "negative_bins": 129,
+    "distinct_eligible_trajectories": 3,
+    "qualified_bidirectional": true,
+    "rule": "At least eight production regression bins in each measured velocity direction and two distinct FIT trajectories; experimental readiness, not a physical safety threshold",
+    "validation_used": false,
+    "production_coefficients_modified": false,
+    "raw_data_loaded_twice": false,
+    "processing_wall_s": 5.355823140125722,
+    "information": {
+      "samples": 620,
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        24.909415727528415,
+        0.4440554150117834,
+        0.24368252770445245
+      ],
+      "scaled_condition": 102.22077045154224,
+      "acceleration_rms_native": 0.0019583239580461807,
+      "independent_acceleration_rms_native": 0.0019573213335280604,
+      "velocity_rms_native": 0.0033022848041494145,
+      "velocity_p05_p95_native": [
+        -0.005170094232328721,
+        0.005833234999172774
+      ],
+      "direction_counts": {
+        "positive": 491,
+        "negative": 129
+      },
+      "estimated_parameters": null,
+      "hidden_dynamics_used": false,
+      "interpretation": "Regressor opportunity only. Compare measured acceleration sensitivity with phase-matched compensated F/T residual; rank alone cannot establish physical parameter accuracy."
+    }
+  },
+  "online_model": {
+    "parameter_names": [
+      "m_eff_kg",
+      "b_N_s_m",
+      "F_c_N"
+    ],
+    "parameters": [
+      1.5774987047968116,
+      5.5882792890089235,
+      0.27356773951437197
+    ],
+    "conditional_std": [
+      0.0024692040898566183,
+      0.0018359570071195498,
+      6.064234442553219e-06
+    ],
+    "conditionally_supported": [
+      true,
+      true,
+      true
+    ],
+    "intervals": 0,
+    "scaled_condition": 102.22077045154224
+  },
+  "cross_FIT_parameter_range": [
+    0.013742412327802711,
+    0.09031430016301467,
+    0.000482839295188664
+  ],
+  "complete_independent_validation_segments": 0,
+  "independent_prediction": null,
+  "authored_parameter_errors": null,
+  "hidden_authored_parameters_revealed": false,
+  "final_safe_park": true,
+  "hard_stop_records": 0,
+  "informational_warning_records": 1991,
+  "wrist_agent_checkpoints": 6,
+  "base_relocations": 0,
+  "process": {
+    "returncode": 0,
+    "wall_s": 4837.525772226974,
+    "actor_exited": true
+  },
+  "profile": {
+    "wall_s": 4834.1105230499525,
+    "simulation_s": 525.6375,
+    "simulation_per_wall_s": 0.10873510183386605,
+    "cost_wall_s": {
+      "initialization": 21.595797803951427,
+      "trajectory_planning": 29.317071227822453,
+      "actuation": 195.4436892941594,
+      "physics_and_contact_callback": 527.6329330757726,
+      "state_and_FT": 287.0742759623099,
+      "collision_and_safety": 102.50836420222186,
+      "buffered_evidence": 131.25690663419664,
+      "RGBD_SAM3_and_incremental_geometry": 143.91151295485906,
+      "grasp_ranking_and_IK": 907.0869828979485,
+      "Pink_IK": 8.96105945808813,
+      "command_collision_queries": 14.579988726880401,
+      "IK_and_view_planning": 0.5773303371388465,
+      "export": 0.06923418305814266
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 21.595797803951427,
+      "trajectory_planning": 29.317071227822453,
+      "actuation": 195.4436892941594,
+      "physics_and_contact_callback": 527.6329330757726,
+      "state_and_FT": 287.0742759623099,
+      "collision_and_safety": 102.50836420222186,
+      "buffered_evidence": 131.25690663419664,
+      "RGBD_SAM3_and_incremental_geometry": 143.91151295485906,
+      "grasp_ranking_and_IK": 907.0869828979485,
+      "Pink_IK": 8.96105945808813,
+      "command_collision_queries": 14.579988726880401,
+      "IK_and_view_planning": 0.5773303371388465,
+      "export": 0.06923418305814266
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 28,
+      "actuation": 126153,
+      "physics_and_contact_callback": 126153,
+      "state_and_FT": 126153,
+      "collision_and_safety": 126153,
+      "buffered_evidence": 126153,
+      "RGBD_SAM3_and_incremental_geometry": 6,
+      "grasp_ranking_and_IK": 5,
+      "Pink_IK": 21758,
+      "command_collision_queries": 2720,
+      "IK_and_view_planning": 2,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 22.201719812117517,
+      "PREGRASP": 1320.832848998718,
+      "agent_return_to_execution_start": 1.8179329871200025,
+      "APPROACH": 24.786000482039526,
+      "SLOW_CLOSE": 485.7834943984635,
+      "CENTER": 29.55993511946872,
+      "LOW_PRELOAD": 7.905411392450333,
+      "FORCE_HOLD": 8.67168468865566,
+      "CONTACT_PRELOAD": 18.0798217728734,
+      "OPEN_CONTINUE": 192.40522125083953,
+      "RELEASE": 64.86562648555264,
+      "CLEARANCE_RETREAT": 56.1083060184028,
+      "SAFE_PARK_MOTION": 136.99714335170574
+    },
+    "unaccounted_wall_s": 2464.095376291545,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "agent_unloaded_wait_wall_s": 2015.6653730596881,
+  "storage_bytes_by_category": {
+    "root": 9560814,
+    "attempt_inputs": 869115,
+    "visual_planning": 9434100,
+    "robot_io": 37032,
+    "sensor_assembly": 37886,
+    "plot_cache": 121541,
+    "asset": 1304945,
+    "telemetry": 19912180,
+    "agent_commands": 29552,
+    "agent_geometry": 4578409,
+    "agent_responses": 1392817,
+    "contact_evidence": 5026975,
+    "station": 229,
+    "model": 116069,
+    "rgbd": 32847742,
+    "source": 497596,
+    "contact_feedback": 780239
+  },
+  "total_storage_bytes_before_integrity_index": 86547241,
+  "private_evidence_index_sha256": "180ce762ad8fc13438132bfe0d5952fc38d78a1e1075fe6ed9dc5d36583802d7",
+  "optional_diagnostic_issues": [],
+  "not_matched_preload_AB": true,
+  "conditional_uncertainty_excludes_systematic_error": true
+}

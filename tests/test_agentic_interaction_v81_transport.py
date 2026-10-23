@@ -46,5 +46,17 @@ class TransportTests(unittest.TestCase):
         command=dict(operation='build_geometry',protocol_version=1,sequence=0,planning_target_q=1.57)
         self.assertEqual(validate(command,0),command)
 
+    def test_changed_task_exploration_requires_explicit_current_visual_reason(self):
+        base=dict(operation='build_geometry',protocol_version=1,sequence=0)
+        for value in [1,'true',None]:
+            with self.subTest(value=value),self.assertRaises(ProtocolError):
+                validate(dict(base,exploratory_task_reconsideration=value),0)
+        for extra in [{},dict(inspected_image_sha256='a'*64),dict(reason='new task')]:
+            with self.subTest(extra=extra),self.assertRaises(ProtocolError):
+                validate(dict(base,exploratory_task_reconsideration=True,**extra),0)
+        command=dict(base,exploratory_task_reconsideration=True,inspected_image_sha256='a'*64,
+            reason='A shorter total excursion after measured healthy prefix; fresh geometry and native checks still required.')
+        self.assertEqual(validate(command,0),command)
+
 
 if __name__=='__main__':unittest.main()

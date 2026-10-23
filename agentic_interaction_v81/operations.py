@@ -65,6 +65,8 @@ def operations_class(original):
 
         def request_plan(self,command):
             from interaction_runtime.segments import validate_action
+            if command.get('exploratory_task_reconsideration') and self.r.job['articulation_v7']['joint_type']!='prismatic':
+                return dict(plan=False,reason='TASK_RECONSIDERATION_IS_PRISMATIC_ONLY',recoverable=True)
             actions=command.get('planned_segments')
             if not isinstance(actions,list) or not actions:
                 return dict(plan=False,reason='PREDECLARE_FINITE_NATIVE_COORDINATE_CHAIN',recoverable=True)
