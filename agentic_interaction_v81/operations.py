@@ -10,7 +10,11 @@ def operations_class(original):
         worker_script='agentic_interaction_v81/update_model.py'
 
         def decision_packet(self,sequence,result=None):
-            packet=super().decision_packet(sequence,result)
+            parent=getattr(super(),'decision_packet',None)
+            if parent is None:
+                from .decision_packet import revolute_packet
+                packet=revolute_packet(self,sequence,result)
+            else:packet=parent(sequence,result)
             if self.r.job['articulation_v7']['joint_type']!='prismatic':return packet
             from .recovery_search import current_packet
             from .recovery_batch import measured_costs
