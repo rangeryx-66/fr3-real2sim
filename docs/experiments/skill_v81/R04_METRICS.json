@@ -1,0 +1,208 @@
+{
+  "episode_id": "v81_engineering_revolute_04",
+  "source_commit": "32d8841",
+  "status": "NOT_PASS",
+  "full_range_90deg": false,
+  "maximum_actual_opening_deg": 41.30442494896614,
+  "completed_closing_deg": 29.873451943657706,
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_ACCEL_OPEN",
+      "status": "TARGET_REACHED",
+      "start_deg": -5.471163191949843e-07,
+      "end_deg": 41.304383967831114,
+      "minimum_deg": -5.84675718428324e-07,
+      "maximum_deg": 41.304383967831114,
+      "records": 10234,
+      "target_reached": true
+    },
+    {
+      "id": 2,
+      "role": "FIT_DIFFERENT_SPEED_CLOSE",
+      "status": "TARGET_REACHED",
+      "start_deg": 41.304411288587794,
+      "end_deg": 11.43095934493009,
+      "minimum_deg": 11.43095934493009,
+      "maximum_deg": 41.30442494896614,
+      "records": 13293,
+      "target_reached": true
+    },
+    {
+      "id": 3,
+      "role": "FIT_NEW_ACCEL_OPEN",
+      "status": "TARGET_REACHED",
+      "start_deg": 11.430928609078824,
+      "end_deg": 33.25800106892214,
+      "minimum_deg": 11.429891274098628,
+      "maximum_deg": 33.259329540715704,
+      "records": 5615,
+      "target_reached": true
+    }
+  ],
+  "physical_acquisitions": 1,
+  "base_moves": 0,
+  "station_refusals": [
+    {
+      "sequence": 4,
+      "reason": "ValueError('STATION_STABLE_DWELL_NOT_OBSERVED_WITHIN_FINITE_HOLD')"
+    },
+    {
+      "sequence": 5,
+      "reason": "ValueError('STATION_STABLE_DWELL_NOT_OBSERVED_WITHIN_FINITE_HOLD')"
+    },
+    {
+      "sequence": 16,
+      "reason": "ValueError('STATION_STABLE_DWELL_NOT_OBSERVED_WITHIN_FINITE_HOLD')"
+    }
+  ],
+  "validation": {
+    "complete": false,
+    "status": "DEFERRED_BEFORE_EXECUTION",
+    "prediction_metrics": null
+  },
+  "FIT": {
+    "schema": "v81-measured-FIT-readiness",
+    "estimator_version": "V7-SI-common-SG121",
+    "episode_id": "v81_engineering_revolute_04",
+    "numeric_index_sha256": "739cd8a10ddd104e315c1c3950a574158772e4c972e980c4bad8f08e2b957af7",
+    "model_sha256": "f2edbe7e6a61e2917d5cf38200b6b7b6dce671d0737b83d2ca06f629c6fe42a3",
+    "latest_completed_FIT_id": 3,
+    "groups": [
+      {
+        "block": "FIT_ACCEL_OPEN_01#0",
+        "eligible_samples": 9992,
+        "regression_bins": 417,
+        "positive_bins": 417,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.0037772946525365114,
+          0.7184728384017944
+        ]
+      },
+      {
+        "block": "FIT_DIFFERENT_SPEED_CLOSE_02#0",
+        "eligible_samples": 13051,
+        "regression_bins": 544,
+        "positive_bins": 0,
+        "negative_bins": 544,
+        "coordinate_support_native": [
+          0.20248350501060486,
+          0.7208185791969299
+        ]
+      },
+      {
+        "block": "FIT_NEW_ACCEL_OPEN_03#0",
+        "eligible_samples": 5373,
+        "regression_bins": 225,
+        "positive_bins": 225,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.20175392925739288,
+          0.5773809552192688
+        ]
+      }
+    ],
+    "positive_bins": 642,
+    "negative_bins": 544,
+    "distinct_eligible_trajectories": 3,
+    "qualified_bidirectional": true,
+    "rule": "At least eight production regression bins in each measured velocity direction and two distinct FIT trajectories; experimental readiness, not a physical safety threshold",
+    "validation_used": false,
+    "production_coefficients_modified": false,
+    "raw_data_loaded_twice": false,
+    "processing_wall_s": 9.771584403933957,
+    "information": {
+      "samples": 1186,
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        1.554038097372307,
+        0.7200837596811389,
+        0.050047685965389915
+      ],
+      "scaled_condition": 31.051147868194942,
+      "acceleration_rms_native": 0.020909717892484195,
+      "independent_acceleration_rms_native": 0.020909149072439546,
+      "velocity_rms_native": 0.01478832576211055,
+      "velocity_p05_p95_native": [
+        -0.013579774316930786,
+        0.02484578420283134
+      ],
+      "direction_counts": {
+        "positive": 642,
+        "negative": 544
+      },
+      "estimated_parameters": null,
+      "hidden_dynamics_used": false,
+      "interpretation": "Regressor opportunity only. Compare measured acceleration sensitivity with phase-matched compensated F/T residual; rank alone cannot establish physical parameter accuracy."
+    }
+  },
+  "online_model": {
+    "parameter_names": [
+      "I_eff_kg_m2",
+      "b_Nm_s_rad",
+      "nonnegative_resistance_control_0",
+      "nonnegative_resistance_control_1",
+      "nonnegative_resistance_control_2",
+      "nonnegative_resistance_control_3",
+      "nonnegative_resistance_control_4",
+      "nonnegative_resistance_control_5",
+      "nonnegative_resistance_control_6"
+    ],
+    "parameters": [
+      0.1292789580200028,
+      0.235697481006304,
+      0.025889396155853856,
+      0.0397806890471174,
+      0.03561239243347196,
+      0.02061134276650927,
+      0.026322556150146437,
+      0.017743671943626457,
+      0.016710987026225897
+    ],
+    "conditional_std": [
+      0.0009864606747194797,
+      0.004833609845170072,
+      0.0007619336795949717,
+      0.0004991120869194779,
+      0.00024331775254313962,
+      0.00018729123788660982,
+      0.00022306904358979212,
+      0.0008984061445390214,
+      0.008714408326151831
+    ],
+    "intervals": 8,
+    "domain_native": [
+      -0.010471975511965976,
+      1.7453292519943295
+    ]
+  },
+  "authored_errors": null,
+  "hidden_truth_revealed": false,
+  "final_safe_park": true,
+  "process": {
+    "returncode": 0,
+    "wall_s": 3126.515613239957,
+    "actor_exited": true
+  },
+  "unloaded_agent_protocol_wait_s": 1470.7522150978912,
+  "storage_bytes_by_category": {
+    "root": 7611935,
+    "visual_planning": 9458506,
+    "robot_io": 37029,
+    "sensor_assembly": 37881,
+    "plot_cache": 121541,
+    "asset": 734978,
+    "telemetry": 21223579,
+    "agent_commands": 20021,
+    "agent_geometry": 4795259,
+    "agent_responses": 496249,
+    "station": 229,
+    "model": 115993,
+    "rgbd": 21669112,
+    "source": 507112,
+    "contact_feedback_v81": 272564
+  },
+  "total_storage_bytes": 67101988,
+  "private_evidence_index_sha256": "ac453b38d1cb06cccdc6f17869bff9c3a70a20398f36dd6f3e8dfe0afa5f88a3"
+}
