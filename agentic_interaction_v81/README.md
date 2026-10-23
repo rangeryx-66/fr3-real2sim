@@ -25,6 +25,16 @@ images, incomplete hypotheses, loaded/hard-stop states and revolute jobs are
 rejected. Existing observed-mask preservation/scoring and native execution
 checks still own planning. No camera, robot or object is moved by this selection.
 
+`select_observed_target` accepts that same explicit inspected target **without
+grasp search**. It applies the unchanged observed-mask preservation, exposes
+incremental geometry, and allows a complementary wrist view to add surfaces to
+the correct association before one expensive planning call. It grants neither
+physical approval nor extra observation budget.
+
+Every live wait exposes `deadline_unix_s`. The publisher rejects closed or
+ended episode windows before creating a command file. A published command is
+still pending until its actual ACK; publication never implies robot execution.
+
 Prismatic `contact_following:"rate_consistent"` with explicit
 `transverse_unloading:true` is an **experimental** alternative to the default
 `legacy_window`. It preserves the original causal load filter, correction

@@ -193,6 +193,26 @@ engineering job must also declare a finite unloaded decision window consistent
 with actual image transfer/inspection cost, rather than claim this timeout was
 a physical grasp failure.
 
+P05 (`c344b71`) physically confirmed the explicit lower-target association and
+automatic native-chain interface, but is **NOT PASS**. Its current automatic
+15-degree candidate predicted approximately 9.88/1.64 mm left/right first
+contacts. Actual original closure failed `BILATERAL_HOLD_NOT_ESTABLISHED`;
+reported left normals were only about 0.05 N and right reports absent. No
+probing action ran and no meaningful drawer travel occurred. Absence of a
+normal report is not proof of physical separation. Verified release and full
+parking succeeded. Fresh same-scene wrist re-observation completed, but the
+next Agent view request arrived **307.71 s** into a **300 s** unloaded window
+and was not ACKed. The actor safely exited after **1487.41 s wall**. This valid
+failed acquisition and the orchestration failure both remain; they are not a
+new blind-benchmark outcome or a successful recovery.
+
+The subsequent isolated interface separates inspected target acceptance from
+expensive ranking, enabling correctly associated front/oblique views **before**
+planning. Live wait packets expose an absolute deadline and the publisher
+rejects expired/ended windows rather than reporting a misleading late
+publication. Software now has **113** passing V8/V8.1 tests and unchanged frozen
+behavioral-source audits. These fixes alone are not physical contact evidence.
+
 ## Efficiency and remaining work
 
 R05 (`bf09af9`) is **NOT PASS**: fresh-image-selected, actuator-executed relocation reached **(0.55,-0.79) m**, keeping the door closed. New frontal observations retained **295.89 mm** after an earlier SAM result selected only a mounting block. A complete **90.24° native plan** was obtained, but the first central grasp physically transmitted only **0.149°** before `SUSTAINED_LOW_TRANSMISSION`. Absolute servo error was about **0.45 mm**, versus about **3.3 mm** deviation from the rigid hinge arc, with one-sided load migration and aperture growth. Safe release/parking succeeded. No absence of a positive-normal report was called proof of separation.

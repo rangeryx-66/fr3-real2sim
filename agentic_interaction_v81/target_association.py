@@ -44,3 +44,21 @@ def start_latest(ops, command):
     ops.g.pop('recovery_candidate_catalog',None)
     ops.current_plan_ready=False;ops._v81_plan_ticket=None;ops.cache.clear()
     return evidence
+
+
+def accept_latest(ops,command):
+    """Accept an inspected target before another view, without ranking grasps."""
+    import numpy as np
+    from agent_command_protocol_v12 import atomic_json
+    evidence=start_latest(ops,command)
+    request=command['observed_handle_hypothesis'];folder=Path(evidence['selected_folder'])
+    if request['source']=='SAM3':mask=np.load(folder/(request['id']+'.npy'))
+    else:
+        with np.load(folder/'depth_handle_proposals.npz',allow_pickle=False)as data:
+            mask=data['proposal_'+request['id']]
+    np.save(folder/'handle_mask.npy',mask);np.save(folder/'sam3_mask_raw.npy',mask)
+    atomic_json(folder/'AGENT_HANDLE_HYPOTHESIS_APPROVAL.json',dict(request=request,
+        source='explicit current observed-target selection before further sensing',GT_used=False))
+    feedback=ops.accept_geometry(folder,'Agent-inspected current target, no GT or threshold change')
+    return dict(accepted=True,target_association=evidence,incremental=feedback,
+        robot_motion_executed=False,grasp_search_started=False)

@@ -1,13 +1,14 @@
 import hashlib,json,tempfile,unittest
+import numpy as np
 from pathlib import Path
 from types import SimpleNamespace
-from agentic_interaction_v81.target_association import start_latest
+from agentic_interaction_v81.target_association import start_latest,accept_latest
 
 
 class AssociationTests(unittest.TestCase):
     def fixture(self,d):
         p=Path(d);(p/'rgb.png').write_bytes(b'fresh wrist')
-        (p/'candidate_00.npy').write_bytes(b'observed mask')
+        np.save(p/'candidate_00.npy',np.array([[True,False],[False,True]]))
         (p/'candidate_cues.json').write_text(json.dumps([dict(name='candidate_00',partial=False,eligible_for_grasp=True)]))
         old=dict(folder='old other part',world_sim_s=1)
         latest=dict(folder=d,world_sim_s=2)
@@ -19,7 +20,7 @@ class AssociationTests(unittest.TestCase):
         c=dict(reason='Fresh view shows a different moving-part handle',
             inspected_image_sha256=hashlib.sha256(b'fresh wrist').hexdigest(),
             observed_handle_hypothesis=dict(source='SAM3',id='candidate_00',
-                sha256=hashlib.sha256(b'observed mask').hexdigest(),reason='lower front bar'))
+                sha256=hashlib.sha256((p/'candidate_00.npy').read_bytes()).hexdigest(),reason='lower front bar'))
         return ops,c
 
     def test_explicit_switch_keeps_history_and_actual_routes_not_extra_views(self):
@@ -48,6 +49,16 @@ class AssociationTests(unittest.TestCase):
             ops.r.job['articulation_v7']['joint_type']='prismatic'
             ops._last_contact_finished_world_s=4
             with self.assertRaises(ValueError):start_latest(ops,c)
+
+    def test_accept_before_another_view_does_not_search_or_move(self):
+        with tempfile.TemporaryDirectory()as d:
+            ops,c=self.fixture(d);calls=[]
+            ops.accept_geometry=lambda folder,reason:(calls.append((folder,reason))or dict(geometry=True))
+            result=accept_latest(ops,c)
+            self.assertTrue(result['accepted']);self.assertEqual(len(calls),1)
+            self.assertFalse(result['grasp_search_started'])
+            self.assertFalse(result['robot_motion_executed'])
+            np.testing.assert_array_equal(np.load(Path(d)/'handle_mask.npy'),np.load(Path(d)/'candidate_00.npy'))
 
 
 if __name__=='__main__':unittest.main()

@@ -31,7 +31,8 @@ def serve(r):
             packet['station']=dict(generation=r.base_generation,measured_base=r.base.tolist(),
                 operations=['evaluate_station','relocate_station'],actuation='native driven XY stage')
             atomic_json(r.output/'DECISION_PACKET.json',packet)
-            atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,timeout_s=wait))
+            atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,timeout_s=wait,
+                deadline_unix_s=time.time()+wait,requires_ACK_before_execution=True))
             began=time.perf_counter();path=commands/('%03d.json'%seq)
             while not path.exists():
                 if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.perf_counter()-began>=wait:
@@ -49,6 +50,9 @@ def serve(r):
                 elif op=='move_and_observe':result=ops.move_and_observe(ops.cache.get(command['evaluated_command'],{}))
                 elif op=='build_geometry':result=ops.request_plan(command)
                 elif op=='prepare_grasp':result=ops.prepare_grasp(command)
+                elif op=='select_observed_target':
+                    from .target_association import accept_latest
+                    result=accept_latest(ops,command)
                 elif op=='observe_view':result=ops.observe_view(command)
                 elif op=='redeclare_actions':result=ops.redeclare_actions(command)
                 elif op=='validate_execution':result=ops.validate_execution()

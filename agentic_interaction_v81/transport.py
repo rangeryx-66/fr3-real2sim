@@ -1,5 +1,5 @@
 """V8 atomic transport plus explicitly validated V8.1 station requests."""
-import argparse,fcntl,hashlib,json,math,sys
+import argparse,fcntl,hashlib,json,math,sys,time
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]/'scripts'))
 from agent_command_protocol_v12 import (
@@ -9,8 +9,10 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
-    if op in ('prepare_grasp','observe_view'):
-        validate(dict(command,operation='build_geometry' if op=='prepare_grasp' else 'evaluate_view'),sequence)
+    if op in ('prepare_grasp','observe_view','select_observed_target'):
+        forwarded=dict(command,operation='evaluate_view'if op=='observe_view'else'build_geometry')
+        if op=='select_observed_target':forwarded['start_new_target_association']=True
+        validate(forwarded,sequence)
         return command
     if op=='build_geometry' and 'exploratory_task_reconsideration' in command:
         value=command['exploratory_task_reconsideration']
@@ -72,10 +74,21 @@ def validate(command,sequence):
 def publish(directory,sequence,command):
     directory=Path(directory);directory.mkdir(parents=True,exist_ok=True)
     value=dict(command,protocol_version=VERSION,sequence=sequence);validate(value,sequence)
+    if directory.name=='agent_commands':
+        episode=directory.parent
+        if (episode/'PROCESS_COMPLETION.json').exists()or(episode/'EPISODE_RESULT.json').exists():
+            raise ProtocolError('EPISODE_ENDED_NO_COMMAND_CAN_EXECUTE')
+        waiting=episode/'WAITING_FOR_AGENT.json'
+        if not waiting.exists():raise ProtocolError('LIVE_AGENT_DECISION_WINDOW_REQUIRED')
+        window=json.loads(waiting.read_text())
+        deadline=window.get('deadline_unix_s',waiting.stat().st_mtime+float(window['timeout_s']))
+        if window.get('sequence')!=sequence or time.time()>=deadline:
+            raise ProtocolError('STALE_OR_CLOSED_AGENT_DECISION_WINDOW')
     with (directory/'.publisher.lock').open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX)
         result=atomic_publish(directory,sequence,value)
-    return dict(result,protocol_version=VERSION,sequence=sequence,acknowledgment='pending',extension='V81_STATION')
+    return dict(result,protocol_version=VERSION,sequence=sequence,acknowledgment='pending',
+        extension='V81_STATION',publication_is_not_execution=True)
 
 
 def receive(path,sequence,responses):
