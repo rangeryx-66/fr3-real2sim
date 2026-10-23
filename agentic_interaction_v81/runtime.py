@@ -40,6 +40,8 @@ def runtime_class(original):
             self.base_active=False
             self.base_trace=[]
             self.base_generation=0
+            from .motion_dwell import MotionDwell
+            self.station_motion=MotionDwell(self.dt)
             self.read_base()
             from .collision import MobileScene
             self.mobile_collision=MobileScene(self.export,self.model,self.allowed,self.initial_base)
@@ -67,7 +69,8 @@ def runtime_class(original):
             home=np.asarray(self.c['home_q']) if 'home_q' in self.c else np.array([0,-.5,0,1.,0,.5,0])
             if parked and self.g.get('last_exit_plan'):
                 home=np.asarray(self.g['last_exit_plan']['parking_q'])
-            stationary=np.max(abs(q[self.arm]-home))<=.025 and np.max(abs(dq[self.arm]))<.01
+            stationary=(np.max(abs(q[self.arm]-home))<=.025 and
+                self.station_motion.ready(self.rows[-1]['t'],q[self.arm]))
             unloaded=self.grasp_reference is None and max(self.filtered())<=self.policy.data['force']['unloaded_pad_n'] and self.supervisor.force.settled()
             released=float(self.rows[-1]['aperture_m'])>=.083
             velocity=float(self.rows[-1].get('joint_coordinate_velocity',0.))
@@ -81,6 +84,8 @@ def runtime_class(original):
             if record:
                 (self.output/'V81_STATION_BOUNDARY.json').write_text(json.dumps(dict(
                     boundary=asdict(boundary),arm_velocity_rad_s=dq[self.arm].tolist(),
+                    native_velocity_instantaneous_below_01=bool(np.max(abs(dq[self.arm]))<.01),
+                    measured_motion_dwell=self.station_motion.latest,
                     measured_aperture_m=float(self.rows[-1]['aperture_m']),
                     object_velocity_native_s=velocity,pad_loads_n=self.filtered().tolist(),
                     grasp_reference_present=self.grasp_reference is not None,
@@ -164,6 +169,8 @@ def runtime_class(original):
                     self.base_trace.append(dict(t=row['t'],base=self.base.tolist(),
                         commanded_joint_positions_m=self.base_goal.tolist(),
                         measured_joint_positions_m=row['q'][self.base_indices].tolist()))
+                if hasattr(self,'station_motion'):
+                    self.station_motion.update(row['t'],row['q'][self.arm],row['T_tcp'],self.actual())
             return super().enrich_measurement(row,pre_contact_poses)
 
         def close(self):

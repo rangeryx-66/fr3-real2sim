@@ -12,6 +12,7 @@ sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 def main():
     p=argparse.ArgumentParser();p.add_argument('--job',required=True,type=Path)
     p.add_argument('--move-xy',nargs=2,type=float,help='Short engineering fixture only, <=30 mm displacement')
+    p.add_argument('--dwell-diagnostics',action='store_true',help='Two seconds of actual unloaded240Hz joint/pose samples before any base motion')
     a=p.parse_args()
     if a.move_xy and (not all(__import__('math').isfinite(v) for v in a.move_xy) or __import__('math').hypot(*a.move_xy)>.03):
         raise ValueError('BOUNDED_UNLOADED_INTERFACE_MOTION_ONLY')
@@ -38,6 +39,22 @@ def main():
             acquisitions=0,object_joint_commands=False,base_motion_executed=False)
         atomic_json(r.output/'V81_STATIONARY_MOUNT_CHECK.json',result)
         if delta>.001:raise RuntimeError('MOUNT_FK_INCONSISTENT')
+        if a.dwell_diagnostics:
+            rows=[]
+            for _ in range(round(2/r.dt)):
+                r.hold(r.dt);row=r.rows[-1]
+                rows.append((row['t'],np.asarray(row['q'])[r.arm].copy(),
+                    np.asarray(row['joint_velocities'])[r.arm].copy(),row['T_tcp'].copy(),r.actual()))
+            t=np.array([x[0]for x in rows]);q=np.array([x[1]for x in rows]);dq=np.array([x[2]for x in rows]);T=np.array([x[3]for x in rows])
+            np.savez_compressed(r.output/'UNLOADED_STATION_240HZ.npz',t=t,q=q,dq_reported=dq,T_tcp=T,object_q=np.array([x[4]for x in rows]))
+            sample=dict(native_reported_velocity_max_rad_s=np.max(abs(dq),axis=0).tolist(),
+                measured_joint_excursion_rad=np.ptp(q,axis=0).tolist(),
+                configuration_velocity_max_rad_s=np.max(abs(np.diff(q,axis=0)/np.diff(t)[:,None]),axis=0).tolist(),
+                measured_motion_dwell=r.station_motion.latest,
+                no_actuator_or_physics_change=True,acquisitions=0)
+            atomic_json(r.output/'UNLOADED_STATION_DIAGNOSTIC.json',sample)
+            if not r.station_motion.ready(t[-1],q[-1]):
+                raise RuntimeError('MEASURED_CONFIGURATIONS_NOT_STATIONARY_NO_BASE_MOTION')
         if a.move_xy:
             initial=r.base.copy();target=initial[:2]+np.asarray(a.move_xy)
             forward=r.move_station(target)

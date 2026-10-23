@@ -9,6 +9,10 @@ def operations_class(original):
     class StationOperations(original):
         worker_script='agentic_interaction_v81/update_model.py'
 
+        def validate_execution(self):
+            from .execution_return import direct_return
+            with direct_return(self.r):return super().validate_execution()
+
         def interact(self,target,max_sim_s=None,action=None):
             proposed=self.actions[0] if self.actions else action
             if proposed and proposed['role'].startswith('VALIDATION'):
@@ -57,7 +61,8 @@ def operations_class(original):
             if command.get('segments')!=getattr(self,'_v81_declared_chain',None):
                 return dict(executed=False,recoverable=True,reason='DECLARE_AND_VALIDATE_THIS_CHAIN_BEFORE_ACQUISITION')
             generation=len(self.g['observation_generations'])
-            result=super().attempt(command)
+            from .execution_return import direct_return
+            with direct_return(self.r):result=super().attempt(command)
             result['observation_generation_v81']=generation
             self._last_contact_finished_world_s=float(self.r.world.current_time)
             result['station_generation']=self.r.base_generation
