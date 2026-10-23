@@ -1,7 +1,7 @@
 import json,tempfile,time,unittest
 from pathlib import Path
 from types import SimpleNamespace
-from agentic_interaction_v81.debug_budget import apply,window,VALUES,PROFILE
+from agentic_interaction_v81.debug_budget import apply,window,VALUES,PROFILE,FULL_RANGE_PROFILE
 from agentic_interaction_v81.transport import publish,ProtocolError
 from agentic_interaction_v81.session_status import write
 from interaction_runtime.segments import EpisodeBudget
@@ -26,6 +26,16 @@ class DebugBudgetTests(unittest.TestCase):
         job={'x':1};apply({},job);self.assertEqual(job,{'x':1})
         for change in [dict(wall_budget_s=1800),dict(agent_wait_s=180),dict(phase='independent_repetition')]:
             with self.subTest(change=change),self.assertRaises(ValueError):apply(dict(self.spec(),**change),{})
+
+    def test_full_range_profile_has_separate_resources_not_new_physical_limits(self):
+        job={'safety_policy':'frozen','controller':'frozen'}
+        spec=dict(self.spec(),debug_budget_profile=FULL_RANGE_PROFILE,wall_budget_s=5400,sim_budget_s=2700)
+        apply(spec,job);job.pop('deadline_shanghai')
+        b=EpisodeBudget(job,now=lambda:0)
+        self.assertEqual(b.remaining(0),dict(wall_s=4800.,sim_s=2580.,exit_reserved=True))
+        self.assertEqual(job['agent_wait_timeout_s'],600.)
+        self.assertEqual(job['safety_policy'],'frozen');self.assertEqual(job['controller'],'frozen')
+        with self.assertRaises(ValueError):apply(dict(spec,sim_budget_s=1800),{})
 
     def test_historical_waiting_cannot_publish_while_running_or_closed(self):
         with tempfile.TemporaryDirectory()as d:
