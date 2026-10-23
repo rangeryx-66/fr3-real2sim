@@ -57,6 +57,7 @@ def check(ops,command):
 
 @contextmanager
 def scope(ops,index):
+    identity=observation_identity(ops)  # reject stale/missing evidence before expensive search
     import native_g1_robust_contact_ranking as frozen
     original=frozen.diverse_shortlist
     audit=[]
@@ -72,7 +73,7 @@ def scope(ops,index):
         try:yield
         finally:
             path=ops.r.output/'RECOVERY_SEARCH_V81.json'
-            path.write_text(json.dumps(dict(identity=observation_identity(ops),batches=audit,
+            path.write_text(json.dumps(dict(identity=identity,batches=audit,
                 search_is_not_physical_recovery=True),indent=2))
 
 
