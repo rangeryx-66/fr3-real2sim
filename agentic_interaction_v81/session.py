@@ -62,6 +62,9 @@ def serve(r):
                 elif op=='safe_release_retreat':result=ops.release_park()
                 elif op=='evaluate_station':result=ops.evaluate_station(command);ops.cache[seq]=result
                 elif op=='relocate_station':result=ops.relocate_station(ops.cache.get(command['evaluated_command'],{}))
+                elif op=='relocate_observe_prepare':
+                    from .recovery_batch import relocate_observe_prepare
+                    result=relocate_observe_prepare(ops,command)
                 elif op=='plan_panel_push':result=dict(valid=False,reason='Mobile support validation for intentional panel mode is not yet activated; handle reversal remains available')
                 elif op=='finish':result=dict(safe_exit=ops.release_park())
                 else:result=dict(executed=False,recoverable=True,reason='UNKNOWN_V81_OPERATION')

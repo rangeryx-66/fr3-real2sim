@@ -1,5 +1,10 @@
 # V8.1 engineering extension
 
+Latest result: [recovery-first report](../docs/experiments/skill_v81/RECOVERY_FIRST_REPORT.md),
+**NOT PASS**. A physical short pull/reverse, base relocation and new sensing
+completed, but no post-relocation regrasp occurred. New preload tests and
+full-range resumption remain gated.
+
 ## Recovery-first stop gate (2026-10-23)
 
 Full 90-degree / 150-mm experiments and independent repetitions are stopped.
@@ -25,6 +30,17 @@ The actual plan ticket, image bytes, station, observations and acquisition count
 must still match. This enables informed candidate choice without a new contact
 score threshold or approval of a mechanically weak plan. It does not allow a
 third batch or a pose supplied by the Agent.
+
+The optional prismatic-only `relocate_observe_prepare` accepts a current
+inspected wrist image, Agent-selected `target_xy_m`, reason and finite
+`planned_segments`, plus the usual legal preload/planning options. It uses the
+original current-state station validation and actuator move, fresh sensing and
+tentative automatic grasp preparation. It never acquires contact. The Agent
+must inspect the new observation and plan before separately approving a grasp.
+If the new target is ambiguous it returns without selecting a mask or planning.
+Same-episode measured operation costs are exposed at boundaries; a known
+insufficient work budget refuses the batch before motion, preserving exit
+reserves. This batch is software-tested, **not yet native-validated**.
 
 Prismatic planning retires stale plan/image files by moving them into
 `plan_history` and exposes `current_plan_ready` explicitly. Failed recovery

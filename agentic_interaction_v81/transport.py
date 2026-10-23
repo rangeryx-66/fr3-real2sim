@@ -9,6 +9,21 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    if op=='relocate_observe_prepare':
+        fields={'operation','protocol_version','sequence','reason','target_xy_m',
+            'inspected_image_sha256','planned_segments','planning_target_q',
+            'native_g1_preload_request_n','transverse_unloading','contact_following'}
+        if set(command)-fields:raise ProtocolError('no pose or recovery override allowed')
+        station={k:command[k]for k in ('protocol_version','sequence','reason','target_xy_m','inspected_image_sha256')if k in command}
+        validate(dict(station,operation='evaluate_station'),sequence)
+        plan={k:v for k,v in command.items()if k not in ('target_xy_m',)}
+        validate(dict(plan,operation='prepare_grasp'),sequence)
+        original_validate(dict(protocol_version=command.get('protocol_version'),sequence=sequence,
+            operation='attempt_grasp_and_probe',segments=command.get('planned_segments')),sequence)
+        if 'native_g1_preload_request_n' in command:
+            value=command['native_g1_preload_request_n']
+            if isinstance(value,bool)or value not in (.5,.75,1.,1.5):raise ProtocolError('tested preload menu only')
+        return command
     if op in ('prepare_grasp','observe_view','select_observed_target'):
         forwarded=dict(command,operation='evaluate_view'if op=='observe_view'else'build_geometry')
         if op=='select_observed_target':forwarded['start_new_target_association']=True

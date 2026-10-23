@@ -1,5 +1,10 @@
 # V8.1 engineering progress — NOT PASS
 
+Latest bounded recovery work and its **incomplete physical recovery** are in
+[RECOVERY_FIRST_REPORT.md](RECOVERY_FIRST_REPORT.md). Full-range testing remains
+stopped. Post-relocation regrasp, repeated transmission and new preload A/B are
+not claimed complete; no independent repetition has started.
+
 ## Recovery-first stop and P06 diagnosis (2026-10-23)
 
 Full-range testing is stopped by the user's newer instruction. No new 90°/

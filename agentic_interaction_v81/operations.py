@@ -13,6 +13,8 @@ def operations_class(original):
             packet=super().decision_packet(sequence,result)
             if self.r.job['articulation_v7']['joint_type']!='prismatic':return packet
             from .recovery_search import current_packet
+            from .recovery_batch import measured_costs
+            packet['measured_recovery_costs']=measured_costs(self)
             return current_packet(self,packet)
 
         def validate_execution(self):

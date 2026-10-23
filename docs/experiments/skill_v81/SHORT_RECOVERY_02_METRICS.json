@@ -1,0 +1,163 @@
+{
+  "episode": "v81_short_relocation_regrasp_02",
+  "source": "0ab00889b9cce48bf59fd3d65d3c3bdb3f2fbc16",
+  "status": "ORCHESTRATION_TIMEOUT",
+  "assessment": "NOT_PASS: no second physical acquisition; recovery and repeated transmission not validated",
+  "physical_acquisitions": 1,
+  "requested_preload_n": 1.0,
+  "hold_s": 1.0,
+  "initial_grasp": true,
+  "segments": [
+    {
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "gain_native": 0.020097102954759194,
+      "joint_coordinate": 0.02009708434343338,
+      "requested_target_reached": true
+    },
+    {
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "gain_native": -0.012179265730082989,
+      "joint_coordinate": 0.007917818613350391,
+      "requested_target_reached": true
+    },
+    {
+      "status": "VALIDATION_DEFERRED",
+      "reason": "QUALIFIED_BIDIRECTIONAL_FIT_NOT_YET_READY",
+      "gain_native": null,
+      "joint_coordinate": null,
+      "requested_target_reached": false
+    }
+  ],
+  "actual_pull_mm": 20.097102954759194,
+  "actual_reverse_mm": 12.179265730082989,
+  "base_relocation_mm": 21.507656856301114,
+  "actual_station": [
+    0.21604999899864197,
+    -0.5407400131225586,
+    -0.10000000149011612,
+    -0.7952486758187507
+  ],
+  "post_relocation_fresh_observation": true,
+  "new_grasp_selected_after_relocation": false,
+  "physical_regrasp": false,
+  "complete_validation": false,
+  "safe_exit": true,
+  "park": true,
+  "final_q_m": 0.007917812094092369,
+  "final_pad_load_n": [
+    0.0,
+    0.0
+  ],
+  "process": {
+    "returncode": 0,
+    "wall_s": 1479.405387466075,
+    "actor_exited": true
+  },
+  "operations": [
+    {
+      "operation": "select_observed_target",
+      "wall_s": 3.5471818861551583,
+      "Agent_wait_s": 73.7190709200222
+    },
+    {
+      "operation": "observe_view",
+      "wall_s": 40.55703205894679,
+      "Agent_wait_s": 25.87291289586574
+    },
+    {
+      "operation": "prepare_grasp",
+      "wall_s": 110.9435212330427,
+      "Agent_wait_s": 31.867451225873083
+    },
+    {
+      "operation": "attempt_grasp_and_probe",
+      "wall_s": 424.2919990851078,
+      "Agent_wait_s": 26.31476297788322
+    },
+    {
+      "operation": "observe",
+      "wall_s": 36.01577030913904,
+      "Agent_wait_s": 104.73404971789569
+    },
+    {
+      "operation": "evaluate_station",
+      "wall_s": 5.609161460073665,
+      "Agent_wait_s": 65.0573171870783
+    },
+    {
+      "operation": "relocate_station",
+      "wall_s": 8.507569758919999,
+      "Agent_wait_s": 28.186814212007448
+    },
+    {
+      "operation": "reobserve_and_replan",
+      "wall_s": 61.84530874690972,
+      "Agent_wait_s": 109.4728894601576
+    }
+  ],
+  "completed_operation_wait_s": 465.2252685967833,
+  "final_timeout_s": 180,
+  "late_finish_not_ACKed": true,
+  "new_preload_comparison_launched": false,
+  "full_range_testing_resumed": false,
+  "private_integrity_sha256": "d0c55a9292d1b2acac88f73252032e4a7f6354eae7db0428366fa18587b2758a",
+  "storage_bytes": 51086951,
+  "storage_categories_bytes": {
+    "root_metadata": 8453402,
+    "attempt_inputs": 283771,
+    "visual_planning": 9241019,
+    "robot_io": 37041,
+    "sensor_assembly": 37901,
+    "plot_cache": 121541,
+    "asset": 1305704,
+    "telemetry": 5841335,
+    "agent_commands": 6806,
+    "agent_geometry": 4102646,
+    "agent_responses": 1073801,
+    "target_associations": 977,
+    "contact_evidence": 1450644,
+    "station": 229,
+    "model": 94978,
+    "rgbd": 17889601,
+    "station_states": 306240,
+    "source": 562888,
+    "contact_feedback": 276427
+  },
+  "hidden_dynamics_read": false,
+  "contact_diagnostics": {
+    "raw_pad_peaks_n": [
+      2.287743330001831,
+      1.9897977113723755
+    ],
+    "command_aperture_range_mm": [
+      9.242380142211914,
+      84.0
+    ],
+    "measured_aperture_range_mm": [
+      10.39794635772705,
+      83.88897705078125
+    ],
+    "segments": [
+      {
+        "role": "FIT_SHORT_OPEN",
+        "aperture_drift_mm": 0.05596131086349487,
+        "maximum_object_relative_TCP_translation_drift_mm": 0.5531104675773294,
+        "end_pad_load_n": [
+          1.0636038780212402,
+          1.0760242938995361
+        ]
+      },
+      {
+        "role": "FIT_SHORT_REVERSE",
+        "aperture_drift_mm": -0.010427087545394897,
+        "maximum_object_relative_TCP_translation_drift_mm": 0.1810644427466947,
+        "end_pad_load_n": [
+          1.531665325164795,
+          0.6185383796691895
+        ]
+      }
+    ]
+  }
+}
