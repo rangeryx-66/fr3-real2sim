@@ -14,6 +14,7 @@ def main():
     p.add_argument('--move-xy',nargs=2,type=float,help='Short engineering fixture only, <=30 mm displacement')
     p.add_argument('--dwell-diagnostics',action='store_true',help='Two seconds of actual unloaded240Hz joint/pose samples before any base motion')
     p.add_argument('--exercise-arm-return',action='store_true',help='Short native-checked unloaded arm excursion and return, not an archived observation or grasp')
+    p.add_argument('--wrist-render-fixture',action='store_true',help='Install the original wrist camera and execute its eight observation render calls; no SAM or manipulation decision')
     a=p.parse_args()
     if a.move_xy and (not all(__import__('math').isfinite(v) for v in a.move_xy) or __import__('math').hypot(*a.move_xy)>.03):
         raise ValueError('BOUNDED_UNLOADED_INTERFACE_MOTION_ONLY')
@@ -40,11 +41,17 @@ def main():
             acquisitions=0,object_joint_commands=False,base_motion_executed=False)
         atomic_json(r.output/'V81_STATIONARY_MOUNT_CHECK.json',result)
         if delta>.001:raise RuntimeError('MOUNT_FK_INCONSISTENT')
+        if a.wrist_render_fixture:
+            from native_g1_wrist_input import install_camera
+            install_camera(r.g)
+            for _ in range(8):r.world.render()
         if a.exercise_arm_return:
             start=r.qtarget[r.arm].copy()
             target=start+np.array([.2,0.,-.15,0.,.1,0.,.15])
             r.move_path([target],'SAFE_PARK_MOTION')
             r.move_path([start],'SAFE_PARK_MOTION');r.hold(.3)
+            if a.wrist_render_fixture:
+                for _ in range(8):r.world.render()
             atomic_json(r.output/'UNLOADED_ARM_RETURN_FIXTURE.json',dict(
                 starting_command_q=start.tolist(),excursion_command_q=target.tolist(),
                 returned_command_q=r.qtarget[r.arm].tolist(),
