@@ -94,6 +94,13 @@ def operations_class(original):
                 return dict(plan=False,recoverable=True,
                     reason='DECLARATION_PREFLIGHT:'+str(error),
                     robot_action_executed=False,expensive_planning_started=False)
+            association=None
+            if command.get('start_new_target_association',False):
+                from .target_association import start_latest
+                try:association=start_latest(self,command)
+                except (ValueError,KeyError,FileNotFoundError) as error:
+                    return dict(plan=False,recoverable=True,reason='TARGET_ASSOCIATION:'+str(error),
+                        robot_action_executed=False,expensive_planning_started=False)
             if command.get('exploratory_task_reconsideration') and self.r.job['articulation_v7']['joint_type']!='prismatic':
                 return dict(plan=False,reason='TASK_RECONSIDERATION_IS_PRISMATIC_ONLY',recoverable=True)
             self._v81_declared_chain=actions
@@ -130,6 +137,7 @@ def operations_class(original):
             if result.get('plan'):
                 self.r.v81_contact_following_mode=following
                 result['contact_following_v81']=following
+            if association is not None:result['target_association']=association
             return result
 
         def redeclare_actions(self,command):

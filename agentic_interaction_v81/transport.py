@@ -21,6 +21,15 @@ def validate(command,sequence):
                 raise ProtocolError('current inspected wrist image SHA256 required')
             if not isinstance(command.get('reason'),str) or not command['reason'].strip():
                 raise ProtocolError('explicit Agent changed-task reason required')
+    if op=='build_geometry' and 'start_new_target_association' in command:
+        if type(command['start_new_target_association']) is not bool:
+            raise ProtocolError('boolean target-association selection required')
+        if command['start_new_target_association']:
+            h=command.get('inspected_image_sha256')
+            if (not isinstance(h,str)or len(h)!=64
+                    or any(c not in '0123456789abcdef'for c in h)
+                    or not command.get('reason')or not command.get('observed_handle_hypothesis')):
+                raise ProtocolError('current inspected explicit observed-target selection required')
     if op=='redeclare_actions':
         allowed={'operation','protocol_version','sequence','reason','segments','inspected_image_sha256'}
         if set(command)-allowed:raise ProtocolError('action declaration cannot modify a pose or preload')

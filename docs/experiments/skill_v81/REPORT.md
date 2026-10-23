@@ -171,6 +171,28 @@ from future online inputs; no hinge/rail estimation benchmark has launched.
 Both full-range engineering lifecycles and all four independent repetitions
 remain incomplete. The readiness gate stays closed.
 
+Fresh P04 (`5f92db9`) then exposed an association/orchestration failure, with
+**zero physical acquisitions**, not a drawer traction result. Codex inspected
+the actual upper-mask/whole-image/depth/cloud board and requested a reachable
+right-oblique wrist view of the visible lower front. Actual actuators reached
+it and a complete lower-bar SAM mask scored 0.527. Fusion nevertheless retained
+the first upper-bar reference (observed section z approximately 0.544 m); its
+automatic native approach search failed. The scene subsequently hit its finite
+180 s unloaded Agent window and performed verified release/parking. Wall time
+688.26 s; actor rc=0. The late command is retained as unacknowledged, never
+treated as executed recovery. The source/decision record is preserved.
+
+The next isolated interface lets the Agent explicitly start a new target
+association from its **latest inspected, complete observed hypothesis** before
+planning. It archives old views as history, preserves their files and actual
+return routes, invalidates old plans/candidate catalogs, and does not reset the
+four-view budget. No asset rule, automatic target choice, new mask threshold or
+GT information is added. Software tests reject stale selection, loaded states
+and revolute use. Fresh native confirmation remains required. A subsequent
+engineering job must also declare a finite unloaded decision window consistent
+with actual image transfer/inspection cost, rather than claim this timeout was
+a physical grasp failure.
+
 ## Efficiency and remaining work
 
 R05 (`bf09af9`) is **NOT PASS**: fresh-image-selected, actuator-executed relocation reached **(0.55,-0.79) m**, keeping the door closed. New frontal observations retained **295.89 mm** after an earlier SAM result selected only a mounting block. A complete **90.24° native plan** was obtained, but the first central grasp physically transmitted only **0.149°** before `SUSTAINED_LOW_TRANSMISSION`. Absolute servo error was about **0.45 mm**, versus about **3.3 mm** deviation from the rigid hinge arc, with one-sided load migration and aperture growth. Safe release/parking succeeded. No absence of a positive-normal report was called proof of separation.

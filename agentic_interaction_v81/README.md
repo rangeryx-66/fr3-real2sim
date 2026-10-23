@@ -15,6 +15,16 @@ It combines the existing deterministic view feasibility check with actuator
 motion/capture only when that same route is feasible. Stale pre-contact evidence
 is rejected. Neither operation invents a view, pose or high-level decision.
 
+When fresh images identify the first accepted mask as a different object part,
+prismatic `prepare_grasp`/`build_geometry` may explicitly request
+`start_new_target_association:true`, with the current inspected wrist SHA,
+reason and a current `observed_handle_hypothesis`. Only the latest selected
+observation becomes the new association seed. All earlier captures remain in
+history; actual wrist routes and the used view budget are preserved. Stale
+images, incomplete hypotheses, loaded/hard-stop states and revolute jobs are
+rejected. Existing observed-mask preservation/scoring and native execution
+checks still own planning. No camera, robot or object is moved by this selection.
+
 Prismatic `contact_following:"rate_consistent"` with explicit
 `transverse_unloading:true` is an **experimental** alternative to the default
 `legacy_window`. It preserves the original causal load filter, correction
