@@ -1,5 +1,19 @@
 # V8.1 engineering progress — NOT PASS
 
+## User-requested pause (2026-10-23)
+
+All physical testing is paused. P03 (`ea25407`) finished through the original guarded release/parking operation, actor return code 0; its owned actor is no longer running. R06 was prepared but **not launched**. No V8.1 tag or independent repetition has been activated; the engineering readiness gate remains closed.
+
+P03 acquired two fresh, automatically planned grasps in one continuous scene. At a 1.0 N request it physically completed **0→50.107 mm**, then **45.253 mm reverse** to 4.854 mm. Reopening stopped after 1.848 mm with `PRISMATIC_PERSISTENT_SLIDING_STALL`; it was not relabeled complete. Diagnostics separate 0.759 mm command-to-measured TCP error change from **1.729 mm measured-TCP/drawer relative travel**. Actual pad contacts remained near lateral pad edges. This supports a contact-migration/retention concern, without proving a unique mechanism or treating missing positive-normal reports as separation.
+
+After verified unloading/parking, Codex inspected fresh wrist RGB-D and actual force/contact boards, requested an opposite oblique wrist view, and chose the tested **lower 0.75 N request** to investigate constraint loading. Independent validation completed **6.662→40.076 mm in 10.058 s**, against the prior sealed FIT-only model. Segment-local prediction retained **7.042 s**, with free position RMSE **0.01852 mm**, velocity RMSE **0.1969 mm/s**, and compensated-force RMSE **0.03833 mN**, initialized once without subsequent state correction. This is short-range conditional prediction, not proof of authored-parameter accuracy or full-travel dynamics. Authored truth remains unrevealed.
+
+Expansion then stopped at **76.864 mm** with persistent transmission failure: command-to-measured TCP error changed by -0.073 mm, whereas measured-TCP/drawer relative travel grew **1.994 mm**. Lower requested preload did not solve long-range retention; these were not matched preload A/B trials. Both failures and guarded exits remain preserved. A third candidate plan was obtained from fresh measurements, but **no third physical acquisition occurred** because the user paused testing.
+
+Wall time was **3405.56 s (56.76 min)**, including **1292.84 s unloaded Agent/protocol waiting** and **710.79 s planning**. The two physical-attempt operations consumed 495.6/530.0 s, including approach, unchanged closure/hold, interactions and exit. Evidence was **69.20 MB** before its private integrity index. Efficiency remains below target; measured waiting/planning overhead also needs attention. [P03_METRICS.json](P03_METRICS.json) preserves the compact result and private evidence commitment.
+
+R02's 63.086°/31.580° closing/complete validation and P01's 160.375 mm/83.415 mm reverse remain separate engineering results. P01 had no complete validation; P03 has validation but insufficient maximum travel. They must **not** be stitched into a completed V8.1 lifecycle. Original frozen revolute sources, physics and protections remain preserved. Independent repetitions remain **0/4**.
+
 The 90° revolute and ≥150 mm prismatic engineering lifecycles are not yet complete. No independent repetition has started; the launch gate remains closed. V8.0 (`2f021639`) and its 71 frozen revolute source/configuration files plus 22 external dependencies remain unchanged. All earlier outcomes are preserved.
 
 ## Recorded attempts

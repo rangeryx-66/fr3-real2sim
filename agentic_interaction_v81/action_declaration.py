@@ -33,6 +33,11 @@ def redeclare(ops, command):
             or command.get('inspected_image_sha256') != inspected.get('sha256')):
         return dict(declared=False, reason='STALE_OR_UNINSPECTED_PLAN_IMAGE')
     actions = command['segments']
+    from .declaration_preflight import check
+    try:check(actions,ops.articulation())
+    except (ValueError,TypeError,KeyError) as error:
+        return dict(declared=False,reason='DECLARATION_PREFLIGHT:'+str(error),
+                    robot_motion_executed=False)
     plan = json.loads((ops.r.output/'visual_plan.json').read_text())
     states = [float(p['state']) for p in plan['path']]
     for action in actions:

@@ -1,0 +1,222 @@
+{
+  "schema": "v81-paused-engineering-result",
+  "episode": "v81_engineering_prismatic_03",
+  "source_commit": "ea25407ceb2c21b80ea2bfe26522e50a9bb0114f",
+  "status": "USER_PAUSED_NOT_V81_PASS",
+  "maximum_actual_displacement_m": 0.07686423510313034,
+  "largest_completed_reverse_m": 0.045252996031194925,
+  "physical_acquisitions": 2,
+  "requested_preload_n": [
+    1.0,
+    0.75
+  ],
+  "wrist_observations": 7,
+  "base_relocations": 0,
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_ACCEL_OPEN",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start_m": -5.016438464622297e-08,
+      "end_m": 0.05010654404759407,
+      "elapsed_sim_s": 12.32916666666668
+    },
+    {
+      "id": 2,
+      "role": "FIT_REVERSE_SLOW",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start_m": 0.05010730028152466,
+      "end_m": 0.004854304250329733,
+      "elapsed_sim_s": 12.716666666666669
+    },
+    {
+      "id": 3,
+      "role": "FIT_ACCEL_REOPEN",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "start_m": 0.004854281898587942,
+      "end_m": 0.0067025828175246716,
+      "elapsed_sim_s": 4.308333333333337
+    },
+    {
+      "id": 4,
+      "role": "VALIDATION_OPEN_DISTINCT",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start_m": 0.006662378553301096,
+      "end_m": 0.04007605463266373,
+      "elapsed_sim_s": 10.058333333333337
+    },
+    {
+      "id": 5,
+      "role": "FIT_EXPANDED_OPEN",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "start_m": 0.04007607325911522,
+      "end_m": 0.07686423510313034,
+      "elapsed_sim_s": 10.308333333333337
+    }
+  ],
+  "sealed_validation": [
+    {
+      "seal_file": "04.json",
+      "model_sha256": "a775aceda3a77c443c785de59f74e20b3b15bb63138cf81b0bd3fea055ea263f",
+      "parameters": [
+        1.5752053111793118,
+        5.660351903295297,
+        0.27322421106380074
+      ],
+      "conditional_std": [
+        0.0029591205781291144,
+        0.018918953770755087,
+        9.21300903536237e-05
+      ],
+      "heldout": {
+        "VALIDATION_OPEN_DISTINCT_04#0": {
+          "status": "predicted",
+          "effort_rmse": 3.832963997471972e-05,
+          "coordinate_rmse": 1.8522387025924333e-05,
+          "velocity_rmse": 0.00019691825368033745,
+          "final_coordinate_error": 0.00010541580797376882,
+          "outside_FIT_support": false,
+          "samples": 1691,
+          "duration_s": 7.041666666666629,
+          "units": {
+            "coordinate": "m",
+            "effort": "N",
+            "inertial": "kg",
+            "damping": "N s/m"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "validation_used_for_fit": false
+    }
+  ],
+  "attempt_contact_diagnostics": [
+    {
+      "raw_normal_peaks_n": [
+        1.555854082107544,
+        3.1587626934051514
+      ],
+      "segments": [
+        {
+          "role": "FIT_ACCEL_OPEN",
+          "status": "TARGET_REACHED",
+          "measured_drawer_travel_m": 0.05010579327456455,
+          "duration_s": 12.320833333333326,
+          "last_pad_normal_mean_n": [
+            0.770240843296051,
+            1.1858640909194946
+          ],
+          "command_TCP_travel_m": 0.05163886956294417,
+          "measured_TCP_travel_m": 0.05083400635491847,
+          "command_to_measured_TCP_error_change_m": 0.0008048632080256968,
+          "measured_TCP_to_drawer_relative_travel_m": 0.0007282130803539233
+        },
+        {
+          "role": "FIT_REVERSE_SLOW",
+          "status": "TARGET_REACHED",
+          "measured_drawer_travel_m": -0.04525297414511442,
+          "duration_s": 12.708333333333314,
+          "last_pad_normal_mean_n": [
+            0.902466893196106,
+            1.0990322828292847
+          ],
+          "command_TCP_travel_m": -0.04635833289414265,
+          "measured_TCP_travel_m": -0.04546585191496599,
+          "command_to_measured_TCP_error_change_m": -0.0008924809791766575,
+          "measured_TCP_to_drawer_relative_travel_m": -0.00021287776985157159
+        },
+        {
+          "role": "FIT_ACCEL_REOPEN",
+          "status": "TRANSMISSION_FAILURE",
+          "measured_drawer_travel_m": 0.0018482822924852371,
+          "duration_s": 4.299999999999983,
+          "last_pad_normal_mean_n": [
+            0.4159087836742401,
+            1.4556138515472412
+          ],
+          "command_TCP_travel_m": 0.004336422023021591,
+          "measured_TCP_travel_m": 0.003577382066638879,
+          "command_to_measured_TCP_error_change_m": 0.0007590399563827122,
+          "measured_TCP_to_drawer_relative_travel_m": 0.0017290997741536418
+        }
+      ],
+      "guarded_park": true
+    },
+    {
+      "raw_normal_peaks_n": [
+        1.8918057680130005,
+        1.3862444162368774
+      ],
+      "segments": [
+        {
+          "role": "VALIDATION_OPEN_DISTINCT",
+          "status": "TARGET_REACHED",
+          "measured_drawer_travel_m": 0.03341365745291114,
+          "duration_s": 10.049999999999955,
+          "last_pad_normal_mean_n": [
+            1.3356971740722656,
+            0.14497749507427216
+          ],
+          "command_TCP_travel_m": 0.035229535121344246,
+          "measured_TCP_travel_m": 0.034577164098135826,
+          "command_to_measured_TCP_error_change_m": 0.0006523710232084201,
+          "measured_TCP_to_drawer_relative_travel_m": 0.0011635066452246878
+        },
+        {
+          "role": "FIT_EXPANDED_OPEN",
+          "status": "TRANSMISSION_FAILURE",
+          "measured_drawer_travel_m": 0.03678814694285393,
+          "duration_s": 10.299999999999955,
+          "last_pad_normal_mean_n": [
+            0.5822213888168335,
+            0.7494034767150879
+          ],
+          "command_TCP_travel_m": 0.03870909859793509,
+          "measured_TCP_travel_m": 0.038781816120546486,
+          "command_to_measured_TCP_error_change_m": -7.271752261139852e-05,
+          "measured_TCP_to_drawer_relative_travel_m": 0.0019936691776925586
+        }
+      ],
+      "guarded_park": true
+    }
+  ],
+  "final_safe_park": true,
+  "process": {
+    "returncode": 0,
+    "wall_s": 3405.5619316969533,
+    "actor_exited": true
+  },
+  "unloaded_agent_protocol_wait_s": 1292.8437487771735,
+  "planning_wall_s": 710.7855544397607,
+  "storage_bytes_before_integrity_index": 69199869,
+  "storage_bytes_by_category": {
+    "root": 9490863,
+    "validation_model_seals": 5335,
+    "attempt_inputs": 574493,
+    "visual_planning": 9362266,
+    "robot_io": 37032,
+    "sensor_assembly": 37886,
+    "plot_cache": 121541,
+    "asset": 1304940,
+    "telemetry": 14257862,
+    "agent_commands": 22126,
+    "agent_geometry": 3937698,
+    "agent_responses": 1313259,
+    "contact_evidence": 3625085,
+    "station": 229,
+    "model": 114809,
+    "rgbd": 23918053,
+    "source": 520006,
+    "contact_feedback": 556386
+  },
+  "private_integrity_index_sha256": "5143cbfb2780e0665cf1bc4cb141930ce1271f6e1150081dbf546bb7dd62b99b",
+  "authored_truth_revealed": false,
+  "independent_repetitions_started": 0,
+  "readiness_gate_open": false,
+  "next_revolute_spec_prepared_but_not_launched": true
+}

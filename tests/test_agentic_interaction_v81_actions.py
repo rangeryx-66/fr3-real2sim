@@ -66,7 +66,9 @@ class DeclarationTests(unittest.TestCase):
             self.assertFalse(redeclare(ops,c)['declared'])
             c['inspected_image_sha256']=hashlib.sha256((Path(d)/'AGENT_GRASP_PLAN_INSPECTION.png').read_bytes()).hexdigest()
             c['segments'][0]['coordinate_unit']='m'
-            with self.assertRaises(ValueError):redeclare(ops,c)
+            result=redeclare(ops,c)
+            self.assertFalse(result['declared'])
+            self.assertIn('DECLARATION_PREFLIGHT',result['reason'])
 
     def test_manual_pose_preload_and_incomplete_validation_are_rejected(self):
         with tempfile.TemporaryDirectory() as d:

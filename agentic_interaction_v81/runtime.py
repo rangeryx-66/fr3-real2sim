@@ -40,6 +40,7 @@ def runtime_class(original):
             self.base_active=False
             self.base_trace=[]
             self.base_generation=0
+            self.v81_contact_following_mode='legacy_window'
             from .motion_dwell import MotionDwell
             self.station_motion=MotionDwell(self.dt)
             self.read_base()
@@ -91,6 +92,25 @@ def runtime_class(original):
                     grasp_reference_present=self.grasp_reference is not None,
                     force_history_settled=bool(self.supervisor.force.settled()))))
             return boundary
+
+        def cartesian_step(self,goal,phase):
+            if (getattr(self,'v81_contact_following_mode','legacy_window')=='rate_consistent'
+                    and self.job['articulation_v7']['joint_type']=='prismatic'
+                    and self.transverse_unloading_enabled and self.grasp_reference is not None
+                    and self.policy.phase(phase)=='LOADED' and not self._decelerating
+                    and self.unloading is None):
+                from .contact_following import RateConsistentFollowing
+                if self.unloading_closure is None:
+                    raise RuntimeError('UNLOADING_CLOSURE_CONTEXT_UNAVAILABLE')
+                c=self.unloading_closure
+                self.unloading=RateConsistentFollowing(self.closure_policy,
+                    self.contact_evidence.axis,self.filtered_loads.maxlen,
+                    c.command[:3,3]-c.origin[:3,3])
+                self.event('V81_RATE_CONSISTENT_FOLLOWING',
+                    filtered_window_steps=self.filtered_loads.maxlen,
+                    integration_steps=1,original_centering_caps_preserved=True,
+                    jaw_command_feedback=False,actuator_authority_changed=False)
+            return super().cartesian_step(goal,phase)
 
         def evaluate_station(self,target):
             import numpy as np

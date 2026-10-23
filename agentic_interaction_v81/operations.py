@@ -62,6 +62,8 @@ def operations_class(original):
             return result
 
         def attempt(self,command):
+            if command.get('contact_following',getattr(self.r,'v81_contact_following_mode','legacy_window'))!=getattr(self.r,'v81_contact_following_mode','legacy_window'):
+                return dict(executed=False,recoverable=True,reason='REPLAN_CHANGED_CONTACT_FOLLOWING_MODE')
             if command.get('segments')!=getattr(self,'_v81_declared_chain',None):
                 return dict(executed=False,recoverable=True,reason='DECLARE_AND_VALIDATE_THIS_CHAIN_BEFORE_ACQUISITION')
             generation=len(self.g['observation_generations'])
@@ -70,16 +72,22 @@ def operations_class(original):
             result['observation_generation_v81']=generation
             self._last_contact_finished_world_s=float(self.r.world.current_time)
             result['station_generation']=self.r.base_generation
+            result['contact_following_v81']=getattr(self.r,'v81_contact_following_mode','legacy_window')
             return result
 
         def request_plan(self,command):
-            from interaction_runtime.segments import validate_action
+            from .declaration_preflight import check
+            from .contact_following import selection
+            actions=command.get('planned_segments')
+            try:
+                check(actions,self.articulation())
+                following=selection(command,self.r.job['articulation_v7']['joint_type'])
+            except (ValueError,TypeError,KeyError) as error:
+                return dict(plan=False,recoverable=True,
+                    reason='DECLARATION_PREFLIGHT:'+str(error),
+                    robot_action_executed=False,expensive_planning_started=False)
             if command.get('exploratory_task_reconsideration') and self.r.job['articulation_v7']['joint_type']!='prismatic':
                 return dict(plan=False,reason='TASK_RECONSIDERATION_IS_PRISMATIC_ONLY',recoverable=True)
-            actions=command.get('planned_segments')
-            if not isinstance(actions,list) or not actions:
-                return dict(plan=False,reason='PREDECLARE_FINITE_NATIVE_COORDINATE_CHAIN',recoverable=True)
-            for action in actions:validate_action(action);self.articulation().validate_target(action)
             self._v81_declared_chain=actions
             # A short first probe need not hide a later workspace limitation.
             # The Agent may request a separate known-kinematics planning horizon;
@@ -111,6 +119,9 @@ def operations_class(original):
                 from .action_declaration import ticket
                 self._v81_plan_ticket=ticket(self)
             else:self._v81_plan_ticket=None
+            if result.get('plan'):
+                self.r.v81_contact_following_mode=following
+                result['contact_following_v81']=following
             return result
 
         def redeclare_actions(self,command):

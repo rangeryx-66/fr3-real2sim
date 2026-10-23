@@ -29,6 +29,9 @@ def main():
     xarm7_native_gripper.OUT=Path(job['v8_robot_io'])
     from .runtime import runtime_class
     from .session import serve
+    if 'v81_contact_comparison' in job:
+        if job['v81_phase']!='engineering':raise ValueError('ENGINEERING_COMPARISON_CANNOT_RUN_AS_REPETITION')
+        from .contact_fixture import serve
     from interaction_runtime.probing_v7 import RuntimeV7
     from interaction_runtime.prismatic_v751 import PrismaticRuntimeV751
     from run_efficient_probing_v2 import main as run
