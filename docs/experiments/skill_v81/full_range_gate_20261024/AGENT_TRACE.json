@@ -1,0 +1,353 @@
+{
+  "traces": [
+    {
+      "episode_id": "v81_full_range_blind_revolute_01_runtime_repair",
+      "decisions": [
+        {
+          "sequence": 0,
+          "operation": "observe_view",
+          "reason": "Actually inspected initial wrist RGB/mask/depth/cloud: vertical handle partly occluded by robot near top; dark cabinet, no accepted SAM. Depth-proposal rectangles include panel and are rejected as handle geometry. Pixel(330,220) on visible bar gives current measured cue[.31483,-.33560,.42275]. Request right/top oblique camera centered40mm above that cue, expected to clear robot occlusion and expose full bar. View cue only, not manual grasp/mask.",
+          "inspected_image_sha256": "b7b32cacea5ba4fa5292a216bdb587eb06eb35a52e86b80f9d9b30185a491ab8",
+          "wall_s": 43.007646509911865,
+          "unloaded_wait_s": 158.75604183785617,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 1,
+          "operation": "observe_view",
+          "reason": "Inspected fresh oblique RGB/SAM/depth/cloud: full295.8mm vertical bar accepted, robot no longer obscures it. Current measured mask median[.31270,-.33597,.53254]. Request near-frontal slightly elevated view at median+[0,-470,+40]mm to complement measured side surface before contact planning; unseen rear stays uncertain.",
+          "inspected_image_sha256": "7862578d1d252b7f47408e66c5c7f44a894abec5f60336f65968173f9c6c5e05",
+          "wall_s": 32.94249142007902,
+          "unloaded_wait_s": 562.4764398569241,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 2,
+          "operation": "prepare_grasp",
+          "reason": "Inspected both fresh oblique/frontal wrist RGB masks depth clouds: full vertical bar measured, unknown rear explicit. Generate unchanged automatic native grasp with current-state whole approach/closing/arc/exit checks. Prioritize acceleration-rich12deg opening FIT, different-speed reverse to4deg, distinct predeclared10deg VALIDATION; horizon25deg is only a feasibility check, not a90deg command. No hidden physics, no archived pose.",
+          "inspected_image_sha256": "c6e5dfa0a8be989009537840a098ab1835afdb926573e4c7276d1b79e9f32c65",
+          "wall_s": 231.7699208408594,
+          "unloaded_wait_s": 76.56438021128997,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 3,
+          "operation": "attempt_grasp_and_probe",
+          "reason": "Inspected current measured-bar/native-finger grasp overlay and full native execution check: appropriate bilateral pad placement, measured/uncertain surfaces separate, return/approach and25deg arc feasible with joint margin. Explicitly approve original grasp/1s hold and finite12deg opening FIT\u21924deg reverse FIT\u2192distinct10deg VALIDATION if worker-ready, then guarded release/park. No force/physics/controller change.",
+          "inspected_image_sha256": "88e4952071186da489e48543c0efa0591dca50bd7700fa4b313afaea7d8b3eb6",
+          "wall_s": 407.6435040012002,
+          "unloaded_wait_s": 46.689134624786675,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 4,
+          "operation": "reobserve_and_replan",
+          "reason": "Inspected actual reverse contact/F-T/servo/rigid-arc plot:12.013deg opening and8.029deg reverse both target-reached; bounded~0.6mm arc-relative motion, load migrates but absent single-pad report is not proof of separation. Original safe park succeeded. Bidirectional FIT now qualified(167positive/152negative bins). Capture fresh wrist at actual3.985deg, replan current-state grasp for originally declared10deg independent validation BEFORE further range extension.",
+          "inspected_image_sha256": null,
+          "wall_s": 46.168976234737784,
+          "unloaded_wait_s": 50.467415981926024,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 5,
+          "operation": "observe_view",
+          "reason": "Inspected actual3.98deg reobservation: upper bar occluded again in coarse survey, no SAM accepted. Current visible-bar depth pixel318,230 maps[.31791,-.36549,.40856]; choose right/elevated view aimed100mm above visible lower cue to reveal whole current-state bar. Use new route and fresh geometry, never cached precontact pose.",
+          "inspected_image_sha256": "6288fb2b4ebaf29af52600716d16966e2ff5833a2bf2694e4564d06d66d3a9fa",
+          "wall_s": 45.37716360716149,
+          "unloaded_wait_s": 100.08322928100824,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 6,
+          "operation": "prepare_grasp",
+          "reason": "Inspected fresh current-state wrist RGB SAM depth cloud: entire vertical bar accepted without crop, measured 295.89mm, front/side observed and rear unknown. Generate a new automatic candidate at current 3.98deg. Execute previously declared 10deg independent validation FIRST using now-published bidirectional FIT; only after validation attempt expand to35deg and reverse to10deg if full native route permits.40deg is feasibility horizon, not commanded teleport or guaranteed range.",
+          "inspected_image_sha256": "3d2324979e35a42bab9a8307c89d39b2d4e1d6858db33bb4d38104c956cf6a06",
+          "wall_s": 196.7103717890568,
+          "unloaded_wait_s": 215.6682814839296,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 7,
+          "operation": "attempt_grasp_and_probe",
+          "reason": "Explicitly approve one fresh physical acquisition after inspecting new measured-surface plan: two native pads flank current vertical bar; native whole return/approach and40deg horizon passed, root/nonhandle closing collision absent. Now-ready qualified bidirectional model must be sealed before original10deg independent validation, then35deg opening and10deg reverse only if native protections permit. No grip change, no old pose, preserve all failures.",
+          "inspected_image_sha256": "cd754848e43903e07223fbadea4e5fe47daf334368c1165ee803328534df81aa",
+          "wall_s": 551.8630397790112,
+          "unloaded_wait_s": 91.86983849015087,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 8,
+          "operation": "observe",
+          "reason": "Current block physically completed independent validation,35deg opening and25deg reverse; safe exit reached native park. Capture fresh post-contact wrist state before selecting a safe base relocation for further range.",
+          "inspected_image_sha256": null,
+          "wall_s": 21.49860845739022,
+          "unloaded_wait_s": 112.99094492662698,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 9,
+          "operation": "evaluate_station",
+          "reason": "Inspected fresh unloaded wrist RGB-depth at native park (floor and fingers, no handle), and current attempt contact plot: actual35.02deg open/25.03deg reverse, bounded ~1.1mm rigid-arc residual and no hard stop. Current state9.99deg. Using same-scene measured bar plus permitted hinge prior, later arc moves rightward and outward; select264mm right/197mm outward XY station shift to improve later-angle workspace. Validate complete released/native route and destination; no cached station/grasp or object motion.",
+          "inspected_image_sha256": "da07308c2521be182e1780530801f031b40a73de1d1eacb79a44f977edf67154",
+          "wall_s": 20.21863394510001,
+          "unloaded_wait_s": 111.33289793506265,
+          "reported_status": "OFFLINE_ROUTE_CANDIDATE",
+          "reason_returned": null
+        },
+        {
+          "sequence": 10,
+          "operation": "relocate_station",
+          "reason": "Approve only the validated released/native whole-route relocation to XY[0.46,-0.73]. Actual25deg reverse, independent validation and unloaded park verified. Invalidate old views/grasp; fresh observation/new automatic grasp mandatory after actuator-driven carriage motion.",
+          "inspected_image_sha256": null,
+          "wall_s": 35.011440629605204,
+          "unloaded_wait_s": 42.669863370247185,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 11,
+          "operation": "reobserve_and_replan",
+          "reason": "Actual validated XY station relocation executed/reached with measured destination parking; old plans invalidated, door remains current9.99deg. Obtain fresh wrist RGB-D for new station/current door before proposing grasp for later-angle extension.",
+          "inspected_image_sha256": null,
+          "wall_s": 57.73847108986229,
+          "unloaded_wait_s": 19.9688380532898,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 12,
+          "operation": "observe_view",
+          "reason": "Inspected fresh post-relocation RGB SAM depth cloud: handle upper end self-occluded, no valid SAM mask. Visible lower bar at current1280x960 pixel318,260 gives measured world[.33232,-.40581,.38079]. Request elevated right-oblique viewpoint aiming130mm above this visible lower cue to reveal full current-state bar. New native route required.",
+          "inspected_image_sha256": "aacb39c7213cb418344373255dd0b87f67f042e8db4b3dd93ad6975de0330a52",
+          "wall_s": 42.64204734098166,
+          "unloaded_wait_s": 72.14251123275608,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 13,
+          "operation": "prepare_grasp",
+          "reason": "Inspected new-station wrist RGB SAM depth cloud: complete measured vertical bar, no crop, rear remains unknown. Prior independent validation and25deg reverse already physically complete. Generate new automatic grasp from these observations, check complete current-state approach and arc through90deg. New finite chain uses20deg distinct-profile validation first, then90deg FIT and30deg reverse if current native IK/collision and measured contact allow. No inherited grasp transform or fixed relocation schedule.",
+          "inspected_image_sha256": "498b2816bf8fe59fd01341c737e554ffdd22df7d02351127e5e27489ff2a6ffd",
+          "wall_s": 239.71516720298678,
+          "unloaded_wait_s": 52.35528079746291,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 14,
+          "operation": "attempt_grasp_and_probe",
+          "reason": "Explicitly approve fresh post-relocation physical regrasp from inspected new plan: pads flank observed bar at newly selected height/family[.3,0,0,0], current-state return/approach and90deg arc valid. Execute20deg distinct validation then90deg opening and60deg reverse through original actuators/protections, finite remaining resources and guarded exit. No grip increase; retain any partial/transmission/safety failure.",
+          "inspected_image_sha256": "ee23d2648023b219684b6da4628d51f99125ee3ba54bc46e297f9372f560368e",
+          "wall_s": 380.09311680682003,
+          "unloaded_wait_s": 70.790095992852,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 15,
+          "operation": "finish",
+          "reason": "End this valid same-scene revolute integration episode without retry. Actual max35.02deg,25.03deg reverse, two complete independent validations, one actual base relocation and three fresh acquisitions. Latest90deg continuation rejected by native arm link3 vs moving-door original31 collision at measured20.02deg; guarded release and park safe. Remaining ~8min normal work is below measured new relocation/observation/automatic planning/acquisition/exit cost. Preserve NOT PASS full-range outcome, seal online models/actions before evaluator truth. No tuning, no repetitions.",
+          "inspected_image_sha256": null,
+          "wall_s": 0.09264863934367895,
+          "unloaded_wait_s": 109.71959956176579,
+          "reported_status": null,
+          "reason_returned": null
+        }
+      ]
+    },
+    {
+      "episode_id": "v81_full_range_blind_prismatic_01",
+      "decisions": [
+        {
+          "sequence": 0,
+          "operation": "observe_view",
+          "reason": "Inspected actual initial wrist RGB SAM depth local cloud: two drawer handles visible; selected upper handle lies near top boundary and native known rail prior identifies upper moving part. Current upper-bar depth pixel640,20 gives observed cue[.49858,-.36147,.54082]. Choose oblique elevated view centered on this measured cue to recover full front/side geometry and separate bar/mount/panel; no hidden geometry/grasp.",
+          "inspected_image_sha256": "3a8ad672fabb18c748ae53ea28e374c2f3a33db45d09e4125456c6ac2af93d22",
+          "wall_s": 0.14445857517421246,
+          "unloaded_wait_s": 180.68286531884223,
+          "reported_status": null,
+          "reason_returned": "NO_VALIDATED_VIEW_ROUTE"
+        },
+        {
+          "sequence": 1,
+          "operation": "observe_view",
+          "reason": "Prior elevated oblique view was rejected by original IK/collision route validation with zero motion. Keep fresh current observation; choose centered lower camera with upward sightline to same observed upper bar, reducing reach/height demand while centering full target. No geometry or protection changes.",
+          "inspected_image_sha256": "3a8ad672fabb18c748ae53ea28e374c2f3a33db45d09e4125456c6ac2af93d22",
+          "wall_s": 42.65996960410848,
+          "unloaded_wait_s": 126.57506804075092,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 2,
+          "operation": "select_observed_target",
+          "reason": "Explicitly retain intended moving-part identity from fresh RGB-D/current SAM candidate; highest-score mask switched to neighboring upper drawer. New target association discards old unrelated geometry and keeps measured bar only; no GT mask or grasp.",
+          "inspected_image_sha256": "4399678d41a5a454f7b2ec4fadb24e664f7995e24c23c3757b6c84da24313d7e",
+          "wall_s": 4.131715549621731,
+          "unloaded_wait_s": 107.40596859622747,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 3,
+          "operation": "prepare_grasp",
+          "reason": "Actually inspected current tight SAM candidate on intended middle-row bar; explicit target association now excludes neighboring drawer. Front measured, rear uncertain. Generate automatic native-G1 candidate and complete closure/approach/return checked through80mm. Prioritize acceleration-rich60mm FIT and45mm reverse at different speed then independent50mm validation; initial legal requested preload1.0N and frozen default contact following.",
+          "inspected_image_sha256": "4399678d41a5a454f7b2ec4fadb24e664f7995e24c23c3757b6c84da24313d7e",
+          "wall_s": 51.93245581025258,
+          "unloaded_wait_s": 82.95553344255313,
+          "reported_status": null,
+          "reason_returned": "RuntimeError('BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED')"
+        },
+        {
+          "sequence": 4,
+          "operation": "prepare_grasp",
+          "reason": "First automatically ranked batch exhausted17 approach/arc branches with no physical acquisition; measured target bar has valid pad support but current-station executable route absent. Request existing bounded second candidate batch with different automatic depths/orientations, same current observed target, same1.0N preload and FIT/validation declaration. No cached grasp, no score/physics change. If exhausted, assess station rather than repeat identical search.",
+          "inspected_image_sha256": "4399678d41a5a454f7b2ec4fadb24e664f7995e24c23c3757b6c84da24313d7e",
+          "wall_s": 52.04580069798976,
+          "unloaded_wait_s": 153.47083031293005,
+          "reported_status": null,
+          "reason_returned": "RuntimeError('BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED')"
+        },
+        {
+          "sequence": 5,
+          "operation": "safe_release_retreat",
+          "reason": "Both permitted automatic candidate batches exhausted current-station approach/arc feasibility before physical acquisition. Preserve failures; move through guarded native-checked unloaded parking before assessing actual base relocation. No contact loading, no altered grasp/physics or safety reset.",
+          "inspected_image_sha256": null,
+          "wall_s": 48.8227002909407,
+          "unloaded_wait_s": 61.985604155343026,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 6,
+          "operation": "observe",
+          "reason": "Guarded native release/retreat reached measured native-rest parking with zero pad loads and drawer0m. Capture current post-parking wrist evidence before choosing safe outward station relocation; both rejected planning batches preserved, zero physical acquisitions.",
+          "inspected_image_sha256": null,
+          "wall_s": 40.910587300080806,
+          "unloaded_wait_s": 65.51048788474873,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 7,
+          "operation": "relocate_observe_prepare",
+          "reason": "Inspected fresh unloaded parking wrist RGB-depth plus current intended bar geometry from this scene. Two automatic grasp batches failed current-station approach/arc, zero acquisitions. Known rail points outward -Y; choose187mm outward/54mm right base shift to increase approach and future150mm travel workspace. Validate/execute full released/native carriage route, capture fresh wrist observations and tentatively regenerate automatic candidates. Agent must inspect NEW RGB-D and plan before any physical approval; no cached grasp or target reset.",
+          "inspected_image_sha256": "cc172761b0f5cced701d9116c514b05f952d6d4bed2135dd07db0a109993cffe",
+          "wall_s": 264.8199856192805,
+          "unloaded_wait_s": 45.11715669604018,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 8,
+          "operation": "select_observed_target",
+          "reason": "Reject tempting collision-feasible plan because it changed observed target identity after relocation. Explicitly retain current measured target atz.54; new automatic candidate/complete execution check required. No native/GT handle point or cached grasp used.",
+          "inspected_image_sha256": "04a1645d22a242af322aa5d9d77957187aabb54705dde378e54c2c7427967ce2",
+          "wall_s": 8.196790548972785,
+          "unloaded_wait_s": 153.80334367090836,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 9,
+          "operation": "select_observed_target",
+          "reason": "Agent revises unverified target association after two exhausted higher-bar plan batches and current native-feasible lower-bar proposal. Use fresh current SAM geometry, regenerate automatic plan and inspect it again; no stale plan approval, no GT pose, no physical execution yet.",
+          "inspected_image_sha256": "04a1645d22a242af322aa5d9d77957187aabb54705dde378e54c2c7427967ce2",
+          "wall_s": 5.2635666518472135,
+          "unloaded_wait_s": 201.47386407805607,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 10,
+          "operation": "prepare_grasp",
+          "reason": "Current lower-bar observation hypothesis selected explicitly after visual association uncertainty; regenerate automatic grasp and complete native closing/current-state approach/80mm arc checks at actual relocated base. Same declared60mm pull/15mm reverse/50mm independent validation, same1.0N requested preload. Measured selected-joint progress remains mandatory; previous automatic plan is invalidated and never reused.",
+          "inspected_image_sha256": "04a1645d22a242af322aa5d9d77957187aabb54705dde378e54c2c7427967ce2",
+          "wall_s": 160.9379211217165,
+          "unloaded_wait_s": 40.346898179035634,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 11,
+          "operation": "attempt_grasp_and_probe",
+          "reason": "Explicitly approve first physical acquisition after inspecting freshly regenerated current lower-bar plan: native pads span measured bar, complete current released-finger closing/return/approach and80mm arc passed. Actual moving-joint progress must confirm target/transmission. Same1.0N requested preload, frozen default following;60mm acceleration-rich pull,15mm different-speed reverse, independently declared50mm validation only if FIT ready. Preserve mismatch/failure and guarded park.",
+          "inspected_image_sha256": "db858b7c1c2487a56ad03ca4ad8017fbea24a905bb99a0ad6bc16b8a4906a64f",
+          "wall_s": 452.0607468462549,
+          "unloaded_wait_s": 65.73662819201127,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 12,
+          "operation": "reobserve_and_replan",
+          "reason": "First physical acquisition/1s hold confirmed selected-joint pulling17.28mm, then genuine persistent sliding-stall; hard latch absent, guarded release and measured native parking reached. Preserve failed60mm target and qualified FIT prefix. Obtain fresh current-state wrist RGB-D for recovery; inspect contact geometry/servo-vs-relative-slip/F-T before choosing new feasible candidate or legal preload. No scene/object reset.",
+          "inspected_image_sha256": null,
+          "wall_s": 63.13393679028377,
+          "unloaded_wait_s": 314.83840548759326,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 13,
+          "operation": "prepare_grasp",
+          "reason": "After actual17.28mm pull/stall, inspected fresh RGB-D, full-rate loads/servo-vs-relative slip and native contact locations: ~2.6mm slip jump, ~2N transverse vs.45N useful rail load, pad-edge migration. Remain1.0N requested preload; choose a new automatically feasible candidate with existing bounded transverse-unloading option, no new controller/authority. Begin reverse FIT from actual17mm to4mm, varied-speed opening FIT to45mm, newly independently declared distinct reverse validation to12mm; these are predeclared recovery actions, not relabelled original failed60mm.",
+          "inspected_image_sha256": "81bfae01fc006843465ef20dfe59e8661983e3c23d3c1cb888e462bbf784395f",
+          "wall_s": 122.92536606825888,
+          "unloaded_wait_s": 103.06814048066735,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 14,
+          "operation": "attempt_grasp_and_probe",
+          "reason": "Explicitly approve one same-scene recovery regrasp after fresh actual wrist/depth/mask and contact-feedback inspection. New automatic family[0,0,0,0] differs from first[.3,...] and passes current17.28mm full closing/return/approach/55mm arc checks. Retain1.0N requested preload; invoke existing bounded transverse unloading due measured lateral bias/slip, legacy contact-following unchanged. Reverse FIT to4mm, opening FIT45mm and distinct predeclared reverse validation12mm; preserve any failure, no scene reset or source/control tuning.",
+          "inspected_image_sha256": "2b7f3c42eab120f895fe4dd7f62da5a217839955b42be340141f7d1fbd74e395",
+          "wall_s": 392.72723021078855,
+          "unloaded_wait_s": 103.3281860332936,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 15,
+          "operation": "reobserve_and_replan",
+          "reason": "Second physical acquisition/hold succeeded but reverse startup produced measured tangential slip with essentially no drawer progress, hard latch absent and guarded parking reached. Preserve second failure. Obtain fresh wrist RGB-D of actual17.2mm drawer state and inspect newest contact feedback before final recovery/exit decision. Remaining normal resources must cover any useful FIT/independent validation and guarded exit, not merely another acquisition.",
+          "inspected_image_sha256": null,
+          "wall_s": 67.39667361415923,
+          "unloaded_wait_s": 394.11418211180717,
+          "reported_status": null,
+          "reason_returned": null
+        },
+        {
+          "sequence": 16,
+          "operation": "finish",
+          "reason": "End valid blind prismatic integration without scene retry. Inspected fresh final wrist RGB/SAM/depth/cloud and attempt2 native contact/FT plots. First acquisition pulled17.28mm then real stall/slip; same-scene fresh automatic regrasp plus existing transverse unloading held bilaterally but reverse startup produced~1.7mm relative TCP slip with only~0.06mm object change. Both guarded releases/parking succeeded, hard latch absent. Remaining normalwork~689s vs measured recovery-preparation/acquisition~680s alone, insufficient recovery PLUS qualified bidirectional FIT/complete independent validation and range extension without borrowing600s exit reserve. Preserve NOT PASS, validation N/A, no model-truth reveal until actor/Agent seal; no grip escalation/tuning/repetitions.",
+          "inspected_image_sha256": "9f4996a58ca56eed42e42baaa9ececb99e1f43b6ea85c9714994703295accde0",
+          "wall_s": 47.524938920047134,
+          "unloaded_wait_s": 75.66297974903136,
+          "reported_status": null,
+          "reason_returned": null
+        }
+      ]
+    }
+  ],
+  "corrections_and_limits": [
+    "Original Agent reasoning is retained, including errors and subsequent corrections.",
+    "R: requested90deg planning returned best planned endpoint81.1deg, not full90deg feasibility. A later native successor check correctly rejected link3/original31. Planned81.1deg is NOT actual motion.",
+    "P: Agent initially overinterpreted joint-anchor height as handle association and repeatedly retained a different visible bar. This was corrected before first acquisition; native selected-joint motion17.28mm confirmed the lower-bar hypothesis.",
+    "P: approval11 reason mistakenly mentioned first family[.3,...]; actual archived family was[0,0,180,0]. Recovery actual family[0,0,0,0]. Original mistaken reason is not edited.",
+    "P: transverse_unloading=true selected an existing frozen V7.5.1 option; no control math, authority, physical resistance or safety setting changed.",
+    "Resource-based final decisions are NOT global-budget exhaustion or hard safety stops."
+  ],
+  "raw_RGBD_and_FT_not_published": true
+}
