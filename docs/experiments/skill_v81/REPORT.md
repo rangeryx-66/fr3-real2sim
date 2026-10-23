@@ -1,9 +1,12 @@
 # V8.1 engineering progress — NOT PASS
 
-Latest bounded recovery work and its **incomplete physical recovery** are in
-[RECOVERY_FIRST_REPORT.md](RECOVERY_FIRST_REPORT.md). Full-range testing remains
-stopped. Post-relocation regrasp, repeated transmission and new preload A/B are
-not claimed complete; no independent repetition has started.
+Latest bounded recovery gate: **physical post-relocation regrasp PASS**, followed
+by a separate complete short FIT/independent VALIDATION regression. See
+[DEBUG_RECOVERY_GATE_REPORT.md](DEBUG_RECOVERY_GATE_REPORT.md). This does not
+complete V8.1 full-range acceptance. Full-range testing, new preload A/B and the
+four independent repetitions remain stopped. Historical incomplete recovery
+and its failures remain unchanged in
+[RECOVERY_FIRST_REPORT.md](RECOVERY_FIRST_REPORT.md).
 
 ## Recovery-first stop and P06 diagnosis (2026-10-23)
 
