@@ -1,0 +1,325 @@
+{
+  "episode_id": "v81_engineering_revolute_02",
+  "status": "FULL_RANGE_ENGINEERING_INCOMPLETE_NOT_PASS",
+  "phase": "engineering_not_independent_repetition",
+  "source_commit": "dd83cb5a21da60490fbd44df3161d9cb05e93093",
+  "joint_type": "revolute",
+  "maximum_actual_opening_deg": 63.086079212149805,
+  "goal_deg": 90.0,
+  "largest_completed_closing_deg": 31.579755287958307,
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_SUPPORTED_OPEN_ACCEL",
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "SUSTAINED_LOW_TRANSMISSION",
+      "start_rad": -7.886997803983886e-13,
+      "end_rad": 0.3926684558391571,
+      "net_deg": 22.498245267548036,
+      "target_reached": false
+    },
+    {
+      "id": 2,
+      "role": "FIT_RECOVERY_OPEN_ACCEL",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start_rad": 0.3925632834434509,
+      "end_rad": 1.1009869575500488,
+      "net_deg": 40.58968663345932,
+      "target_reached": true
+    },
+    {
+      "id": 3,
+      "role": "FIT_RECOVERY_REVERSE_SLOW",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start_rad": 1.1009869575500488,
+      "end_rad": 0.5498162508010864,
+      "net_deg": -31.579755287958307,
+      "target_reached": true
+    },
+    {
+      "id": 4,
+      "role": "VALIDATION_INDEPENDENT_REOPEN",
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "start_rad": 0.5494555234909058,
+      "end_rad": 1.0002533197402954,
+      "net_deg": 25.82881113888844,
+      "target_reached": true
+    }
+  ],
+  "physical_acquisitions": 3,
+  "wrist_agent_checkpoints": 8,
+  "pregrasp_checkpoints": 3,
+  "base_relocations": [
+    {
+      "reached": true,
+      "executed": true,
+      "actual_base": [
+        0.44907063245773315,
+        -0.8396046757698059,
+        -0.09999990463256836,
+        -0.7952486758187507
+      ],
+      "initial_base": [
+        0.19605375826358795,
+        -0.5328198075294495,
+        -0.10000000149011612,
+        -0.7952486758187507
+      ],
+      "position_error_m": 3.707689063690769e-08,
+      "object_coordinate": 0.0,
+      "object_joint_command": false,
+      "verified_destination_unloaded_park": true,
+      "native_route_samples": null,
+      "prior_executable_inputs_invalidated": [
+        "view_routes",
+        "visual_plan",
+        "approach",
+        "closing_path",
+        "execution_approval"
+      ]
+    }
+  ],
+  "qualified_FIT": {
+    "schema": "v81-measured-FIT-readiness",
+    "estimator_version": "V7-SI-common-SG121",
+    "episode_id": "v81_engineering_revolute_02",
+    "numeric_index_sha256": "5366444d86df14d434eb95913062e7be0fb2774d3d2f3417db1e09b16f0d4f62",
+    "model_sha256": "39ca52e0b0c67c7b107de38a6607a68cb97efb44da96bcdad9641195e680ea2f",
+    "latest_completed_FIT_id": 3,
+    "groups": [
+      {
+        "block": "FIT_SUPPORTED_OPEN_ACCEL_01#0",
+        "eligible_samples": 7319,
+        "regression_bins": 306,
+        "positive_bins": 306,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.004603978246450424,
+          0.3851696848869324
+        ]
+      },
+      {
+        "block": "FIT_RECOVERY_OPEN_ACCEL_02#0",
+        "eligible_samples": 10108,
+        "regression_bins": 422,
+        "positive_bins": 422,
+        "negative_bins": 0,
+        "coordinate_support_native": [
+          0.3974727392196655,
+          1.0971200466156006
+        ]
+      },
+      {
+        "block": "FIT_RECOVERY_REVERSE_SLOW_03#0",
+        "eligible_samples": 10659,
+        "regression_bins": 445,
+        "positive_bins": 0,
+        "negative_bins": 445,
+        "coordinate_support_native": [
+          0.5515603423118591,
+          1.0972782373428345
+        ]
+      }
+    ],
+    "positive_bins": 728,
+    "negative_bins": 445,
+    "distinct_eligible_trajectories": 3,
+    "qualified_bidirectional": true,
+    "rule": "At least eight production regression bins in each measured velocity direction and two distinct FIT trajectories; experimental readiness, not a physical safety threshold",
+    "validation_used": false,
+    "production_coefficients_modified": false,
+    "raw_data_loaded_twice": false,
+    "processing_wall_s": 12.871499774046242,
+    "information": {
+      "samples": 1173,
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        1.5457977265871714,
+        0.7230346922635325,
+        0.045492264389081744
+      ],
+      "scaled_condition": 33.97935335481271,
+      "acceleration_rms_native": 0.021111831150633215,
+      "independent_acceleration_rms_native": 0.021111147731910113,
+      "velocity_rms_native": 0.014884651142655345,
+      "velocity_p05_p95_native": [
+        -0.016421989162821535,
+        0.023227654278363347
+      ],
+      "direction_counts": {
+        "positive": 728,
+        "negative": 445
+      },
+      "estimated_parameters": null,
+      "hidden_dynamics_used": false,
+      "interpretation": "Regressor opportunity only. Compare measured acceleration sensitivity with phase-matched compensated F/T residual; rank alone cannot establish physical parameter accuracy."
+    }
+  },
+  "sealed_validation": [
+    {
+      "seal_file": "04.json",
+      "model_sha256": "f174de055c3615dd3d6f63adbe2e17abec5fc8fb558be6593d8248b05273ae67",
+      "parameters": [
+        0.12928984992570075,
+        0.27649047057722265,
+        0.03030515796386759,
+        0.04065942069967849,
+        0.01720947350718451,
+        0.026279146612974355,
+        0.01915903043203777,
+        0.014465739346751542
+      ],
+      "conditional_std": [
+        0.0016883475583888091,
+        0.008994285332929572,
+        0.0007711938262181974,
+        0.0005969748099671141,
+        0.00048079253700547564,
+        0.0002770087152001601,
+        0.0005096100591992681,
+        0.0007527804145995846
+      ],
+      "heldout": {
+        "VALIDATION_INDEPENDENT_REOPEN_04#0": {
+          "status": "predicted",
+          "effort_rmse": 0.0004148424678559779,
+          "coordinate_rmse": 0.012663071054542613,
+          "velocity_rmse": 0.0015036957564322237,
+          "final_coordinate_error": -0.00018636780532432784,
+          "outside_FIT_support": false,
+          "samples": 7812,
+          "duration_s": 32.54583333333335,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction",
+          "coordinate_rmse_deg": 0.7255405270995684,
+          "velocity_rmse_deg_s": 0.08615542051529823
+        }
+      },
+      "validation_used_for_fit": false
+    }
+  ],
+  "complete_independent_validation_segments": 1,
+  "final_safe_park": true,
+  "hard_stop_records": 0,
+  "informational_warning_records": 0,
+  "process": {
+    "returncode": 0,
+    "wall_s": 4978.294284800999,
+    "actor_exited": true
+  },
+  "profile": {
+    "wall_s": 4974.658538687974,
+    "simulation_s": 662.25,
+    "simulation_per_wall_s": 0.13312471496278075,
+    "cost_wall_s": {
+      "initialization": 19.718454630114138,
+      "trajectory_planning": 18.116485327947885,
+      "actuation": 229.41349029773846,
+      "physics_and_contact_callback": 600.0310263542924,
+      "state_and_FT": 328.6362135731615,
+      "collision_and_safety": 94.10134965623729,
+      "buffered_evidence": 139.73198441322893,
+      "RGBD_SAM3_and_incremental_geometry": 172.1261401232332,
+      "IK_and_view_planning": 0.8639700699131936,
+      "grasp_ranking_and_IK": 807.7167828818783,
+      "render_and_video": 0.8944688809569925,
+      "Pink_IK": 15.320626671193168,
+      "command_collision_queries": 19.530696386937052,
+      "export": 0.04241234180517495
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 19.718454630114138,
+      "trajectory_planning": 18.116485327947885,
+      "actuation": 229.41349029773846,
+      "physics_and_contact_callback": 600.0310263542924,
+      "state_and_FT": 328.6362135731615,
+      "collision_and_safety": 94.10134965623729,
+      "buffered_evidence": 139.73198441322893,
+      "RGBD_SAM3_and_incremental_geometry": 172.1261401232332,
+      "IK_and_view_planning": 0.8639700699131936,
+      "grasp_ranking_and_IK": 807.7167828818783,
+      "render_and_video": 0.8944688809569925,
+      "Pink_IK": 15.320626671193168,
+      "command_collision_queries": 19.530696386937052,
+      "export": 0.04241234180517495
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 28,
+      "actuation": 158940,
+      "physics_and_contact_callback": 158940,
+      "state_and_FT": 158940,
+      "collision_and_safety": 158940,
+      "buffered_evidence": 158940,
+      "RGBD_SAM3_and_incremental_geometry": 8,
+      "IK_and_view_planning": 4,
+      "grasp_ranking_and_IK": 4,
+      "render_and_video": 30,
+      "Pink_IK": 40026,
+      "command_collision_queries": 5004,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 20.18379957904108,
+      "PREGRASP": 1267.5599564474542,
+      "RELEASE": 43.20000588637777,
+      "CLEARANCE_RETREAT": 33.07450471655466,
+      "SAFE_PARK_MOTION": 212.9538023355417,
+      "agent_return_to_execution_start": 1.3786013450007886,
+      "APPROACH": 22.746499265776947,
+      "SLOW_CLOSE": 419.84075605054386,
+      "CENTER": 20.618574279826134,
+      "LOW_PRELOAD": 3.620522669982165,
+      "FORCE_HOLD": 7.53670732374303,
+      "OPEN_CONTINUE": 393.5303717087954
+    },
+    "unaccounted_wall_s": 2528.4144370793365,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "agent_unloaded_wait_wall_s": 2199.566203204682,
+  "optional_diagnostic_issues": [
+    [
+      "record_frame",
+      "IndexError('too many indices for array: array is 0-dimensional, but 1 were indexed')"
+    ]
+  ],
+  "storage_bytes_by_category": {
+    "root": 31825623,
+    "validation_model_seals": 8513,
+    "visual_planning": 9039012,
+    "robot_io": 37029,
+    "sensor_assembly": 37881,
+    "plot_cache": 121541,
+    "asset": 734953,
+    "telemetry": 29892985,
+    "agent_commands": 24646,
+    "agent_geometry": 4878787,
+    "agent_responses": 10756864,
+    "station": 229,
+    "model": 130014,
+    "rgbd": 39263867,
+    "station_states": 328825,
+    "source": 477517,
+    "contact_feedback_v81": 294270
+  },
+  "total_storage_bytes_before_integrity_index": 127852556,
+  "private_evidence_index_sha256": "ffcd4d49abae3413c085a519d2a458fd7b0b0191a9a8f108fb7a6ee9a1f668da",
+  "hidden_authored_parameters_revealed": false,
+  "authored_parameter_errors": null,
+  "independent_effective_PhysX_inertia_verification": false,
+  "limitations": [
+    "known hinge/state",
+    "development object and unchanged original physics, not blind new dynamics",
+    "ideal virtual wrist load cell",
+    "simulated wrist mount and XY stage",
+    "conditional uncertainty excludes contact/systematic error"
+  ]
+}
