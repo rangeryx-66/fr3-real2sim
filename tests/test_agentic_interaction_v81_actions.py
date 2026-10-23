@@ -21,7 +21,7 @@ class DeclarationTests(unittest.TestCase):
         (p/'V8_PLAN_INSPECTION_PROVENANCE.json').write_text(json.dumps(dict(sha256=sha,
             plan_sha256=hashlib.sha256(plan.read_bytes()).hexdigest())))
         ops=SimpleNamespace(current_plan_ready=True,acquisitions=0,
-            r=SimpleNamespace(output=p,base_generation=0),
+            r=SimpleNamespace(output=p,base_generation=0,job=dict(articulation_v7=dict(joint_type='revolute'))),
             g=dict(agent_observations=[dict(accepted_for_geometry=True,folder=str(view))]),
             articulation=lambda:Articulation('revolute',(0,0,1),(0,0,0),(0,1.75)),
             validate_execution=lambda:dict(valid=True),_v81_declared_chain=['previous'])
@@ -75,6 +75,28 @@ class DeclarationTests(unittest.TestCase):
                 with self.subTest(extra=extra),self.assertRaises(ProtocolError):validate(dict(c,**extra),1)
             c['segments'][0]['fit_intervals_s']=[[0,10]]
             with self.assertRaises(ProtocolError):validate(c,1)
+
+    def test_prismatic_inherited_handshake_receives_same_revalidated_chain(self):
+        with tempfile.TemporaryDirectory() as d:
+            ops,c=self.fixture(d);ops.r.job['articulation_v7']['joint_type']='prismatic'
+            ops.g['v75_declared_chain']=['previous']
+            result=redeclare(ops,c)
+            self.assertTrue(result['declared'])
+            self.assertTrue(result['original_prismatic_declaration_synchronized'])
+            self.assertEqual(ops._v81_declared_chain,ops.g['v75_declared_chain'])
+            self.assertEqual(c['segments'],ops.g['v75_declared_chain'])
+
+    def test_missing_prismatic_owner_state_fails_closed(self):
+        with tempfile.TemporaryDirectory() as d:
+            ops,c=self.fixture(d);ops.r.job['articulation_v7']['joint_type']='prismatic'
+            self.assertEqual(redeclare(ops,c)['reason'],'ORIGINAL_PRISMATIC_DECLARATION_MISSING')
+            self.assertEqual(ops._v81_declared_chain,['previous'])
+
+    def test_revolute_does_not_author_or_change_prismatic_owner_state(self):
+        with tempfile.TemporaryDirectory() as d:
+            ops,c=self.fixture(d);ops.g['v75_declared_chain']=['untouched']
+            self.assertTrue(redeclare(ops,c)['declared'])
+            self.assertEqual(ops.g['v75_declared_chain'],['untouched'])
 
 
 if __name__=='__main__':unittest.main()

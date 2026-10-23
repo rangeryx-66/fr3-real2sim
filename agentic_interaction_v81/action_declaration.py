@@ -43,10 +43,18 @@ def redeclare(ops, command):
     checked = ops.validate_execution()
     if not checked.get('valid'):
         return dict(declared=False, reason='MEASURED_STATE_EXECUTION_REVALIDATION_FAILED', check=checked)
+    prismatic = ops.r.job['articulation_v7']['joint_type'] == 'prismatic'
+    if prismatic and 'v75_declared_chain' not in ops.g:
+        return dict(declared=False, reason='ORIGINAL_PRISMATIC_DECLARATION_MISSING')
+    # The unchanged V7.5 owner independently checks this declaration, then
+    # reruns native whole-chain validation and admission at actual acquisition.
+    # Synchronize its input; never bypass its attempt/closing/load checks.
+    if prismatic:ops.g['v75_declared_chain'] = actions
     ops._v81_declared_chain = actions
     return dict(declared=True, segments=actions, robot_motion_executed=False,
                 reused_only_current_unexecuted_measured_geometry_plan=True,
                 plan_sha256=ops._v81_plan_ticket['plan_sha256'],
                 measured_state_revalidated=True,
+                original_prismatic_declaration_synchronized=prismatic,
                 each_successor_requires_original_live_check=True,
                 scores_controllers_physics_and_safety_unchanged=True)
