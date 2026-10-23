@@ -28,6 +28,16 @@ def validate(config):
     return data
 
 
+def check_declaration(config,job):
+    from interaction_runtime.articulation_v7 import Articulation
+    from .declaration_preflight import check
+    # Target-unit/range validation needs no live object transform or first
+    # sensor row. This dummy frame is NEVER supplied to motion or estimation.
+    prior=Articulation(job['articulation_v7']['joint_type'],(1,0,0),(0,0,0),
+                       tuple(job['articulation_v7']['limits_native']))
+    return check(config['segments'],prior)
+
+
 def serve(r):
     import copy
     import numpy as np
@@ -50,7 +60,7 @@ def serve(r):
             controlled_observed_failed_fixture=True,
             comparison_fixture_sha256=config['fixture_sha256'])
         atomic_json(provenance,record)
-        actions=config['segments'];check(actions,ops.articulation())
+        actions=config['segments'];check_declaration(config,r.job)
         if config['geometry']=='same_section_zero_insertion':
             # Exact same-section/roll/pitch member of the FROZEN bar family:
             # T.pos = anchor + observed_normal * insertion - R * pad_offset.
