@@ -96,7 +96,15 @@ def operations_class(original):
             result.update(planning_horizon_native=horizon,
                 executable_first_target_native=actions[0]['target_q'],
                 planning_horizon_is_not_motion=True)
+            if result.get('plan') and hasattr(self.r,'output'):
+                from .action_declaration import ticket
+                self._v81_plan_ticket=ticket(self)
+            else:self._v81_plan_ticket=None
             return result
+
+        def redeclare_actions(self,command):
+            from .action_declaration import redeclare
+            return redeclare(self,command)
 
         def evaluate_station(self,command):
             if not command.get('reason') or not command.get('inspected_image_sha256'):
