@@ -4,12 +4,24 @@ import unittest
 import copy
 from pathlib import Path
 from types import SimpleNamespace
-from agentic_interaction_v81.integration import apply, progress, ACTIVE_PROFILE, PRISMATIC_ACTIVE_PROFILE
+from agentic_interaction_v81.integration import apply, progress, ACTIVE_PROFILE, PRISMATIC_ACTIVE_PROFILE, REVOLUTE_VALIDATION_PROFILE
 from agentic_interaction_v81 import task_recovery
 from test_agentic_interaction_v81_task_recovery import fixture
 
 
 class PrismaticRecoveryProfileTests(unittest.TestCase):
+    def test_revolute_validation_profile_adds_only_recording_to_original_r02(self):
+        original=dict(articulation_v7=dict(joint_type='revolute'))
+        validation=copy.deepcopy(original)
+        apply(dict(phase='engineering',integration_profile=ACTIVE_PROFILE),original)
+        apply(dict(phase='engineering',integration_profile=REVOLUTE_VALIDATION_PROFILE),validation)
+        self.assertEqual(validation.pop('v83_continuous_video_hz'),5)
+        self.assertEqual(validation,original)
+        self.assertEqual(validation['v81_task_goal_native'],math.pi/2)
+        self.assertEqual(validation['v81_minimum_reverse_native'],math.radians(10))
+        with self.assertRaisesRegex(ValueError,'REQUIRES_REVOLUTE'):
+            apply(dict(phase='engineering',integration_profile=REVOLUTE_VALIDATION_PROFILE),dict(articulation_v7=dict(joint_type='prismatic')))
+
     def test_video_override_changes_only_recording_mode(self):
         from agentic_interaction_v81.video_evidence import configure
         with tempfile.TemporaryDirectory() as directory:

@@ -17,6 +17,15 @@ camera pixels enter online planning. `V83_VIDEO_EVIDENCE.json` records the
 recording-only configuration override; physical policy values are unchanged.
 Paused perception/planning has no advancing physical state to record.
 
+## V8.3 independent revolute model validation
+
+The opt-in `v83_revolute_model_validation_v1` profile has exactly the existing
+R02 recovery goal (90 degrees), post-goal reverse requirement (10 degrees),
+units and protection. Its sole extra job setting is 5 Hz continuous private
+evidence recording. The original `v81_active_recovery_v1` behavior is unchanged.
+The separately frozen V8.3 candidate/baseline comparison is preregistered and
+evaluated offline; it does not replace the controller or online numeric worker.
+
 ## Active R02 recovery experiment (2026-10-24)
 
 The separately authorized engineering profile `v81_active_recovery_v1` targets

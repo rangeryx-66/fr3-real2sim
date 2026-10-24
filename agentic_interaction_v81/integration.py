@@ -5,6 +5,7 @@ from agent_command_protocol_v12 import atomic_json
 PROFILE='v81_force_replan_validation_v1'
 ACTIVE_PROFILE='v81_active_recovery_v1'
 PRISMATIC_ACTIVE_PROFILE='v83_prismatic_active_recovery_v1'
+REVOLUTE_VALIDATION_PROFILE='v83_revolute_model_validation_v1'
 
 
 def apply(spec,job):
@@ -12,13 +13,15 @@ def apply(spec,job):
     if profile is None:
         if spec.get('preload_study'):raise ValueError('PRELOAD_STUDY_REQUIRES_INTEGRATED_PROFILE')
         return
-    if profile not in (PROFILE,ACTIVE_PROFILE,PRISMATIC_ACTIVE_PROFILE) or spec.get('phase')!='engineering':
+    if profile not in (PROFILE,ACTIVE_PROFILE,PRISMATIC_ACTIVE_PROFILE,REVOLUTE_VALIDATION_PROFILE) or spec.get('phase')!='engineering':
         raise ValueError('EXPLICIT_INTEGRATED_ENGINEERING_PROFILE_REQUIRED')
     if 'preload_study' in spec and type(spec['preload_study']) is not bool:
         raise ValueError('BOOLEAN_PRELOAD_STUDY_REQUIRED')
     job.update(v81_integrated_repair=True,v81_preload_study=bool(spec.get('preload_study',False)))
-    if profile==ACTIVE_PROFILE:
+    if profile in (ACTIVE_PROFILE,REVOLUTE_VALIDATION_PROFILE):
         job.update(v81_active_recovery=True,v81_minimum_reverse_native=math.radians(10.))
+    if profile==REVOLUTE_VALIDATION_PROFILE:
+        job['v83_continuous_video_hz']=5
     if profile==PRISMATIC_ACTIVE_PROFILE:
         job.update(v81_active_recovery=True,v81_minimum_reverse_native=.04,
                    v83_continuous_video_hz=5)
@@ -30,6 +33,8 @@ def apply(spec,job):
         joint=job.get('articulation_v7',{}).get('joint_type')
         if profile==ACTIVE_PROFILE and joint and joint!='revolute':
             raise ValueError('ACTIVE_RECOVERY_PROFILE_CURRENTLY_REVOLUTE_ONLY')
+        if profile==REVOLUTE_VALIDATION_PROFILE and joint and joint!='revolute':
+            raise ValueError('V83_REVOLUTE_VALIDATION_PROFILE_REQUIRES_REVOLUTE')
         if profile==PRISMATIC_ACTIVE_PROFILE and joint and joint!='prismatic':
             raise ValueError('V83_PRISMATIC_PROFILE_REQUIRES_PRISMATIC')
         if joint:job['v81_task_goal_native']=(.18 if profile==PRISMATIC_ACTIVE_PROFILE
