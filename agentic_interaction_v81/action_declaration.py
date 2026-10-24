@@ -53,6 +53,13 @@ def redeclare(ops, command):
     if not checked.get('valid'):
         return dict(declared=False, reason='MEASURED_STATE_EXECUTION_REVALIDATION_FAILED', check=checked)
     prismatic = ops.r.job['articulation_v7']['joint_type'] == 'prismatic'
+    revolute_chain = None
+    if not prismatic and ops.r.job.get('v81_integrated_repair'):
+        from .revolute_certificate import evaluate
+        revolute_chain=evaluate(ops.g,plan,actions,ops.r.policy,ops.r.c,ops.r.solver)
+        if not revolute_chain['valid']:
+            return dict(declared=False,reason='REDECLARED_REVOLUTE_CHAIN_REJECTED',
+                native_check=revolute_chain,robot_motion_executed=False)
     if prismatic and 'v75_declared_chain' not in ops.g:
         return dict(declared=False, reason='ORIGINAL_PRISMATIC_DECLARATION_MISSING')
     # The unchanged V7.5 owner independently checks this declaration, then
@@ -65,5 +72,6 @@ def redeclare(ops, command):
                 plan_sha256=ops._v81_plan_ticket['plan_sha256'],
                 measured_state_revalidated=True,
                 original_prismatic_declaration_synchronized=prismatic,
+                revolute_chain=revolute_chain,
                 each_successor_requires_original_live_check=True,
                 scores_controllers_physics_and_safety_unchanged=True)

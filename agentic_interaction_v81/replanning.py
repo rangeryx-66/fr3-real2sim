@@ -80,7 +80,18 @@ def candidate_gate(actions,horizon,pool=None):
                 ('section_fraction','insertion_m','roll_deg','pitch_deg')],**result))
             return result
         result=original(checker,candidate)
-        if not prismatic:result['target_coverage']=bounds
+        if not prismatic:
+            result['target_coverage']=bounds
+            if result.get('valid') and getattr(checker,'g',{}).get('job',{}).get('v81_integrated_repair'):
+                from .revolute_certificate import evaluate
+                chain=evaluate(checker.g,candidate,actions,checker.policy,checker.config,checker.solver)
+                result['v81_revolute_chain']=chain
+                if not chain['valid']:result.update(valid=False,reason=chain['reason'])
+                checker.audit[-1].update(result)
+                from agent_command_protocol_v12 import atomic_json
+                atomic_json(checker.g['a'].output/'EXECUTION_CANDIDATE_AUDIT.json',dict(
+                    candidates=checker.audit,weights_changed=False,
+                    revolute_closing_lead_and_exit_checked=True,native_use='collision safety only'))
         return result
     with patch.object(native.CandidateCheck,'__call__',checked):yield audit
 
