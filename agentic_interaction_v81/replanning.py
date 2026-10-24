@@ -77,15 +77,17 @@ def candidate_gate(actions,horizon,pool=None):
         bounds=coverage(candidate,required,horizon)
         prismatic=getattr(checker,'g',{}).get('job',{}).get('articulation_v7',{}).get('joint_type')=='prismatic'
         integrated=bool(getattr(checker,'g',{}).get('job',{}).get('v81_integrated_repair'))
-        # The nominal opening arc covers the first action. A later reversal
-        # across its start must reach the native whole-chain checker, not be
-        # rejected before that checker can supply its independent certificate.
+        # A nominal arc covering its requested horizon is also a valid input
+        # to whole-chain CHECKING when the first probe reverses across its
+        # start. It is not permission to execute that uncovered reverse.
         first_checked=coverage(candidate,[actions[0]['target_q']])['full_requested_actions_feasible']
+        check_whole_chain=integrated and not prismatic and (
+            first_checked or bounds['full_requested_horizon_feasible'] is True)
         audit.append(dict(family=[candidate[k] for k in
             ('section_fraction','insertion_m','roll_deg','pitch_deg')],coverage=bounds,
             deferred_to_original_prismatic_whole_chain=prismatic,
-            deferred_to_revolute_whole_chain=integrated and not prismatic and first_checked))
-        if not bounds['full_requested_actions_feasible'] and not prismatic and not (integrated and first_checked):
+            deferred_to_revolute_whole_chain=check_whole_chain))
+        if not bounds['full_requested_actions_feasible'] and not prismatic and not check_whole_chain:
             result=dict(valid=False,reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',coverage=bounds)
             checker.audit.append(dict(family=[candidate[k] for k in
                 ('section_fraction','insertion_m','roll_deg','pitch_deg')],**result))

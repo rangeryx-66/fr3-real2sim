@@ -33,11 +33,14 @@ def progress(r,row):
     if not r.job.get('v81_integrated_repair'):return
     q=float(row['joint_coordinate']);goal=r.job['v81_task_goal_native']
     previous=getattr(r,'v81_task_progress',None)
+    first_goal=(previous or {}).get('first_goal_record')
+    if first_goal is None and q>=goal:
+        first_goal=getattr(getattr(r,'record',None),'count',None)
     r.v81_task_progress=dict(requested_final_target_native=goal,
         maximum_measured_native=max(q,previous['maximum_measured_native']) if previous else q,
         minimum_measured_native=min(q,previous['minimum_measured_native']) if previous else q,
         current_measured_native=q,unit='rad' if r.job['articulation_v7']['joint_type']=='revolute' else 'm',
-        global_goal_erased_by_shorter_action=False)
+        global_goal_erased_by_shorter_action=False,first_goal_record=first_goal)
 
 
 def packet(ops):

@@ -3,8 +3,9 @@
 ## Active R02 recovery experiment (2026-10-24)
 
 The separately authorized engineering profile `v81_active_recovery_v1` targets
-the measured revolute coordinate of 90 degrees, at least 10 degrees of completed
-reverse motion, and complete independent validation. This is an experimental
+the measured revolute coordinate of 90 degrees, followed by at least 10 degrees
+of completed reverse motion and complete independent validation. Early probing
+reversals cannot substitute for this post-goal lifecycle. This is an experimental
 profile, not a physical success claim. The user's current R02 authorization
 supersedes the historical range gate below for this experiment only.
 
@@ -19,7 +20,11 @@ faults, a hard safety latch or inability to verify unloading remain terminal.
 After contact, fresh observation retires old-angle geometry before fusion.
 Grasp approval still requires actual inspection, current native checks and the
 unchanged original physical owner. Whole-chain revolute certificates can cover
-reverse targets below the initial forward arc; no native check is bypassed.
+reverse targets below the initial forward arc, including a first reverse probe.
+A candidate covering the requested nominal horizon may proceed to original
+native checking; execution still requires the complete independent chain
+certificate. An incomplete nominal horizon and uncovered first action remain
+rejected. No native check is bypassed.
 
 Numerical delay/failure leaves validation pending while useful manipulation and
 qualified FIT may continue. `retry_model` with a reason permits one immutable

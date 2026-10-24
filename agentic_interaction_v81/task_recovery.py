@@ -48,15 +48,20 @@ def remaining(ops):
 
 def completed(ops):
     progress=getattr(ops.r,'v81_task_progress',{})
+    first_goal=progress.get('first_goal_record')
+    # Early diagnostic reversals cannot satisfy the requested reverse after
+    # reaching the task goal. Missing temporal evidence stays incomplete.
+    after_goal=[s for s in ops.r.record.segments if first_goal is not None
+                and s.get('first_step',-1)>=first_goal]
     reverse=sum(max(0.,-float(s.get('result',{}).get('gain_native',0.)))
-        for s in ops.r.record.segments
+        for s in after_goal
         if s.get('result',{}).get('status')=='TARGET_REACHED'
         and s.get('result',{}).get('physical_transmission_valid'))
     validation=any(s['role'].startswith('VALIDATION')
         and s.get('result',{}).get('status')=='TARGET_REACHED'
         and s.get('result',{}).get('requested_target_reached')
         and s.get('result',{}).get('physical_transmission_valid')
-        for s in ops.r.record.segments)
+        for s in after_goal)
     return dict(actual_goal_reached=progress.get('maximum_measured_native',-math.inf)>=state(ops)['goal_native'],
         completed_reverse_native=reverse,
         meaningful_reverse=reverse>=ops.r.job['v81_minimum_reverse_native'],

@@ -24,6 +24,27 @@ def fixture(folder):
 
 
 class TaskRecoveryTests(unittest.TestCase):
+    def test_early_probe_reverse_cannot_replace_post_goal_reverse_and_validation(self):
+        from agentic_interaction_v81.integration import progress
+        with tempfile.TemporaryDirectory() as d:
+            ops=fixture(d);ops.r.job['v81_integrated_repair']=True
+            ops.r.v81_task_progress=None
+            ops.r.record.count=100
+            progress(ops.r,dict(joint_coordinate=1.571))
+            ops.r.record.count=120
+            progress(ops.r,dict(joint_coordinate=1.2))
+            self.assertEqual(ops.r.v81_task_progress['first_goal_record'],100)
+            result=dict(status='TARGET_REACHED',physical_transmission_valid=True,
+                        requested_target_reached=True,gain_native=-.3)
+            ops.r.record.segments=[dict(role='VALIDATION_EARLY',first_step=50,result=result)]
+            done=recovery.completed(ops)
+            self.assertTrue(done['actual_goal_reached'])
+            self.assertFalse(done['meaningful_reverse'])
+            self.assertFalse(done['complete_independent_validation'])
+            self.assertFalse(recovery.finish_check(ops,{})['allowed'])
+            ops.r.record.segments.append(dict(role='VALIDATION_AFTER_GOAL',first_step=110,result=result))
+            self.assertTrue(recovery.finish_check(ops,{})['task_complete'])
+
     def test_broken_worker_publication_is_not_a_controller_fault(self):
         from agentic_interaction_v81.validation_queue import model_state
         with tempfile.TemporaryDirectory() as d:
