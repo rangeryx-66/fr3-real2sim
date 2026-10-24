@@ -19,8 +19,10 @@ class HorizonTests(unittest.TestCase):
         actions=[action,validation]
         command=dict(planned_segments=actions,planning_target_q=horizon)
         native=ModuleType('native_g1_execution_candidates');native.current_export=lambda *a:a[0]
+        native.CandidateCheck=type('CandidateCheck',(),{'__call__':lambda *a:dict(valid=True)})
         mobile=ModuleType('interactive_twin_recovery.mobile');mobile.at_base=lambda *a:a[0]
         with patch.dict(sys.modules,{'native_g1_execution_candidates':native,'interactive_twin_recovery.mobile':mobile}), \
+             patch('agentic_interaction_v81.replanning.admission',return_value={'admitted':True}), \
              patch('agentic_interaction_v81.performance.cached_planning_fk',return_value=nullcontext()), \
              patch('agentic_interaction_v81.recovery_memory.task_memory') as prismatic:
             result=ops.request_plan(command)

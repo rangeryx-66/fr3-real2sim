@@ -84,6 +84,10 @@ def serve(r):
             except Exception as e:
                 result=dict(operation_stopped=True,reason=repr(e),
                     recoverable=g['recovery_state']=='UNLOADED_OBSERVATION' and r.supervisor.latched is None)
+                if op in ('prepare_grasp','build_geometry','validate_execution') and result['recoverable']:
+                    from .replanning import state
+                    state(ops)['state']='UNLOADED_REPLAN_REQUIRED'
+                    result.update(status='PLANNING_REJECTED',episode_termination_required=False)
             entry=dict(command=command,result=result,wall_s=time.perf_counter()-started,unloaded_wait_s=started-began)
             complete(responses,seq,result_packet(entry));trace.append(entry);last=result
             atomic_json(r.output/'AGENT_ACTION_TRACE.json',result_packet(trace))

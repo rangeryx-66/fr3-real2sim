@@ -9,6 +9,13 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    actions=command.get('segments',command.get('planned_segments',[]))
+    if isinstance(actions,list):
+        try:
+            from .replanning import alternatives
+            for action in actions:
+                if isinstance(action,dict):alternatives(action)
+        except (ValueError,KeyError,TypeError) as error:raise ProtocolError(str(error)) from error
     if op=='relocate_observe_prepare':
         fields={'operation','protocol_version','sequence','reason','target_xy_m',
             'inspected_image_sha256','planned_segments','planning_target_q',

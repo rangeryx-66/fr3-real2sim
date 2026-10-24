@@ -1,0 +1,165 @@
+"""Bounded same-episode planning recovery; never a collision override.
+
+Geometric rejection and a physical hard latch are different events. No action
+target is silently truncated, and no rejected path is sent to the actuators.
+"""
+from contextlib import contextmanager
+from copy import deepcopy
+import math
+from unittest.mock import patch
+
+
+def coverage(plan, targets, horizon=None):
+    states=[float(p['state']) for p in plan.get('path',[])]
+    valid=bool(states) and all(math.isfinite(v) for v in states)
+    low,high=(min(states),max(states)) if valid else (None,None)
+    # Floating-point comparison only, not a relaxed physical target tolerance.
+    def includes(q):return valid and low-1e-10<=float(q)<=high+1e-10
+    missing=[float(q) for q in targets if not includes(q)]
+    return dict(full_requested_actions_feasible=valid and not missing,
+        checked_interval_native=[low,high],uncovered_targets_native=missing,
+        requested_horizon_native=horizon,
+        full_requested_horizon_feasible=includes(horizon) if horizon is not None else None,
+        endpoint_is_not_physical_progress=True)
+
+
+def alternatives(action):
+    """All replacements are independent, predeclared FIT trajectories."""
+    items=action.get('path_alternatives',[])
+    if not isinstance(items,list) or len(items)>2:raise ValueError('AT_MOST_TWO_DECLARED_PATH_ALTERNATIVES')
+    if items and not action['role'].startswith('FIT'):raise ValueError('VALIDATION_TARGET_MUST_NOT_BE_SUBSTITUTED')
+    if not items:return []
+    from agent_command_protocol_v12 import validate
+    roles={action['role']}
+    for item in items:
+        if (not isinstance(item,dict) or 'path_alternatives' in item
+                or not item.get('role','').startswith('FIT') or item['role'] in roles
+                or item.get('coordinate_unit')!=action.get('coordinate_unit')):
+            raise ValueError('DISTINCT_COMPLETE_FIT_ALTERNATIVE_REQUIRED')
+        validate(dict(protocol_version=1,sequence=0,operation='attempt_grasp_and_probe',segments=[item]),0)
+        roles.add(item['role'])
+    return items
+
+
+def targets(actions):
+    return [item['target_q'] for action in actions for item in [action,*alternatives(action)]]
+
+
+@contextmanager
+def candidate_gate(actions,horizon):
+    """Existing ranked IK branches fall through when the full action is absent.
+
+    The original native closing/approach/timed-route check remains mandatory.
+    This predicate does not change geometry, utility or collision margins.
+    """
+    import native_g1_execution_candidates as native
+    original=native.CandidateCheck.__call__
+    required=targets(actions)
+    audit=[]
+    def checked(checker,candidate):
+        bounds=coverage(candidate,required,horizon)
+        audit.append(dict(family=[candidate[k] for k in
+            ('section_fraction','insertion_m','roll_deg','pitch_deg')],coverage=bounds))
+        if not bounds['full_requested_actions_feasible']:
+            result=dict(valid=False,reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',coverage=bounds)
+            checker.audit.append(dict(family=[candidate[k] for k in
+                ('section_fraction','insertion_m','roll_deg','pitch_deg')],**result))
+            return result
+        result=original(checker,candidate)
+        result['target_coverage']=bounds
+        return result
+    with patch.object(native.CandidateCheck,'__call__',checked):yield audit
+
+
+def state(ops):
+    if not hasattr(ops,'_v81_replanning'):
+        ops._v81_replanning=dict(state='READY',rejections=[],same_episode=True,
+            new_episode_retry_authorized=False,physical_hard_stop_authoritative=True)
+    return ops._v81_replanning
+
+
+def reject(ops,route,action):
+    record=dict(reason=route.get('reason'),requested_action=deepcopy(action),
+        measured_coordinate=ops.r.actual(),station_generation=ops.r.base_generation,
+        native_rejection_preserved=deepcopy(route))
+    s=state(ops);s['rejections'].append(record);s['state']='REPLAN_REQUIRED'
+    return record
+
+
+def successor(ops,action,original):
+    route=original(action)
+    # An opt-in, one-shot engineering protocol fault. It is recorded as an
+    # injected rejection, never misreported as an actual native collision.
+    fixture=ops.r.job.get('v81_path_rejection_fixture')
+    if fixture and route.get('valid') and not getattr(ops,'_v81_rejection_injected',False):
+        if ops.r.job.get('v81_phase')!='engineering':raise ValueError('ENGINEERING_REJECTION_ONLY')
+        ops._v81_rejection_injected=True
+        route=dict(valid=False,reason='INJECTED_COLLISION_REJECTION',engineering_injected=True,
+            original_native_check=route,robot_motion_executed=False)
+    if route.get('valid'):return route
+    record=reject(ops,route,action)
+    if ops.r.supervisor.latched is not None:
+        state(ops)['state']='HARD_STOP';return route
+    previous=ops.r.record.segments[-1].get('result',{}) if ops.r.record.segments else {}
+    from interaction_runtime.segments import continuation_allowed
+    allowed,why=continuation_allowed(previous,action,None,
+        ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt))
+    if not allowed or not previous.get('safely_stopped') or not previous.get('physical_transmission_valid'):
+        record['alternative_checks_blocked']=why
+        return dict(route,status='PLANNING_REJECTED',recoverable=True,
+            reason=route.get('reason'),safe_alternative_boundary=False)
+    start=float(ops.r.actual());goal=float(action['target_q'])
+    # The frozen caller has already required safe stopped transmission via
+    # continuation_allowed. No Agent inference or waiting occurs under load.
+    checks=[]
+    for other in alternatives(action):
+        target=float(other['target_q'])
+        if not min(start,goal)<target<max(start,goal):
+            checks.append(dict(valid=False,reason='NOT_A_SHORTER_SAME_DIRECTION_ACTION',action=other));continue
+        ops.articulation().validate_target(other)
+        checked=original(other);checks.append(dict(action=deepcopy(other),check=deepcopy(checked)))
+        if ops.r.supervisor.latched is not None:
+            state(ops)['state']='HARD_STOP';return dict(valid=False,reason='HARD_STOP')
+        if checked.get('valid'):
+            selected=deepcopy(other)
+            record['alternatives']=checks;record['selected_action']=selected
+            action.clear();action.update(selected)
+            state(ops)['state']='CHECKED_ALTERNATIVE_SELECTED'
+            return dict(checked,requested_path_rejected=True,rejected_request=record,
+                selected_action=selected,full_original_target_feasible=False,
+                full_selected_target_feasible=True)
+    record['alternatives']=checks
+    return dict(route,status='PLANNING_REJECTED',recoverable=True,
+        episode_termination_required=False,alternative_checks=checks)
+
+
+def packet(ops):
+    from .recovery_batch import measured_costs
+    s=deepcopy(state(ops));s['hard_latch']=ops.r.supervisor.latched
+    s['unloaded']=ops.g['recovery_state']=='UNLOADED_OBSERVATION'
+    s['remaining_work']=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
+    s['measured_costs']=measured_costs(ops)
+    s['search_order']=['checked predeclared shorter successor',
+        'same-station automatic IK branches and ranked observed grasp candidates',
+        'fresh wrist observation if post-contact or stale',
+        'Agent-selected evaluated base relocation and fresh regrasp']
+    s['instruction']='Multiple safe replans within this scene are permitted. Never approve an uncovered full target or clear a hard latch.'
+    return s
+
+
+def admission(ops):
+    """Preserve one measured recovery opportunity before another acquisition.
+
+    EpisodeBudget.remaining already subtracts the deterministic exit reserve.
+    Unknown first-operation costs are reported, not invented as safety limits.
+    """
+    from .recovery_batch import measured_costs
+    cost=measured_costs(ops);remaining=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
+    latest=cost['observed_max_operation_wall_s']
+    names=('reobserve_and_replan','prepare_grasp','attempt_grasp_and_probe')
+    reserve=sum(latest[n] for n in names) if all(n in latest for n in names) else None
+    need=(reserve+latest['attempt_grasp_and_probe']) if reserve is not None else None
+    return dict(admitted=need is None or need<=remaining['wall_s'],
+        measured_current_attempt_plus_one_recovery_wall_s=need,
+        remaining_work=remaining,exit_reserve_already_excluded=True,
+        cost_unknown=need is None)

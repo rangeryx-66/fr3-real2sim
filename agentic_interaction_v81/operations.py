@@ -15,6 +15,8 @@ def operations_class(original):
                 from .decision_packet import revolute_packet
                 packet=revolute_packet(self,sequence,result)
             else:packet=parent(sequence,result)
+            from .replanning import packet as recovery_packet
+            packet['planning_recovery']=recovery_packet(self)
             if self.r.job['articulation_v7']['joint_type']!='prismatic':return packet
             from .recovery_search import current_packet
             from .recovery_batch import measured_costs
@@ -82,6 +84,22 @@ def operations_class(original):
             return result
 
         def attempt(self,command):
+            from copy import deepcopy
+            from .replanning import admission,coverage,state
+            command=deepcopy(command)  # replacements never erase the original Agent request
+            if not self.current_plan_ready:
+                return dict(executed=False,status='PLANNING_REJECTED',recoverable=True,
+                    reason='CURRENT_FULL_TARGET_CHECKED_PLAN_REQUIRED')
+            candidate=json.loads((self.r.output/'visual_plan.json').read_text())
+            from .replanning import targets
+            checked=coverage(candidate,targets(command.get('segments',[])))
+            if not checked['full_requested_actions_feasible']:
+                return dict(executed=False,status='PLANNING_REJECTED',recoverable=True,
+                    reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',coverage=checked)
+            resources=admission(self)
+            if not resources['admitted']:
+                return dict(executed=False,status='RECOVERY_RESERVE_REQUIRED',recoverable=True,
+                    reason='OBSERVED_ATTEMPT_AND_RECOVERY_COST_EXCEEDS_WORK_BUDGET',resources=resources)
             if command.get('contact_following',getattr(self.r,'v81_contact_following_mode','legacy_window'))!=getattr(self.r,'v81_contact_following_mode','legacy_window'):
                 return dict(executed=False,recoverable=True,reason='REPLAN_CHANGED_CONTACT_FOLLOWING_MODE')
             if command.get('segments')!=getattr(self,'_v81_declared_chain',None):
@@ -93,7 +111,27 @@ def operations_class(original):
             self._last_contact_finished_world_s=float(self.r.world.current_time)
             result['station_generation']=self.r.base_generation
             result['contact_following_v81']=getattr(self.r,'v81_contact_following_mode','legacy_window')
+            result['planning_recovery']=dict(state(self))
+            rejected=any(not c.get('valid') for c in result.get('continuations',[]))
+            if rejected and self.r.supervisor.latched is None:
+                safe=bool(result.get('safe_exit',{}).get('safe'))
+                state(self)['state']='UNLOADED_REPLAN_REQUIRED' if safe else 'SAFE_EXIT_UNAVAILABLE'
+                result.update(planning_status='PLANNING_REJECTED',recoverable=safe,
+                    episode_termination_required=not safe)
+                # Fresh post-contact observation may be collected automatically
+                # at the verified unloaded boundary, never reasoning under load.
+                costs=resources.get('measured_current_attempt_plus_one_recovery_wall_s')
+                if safe and costs is not None:
+                    remaining=self.r.episode_budget.remaining(self.r.tick*self.r.dt)
+                    if remaining['wall_s']>=costs:
+                        result['fresh_replanning_observation']=self.reobserve()
+                        state(self)['state']='FRESH_EVIDENCE_REQUIRES_AGENT_INSPECTION'
+            result['planning_recovery']=dict(state(self))
             return result
+
+        def check_successor(self,action):
+            from .replanning import successor
+            return successor(self,action,super().check_successor)
 
         def request_plan(self,command):
             from .declaration_preflight import check
@@ -108,6 +146,12 @@ def operations_class(original):
                 return dict(plan=False,recoverable=True,
                     reason='DECLARATION_PREFLIGHT:'+str(error),
                     robot_action_executed=False,expensive_planning_started=False)
+            from .replanning import admission
+            resources=admission(self)
+            if not resources['admitted']:
+                return dict(plan=False,recoverable=True,status='RECOVERY_RESERVE_REQUIRED',
+                    reason='OBSERVED_ATTEMPT_AND_RECOVERY_COST_EXCEEDS_WORK_BUDGET',
+                    resources=resources,expensive_planning_started=False)
             association=None
             if command.get('start_new_target_association',False):
                 from .target_association import start_latest
@@ -146,12 +190,29 @@ def operations_class(original):
             prismatic=self.r.job['articulation_v7']['joint_type']=='prismatic'
             search_context=search_scope(self,search_round) if prismatic else nullcontext()
             prune_context=skip_dominated_checks() if prismatic else nullcontext()
-            with patch.object(executable,'current_export',current), cached_planning_fk(), memory_scope, search_context, prune_context:
+            from .replanning import candidate_gate
+            with patch.object(executable,'current_export',current), cached_planning_fk(), memory_scope, search_context, prune_context, candidate_gate(actions,horizon) as coverage_audit:
                 result=super().request_plan(command)
+            if hasattr(self.r,'output'):
+                from agent_command_protocol_v12 import atomic_json
+                atomic_json(self.r.output/'TARGET_COVERAGE_CANDIDATE_AUDIT.json',dict(candidates=coverage_audit,
+                    scores_unchanged=True,native_rejection_authoritative=True))
             if self.r.job['articulation_v7']['joint_type']=='prismatic':search_complete(self,search_round,result)
             result.update(planning_horizon_native=horizon,
                 executable_first_target_native=actions[0]['target_q'],
                 planning_horizon_is_not_motion=True)
+            if result.get('plan') and hasattr(self.r,'output'):
+                from .replanning import coverage,targets
+                bounds=coverage(json.loads((self.r.output/'visual_plan.json').read_text()),targets(actions),horizon)
+                result['target_coverage']=bounds
+                if not bounds['full_requested_actions_feasible']:
+                    self.current_plan_ready=False
+                    result.update(plan=False,status='PLANNING_REJECTED',recoverable=True,
+                        reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',episode_termination_required=False)
+            if not result.get('plan'):
+                from .replanning import state
+                state(self)['state']='UNLOADED_REPLAN_REQUIRED'
+                result.update(status='PLANNING_REJECTED',recoverable=True,episode_termination_required=False)
             if result.get('plan') and hasattr(self.r,'output'):
                 from .action_declaration import ticket
                 self._v81_plan_ticket=ticket(self)

@@ -39,6 +39,10 @@ def redeclare(ops, command):
         return dict(declared=False,reason='DECLARATION_PREFLIGHT:'+str(error),
                     robot_motion_executed=False)
     plan = json.loads((ops.r.output/'visual_plan.json').read_text())
+    from .replanning import coverage,targets
+    bounds=coverage(plan,targets(actions))
+    if not bounds['full_requested_actions_feasible']:
+        return dict(declared=False,reason='ACTION_EXCEEDS_EXISTING_CHECKED_TASK_ARC',coverage=bounds)
     states = [float(p['state']) for p in plan['path']]
     for action in actions:
         validate_action(action)

@@ -11,6 +11,9 @@ def check(actions, articulation):
     for action in actions:
         validate_action(action)
         articulation.validate_target(action)
+        from .replanning import alternatives
+        for alternative in alternatives(action):
+            validate_action(alternative);articulation.validate_target(alternative)
     if not any(a['role'].startswith('VALIDATION') for a in actions):
         raise ValueError('COMPLETE_VALIDATION_NOT_PLANNED')
     return dict(valid=True, actions=len(actions), robot_motion_executed=False,
