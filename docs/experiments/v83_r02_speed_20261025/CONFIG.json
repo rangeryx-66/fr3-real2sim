@@ -1,0 +1,71 @@
+{
+  "schema": "v83-r02-speed-static-configuration-v1",
+  "status": "STATIC_ONLY_FINAL_PHYSICAL_OUTCOME_PENDING_CLOSED",
+  "episode_id": "v83_r02_speed_comparison_20261025_01",
+  "source_commit": "1782baf392402db1d547732c8709a6ac15369c6c",
+  "protected_success_baseline": "792fa3b55160c8e83d50ec70f82803af8de14e9b",
+  "spec_sha256": "dae5f2b0f0040e84d26c2c9d1a3a24778b928241888ba56eb31f245a4efc890c",
+  "environment_sha256": "1159770ec5caf3c4604903fd087aee4a1aaf1183428921daad8605ba63368be3",
+  "physics_commitment_sha256": "ef92278ff59b4df57dbffd8e784e5eab56c51637f97cbf44830d920a023d523e",
+  "plant_coefficients_read": false,
+  "profile": "v83_revolute_orchestration_extension_v1",
+  "initial_resources": {
+    "wall_s": 7200,
+    "sim_s": 3600,
+    "agent_wait_s": 600,
+    "acquisitions": 6,
+    "safe_exit_wall_s": 300,
+    "safe_exit_sim_s": 120
+  },
+  "authorization": {
+    "human_authorization_ref": "user_20261025_continue_promising_safe_work_beyond_chosen_time_budget",
+    "max_extra_wall_s": 7200,
+    "parked_decision_renewal_s": 900,
+    "actual_accepted_credit_pending_final_audit": true,
+    "physical_authority_change": false
+  },
+  "recording": {
+    "continuous_video_hz": 5,
+    "synchronized_load_channels_opt_in": true,
+    "raw_private": true,
+    "raw_native_hz": 240,
+    "unloaded_retention_hz": 10
+  },
+  "original_motion_limits": {
+    "loaded_speed_m_s": 0.012,
+    "loaded_acceleration_m_s2": 0.04,
+    "loaded_angular_speed_rad_s": 0.08,
+    "loaded_angular_acceleration_rad_s2": 0.2,
+    "lead_rad": 0.008726646259971648
+  },
+  "first_comparison": {
+    "same_acquisition": true,
+    "low_speed_m_s": 0.006,
+    "low_acceleration_m_s2": 0.02,
+    "fast_speed_m_s": 0.01,
+    "fast_acceleration_m_s2": 0.03,
+    "velocity_program": "constant",
+    "declared_common_q_rad": [
+      0.06,
+      0.18
+    ],
+    "primary_metric": "measured joint coordinate progress per simulation second; actual common support and incomplete intervals explicitly retained"
+  },
+  "extensions_scope": [
+    "Explicit authorized parked-boundary task-wall/wait facade",
+    "Synchronized copies of already sampled native feedback",
+    "5 Hz continuous private recording"
+  ],
+  "control_claims": {
+    "guards_relaxed": false,
+    "drive_authority_increased": false,
+    "physics_model_changed": false,
+    "transmission_degradation_fixed": false,
+    "overall_efficiency_improved": false,
+    "one_episode_establishes_robustness": false
+  },
+  "notes": [
+    "All final lifecycle, model validation, raw chunk/video and owned-process audits await explicit CLOSED from physical owner.",
+    "Joint reactions, projected feedback, external applied command and native drive caps are distinct; no independently measured implicit motor output is available."
+  ]
+}

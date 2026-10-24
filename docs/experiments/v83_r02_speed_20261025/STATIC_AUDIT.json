@@ -1,0 +1,42 @@
+{
+  "schema": "v83-r02-speed-static-source-audit-v1",
+  "source_commit": "1782baf392402db1d547732c8709a6ac15369c6c",
+  "baseline_audit": {
+    "baseline_commit": "2f021639aea65e6ae859bac9a3385d49db10212f",
+    "physical_source_files": 606,
+    "frozen_revolute_source_files": 71,
+    "release_source_files": 956,
+    "modified_frozen_paths": [],
+    "failures": [],
+    "rechecked_by": "speed-audit child; local read-only baseline_audit()"
+  },
+  "runtime_source_status": {
+    "head_matches": true,
+    "tracked_source_modified": false,
+    "generated_untracked_asset_path_receipts": 1,
+    "note": "One runtime-generated asset path receipt exists; do not describe entire checkout as completely clean."
+  },
+  "regression": {
+    "tests": 205,
+    "local": {
+      "status": "OK",
+      "skipped": 1
+    },
+    "server": {
+      "status": "OK",
+      "skipped": 0
+    },
+    "verification_source": "Parent root reports completed local and server runs on unchanged 1782baf source; this child did not repeat them.",
+    "command": "PYTHONPATH=scripts <venv-python> -m unittest discover -s tests -p 'test_agentic_interaction_v8*.py' -q",
+    "server_reported_elapsed_s": 1.262,
+    "stdout_receipt_sha256": null,
+    "stdout_receipt_note": "Only root's actual tool outputs in this conversation were retained. No separate stdout receipt exists; none was recreated."
+  },
+  "pending": [
+    "Final loaded-source hashes versus committed bytes",
+    "Numeric chunk hash/schema/retention audit",
+    "Complete video timestamp/encoding coverage audit",
+    "Four physical attempts and all failed/pending validation accounting",
+    "Final native parking/unloading and exact owned actor/launcher absence"
+  ]
+}
