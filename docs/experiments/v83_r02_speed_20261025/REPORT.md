@@ -118,7 +118,7 @@ seq10 首次规划拒绝与 seq20/29 视角拒绝都保留，之后改候选/视
 
 第 6 段同名高角正向失败，整体排除独立验证，不能拼接第 7 段补成一个从 20° 开始的完整预测。原待办 `VALIDATION_SPEED_RECOVERED_REVERSE` 的 0.35 rad 目标未执行，最终仍为 READY_FOR_CURRENT_STATE_REPLAN；不能补记成功。第 3、5 段失败 FIT 仅原预声明且合格的传力前缀可用于辅助拟合，失败末端不能直接纳入合格数据。
 
-本报告没有重拟合或选择新的动力学模型。操作生命周期 PASS 不等于 Physics-ID 参数准确或模型整体改善；原冻结外部模型的独立预测对照另见 [Physics-ID 报告](../v83_physics_id_20261024/REPORT.md)，其低角退化与总体指标必须一并报告。
+本报告没有重拟合或选择新的动力学模型。操作生命周期 PASS 不等于 Physics-ID 参数准确或模型整体改善；原冻结外部模型的独立预测对照另见 [Physics-ID 报告](</Users/rangeryx/Documents/ChatGPT/robot in loop real2sim/github_release/fr3-real2sim-v83-physics-id/docs/experiments/v83_physics_id_20261024/REPORT.md>)，其低角退化与总体指标必须一并报告。
 
 - 按用户授权，在原生 verified parked/unloaded 边界接受 seq6/15/27 各 1800 s，共 **5400 s** 墙钟信用；有效任务期限 12600 s，原时钟不重置。仿真上限 3600 s、获取次数 6、退出储备 300 wall /120 sim s、全部物理上限不变。
 - 本地/服务器 205 项回归由 root 实跑，本地 1 skip、服务器无 skip。仅保留会话实际工具输出，没有另存 stdout 承诺，不补造。606/71/956 冻结源审计通过。
