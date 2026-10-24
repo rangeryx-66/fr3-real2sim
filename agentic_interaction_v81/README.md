@@ -1,5 +1,45 @@
 # V8.1 engineering extension
 
+## Active R02 recovery experiment (2026-10-24)
+
+The separately authorized engineering profile `v81_active_recovery_v1` targets
+the measured revolute coordinate of 90 degrees, at least 10 degrees of completed
+reverse motion, and complete independent validation. This is an experimental
+profile, not a physical success claim. The user's current R02 authorization
+supersedes the historical range gate below for this experiment only.
+
+Recoverable planning, transmission and finite-action timeout results return to
+the Agent at a verified unloaded boundary. `TASK_RECOVERY.json` preserves the
+goal, measured progress and failure history. An unchanged failed request is
+rejected until its action or evidence changes. A single failure, initial
+acquisition/view count or operation count does not terminate the task; finite
+wall/simulation resources and reserved safety exit still bind. Unknown control
+faults, a hard safety latch or inability to verify unloading remain terminal.
+
+After contact, fresh observation retires old-angle geometry before fusion.
+Grasp approval still requires actual inspection, current native checks and the
+unchanged original physical owner. Whole-chain revolute certificates can cover
+reverse targets below the initial forward arc; no native check is bypassed.
+
+Numerical delay/failure leaves validation pending while useful manipulation and
+qualified FIT may continue. `retry_model` with a reason permits one immutable
+resubmission per failed completed-FIT snapshot at an unloaded boundary. Failed
+physical validation is retained as history when explicitly redeclared after
+recovery; it is never counted as complete or admitted to FIT.
+
+`finish` accepts measured task completion, hard safety, protected resource
+exhaustion, or a `stop_assessment` of kind `NO_SAFE_CONTINUATION`. The latter
+references actual failure sequences for changed view, candidate, motion and
+station strategies in the current measured scene. A reason string alone is
+insufficient. `owner_requested_stop:true` is reserved for an explicit human stop,
+not an Agent shortcut. Use normal `finish` for controlled export: the historical
+STOP_AND_EXPORT marker may interrupt the frozen parking owner itself.
+
+The frozen Skill, controllers, collision checks, loads, physical parameters,
+estimator math and FIT/VALIDATION isolation remain unchanged. See the private
+registered episode evidence for actual outcomes; software tests are not a
+90-degree or parameter-identifiability certificate.
+
 Current integrated engineering profile: `v81_force_replan_validation_v1`.
 It keeps V8.0 physical owners byte-frozen. A separately registered preload
 study accepts 2.0/2.5/3.0 N **requests**, using the same native drive authority;

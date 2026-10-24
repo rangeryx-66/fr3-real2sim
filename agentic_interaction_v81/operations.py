@@ -9,6 +9,32 @@ def operations_class(original):
     class StationOperations(original):
         worker_script='agentic_interaction_v81/update_model.py'
 
+        def observe(self):
+            if self.r.job.get('v81_active_recovery'):
+                rows=self.g['agent_observations']
+                boundary=getattr(self,'_last_contact_finished_world_s',0.)
+                if rows and any(row['world_sim_s']<boundary for row in rows):
+                    # Moving-object views from before contact cannot be fused
+                    # with current geometry. Keep their evidence, retire inputs.
+                    self.g['observation_generations'].append(rows)
+                    self.g['agent_observations']=[];self.g['wrist_routes']=[]
+                    self.g.pop('recovery_candidate_catalog',None)
+                    self.current_plan_ready=False
+            return super().observe()
+
+        def move_and_observe(self,evaluated):
+            if not self.r.job.get('v81_active_recovery') or self.g['agent_moves']<4:
+                return super().move_and_observe(evaluated)
+            from .task_recovery import unloaded
+            if not unloaded(self) or not evaluated.get('feasible'):
+                return dict(executed=False,reason='VERIFIED_UNLOADED_VALIDATED_VIEW_REQUIRED')
+            # Same original native route actuator and settle; the old four-view
+            # allowance is not a physical limit. Finite episode resources bind.
+            self.r.move_path(evaluated['route']['q_path'][1:],'PREGRASP')
+            self.r.hold(self.g['wrist_config']['settle_s'])
+            self.g['agent_moves']+=1;self.g['wrist_routes'].append(evaluated['route'])
+            return self.observe()
+
         def decision_packet(self,sequence,result=None):
             parent=getattr(super(),'decision_packet',None)
             if parent is None:
@@ -167,6 +193,8 @@ def operations_class(original):
                 return dict(executed=False,recoverable=True,reason='REPLAN_CHANGED_CONTACT_FOLLOWING_MODE')
             if command.get('segments')!=getattr(self,'_v81_declared_chain',None):
                 return dict(executed=False,recoverable=True,reason='DECLARE_AND_VALIDATE_THIS_CHAIN_BEFORE_ACQUISITION')
+            from .task_recovery import acquisition_allowance
+            acquisition_allowance(self,command)
             generation=len(self.g['observation_generations'])
             integrated=self.r.job.get('v81_integrated_repair')
             if integrated:

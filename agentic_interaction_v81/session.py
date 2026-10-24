@@ -1,5 +1,5 @@
 """Finite Agent session with station requests at verified unloaded boundaries."""
-import json,time
+import itertools,json,time
 from agent_command_protocol_v12 import atomic_json
 from .transport import receive,complete
 from interaction_runtime.serialization import result_packet
@@ -16,21 +16,35 @@ def serve(r):
     else:
         from interaction_runtime.probing_v7 import OperationsV7 as Owner
     ops=operations_class(Owner)(r);g=r.g
+    from . import task_recovery
     commands=r.output/'agent_commands';responses=r.output/'agent_responses'
     commands.mkdir(exist_ok=True);responses.mkdir(exist_ok=True);trace=[];last=None;seq=-1
     try:
         from interaction_runtime.registered_observation_v71 import initialize
         initialize(r,ops)
-        for seq in range(int(r.job.get('maximum_agent_operations',100))):
+        sequences=(itertools.count() if r.job.get('v81_active_recovery')
+                   else range(int(r.job.get('maximum_agent_operations',100))))
+        for seq in sequences:
             if g['recovery_state']!='UNLOADED_OBSERVATION' or r.supervisor.latched is not None:
                 return dict(status='HARD_STOP_OR_NO_SAFE_DECISION_BOUNDARY',trace=trace,stop=r.supervisor.latched)
             wait,resources=window(r)
             if wait<=0:return dict(status='BUDGET_EXHAUSTED',safe_exit=ops.release_park(),trace=trace)
-            packet=ops.decision_packet(seq,last) if hasattr(ops,'decision_packet') else dict(
-                sequence=seq,joint_coordinate=r.actual(),units=ops.articulation().units,
-                remaining_resources=resources,feedback=ops.feedback(),unloaded=True)
+            try:
+                packet=ops.decision_packet(seq,last) if hasattr(ops,'decision_packet') else dict(
+                    sequence=seq,joint_coordinate=r.actual(),units=ops.articulation().units,
+                    remaining_resources=resources,feedback=ops.feedback(),unloaded=True)
+            except (json.JSONDecodeError,FileNotFoundError,TimeoutError) as error:
+                if not task_recovery.enabled(ops) or not task_recovery.unloaded(ops):raise
+                packet=dict(sequence=seq,joint_coordinate=r.actual(),units=ops.articulation().units,
+                    remaining_resources=resources,unloaded=True,
+                    feedback_status='READ_ONLY_FEEDBACK_UNAVAILABLE',feedback_error=repr(error),
+                    original_goal_native=r.job['v81_task_goal_native'],
+                    instruction='Preserve pending identification. Inspect current evidence or retry the numerical worker; no stale model is approved.')
             packet['station']=dict(generation=r.base_generation,measured_base=r.base.tolist(),
                 operations=['evaluate_station','relocate_station'],actuation='native driven XY stage')
+            if task_recovery.enabled(ops):
+                packet['task_recovery']=dict(task_recovery.state(ops),
+                    completion=task_recovery.completed(ops))
             atomic_json(r.output/'DECISION_PACKET.json',packet)
             deadline=time.time()+wait
             status(r,seq,'WAITING',unloaded=True,deadline_unix_s=deadline)
@@ -55,7 +69,9 @@ def serve(r):
             status(r,seq,'RUNNING',operation=op,unloaded_decision=False)
             try:
                 for action in command.get('segments',[]):validate_action(action);ops.articulation().validate_target(action)
-                if op=='observe':result=ops.observe()
+                result=task_recovery.before(ops,command)
+                if result is not None:pass
+                elif op=='observe':result=ops.observe()
                 elif op=='inspect':result=packet
                 elif op=='evaluate_view':result=ops.evaluate_view(command['target']);ops.cache[seq]=result
                 elif op=='move_and_observe':result=ops.move_and_observe(ops.cache.get(command['evaluated_command'],{}))
@@ -72,6 +88,9 @@ def serve(r):
                 elif op=='validate_execution':result=ops.validate_execution()
                 elif op=='attempt_grasp_and_probe':result=ops.attempt(command)
                 elif op=='inspect_contact_result':result=ops.feedback()
+                elif op=='retry_model':
+                    from .validation_queue import retry_model
+                    result=retry_model(ops,command)
                 elif op in ('reobserve_and_replan','fresh_mode_observation'):result=ops.reobserve()
                 elif op=='safe_release_retreat':result=ops.release_park()
                 elif op=='evaluate_station':result=ops.evaluate_station(command);ops.cache[seq]=result
@@ -83,7 +102,13 @@ def serve(r):
                 elif op=='finish':result=dict(safe_exit=ops.release_park())
                 else:result=dict(executed=False,recoverable=True,reason='UNKNOWN_V81_OPERATION')
             except SafetyStop as e:result=dict(status='SAFETY_STOP',reason=e.reason,evidence=e.evidence)
-            except ExecutionBudgetExhausted as e:result=dict(status='BUDGET_EXHAUSTED',reason=str(e),safe_exit=ops.release_park())
+            except ExecutionBudgetExhausted as e:
+                result=dict(status='BUDGET_EXHAUSTED',reason=str(e),safe_exit=ops.release_park())
+                if task_recovery.enabled(ops) and task_recovery.unloaded(ops):
+                    available=task_recovery.remaining(ops)
+                    if available['wall_s']>0 and available['sim_s']>0:
+                        result.update(status='OPERATION_BUDGET_EXHAUSTED',recoverable=True,
+                            episode_termination_required=False)
             except Exception as e:
                 result=dict(operation_stopped=True,reason=repr(e),
                     recoverable=g['recovery_state']=='UNLOADED_OBSERVATION' and r.supervisor.latched is None)
@@ -91,11 +116,20 @@ def serve(r):
                     from .replanning import state
                     state(ops)['state']='UNLOADED_REPLAN_REQUIRED'
                     result.update(status='PLANNING_REJECTED',episode_termination_required=False)
+                elif task_recovery.enabled(ops):
+                    if op in ('evaluate_view','observe_view','evaluate_station','redeclare_actions','retry_model') and task_recovery.unloaded(ops):
+                        result.update(status='PLANNING_REJECTED',episode_termination_required=False)
+                    else:
+                        result.update(status='CONTROL_STATE_UNTRUSTED',recoverable=False)
+            result=task_recovery.after(ops,command,result)
             entry=dict(command=command,result=result,wall_s=time.perf_counter()-started,unloaded_wait_s=started-began)
             complete(responses,seq,result_packet(entry));trace.append(entry);last=result
             atomic_json(r.output/'AGENT_ACTION_TRACE.json',result_packet(trace))
             status(r,seq,'COMPLETED',operation=op)
-            if op=='finish':return dict(status='SESSION_COMPLETE',trace=trace,safe_exit=result.get('safe_exit'))
+            if op=='finish' and result.get('status')!='CONTINUATION_REQUIRED':
+                return dict(status='SESSION_COMPLETE',trace=trace,safe_exit=result.get('safe_exit'))
+            if result.get('task_recovery',{}).get('episode_termination_required'):
+                return dict(status=result['task_recovery']['status'],trace=trace)
             if r.supervisor.latched is not None or result.get('status') in ('SAFETY_STOP','BUDGET_EXHAUSTED'):
                 return dict(status=result.get('status','SAFETY_STOP'),trace=trace)
         return dict(status='BOUNDED_OPERATION_BUDGET',safe_exit=ops.release_park(),trace=trace)

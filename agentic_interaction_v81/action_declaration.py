@@ -43,12 +43,9 @@ def redeclare(ops, command):
     bounds=coverage(plan,targets(actions))
     if not bounds['full_requested_actions_feasible']:
         return dict(declared=False,reason='ACTION_EXCEEDS_EXISTING_CHECKED_TASK_ARC',coverage=bounds)
-    states = [float(p['state']) for p in plan['path']]
     for action in actions:
         validate_action(action)
         ops.articulation().validate_target(action)
-        if not min(states) <= action['target_q'] <= max(states):
-            return dict(declared=False, reason='ACTION_EXCEEDS_EXISTING_CHECKED_TASK_ARC')
     checked = ops.validate_execution()
     if not checked.get('valid'):
         return dict(declared=False, reason='MEASURED_STATE_EXECUTION_REVALIDATION_FAILED', check=checked)

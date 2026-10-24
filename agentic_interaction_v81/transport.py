@@ -9,6 +9,16 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    if op=='retry_model':
+        original_validate(dict(command,operation='inspect'),sequence)
+        if set(command)-{'operation','sequence','protocol_version','reason'} or not command.get('reason'):
+            raise ProtocolError('numerical retry reason required; no model, data or coefficient overrides')
+        return command
+    if 'owner_requested_stop' in command and (op!='finish' or type(command['owner_requested_stop']) is not bool):
+        raise ProtocolError('explicit owner stop is a boolean finish-only field')
+    if 'recovery_strategy' in command and command['recovery_strategy'] not in (
+            'change_view','change_candidate','change_motion','relocate_station'):
+        raise ProtocolError('known evidence-backed recovery strategy required')
     if op=='export_matched_reference':
         original_validate(dict(command,operation='inspect'),sequence)
         if set(command)-{'operation','sequence','protocol_version','reason','inspected_image_sha256'}:

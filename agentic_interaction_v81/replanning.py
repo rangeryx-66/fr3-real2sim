@@ -22,6 +22,11 @@ def coverage(plan, targets, horizon=None):
     if plan.get('coordinate_unit')=='m' and chain.get('valid') is True:
         certified=[float(a['target_m']) for a in chain.get('declared_actions',[])
                    if type(a.get('target_m')) in (int,float) and math.isfinite(a['target_m'])]
+    revolute=(plan.get('execution_feasibility') or {}).get('v81_revolute_chain') or {}
+    if plan.get('coordinate_unit')!='m' and revolute.get('valid') is True:
+        certified=[float(a['target_rad']) for a in revolute.get('endpoints',[])
+                   if type(a.get('target_rad')) in (int,float) and math.isfinite(a['target_rad'])
+                   and a.get('exit_valid') is True]
     def includes(q):
         return ((valid and low-1e-10<=float(q)<=high+1e-10)
                 or any(abs(float(q)-v)<=1e-10 for v in certified))
@@ -71,10 +76,16 @@ def candidate_gate(actions,horizon,pool=None):
         if pool is not None:pool.append(deepcopy(candidate))
         bounds=coverage(candidate,required,horizon)
         prismatic=getattr(checker,'g',{}).get('job',{}).get('articulation_v7',{}).get('joint_type')=='prismatic'
+        integrated=bool(getattr(checker,'g',{}).get('job',{}).get('v81_integrated_repair'))
+        # The nominal opening arc covers the first action. A later reversal
+        # across its start must reach the native whole-chain checker, not be
+        # rejected before that checker can supply its independent certificate.
+        first_checked=coverage(candidate,[actions[0]['target_q']])['full_requested_actions_feasible']
         audit.append(dict(family=[candidate[k] for k in
             ('section_fraction','insertion_m','roll_deg','pitch_deg')],coverage=bounds,
-            deferred_to_original_prismatic_whole_chain=prismatic))
-        if not bounds['full_requested_actions_feasible'] and not prismatic:
+            deferred_to_original_prismatic_whole_chain=prismatic,
+            deferred_to_revolute_whole_chain=integrated and not prismatic and first_checked))
+        if not bounds['full_requested_actions_feasible'] and not prismatic and not (integrated and first_checked):
             result=dict(valid=False,reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',coverage=bounds)
             checker.audit.append(dict(family=[candidate[k] for k in
                 ('section_fraction','insertion_m','roll_deg','pitch_deg')],**result))
@@ -82,11 +93,16 @@ def candidate_gate(actions,horizon,pool=None):
         result=original(checker,candidate)
         if not prismatic:
             result['target_coverage']=bounds
-            if result.get('valid') and getattr(checker,'g',{}).get('job',{}).get('v81_integrated_repair'):
+            if result.get('valid') and integrated:
                 from .revolute_certificate import evaluate
                 chain=evaluate(checker.g,candidate,actions,checker.policy,checker.config,checker.solver)
                 result['v81_revolute_chain']=chain
                 if not chain['valid']:result.update(valid=False,reason=chain['reason'])
+                certified_plan=dict(candidate,execution_feasibility=result)
+                bounds=coverage(certified_plan,required,horizon)
+                result['target_coverage']=bounds
+                if result['valid'] and not bounds['full_requested_actions_feasible']:
+                    result.update(valid=False,reason='REQUESTED_TARGET_NOT_FULLY_CHECKED')
                 checker.audit[-1].update(result)
                 from agent_command_protocol_v12 import atomic_json
                 atomic_json(checker.g['a'].output/'EXECUTION_CANDIDATE_AUDIT.json',dict(

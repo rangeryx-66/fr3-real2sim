@@ -40,7 +40,8 @@ def select(ops,command):
     candidates=sorted(pool['candidates'],key=lambda c:c['shared_selection_utility'],reverse=True)
     for candidate in candidates:
         bounds=coverage(candidate,required,pool['horizon'])
-        if not bounds['full_requested_actions_feasible'] and not prismatic:
+        first_checked=coverage(candidate,[actions[0]['target_q']])['full_requested_actions_feasible']
+        if not bounds['full_requested_actions_feasible'] and not prismatic and not first_checked:
             audit.append(dict(valid=False,reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',coverage=bounds));continue
         check=checker(candidate)
         audit.append(dict(family=[candidate[k]for k in ('section_fraction','insertion_m','roll_deg','pitch_deg')],check=check))

@@ -24,7 +24,15 @@ def enqueue(ops,command):
     for action in command.get('segments',[]):
         if not action['role'].startswith('VALIDATION'):continue
         key=identity(action)
-        if any(r['id']==key for r in data['requests']):continue
+        existing=next((r for r in data['requests'] if r['id']==key),None)
+        if existing:
+            if ops.r.job.get('v81_active_recovery') and existing['status']=='PHYSICAL_FAILURE':
+                existing.setdefault('failed_attempts',[]).append(deepcopy({
+                    k:v for k,v in existing.items() if k!='failed_attempts'}))
+                existing.update(status='PENDING_REPLAN',approval_reason=command.get('reason'),
+                    inspected_image_sha256=command.get('inspected_image_sha256'))
+                existing.pop('result',None)
+            continue
         data['requests'].append(dict(id=key,action=deepcopy(action),status='PENDING_FIT',
             approved_before_execution=True,approval_reason=command.get('reason'),
             inspected_image_sha256=command.get('inspected_image_sha256'),
@@ -151,4 +159,40 @@ def boundary(ops):
     current=requests(ops)
     pending=[r for r in current['requests'] if r['status'] not in ('COMPLETE','PHYSICAL_FAILURE')]
     return dict(state=status['state'],pending=pending,model=status,
-        priority='Resume the ORIGINAL pending VALIDATION after current-state native planning and fresh Agent grasp approval; optional range expansion must wait.')
+        priority=('Keep the ORIGINAL pending VALIDATION; complete it when a qualified model and current-state route are ready. '
+            'While numerical work is pending or failed, useful manipulation/FIT and safe recovery remain available.'
+            if ops.r.job.get('v81_active_recovery') else
+            'Resume the ORIGINAL pending VALIDATION after current-state native planning and fresh Agent grasp approval; optional range expansion must wait.'))
+
+
+def retry_model(ops,command):
+    """One new immutable job per failed FIT snapshot, only while safely unloaded.
+
+    A repeat failure remains visible and prompts a different strategy; it never
+    ends manipulation, approves stale coefficients, or refits validation data.
+    """
+    from .task_recovery import enabled,unloaded
+    from .model_packets import submit
+    import threading
+    if not enabled(ops) or not unloaded(ops):
+        return dict(retried=False,reason='ACTIVE_RECOVERY_UNLOADED_BOUNDARY_REQUIRED')
+    if any(not future.done() for future in ops.updates):
+        return dict(retried=False,state='MODEL_COMPUTING',request_preserved=True)
+    current=model_state(ops)
+    if current['state'] not in ('WORKER_FAILED','MODEL_COMPUTING'):
+        return dict(retried=False,state=current['state'],request_preserved=True)
+    fit=[s for s in ops.r.record.segments if s.get('completed') and s['role'].startswith('FIT')]
+    key=tuple((s['id'],s['last_step']) for s in fit)
+    retried=getattr(ops,'_v81_retried_fit_snapshots',set())
+    if not key or key in retried:
+        return dict(retried=False,state='NUMERICAL_DIAGNOSIS_REQUIRED',request_preserved=True,
+            manipulation_may_continue=True,reason='SAME_FAILED_FIT_SNAPSHOT_ALREADY_RETRIED')
+    # Use the same producer barrier as the original recorder, never assume that
+    # in-memory completed records imply committed numeric chunks.
+    ops.r.record.flush();ready=threading.Event();ops.r.record.queue.put(ready)
+    retried.add(key);ops._v81_retried_fit_snapshots=retried
+    ops._v81_last_packet_identity=None
+    submit(ops,ready)
+    return dict(retried=True,state='MODEL_COMPUTING',request_preserved=True,
+        same_production_estimator=True,validation_used_for_fit=False,
+        immutable_new_packet=True,reason=command['reason'])

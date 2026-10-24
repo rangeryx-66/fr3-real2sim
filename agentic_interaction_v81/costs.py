@@ -25,7 +25,9 @@ def admission(ops,actions):
     motion=travel*costs['healthy_motion_wall_s_per_native']
     current=costs['acquire']+costs['release']+motion
     recovery=costs['acquire']+costs['release']+measured.get('prepare_grasp',0.)+measured.get('reobserve_and_replan',0.)+60.
-    return dict(admitted=current+recovery<=remaining['wall_s'],cost_unknown=False,
+    need=current if ops.r.job.get('v81_active_recovery') else current+recovery
+    return dict(admitted=need<=remaining['wall_s'],cost_unknown=False,
+        additional_recovery_reserve_available=current+recovery<=remaining['wall_s'],
         current_declared_motion_estimate_wall_s=motion,current_attempt_estimate_wall_s=current,
         recovery_reserve_wall_s=recovery,remaining_work=remaining,
         measured_phase_costs=costs,exit_reserve_already_excluded=True,
