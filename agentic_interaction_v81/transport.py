@@ -9,6 +9,21 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    if op=='export_matched_reference':
+        original_validate(dict(command,operation='inspect'),sequence)
+        if set(command)-{'operation','sequence','protocol_version','reason','inspected_image_sha256'}:
+            raise ProtocolError('no manual fixture/grasp fields allowed')
+        h=command.get('inspected_image_sha256')
+        if not isinstance(h,str) or len(h)!=64 or not command.get('reason'):
+            raise ProtocolError('current inspected plan SHA and diagnostic reason required')
+        return command
+    if 'native_g1_preload_request_n' in command:
+        try:
+            from .preload_extension import request
+            request(command['native_g1_preload_request_n'],study=True)
+        except ValueError as error:raise ProtocolError(str(error)) from error
+    if 'reuse_current_candidates' in command and type(command['reuse_current_candidates']) is not bool:
+        raise ProtocolError('boolean current-candidate reuse required')
     actions=command.get('segments',command.get('planned_segments',[]))
     if isinstance(actions,list):
         try:
@@ -29,7 +44,8 @@ def validate(command,sequence):
             operation='attempt_grasp_and_probe',segments=command.get('planned_segments')),sequence)
         if 'native_g1_preload_request_n' in command:
             value=command['native_g1_preload_request_n']
-            if isinstance(value,bool)or value not in (.5,.75,1.,1.5):raise ProtocolError('tested preload menu only')
+            from .preload_extension import request
+            request(value,study=True)  # server still enforces per-job evidence admission
         return command
     if op in ('prepare_grasp','observe_view','select_observed_target'):
         forwarded=dict(command,operation='evaluate_view'if op=='observe_view'else'build_geometry')

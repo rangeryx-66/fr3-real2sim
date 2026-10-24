@@ -61,6 +61,9 @@ def serve(r):
                 elif op=='move_and_observe':result=ops.move_and_observe(ops.cache.get(command['evaluated_command'],{}))
                 elif op=='build_geometry':result=ops.request_plan(command)
                 elif op=='prepare_grasp':result=ops.prepare_grasp(command)
+                elif op=='export_matched_reference':
+                    from .contact_fixture import export_reference
+                    result=export_reference(ops,command)
                 elif op=='select_observed_target':
                     from .target_association import accept_latest
                     result=accept_latest(ops,command)

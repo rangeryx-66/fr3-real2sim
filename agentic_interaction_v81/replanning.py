@@ -57,7 +57,7 @@ def targets(actions):
 
 
 @contextmanager
-def candidate_gate(actions,horizon):
+def candidate_gate(actions,horizon,pool=None):
     """Existing ranked IK branches fall through when the full action is absent.
 
     The original native closing/approach/timed-route check remains mandatory.
@@ -68,6 +68,7 @@ def candidate_gate(actions,horizon):
     required=targets(actions)
     audit=[]
     def checked(checker,candidate):
+        if pool is not None:pool.append(deepcopy(candidate))
         bounds=coverage(candidate,required,horizon)
         prismatic=getattr(checker,'g',{}).get('job',{}).get('articulation_v7',{}).get('joint_type')=='prismatic'
         audit.append(dict(family=[candidate[k] for k in
@@ -96,6 +97,10 @@ def reject(ops,route,action):
         measured_coordinate=ops.r.actual(),station_generation=ops.r.base_generation,
         native_rejection_preserved=deepcopy(route))
     s=state(ops);s['rejections'].append(record);s['state']='REPLAN_REQUIRED'
+    if hasattr(ops.r,'output'):
+        from agent_command_protocol_v12 import atomic_json
+        atomic_json(ops.r.output/'PATH_REJECTION_BACKLOG.json',dict(requests=s['rejections'],
+            original_requests_preserved=True,shorter_alternative_is_not_original_completion=True))
     return record
 
 
@@ -161,13 +166,16 @@ def packet(ops):
     return s
 
 
-def admission(ops):
+def admission(ops,actions=None):
     """Preserve one measured recovery opportunity before another acquisition.
 
     EpisodeBudget.remaining already subtracts the deterministic exit reserve.
     Unknown first-operation costs are reported, not invented as safety limits.
     """
     from .recovery_batch import measured_costs
+    if getattr(ops.r,'job',{}).get('v81_integrated_repair'):
+        from .costs import admission as measured_admission
+        return measured_admission(ops,actions)
     cost=measured_costs(ops);remaining=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
     latest=cost['observed_max_operation_wall_s']
     names=('reobserve_and_replan','prepare_grasp','attempt_grasp_and_probe')

@@ -67,7 +67,9 @@ class RecoveryBatchTests(unittest.TestCase):
         with self.assertRaises(ProtocolError):validate(dict(c,T_grasp=[[1,0,0,0]]),3)
         with self.assertRaises(ProtocolError):validate(dict(c,target_xy_m=[float('nan'),0]),3)
         with self.assertRaises(ProtocolError):validate(dict(c,planned_segments=[]),3)
-        with self.assertRaises(ProtocolError):validate(dict(c,native_g1_preload_request_n=2.),3)
+        # New transport advertises the authorized engineering menu. The live
+        # server separately requires a study or published measured evidence.
+        self.assertEqual(validate(dict(c,native_g1_preload_request_n=2.),3)['native_g1_preload_request_n'],2.)
 
 
 if __name__=='__main__':unittest.main()

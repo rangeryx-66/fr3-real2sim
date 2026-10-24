@@ -70,6 +70,15 @@ def runtime_class(original):
             self.engineering_before_physics=actuate
             self.record.metadata['v81_base']=dict(joint_indices=self.base_indices.tolist(),joint_names=self.mount['joint_names'],
                 moving_only_when_verified_unloaded=True,kind='simulated driven XY carriage; not wheels')
+            if job.get('v81_integrated_repair') and job['articulation_v7']['joint_type']=='prismatic':
+                from .preload_extension import instrument
+                instrument(self)
+
+        def step(self):
+            row=super().step()
+            from .integration import progress
+            progress(self,row)
+            return row
 
         def station_boundary(self,record=True):
             import numpy as np

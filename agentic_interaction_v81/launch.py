@@ -12,9 +12,12 @@ def launch(specfile,profile):
     baseline_audit()
     spec=json.loads(Path(specfile).read_text())
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
-             'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture'}
+             'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
+             'integration_profile','preload_study'}
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
+    from .integration import apply as integrated_profile
+    integrated_profile(spec,{})
     if 'path_rejection_fixture' in spec and (phase!='engineering' or spec['path_rejection_fixture'] is not True):
         raise ValueError('EXPLICIT_ENGINEERING_REJECTION_FIXTURE_ONLY')
     if phase not in ('engineering','independent_repetition'):raise ValueError('V81_DEVELOPMENT_PHASE_REQUIRED')
@@ -23,6 +26,8 @@ def launch(specfile,profile):
         if phase!='engineering':raise ValueError('MATCHED_COMPARISON_CANNOT_BE_AN_INDEPENDENT_REPETITION')
         from .contact_fixture import validate
         validate(comparison)
+        if comparison['kind']=='prismatic_preload_extension_v81' and not spec.get('preload_study'):
+            raise ValueError('CONTROLLED_PRELOAD_STUDY_REGISTRATION_REQUIRED')
     commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
     if phase=='independent_repetition':
         gate=ROOT/'docs/experiments/skill_v81/ENGINEERING_READINESS.json'
@@ -39,12 +44,13 @@ def launch(specfile,profile):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
     job=json.loads((out/'job.json').read_text())
     debug_budget(spec,job)
+    integrated_profile(spec,job)
     job.update(v81_phase=phase,v81_frozen_release_commit=spec.get('frozen_release_commit'),
         runtime_acquisition_budget=budget,maximum_agent_operations=100,research_reference='agentic-interaction-v8.0.0')
     if spec.get('path_rejection_fixture'):job['v81_path_rejection_fixture']=True
@@ -59,6 +65,7 @@ def launch(specfile,profile):
     job['estimation_v7']['domain_native']=[min(old_domain[0],limits[0]),max(old_domain[1],limits[1])]
     dump(out/'job.json',job)
     sources={str(f.relative_to(ROOT)):digest(f) for f in sorted((ROOT/'agentic_interaction_v81').glob('*.py'))}
+    sources['agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json']=digest(ROOT/'agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json')
     dump(out/'V81_PRELAUNCH.json',dict(spec=spec,spec_sha256=digest(specfile),job_sha256=digest(out/'job.json'),
         source_commit=commit,source_sha256=sources,baseline_audit=baseline_audit(),
         effective_resources={k:job[k]for k in ('episode_wall_budget_s','episode_sim_budget_s','agent_wait_timeout_s','safe_exit_wall_reserve_s','safe_exit_sim_reserve_s')},

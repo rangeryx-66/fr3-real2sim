@@ -1,5 +1,25 @@
 # V8.1 engineering extension
 
+Current integrated engineering profile: `v81_force_replan_validation_v1`.
+It keeps V8.0 physical owners byte-frozen. A separately registered preload
+study accepts 2.0/2.5/3.0 N **requests**, using the same native drive authority;
+these are not measured loads or manufacturer ratings. Ordinary Agent jobs may
+use only the baseline menu plus `PRELOAD_EVIDENCE_POLICY.json`'s measured-evidence
+approved additions. The live packet and server validation share that policy.
+Historical 1.5 N menus below describe the older, still reproducible profile.
+
+FIT packets are immutable, reference one copy of each raw numeric chunk, and
+publish atomic model pointers. Pending VALIDATION requests survive a deferred
+handover. The runtime distinguishes computing, insufficient data and worker
+failure; at most the original one-second guarded endpoint hold is used while
+contact is verified stable. Otherwise release/park precedes reasoning and the
+original request remains the highest-priority current-state recovery task.
+
+`reuse_current_candidates:true` can recheck the current observation's unexecuted
+automatic candidate pool after a real planning rejection, saving a second
+reconstruction/search. Any observation, station, object-coordinate or physical
+acquisition change invalidates it. No historical successful pose is accepted.
+
 Latest gate: [same-scene rejected-path replanning](../docs/experiments/skill_v81/replanning_gate_20261024/REPORT.md).
 One fresh short physical test passed rejection → different native-checked
 action → continued opening/reversal → unloaded parking. This is **not** a

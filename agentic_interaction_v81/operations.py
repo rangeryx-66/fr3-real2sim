@@ -17,6 +17,9 @@ def operations_class(original):
             else:packet=parent(sequence,result)
             from .replanning import packet as recovery_packet
             packet['planning_recovery']=recovery_packet(self)
+            if self.r.job.get('v81_integrated_repair'):
+                from .integration import packet as integrated_packet
+                packet['integrated_task']=integrated_packet(self)
             if self.r.job['articulation_v7']['joint_type']!='prismatic':return packet
             from .recovery_search import current_packet
             from .recovery_batch import measured_costs
@@ -36,12 +39,53 @@ def operations_class(original):
             return observe_view(self,command)
 
         def release_park(self):
+            import time
+            started=time.perf_counter()
             from .exit_routes import release_park
-            return release_park(self.r,super().release_park)
+            result=release_park(self.r,super().release_park)
+            if self.r.job.get('v81_integrated_repair'):
+                from .costs import record
+                record(self,'release',started)
+            return result
+
+        def update_async(self,ready):
+            if not self.r.job.get('v81_integrated_repair'):return super().update_async(ready)
+            from .model_packets import submit
+            return submit(self,ready)
+
+        def acquire(self):
+            import time
+            started=time.perf_counter()
+            result=super().acquire()
+            self._v81_current_acquisition_verified=bool(result.get('acquired'))
+            if self.r.job.get('v81_integrated_repair'):
+                from .costs import record
+                record(self,'acquire',started)
+            return result
 
         def interact(self,target,max_sim_s=None,action=None):
             proposed=self.actions[0] if self.actions else action
+            integrated=self.r.job.get('v81_integrated_repair')
+            if integrated and getattr(self,'_v81_action_index',0)==0:
+                self._v81_first_route_check=self.check_successor(proposed)
+                if not self._v81_first_route_check.get('valid'):
+                    if self.actions:self.actions.pop(0)
+                    return dict(ok=False,status='PLANNING_REJECTED',
+                        reason=self._v81_first_route_check.get('reason'),
+                        native_check=self._v81_first_route_check,physical_motion_executed=False,
+                        requested_target_reached=False,safely_stopped=True,
+                        physical_transmission_valid=False)
+            self._v81_action_index=getattr(self,'_v81_action_index',0)+1
             if proposed and proposed['role'].startswith('VALIDATION'):
+                if integrated:
+                    from .validation_queue import admit
+                    admission=admit(self,proposed)
+                    if not admission['ready']:
+                        if self.actions:self.actions.pop(0)
+                        return dict(ok=False,status='VALIDATION_DEFERRED',executed=False,
+                            reason=admission['reason'],pending_request_preserved=True,
+                            validation_admission=admission,requested_target_reached=False,
+                            complete_independent_validation=False)
                 import hashlib
                 folder=self.r.output/'model';m=folder/'estimate.json';f=folder/'FIT_READINESS_V81.json'
                 ready=json.loads(f.read_text()) if f.exists() else {}
@@ -68,7 +112,17 @@ def operations_class(original):
                     declared_action=proposed,model_sha256=ready['model_sha256'],
                     selected=model.get('selected'),configuration=model.get('configuration'),
                     readiness=ready,object_coordinate=self.r.actual()),indent=2))
-            return super().interact(target,max_sim_s,action)
+            import time
+            started=time.perf_counter()
+            result=super().interact(target,max_sim_s,action)
+            if integrated and result.get('status')=='TARGET_REACHED' and result.get('physical_transmission_valid'):
+                from .costs import record
+                record(self,'healthy_action',started,result.get('gain_native'))
+            if integrated and proposed and proposed['role'].startswith('VALIDATION'):
+                from .validation_queue import mark
+                mark(self,proposed,'COMPLETE' if result.get('status')=='TARGET_REACHED'
+                    and result.get('requested_target_reached') else 'PHYSICAL_FAILURE',result=result)
+            return result
 
         def feedback(self):
             if self.r.job['articulation_v7']['joint_type']=='revolute' and self.g['contact_attempts']:
@@ -96,7 +150,7 @@ def operations_class(original):
             if not checked['full_requested_actions_feasible']:
                 return dict(executed=False,status='PLANNING_REJECTED',recoverable=True,
                     reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',coverage=checked)
-            resources=admission(self)
+            resources=admission(self,command.get('segments'))
             if not resources['admitted']:
                 return dict(executed=False,status='RECOVERY_RESERVE_REQUIRED',recoverable=True,
                     reason='OBSERVED_ATTEMPT_AND_RECOVERY_COST_EXCEEDS_WORK_BUDGET',resources=resources)
@@ -105,6 +159,13 @@ def operations_class(original):
             if command.get('segments')!=getattr(self,'_v81_declared_chain',None):
                 return dict(executed=False,recoverable=True,reason='DECLARE_AND_VALIDATE_THIS_CHAIN_BEFORE_ACQUISITION')
             generation=len(self.g['observation_generations'])
+            integrated=self.r.job.get('v81_integrated_repair')
+            if integrated:
+                from .validation_queue import enqueue
+                enqueue(self,command)
+                self._v81_action_index=0;self._v81_first_route_check=None
+                self._v81_block_first_record=self.r.record.count
+                self._v81_current_acquisition_verified=False
             from .execution_return import direct_return
             with direct_return(self.r):result=super().attempt(command)
             result['observation_generation_v81']=generation
@@ -112,7 +173,8 @@ def operations_class(original):
             result['station_generation']=self.r.base_generation
             result['contact_following_v81']=getattr(self.r,'v81_contact_following_mode','legacy_window')
             result['planning_recovery']=dict(state(self))
-            rejected=any(not c.get('valid') for c in result.get('continuations',[]))
+            rejected=(bool(getattr(self,'_v81_first_route_check',None))
+                and not self._v81_first_route_check['valid']) or any(not c.get('valid') for c in result.get('continuations',[]))
             if rejected and self.r.supervisor.latched is None:
                 safe=bool(result.get('safe_exit',{}).get('safe'))
                 state(self)['state']='UNLOADED_REPLAN_REQUIRED' if safe else 'SAFE_EXIT_UNAVAILABLE'
@@ -121,12 +183,17 @@ def operations_class(original):
                 # Fresh post-contact observation may be collected automatically
                 # at the verified unloaded boundary, never reasoning under load.
                 costs=resources.get('measured_current_attempt_plus_one_recovery_wall_s')
+                if integrated:costs=resources.get('recovery_reserve_wall_s')
                 if safe and costs is not None:
                     remaining=self.r.episode_budget.remaining(self.r.tick*self.r.dt)
                     if remaining['wall_s']>=costs:
                         result['fresh_replanning_observation']=self.reobserve()
                         state(self)['state']='FRESH_EVIDENCE_REQUIRES_AGENT_INSPECTION'
             result['planning_recovery']=dict(state(self))
+            if integrated:
+                from .validation_queue import boundary
+                result['pending_validation']=boundary(self)
+                result['first_action_measured_native_check']=self._v81_first_route_check
             return result
 
         def check_successor(self,action):
@@ -147,7 +214,7 @@ def operations_class(original):
                     reason='DECLARATION_PREFLIGHT:'+str(error),
                     robot_action_executed=False,expensive_planning_started=False)
             from .replanning import admission
-            resources=admission(self)
+            resources=admission(self,actions)
             if not resources['admitted']:
                 return dict(plan=False,recoverable=True,status='RECOVERY_RESERVE_REQUIRED',
                     reason='OBSERVED_ATTEMPT_AND_RECOVERY_COST_EXCEEDS_WORK_BUDGET',
@@ -191,8 +258,20 @@ def operations_class(original):
             search_context=search_scope(self,search_round) if prismatic else nullcontext()
             prune_context=skip_dominated_checks() if prismatic else nullcontext()
             from .replanning import candidate_gate
-            with patch.object(executable,'current_export',current), cached_planning_fk(), memory_scope, search_context, prune_context, candidate_gate(actions,horizon) as coverage_audit:
-                result=super().request_plan(command)
+            collected=[];integrated=self.r.job.get('v81_integrated_repair')
+            if prismatic and integrated:
+                from .preload_extension import menu_scope
+                menu=menu_scope(self)
+            else:menu=nullcontext()
+            with patch.object(executable,'current_export',current), cached_planning_fk(), memory_scope, search_context, prune_context, candidate_gate(actions,horizon,collected if integrated else None) as coverage_audit, menu:
+                if command.get('reuse_current_candidates'):
+                    if not integrated:return dict(plan=False,recoverable=True,reason='INTEGRATED_CANDIDATE_REPLAN_NOT_ACTIVE')
+                    from .candidate_pool import select
+                    result=select(self,command)
+                else:result=super().request_plan(command)
+            if integrated and collected and not command.get('reuse_current_candidates'):
+                from .candidate_pool import keep
+                keep(self,collected,horizon)
             if hasattr(self.r,'output'):
                 from agent_command_protocol_v12 import atomic_json
                 atomic_json(self.r.output/'TARGET_COVERAGE_CANDIDATE_AUDIT.json',dict(candidates=coverage_audit,

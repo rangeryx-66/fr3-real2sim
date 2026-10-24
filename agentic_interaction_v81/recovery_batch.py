@@ -36,7 +36,8 @@ def relocate_observe_prepare(ops,command):
     selection(command,'prismatic')
     if 'native_g1_preload_request_n' in command:
         preload=command['native_g1_preload_request_n']
-        if isinstance(preload,bool)or preload not in (.5,.75,1.,1.5):raise ValueError('TESTED_PRELOAD_MENU_ONLY')
+        from .preload_extension import for_job
+        for_job(ops.r.job,preload)
     cost=measured_costs(ops)
     remaining=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
     if cost['available'] and cost['recovery_preparation_and_attempt_observed_cost_s']>remaining['wall_s']:
