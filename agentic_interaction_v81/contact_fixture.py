@@ -60,8 +60,10 @@ def export_reference(ops,command):
     if r.supervisor.latched is not None or r.grasp_reference is not None:
         return dict(exported=False,reason='UNLOADED_UNLATCHED_STATE_REQUIRED')
     candidate=json.loads((root/'visual_plan.json').read_text())
-    from native_g1_visual_input import observed_geometry
-    geometry=observed_geometry(root/'agent_geometry')
+    # The incremental owner already sealed this measured geometry. Calling
+    # the older single-view builder would both require obsolete input files
+    # and risk changing the reference rather than merely serializing it.
+    geometry=json.loads((root/'agent_geometry/observed_geometry.json').read_text())
     section=next(s for s in candidate['grasp_geometry_selection']['sections']
         if s['fraction']==candidate['section_fraction'])
     data=dict(kind='fresh_matched_observation_reference_v81',T=candidate['T'],

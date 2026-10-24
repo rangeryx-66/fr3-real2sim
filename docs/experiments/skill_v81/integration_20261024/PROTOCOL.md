@@ -62,3 +62,15 @@ Raw RGB-D, F/T and telemetry stay private and compact. Publish source hashes,
 derived contact/retention comparisons, real rejection/recovery traces, validation
 status, actual range, parking, timing and remaining blockers. No short gate alone
 constitutes completion of this integrated task.
+
+### Reference-only interface correction
+
+`v81_preload_fresh_reference_01` obtained and inspected a fresh lower-handle
+SAM candidate, incremental cloud and fully checked automatic plan. Its reference
+export failed before any acquisition: the exporter called the obsolete
+single-view geometry builder. Preserve this error. The correction serializes
+the existing incremental `observed_geometry.json`; it never rebuilds geometry.
+After verified scene shutdown, the same inspected, unexecuted reference may be
+serialized offline from the sealed observation/plan and zero-acquisition record.
+This is explicitly an engineering control reference, not a successful cached
+grasp, new sensing outcome or online full-task fallback.

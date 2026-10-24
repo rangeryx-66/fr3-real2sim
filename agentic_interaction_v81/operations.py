@@ -20,6 +20,8 @@ def operations_class(original):
             if self.r.job.get('v81_integrated_repair'):
                 from .integration import packet as integrated_packet
                 packet['integrated_task']=integrated_packet(self)
+                if self.r.job['articulation_v7']['joint_type']=='prismatic':
+                    packet['legal_preloads_n']=packet['integrated_task']['preload_menu']['requests_n']
             if self.r.job['articulation_v7']['joint_type']!='prismatic':return packet
             from .recovery_search import current_packet
             from .recovery_batch import measured_costs
