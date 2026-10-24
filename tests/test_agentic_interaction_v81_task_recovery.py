@@ -24,6 +24,17 @@ def fixture(folder):
 
 
 class TaskRecoveryTests(unittest.TestCase):
+    def test_broken_worker_publication_is_not_a_controller_fault(self):
+        from agentic_interaction_v81.validation_queue import model_state
+        with tempfile.TemporaryDirectory() as d:
+            ops=fixture(d);ops.r.record.segments=[dict(id=1,role='FIT_OPEN')]
+            (Path(d)/'model').mkdir();(Path(d)/'model/MODEL_PUBLICATION.json').write_text('{')
+            result=model_state(ops)
+            self.assertEqual(result['state'],'WORKER_FAILED')
+            self.assertFalse(result['qualified_model_approved'])
+            self.assertTrue(result['manipulation_may_continue'])
+            self.assertEqual(recovery.classify(ops,dict(pending_validation=result)),'READY')
+
     def test_post_contact_observation_retires_old_angle_and_view_count_is_not_a_stop(self):
         from agentic_interaction_v81.operations import operations_class
         from unittest.mock import Mock

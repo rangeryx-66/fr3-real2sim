@@ -40,7 +40,7 @@ def enqueue(ops,command):
     write(ops,data)
 
 
-def model_state(ops):
+def _model_state(ops):
     expected=max((s['id'] for s in ops.r.record.segments if s['role'].startswith('FIT')),default=0)
     if expected==0:return dict(state='DATA_INSUFFICIENT',reason='NO_COMPLETED_FIT_DATA',
         needed='qualified bidirectional FIT before independent VALIDATION')
@@ -65,6 +65,17 @@ def model_state(ops):
             negative_bins=max(0,8-ready.get('negative_bins',0)),
             distinct_eligible_trajectories=max(0,2-ready.get('distinct_eligible_trajectories',0)),
             excitation=ready.get('information'),parameter_support=(model.get('selected')or{}).get('conditionally_supported')))
+
+
+def model_state(ops):
+    try:return _model_state(ops)
+    except (OSError,json.JSONDecodeError,KeyError,TypeError,ValueError) as error:
+        if not ops.r.job.get('v81_active_recovery'):raise
+        # Only immutable numerical publication files are read above. A worker
+        # publication failure is not a controller/sensor fault and must not
+        # discard an already completed physical attempt after safe unloading.
+        return dict(state='WORKER_FAILED',reason='NUMERICAL_PUBLICATION_UNAVAILABLE',
+            error=repr(error),qualified_model_approved=False,manipulation_may_continue=True)
 
 
 def mark(ops,action,status,**metadata):
