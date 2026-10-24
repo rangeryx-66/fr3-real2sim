@@ -9,6 +9,12 @@ from agent_command_protocol_v12 import (
 def validate(command,sequence):
     if not isinstance(command,dict):return original_validate(command,sequence)
     op=command.get('operation')
+    if op=='extend_orchestration_wall':
+        original_validate(dict(command,operation='inspect'),sequence)
+        from .orchestration_extension import validate_request
+        try:validate_request(command)
+        except ValueError as error:raise ProtocolError(str(error)) from error
+        return command
     if op=='retry_model':
         original_validate(dict(command,operation='inspect'),sequence)
         if set(command)-{'operation','sequence','protocol_version','reason'} or not command.get('reason'):

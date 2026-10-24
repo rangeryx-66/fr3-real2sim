@@ -42,6 +42,8 @@ def serve(r):
                     instruction='Preserve pending identification. Inspect current evidence or retry the numerical worker; no stale model is approved.')
             packet['station']=dict(generation=r.base_generation,measured_base=r.base.tolist(),
                 operations=['evaluate_station','relocate_station'],actuation='native driven XY stage')
+            if hasattr(r,'orchestration_extension'):
+                packet['orchestration_extension']=r.orchestration_extension.packet()
             if task_recovery.enabled(ops):
                 packet['task_recovery']=dict(task_recovery.state(ops),
                     completion=task_recovery.completed(ops))
@@ -54,6 +56,22 @@ def serve(r):
             began=time.perf_counter();path=commands/('%03d.json'%seq)
             heartbeat=began
             while not path.exists():
+                if (not r.stopped and not (r.output/'STOP_AND_EXPORT').exists()
+                        and time.perf_counter()-began>=wait and hasattr(r,'orchestration_extension')):
+                    from .orchestration_extension import renew_parked_wait
+                    renewal=renew_parked_wait(ops,deadline)
+                    if renewal.get('extended'):
+                        # Keep began: finite authorized seconds add to this
+                        # window instead of silently restarting its clock.
+                        wait+=renewal['renewed_wait_s'];deadline+=renewal['renewed_wait_s']
+                        packet['orchestration_extension']=r.orchestration_extension.packet()
+                        packet['remaining_resources']=r.episode_budget.remaining(r.tick*r.dt)
+                        atomic_json(r.output/'DECISION_PACKET.json',packet)
+                        status(r,seq,'WAITING',unloaded=True,deadline_unix_s=deadline)
+                        atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,
+                            timeout_s=wait,deadline_unix_s=deadline,requires_ACK_before_execution=True,
+                            live_status_file='AGENT_SESSION_STATUS.json',orchestration_renewal=renewal))
+                    else:atomic_json(r.output/'ORCHESTRATION_WAIT_RENEWAL_REFUSAL.json',renewal)
                 if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.perf_counter()-began>=wait:
                     status(r,seq,'FINALIZING',unloaded=True,reason='decision deadline or owner stop')
                     return dict(status='ORCHESTRATION_TIMEOUT' if not r.stopped else 'OWNER_STOP',
@@ -91,6 +109,9 @@ def serve(r):
                 elif op=='retry_model':
                     from .validation_queue import retry_model
                     result=retry_model(ops,command)
+                elif op=='extend_orchestration_wall':
+                    from .orchestration_extension import handle
+                    result=handle(ops,command,deadline)
                 elif op in ('reobserve_and_replan','fresh_mode_observation'):result=ops.reobserve()
                 elif op=='safe_release_retreat':result=ops.release_park()
                 elif op=='evaluate_station':result=ops.evaluate_station(command);ops.cache[seq]=result
@@ -134,6 +155,7 @@ def serve(r):
                 return dict(status=result.get('status','SAFETY_STOP'),trace=trace)
         return dict(status='BOUNDED_OPERATION_BUDGET',safe_exit=ops.release_park(),trace=trace)
     finally:
+        if hasattr(r,'orchestration_extension'):r.orchestration_extension.closed=True
         status(r,seq,'FINALIZING',reason='closing workers and deterministic actor export')
         try:ops.close_workers()
         finally:status(r,seq,'CLOSED',unloaded=g['recovery_state']=='UNLOADED_OBSERVATION')

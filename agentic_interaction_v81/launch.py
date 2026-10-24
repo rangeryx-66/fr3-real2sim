@@ -13,7 +13,7 @@ def launch(specfile,profile):
     spec=json.loads(Path(specfile).read_text())
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
-             'integration_profile','preload_study'}
+             'integration_profile','preload_study','orchestration_authorization'}
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     from .integration import apply as integrated_profile
@@ -44,7 +44,7 @@ def launch(specfile,profile):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
@@ -53,6 +53,13 @@ def launch(specfile,profile):
     integrated_profile(spec,job)
     job.update(v81_phase=phase,v81_frozen_release_commit=spec.get('frozen_release_commit'),
         runtime_acquisition_budget=budget,maximum_agent_operations=100,research_reference='agentic-interaction-v8.0.0')
+    from .orchestration_extension import FLAG, KEY_ENV, wait_actor
+    ledger_key=None
+    if job.get(FLAG):
+        import secrets
+        ledger_key=secrets.token_hex(32)
+        job.update(v83_orchestration_source_commit=commit,
+                   v83_orchestration_session_nonce=secrets.token_hex(16))
     if spec.get('path_rejection_fixture'):job['v81_path_rejection_fixture']=True
     if comparison is not None:
         if job['articulation_v7']['joint_type']!='prismatic':raise ValueError('MATCHED_COMPARISON_REQUIRES_PRISMATIC')
@@ -80,13 +87,14 @@ def launch(specfile,profile):
         env=dict(os.environ,PYTHONPATH=str(ROOT)+':'+str(ROOT/'scripts'),PYTHONNOUSERSITE='1',
             OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MPLCONFIGDIR=str(out/'plot_cache'),
             PATH=p['ffmpeg_dir']+':'+os.environ['PATH'])
+        if ledger_key is not None:env[KEY_ENV]=ledger_key
         command=[p['python'],'-u','-m','agentic_interaction_v81.entry','--job',str(out/'job.json')]
         began=time.perf_counter()
         with (out/'actor.log').open('wb') as log:
             actor=subprocess.Popen(command,cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
             dump(out/'PROCESS.json',dict(pid=actor.pid,command=command,checkout=str(ROOT),free_VRAM_MiB=free,
                 source_commit=commit,job_sha256=digest(out/'job.json')))
-            try:rc=actor.wait(timeout=float(job['episode_wall_budget_s'])+180)
+            try:rc=wait_actor(actor,job,out,ledger_key)
             except subprocess.TimeoutExpired:
                 (out/'STOP_AND_EXPORT').touch()
                 try:rc=actor.wait(timeout=90)

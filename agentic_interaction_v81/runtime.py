@@ -30,6 +30,8 @@ def runtime_class(original):
                 super().__init__(job)
             from .video_evidence import configure
             configure(self)
+            from .orchestration_extension import install
+            install(self)  # new opt-in actor constructor only; never hot-load
             import numpy as np
             from isaacsim.core.prims import RigidPrim
             self.mount=json.loads((self.output/'V81_MOBILE_MOUNT.json').read_text())
