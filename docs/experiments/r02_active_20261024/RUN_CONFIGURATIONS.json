@@ -1,0 +1,283 @@
+{
+  "configurations": [
+    {
+      "sequence": 8,
+      "segments": [
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "FIT_ACTIVE_LOW_RANGE",
+          "target_q": 0.6,
+          "reference_speed_m_s": 0.008,
+          "reference_acceleration_m_s2": 0.025,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.4,
+          "period_s": 1.8,
+          "fit_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "FIT_ACTIVE_TO_90",
+          "target_q": 1.5707963267948966,
+          "reference_speed_m_s": 0.012,
+          "reference_acceleration_m_s2": 0.04,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.25,
+          "period_s": 1.2,
+          "fit_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "FIT_ACTIVE_REVERSE_FROM_90",
+          "target_q": 1.15,
+          "reference_speed_m_s": 0.007,
+          "reference_acceleration_m_s2": 0.025,
+          "velocity_program": "plateaus",
+          "low_speed_fraction": 0.5,
+          "ramp_s": 0.7,
+          "plateau_s": 1.5,
+          "fit_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "VALIDATION_ACTIVE_REOPEN_HIGH",
+          "target_q": 1.5,
+          "reference_speed_m_s": 0.0095,
+          "reference_acceleration_m_s2": 0.03,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.55,
+          "period_s": 2.1
+        }
+      ],
+      "inspected_image_sha256": "39abd022114e5f897b512a5bf38222f24ab0c76f20a6af40ef41ffd16ec178d8"
+    },
+    {
+      "sequence": 26,
+      "segments": [
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "FIT_RECOVERY_FORWARD_PROBE",
+          "target_q": 0.45,
+          "reference_speed_m_s": 0.006,
+          "reference_acceleration_m_s2": 0.02,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.5,
+          "period_s": 1.8,
+          "fit_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "FIT_RECOVERY_REVERSE_PROBE",
+          "target_q": 0.23,
+          "reference_speed_m_s": 0.0055,
+          "reference_acceleration_m_s2": 0.018,
+          "velocity_program": "plateaus",
+          "low_speed_fraction": 0.5,
+          "ramp_s": 0.7,
+          "plateau_s": 1.5,
+          "fit_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "FIT_RECOVERY_TO_90",
+          "target_q": 1.5707963267948966,
+          "reference_speed_m_s": 0.009,
+          "reference_acceleration_m_s2": 0.025,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.4,
+          "period_s": 1.8,
+          "fit_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "VALIDATION_REVERSE_FROM_90",
+          "target_q": 1.15,
+          "reference_speed_m_s": 0.007,
+          "reference_acceleration_m_s2": 0.025,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.55,
+          "period_s": 2.1
+        }
+      ],
+      "inspected_image_sha256": "88e7f2fda3fc9d4732616cd1c331f8658ec33da055812d6dc567dc2e49aa2e49"
+    },
+    {
+      "sequence": 37,
+      "segments": [
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "VALIDATION_FINAL_OPEN_90",
+          "target_q": 1.5707963267948966,
+          "reference_speed_m_s": 0.005,
+          "reference_acceleration_m_s2": 0.015,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.5,
+          "period_s": 1.6
+        },
+        {
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "allow_target_truncation": false,
+          "role": "VALIDATION_AFTER_GOAL_REVERSE",
+          "target_q": 1.15,
+          "reference_speed_m_s": 0.0075,
+          "reference_acceleration_m_s2": 0.025,
+          "velocity_program": "sine",
+          "low_speed_fraction": 0.6,
+          "period_s": 2.3
+        }
+      ],
+      "inspected_image_sha256": "a1d480596d3ed8cf9307406fbf1f515bd46070dc35bc69b832f94bd3f32f2972"
+    }
+  ],
+  "postrun_models": {
+    "constant_model": {
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "C_Nm"
+      ],
+      "parameters": [
+        0.1302659033991026,
+        0.5131320519306765,
+        0.02310066971387489
+      ],
+      "conditional_std": [
+        0.029145087697077264,
+        0.06399160226050707,
+        0.0006230399419876929
+      ],
+      "intervals": 0,
+      "active_controls": [
+        0
+      ],
+      "domain_native": [
+        -0.010471975511965976,
+        1.7453292519943295
+      ],
+      "cv_rmse": 0.004874067865435207,
+      "scaled_condition": 52.18099550364315
+    },
+    "extended_model": {
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "nonnegative_resistance_control_0",
+        "nonnegative_resistance_control_1",
+        "nonnegative_resistance_control_2",
+        "nonnegative_resistance_control_3",
+        "nonnegative_resistance_control_4",
+        "nonnegative_resistance_control_5",
+        "nonnegative_resistance_control_6",
+        "nonnegative_resistance_control_7",
+        "nonnegative_resistance_control_8",
+        "nonnegative_resistance_control_9"
+      ],
+      "parameters": [
+        0.1307897525915243,
+        0.23808140182165444,
+        0.026059394386834807,
+        0.03984137188379267,
+        0.035227028985896455,
+        0.020936616398768718,
+        0.02486408342619194,
+        0.023127586284869543,
+        0.024061390853060353,
+        0.023377094161612533,
+        0.024143984693105847,
+        0.021993632221402163
+      ],
+      "conditional_std": [
+        0.00269806988965936,
+        0.008140551390604064,
+        0.0006726407229350293,
+        0.00044279635190036694,
+        0.0002446036780264582,
+        0.00016073229729702393,
+        0.00019558139496559287,
+        9.778853723431062e-05,
+        7.851409664301755e-05,
+        8.086184817027124e-05,
+        0.00017213802891796092,
+        0.000814470605897133
+      ],
+      "intervals": 8,
+      "active_controls": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "domain_native": [
+        -0.010471975511965976,
+        1.7453292519943295
+      ],
+      "cv_rmse": 0.005543717315816037,
+      "scaled_condition": 40.76865920869882
+    }
+  },
+  "selection": "FIT-only leave-complete-trajectory-out; >=3 FIT trajectories and >=10% CV gain for extension"
+}

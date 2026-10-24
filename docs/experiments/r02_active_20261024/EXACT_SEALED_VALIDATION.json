@@ -1,0 +1,135 @@
+{
+  "schema": "exact-sealed-heldout-prediction-v1",
+  "episode_id": "v81_r02_active90_20261024_01",
+  "evaluation_after_actor_exit": true,
+  "refitting_performed": false,
+  "model_selection_performed": false,
+  "validation_used_for_fit_or_selection": false,
+  "hidden_physics_used": false,
+  "processing": "unchanged production load_segments and prediction; exact pre-execution selected model",
+  "results": [
+    {
+      "segment_id": 5,
+      "role": "VALIDATION_FINAL_OPEN_90",
+      "seal_sha256": "c23b922776827c80eb35f37f1807c594aa0bbffe14674926d8ab0014120e77f5",
+      "frozen_model_sha256": "6d7c8b9af817dc3bae7faf62c884837dcdcb8a19a163533fd7e94fdf52834c65",
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "C_Nm"
+      ],
+      "parameters": [
+        0.13026596425696035,
+        0.513135075511602,
+        0.023100708181549513
+      ],
+      "conditional_std": [
+        0.029144799444321082,
+        0.06399073363335918,
+        0.0006230307929003415
+      ],
+      "predictions": {
+        "VALIDATION_FINAL_OPEN_90_05#0": {
+          "status": "predicted",
+          "effort_rmse": 0.0018761826586225535,
+          "coordinate_rmse": 0.014299434631885738,
+          "velocity_rmse": 0.0035473667604345796,
+          "final_coordinate_error": -0.025494273538171575,
+          "outside_FIT_support": true,
+          "samples": 1792,
+          "duration_s": 7.462500000000091,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "unfiltered_input_sensitivity": {
+        "VALIDATION_FINAL_OPEN_90_05#0": {
+          "status": "predicted",
+          "effort_rmse": 0.006552230079976322,
+          "coordinate_rmse": 0.014405662213792126,
+          "velocity_rmse": 0.003538177036923358,
+          "final_coordinate_error": -0.025629721591483356,
+          "outside_FIT_support": true,
+          "samples": 1792,
+          "duration_s": 7.462500000000091,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    },
+    {
+      "segment_id": 6,
+      "role": "VALIDATION_AFTER_GOAL_REVERSE",
+      "seal_sha256": "43538957f08587447488583fff48e705300ba4200190fa6c7578a3b5b841da76",
+      "frozen_model_sha256": "6d7c8b9af817dc3bae7faf62c884837dcdcb8a19a163533fd7e94fdf52834c65",
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "C_Nm"
+      ],
+      "parameters": [
+        0.13026596425696035,
+        0.513135075511602,
+        0.023100708181549513
+      ],
+      "conditional_std": [
+        0.029144799444321082,
+        0.06399073363335918,
+        0.0006230307929003415
+      ],
+      "predictions": {
+        "VALIDATION_AFTER_GOAL_REVERSE_06#0": {
+          "status": "predicted",
+          "effort_rmse": 0.0034751918581911213,
+          "coordinate_rmse": 0.11237512038267423,
+          "velocity_rmse": 0.006718362797987697,
+          "final_coordinate_error": 0.1951460301945096,
+          "outside_FIT_support": true,
+          "samples": 7080,
+          "duration_s": 29.495833333333394,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      },
+      "unfiltered_input_sensitivity": {
+        "VALIDATION_AFTER_GOAL_REVERSE_06#0": {
+          "status": "predicted",
+          "effort_rmse": 0.006984880102915296,
+          "coordinate_rmse": 0.11207105347749476,
+          "velocity_rmse": 0.006706060190808773,
+          "final_coordinate_error": 0.19480977367535468,
+          "outside_FIT_support": true,
+          "samples": 7080,
+          "duration_s": 29.495833333333394,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+        }
+      }
+    }
+  ],
+  "source_sha256": {
+    "scripts/update_probing_v7_model.py": "de24f2f1b439f1798dff60038ddac58ea7767ed445060eb9e7ad10668f48dbab",
+    "scripts/xarm_ft_v7_estimator.py": "9f8469101f9dc95d900049fe963a2c56de655cfc0156a2fbc394f7ca4a6f3e1c",
+    "interaction_runtime/segment_quality.py": "e60fd345fbcecbcd026aed98a2809316cedfcccf562fd96d48d6df6020075e4b"
+  }
+}
