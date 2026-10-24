@@ -21,6 +21,12 @@ def for_job(job,value):
         approved=job.get('v81_evidence_approved_preloads',()))
 
 
+def active_requests(job):
+    values=BASELINE+(STUDY if job.get('v81_preload_study') else
+        tuple(job.get('v81_evidence_approved_preloads',())))
+    return tuple(for_job(job,value) for value in values)
+
+
 def select(ops,command):
     """Same unloaded checks and original position mapping, without a 1.5 cap."""
     from interaction_runtime.prismatic_preload_v71 import preload_policy
@@ -49,6 +55,10 @@ def menu_scope(ops):
     if not ops.r.job.get('v81_integrated_repair'):
         yield;return
     from interaction_runtime.prismatic_feedback_v75 import PrismaticEvidenceOperationsV75 as Owner
+    from interaction_runtime.prismatic_v73 import PrismaticOperationsV73 as AcquisitionOwner
+    import interaction_runtime.prismatic_memory_v75_r3 as memory
+    import interaction_runtime.prismatic_operations_v75_r3 as conditioned
+    allowed=active_requests(ops.r.job)
     def admitted(self,command):
         from .declaration_preflight import check
         self.current_plan_ready=False
@@ -58,7 +68,32 @@ def menu_scope(ops):
         except ValueError as error:
             return dict(plan=False,reason=str(error),recoverable=self.r.supervisor.latched is None)
         return super(Owner,self).request_plan(command)
-    with patch.object(Owner,'request_plan',admitted):yield
+    def acquisition(self,command):
+        # Only V73's literal menu guard is replaced. Preserve its input record,
+        # parent execution (including all V75 checks above this owner), feedback
+        # and original native closure/drive mapping. No controller is copied.
+        import json
+        from agent_command_protocol_v12 import atomic_json
+        value=for_job(self.r.job,command.get('native_g1_preload_request_n',self.r.closure_policy['preload_n']))
+        if self.current_plan_ready:
+            selected=json.loads((self.r.output/'visual_plan.json').read_text())
+            keys=['T','T_grasp','section_fraction','insertion_m','roll_deg','pitch_deg',
+                'preplan','approach','contact_geometry_audit','contact_score_surface_source']
+            folder=self.r.output/'attempt_inputs';folder.mkdir(exist_ok=True)
+            atomic_json(folder/('%02d.json'%len(self.g['contact_attempts'])),dict(
+                selected={k:selected[k] for k in keys if k in selected},requested_preload_n=value,
+                measured_start_q=self.r.actual(),observations=[r['folder'] for r in self.g['agent_observations']],GT_grasp_used=False))
+        result=super(AcquisitionOwner,self).attempt(command)
+        try:result['contact_inspection']=self.feedback().get('contact_feedback')
+        except Exception as error:result['contact_inspection_error']=repr(error)
+        return result
+    # Both modules retain an imported reference to this menu. The functions
+    # continue to own failure-condition fingerprints and candidate exclusion.
+    with patch.object(Owner,'request_plan',admitted), \
+         patch.object(memory,'LEGAL_REQUESTS',allowed), \
+         patch.object(conditioned,'LEGAL_REQUESTS',allowed), \
+         patch.object(AcquisitionOwner,'attempt',acquisition):
+        yield
 
 
 def instrument(r):

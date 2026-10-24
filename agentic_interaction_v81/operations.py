@@ -176,7 +176,11 @@ def operations_class(original):
                 self._v81_block_first_record=self.r.record.count
                 self._v81_current_acquisition_verified=False
             from .execution_return import direct_return
-            with direct_return(self.r):result=super().attempt(command)
+            if integrated and self.r.job['articulation_v7']['joint_type']=='prismatic':
+                from .preload_extension import menu_scope
+                acquisition_menu=menu_scope(self)
+            else:acquisition_menu=nullcontext()
+            with direct_return(self.r),acquisition_menu:result=super().attempt(command)
             result['observation_generation_v81']=generation
             self._last_contact_finished_world_s=float(self.r.world.current_time)
             result['station_generation']=self.r.base_generation

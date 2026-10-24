@@ -29,6 +29,58 @@ class PhysicsLifecycleTests(unittest.TestCase):
 
 
 class PreloadTests(unittest.TestCase):
+    def test_real_prismatic_mro_memory_planning_and_acquisition_admit_same_menu(self):
+        try:
+            import trimesh, fcl, pinocchio
+        except ModuleNotFoundError as error:
+            self.skipTest('Full frozen planner import requires server dependency environment: '+str(error))
+        from agentic_interaction_v81.preload_extension import menu_scope
+        from native_g1_radial_families_v751 import radial_operations_class
+        from interaction_runtime.probing_v7 import OperationsV7
+        from interaction_runtime.prismatic_preload_v71 import PreloadOperations
+        from interaction_runtime.prismatic_v73 import PrismaticOperationsV73
+        import interaction_runtime.prismatic_memory_v75_r3 as memory
+        import interaction_runtime.prismatic_operations_v75_r3 as conditioned
+        from interaction_runtime.articulation_v7 import Articulation
+        actions=[dict(role=role,coordinate_unit='m',target_q=q,profile='constant',hold=True,
+            **({'fit_intervals_s':[[.6,10.]]} if role.startswith('FIT') else {}))
+            for role,q in [('FIT_A',.03),('FIT_B',.01),('VALIDATION_C',.02)]]
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);(p/'visual_plan.json').write_text('{}')
+            cls=radial_operations_class();ops=cls.__new__(cls)
+            ops.g={'recovery_state':'UNLOADED_OBSERVATION','contact_attempts':[],
+                'agent_observations':[]}
+            ops.r=SimpleNamespace(job={'v81_integrated_repair':True,
+                'v81_evidence_approved_preloads':[2.,2.5]},output=p,
+                closure_policy={'preload_n':1.,'finger_effort_limit_n':10.},
+                supervisor=SimpleNamespace(latched=None,force=SimpleNamespace(settled=lambda:True)),
+                grasp_reference=None,filtered=lambda:[0.,0.],
+                policy=SimpleNamespace(data={'force':{'unloaded_pad_n':.05}}),actual=lambda:0.)
+            ops.articulation=lambda:Articulation('prismatic',(0.,-1.,0.),(0.,0.,0.),(0.,.2))
+            ops.feedback=lambda:{'contact_feedback':{'current':True}}
+            for value in (2.,2.5,3.):
+                ops.r.job['v81_preload_study']=value==3.
+                command={'native_g1_preload_request_n':value,'planned_segments':actions}
+                with menu_scope(ops):
+                    self.assertEqual(memory.recovery_memory([],p,value)[1]['requested_preload_n'],value)
+                    self.assertIn(value,conditioned.LEGAL_REQUESTS)
+                    with patch.object(OperationsV7,'request_plan',return_value={'plan':False,'reason':'geometry_stub'})as downstream:
+                        result=ops.request_plan(command)
+                        downstream.assert_called_once()
+                        self.assertEqual(result['reason'],'geometry_stub')
+                    ops.current_plan_ready=True
+                    with patch.object(PreloadOperations,'attempt',return_value={'physical_grasp_started':True})as execution:
+                        result=PrismaticOperationsV73.attempt(ops,{'native_g1_preload_request_n':value})
+                        execution.assert_called_once()
+                        self.assertTrue(result['physical_grasp_started'])
+                        recorded=json.loads((p/'attempt_inputs/00.json').read_text())
+                        self.assertEqual(recorded['requested_preload_n'],value)
+                self.assertEqual(memory.LEGAL_REQUESTS,(.5,.75,1.,1.5))
+                self.assertEqual(conditioned.LEGAL_REQUESTS,(.5,.75,1.,1.5))
+            ops.r.job['v81_preload_study']=False
+            with menu_scope(ops),self.assertRaises(ValueError):
+                PrismaticOperationsV73.attempt(ops,{'native_g1_preload_request_n':3.})
+
     def test_no_silent_menu_clipping_or_unverified_agent_activation(self):
         for value in (2.,2.5,3.):
             self.assertEqual(for_job({'v81_preload_study':True},value),value)
