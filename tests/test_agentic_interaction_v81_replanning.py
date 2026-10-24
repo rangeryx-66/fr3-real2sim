@@ -1,6 +1,9 @@
 import copy
 import math
 import sys
+import json
+import tempfile
+from pathlib import Path
 import unittest
 from types import SimpleNamespace,ModuleType
 from unittest.mock import patch
@@ -29,6 +32,15 @@ class ReplanningTests(unittest.TestCase):
         self.assertTrue(coverage(p,[math.radians(20)],math.pi/2)['full_requested_actions_feasible'])
         self.assertFalse(coverage(p,[0.])['full_requested_actions_feasible'])
         self.assertFalse(coverage({},[.1])['full_requested_actions_feasible'])
+
+    def test_prismatic_whole_chain_certificate_preserves_cross_start_reversal(self):
+        p=dict(coordinate_unit='m',path=[dict(state=.02),dict(state=.01)],
+            execution_feasibility=dict(v75_whole_chain=dict(valid=True,
+                declared_actions=[dict(target_m=.01),dict(target_m=.03),dict(target_m=.025)])))
+        self.assertTrue(coverage(p,[.01,.03,.025])['full_requested_actions_feasible'])
+        self.assertFalse(coverage(p,[.04])['full_requested_actions_feasible'])
+        p['execution_feasibility']['v75_whole_chain']['valid']=False
+        self.assertFalse(coverage(p,[.03])['full_requested_actions_feasible'])
 
     def test_native_rejection_then_different_checked_plan_continues(self):
         ops=self.ops();a=action(.8);a['path_alternatives']=[action(.5,'FIT_SHORTER')];calls=[]
@@ -89,6 +101,20 @@ class ReplanningTests(unittest.TestCase):
             self.assertTrue(checker(dict(full,collision_free=True))['valid'])
         self.assertEqual(len(calls),2)
 
+    def test_prismatic_delegates_to_frozen_whole_chain_not_first_arc_only(self):
+        class Native:
+            def __init__(self):self.audit=[];self.g={'job':{'articulation_v7':{'joint_type':'prismatic'}}}
+            def __call__(self,c):return dict(valid=True)
+        module=ModuleType('native_g1_execution_candidates');module.CandidateCheck=Native
+        partial=dict(coordinate_unit='m',path=[dict(state=.02),dict(state=.01)],
+            section_fraction=0,insertion_m=0,roll_deg=0,pitch_deg=0)
+        a=dict(action(.03),coordinate_unit='m')
+        with patch.dict(sys.modules,{'native_g1_execution_candidates':module}),candidate_gate([a],.01) as audit:
+            self.assertTrue(Native()(partial)['valid'])
+            self.assertTrue(audit[0]['deferred_to_original_prismatic_whole_chain'])
+        # The eventual approval still fails without the full native certificate.
+        self.assertFalse(coverage(partial,[.03])['full_requested_actions_feasible'])
+
     def test_recovery_reserve_does_not_consume_exit_reserve(self):
         ops=self.ops();cost=dict(observed_max_operation_wall_s=dict(reobserve_and_replan=80,
             prepare_grasp=100,attempt_grasp_and_probe=400))
@@ -96,6 +122,54 @@ class ReplanningTests(unittest.TestCase):
             result=admission(ops);self.assertTrue(result['admitted'])
             ops.r.episode_budget.remaining=lambda t:dict(wall_s=970,sim_s=1000)
             self.assertFalse(admission(ops)['admitted'])
+
+    def test_partial_target_never_reaches_physical_owner(self):
+        from agentic_interaction_v81.operations import operations_class
+        calls=[]
+        class Owner:
+            def attempt(self,command):calls.append(command);return {}
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);(p/'visual_plan.json').write_text(json.dumps(dict(
+                path=[dict(state=0),dict(state=math.radians(81.1))])))
+            ops=operations_class(Owner)();ops.current_plan_ready=True;ops.r=SimpleNamespace(output=p)
+            result=ops.attempt(dict(segments=[action(math.pi/2)]))
+            self.assertEqual(result['status'],'PLANNING_REJECTED');self.assertEqual(calls,[])
+
+    def test_session_keeps_accepting_commands_after_rejected_path(self):
+        from agentic_interaction_v81.session import serve
+        events=[]
+        class Ops:
+            def __init__(self,r):self.cache={}
+            def decision_packet(self,*args):return {'unloaded':True}
+            def attempt(self,c):return dict(status='PLANNING_REJECTED',recoverable=True,
+                episode_termination_required=False,safe_exit={'safe':True})
+            def release_park(self):events.append('park');return {'safe':True}
+            def close_workers(self):events.append('closed')
+        observed=ModuleType('interaction_runtime.registered_observation_v71');observed.initialize=lambda *a:None
+        owner=ModuleType('interaction_runtime.probing_v7');owner.OperationsV7=object
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);(p/'agent_commands').mkdir()
+            commands=[dict(operation='attempt_grasp_and_probe',segments=[action(.5)]),
+                dict(operation='inspect'),dict(operation='finish')]
+            for i,c in enumerate(commands):(p/'agent_commands'/('%03d.json'%i)).write_text(json.dumps(c))
+            r=SimpleNamespace(job={'articulation_v7':{'joint_type':'revolute'},'maximum_agent_operations':4},
+                g={'recovery_state':'UNLOADED_OBSERVATION'},output=p,base_generation=0,
+                base=SimpleNamespace(tolist=lambda:[0,0,0,0]),supervisor=SimpleNamespace(latched=None))
+            # The real session dispatch/termination logic is tested; the
+            # physical owner is a fixture, not a claimed Isaac contact test.
+            Ops.articulation=lambda self:SimpleNamespace(validate_target=lambda a:True)
+            with patch.dict(sys.modules,{'interaction_runtime.registered_observation_v71':observed,
+                    'interaction_runtime.probing_v7':owner}), \
+                 patch('agentic_interaction_v81.session.operations_class',return_value=Ops), \
+                 patch('agentic_interaction_v81.session.window',return_value=(20,{})), \
+                 patch('agentic_interaction_v81.session.status'), \
+                 patch('agentic_interaction_v81.session.receive',side_effect=lambda path,i,res:(commands[i],{})), \
+                 patch('agentic_interaction_v81.session.complete'):
+                result=serve(r)
+            self.assertEqual(result['status'],'SESSION_COMPLETE')
+            self.assertEqual(len(result['trace']),3)
+            self.assertEqual(result['trace'][0]['result']['status'],'PLANNING_REJECTED')
+            self.assertEqual(events,['park','closed'])
 
 
 if __name__=='__main__':unittest.main()

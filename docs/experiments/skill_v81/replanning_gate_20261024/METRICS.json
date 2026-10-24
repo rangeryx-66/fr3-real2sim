@@ -1,0 +1,181 @@
+{
+  "status": "PASS_SHORT_REPLANNING_GATE",
+  "episode_id": "v81_replanning_gate_01",
+  "physical_source_commit": "25d827392d9589ba9b53d05e6944ef1d2a23e69b",
+  "one_fresh_scene": true,
+  "actual_acquisitions": 1,
+  "acquisition": {
+    "acquired": true,
+    "hold_s": 1.0,
+    "joint_coordinate": -7.397052304014551e-09,
+    "units": {
+      "coordinate": "rad",
+      "effort": "N m",
+      "inertial": "kg m^2",
+      "damping": "N m s/rad"
+    }
+  },
+  "maximum_actual_angle_deg": 9.027914379812012,
+  "reverse_travel_deg": 6.044287540430397,
+  "segments": [
+    {
+      "role": "FIT_INITIAL_OPEN",
+      "declared_target_deg": 6.0,
+      "status": "TARGET_REACHED",
+      "actual_end_deg": 6.016448970033895,
+      "actual_gain_deg": 6.016449393853772,
+      "elapsed_sim_s": 10.049999999999997,
+      "measured_stopped": true,
+      "transmission_valid": true
+    },
+    {
+      "role": "FIT_REPLAN_SHORTER_OPEN",
+      "declared_target_deg": 9.0,
+      "status": "TARGET_REACHED",
+      "actual_end_deg": 9.02791011094378,
+      "actual_gain_deg": 3.011461140909887,
+      "elapsed_sim_s": 5.099999999999994,
+      "measured_stopped": true,
+      "transmission_valid": true
+    },
+    {
+      "role": "FIT_REVERSE",
+      "declared_target_deg": 3.0,
+      "status": "TARGET_REACHED",
+      "actual_end_deg": 2.9836225705133845,
+      "actual_gain_deg": -6.044287540430397,
+      "elapsed_sim_s": 12.82916666666668,
+      "measured_stopped": true,
+      "transmission_valid": true
+    }
+  ],
+  "rejection": {
+    "reason": "INJECTED_COLLISION_REJECTION",
+    "engineering_injected": true,
+    "rejected_requested_target_deg": 12.0,
+    "selected_target_deg": 9.0,
+    "selected_original_native_check_valid": true,
+    "original_rejected_request_completed": false
+  },
+  "complete_independent_validation": false,
+  "validation_status": "VALIDATION_DEFERRED",
+  "validation_metrics": null,
+  "full_range_pass": false,
+  "park": {
+    "reached": true,
+    "unloaded": true,
+    "measured_collision_valid": true,
+    "pad_loads_n": [
+      0.0,
+      0.0
+    ],
+    "measured_q": [
+      -0.34823259711265564,
+      -0.5007291436195374,
+      -0.0008403224055655301,
+      1.0011792182922363,
+      0.0020024143159389496,
+      0.5019999742507935,
+      -0.0037137665785849094
+    ],
+    "door_angle_deg": 2.9836225705133845
+  },
+  "hard_safety_stop_samples": 0,
+  "informational_warning_samples": 0,
+  "event_counts": {
+    "CONTINUOUS_REFERENCE_HANDOVER": 4,
+    "PHYSICAL_GRASP_START": 1,
+    "PAD_CONTACT_ACQUIRED": 13,
+    "PAD_CONTACT_LOST": 13,
+    "GRASP_VERIFIED": 1,
+    "RELEASED": 1,
+    "CLEARANCE_REACHED": 1,
+    "SAFE_PARK_REACHED": 1
+  },
+  "wall_s": 1002.0905439257622,
+  "simulation_s": 167.8,
+  "operation_wall_s": [
+    {
+      "operation": "observe_view",
+      "wall_s": 41.83324318192899,
+      "unloaded_wait_s": 65.32452271133661
+    },
+    {
+      "operation": "prepare_grasp",
+      "wall_s": 169.05700953071937,
+      "unloaded_wait_s": 86.92762580420822
+    },
+    {
+      "operation": "attempt_grasp_and_probe",
+      "wall_s": 444.5438165040687,
+      "unloaded_wait_s": 36.62535506207496
+    },
+    {
+      "operation": "finish",
+      "wall_s": 0.043037859722971916,
+      "unloaded_wait_s": 70.10726643493399
+    }
+  ],
+  "full_target_coverage": {
+    "full_requested_actions_feasible": true,
+    "checked_interval_native": [
+      0.0,
+      0.2617993877991494
+    ],
+    "uncovered_targets_native": [],
+    "requested_horizon_native": 0.2617993877991494,
+    "full_requested_horizon_feasible": true,
+    "endpoint_is_not_physical_progress": true
+  },
+  "raw_chunks_verified": [
+    {
+      "file": "00000000.npz",
+      "sha256": "9a7a042a3021866472ca5c51213995c68c6436ad1e1d52584a26c9d2832c3007",
+      "matched": true
+    },
+    {
+      "file": "00030008.npz",
+      "sha256": "8eaebe0abe1461e71dee1751c996204b5ed67decec872a0ada79027e3d662da5",
+      "matched": true
+    },
+    {
+      "file": "00031232.npz",
+      "sha256": "1a4a4298c97fc423643e3c0f04888b50fa8ed2f92ec1fa4e61eee3abe34cc3eb",
+      "matched": true
+    },
+    {
+      "file": "00034311.npz",
+      "sha256": "5e72c50bacd56ab814b6a1783446d0701c8052f7b42edbfb05539f34e5abb17c",
+      "matched": true
+    }
+  ],
+  "loaded_source_matches": {
+    "agentic_interaction_v81/__init__.py": true,
+    "agentic_interaction_v81/action_declaration.py": true,
+    "agentic_interaction_v81/boundary_operations.py": true,
+    "agentic_interaction_v81/collision.py": true,
+    "agentic_interaction_v81/contact_diagnosis.py": true,
+    "agentic_interaction_v81/contact_following.py": true,
+    "agentic_interaction_v81/contact_measurement.py": true,
+    "agentic_interaction_v81/debug_budget.py": true,
+    "agentic_interaction_v81/decision_packet.py": true,
+    "agentic_interaction_v81/declaration_preflight.py": true,
+    "agentic_interaction_v81/entry.py": true,
+    "agentic_interaction_v81/execution_return.py": true,
+    "agentic_interaction_v81/exit_routes.py": true,
+    "agentic_interaction_v81/feedback.py": true,
+    "agentic_interaction_v81/mobile_mount.py": true,
+    "agentic_interaction_v81/motion_dwell.py": true,
+    "agentic_interaction_v81/operations.py": true,
+    "agentic_interaction_v81/performance.py": true,
+    "agentic_interaction_v81/preflight.py": true,
+    "agentic_interaction_v81/recovery_batch.py": true,
+    "agentic_interaction_v81/recovery_search.py": true,
+    "agentic_interaction_v81/replanning.py": true,
+    "agentic_interaction_v81/runtime.py": true,
+    "agentic_interaction_v81/session.py": true,
+    "agentic_interaction_v81/session_status.py": true,
+    "agentic_interaction_v81/transport.py": true
+  },
+  "actor_exited": true
+}

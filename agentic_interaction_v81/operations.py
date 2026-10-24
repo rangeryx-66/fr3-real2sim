@@ -116,7 +116,7 @@ def operations_class(original):
             if rejected and self.r.supervisor.latched is None:
                 safe=bool(result.get('safe_exit',{}).get('safe'))
                 state(self)['state']='UNLOADED_REPLAN_REQUIRED' if safe else 'SAFE_EXIT_UNAVAILABLE'
-                result.update(planning_status='PLANNING_REJECTED',recoverable=safe,
+                result.update(status='PLANNING_REJECTED',planning_status='PLANNING_REJECTED',recoverable=safe,
                     episode_termination_required=not safe)
                 # Fresh post-contact observation may be collected automatically
                 # at the verified unloaded boundary, never reasoning under load.

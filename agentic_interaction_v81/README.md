@@ -1,5 +1,37 @@
 # V8.1 engineering extension
 
+Latest gate: [same-scene rejected-path replanning](../docs/experiments/skill_v81/replanning_gate_20261024/REPORT.md).
+One fresh short physical test passed rejection → different native-checked
+action → continued opening/reversal → unloaded parking. This is **not** a
+full-range or independent dynamics-validation PASS; those gates remain closed.
+
+`prepare_grasp` now reports `target_coverage`: a nominal partial endpoint is
+never approval of the full requested target. Existing ranked IK/grasp search
+continues past incomplete candidates. The frozen prismatic whole-chain native
+certificate is retained for trajectories crossing the acquisition coordinate.
+
+A FIT successor may declare up to two complete `path_alternatives`, each with
+a distinct FIT role and the same native coordinate unit. After a path rejection,
+the original checker tries shorter same-direction alternatives only at a
+measured stable stopped boundary. Every alternate target/profile is declared
+before execution; VALIDATION cannot be substituted. Original requests and
+rejections remain in the trace. No new pose, collision exception or score is
+introduced. See the [contract and short-test protocol](../docs/experiments/skill_v81/replanning_gate_20261024/PROTOCOL.md).
+
+If alternatives are rejected, guarded release/parking returns
+`PLANNING_REJECTED` with recovery evidence and finite resources. Same-scene
+replanning is permitted: inspect fresh post-contact wrist evidence, search
+existing candidates/IK branches, and only then consider an Agent-selected,
+native-validated station move when needed. A new scene/outcome retry and a hard
+stop reset remain forbidden. A single rejected route is not global infeasibility.
+
+The engineering-only `path_rejection_fixture:true` is opt-in at launch, rejects
+one otherwise native-valid planning result, and records the injection explicitly.
+It never turns a native-invalid path into an executable path and cannot be
+enabled for independent repetitions.
+
+## Historical recovery-first gate
+
 Latest result: [recovery-first report](../docs/experiments/skill_v81/RECOVERY_FIRST_REPORT.md),
 **NOT PASS**. A physical short pull/reverse, base relocation and new sensing
 completed, but no post-relocation regrasp occurred. New preload tests and

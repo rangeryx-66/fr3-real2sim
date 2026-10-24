@@ -1,0 +1,219 @@
+{
+  "observations": {
+    "images": [
+      {
+        "image": "inspected_boards/obs00.png",
+        "sha256": "037028dfce8e7549ec037c976de38f613cfb108670e7d036adbd81666b5e7a04",
+        "purpose": "Agent selected raised/lateral view after actual RGB-depth inspection",
+        "copy_of_actual_inspected_image": true
+      },
+      {
+        "image": "inspected_boards/obs01.png",
+        "sha256": "dfc8537558e35016ad5db19a34e871aaf16424c3f245fdca26108e0f5dcede8c",
+        "purpose": "Agent requested short automatic grasp plan after full-bar inspection",
+        "copy_of_actual_inspected_image": true
+      },
+      {
+        "image": "inspected_boards/plan01.png",
+        "sha256": "9bf47e7ce53ad135d3cc69457291085d28091e35439aa452ca823a7496a58b4f",
+        "purpose": "Explicit finite physical approval at sequence 2",
+        "copy_of_actual_inspected_image": true
+      }
+    ],
+    "not_reconstructed_or_GT": true
+  },
+  "decisions": [
+    {
+      "sequence": 0,
+      "operation": "observe_view",
+      "reason": "Fresh RGB shows vertical handle partly hidden by gripper at top; native pixel (340,240) optical-Z 0.599674 m unprojects to visible handle point. Raise and shift current wrist camera to center this observed region and reduce self-occlusion; no archived view or GT.",
+      "status": null,
+      "wall_s": 41.83324318192899
+    },
+    {
+      "sequence": 1,
+      "operation": "prepare_grasp",
+      "reason": "Inspected fresh observation 01: complete vertical bar separated from moving panel, no top gripper occlusion. Generate automatic native G1 candidate covering every declared short target; 12-degree successor has two separately predeclared shorter FIT alternatives for the registered one-shot rejection test. No physical approval yet.",
+      "status": null,
+      "wall_s": 169.05700953071937
+    },
+    {
+      "sequence": 2,
+      "operation": "attempt_grasp_and_probe",
+      "reason": "Explicit approval of ONE bounded physical attempt after inspecting fresh wrist RGB-D and plan01 measured surfaces/native fingers. Full 0-15deg checked arc covers every declared target; native return/approach valid. Execute original acquisition/hold, preserve the one-shot injected 12deg successor rejection, check predeclared 9deg then 8deg FIT alternatives from safe stopped measured state, reverse, independent validation only if FIT-ready, and original guarded release/parking. No full-range request or force/safety change.",
+      "status": null,
+      "wall_s": 444.5438165040687
+    },
+    {
+      "sequence": 3,
+      "operation": "finish",
+      "reason": "Inspected actual current contact/relative-motion feedback: injected 12deg planning rejection led to native-checked 9deg action, physical continuation and 6.044deg reversal. Original safe exit confirms reached/unloaded native-checked park with zero pad loads and no hard latch. Short recovery gate complete; validation was correctly deferred and is not claimed. End this sole engineering scene, no extra acquisition or full-range run.",
+      "status": null,
+      "wall_s": 0.043037859722971916
+    }
+  ],
+  "deterministic_rejection_and_alternative": {
+    "valid": true,
+    "actual_start_q": 0.10500684380531311,
+    "target_q": 0.15707963267948966,
+    "units": {
+      "coordinate": "rad",
+      "effort": "N m",
+      "inertial": "kg m^2",
+      "damping": "N m s/rad"
+    },
+    "measured_state_route": true,
+    "requested_path_rejected": true,
+    "rejected_request": {
+      "reason": "INJECTED_COLLISION_REJECTION",
+      "requested_action": {
+        "role": "FIT_REQUESTED_OPEN",
+        "coordinate_unit": "rad",
+        "target_q": 0.20943951023931953,
+        "profile": "constant",
+        "hold": true,
+        "reference_speed_m_s": 0.006,
+        "reference_acceleration_m_s2": 0.025,
+        "velocity_program": "sine",
+        "low_speed_fraction": 0.65,
+        "period_s": 3.4,
+        "fit_intervals_s": [
+          [
+            0,
+            1000
+          ]
+        ],
+        "path_alternatives": [
+          {
+            "role": "FIT_REPLAN_SHORTER_OPEN",
+            "coordinate_unit": "rad",
+            "target_q": 0.15707963267948966,
+            "profile": "constant",
+            "hold": true,
+            "reference_speed_m_s": 0.006,
+            "reference_acceleration_m_s2": 0.025,
+            "velocity_program": "sine",
+            "low_speed_fraction": 0.65,
+            "period_s": 3.4,
+            "fit_intervals_s": [
+              [
+                0,
+                1000
+              ]
+            ]
+          },
+          {
+            "role": "FIT_REPLAN_SHORTEST_OPEN",
+            "coordinate_unit": "rad",
+            "target_q": 0.13962634015954636,
+            "profile": "constant",
+            "hold": true,
+            "reference_speed_m_s": 0.006,
+            "reference_acceleration_m_s2": 0.025,
+            "velocity_program": "sine",
+            "low_speed_fraction": 0.65,
+            "period_s": 3.4,
+            "fit_intervals_s": [
+              [
+                0,
+                1000
+              ]
+            ]
+          }
+        ]
+      },
+      "measured_coordinate": 0.10500684380531311,
+      "station_generation": 0,
+      "native_rejection_preserved": {
+        "valid": false,
+        "reason": "INJECTED_COLLISION_REJECTION",
+        "engineering_injected": true,
+        "original_native_check": {
+          "valid": true,
+          "actual_start_q": 0.10500684380531311,
+          "target_q": 0.20943951023931953,
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "measured_state_route": true
+        },
+        "robot_motion_executed": false
+      },
+      "alternatives": [
+        {
+          "action": {
+            "role": "FIT_REPLAN_SHORTER_OPEN",
+            "coordinate_unit": "rad",
+            "target_q": 0.15707963267948966,
+            "profile": "constant",
+            "hold": true,
+            "reference_speed_m_s": 0.006,
+            "reference_acceleration_m_s2": 0.025,
+            "velocity_program": "sine",
+            "low_speed_fraction": 0.65,
+            "period_s": 3.4,
+            "fit_intervals_s": [
+              [
+                0,
+                1000
+              ]
+            ]
+          },
+          "check": {
+            "valid": true,
+            "actual_start_q": 0.10500684380531311,
+            "target_q": 0.15707963267948966,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "measured_state_route": true
+          }
+        }
+      ],
+      "selected_action": {
+        "role": "FIT_REPLAN_SHORTER_OPEN",
+        "coordinate_unit": "rad",
+        "target_q": 0.15707963267948966,
+        "profile": "constant",
+        "hold": true,
+        "reference_speed_m_s": 0.006,
+        "reference_acceleration_m_s2": 0.025,
+        "velocity_program": "sine",
+        "low_speed_fraction": 0.65,
+        "period_s": 3.4,
+        "fit_intervals_s": [
+          [
+            0,
+            1000
+          ]
+        ]
+      }
+    },
+    "selected_action": {
+      "role": "FIT_REPLAN_SHORTER_OPEN",
+      "coordinate_unit": "rad",
+      "target_q": 0.15707963267948966,
+      "profile": "constant",
+      "hold": true,
+      "reference_speed_m_s": 0.006,
+      "reference_acceleration_m_s2": 0.025,
+      "velocity_program": "sine",
+      "low_speed_fraction": 0.65,
+      "period_s": 3.4,
+      "fit_intervals_s": [
+        [
+          0,
+          1000
+        ]
+      ]
+    },
+    "full_original_target_feasible": false,
+    "full_selected_target_feasible": true
+  }
+}

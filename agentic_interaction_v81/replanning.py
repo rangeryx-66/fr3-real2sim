@@ -14,11 +14,22 @@ def coverage(plan, targets, horizon=None):
     valid=bool(states) and all(math.isfinite(v) for v in states)
     low,high=(min(states),max(states)) if valid else (None,None)
     # Floating-point comparison only, not a relaxed physical target tolerance.
-    def includes(q):return valid and low-1e-10<=float(q)<=high+1e-10
+    # The frozen prismatic owner checks an entire bidirectional chain, which
+    # can cross the acquisition coordinate. Its first nominal arc alone is
+    # not the whole safety certificate. Keep that established adapter intact.
+    chain=(plan.get('execution_feasibility') or {}).get('v75_whole_chain') or {}
+    certified=[]
+    if plan.get('coordinate_unit')=='m' and chain.get('valid') is True:
+        certified=[float(a['target_m']) for a in chain.get('declared_actions',[])
+                   if type(a.get('target_m')) in (int,float) and math.isfinite(a['target_m'])]
+    def includes(q):
+        return ((valid and low-1e-10<=float(q)<=high+1e-10)
+                or any(abs(float(q)-v)<=1e-10 for v in certified))
     missing=[float(q) for q in targets if not includes(q)]
     return dict(full_requested_actions_feasible=valid and not missing,
         checked_interval_native=[low,high],uncovered_targets_native=missing,
         requested_horizon_native=horizon,
+        native_whole_chain_certified_targets=sorted(set(certified)),
         full_requested_horizon_feasible=includes(horizon) if horizon is not None else None,
         endpoint_is_not_physical_progress=True)
 
@@ -58,15 +69,17 @@ def candidate_gate(actions,horizon):
     audit=[]
     def checked(checker,candidate):
         bounds=coverage(candidate,required,horizon)
+        prismatic=getattr(checker,'g',{}).get('job',{}).get('articulation_v7',{}).get('joint_type')=='prismatic'
         audit.append(dict(family=[candidate[k] for k in
-            ('section_fraction','insertion_m','roll_deg','pitch_deg')],coverage=bounds))
-        if not bounds['full_requested_actions_feasible']:
+            ('section_fraction','insertion_m','roll_deg','pitch_deg')],coverage=bounds,
+            deferred_to_original_prismatic_whole_chain=prismatic))
+        if not bounds['full_requested_actions_feasible'] and not prismatic:
             result=dict(valid=False,reason='REQUESTED_TARGET_NOT_FULLY_CHECKED',coverage=bounds)
             checker.audit.append(dict(family=[candidate[k] for k in
                 ('section_fraction','insertion_m','roll_deg','pitch_deg')],**result))
             return result
         result=original(checker,candidate)
-        result['target_coverage']=bounds
+        if not prismatic:result['target_coverage']=bounds
         return result
     with patch.object(native.CandidateCheck,'__call__',checked):yield audit
 
@@ -127,10 +140,11 @@ def successor(ops,action,original):
             state(ops)['state']='CHECKED_ALTERNATIVE_SELECTED'
             return dict(checked,requested_path_rejected=True,rejected_request=record,
                 selected_action=selected,full_original_target_feasible=False,
+                feasibility_scope='this checked/rejected path only',global_target_infeasibility_proven=False,
                 full_selected_target_feasible=True)
     record['alternatives']=checks
     return dict(route,status='PLANNING_REJECTED',recoverable=True,
-        episode_termination_required=False,alternative_checks=checks)
+        episode_termination_required=False,global_target_infeasibility_proven=False,alternative_checks=checks)
 
 
 def packet(ops):
