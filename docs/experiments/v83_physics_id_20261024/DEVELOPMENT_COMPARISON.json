@@ -1,0 +1,694 @@
+{
+  "schema": "v83-fixed-model-heldout-comparison-v1",
+  "episode_id": "v81_r02_active90_20261024_01",
+  "development_diagnostic_only": true,
+  "independent_validation": false,
+  "registration_sha256": null,
+  "model_sha256": {
+    "candidate": "80a8b03601f506eb6aeac0277ac8f49846a721b188e3eec419589d106dadf323",
+    "baseline": "b6871727187dda6c55fff8311a529c5668a56a1b3b04275b5449847ccadb22f8"
+  },
+  "refitting_performed": false,
+  "model_selection_performed": false,
+  "validation_used_for_fit_or_selection": false,
+  "hidden_physics_used": false,
+  "segment_quality": [
+    {
+      "id": 5,
+      "role": "VALIDATION_FINAL_OPEN_90",
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION"
+      },
+      "blocks": [
+        {
+          "records": 2034,
+          "valid": 1792,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.0041666666667197205,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333366227,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "coordinate_unit": "rad",
+            "minimum_absolute_native_velocity": 0.0001,
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          }
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "role": "VALIDATION_AFTER_GOAL_REVERSE",
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION"
+      },
+      "blocks": [
+        {
+          "records": 7322,
+          "valid": 7080,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.0041666666667197205,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333366227,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "coordinate_unit": "rad",
+            "minimum_absolute_native_velocity": 0.0001,
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          }
+        }
+      ]
+    }
+  ],
+  "models": {
+    "candidate": {
+      "segments": {
+        "VALIDATION_FINAL_OPEN_90_05#0": {
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 0.00036017040305093566,
+            "coordinate_rmse": 0.004221844699967917,
+            "velocity_rmse": 0.0015390185454979828,
+            "final_coordinate_error": 0.009746274190800763,
+            "outside_FIT_support": true,
+            "samples": 1792,
+            "duration_s": 7.462500000000091,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "strata": {
+            "all": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.004221844699967917,
+              "coordinate_rmse_deg": 0.24189388306783696
+            },
+            "high_angle_ge60": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.004221844699967917,
+              "coordinate_rmse_deg": 0.24189388306783696
+            },
+            "high_angle_reverse": {
+              "samples": 0
+            },
+            "reverse": {
+              "samples": 0
+            },
+            "forward": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.004221844699967917,
+              "coordinate_rmse_deg": 0.24189388306783696
+            },
+            "quality_valid": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.004221844699967917,
+              "coordinate_rmse_deg": 0.24189388306783696
+            },
+            "quality_rejected": {
+              "samples": 0
+            },
+            "position_deg_0_30": {
+              "samples": 0
+            },
+            "position_deg_30_60": {
+              "samples": 0
+            },
+            "position_deg_60_75": {
+              "samples": 0
+            },
+            "position_deg_75_100": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.004221844699967917,
+              "coordinate_rmse_deg": 0.24189388306783696
+            },
+            "absolute_velocity_rad_s_0_0.01": {
+              "samples": 1179,
+              "coordinate_rmse_rad": 0.004215459139050036,
+              "coordinate_rmse_deg": 0.2415280173774187
+            },
+            "absolute_velocity_rad_s_0.01_0.02": {
+              "samples": 613,
+              "coordinate_rmse_rad": 0.004234099154399414,
+              "coordinate_rmse_deg": 0.24259601158699715
+            },
+            "absolute_velocity_rad_s_0.02_1": {
+              "samples": 0
+            },
+            "absolute_acceleration_rad_s2_0_0.005": {
+              "samples": 604,
+              "coordinate_rmse_rad": 0.004009828147265287,
+              "coordinate_rmse_deg": 0.22974622941106326
+            },
+            "absolute_acceleration_rad_s2_0.005_0.02": {
+              "samples": 1188,
+              "coordinate_rmse_rad": 0.004325654723254285,
+              "coordinate_rmse_deg": 0.24784175927330068
+            },
+            "absolute_acceleration_rad_s2_0.02_100": {
+              "samples": 0
+            }
+          },
+          "contact": {
+            "reported_relative_slip_max_m": 0.0009662178927101195,
+            "reported_relative_slip_median_m": 0.0007997351931408048,
+            "error_vs_reported_slip_correlation": 0.9069851350367921,
+            "missing_positive_normal_is_not_proven_separation": true,
+            "max_servo_error_m": 0.0009951890272562173,
+            "max_rigid_arc_residual_m": 0.0009927878069392819,
+            "hard_stop_samples": 0
+          },
+          "final_coordinate_error_rad": 0.009746274190800763,
+          "final_coordinate_error_deg": 0.5584203771101653
+        },
+        "VALIDATION_AFTER_GOAL_REVERSE_06#0": {
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 0.00013876176728842658,
+            "coordinate_rmse": 0.0031750447745477247,
+            "velocity_rmse": 0.0005522828678348982,
+            "final_coordinate_error": 0.006516700218627491,
+            "outside_FIT_support": true,
+            "samples": 7080,
+            "duration_s": 29.495833333333394,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "strata": {
+            "all": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.0031750447745477247,
+              "coordinate_rmse_deg": 0.1819166653466506
+            },
+            "high_angle_ge60": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.0031750447745477247,
+              "coordinate_rmse_deg": 0.1819166653466506
+            },
+            "high_angle_reverse": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.0031750447745477247,
+              "coordinate_rmse_deg": 0.1819166653466506
+            },
+            "reverse": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.0031750447745477247,
+              "coordinate_rmse_deg": 0.1819166653466506
+            },
+            "forward": {
+              "samples": 0
+            },
+            "quality_valid": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.0031750447745477247,
+              "coordinate_rmse_deg": 0.1819166653466506
+            },
+            "quality_rejected": {
+              "samples": 0
+            },
+            "position_deg_0_30": {
+              "samples": 0
+            },
+            "position_deg_30_60": {
+              "samples": 0
+            },
+            "position_deg_60_75": {
+              "samples": 2652,
+              "coordinate_rmse_rad": 0.0044557645255992985,
+              "coordinate_rmse_deg": 0.25529650182095126
+            },
+            "position_deg_75_100": {
+              "samples": 4428,
+              "coordinate_rmse_rad": 0.002056148430477126,
+              "coordinate_rmse_deg": 0.11780862711878769
+            },
+            "absolute_velocity_rad_s_0_0.01": {
+              "samples": 1,
+              "coordinate_rmse_rad": 0.00531539636885725,
+              "coordinate_rmse_deg": 0.3045497783746834
+            },
+            "absolute_velocity_rad_s_0.01_0.02": {
+              "samples": 7079,
+              "coordinate_rmse_rad": 0.0031746404861621343,
+              "coordinate_rmse_deg": 0.1818935013284501
+            },
+            "absolute_velocity_rad_s_0.02_1": {
+              "samples": 0
+            },
+            "absolute_acceleration_rad_s2_0_0.005": {
+              "samples": 2624,
+              "coordinate_rmse_rad": 0.0032104475800130445,
+              "coordinate_rmse_deg": 0.18394509668273612
+            },
+            "absolute_acceleration_rad_s2_0.005_0.02": {
+              "samples": 4456,
+              "coordinate_rmse_rad": 0.0031540112634243817,
+              "coordinate_rmse_deg": 0.18071153393094158
+            },
+            "absolute_acceleration_rad_s2_0.02_100": {
+              "samples": 0
+            }
+          },
+          "contact": {
+            "reported_relative_slip_max_m": 0.0010805662022903562,
+            "reported_relative_slip_median_m": 0.0010291843209415674,
+            "error_vs_reported_slip_correlation": -0.13217745027956174,
+            "missing_positive_normal_is_not_proven_separation": true,
+            "max_servo_error_m": 0.0005250392450662732,
+            "max_rigid_arc_residual_m": 0.0007286992498629114,
+            "hard_stop_samples": 0
+          },
+          "final_coordinate_error_rad": 0.006516700218627491,
+          "final_coordinate_error_deg": 0.3733794188793361
+        }
+      },
+      "aggregate": {
+        "all": {
+          "samples": 8872,
+          "coordinate_rmse_rad": 0.0034124598811890463,
+          "coordinate_rmse_deg": 0.1955195489498467
+        },
+        "high_angle_ge60": {
+          "samples": 8872,
+          "coordinate_rmse_rad": 0.0034124598811890463,
+          "coordinate_rmse_deg": 0.1955195489498467
+        },
+        "high_angle_reverse": {
+          "samples": 7080,
+          "coordinate_rmse_rad": 0.0031750447745477247,
+          "coordinate_rmse_deg": 0.1819166653466506
+        },
+        "reverse": {
+          "samples": 7080,
+          "coordinate_rmse_rad": 0.0031750447745477247,
+          "coordinate_rmse_deg": 0.1819166653466506
+        },
+        "forward": {
+          "samples": 1792,
+          "coordinate_rmse_rad": 0.004221844699967917,
+          "coordinate_rmse_deg": 0.24189388306783696
+        },
+        "quality_valid": {
+          "samples": 8872,
+          "coordinate_rmse_rad": 0.0034124598811890463,
+          "coordinate_rmse_deg": 0.1955195489498467
+        },
+        "quality_rejected": {
+          "samples": 0
+        },
+        "position_deg_0_30": {
+          "samples": 0
+        },
+        "position_deg_30_60": {
+          "samples": 0
+        },
+        "position_deg_60_75": {
+          "samples": 2652,
+          "coordinate_rmse_rad": 0.0044557645255992985,
+          "coordinate_rmse_deg": 0.25529650182095126
+        },
+        "position_deg_75_100": {
+          "samples": 6220,
+          "coordinate_rmse_rad": 0.002853919850292661,
+          "coordinate_rmse_deg": 0.16351756249037722
+        },
+        "absolute_velocity_rad_s_0_0.01": {
+          "samples": 1180,
+          "coordinate_rmse_rad": 0.0042165127702662435,
+          "coordinate_rmse_deg": 0.24158838599927063
+        },
+        "absolute_velocity_rad_s_0.01_0.02": {
+          "samples": 7692,
+          "coordinate_rmse_rad": 0.003271677588597191,
+          "coordinate_rmse_deg": 0.18745331775415752
+        },
+        "absolute_velocity_rad_s_0.02_1": {
+          "samples": 0
+        },
+        "absolute_acceleration_rad_s2_0_0.005": {
+          "samples": 3228,
+          "coordinate_rmse_rad": 0.0033744542375661224,
+          "coordinate_rmse_deg": 0.19334198597257488
+        },
+        "absolute_acceleration_rad_s2_0.005_0.02": {
+          "samples": 5644,
+          "coordinate_rmse_rad": 0.0034340075563304906,
+          "coordinate_rmse_deg": 0.1967541397937704
+        },
+        "absolute_acceleration_rad_s2_0.02_100": {
+          "samples": 0
+        }
+      },
+      "parameters": [
+        0.1307897525915243,
+        0.23808140182165444,
+        0.026059394386834807,
+        0.03984137188379267,
+        0.035227028985896455,
+        0.020936616398768718,
+        0.02486408342619194,
+        0.023127586284869543,
+        0.024061390853060353,
+        0.023377094161612533,
+        0.024143984693105847,
+        0.021993632221402163
+      ],
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "nonnegative_resistance_control_0",
+        "nonnegative_resistance_control_1",
+        "nonnegative_resistance_control_2",
+        "nonnegative_resistance_control_3",
+        "nonnegative_resistance_control_4",
+        "nonnegative_resistance_control_5",
+        "nonnegative_resistance_control_6",
+        "nonnegative_resistance_control_7",
+        "nonnegative_resistance_control_8",
+        "nonnegative_resistance_control_9"
+      ]
+    },
+    "baseline": {
+      "segments": {
+        "VALIDATION_FINAL_OPEN_90_05#0": {
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 0.0018761826586225535,
+            "coordinate_rmse": 0.014299434631885738,
+            "velocity_rmse": 0.0035473667604345796,
+            "final_coordinate_error": -0.025494273538171575,
+            "outside_FIT_support": true,
+            "samples": 1792,
+            "duration_s": 7.462500000000091,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "strata": {
+            "all": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.014299434631885738,
+              "coordinate_rmse_deg": 0.8192972538302588
+            },
+            "high_angle_ge60": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.014299434631885738,
+              "coordinate_rmse_deg": 0.8192972538302588
+            },
+            "high_angle_reverse": {
+              "samples": 0
+            },
+            "reverse": {
+              "samples": 0
+            },
+            "forward": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.014299434631885738,
+              "coordinate_rmse_deg": 0.8192972538302588
+            },
+            "quality_valid": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.014299434631885738,
+              "coordinate_rmse_deg": 0.8192972538302588
+            },
+            "quality_rejected": {
+              "samples": 0
+            },
+            "position_deg_0_30": {
+              "samples": 0
+            },
+            "position_deg_30_60": {
+              "samples": 0
+            },
+            "position_deg_60_75": {
+              "samples": 0
+            },
+            "position_deg_75_100": {
+              "samples": 1792,
+              "coordinate_rmse_rad": 0.014299434631885738,
+              "coordinate_rmse_deg": 0.8192972538302588
+            },
+            "absolute_velocity_rad_s_0_0.01": {
+              "samples": 1179,
+              "coordinate_rmse_rad": 0.014247525181632277,
+              "coordinate_rmse_deg": 0.8163230614138911
+            },
+            "absolute_velocity_rad_s_0.01_0.02": {
+              "samples": 613,
+              "coordinate_rmse_rad": 0.01439874743435528,
+              "coordinate_rmse_deg": 0.8249874582633799
+            },
+            "absolute_velocity_rad_s_0.02_1": {
+              "samples": 0
+            },
+            "absolute_acceleration_rad_s2_0_0.005": {
+              "samples": 604,
+              "coordinate_rmse_rad": 0.013771543822994994,
+              "coordinate_rmse_deg": 0.789051338437072
+            },
+            "absolute_acceleration_rad_s2_0.005_0.02": {
+              "samples": 1188,
+              "coordinate_rmse_rad": 0.01456048662156427,
+              "coordinate_rmse_deg": 0.8342544310723313
+            },
+            "absolute_acceleration_rad_s2_0.02_100": {
+              "samples": 0
+            }
+          },
+          "contact": {
+            "reported_relative_slip_max_m": 0.0009662178927101195,
+            "reported_relative_slip_median_m": 0.0007997351931408048,
+            "error_vs_reported_slip_correlation": -0.8733370774815422,
+            "missing_positive_normal_is_not_proven_separation": true,
+            "max_servo_error_m": 0.0009951890272562173,
+            "max_rigid_arc_residual_m": 0.0009927878069392819,
+            "hard_stop_samples": 0
+          },
+          "final_coordinate_error_rad": -0.025494273538171575,
+          "final_coordinate_error_deg": -1.4607142754892877
+        },
+        "VALIDATION_AFTER_GOAL_REVERSE_06#0": {
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 0.0034751918581911213,
+            "coordinate_rmse": 0.11237512038267423,
+            "velocity_rmse": 0.006718362797987697,
+            "final_coordinate_error": 0.1951460301945096,
+            "outside_FIT_support": true,
+            "samples": 7080,
+            "duration_s": 29.495833333333394,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction"
+          },
+          "strata": {
+            "all": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.11237512038267423,
+              "coordinate_rmse_deg": 6.4386201202017865
+            },
+            "high_angle_ge60": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.11237512038267423,
+              "coordinate_rmse_deg": 6.4386201202017865
+            },
+            "high_angle_reverse": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.11237512038267423,
+              "coordinate_rmse_deg": 6.4386201202017865
+            },
+            "reverse": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.11237512038267423,
+              "coordinate_rmse_deg": 6.4386201202017865
+            },
+            "forward": {
+              "samples": 0
+            },
+            "quality_valid": {
+              "samples": 7080,
+              "coordinate_rmse_rad": 0.11237512038267423,
+              "coordinate_rmse_deg": 6.4386201202017865
+            },
+            "quality_rejected": {
+              "samples": 0
+            },
+            "position_deg_0_30": {
+              "samples": 0
+            },
+            "position_deg_30_60": {
+              "samples": 0
+            },
+            "position_deg_60_75": {
+              "samples": 2652,
+              "coordinate_rmse_rad": 0.1600113296641902,
+              "coordinate_rmse_deg": 9.167973864034572
+            },
+            "position_deg_75_100": {
+              "samples": 4428,
+              "coordinate_rmse_rad": 0.06969188226869577,
+              "coordinate_rmse_deg": 3.9930507203188843
+            },
+            "absolute_velocity_rad_s_0_0.01": {
+              "samples": 1,
+              "coordinate_rmse_rad": 0.17929943621058753,
+              "coordinate_rmse_deg": 10.273100963941792
+            },
+            "absolute_velocity_rad_s_0.01_0.02": {
+              "samples": 7079,
+              "coordinate_rmse_rad": 0.11236285067775345,
+              "coordinate_rmse_deg": 6.437917117893955
+            },
+            "absolute_velocity_rad_s_0.02_1": {
+              "samples": 0
+            },
+            "absolute_acceleration_rad_s2_0_0.005": {
+              "samples": 2624,
+              "coordinate_rmse_rad": 0.11258492386986821,
+              "coordinate_rmse_deg": 6.450640974545128
+            },
+            "absolute_acceleration_rad_s2_0.005_0.02": {
+              "samples": 4456,
+              "coordinate_rmse_rad": 0.11225139017864194,
+              "coordinate_rmse_deg": 6.431530901712443
+            },
+            "absolute_acceleration_rad_s2_0.02_100": {
+              "samples": 0
+            }
+          },
+          "contact": {
+            "reported_relative_slip_max_m": 0.0010805662022903562,
+            "reported_relative_slip_median_m": 0.0010291843209415674,
+            "error_vs_reported_slip_correlation": -0.17502208016042195,
+            "missing_positive_normal_is_not_proven_separation": true,
+            "max_servo_error_m": 0.0005250392450662732,
+            "max_rigid_arc_residual_m": 0.0007286992498629114,
+            "hard_stop_samples": 0
+          },
+          "final_coordinate_error_rad": 0.1951460301945096,
+          "final_coordinate_error_deg": 11.181043918877927
+        }
+      },
+      "aggregate": {
+        "all": {
+          "samples": 8872,
+          "coordinate_rmse_rad": 0.10059216256868074,
+          "coordinate_rmse_deg": 5.763506367279264
+        },
+        "high_angle_ge60": {
+          "samples": 8872,
+          "coordinate_rmse_rad": 0.10059216256868074,
+          "coordinate_rmse_deg": 5.763506367279264
+        },
+        "high_angle_reverse": {
+          "samples": 7080,
+          "coordinate_rmse_rad": 0.11237512038267423,
+          "coordinate_rmse_deg": 6.4386201202017865
+        },
+        "reverse": {
+          "samples": 7080,
+          "coordinate_rmse_rad": 0.11237512038267423,
+          "coordinate_rmse_deg": 6.4386201202017865
+        },
+        "forward": {
+          "samples": 1792,
+          "coordinate_rmse_rad": 0.014299434631885738,
+          "coordinate_rmse_deg": 0.8192972538302588
+        },
+        "quality_valid": {
+          "samples": 8872,
+          "coordinate_rmse_rad": 0.10059216256868074,
+          "coordinate_rmse_deg": 5.763506367279264
+        },
+        "quality_rejected": {
+          "samples": 0
+        },
+        "position_deg_0_30": {
+          "samples": 0
+        },
+        "position_deg_30_60": {
+          "samples": 0
+        },
+        "position_deg_60_75": {
+          "samples": 2652,
+          "coordinate_rmse_rad": 0.1600113296641902,
+          "coordinate_rmse_deg": 9.167973864034572
+        },
+        "position_deg_75_100": {
+          "samples": 6220,
+          "coordinate_rmse_rad": 0.05930062537934351,
+          "coordinate_rmse_deg": 3.3976755567227594
+        },
+        "absolute_velocity_rad_s_0_0.01": {
+          "samples": 1180,
+          "coordinate_rmse_rad": 0.015167869277564139,
+          "coordinate_rmse_deg": 0.8690548938105701
+        },
+        "absolute_velocity_rad_s_0.01_0.02": {
+          "samples": 7692,
+          "coordinate_rmse_rad": 0.10786924182047405,
+          "coordinate_rmse_deg": 6.18045229558924
+        },
+        "absolute_velocity_rad_s_0.02_1": {
+          "samples": 0
+        },
+        "absolute_acceleration_rad_s2_0_0.005": {
+          "samples": 3228,
+          "coordinate_rmse_rad": 0.10168150985120489,
+          "coordinate_rmse_deg": 5.825921368991944
+        },
+        "absolute_acceleration_rad_s2_0.005_0.02": {
+          "samples": 5644,
+          "coordinate_rmse_rad": 0.099963790783177,
+          "coordinate_rmse_deg": 5.727503316004801
+        },
+        "absolute_acceleration_rad_s2_0.02_100": {
+          "samples": 0
+        }
+      },
+      "parameters": [
+        0.13026596425696035,
+        0.513135075511602,
+        0.023100708181549513
+      ],
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "C_Nm"
+      ]
+    }
+  },
+  "all_declared_validation_completed": true
+}

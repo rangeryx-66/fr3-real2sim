@@ -1,0 +1,490 @@
+{
+  "schema": "v83-fixed-external-model-v1",
+  "frozen_at_unix_s": 1792843667.6412745,
+  "lineage": {
+    "training_episode_ids": [
+      "v81_r02_active90_20261024_01"
+    ],
+    "training_roles": [
+      "FIT_ACTIVE_LOW_RANGE_01",
+      "FIT_RECOVERY_FORWARD_PROBE_02",
+      "FIT_RECOVERY_REVERSE_PROBE_03",
+      "FIT_RECOVERY_TO_90_04"
+    ],
+    "training_bins": 1854,
+    "training_index_sha256": "e67e74aae6fe0602de729017db7e44f56737e1a41c63f55211018e148ea27995",
+    "quality_provenance": [
+      {
+        "id": 1,
+        "role": "FIT_ACTIVE_LOW_RANGE",
+        "quality": {
+          "action_ok": false,
+          "action_status": "TRANSMISSION_FAILURE",
+          "label": "PREDECLARED_TRANSMITTING_FIT_PREFIX",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ],
+          "valid_until_s": 28.833333333333314,
+          "excitation": {
+            "duration_s": 28.82916666666665,
+            "range_native": 0.33500585509346026,
+            "velocity_rms_native": 0.01244472004925527,
+            "coordinate_unit": "rad"
+          },
+          "action_remains_failed": true
+        },
+        "blocks": [
+          {
+            "records": 6920,
+            "valid": 6678,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "role": "FIT_RECOVERY_FORWARD_PROBE",
+        "quality": {
+          "action_ok": true,
+          "action_status": "TARGET_REACHED",
+          "label": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        "blocks": [
+          {
+            "records": 2808,
+            "valid": 2566,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "role": "FIT_RECOVERY_REVERSE_PROBE",
+        "quality": {
+          "action_ok": true,
+          "action_status": "TARGET_REACHED",
+          "label": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        "blocks": [
+          {
+            "records": 5819,
+            "valid": 5577,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "role": "FIT_RECOVERY_TO_90",
+        "quality": {
+          "action_ok": false,
+          "action_status": "TRANSMISSION_FAILURE",
+          "label": "PREDECLARED_TRANSMITTING_FIT_PREFIX",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ],
+          "valid_until_s": 124.33750000000006,
+          "excitation": {
+            "duration_s": 124.33750000000003,
+            "range_native": 1.2714618146419525,
+            "velocity_rms_native": 0.010851905813336324,
+            "coordinate_unit": "rad"
+          },
+          "action_remains_failed": true
+        },
+        "blocks": [
+          {
+            "records": 29842,
+            "valid": 29600,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      }
+    ],
+    "old_validation_05_06_used_for_structure_selection": true,
+    "development_episode_ids": [
+      "v81_r02_active90_20261024_01"
+    ],
+    "final_independent_validation_used": false,
+    "hidden_physics_used": false
+  },
+  "measurement_chain": "unchanged V7-SI-common-SG121; original qualified FIT prefix selection",
+  "evaluation_contract": {
+    "primary": [
+      "high-angle reverse coordinate RMSE",
+      "absolute endpoint error of every completed reverse validation"
+    ],
+    "mandatory_secondary": [
+      "all intervals pooled RMSE",
+      "all high-angle intervals RMSE",
+      "forward RMSE",
+      "position, speed and acceleration strata",
+      "contact/quality association"
+    ],
+    "high_angle_threshold_rad": 1.0471975511965976,
+    "state_correction": "one measured initial q and qd per segment; no later correction",
+    "parameter_accuracy": "unknown without separately authorized post-hoc hidden reference comparison",
+    "model_update_or_selection_on_new_episode": false
+  },
+  "source_sha256": "524a7335d7e06f5de0192901a50f0d41d02226e00b8d58b02a95b7303e8d5d2c",
+  "kind": "candidate_position_resistance_8",
+  "model": {
+    "intervals": 8,
+    "active_controls": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "domain_native": [
+      -0.010471975511965976,
+      1.7453292519943295
+    ],
+    "joint_type": "revolute",
+    "units": {
+      "coordinate": "rad",
+      "effort": "N m",
+      "inertial": "kg m^2",
+      "damping": "N m s/rad"
+    },
+    "parameters": [
+      0.1307897525915243,
+      0.23808140182165444,
+      0.026059394386834807,
+      0.03984137188379267,
+      0.035227028985896455,
+      0.020936616398768718,
+      0.02486408342619194,
+      0.023127586284869543,
+      0.024061390853060353,
+      0.023377094161612533,
+      0.024143984693105847,
+      0.021993632221402163
+    ],
+    "conditional_covariance": [
+      [
+        7.279581129486471e-06,
+        1.5940374013077507e-06,
+        1.327156550255827e-07,
+        -8.333507625536984e-08,
+        -9.917290682769191e-10,
+        -3.2306516656683856e-08,
+        -2.563219448722816e-08,
+        -7.185033333876059e-09,
+        -1.6934712343232742e-08,
+        -8.237015962962012e-09,
+        -2.9429811413467568e-08,
+        1.0150837993385778e-07
+      ],
+      [
+        1.5940374013077507e-06,
+        6.626857694306576e-05,
+        -6.367968349238929e-07,
+        -9.313009006327502e-07,
+        -8.843834739248599e-07,
+        -5.966732086854483e-07,
+        -1.1918034083230552e-06,
+        -5.62285664239274e-07,
+        -5.150893651119789e-07,
+        -5.67262543127832e-07,
+        -6.082935517323736e-07,
+        -1.4385763203509292e-07
+      ],
+      [
+        1.327156550255827e-07,
+        -6.367968349238929e-07,
+        4.5244554215055887e-07,
+        -1.8715559436485488e-07,
+        7.264565688453099e-08,
+        -2.4882483524511642e-08,
+        2.662651023159427e-08,
+        -8.959204319870806e-10,
+        8.736992207688923e-09,
+        2.363333987390967e-09,
+        1.0659763421045933e-08,
+        -1.3964621367441926e-08
+      ],
+      [
+        -8.333507625536984e-08,
+        -9.313009006327502e-07,
+        -1.8715559436485486e-07,
+        1.960686092562736e-07,
+        -5.040574372527457e-08,
+        3.876647107417318e-08,
+        2.446702611547785e-09,
+        1.3488551136556753e-08,
+        3.9960689148750544e-09,
+        1.060005924782891e-08,
+        4.406970741123088e-09,
+        1.5734905455313364e-08
+      ],
+      [
+        -9.917290682769239e-10,
+        -8.843834739248599e-07,
+        7.264565688453097e-08,
+        -5.040574372527457e-08,
+        5.983095930407123e-08,
+        -1.891122907005084e-08,
+        2.8685308111779835e-08,
+        2.829519225579689e-09,
+        9.483224287394255e-09,
+        5.477927759816024e-09,
+        1.142744541185487e-08,
+        -9.252620044683782e-09
+      ],
+      [
+        -3.2306516656683856e-08,
+        -5.966732086854483e-07,
+        -2.4882483524511636e-08,
+        3.876647107417318e-08,
+        -1.8911229070050842e-08,
+        2.5834871394378886e-08,
+        3.259711962604039e-10,
+        8.506428874838484e-09,
+        2.8140236927633737e-09,
+        6.541203883028056e-09,
+        3.2271143002808946e-09,
+        8.839178727792484e-09
+      ],
+      [
+        -2.5632194487228158e-08,
+        -1.191803408323055e-06,
+        2.6626510231594266e-08,
+        2.446702611547785e-09,
+        2.8685308111779832e-08,
+        3.259711962604039e-10,
+        3.8252082056687234e-08,
+        4.318961703714876e-09,
+        1.2311542481829045e-08,
+        7.81741219910739e-09,
+        1.4695107573032724e-08,
+        -1.0204898389031812e-08
+      ],
+      [
+        -7.185033333876062e-09,
+        -5.622856642392741e-07,
+        -8.959204319870793e-10,
+        1.3488551136556753e-08,
+        2.8295192255796883e-09,
+        8.506428874838486e-09,
+        4.318961703714877e-09,
+        9.562598014426154e-09,
+        1.6621708477217456e-09,
+        6.918637879279438e-09,
+        1.8500124547270525e-09,
+        1.2622050254872498e-08
+      ],
+      [
+        -1.6934712343232742e-08,
+        -5.150893651119789e-07,
+        8.736992207688923e-09,
+        3.996068914875055e-09,
+        9.483224287394255e-09,
+        2.8140236927633745e-09,
+        1.2311542481829047e-08,
+        1.662170847721746e-09,
+        6.1644633716691e-09,
+        2.7055468354156997e-09,
+        7.407810845800328e-09,
+        -8.244016975205178e-09
+      ],
+      [
+        -8.237015962962015e-09,
+        -5.67262543127832e-07,
+        2.363333987390968e-09,
+        1.060005924782891e-08,
+        5.477927759816024e-09,
+        6.541203883028057e-09,
+        7.817412199107392e-09,
+        6.918637879279438e-09,
+        2.7055468354156997e-09,
+        6.538638489511998e-09,
+        2.424157675342967e-09,
+        1.1514228844033348e-08
+      ],
+      [
+        -2.9429811413467568e-08,
+        -6.082935517323736e-07,
+        1.0659763421045935e-08,
+        4.406970741123087e-09,
+        1.142744541185487e-08,
+        3.2271143002808962e-09,
+        1.4695107573032724e-08,
+        1.8500124547270525e-09,
+        7.407810845800328e-09,
+        2.4241576753429666e-09,
+        2.963150099976075e-08,
+        -2.070131992970713e-08
+      ],
+      [
+        1.0150837993385778e-07,
+        -1.4385763203509292e-07,
+        -1.3964621367441946e-08,
+        1.573490545531336e-08,
+        -9.25262004468378e-09,
+        8.839178727792482e-09,
+        -1.0204898389031812e-08,
+        1.2622050254872498e-08,
+        -8.244016975205178e-09,
+        1.1514228844033348e-08,
+        -2.070131992970713e-08,
+        6.63362367870443e-07
+      ]
+    ],
+    "conditional_std": [
+      0.00269806988965936,
+      0.008140551390604064,
+      0.0006726407229350293,
+      0.00044279635190036694,
+      0.0002446036780264582,
+      0.00016073229729702393,
+      0.00019558139496559287,
+      9.778853723431062e-05,
+      7.851409664301755e-05,
+      8.086184817027124e-05,
+      0.00017213802891796092,
+      0.000814470605897133
+    ],
+    "algebraic_rank": 12,
+    "scaled_singular_values": [
+      0.7865244085416262,
+      0.6724499270335212,
+      0.5249352983739433,
+      0.41534388209719086,
+      0.340918097350583,
+      0.33590267425112413,
+      0.2594628722779451,
+      0.20119176335425037,
+      0.15526078687356268,
+      0.11280107202196032,
+      0.029621264517154723,
+      0.01929237860179138
+    ],
+    "scaled_condition": 40.76865920869882,
+    "support_intervals_native": [
+      [
+        0.002333152470075422,
+        1.4988278249899547
+      ]
+    ],
+    "FIT_rmse": 0.0003620676630090443,
+    "smoothness": 0.001,
+    "validation_used": false,
+    "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+    "parameter_names": [
+      "I_eff_kg_m2",
+      "b_Nm_s_rad",
+      "nonnegative_resistance_control_0",
+      "nonnegative_resistance_control_1",
+      "nonnegative_resistance_control_2",
+      "nonnegative_resistance_control_3",
+      "nonnegative_resistance_control_4",
+      "nonnegative_resistance_control_5",
+      "nonnegative_resistance_control_6",
+      "nonnegative_resistance_control_7",
+      "nonnegative_resistance_control_8",
+      "nonnegative_resistance_control_9"
+    ],
+    "conditionally_supported": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "inertial_sensitivity_after_velocity_and_friction_projection": 0.3403344161532788,
+    "uncalibrated_total_physical_accuracy": true,
+    "structure": "existing V7 cubic position-resistance, 8 intervals, smoothness .001"
+  }
+}

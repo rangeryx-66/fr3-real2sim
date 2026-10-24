@@ -1,0 +1,305 @@
+{
+  "schema": "v83-fixed-external-model-v1",
+  "frozen_at_unix_s": 1792843667.6412745,
+  "lineage": {
+    "training_episode_ids": [
+      "v81_r02_active90_20261024_01"
+    ],
+    "training_roles": [
+      "FIT_ACTIVE_LOW_RANGE_01",
+      "FIT_RECOVERY_FORWARD_PROBE_02",
+      "FIT_RECOVERY_REVERSE_PROBE_03",
+      "FIT_RECOVERY_TO_90_04"
+    ],
+    "training_bins": 1854,
+    "training_index_sha256": "e67e74aae6fe0602de729017db7e44f56737e1a41c63f55211018e148ea27995",
+    "quality_provenance": [
+      {
+        "id": 1,
+        "role": "FIT_ACTIVE_LOW_RANGE",
+        "quality": {
+          "action_ok": false,
+          "action_status": "TRANSMISSION_FAILURE",
+          "label": "PREDECLARED_TRANSMITTING_FIT_PREFIX",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ],
+          "valid_until_s": 28.833333333333314,
+          "excitation": {
+            "duration_s": 28.82916666666665,
+            "range_native": 0.33500585509346026,
+            "velocity_rms_native": 0.01244472004925527,
+            "coordinate_unit": "rad"
+          },
+          "action_remains_failed": true
+        },
+        "blocks": [
+          {
+            "records": 6920,
+            "valid": 6678,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "role": "FIT_RECOVERY_FORWARD_PROBE",
+        "quality": {
+          "action_ok": true,
+          "action_status": "TARGET_REACHED",
+          "label": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        "blocks": [
+          {
+            "records": 2808,
+            "valid": 2566,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "role": "FIT_RECOVERY_REVERSE_PROBE",
+        "quality": {
+          "action_ok": true,
+          "action_status": "TARGET_REACHED",
+          "label": "COMPLETE_ACTION_DECLARED_FIT_INTERVALS",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ]
+        },
+        "blocks": [
+          {
+            "records": 5819,
+            "valid": 5577,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "role": "FIT_RECOVERY_TO_90",
+        "quality": {
+          "action_ok": false,
+          "action_status": "TRANSMISSION_FAILURE",
+          "label": "PREDECLARED_TRANSMITTING_FIT_PREFIX",
+          "declared_intervals_s": [
+            [
+              0,
+              500
+            ]
+          ],
+          "valid_until_s": 124.33750000000006,
+          "excitation": {
+            "duration_s": 124.33750000000003,
+            "range_native": 1.2714618146419525,
+            "velocity_rms_native": 0.010851905813336324,
+            "coordinate_unit": "rad"
+          },
+          "action_remains_failed": true
+        },
+        "blocks": [
+          {
+            "records": 29842,
+            "valid": 29600,
+            "processing": {
+              "version": "V3.1-common-SG2",
+              "window": 121,
+              "dt_s": 0.004166666666662877,
+              "boundary_exclusion_samples": 121,
+              "centered_future_support_samples": 62,
+              "filter_lookahead_s": 0.2583333333330984,
+              "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+              "tool_compensation_count": 1,
+              "reference": "fixed world hinge origin before filtering",
+              "friction_basis": "K(sign(native_velocity))",
+              "coordinate_unit": "rad",
+              "minimum_absolute_native_velocity": 0.0001,
+              "finite_difference_error_remains": true,
+              "availability": "completed segment plus worker latency; not zero-latency online state"
+            }
+          }
+        ]
+      }
+    ],
+    "old_validation_05_06_used_for_structure_selection": true,
+    "development_episode_ids": [
+      "v81_r02_active90_20261024_01"
+    ],
+    "final_independent_validation_used": false,
+    "hidden_physics_used": false
+  },
+  "measurement_chain": "unchanged V7-SI-common-SG121; original qualified FIT prefix selection",
+  "evaluation_contract": {
+    "primary": [
+      "high-angle reverse coordinate RMSE",
+      "absolute endpoint error of every completed reverse validation"
+    ],
+    "mandatory_secondary": [
+      "all intervals pooled RMSE",
+      "all high-angle intervals RMSE",
+      "forward RMSE",
+      "position, speed and acceleration strata",
+      "contact/quality association"
+    ],
+    "high_angle_threshold_rad": 1.0471975511965976,
+    "state_correction": "one measured initial q and qd per segment; no later correction",
+    "parameter_accuracy": "unknown without separately authorized post-hoc hidden reference comparison",
+    "model_update_or_selection_on_new_episode": false
+  },
+  "source_sha256": "524a7335d7e06f5de0192901a50f0d41d02226e00b8d58b02a95b7303e8d5d2c",
+  "kind": "original_exact_frozen_baseline",
+  "model": {
+    "intervals": 0,
+    "active_controls": [
+      0
+    ],
+    "domain_native": [
+      -0.010471975511965976,
+      1.7453292519943295
+    ],
+    "joint_type": "revolute",
+    "units": {
+      "coordinate": "rad",
+      "effort": "N m",
+      "inertial": "kg m^2",
+      "damping": "N m s/rad"
+    },
+    "parameters": [
+      0.13026596425696035,
+      0.513135075511602,
+      0.023100708181549513
+    ],
+    "conditional_covariance": [
+      [
+        0.0008494193346496985,
+        -1.714588190696909e-05,
+        1.6179235699893107e-07
+      ],
+      [
+        -1.714588190696909e-05,
+        0.0040948139909355264,
+        -3.79320347775981e-05
+      ],
+      [
+        1.6179235699893107e-07,
+        -3.79320347775981e-05,
+        3.8816736890202825e-07
+      ]
+    ],
+    "conditional_std": [
+      0.029144799444321082,
+      0.06399073363335918,
+      0.0006230307929003415
+    ],
+    "algebraic_rank": 3,
+    "scaled_singular_values": [
+      1.9408032092795282,
+      0.34063755652810734,
+      0.03719367924178499
+    ],
+    "scaled_condition": 52.18099550364315,
+    "support_intervals_native": [
+      [
+        0.002333152470075422,
+        1.4988278249899547
+      ]
+    ],
+    "FIT_rmse": 0.0036444477355612685,
+    "smoothness": 0,
+    "validation_used": false,
+    "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+    "parameter_names": [
+      "I_eff_kg_m2",
+      "b_Nm_s_rad",
+      "C_Nm"
+    ],
+    "conditionally_supported": [
+      true,
+      true,
+      true
+    ],
+    "inertial_sensitivity_after_velocity_and_friction_projection": 0.3406272133339751,
+    "uncalibrated_total_physical_accuracy": true,
+    "FIT_only_trajectory_CV": [
+      {
+        "segment": "FIT_ACTIVE_LOW_RANGE_01",
+        "rmse": 0.008600648715207807
+      },
+      {
+        "segment": "FIT_RECOVERY_FORWARD_PROBE_02",
+        "rmse": 0.0013745709763899223
+      },
+      {
+        "segment": "FIT_RECOVERY_REVERSE_PROBE_03",
+        "rmse": 0.003998123063369158
+      },
+      {
+        "segment": "FIT_RECOVERY_TO_90_04",
+        "rmse": 0.005522632845946371
+      }
+    ],
+    "cv_rmse": 0.004873993900228315,
+    "heldout_motion": {},
+    "heldout_unfiltered_input_sensitivity": {}
+  },
+  "original_frozen_model_sha256": "6d7c8b9af817dc3bae7faf62c884837dcdcb8a19a163533fd7e94fdf52834c65",
+  "original_seal_sha256": "43538957f08587447488583fff48e705300ba4200190fa6c7578a3b5b841da76"
+}
