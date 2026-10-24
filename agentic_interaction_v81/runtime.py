@@ -28,6 +28,8 @@ def runtime_class(original):
             # NativeDrive still owns every arm/G1 command and its exact caps.
             with patch.object(plant,'author',assemble),patch.object(gripper,'NativeDrive',drive_class(gripper.NativeDrive)):
                 super().__init__(job)
+            from .video_evidence import configure
+            configure(self)
             import numpy as np
             from isaacsim.core.prims import RigidPrim
             self.mount=json.loads((self.output/'V81_MOBILE_MOUNT.json').read_text())
@@ -73,6 +75,14 @@ def runtime_class(original):
             if job.get('v81_integrated_repair') and job['articulation_v7']['joint_type']=='prismatic':
                 from .preload_extension import instrument
                 instrument(self)
+
+        def record_frame(self):
+            if self.job.get('v83_continuous_video_hz'):
+                from .video_evidence import configure
+                from interaction_runtime.runtime import Runtime
+                configure(self)
+                return Runtime.record_frame(self)
+            return super().record_frame()
 
         def step(self):
             row=super().step()

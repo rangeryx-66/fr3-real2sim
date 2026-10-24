@@ -1,5 +1,22 @@
 # V8.1 engineering extension
 
+## V8.3 prismatic engineering experiment
+
+The separately authorized `v83_prismatic_active_recovery_v1` profile reuses
+the R02 episode recovery loop for the registered prismatic owner. Its initial
+measured task goal is 0.18 m and meaningful post-goal reverse is 0.04 m; these
+are task coordinates in metres, not TCP travel or physical feasibility limits.
+Current-state safe exploration may extend the range after complete validation.
+The existing prismatic controller, closure, preload menu, native path checks,
+load guards and FIT quality masks remain authoritative. The R02 profile stays
+revolute-only and unchanged.
+
+This profile also records the existing private diagnostic overview at 5 Hz
+through all advancing simulation, bypassing only the old event-clip cap. No
+camera pixels enter online planning. `V83_VIDEO_EVIDENCE.json` records the
+recording-only configuration override; physical policy values are unchanged.
+Paused perception/planning has no advancing physical state to record.
+
 ## Active R02 recovery experiment (2026-10-24)
 
 The separately authorized engineering profile `v81_active_recovery_v1` targets
