@@ -286,6 +286,10 @@ def operations_class(original):
                 from .replanning import coverage,targets
                 bounds=coverage(json.loads((self.r.output/'visual_plan.json').read_text()),targets(actions),horizon)
                 result['target_coverage']=bounds
+                if integrated:
+                    final_goal=self.r.job['v81_task_goal_native']
+                    result['original_final_goal_coverage']=coverage(
+                        json.loads((self.r.output/'visual_plan.json').read_text()),[final_goal],final_goal)
                 if not bounds['full_requested_actions_feasible']:
                     self.current_plan_ready=False
                     result.update(plan=False,status='PLANNING_REJECTED',recoverable=True,

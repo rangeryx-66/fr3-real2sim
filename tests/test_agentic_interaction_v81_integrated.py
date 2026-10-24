@@ -61,7 +61,9 @@ class PacketTests(unittest.TestCase):
 class ValidationTests(unittest.TestCase):
     def ops(self,p):
         self.holds=[]
-        r=SimpleNamespace(output=p,job={'episode_id':'test'},dt=1/240,supervisor=SimpleNamespace(latched=None),
+        r=SimpleNamespace(output=p,job={'episode_id':'test'},dt=1/240,tick=0,
+            episode_budget=SimpleNamespace(remaining=lambda t:dict(wall_s=100.,sim_s=100.)),
+            supervisor=SimpleNamespace(latched=None),
             record=SimpleNamespace(segments=[dict(id=1,role='FIT_A',first_step=0,result=dict(
                 status='TARGET_REACHED',safely_stopped=True,physical_transmission_valid=True))]),
             rows=[dict(aperture_m=.014,relative_translation_slip_m=0.)],
@@ -113,6 +115,31 @@ class ValidationTests(unittest.TestCase):
             with patch('agentic_interaction_v81.validation_queue.model_state',return_value={'state':'MODEL_COMPUTING'}):
                 self.assertFalse(admit(ops,a)['ready'])
             self.assertEqual(self.holds,[]);self.assertEqual(requests(ops)['requests'][0]['action'],a)
+
+    def test_measured_worker_latency_allows_finite_stable_handover(self):
+        with tempfile.TemporaryDirectory()as d:
+            p=Path(d);ops=self.ops(p);a=self.action();enqueue(ops,dict(segments=[a]))
+            ready=self.publication(p)
+            pub=ready['publication'];pub['worker_wall_s']=4.
+            (p/'model/MODEL_PUBLICATION.json').write_text(json.dumps(pub))
+            with patch('agentic_interaction_v81.validation_queue.model_state',
+                       side_effect=[{'state':'MODEL_COMPUTING'}]*30+[ready]):
+                self.assertTrue(admit(ops,a)['ready'])
+            self.assertGreater(sum(self.holds),1.)
+            self.assertLessEqual(sum(self.holds),3.)
+            self.assertEqual(requests(ops)['requests'][0]['action'],a)
+
+    def test_contact_degradation_interrupts_numerical_wait(self):
+        with tempfile.TemporaryDirectory()as d:
+            p=Path(d);ops=self.ops(p);a=self.action();enqueue(ops,dict(segments=[a]))
+            def drift(t):
+                self.holds.append(t);ops.r.rows[-1]['aperture_m']+=.0006
+            ops.r.hold=drift
+            with patch('agentic_interaction_v81.validation_queue.model_state',return_value={'state':'MODEL_COMPUTING'}):
+                result=admit(ops,a)
+            self.assertFalse(result['ready']);self.assertEqual(result['reason'],'CONTACT_UNSTABLE')
+            self.assertAlmostEqual(sum(self.holds),.05)
+            self.assertEqual(requests(ops)['requests'][0]['action'],a)
 
 
 if __name__=='__main__':unittest.main()

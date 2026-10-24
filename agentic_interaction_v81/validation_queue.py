@@ -67,12 +67,26 @@ def mark(ops,action,status,**metadata):
 
 
 def admit(ops,action):
-    """No Agent wait. At most the original one-second stable endpoint hold.
+    """No Agent wait. Measured-cost, finite, guarded numerical handover.
 
     Full native physics/guards continue; this is not a paused-PhysX success.
     If loading becomes unstable, release through the original finite owner.
     """
     status=model_state(ops);held=0.;r=ops.r
+    publication=r.output/'model/MODEL_PUBLICATION.json'
+    prior=json.loads(publication.read_text()) if publication.exists() else {}
+    # This uses worker latency, never an obsolete model's coefficients. The
+    # original acquisition hold is unchanged. A stopped endpoint may step
+    # real physics while a finite numeric job finishes; instability unloads.
+    latency=float(prior.get('worker_wall_s',0.))
+    wall_cap=min(10.,max(1.,1.5*latency))
+    resources=r.episode_budget.remaining(r.tick*r.dt)
+    wall_cap=min(wall_cap,resources['wall_s'])
+    sim_cap=min(3. if latency else 1.,resources['sim_s'])
+    deadline=time.monotonic()+wall_cap
+    handover=dict(measured_previous_worker_wall_s=latency,wall_cap_s=wall_cap,
+        simulation_cap_s=sim_cap,acquisition_hold_unchanged=True,
+        real_physics_and_original_protections_active=True,Agent_wait=False)
     segment=r.record.segments[-1] if r.record.segments else {}
     previous=segment.get('result',{})
     stable=(bool(previous.get('safely_stopped') and previous.get('physical_transmission_valid')
@@ -81,9 +95,11 @@ def admit(ops,action):
         else bool(getattr(ops,'_v81_current_acquisition_verified',False)))
     begin_aperture=float(r.rows[-1]['aperture_m']) if r.rows else None
     begin_slip=float(r.rows[-1]['relative_translation_slip_m']) if r.rows else None
-    while status['state']=='MODEL_COMPUTING' and stable and held<1.-r.dt/2:
+    while (status['state']=='MODEL_COMPUTING' and stable and held<sim_cap-r.dt/2
+            and time.monotonic()<deadline):
         if r.supervisor.latched is not None:break
-        r.hold(min(.05,1.-held));held=min(1.,held+.05)
+        step=min(.05,sim_cap-held)
+        r.hold(step);held=min(sim_cap,held+step)
         row=r.rows[-1]
         stable=(abs(float(row['aperture_m'])-begin_aperture)<.0005
             and abs(float(row['relative_translation_slip_m'])-begin_slip)<r.closure_policy['max_slip_m'])
@@ -92,9 +108,11 @@ def admit(ops,action):
         mark(ops,action,'PENDING_MODEL' if status['state']=='MODEL_COMPUTING' else
             'NEEDS_EXCITATION' if status['state']=='DATA_INSUFFICIENT' else
             'WORKER_FAILED' if status['state']=='WORKER_FAILED' else 'PENDING_REPLAN',
-            last_model_state=status,finite_guarded_hold_sim_s=held,contact_stable=stable)
+            last_model_state=status,finite_guarded_hold_sim_s=held,contact_stable=stable,
+            numerical_handover_budget=handover)
         return dict(ready=False,model_state=status,finite_guarded_hold_sim_s=held,
-            request_preserved=True,reason='CONTACT_UNSTABLE' if not stable else status['state'])
+            request_preserved=True,numerical_handover_budget=handover,
+            reason='CONTACT_UNSTABLE' if not stable else status['state'])
     # Recheck after any actual hold: no stale measured-state route approval.
     route=ops.check_successor(action)
     if not route.get('valid'):
@@ -105,7 +123,7 @@ def admit(ops,action):
     seal=dict(id=identity(action),action=action,publication=pub,
         readiness=status['readiness'],model_sha256=pub['model_sha256'],
         initialized_from_measured_coordinate=r.actual(),future_validation_used=False,
-        finite_guarded_hold_sim_s=held)
+        finite_guarded_hold_sim_s=held,numerical_handover_budget=handover)
     atomic_json(folder/(identity(action)+'.json'),seal)
     mark(ops,action,'SEALED_READY',seal=str(folder/(identity(action)+'.json')))
     return dict(ready=True,model_state=status,finite_guarded_hold_sim_s=held,seal=seal)
@@ -130,5 +148,7 @@ def boundary(ops):
         time.sleep(.05);status=model_state(ops)
     if status['state']=='READY':
         for row in pending:mark(ops,row['action'],'READY_FOR_CURRENT_STATE_REPLAN',publication=status['publication'])
+    current=requests(ops)
+    pending=[r for r in current['requests'] if r['status'] not in ('COMPLETE','PHYSICAL_FAILURE')]
     return dict(state=status['state'],pending=pending,model=status,
         priority='Resume the ORIGINAL pending VALIDATION after current-state native planning and fresh Agent grasp approval; optional range expansion must wait.')

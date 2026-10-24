@@ -1,8 +1,14 @@
 {
-  "schema": "v81-measured-preload-evidence-v1",
-  "approved_agent_requests_n": [],
-  "study_requests_n": [2.0, 2.5, 3.0],
-  "status": "CONTROLLED_COMPARISONS_NOT_YET_COMPLETED",
-  "requested_value_is_not_measured_force": true,
-  "native_drive_authority_changed": false
+  "version": "v81-preload-evidence-20261024",
+  "baseline_requests_n": [0.5, 0.75, 1.0, 1.5],
+  "controlled_study_requests_n": [2.0, 2.5, 3.0],
+  "approved_agent_requests_n": [2.0, 2.5],
+  "evidence_source_commit": "7ec52eb4f419b820b1764cdaf410a4c1c40edba8",
+  "observed_reference_sha256": "02e2d7b63241b9e3e76833f62b01b726ebce72ecb7a863e76ba1c35de8b517e3",
+  "completed_control_episodes": ["v81_preload_matched_01", "v81_preload_matched_02", "v81_preload_matched_03"],
+  "support": "Same freshly observed unexecuted automatic grasp, station, physics and 18 -> 6 -> 24 mm trajectory. 2.0/2.5 N requests increased measured normal load without position saturation and completed repeated pulling/reversal and original guarded parking. Limited short-range engineering evidence, no 150 mm reliability or hardware rating claim.",
+  "tradeoff": "Higher preload also increases load asymmetry and transverse force. Select from actual fresh geometry/contact feedback, never an asset-ID lookup or automatic maximum.",
+  "not_approved_for_ordinary_Agent": [{"request_n": 3.0, "episode": "v81_preload_matched_04", "reason": "Original sustained per-pad overload during hold: window 4.00693 N, instantaneous 4.20798 N; no authority saturation, no completed hold or task motion. Hard latch preserved. No task threshold recalibration or hardware-safety claim."}],
+  "actuator_authority_gains_physics_and_safety_unchanged": true,
+  "requested_preload_is_not_measured_force": true
 }

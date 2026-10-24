@@ -71,7 +71,9 @@ def submit(ops,ready):
             publication=dict(state='READY' if readiness['qualified_bidirectional'] else 'DATA_INSUFFICIENT',
                 packet=str(packet),model=str(folder/'estimate.json'),
                 readiness=str(folder/'FIT_READINESS_V81.json'),model_sha256=readiness['model_sha256'],
-                latest_FIT_id=readiness['latest_completed_FIT_id'],published_unix_s=time.time())
+                latest_FIT_id=readiness['latest_completed_FIT_id'],published_unix_s=time.time(),
+                worker_wall_s=time.time()-state['created_unix_s'],
+                production_processing_wall_s=readiness['processing_wall_s'])
             # Each packet is written once. Only the pointer/public UI copies
             # change, monotonically; no reader seals a mismatched pair.
             old=ops.r.output/'model/MODEL_PUBLICATION.json'

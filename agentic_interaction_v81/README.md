@@ -11,8 +11,9 @@ Historical 1.5 N menus below describe the older, still reproducible profile.
 FIT packets are immutable, reference one copy of each raw numeric chunk, and
 publish atomic model pointers. Pending VALIDATION requests survive a deferred
 handover. The runtime distinguishes computing, insufficient data and worker
-failure; at most the original one-second guarded endpoint hold is used while
-contact is verified stable. Otherwise release/park precedes reasoning and the
+failure; a measured-worker-cost finite guarded endpoint handover is used only while
+contact is verified stable (maximum10 wall/3 simulated seconds; the original
+one-second acquisition hold is unchanged). Otherwise release/park precedes reasoning and the
 original request remains the highest-priority current-state recovery task.
 
 `reuse_current_candidates:true` can recheck the current observation's unexecuted
