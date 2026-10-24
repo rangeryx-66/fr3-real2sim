@@ -1,6 +1,6 @@
 {
   "schema": "v83-r02-speed-static-configuration-v1",
-  "status": "STATIC_ONLY_FINAL_PHYSICAL_OUTCOME_PENDING_CLOSED",
+  "status": "CLOSED_PHYSICAL_LIFECYCLE_PASS_CONTROL_DEGRADATION_UNRESOLVED",
   "episode_id": "v83_r02_speed_comparison_20261025_01",
   "source_commit": "1782baf392402db1d547732c8709a6ac15369c6c",
   "protected_success_baseline": "792fa3b55160c8e83d50ec70f82803af8de14e9b",
@@ -21,8 +21,15 @@
     "human_authorization_ref": "user_20261025_continue_promising_safe_work_beyond_chosen_time_budget",
     "max_extra_wall_s": 7200,
     "parked_decision_renewal_s": 900,
-    "actual_accepted_credit_pending_final_audit": true,
-    "physical_authority_change": false
+    "physical_authority_change": false,
+    "actual_accepted_extra_wall_s": 5400,
+    "effective_wall_s": 12600,
+    "accepted_sequences": [
+      6,
+      15,
+      27
+    ],
+    "decision_clock_or_sim_state_reset": false
   },
   "recording": {
     "continuous_video_hz": 5,
@@ -65,7 +72,7 @@
     "one_episode_establishes_robustness": false
   },
   "notes": [
-    "All final lifecycle, model validation, raw chunk/video and owned-process audits await explicit CLOSED from physical owner.",
+    "Final lifecycle, source, numeric/video metadata and owned-process audits completed after CLOSED; raw evidence remains private.",
     "Joint reactions, projected feedback, external applied command and native drive caps are distinct; no independently measured implicit motor output is available."
   ]
 }

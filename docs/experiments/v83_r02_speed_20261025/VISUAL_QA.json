@@ -1,0 +1,36 @@
+{
+  "schema": "v83-r02-speed-derived-figure-qa-v1",
+  "actually_viewed": true,
+  "passive_camera_pixels_inspected": false,
+  "plots_only": 2,
+  "figures": [
+    {
+      "file": "PHYSICAL_TRAJECTORY.png",
+      "sha256": "52f10e95f0d64ed40c152ea6a588a09a2f246d5e018ea6c352adb56f6fcd58a4",
+      "qa": "PASS",
+      "checks": [
+        "Axes and labels readable; no clipped annotations or legends.",
+        "Actual joint coordinate and wall/simulation axes are explicitly distinguished.",
+        "Incomplete fast forward, all three failures, recoveries and same-episode limits remain visible."
+      ]
+    },
+    {
+      "file": "SPEED_COMPARISON.png",
+      "sha256": "d92a053a55f66fa65f5210861b8953c3b3198218af13d73ae05565e1d0fd1e17",
+      "qa": "PASS",
+      "checks": [
+        "Axes and labels readable; no clipped annotations or legends.",
+        "Actual joint coordinate and wall/simulation axes are explicitly distinguished.",
+        "Common actual support, failed fast forward, simultaneous acceleration change and changed-grasp reverse confound are stated."
+      ]
+    }
+  ],
+  "derivation": {
+    "trajectory": "All retained actual joint samples, display stride24 plus true maximum and final sample; no object reset or successful episodes concatenated.",
+    "speed_curves": "Observed shared support0.06..0.138505563rad, 100 equal-record mean bins for display; formal sample-level aggregates retained in METRICS.json.",
+    "servo": "Euclidean world-position difference of command_TCP and measured TCP, metres converted to millimetres.",
+    "rigid_arc": "Known hinge transform of segment-initial measured TCP position at each actual measured q; measured minus expected position.",
+    "window_end_semantics": "Suspect-to-stop windows include protected braking/hold; not the same as monitor-stop-only windows in earlier block report.",
+    "no_fitting_or_controller_modification": true
+  }
+}
