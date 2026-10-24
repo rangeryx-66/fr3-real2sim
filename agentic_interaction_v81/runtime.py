@@ -28,6 +28,8 @@ def runtime_class(original):
             # NativeDrive still owns every arm/G1 command and its exact caps.
             with patch.object(plant,'author',assemble),patch.object(gripper,'NativeDrive',drive_class(gripper.NativeDrive)):
                 super().__init__(job)
+            from .load_telemetry import instrument as instrument_load
+            instrument_load(self)
             from .video_evidence import configure
             configure(self)
             from .orchestration_extension import install

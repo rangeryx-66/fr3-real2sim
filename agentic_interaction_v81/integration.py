@@ -27,7 +27,7 @@ def apply(spec,job):
         job['v83_continuous_video_hz']=5
     if profile==ORCHESTRATION_PROFILE:
         from .orchestration_extension import policy, FLAG
-        job.update({FLAG:True, ORCHESTRATION_AUTH:policy(spec)})
+        job.update({FLAG:True, ORCHESTRATION_AUTH:policy(spec), 'v83_load_telemetry':True})
     if profile==PRISMATIC_ACTIVE_PROFILE:
         job.update(v81_active_recovery=True,v81_minimum_reverse_native=.04,
                    v83_continuous_video_hz=5)
