@@ -11,6 +11,23 @@ from agentic_interaction_v81.model_packets import snapshot
 from agentic_interaction_v81.validation_queue import enqueue,admit,model_state,requests
 
 
+class PhysicsLifecycleTests(unittest.TestCase):
+    def test_paused_observation_resumes_before_native_exit_step(self):
+        from agentic_interaction_v81.physics_lifecycle import resume_for_exit
+        from interaction_runtime.policy import SafetyStop
+        class World:
+            playing=False
+            def play(self):self.playing=True
+            def step(self):return 1/240 if self.playing else 0.
+        world=World();r=SimpleNamespace(world=world,supervisor=SimpleNamespace(latched=None))
+        self.assertEqual(world.step(),0.)  # reproduces native dt=0 precondition
+        resume_for_exit(r)
+        self.assertEqual(world.step(),1/240)
+        world.playing=False;r.supervisor.latched={'reason':'real collision'}
+        with self.assertRaises(SafetyStop):resume_for_exit(r)
+        self.assertFalse(world.playing)
+
+
 class PreloadTests(unittest.TestCase):
     def test_no_silent_menu_clipping_or_unverified_agent_activation(self):
         for value in (2.,2.5,3.):
@@ -140,6 +157,32 @@ class ValidationTests(unittest.TestCase):
             self.assertFalse(result['ready']);self.assertEqual(result['reason'],'CONTACT_UNSTABLE')
             self.assertAlmostEqual(sum(self.holds),.05)
             self.assertEqual(requests(ops)['requests'][0]['action'],a)
+
+
+
+
+class CurrentPoolUnitsTests(unittest.TestCase):
+    def test_prismatic_replan_preserves_cross_start_whole_chain_certificate(self):
+        import sys
+        from agentic_interaction_v81.candidate_pool import select
+        with tempfile.TemporaryDirectory()as d:
+            p=Path(d);candidate=dict(path=[{'state':.05},{'state':.15}],
+                shared_selection_utility=1.,section_fraction=0.,insertion_m=0.,roll_deg=0.,pitch_deg=0.)
+            ops=SimpleNamespace(r=SimpleNamespace(output=p,job={'articulation_v7':{'joint_type':'prismatic'}},
+                policy=None,c=None,solver=None),g={},_v81_current_candidates=dict(identity={'same':True},
+                horizon=.15,candidates=[candidate]),current_plan_ready=False)
+            class Checker:
+                def __init__(self,*args):pass
+                def __call__(self,c):return dict(valid=True,v75_whole_chain=dict(valid=True,
+                    declared_actions=[dict(target_m=.12),dict(target_m=.02)]))
+            actions=[dict(role='FIT_PULL',target_q=.12),dict(role='VALIDATION_REVERSE',target_q=.02)]
+            with patch('agentic_interaction_v81.candidate_pool.identity',return_value={'same':True}),\
+                 patch('agentic_interaction_v81.boundary_operations.wrist_evidence',return_value=True),\
+                 patch('agentic_interaction_v81.preload_extension.select'),\
+                 patch.dict(sys.modules,{'interaction_runtime.prismatic_candidate_v75':SimpleNamespace(PrismaticCandidateCheckV75=Checker)}):
+                result=select(ops,dict(planned_segments=actions,reason='same current observed pool'))
+            self.assertTrue(result['plan'])
+            self.assertEqual(json.loads((p/'visual_plan.json').read_text())['coordinate_unit'],'m')
 
 
 if __name__=='__main__':unittest.main()

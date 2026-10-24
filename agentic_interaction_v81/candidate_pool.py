@@ -46,6 +46,11 @@ def select(ops,command):
         audit.append(dict(family=[candidate[k]for k in ('section_fraction','insertion_m','roll_deg','pitch_deg')],check=check))
         if not check.get('valid'):continue
         candidate=deepcopy(candidate);candidate['execution_feasibility']=check
+        if prismatic:
+            # Generated candidates reach this seam before the frozen owner's
+            # final serialization adds its SI coordinate label. Preserve the
+            # current whole-chain certificate on a same-pool replan too.
+            candidate['coordinate_unit']='m'
         bounds=coverage(candidate,required,pool['horizon'])
         if not bounds['full_requested_actions_feasible']:continue
         atomic_json(r.output/'visual_plan.json',candidate)
