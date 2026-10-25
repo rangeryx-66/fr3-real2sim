@@ -100,4 +100,3 @@ def evaluate(episode,output):
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('episode',type=Path);p.add_argument('output',type=Path)
     a=p.parse_args();print(json.dumps(evaluate(a.episode,a.output)))
-
