@@ -86,6 +86,13 @@ def runtime_class(original):
                 from .instance_admission import native_unloaded_check
                 native_unloaded_check(self)
 
+        def move_path(self,path,phase='PREGRASP'):
+            from .path_admission import preflight
+            path=list(path)
+            preflight(self,path,phase,0.)
+            # Original timing/actuation and measured-state supervisor remain.
+            return super().move_path(path,phase)
+
         def record_frame(self):
             if self.job.get('v83_continuous_video_hz'):
                 from .video_evidence import configure

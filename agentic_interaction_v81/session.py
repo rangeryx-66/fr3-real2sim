@@ -156,7 +156,9 @@ def serve(r):
                     state(ops)['state']='UNLOADED_REPLAN_REQUIRED'
                     result.update(status='PLANNING_REJECTED',episode_termination_required=False)
                 elif task_recovery.enabled(ops):
-                    if op in ('evaluate_view','observe_view','evaluate_station','redeclare_actions','retry_model') and task_recovery.unloaded(ops):
+                    preflight_rejection=isinstance(e,RuntimeError) and str(e).startswith('MOTION_PATH_UNAVAILABLE:')
+                    if (op in ('evaluate_view','observe_view','evaluate_station','redeclare_actions','retry_model')
+                            or preflight_rejection and op in ('observe','reobserve_and_replan','fresh_mode_observation')) and task_recovery.unloaded(ops):
                         result.update(status='PLANNING_REJECTED',episode_termination_required=False)
                     else:
                         result.update(status='CONTROL_STATE_UNTRUSTED',recoverable=False)
