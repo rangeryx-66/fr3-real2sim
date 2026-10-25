@@ -75,9 +75,30 @@ def persist(runtime, result=None, pause=False):
 
 def process_outcome(output, returncode):
     path=Path(output)/'TERMINAL_SAFETY.json'
-    evidence=json.loads(path.read_text()) if path.exists() else {}
+    error=None
+    try:evidence=json.loads(path.read_text()) if path.exists() else {}
+    except (OSError,ValueError,TypeError) as failure:
+        evidence={};error=repr(failure)
+    if not isinstance(evidence,dict):
+        evidence={};error='TERMINAL_EVIDENCE_NOT_AN_OBJECT'
+    if evidence and evidence.get('episode_id')!=Path(output).name:
+        evidence={};error='TERMINAL_EVIDENCE_EPISODE_MISMATCH'
+    safe=bool(evidence.get('status')=='SAFE_PARK_VERIFIED'
+        and evidence.get('safe_park_verified') is True
+        and evidence.get('requires_intervention') is False
+        and evidence.get('latch_present') is False)
     return dict(process_returncode=returncode,
         terminal_safety_status=evidence.get('status','UNVERIFIED_MISSING_EVIDENCE'),
-        physical_safe_park_verified=evidence.get('safe_park_verified') is True,
-        requires_intervention=evidence.get('requires_intervention',True),
-        process_exit_is_not_task_success=True)
+        physical_safe_park_verified=safe,
+        requires_intervention=not safe,
+        process_exit_is_not_task_success=True,evidence_error=error)
+
+
+def preserve_unverified_process_hold(output,returncode,registry):
+    outcome=process_outcome(output,returncode)
+    if outcome['requires_intervention'] and not Path(registry).exists():
+        atomic_json(Path(registry),dict(episode_id=Path(output).name,
+            status=outcome['terminal_safety_status'],evidence=str(Path(output)/'TERMINAL_SAFETY.json'),
+            reason='Actor closed without verified physical exit; process rc cannot clear safety.',
+            physical_outcome=outcome))
+    return outcome

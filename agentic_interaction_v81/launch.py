@@ -10,7 +10,7 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def launch(specfile,profile):
     baseline_audit()
-    from .terminal_safety import registry_path,require_clearance,process_outcome
+    from .terminal_safety import registry_path,require_clearance,process_outcome,preserve_unverified_process_hold
     safety_registry=registry_path(json.loads(Path(profile).read_text()))
     require_clearance(safety_registry)
     spec=json.loads(Path(specfile).read_text())
@@ -107,8 +107,10 @@ def launch(specfile,profile):
                     actor.terminate()
                     try:rc=actor.wait(timeout=30)
                     except subprocess.TimeoutExpired:actor.kill();rc=actor.wait(timeout=10)
+        physical=(preserve_unverified_process_hold(out,rc,safety_registry) if job.get('v84_abc')
+            else process_outcome(out,rc))
         dump(out/'PROCESS_COMPLETION.json',dict(returncode=rc,wall_s=time.perf_counter()-began,actor_exited=True,
-            physical_outcome=process_outcome(out,rc)))
+            physical_outcome=physical))
     return out
 
 

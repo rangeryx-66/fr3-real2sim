@@ -3,7 +3,7 @@ import json,tempfile,unittest
 from pathlib import Path
 from types import SimpleNamespace as S
 from unittest.mock import Mock,patch
-from agentic_interaction_v81.terminal_safety import classify,persist,process_outcome,require_clearance
+from agentic_interaction_v81.terminal_safety import classify,persist,process_outcome,require_clearance,preserve_unverified_process_hold
 from agentic_interaction_v81.runtime import runtime_class
 from interaction_runtime.policy import SafetyStop
 
@@ -69,6 +69,28 @@ class TerminalSafetyTests(unittest.TestCase):
             with patch('agentic_interaction_v81.terminal_safety.persist',side_effect=OSError('disk')):
                 with self.assertRaisesRegex(SafetyStop,'OVERLOAD') as caught:o.step()
             self.assertTrue(any('export failed' in n for n in caught.exception.__notes__))
+
+    def test_missing_terminal_record_rc_zero_creates_hold(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);hold=p/'hold.json'
+            v=preserve_unverified_process_hold(p,0,hold)
+            self.assertTrue(v['requires_intervention']);self.assertTrue(hold.exists())
+            with self.assertRaises(RuntimeError):require_clearance(hold)
+
+    def test_corrupt_or_stale_terminal_evidence_cannot_release_gate(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);record=p/'TERMINAL_SAFETY.json';record.write_text('broken')
+            self.assertTrue(process_outcome(p,0)['requires_intervention'])
+            record.write_text('[1]');self.assertTrue(process_outcome(p,0)['requires_intervention'])
+            record.write_text(json.dumps(dict(episode_id='old',status='SAFE_PARK_VERIFIED',safe_park_verified=True,requires_intervention=False)))
+            self.assertTrue(process_outcome(p,0)['requires_intervention'])
+
+    def test_verified_exit_does_not_create_false_hold(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);hold=p/'hold.json'
+            (p/'TERMINAL_SAFETY.json').write_text(json.dumps(dict(episode_id=p.name,status='SAFE_PARK_VERIFIED',safe_park_verified=True,requires_intervention=False,latch_present=False)))
+            v=preserve_unverified_process_hold(p,0,hold)
+            self.assertTrue(v['physical_safe_park_verified']);self.assertFalse(hold.exists())
 
     def test_launcher_refuses_before_resource_preparation_or_actor_spawn(self):
         from agentic_interaction_v81.launch import launch
