@@ -1,0 +1,76 @@
+{
+  "scope": "OFFLINE_REAL_FAILURE_DISPATCH_REPLAY_WITH_NON_PHYSICAL_OWNER_FIXTURE",
+  "rows": [
+    {
+      "episode": "v86_45936_abc_20261025_02",
+      "sequence": 6,
+      "original_trace_sha256": "393a9e806ee963580c356ffed4f63c60739a4889549b3df0e964e3fd02c5c08f",
+      "original_task_status": "REPLAN_REQUIRED",
+      "reason": "RuntimeError('BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED')",
+      "new_outcome": "ACTION_REJECTED",
+      "terminal_required": false,
+      "same_World_fixture": true,
+      "measured_coordinate_preserved": 0.3480774164199829,
+      "park_calls": 1
+    },
+    {
+      "episode": "v86_45936_abc_20261025_04",
+      "sequence": 8,
+      "original_trace_sha256": "856a184eb04423efa8f5a2183ea4182737d2e7b4578ab4d56b27c6a4b756ab51",
+      "original_task_status": "REPLAN_REQUIRED",
+      "reason": "RuntimeError('BOUNDED_VISUAL_APPROACH_IK_SEARCH_EXHAUSTED')",
+      "new_outcome": "ACTION_REJECTED",
+      "terminal_required": false,
+      "same_World_fixture": true,
+      "measured_coordinate_preserved": 0.3471577763557434,
+      "park_calls": 1
+    },
+    {
+      "episode": "v86_45936_abc_20261025_04",
+      "sequence": 9,
+      "original_trace_sha256": "856a184eb04423efa8f5a2183ea4182737d2e7b4578ab4d56b27c6a4b756ab51",
+      "original_task_status": "REPLAN_REQUIRED",
+      "reason": "CURRENT_POOL_NATIVE_SEARCH_EXHAUSTED",
+      "new_outcome": "ACTION_REJECTED",
+      "terminal_required": false,
+      "same_World_fixture": true,
+      "measured_coordinate_preserved": 0.3471577763557434,
+      "park_calls": 1
+    },
+    {
+      "episode": "v86_45936_abc_20261025_05",
+      "sequence": 7,
+      "original_trace_sha256": "a9a203d0012bf8d8b1cdaa1572ea6e5be68e2073af38962cc1bc4a8cfc2618ea",
+      "original_task_status": "HARD_STOP",
+      "reason": "COMMAND_JOINT_MARGIN",
+      "new_outcome": "SAFETY_STOP",
+      "terminal_required": true,
+      "same_World_fixture": true,
+      "measured_coordinate_preserved": 0.34778282046318054,
+      "park_calls": 0
+    },
+    {
+      "episode": "v86_45936_abc_20261025_06",
+      "sequence": 5,
+      "original_trace_sha256": "cd5cd1c70c1a2cc305e0d35177ba9575670c2f900aaaa912aeafea3c53bc742b",
+      "original_task_status": "HARD_STOP",
+      "reason": "COMMAND_JOINT_MARGIN",
+      "new_outcome": "SAFETY_STOP",
+      "terminal_required": true,
+      "same_World_fixture": true,
+      "measured_coordinate_preserved": 0.0,
+      "park_calls": 0
+    }
+  ],
+  "numerical_counterexample": {
+    "robot_joint": "joint2",
+    "original_lower_limit_rad": -2.059,
+    "original_margin_rad": 0.05,
+    "planner_float64_margin_rad": 0.05000000000000071,
+    "native_float32_margin_rad": 0.04999993705749528,
+    "checks_actual_representable_command": true,
+    "actual_closed06_last_command_q2_rad": -2.008999,
+    "exact_full_failed_route_reconstructed": false
+  },
+  "hard_incidents_remain_NOT_PASS": true
+}
