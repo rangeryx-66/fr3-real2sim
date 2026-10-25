@@ -52,6 +52,14 @@ def serve(r):
             blocked=before(ops,dict(command,operation='attempt_grasp_and_probe'))
             if blocked is not None:return blocked
             return ops.attempt(command)
+        if command['operation']=='finish' and r.job.get('v84_short_comparison'):
+            exercised={s.get('declared_action',{}).get('execution_strategy','continuous')
+                for s in r.record.segments if s.get('completed')}
+            if {'legacy','continuous'}<=exercised:
+                recovery.state(ops)['termination_assessment']=dict(allowed=True,
+                    reason='PREREGISTERED_FINITE_SHORT_COMPARISON_FINISHED',
+                    task_complete=False,global_goal_preserved=True)
+                return None
         return before(ops,command)
     def after_command(ops,command,result):
         if ops.abc_state=='C' and r.supervisor.latched is None:

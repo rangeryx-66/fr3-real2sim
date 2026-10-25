@@ -4,6 +4,12 @@ Activation: `integration_profile: v84_abc_continuous_v1`, engineering only.
 Default V8.0/V8.1/V8.3 profiles retain their behavior. No frozen physical,
 collision, closure, actuator, progress-clock or estimator mathematics changes.
 
+For the separately registered short comparison only, profile
+`v84_abc_short_comparison_v1` permits normal finish after both legacy and
+continuous physical strategies have actually produced completed records.
+This declares the diagnostic trial finished, never the global 90° goal
+achieved; failed records remain failures. Full-task profile cannot use it.
+
 ```
 A fresh wrist -> current native whole-chain plan -> inspected approval
   -> acquire_execute (finite long native-coordinate action[s])

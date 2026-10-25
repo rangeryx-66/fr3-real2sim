@@ -7,6 +7,7 @@ ACTIVE_PROFILE='v81_active_recovery_v1'
 PRISMATIC_ACTIVE_PROFILE='v83_prismatic_active_recovery_v1'
 REVOLUTE_VALIDATION_PROFILE='v83_revolute_model_validation_v1'
 ABC_PROFILE='v84_abc_continuous_v1'
+ABC_SHORT_PROFILE='v84_abc_short_comparison_v1'
 from .orchestration_extension import PROFILE as ORCHESTRATION_PROFILE, AUTH as ORCHESTRATION_AUTH
 
 
@@ -17,7 +18,7 @@ def apply(spec,job):
     if profile is None:
         if spec.get('preload_study'):raise ValueError('PRELOAD_STUDY_REQUIRES_INTEGRATED_PROFILE')
         return
-    if profile not in (PROFILE,ACTIVE_PROFILE,PRISMATIC_ACTIVE_PROFILE,REVOLUTE_VALIDATION_PROFILE,ORCHESTRATION_PROFILE,ABC_PROFILE) or spec.get('phase')!='engineering':
+    if profile not in (PROFILE,ACTIVE_PROFILE,PRISMATIC_ACTIVE_PROFILE,REVOLUTE_VALIDATION_PROFILE,ORCHESTRATION_PROFILE,ABC_PROFILE,ABC_SHORT_PROFILE) or spec.get('phase')!='engineering':
         raise ValueError('EXPLICIT_INTEGRATED_ENGINEERING_PROFILE_REQUIRED')
     if 'preload_study' in spec and type(spec['preload_study']) is not bool:
         raise ValueError('BOOLEAN_PRELOAD_STUDY_REQUIRED')
@@ -32,9 +33,10 @@ def apply(spec,job):
     if profile==PRISMATIC_ACTIVE_PROFILE:
         job.update(v81_active_recovery=True,v81_minimum_reverse_native=.04,
                    v83_continuous_video_hz=5)
-    if profile==ABC_PROFILE:
+    if profile in (ABC_PROFILE,ABC_SHORT_PROFILE):
         job.update(v84_abc=True,v81_active_recovery=True,v83_load_telemetry=True,
                    v83_continuous_video_hz=5)
+        job['v84_short_comparison']=profile==ABC_SHORT_PROFILE
     from pathlib import Path
     import json
     policy=json.loads((Path(__file__).parent/'PRELOAD_EVIDENCE_POLICY.json').read_text())
@@ -49,7 +51,7 @@ def apply(spec,job):
             raise ValueError('V83_PRISMATIC_PROFILE_REQUIRES_PRISMATIC')
         if joint:job['v81_task_goal_native']=(.18 if profile==PRISMATIC_ACTIVE_PROFILE
             else math.pi/2 if joint=='revolute' else .15)
-        if profile==ABC_PROFILE and joint:
+        if profile in (ABC_PROFILE,ABC_SHORT_PROFILE) and joint:
             job.update(v81_task_goal_native=math.pi/2 if joint=='revolute' else .18,
                        v81_minimum_reverse_native=math.radians(10.) if joint=='revolute' else .04)
 
