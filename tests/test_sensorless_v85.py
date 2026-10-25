@@ -1,7 +1,7 @@
 import tempfile,json,hashlib,unittest
 from pathlib import Path
 import numpy as np
-from agentic_interaction_v85.effort import virtual_work,kinematic_scale_ambiguity,load_allowed,FIELDS,contiguous
+from agentic_interaction_v85.effort import virtual_work,kinematic_scale_ambiguity,load_allowed,FIELDS,contiguous,known_geometry
 
 
 class SensorlessTests(unittest.TestCase):
@@ -43,6 +43,13 @@ class SensorlessTests(unittest.TestCase):
             p=Path(d);t=p/'telemetry';t.mkdir();f=t/'x.npz';f.write_bytes(b'bad')
             (t/'index.json').write_text(json.dumps(dict(chunks=[dict(file=f.name,sha256='0'*64)])))
             with self.assertRaisesRegex(ValueError,'HASH_MISMATCH'):load_allowed(p)
+
+    def test_geometry_provider_never_opens_FT_configuration(self):
+        with tempfile.TemporaryDirectory() as d:
+            p=Path(d);expected=dict(joint_type='revolute',axis_world=[0,0,1],origin_world_m=[0,0,0])
+            (p/'ARTICULATION_INTERFACE.json').write_text(json.dumps(dict(prior=expected)))
+            (p/'identification_input.json').write_text('POISON F/T CALIBRATION')
+            self.assertEqual(known_geometry(p),expected)
 
     def test_sampling_gap_and_role_boundaries_are_not_interpolated(self):
         a=dict(step=np.array([0,1,2,4,5,6]),t=np.array([0,1,2,4,5,6])/240,

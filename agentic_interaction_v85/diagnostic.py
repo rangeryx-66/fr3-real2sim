@@ -9,7 +9,7 @@ on the old validation trajectories now designated development diagnostics.
 import argparse,copy,hashlib,json
 from pathlib import Path
 import numpy as np
-from update_probing_v7_model import load_segments
+from .reference import load_ft_reference as load_segments
 from update_prismatic_v73_model import qualify
 from xarm_ft_v7_estimator import samples,fit,prediction,analyze,basis
 from interaction_runtime.serialization import result_packet

@@ -51,7 +51,7 @@ def evaluate(episode,frozen,output,expected_sha,cache=None):
             fitted_resistance_intervals=m['intervals'],
             conditional_std=m['conditional_std'],conditional_intervals_exclude_model_and_sensor_systematic_error=True)
     if cache is not None and not extra:
-        from update_probing_v7_model import load_segments
+        from .reference import load_ft_reference as load_segments
         from update_prismatic_v73_model import qualify
         from xarm_ft_v31_estimator import common_filter
         pieces,_,_=load_segments(episode,True)

@@ -24,6 +24,11 @@ def load_allowed(episode):
     return {k:np.concatenate(v)for k,v in parts.items()},index
 
 
+def known_geometry(episode):
+    d=json.loads((episode/'ARTICULATION_INTERFACE.json').read_text())['prior']
+    return {k:d[k]for k in ['joint_type','axis_world','origin_world_m']}
+
+
 def contiguous(a,mask=None):
     ids=np.flatnonzero(np.ones(len(a['t']),bool) if mask is None else mask)
     if not len(ids):return []

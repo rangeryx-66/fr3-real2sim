@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 import pinocchio as pin
 from xarm_ft_v31_estimator import common_filter
-from .effort import load_allowed,contiguous,virtual_work,FIELDS
+from .effort import load_allowed,contiguous,virtual_work,FIELDS,known_geometry
 
 
 def summary(x):
@@ -17,9 +17,7 @@ def summary(x):
 
 
 def geometry(episode):
-    # Only the declared allowed kinematic prior is exported, never bias or wrench.
-    d=json.loads((episode/'identification_input.json').read_text())['prior']
-    return {k:d[k]for k in ['joint_type','axis_world','origin_world_m']}
+    return known_geometry(episode)
 
 
 def prepare(episode):
