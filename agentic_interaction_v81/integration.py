@@ -31,6 +31,8 @@ def apply(spec,job):
     if profile in (ORCHESTRATION_PROFILE,ABC_ORCHESTRATION_PROFILE):
         from .orchestration_extension import policy, FLAG
         job.update({FLAG:True, ORCHESTRATION_AUTH:policy(spec), 'v83_load_telemetry':True})
+    if profile==ABC_ORCHESTRATION_PROFILE:
+        job['v86_object_state_telemetry']=True
     if profile==PRISMATIC_ACTIVE_PROFILE:
         job.update(v81_active_recovery=True,v81_minimum_reverse_native=.04,
                    v83_continuous_video_hz=5)
