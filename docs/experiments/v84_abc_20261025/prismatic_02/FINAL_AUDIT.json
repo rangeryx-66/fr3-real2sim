@@ -1,0 +1,480 @@
+{
+  "schema": "v84-closed-measured-audit-v2",
+  "derivation_source_sha256": "f1b0ab846b989d3d187724bef98fd5cf0e98213bc44ae1efcf070b642bfa5bd2",
+  "episode_id": "v84_prismatic_large_20261025_02",
+  "source_commit": "78b83523143c84b6a7f90856c1e38c7716b220f3",
+  "coordinate_display_unit": "mm",
+  "completion": {
+    "returncode": 0,
+    "wall_s": 1230.5257427520119,
+    "actor_exited": true
+  },
+  "task_progress": {
+    "requested_final_target_native": 0.18,
+    "maximum_measured_native": 0.0,
+    "minimum_measured_native": -1.807003715051757e-21,
+    "current_measured_native": 0.0,
+    "unit": "m",
+    "global_goal_erased_by_shorter_action": false,
+    "first_goal_record": null
+  },
+  "final_state": {
+    "episode_id": "v84_prismatic_large_20261025_02",
+    "sequence": 7,
+    "state": "CLOSED",
+    "updated_unix_s": 1792910478.0041392,
+    "station_generation": 1,
+    "observation_generation": 2,
+    "remaining_work": {
+      "wall_s": 5675.458360522054,
+      "sim_s": 3307.2833333333333,
+      "exit_reserved": true
+    },
+    "safe_exit_wall_reserve_s": 300,
+    "unloaded": false
+  },
+  "physics_steps": 41452,
+  "records": 8400,
+  "chunk_sha256": {
+    "00000000.npz": "4c74488883568af967c7ae456c710e7b54a7848b2c7e768917e225064f410a0b",
+    "00041157.npz": "e6d1c058a74efdc71ab6029c64634a3deb6a2ce58118469c7d81cc7869f2a110"
+  },
+  "recorder_issues": [],
+  "hard_stop_records": 1,
+  "invalid_FT_records": 0,
+  "max_actual": 43.84429380297661,
+  "final_actual": 43.84429380297661,
+  "final_pad_N": [
+    5.262537479400635,
+    0.0
+  ],
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_ABC_RAIL_INITIAL_PULL",
+      "completed": true,
+      "target": 40.0,
+      "end": 40.17971456050873,
+      "gain": 40.179568696871115,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_s": 20.229166666666686,
+      "tracking_limited_fraction": 0.9123980765210119,
+      "advisory_windows": 0,
+      "actual_bad_windows": 0,
+      "FIT_exclude_entire_segment": false,
+      "declared_action": {
+        "role": "FIT_ABC_RAIL_INITIAL_PULL",
+        "target_q": 0.04,
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.025,
+        "execution_strategy": "continuous",
+        "coordinate_unit": "m",
+        "profile": "constant",
+        "hold": true,
+        "allow_target_truncation": false,
+        "fit_intervals_s": [
+          [
+            0.6,
+            300
+          ]
+        ]
+      },
+      "samples": 4494,
+      "measured_last_coordinate": 40.17971456050873,
+      "recorded_phase_span_s": 18.72083333333333,
+      "lead": {
+        "mean": 2.2720598429501857,
+        "p95": 2.489297766799578,
+        "max": 2.558311682080224
+      },
+      "TCP_servo_mm": {
+        "mean": 0.4968970878891108,
+        "p95": 0.6905571005860613,
+        "max": 0.7176554279330835
+      },
+      "pad_N": [
+        {
+          "mean": 2.413022994995117,
+          "p95": 2.4757790565490723,
+          "max": 2.891011953353882
+        },
+        {
+          "mean": 0.002959895646199584,
+          "p95": 0.0,
+          "max": 0.23249787092208862
+        }
+      ],
+      "aperture_minmax_mm": [
+        10.951499938964844,
+        11.417391777038574
+      ],
+      "contact_relative_slip_mm": {
+        "mean": 1.5331470966339111,
+        "p95": 1.5628879070281982,
+        "max": 1.597120761871338
+      },
+      "actual_velocity": {
+        "mean": 2.117224830286173,
+        "p95": 2.380211476702243,
+        "max": 2.9033373575657606
+      },
+      "derived_acceleration_abs": {
+        "mean": 1.4586995227627189,
+        "p95": 3.172713099050426,
+        "max": 121.44922278812693
+      },
+      "acceleration_scope": "Segment-local derivative of measured velocity; noisy diagnostic, not an independent acceleration sensor or estimator input."
+    },
+    {
+      "id": 2,
+      "role": "FIT_ABC_RAIL_LARGE_PULL",
+      "completed": true,
+      "target": 180.0,
+      "end": null,
+      "gain": null,
+      "status": "SAFETY_STOP",
+      "reason": "SUSTAINED_OVERLOAD",
+      "sim_s": null,
+      "tracking_limited_fraction": null,
+      "advisory_windows": 0,
+      "actual_bad_windows": 0,
+      "FIT_exclude_entire_segment": false,
+      "declared_action": {
+        "role": "FIT_ABC_RAIL_LARGE_PULL",
+        "target_q": 0.18,
+        "reference_speed_m_s": 0.01,
+        "reference_acceleration_m_s2": 0.03,
+        "execution_strategy": "continuous",
+        "coordinate_unit": "m",
+        "profile": "constant",
+        "hold": true,
+        "allow_target_truncation": false,
+        "fit_intervals_s": [
+          [
+            0.6,
+            300
+          ]
+        ]
+      },
+      "samples": 174,
+      "measured_last_coordinate": 43.84429380297661,
+      "recorded_phase_span_s": 0.7208333333333314,
+      "lead": {
+        "mean": 0.7945066768716237,
+        "p95": 1.3163306976434372,
+        "max": 1.3796663764540085
+      },
+      "TCP_servo_mm": {
+        "mean": 0.6212071285257597,
+        "p95": 1.2854711311994025,
+        "max": 1.7029631091274615
+      },
+      "pad_N": [
+        {
+          "mean": 2.9958505630493164,
+          "p95": 4.609592914581299,
+          "max": 5.262537479400635
+        },
+        {
+          "mean": 0.008470125496387482,
+          "p95": 0.0,
+          "max": 0.4572615921497345
+        }
+      ],
+      "aperture_minmax_mm": [
+        10.896492958068848,
+        12.87501049041748
+      ],
+      "contact_relative_slip_mm": {
+        "mean": 1.7052421569824219,
+        "p95": 2.206683874130249,
+        "max": 2.392254590988159
+      },
+      "actual_velocity": {
+        "mean": 4.629453382556509,
+        "p95": 9.462167974561453,
+        "max": 11.722452938556671
+      },
+      "derived_acceleration_abs": {
+        "mean": 49.90190737241134,
+        "p95": 155.27546871467652,
+        "max": 241.6136115791611
+      },
+      "acceleration_scope": "Segment-local derivative of measured velocity; noisy diagnostic, not an independent acceleration sensor or estimator input."
+    }
+  ],
+  "action_calls": {
+    "evaluate_station": 2,
+    "safe_release_retreat": 1,
+    "relocate_station": 1,
+    "observe": 1,
+    "observe_view": 1,
+    "prepare_grasp": 1,
+    "acquire_execute": 1
+  },
+  "operation_wall_s": {
+    "evaluate_station": 17.8040376403369,
+    "safe_release_retreat": 53.31397680286318,
+    "relocate_station": 29.11454070499167,
+    "observe": 34.24382473807782,
+    "observe_view": 43.66278215032071,
+    "prepare_grasp": 206.26577461184934,
+    "acquire_execute": 439.3821744406596
+  },
+  "unloaded_decision_wait_s": 308.46737836068496,
+  "waits_by_reason_s": {
+    "UNLOADED_AGENT_COMMAND": 308.23962552985176,
+    "READ_ONLY_FEEDBACK": 4.278005599975586
+  },
+  "waits": [
+    {
+      "start_unix_s": 1792909341.894267,
+      "end_unix_s": 1792909373.3698888,
+      "wall_s": 31.475620774086565,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 0,
+      "start_sim_s": 14.479166666666666,
+      "end_sim_s": 14.479166666666666
+    },
+    {
+      "start_unix_s": 1792909373.5332482,
+      "end_unix_s": 1792909392.4327755,
+      "wall_s": 18.899526118766516,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 1,
+      "start_sim_s": 14.479166666666666,
+      "end_sim_s": 14.479166666666666
+    },
+    {
+      "start_unix_s": 1792909445.8457048,
+      "end_unix_s": 1792909461.1020744,
+      "wall_s": 15.256368643604219,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 2,
+      "start_sim_s": 33.05,
+      "end_sim_s": 33.05
+    },
+    {
+      "start_unix_s": 1792909479.2282958,
+      "end_unix_s": 1792909491.39769,
+      "wall_s": 12.169393945951015,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 3,
+      "start_sim_s": 33.35,
+      "end_sim_s": 33.35
+    },
+    {
+      "start_unix_s": 1792909521.74373,
+      "end_unix_s": 1792909554.9949763,
+      "wall_s": 33.25124596711248,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 4,
+      "start_sim_s": 38.5875,
+      "end_sim_s": 38.5875
+    },
+    {
+      "start_unix_s": 1792909589.7870493,
+      "end_unix_s": 1792909614.2629712,
+      "wall_s": 24.475921242963523,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 5,
+      "start_sim_s": 38.5875,
+      "end_sim_s": 38.5875
+    },
+    {
+      "start_unix_s": 1792909658.439338,
+      "end_unix_s": 1792909723.6388686,
+      "wall_s": 65.19952981127426,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 6,
+      "start_sim_s": 46.46666666666667,
+      "end_sim_s": 46.46666666666667
+    },
+    {
+      "start_unix_s": 1792909930.5018353,
+      "end_unix_s": 1792910038.013855,
+      "wall_s": 107.51201902609318,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 7,
+      "start_sim_s": 46.46666666666667,
+      "end_sim_s": 46.46666666666667
+    },
+    {
+      "start_unix_s": 1792910473.0948083,
+      "end_unix_s": 1792910477.3728135,
+      "wall_s": 4.278005599975586,
+      "start_sim_s": 172.71666666666667,
+      "end_sim_s": 172.71666666666667,
+      "reason": "READ_ONLY_FEEDBACK",
+      "dependency": "contact plot and numeric publication"
+    }
+  ],
+  "trace_partition_unattributed_s": 98.2712533022277,
+  "interaction_sim_s": 20.229166666666686,
+  "interaction_reported_duration_scope": "Sum of result-reported elapsed seconds; hard-interrupted actions may omit a duration; recorded count separately includes them.",
+  "recorded_interaction_240hz_samples": 4668,
+  "recorded_interaction_time_s": 19.45,
+  "sim_end_s": 172.7125,
+  "validation_requests": [
+    {
+      "id": "27e046e87e8a499bd9aa4a4561c3ae13dee5a949f7c44a2aa0ec2b826931fa4f",
+      "action": {
+        "role": "VALIDATION_ABC_RAIL_CONSTANT_REOPEN",
+        "target_q": 0.16,
+        "reference_speed_m_s": 0.01,
+        "reference_acceleration_m_s2": 0.03,
+        "execution_strategy": "continuous",
+        "coordinate_unit": "m",
+        "profile": "constant",
+        "hold": true,
+        "allow_target_truncation": false
+      },
+      "status": "PENDING_FIT",
+      "approved_before_execution": true,
+      "created_unix_s": 1792910038.1754243,
+      "seal": null,
+      "failed_attempts_count": 0,
+      "result": {
+        "status": null,
+        "reason": null,
+        "joint_coordinate": null,
+        "gain_native": null,
+        "elapsed_sim_s": null,
+        "requested_target_reached": null,
+        "safely_stopped": null,
+        "physical_transmission_valid": null
+      }
+    }
+  ],
+  "validation_model_seals": [],
+  "runtime_profile": {
+    "wall_s": 1226.982369250618,
+    "simulation_s": 172.71666666666667,
+    "simulation_per_wall_s": 0.1407654021729373,
+    "cost_wall_s": {
+      "initialization": 23.025927719660103,
+      "trajectory_planning": 6.414962591137737,
+      "actuation": 63.18288961658254,
+      "physics_and_contact_callback": 154.57080774521455,
+      "state_and_FT": 92.32545874034986,
+      "collision_and_safety": 31.422185281291604,
+      "buffered_evidence": 44.431591250468045,
+      "render_and_video": 21.610874120611697,
+      "RGBD_SAM3_and_incremental_geometry": 68.72966887662187,
+      "IK_and_view_planning": 0.2504444560036063,
+      "grasp_ranking_and_IK": 198.42257073381916,
+      "Pink_IK": 2.107477189041674,
+      "command_collision_queries": 3.673114061821252,
+      "export": 0.08722873404622078
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 23.025927719660103,
+      "trajectory_planning": 6.414962591137737,
+      "actuation": 63.18288961658254,
+      "physics_and_contact_callback": 154.57080774521455,
+      "state_and_FT": 92.32545874034986,
+      "collision_and_safety": 31.422185281291604,
+      "buffered_evidence": 44.431591250468045,
+      "render_and_video": 21.610874120611697,
+      "RGBD_SAM3_and_incremental_geometry": 68.72966887662187,
+      "IK_and_view_planning": 0.2504444560036063,
+      "grasp_ranking_and_IK": 198.42257073381916,
+      "Pink_IK": 2.107477189041674,
+      "command_collision_queries": 3.673114061821252,
+      "export": 0.08722873404622078
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 7,
+      "actuation": 41452,
+      "physics_and_contact_callback": 41452,
+      "state_and_FT": 41452,
+      "collision_and_safety": 41452,
+      "buffered_evidence": 41452,
+      "render_and_video": 856,
+      "RGBD_SAM3_and_incremental_geometry": 3,
+      "IK_and_view_planning": 1,
+      "grasp_ranking_and_IK": 1,
+      "Pink_IK": 5472,
+      "command_collision_queries": 684,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 23.62123665958643,
+      "PREGRASP": 361.177675829269,
+      "SAFE_PARK_MOTION": 67.95424160268158,
+      "RELEASE": 2.297829636372626,
+      "CLEARANCE_RETREAT": 9.624541791155934,
+      "agent_return_to_execution_start": 0.6017475482076406,
+      "APPROACH": 8.89054019516334,
+      "SLOW_CLOSE": 167.5596580277197,
+      "CENTER": 2.505604109261185,
+      "LOW_PRELOAD": 1.1994867948815227,
+      "FORCE_HOLD": 2.7650327030569315,
+      "CONTACT_PRELOAD": 5.972575694788247,
+      "OPEN_CONTINUE": 56.08503052452579
+    },
+    "unaccounted_wall_s": 516.727168133948,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "final_safe_exit": {
+    "safe": false,
+    "reason": "HARD_STOP_NO_AUTOMATIC_CONTINUATION",
+    "stop": {
+      "reason": "SUSTAINED_OVERLOAD",
+      "phase": "OPEN_CONTINUE",
+      "t": 172.7125,
+      "force": {
+        "status": "SUSTAINED_OVERLOAD",
+        "raw_peak_n": 5.262537355733608,
+        "wrist_force_n": 5.254375597006408,
+        "wrist_torque_nm": 0.8398505496145794,
+        "window_mean_n": 3.7922838245915758,
+        "sustained_duration_s": 0.15,
+        "t": 172.7125,
+        "stop": true,
+        "normal_only_pad_measurement": true
+      },
+      "tcp_speed_m_s": 0.01081717282308689
+    },
+    "park": {
+      "reached": null,
+      "region": null,
+      "unloaded": null,
+      "pad_loads_n": null,
+      "joint_cell_error_rad": null
+    },
+    "measured_collision_valid": null
+  },
+  "source_evidence_ledgers": [
+    {
+      "file": "V81_LOADED_SOURCES.json",
+      "sha256": "a434598344de24c9d852281658682ae50aa10dc106423fbaa9c293fe63156a33",
+      "entries": 173,
+      "issues": []
+    },
+    {
+      "file": "SOURCE_PROVENANCE.json",
+      "sha256": "1d5dcf7895bd0cc6df8b6b1f7045b07625cf1b3eb1a1aafeb39355aa8f5b2b0f",
+      "entries": 131,
+      "issues": []
+    },
+    {
+      "file": "V81_PRELAUNCH.json",
+      "sha256": "d13f606da2df6815726858e0ed2e66ae4acb6ab2aeb689f63b6af873a985efdb",
+      "entries": 65,
+      "issues": []
+    }
+  ],
+  "raw_evidence_private": true,
+  "timing_scope": "operation walls include physics/render/planning within call; sim is not wall; wait subledgers may overlap operation categories, never add all ledgers"
+}

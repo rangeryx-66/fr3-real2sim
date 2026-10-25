@@ -1,0 +1,868 @@
+{
+  "schema": "v84-closed-measured-audit-v2",
+  "derivation_source_sha256": "f1b0ab846b989d3d187724bef98fd5cf0e98213bc44ae1efcf070b642bfa5bd2",
+  "episode_id": "v84_r02_short_comparison_20261025_02",
+  "source_commit": "78b83523143c84b6a7f90856c1e38c7716b220f3",
+  "coordinate_display_unit": "deg",
+  "completion": {
+    "returncode": 0,
+    "wall_s": 996.0862335390411,
+    "actor_exited": true
+  },
+  "task_progress": {
+    "requested_final_target_native": 1.5707963267948966,
+    "maximum_measured_native": 0.16134411096572876,
+    "minimum_measured_native": -2.0160516811529305e-08,
+    "current_measured_native": 0.03927292302250862,
+    "unit": "rad",
+    "global_goal_erased_by_shorter_action": false,
+    "first_goal_record": null
+  },
+  "final_state": {
+    "episode_id": "v84_r02_short_comparison_20261025_02",
+    "sequence": 4,
+    "state": "CLOSED",
+    "updated_unix_s": 1792897051.562275,
+    "station_generation": 0,
+    "observation_generation": 0,
+    "remaining_work": {
+      "wall_s": 4109.705114045646,
+      "sim_s": 2401.991666666667,
+      "exit_reserved": true
+    },
+    "safe_exit_wall_reserve_s": 300,
+    "unloaded": true
+  },
+  "physics_steps": 42722,
+  "records": 13167,
+  "chunk_sha256": {
+    "00000000.npz": "ba40b70c572b88fba977479aaf5f168c6add850c33a391fa5fddacdac8355114",
+    "00030506.npz": "9fd476210f37b37486ad20052696daabaeeecb34e95b549e1f4bdb5f6e5619c6",
+    "00032211.npz": "4f77d02191fa194c0d81e1a8c13ab8030f1958fe87df91e49d81905735cdfdab",
+    "00034842.npz": "f1e1379fa2be24f296c814ab169dbaae0b61adae8f52ab780c54c727d346866e",
+    "00036847.npz": "524aadbeb93f12d447fad7912d4e19b2c795cca60df8afa6aba37b43d6d9d6f8"
+  },
+  "recorder_issues": [],
+  "hard_stop_records": 0,
+  "invalid_FT_records": 0,
+  "max_actual": 9.244336607626682,
+  "final_actual": 2.2501727383319086,
+  "final_pad_N": [
+    0.0,
+    0.0
+  ],
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_LEGACY_FORWARD",
+      "completed": true,
+      "target": 9.167324722093172,
+      "end": 9.218189789710229,
+      "gain": 9.218190808729517,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_s": 9.200000000000003,
+      "tracking_limited_fraction": 0.0,
+      "advisory_windows": 0,
+      "actual_bad_windows": 0,
+      "FIT_exclude_entire_segment": false,
+      "declared_action": {
+        "role": "FIT_LEGACY_FORWARD",
+        "target_q": 0.16,
+        "execution_strategy": "legacy",
+        "coordinate_unit": "rad",
+        "profile": "constant",
+        "hold": true,
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.025,
+        "max_sim_s": 120,
+        "fit_intervals_s": [
+          [
+            0.6,
+            120
+          ]
+        ]
+      },
+      "samples": 2208,
+      "measured_last_coordinate": 9.218189789710229,
+      "recorded_phase_span_s": 9.19583333333334,
+      "lead": {
+        "mean": 0.2274874036501428,
+        "p95": 0.24430527900866147,
+        "max": 0.2450606513931236
+      },
+      "TCP_servo_mm": {
+        "mean": 0.5065674897897113,
+        "p95": 0.5379605854793517,
+        "max": 0.5435169019278167
+      },
+      "pad_N": [
+        {
+          "mean": 1.7170337438583374,
+          "p95": 1.7656381130218506,
+          "max": 1.9132492542266846
+        },
+        {
+          "mean": 0.43458297848701477,
+          "p95": 0.613259494304657,
+          "max": 1.154271125793457
+        }
+      ],
+      "aperture_minmax_mm": [
+        14.777664184570312,
+        14.875604629516602
+      ],
+      "contact_relative_slip_mm": {
+        "mean": 0.29378363490104675,
+        "p95": 0.42892032861709595,
+        "max": 0.507538378238678
+      },
+      "actual_velocity": {
+        "mean": 1.0020732258172202,
+        "p95": 1.0941740001995344,
+        "max": 1.1080913644070816
+      },
+      "derived_acceleration_abs": {
+        "mean": 0.6941327339495353,
+        "p95": 1.548167389541542,
+        "max": 28.740303710141454
+      },
+      "acceleration_scope": "Segment-local derivative of measured velocity; noisy diagnostic, not an independent acceleration sensor or estimator input."
+    },
+    {
+      "id": 2,
+      "role": "FIT_LEGACY_REVERSE",
+      "completed": true,
+      "target": 2.291831180523293,
+      "end": 2.2526476146889802,
+      "gain": -6.965542175021247,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_s": 7.104166666666671,
+      "tracking_limited_fraction": 0.0,
+      "advisory_windows": 0,
+      "actual_bad_windows": 0,
+      "FIT_exclude_entire_segment": false,
+      "declared_action": {
+        "role": "FIT_LEGACY_REVERSE",
+        "target_q": 0.04,
+        "execution_strategy": "legacy",
+        "coordinate_unit": "rad",
+        "profile": "constant",
+        "hold": true,
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.025,
+        "max_sim_s": 120,
+        "fit_intervals_s": [
+          [
+            0.6,
+            120
+          ]
+        ]
+      },
+      "samples": 1705,
+      "measured_last_coordinate": 2.2526476146889802,
+      "recorded_phase_span_s": 7.1000000000000085,
+      "lead": {
+        "mean": 0.20114148332123621,
+        "p95": 0.21767360985233652,
+        "max": 0.21784444162112165
+      },
+      "TCP_servo_mm": {
+        "mean": 0.36319918709088356,
+        "p95": 0.49114366588794983,
+        "max": 0.5763039635825127
+      },
+      "pad_N": [
+        {
+          "mean": 0.9886134266853333,
+          "p95": 1.0452362298965454,
+          "max": 1.4426078796386719
+        },
+        {
+          "mean": 0.8482843041419983,
+          "p95": 1.1161805391311646,
+          "max": 1.623596429824829
+        }
+      ],
+      "aperture_minmax_mm": [
+        14.61390209197998,
+        14.842474937438965
+      ],
+      "contact_relative_slip_mm": {
+        "mean": 0.13810186088085175,
+        "p95": 0.4795808792114258,
+        "max": 0.5058883428573608
+      },
+      "actual_velocity": {
+        "mean": 0.979508651519719,
+        "p95": 1.0821875304703499,
+        "max": 1.0858336988927142
+      },
+      "derived_acceleration_abs": {
+        "mean": 0.7836736268785509,
+        "p95": 1.9379650181560122,
+        "max": 37.741508261559375
+      },
+      "acceleration_scope": "Segment-local derivative of measured velocity; noisy diagnostic, not an independent acceleration sensor or estimator input."
+    },
+    {
+      "id": 3,
+      "role": "FIT_CONTINUOUS_FORWARD",
+      "completed": true,
+      "target": 9.167324722093172,
+      "end": 9.217784247228257,
+      "gain": 6.961506173552005,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_s": 7.112500000000011,
+      "tracking_limited_fraction": 0.0,
+      "advisory_windows": 0,
+      "actual_bad_windows": 0,
+      "FIT_exclude_entire_segment": false,
+      "declared_action": {
+        "role": "FIT_CONTINUOUS_FORWARD",
+        "target_q": 0.16,
+        "execution_strategy": "continuous",
+        "coordinate_unit": "rad",
+        "profile": "constant",
+        "hold": true,
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.025,
+        "max_sim_s": 120,
+        "fit_intervals_s": [
+          [
+            0.6,
+            120
+          ]
+        ]
+      },
+      "samples": 1707,
+      "measured_last_coordinate": 9.217784247228257,
+      "recorded_phase_span_s": 7.10833333333332,
+      "lead": {
+        "mean": 0.2194007421710276,
+        "p95": 0.23465745449421163,
+        "max": 0.23483818565525996
+      },
+      "TCP_servo_mm": {
+        "mean": 0.47523454533315085,
+        "p95": 0.518125751555611,
+        "max": 0.5352592877737231
+      },
+      "pad_N": [
+        {
+          "mean": 1.6070196628570557,
+          "p95": 1.676361322402954,
+          "max": 1.8764485120773315
+        },
+        {
+          "mean": 0.47597169876098633,
+          "p95": 0.5736691355705261,
+          "max": 1.2037843465805054
+        }
+      ],
+      "aperture_minmax_mm": [
+        14.565256118774414,
+        14.86365032196045
+      ],
+      "contact_relative_slip_mm": {
+        "mean": 0.4707748591899872,
+        "p95": 0.5640100836753845,
+        "max": 0.6396399736404419
+      },
+      "actual_velocity": {
+        "mean": 0.9806316139625375,
+        "p95": 1.0872417850787945,
+        "max": 1.0945695108411604
+      },
+      "derived_acceleration_abs": {
+        "mean": 0.6404124701678324,
+        "p95": 1.5235665422553577,
+        "max": 28.74144669961037
+      },
+      "acceleration_scope": "Segment-local derivative of measured velocity; noisy diagnostic, not an independent acceleration sensor or estimator input."
+    },
+    {
+      "id": 4,
+      "role": "VALIDATION_CONTINUOUS_REVERSE",
+      "completed": true,
+      "target": 2.291831180523293,
+      "end": 2.250172524888497,
+      "gain": -6.991424323107364,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "sim_s": 7.104166666666657,
+      "tracking_limited_fraction": 0.0,
+      "advisory_windows": 0,
+      "actual_bad_windows": 0,
+      "FIT_exclude_entire_segment": false,
+      "declared_action": {
+        "role": "VALIDATION_CONTINUOUS_REVERSE",
+        "target_q": 0.04,
+        "execution_strategy": "continuous",
+        "coordinate_unit": "rad",
+        "profile": "constant",
+        "hold": true,
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.025,
+        "max_sim_s": 120
+      },
+      "samples": 1705,
+      "measured_last_coordinate": 2.250172524888497,
+      "recorded_phase_span_s": 7.099999999999994,
+      "lead": {
+        "mean": 0.1751567042108477,
+        "p95": 0.18938886467263844,
+        "max": 0.18948175959023908
+      },
+      "TCP_servo_mm": {
+        "mean": 0.3502830006170498,
+        "p95": 0.47106176731004823,
+        "max": 0.5611422459151376
+      },
+      "pad_N": [
+        {
+          "mean": 0.9371936917304993,
+          "p95": 0.9974418878555298,
+          "max": 1.2668697834014893
+        },
+        {
+          "mean": 0.9030645489692688,
+          "p95": 1.1939843893051147,
+          "max": 1.5542991161346436
+        }
+      ],
+      "aperture_minmax_mm": [
+        14.611432075500488,
+        14.828560829162598
+      ],
+      "contact_relative_slip_mm": {
+        "mean": 0.162663996219635,
+        "p95": 0.6132121086120605,
+        "max": 0.6344556212425232
+      },
+      "actual_velocity": {
+        "mean": 0.9828451195781726,
+        "p95": 1.0810136343954362,
+        "max": 1.0873022962859726
+      },
+      "derived_acceleration_abs": {
+        "mean": 0.7374645403622937,
+        "p95": 1.8918684849891954,
+        "max": 36.60979580849211
+      },
+      "acceleration_scope": "Segment-local derivative of measured velocity; noisy diagnostic, not an independent acceleration sensor or estimator input."
+    }
+  ],
+  "action_calls": {
+    "observe_view": 1,
+    "prepare_grasp": 1,
+    "acquire_execute": 1,
+    "continue_motion": 1,
+    "finish": 1
+  },
+  "operation_wall_s": {
+    "observe_view": 44.563863292802125,
+    "prepare_grasp": 197.20541969500482,
+    "acquire_execute": 325.41643021674827,
+    "continue_motion": 117.08827536879107,
+    "finish": 0.06920711789280176
+  },
+  "unloaded_decision_wait_s": 215.75400712992996,
+  "waits_by_reason_s": {
+    "READ_ONLY_FEEDBACK": 2.0070302486419678,
+    "UNLOADED_AGENT_COMMAND": 215.66923566814512,
+    "GUARDED_CONTACT_CRITIQUE": 12.565115690231323
+  },
+  "waits": [
+    {
+      "start_unix_s": 1792896135.9266956,
+      "end_unix_s": 1792896135.9415908,
+      "wall_s": 0.014895439147949219,
+      "start_sim_s": 10.008333333333333,
+      "end_sim_s": 10.008333333333333,
+      "reason": "READ_ONLY_FEEDBACK",
+      "dependency": "contact plot and numeric publication"
+    },
+    {
+      "start_unix_s": 1792896135.979224,
+      "end_unix_s": 1792896222.5487633,
+      "wall_s": 86.56953314505517,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 0,
+      "start_sim_s": 10.008333333333333,
+      "end_sim_s": 10.008333333333333
+    },
+    {
+      "start_unix_s": 1792896267.1280968,
+      "end_unix_s": 1792896267.1347044,
+      "wall_s": 0.006607770919799805,
+      "start_sim_s": 17.15833333333333,
+      "end_sim_s": 17.15833333333333,
+      "reason": "READ_ONLY_FEEDBACK",
+      "dependency": "contact plot and numeric publication"
+    },
+    {
+      "start_unix_s": 1792896267.1677265,
+      "end_unix_s": 1792896335.6537354,
+      "wall_s": 68.48600805783644,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 1,
+      "start_sim_s": 17.15833333333333,
+      "end_sim_s": 17.15833333333333
+    },
+    {
+      "start_unix_s": 1792896533.0533614,
+      "end_unix_s": 1792896569.1135406,
+      "wall_s": 36.06017846195027,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 2,
+      "start_sim_s": 17.15833333333333,
+      "end_sim_s": 17.15833333333333
+    },
+    {
+      "start_unix_s": 1792896894.7475033,
+      "end_unix_s": 1792896907.3126187,
+      "wall_s": 12.565115690231323,
+      "start_sim_s": 134.2125,
+      "end_sim_s": 138.0625,
+      "reason": "GUARDED_CONTACT_CRITIQUE",
+      "dependency": "Agent continuation or finite supervised unload",
+      "sequence": 3
+    },
+    {
+      "start_unix_s": 1792897024.8440382,
+      "end_unix_s": 1792897026.8295648,
+      "wall_s": 1.9855270385742188,
+      "start_sim_s": 178.00833333333333,
+      "end_sim_s": 178.00833333333333,
+      "reason": "READ_ONLY_FEEDBACK",
+      "dependency": "contact plot and numeric publication"
+    },
+    {
+      "start_unix_s": 1792897026.8700316,
+      "end_unix_s": 1792897051.423552,
+      "wall_s": 24.55351600330323,
+      "reason": "UNLOADED_AGENT_COMMAND",
+      "dependency": "Agent inspected current packet",
+      "sequence": 4,
+      "start_sim_s": 178.00833333333333,
+      "end_sim_s": 178.00833333333333
+    }
+  ],
+  "trace_partition_unattributed_s": 95.98903071787208,
+  "interaction_sim_s": 30.520833333333343,
+  "interaction_reported_duration_scope": "Sum of result-reported elapsed seconds; hard-interrupted actions may omit a duration; recorded count separately includes them.",
+  "recorded_interaction_240hz_samples": 8549,
+  "recorded_interaction_time_s": 35.62083333333333,
+  "sim_end_s": 178.0,
+  "validation_requests": [
+    {
+      "id": "1eee8ba230315c11537bb5fa463fcb88db746974e31729bc204728c1e940e806",
+      "action": {
+        "role": "VALIDATION_CONTINUOUS_REVERSE",
+        "target_q": 0.04,
+        "execution_strategy": "continuous",
+        "coordinate_unit": "rad",
+        "profile": "constant",
+        "hold": true,
+        "reference_speed_m_s": 0.008,
+        "reference_acceleration_m_s2": 0.025,
+        "max_sim_s": 120
+      },
+      "status": "COMPLETE",
+      "approved_before_execution": true,
+      "created_unix_s": 1792896907.3722959,
+      "seal": "/data1/home/rangeryx/agentic_v84_private/abc_20261025/short_r02_02/episodes/v84_r02_short_comparison_20261025_02/validation_request_seals/1eee8ba230315c11537bb5fa463fcb88db746974e31729bc204728c1e940e806.json",
+      "failed_attempts_count": 0,
+      "result": {
+        "status": "TARGET_REACHED",
+        "reason": null,
+        "joint_coordinate": 0.03927291929721832,
+        "gain_native": -0.12202337384223938,
+        "elapsed_sim_s": 7.104166666666657,
+        "requested_target_reached": true,
+        "safely_stopped": true,
+        "physical_transmission_valid": true
+      }
+    }
+  ],
+  "validation_model_seals": [
+    {
+      "file": "04.json",
+      "sha256": "324d0323b66041c6442ac435a11619fb5c253db7a6f03a400956a908b761dc36",
+      "seal": {
+        "declared_action": {
+          "role": "VALIDATION_CONTINUOUS_REVERSE",
+          "target_q": 0.04,
+          "execution_strategy": "continuous",
+          "coordinate_unit": "rad",
+          "profile": "constant",
+          "hold": true,
+          "reference_speed_m_s": 0.008,
+          "reference_acceleration_m_s2": 0.025,
+          "max_sim_s": 120
+        },
+        "model_sha256": "65c38b0a6cb469bd86a32fef43402821fffa708cfe9e9da108a759e8dbb4b463",
+        "selected": {
+          "intervals": 8,
+          "active_controls": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "domain_native": [
+            -0.010471975511965976,
+            1.7453292519943295
+          ],
+          "joint_type": "revolute",
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "parameters": [
+            0.09241934074976568,
+            0.06901104377751638,
+            0.031905418457028094,
+            0.03781582493753213,
+            0.048607051639430264,
+            7.714988973090271e-08
+          ],
+          "conditional_covariance": [
+            [
+              0.0002707893309246319,
+              -4.596912809986097e-05,
+              1.1554264754512854e-06,
+              5.376929873113377e-07,
+              1.5091070242559966e-06,
+              -2.029616089007561e-07
+            ],
+            [
+              -4.596912809986097e-05,
+              1.1463916156685719e-05,
+              -2.826625418798293e-07,
+              -1.5357607416979707e-07,
+              -3.247937776855682e-07,
+              -8.815892505429122e-08
+            ],
+            [
+              1.1554264754512852e-06,
+              -2.826625418798293e-07,
+              1.9092588558127296e-08,
+              -1.0478249110639532e-08,
+              4.7672120180925844e-08,
+              -1.7070994486823273e-07
+            ],
+            [
+              5.376929873113377e-07,
+              -1.5357607416979707e-07,
+              -1.0478249110639532e-08,
+              2.0908315924369284e-08,
+              -5.104869311627261e-08,
+              2.505920796339542e-07
+            ],
+            [
+              1.5091070242559966e-06,
+              -3.2479377768556827e-07,
+              4.767212018092585e-08,
+              -5.104869311627261e-08,
+              1.8053563330349158e-07,
+              -7.962715165288995e-07
+            ],
+            [
+              -2.0296160890075609e-07,
+              -8.815892505429114e-08,
+              -1.7070994486823273e-07,
+              2.505920796339542e-07,
+              -7.962715165288994e-07,
+              3.8365081044022765e-06
+            ]
+          ],
+          "conditional_std": [
+            0.016455677771657778,
+            0.0033858405391698114,
+            0.00013817593335355944,
+            0.00014459708131345282,
+            0.0004248948497022429,
+            0.00195870061632764
+          ],
+          "algebraic_rank": 6,
+          "scaled_singular_values": [
+            0.3902158291834095,
+            0.1228359283462091,
+            0.037162913827869355,
+            0.004420816639518485,
+            0.001318399106229525,
+            0.00020021352288261275
+          ],
+          "scaled_condition": 1948.99836716922,
+          "support_intervals_native": [
+            [
+              0.014513451817699453,
+              0.1562885520979762
+            ]
+          ],
+          "FIT_rmse": 3.441778970184883e-05,
+          "smoothness": 0.0001,
+          "validation_used": false,
+          "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+          "parameter_names": [
+            "I_eff_kg_m2",
+            "b_Nm_s_rad",
+            "nonnegative_resistance_control_0",
+            "nonnegative_resistance_control_1",
+            "nonnegative_resistance_control_2",
+            "nonnegative_resistance_control_3"
+          ],
+          "conditionally_supported": [
+            true,
+            true,
+            true,
+            true,
+            true,
+            false
+          ],
+          "inertial_sensitivity_after_velocity_and_friction_projection": 0.0030888284609656516,
+          "uncalibrated_total_physical_accuracy": true,
+          "FIT_only_trajectory_CV": [
+            {
+              "segment": "FIT_LEGACY_FORWARD_01",
+              "rmse": 0.00015945146145996813
+            },
+            {
+              "segment": "FIT_LEGACY_REVERSE_02",
+              "rmse": 4.48880882844927e-05
+            },
+            {
+              "segment": "FIT_CONTINUOUS_FORWARD_03",
+              "rmse": 3.3216251849622064e-05
+            }
+          ],
+          "cv_rmse": 7.918526719802764e-05,
+          "heldout_motion": {},
+          "heldout_unfiltered_input_sensitivity": {}
+        },
+        "configuration": {
+          "joint_type": "revolute",
+          "domain_native": [
+            -0.010471975511965976,
+            1.7453292519943295
+          ],
+          "units": {
+            "coordinate": "rad",
+            "effort": "N m",
+            "inertial": "kg m^2",
+            "damping": "N m s/rad"
+          },
+          "parameter_scales": [
+            1.0,
+            0.25,
+            0.045
+          ],
+          "intervals": [
+            2,
+            4,
+            8
+          ],
+          "smoothness": [
+            0.0001,
+            0.001,
+            0.01
+          ],
+          "ridge": 0.001
+        },
+        "readiness": {
+          "schema": "v81-measured-FIT-readiness",
+          "estimator_version": "V7-SI-common-SG121",
+          "episode_id": "v84_r02_short_comparison_20261025_02",
+          "numeric_index_sha256": "db0ed20dd48346caeb13ef24058742efafc3f7856dd95ce9d7a4d28380b1b85b",
+          "model_sha256": "65c38b0a6cb469bd86a32fef43402821fffa708cfe9e9da108a759e8dbb4b463",
+          "latest_completed_FIT_id": 3,
+          "groups": [
+            {
+              "block": "FIT_LEGACY_FORWARD_01#0",
+              "eligible_samples": 1822,
+              "regression_bins": 76,
+              "positive_bins": 76,
+              "negative_bins": 0,
+              "coordinate_support_native": [
+                0.013707350008189678,
+                0.15688586235046387
+              ]
+            },
+            {
+              "block": "FIT_LEGACY_REVERSE_02#0",
+              "eligible_samples": 1319,
+              "regression_bins": 55,
+              "positive_bins": 0,
+              "negative_bins": 55,
+              "coordinate_support_native": [
+                0.043141547590494156,
+                0.14667005836963654
+              ]
+            },
+            {
+              "block": "FIT_CONTINUOUS_FORWARD_03#0",
+              "eligible_samples": 1321,
+              "regression_bins": 56,
+              "positive_bins": 56,
+              "negative_bins": 0,
+              "coordinate_support_native": [
+                0.05330675467848778,
+                0.15687932074069977
+              ]
+            }
+          ],
+          "positive_bins": 132,
+          "negative_bins": 55,
+          "distinct_eligible_trajectories": 3,
+          "qualified_bidirectional": true,
+          "rule": "At least eight production regression bins in each measured velocity direction and two distinct FIT trajectories; experimental readiness, not a physical safety threshold",
+          "validation_used": false,
+          "production_coefficients_modified": false,
+          "raw_data_loaded_twice": false,
+          "processing_wall_s": 2.1957536446861923,
+          "information": {
+            "samples": 187,
+            "algebraic_rank": 3,
+            "scaled_singular_values": [
+              0.6187269327132972,
+              0.004614716066949028,
+              0.0002090015462542871
+            ],
+            "scaled_condition": 2960.3940439775843,
+            "acceleration_rms_native": 0.0003433164143209625,
+            "independent_acceleration_rms_native": 0.00023704774090418883,
+            "velocity_rms_native": 0.01883833673706367,
+            "velocity_p05_p95_native": [
+              -0.01884206869566816,
+              0.01890134367483567
+            ],
+            "direction_counts": {
+              "positive": 132,
+              "negative": 55
+            },
+            "estimated_parameters": null,
+            "hidden_dynamics_used": false,
+            "interpretation": "Regressor opportunity only. Compare measured acceleration sensitivity with phase-matched compensated F/T residual; rank alone cannot establish physical parameter accuracy."
+          }
+        },
+        "object_coordinate": 0.1612962931394577
+      }
+    }
+  ],
+  "runtime_profile": {
+    "wall_s": 992.353489683941,
+    "simulation_s": 178.00833333333333,
+    "simulation_per_wall_s": 0.1793799640791589,
+    "cost_wall_s": {
+      "initialization": 21.13961480697617,
+      "trajectory_planning": 4.702603952493519,
+      "actuation": 65.22294334927574,
+      "physics_and_contact_callback": 174.1568070491776,
+      "state_and_FT": 107.25869379052892,
+      "collision_and_safety": 26.858015965204686,
+      "buffered_evidence": 45.51842313632369,
+      "render_and_video": 23.754031950142235,
+      "RGBD_SAM3_and_incremental_geometry": 50.86911791190505,
+      "IK_and_view_planning": 0.2082237033173442,
+      "grasp_ranking_and_IK": 192.59497951390222,
+      "Pink_IK": 2.992252274416387,
+      "command_collision_queries": 3.913262999150902,
+      "export": 0.04094755370169878
+    },
+    "inclusive_cost_wall_s": {
+      "initialization": 21.13961480697617,
+      "trajectory_planning": 4.702603952493519,
+      "actuation": 65.22294334927574,
+      "physics_and_contact_callback": 174.1568070491776,
+      "state_and_FT": 107.25869379052892,
+      "collision_and_safety": 26.858015965204686,
+      "buffered_evidence": 45.51842313632369,
+      "render_and_video": 23.754031950142235,
+      "RGBD_SAM3_and_incremental_geometry": 50.86911791190505,
+      "IK_and_view_planning": 0.2082237033173442,
+      "grasp_ranking_and_IK": 192.59497951390222,
+      "Pink_IK": 2.992252274416387,
+      "command_collision_queries": 3.913262999150902,
+      "export": 0.04094755370169878
+    },
+    "calls": {
+      "initialization": 1,
+      "trajectory_planning": 7,
+      "actuation": 42722,
+      "physics_and_contact_callback": 42722,
+      "state_and_FT": 42722,
+      "collision_and_safety": 42722,
+      "buffered_evidence": 42722,
+      "render_and_video": 883,
+      "RGBD_SAM3_and_incremental_geometry": 2,
+      "IK_and_view_planning": 1,
+      "grasp_ranking_and_IK": 1,
+      "Pink_IK": 7657,
+      "command_collision_queries": 958,
+      "export": 1
+    },
+    "phase_accounted_wall_s": {
+      "INITIALIZE": 21.613397341687232,
+      "PREGRASP": 347.72176112700254,
+      "agent_return_to_execution_start": 0.4420582903549075,
+      "APPROACH": 8.95830784458667,
+      "SLOW_CLOSE": 163.02150513790548,
+      "CENTER": 4.988166113849729,
+      "LOW_PRELOAD": 1.0104146120138466,
+      "FORCE_HOLD": 2.883306160569191,
+      "OPEN_CONTINUE": 107.46311022154987,
+      "RELEASE": 15.849495059810579,
+      "CLEARANCE_RETREAT": 9.48575018113479,
+      "SAFE_PARK_MOTION": 35.792645866051316
+    },
+    "unaccounted_wall_s": 273.12357172742486,
+    "cost_semantics": "exclusive nested timers; inclusive totals separately, no double counting"
+  },
+  "final_safe_exit": {
+    "safe": true,
+    "reason": null,
+    "stop": null,
+    "park": {
+      "reached": true,
+      "region": "native_rest",
+      "unloaded": true,
+      "pad_loads_n": [
+        0.0,
+        0.0
+      ],
+      "joint_cell_error_rad": 0.003724192501977086
+    },
+    "measured_collision_valid": true
+  },
+  "source_evidence_ledgers": [
+    {
+      "file": "V81_LOADED_SOURCES.json",
+      "sha256": "be7ad87948ea93a547a06f0ce48a417fed5edee0b990969d2fd3721c6847fc92",
+      "entries": 164,
+      "issues": []
+    },
+    {
+      "file": "SOURCE_PROVENANCE.json",
+      "sha256": "4e0ce336a9a0c5f750ebb224ecc57b6ee5d4afc163810bd6820e9532653487c9",
+      "entries": 131,
+      "issues": []
+    },
+    {
+      "file": "V81_PRELAUNCH.json",
+      "sha256": "dc4a0aa827419037897c5fc620bc95c85e0e048ba05b658569cb168f260b788e",
+      "entries": 65,
+      "issues": []
+    }
+  ],
+  "raw_evidence_private": true,
+  "timing_scope": "operation walls include physics/render/planning within call; sim is not wall; wait subledgers may overlap operation categories, never add all ledgers"
+}
