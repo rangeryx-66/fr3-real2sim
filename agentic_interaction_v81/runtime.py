@@ -82,6 +82,9 @@ def runtime_class(original):
             if job.get('v81_integrated_repair') and job['articulation_v7']['joint_type']=='prismatic':
                 from .preload_extension import instrument
                 instrument(self)
+            if job.get('instance_uuid'):
+                from .instance_admission import native_unloaded_check
+                native_unloaded_check(self)
 
         def record_frame(self):
             if self.job.get('v83_continuous_video_hz'):

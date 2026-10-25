@@ -8,6 +8,9 @@ sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 def main():
     p=argparse.ArgumentParser();p.add_argument('--job',required=True,type=Path);a=p.parse_args()
     job=json.loads(a.job.read_text())
+    if job.get('instance_uuid'):
+        from .instance_admission import check_child
+        check_child(job)
     if job.get('v81_phase') not in ('engineering','independent_repetition'):
         raise ValueError('EXPLICIT_V81_PHASE_REQUIRED')
     if job.get('v81_phase')=='independent_repetition' and not job.get('v81_frozen_release_commit'):

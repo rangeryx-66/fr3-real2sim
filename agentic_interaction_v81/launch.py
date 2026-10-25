@@ -1,5 +1,6 @@
 """Versioned V8.1 engineering launcher; no full benchmark is enabled."""
 import argparse,fcntl,json,os,subprocess,sys,time
+from contextlib import nullcontext
 from pathlib import Path
 from agentic_interaction_v8.cli import prepare
 from agentic_interaction_v8.resources import digest,dump
@@ -9,9 +10,19 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 def launch(specfile,profile):
+    env=json.loads(Path(profile).read_text())
+    if 'simulation_isolation' not in env:return _launch(specfile,profile)
+    from .instance_admission import reserve
+    spec=json.loads(Path(specfile).read_text())
+    with reserve(env,spec['episode_id']) as instance:
+        return _launch(specfile,profile,instance)
+
+
+def _launch(specfile,profile,instance=None):
     baseline_audit()
     from .terminal_safety import registry_path,require_clearance,process_outcome,preserve_unverified_process_hold
-    safety_registry=registry_path(json.loads(Path(profile).read_text()))
+    safety_registry=(Path(instance['safety_registry']) if instance else
+        registry_path(json.loads(Path(profile).read_text())))
     require_clearance(safety_registry)
     spec=json.loads(Path(specfile).read_text())
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
@@ -53,6 +64,9 @@ def launch(specfile,profile):
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
     job=json.loads((out/'job.json').read_text())
     job['terminal_safety_registry']=str(safety_registry)
+    if instance:
+        job.update(instance_uuid=instance['uuid'],instance_directory=instance['directory'],
+            instance_environment=instance['environment'])
     debug_budget(spec,job)
     integrated_profile(spec,job)
     job.update(v81_phase=phase,v81_frozen_release_commit=spec.get('frozen_release_commit'),
@@ -83,15 +97,22 @@ def launch(specfile,profile):
         simulation_mount='existing-authority XY carriage adapted to xArm; not wheeled hardware',
         estimator_domain_prior_only=dict(previous=old_domain,current=job['estimation_v7']['domain_native']),
         original_controller_and_safety_sources_unchanged=True))
-    with Path(p['actor_lock']).open('a') as lock:
+    with (nullcontext(instance['resource']) if instance else Path(p['actor_lock']).open('a')) as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         require_clearance(safety_registry)  # recheck after lock; prior actor may have faulted
+        if instance:
+            from .instance_admission import global_and_history
+            global_and_history(instance['environment'])
         free={int(x.split(',')[0]):int(x.split(',')[1]) for x in subprocess.check_output(
             ['nvidia-smi','--query-gpu=index,memory.free','--format=csv,noheader,nounits'],text=True).splitlines()}
         if free[int(p['physics_gpu'])]<12000:raise ValueError('INSUFFICIENT_SHARED_GPU_CAPACITY')
         env=dict(os.environ,PYTHONPATH=str(ROOT)+':'+str(ROOT/'scripts'),PYTHONNOUSERSITE='1',
             OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MPLCONFIGDIR=str(out/'plot_cache'),
             PATH=p['ffmpeg_dir']+':'+os.environ['PATH'])
+        if instance:
+            cache=Path(instance['directory'])/'cache';cache.mkdir()
+            env.update(TMPDIR=str(cache),XDG_CACHE_HOME=str(cache),
+                       MPLCONFIGDIR=str(cache/'matplotlib'))
         if ledger_key is not None:env[KEY_ENV]=ledger_key
         command=[p['python'],'-u','-m','agentic_interaction_v81.entry','--job',str(out/'job.json')]
         began=time.perf_counter()
