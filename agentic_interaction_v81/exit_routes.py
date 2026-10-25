@@ -16,7 +16,11 @@ def timed_returns(r):
     from interaction_runtime.policy import SafetyStop
     original=owner.route_to_joint;history=[]
     def route(g,start,end):
-        path,why=original(g,start,end)
+        # Apply the same measured native envelope to DIRECT/RRT search and
+        # timed verification. Never install this proxy as the runtime guard.
+        from .exit_clearance import ParkingClearance
+        scene=ParkingClearance(g['collision'])
+        path,why=original(dict(g,collision=scene),start,end)
         record=dict(coarse_route=why,coarse_valid=path is not None)
         history.append(record)
         if path is None:return path,why
@@ -27,12 +31,16 @@ def timed_returns(r):
         fingers=np.asarray(g['robot'].get_joint_positions())[g['fingers']].copy()
         def checked(q):
             if g['model'].margin(q)<=r.policy.data['joint_margin_rad']:return False,'JOINT_MARGIN'
-            return g['collision'].check(g['model'].poses(q,g['base'],finger_q=fingers),moving,False)
+            return scene.check(g['model'].poses(q,g['base'],finger_q=fingers),moving,False)
         try:
             samples=timed_path(r.solver,r.base,[first]+path[1:],r.dt,
                 r.policy.motion('SAFE_PARK_MOTION'),np.asarray(r.c['arm_speed_limits'])/3,
                 r.policy.data['arm_command_acceleration_rad_s2'][r.policy.phase('SAFE_PARK_MOTION')],checked)
-            count=sum(1 for _ in samples)
+            count=0
+            for q,_ in samples:
+                ok,why=checked(q)
+                if not ok:raise RuntimeError('EXECUTED_PARK_SAMPLE:'+why)
+                count+=1
         except SafetyStop:raise
         except RuntimeError as error:
             record.update(timed_valid=False,reason=str(error),
