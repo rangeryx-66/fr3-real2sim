@@ -36,7 +36,7 @@ def apply(spec,job):
                    v83_continuous_video_hz=5)
     if profile in (ABC_PROFILE,ABC_SHORT_PROFILE,ABC_ORCHESTRATION_PROFILE):
         job.update(v84_abc=True,v81_active_recovery=True,v83_load_telemetry=True,
-                   v83_continuous_video_hz=5)
+                   v83_continuous_video_hz=5,v86_recovery_supervisor=True)
         job['v84_short_comparison']=profile==ABC_SHORT_PROFILE
     from pathlib import Path
     import json

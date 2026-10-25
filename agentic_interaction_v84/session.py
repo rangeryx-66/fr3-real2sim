@@ -77,7 +77,9 @@ def serve(r):
                 return None
         return before(ops,command)
     def after_command(ops,command,result):
-        if ops.abc_state=='C' and r.supervisor.latched is None:
+        if (ops.abc_state=='C' and r.supervisor.latched is None
+                and result.get('outcome') not in ('UNRECOVERABLE','SAFETY_STOP')
+                and result.get('status') not in ('CONTROL_STATE_UNTRUSTED','SAFETY_STOP')):
             result['task_recovery']=dict(status='LOADED_CRITIQUE',episode_termination_required=False,
                 original_goal_native=r.job['v81_task_goal_native'])
             result['abc']=ops.packet()

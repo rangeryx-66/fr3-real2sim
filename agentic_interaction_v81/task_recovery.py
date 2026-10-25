@@ -107,6 +107,10 @@ def finish_check(ops, command):
 
 def before(ops, command):
     if not enabled(ops):return None
+    from . import recovery_supervisor
+    if recovery_supervisor.enabled(ops):
+        blocked=recovery_supervisor.before(ops,command)
+        if blocked is not None:return blocked
     s=state(ops);op=command['operation']
     if op=='finish':
         check=finish_check(ops,command)
@@ -126,6 +130,12 @@ def classify(ops, result):
     if ops.r.supervisor.latched is not None or result.get('status')=='SAFETY_STOP' or result.get('operation_status')=='SAFETY_STOP':
         return 'HARD_STOP'
     if result.get('status')=='CONTROL_STATE_UNTRUSTED':return 'CONTROL_STATE_UNTRUSTED'
+    outcome=result.get('outcome')
+    if outcome=='UNRECOVERABLE':return 'UNRECOVERABLE'
+    if outcome in ('ACTION_REJECTED','RECOVERABLE_FAILURE'):
+        if not unloaded(ops):return 'SAFE_BOUNDARY_UNAVAILABLE'
+        if result.get('recovery',{}).get('exit_pending'):return 'RECOVERY_EXIT_PENDING'
+        return 'REPLAN_REQUIRED' if outcome=='ACTION_REJECTED' else 'OPERATION_REPLAN_REQUIRED'
     error=result.get('error')
     if error and result.get('operation_status')!='BUDGET_EXHAUSTED':
         known=False
@@ -159,7 +169,7 @@ def classify(ops, result):
 def after(ops, command, result):
     if not enabled(ops):return result
     s=state(ops);status=classify(ops,result);s['status']=status
-    if status in ('HARD_STOP','CONTROL_STATE_UNTRUSTED','SAFE_BOUNDARY_UNAVAILABLE'):
+    if status in ('HARD_STOP','CONTROL_STATE_UNTRUSTED','SAFE_BOUNDARY_UNAVAILABLE','UNRECOVERABLE'):
         s['terminal_fault']=dict(status=status,reason=result.get('reason'),sequence=command['sequence'])
     op=command['operation']
     strategy={

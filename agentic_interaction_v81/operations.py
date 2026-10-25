@@ -242,6 +242,10 @@ def operations_class(original):
             return successor(self,action,super().check_successor)
 
         def request_plan(self,command):
+            scene_stamp=None
+            if getattr(getattr(self,'r',None),'job',{}).get('v86_recovery_supervisor'):
+                from .scene_stamp import capture
+                scene_stamp=capture(self.r)
             from .declaration_preflight import check
             from .contact_following import selection
             actions=command.get('planned_segments')
@@ -343,6 +347,9 @@ def operations_class(original):
             else:self._v81_plan_ticket=None
             if result.get('plan'):
                 self.r.v81_contact_following_mode=following
+                if scene_stamp is not None:
+                    self._v86_plan_scene=scene_stamp
+                    result['native_scene_stamp']=scene_stamp
                 result['contact_following_v81']=following
             if association is not None:result['target_association']=association
             return result

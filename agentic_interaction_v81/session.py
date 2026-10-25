@@ -21,7 +21,18 @@ def serve(r):
     commands.mkdir(exist_ok=True);responses.mkdir(exist_ok=True);trace=[];last=None;seq=-1
     try:
         from interaction_runtime.registered_observation_v71 import initialize
-        initialize(r,ops)
+        from . import recovery_supervisor
+        try:initialize(r,ops)
+        except Exception as error:
+            if not recovery_supervisor.enabled(ops):raise
+            command=dict(operation='initialize_observation',sequence=-1)
+            result=recovery_supervisor.complete(ops,command,
+                recovery_supervisor.exception_result(ops,command,error))
+            result=task_recovery.after(ops,command,result)
+            trace.append(dict(command=command,result=result,initialization_recovery=True))
+            last=result
+            if result['task_recovery']['episode_termination_required']:
+                return dict(status=result['task_recovery']['status'],trace=trace)
         sequences=(itertools.count() if r.job.get('v81_active_recovery')
                    else range(int(r.job.get('maximum_agent_operations',100))))
         for seq in sequences:
@@ -149,9 +160,13 @@ def serve(r):
                         result.update(status='OPERATION_BUDGET_EXHAUSTED',recoverable=True,
                             episode_termination_required=False)
             except Exception as e:
-                result=dict(operation_stopped=True,reason=repr(e),
-                    recoverable=g['recovery_state']=='UNLOADED_OBSERVATION' and r.supervisor.latched is None)
-                if op in ('prepare_grasp','build_geometry','validate_execution') and result['recoverable']:
+                if recovery_supervisor.enabled(ops):
+                    result=recovery_supervisor.exception_result(ops,command,e)
+                else:
+                    result=dict(operation_stopped=True,reason=repr(e),
+                        recoverable=g['recovery_state']=='UNLOADED_OBSERVATION' and r.supervisor.latched is None)
+                if recovery_supervisor.enabled(ops):pass
+                elif op in ('prepare_grasp','build_geometry','validate_execution') and result['recoverable']:
                     from .replanning import state
                     state(ops)['state']='UNLOADED_REPLAN_REQUIRED'
                     result.update(status='PLANNING_REJECTED',episode_termination_required=False)
@@ -162,12 +177,15 @@ def serve(r):
                         result.update(status='PLANNING_REJECTED',episode_termination_required=False)
                     else:
                         result.update(status='CONTROL_STATE_UNTRUSTED',recoverable=False)
+            if recovery_supervisor.enabled(ops):
+                result=recovery_supervisor.complete(ops,command,result)
             result=task_recovery.after(ops,command,result)
             entry=dict(command=command,result=result,wall_s=time.perf_counter()-started,unloaded_wait_s=started-began)
             complete(responses,seq,result_packet(entry));trace.append(entry);last=result
             atomic_json(r.output/'AGENT_ACTION_TRACE.json',result_packet(trace))
             status(r,seq,'COMPLETED',operation=op)
-            if op=='finish' and result.get('status')!='CONTINUATION_REQUIRED':
+            if op=='finish' and (result.get('finish_authorized') if recovery_supervisor.enabled(ops)
+                    else result.get('status')!='CONTINUATION_REQUIRED'):
                 return dict(status='SESSION_COMPLETE',trace=trace,safe_exit=result.get('safe_exit'))
             if result.get('task_recovery',{}).get('episode_termination_required'):
                 return dict(status=result['task_recovery']['status'],trace=trace)
