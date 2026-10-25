@@ -8,17 +8,18 @@ PRISMATIC_ACTIVE_PROFILE='v83_prismatic_active_recovery_v1'
 REVOLUTE_VALIDATION_PROFILE='v83_revolute_model_validation_v1'
 ABC_PROFILE='v84_abc_continuous_v1'
 ABC_SHORT_PROFILE='v84_abc_short_comparison_v1'
+ABC_ORCHESTRATION_PROFILE='v86_abc_authorized_orchestration_v1'
 from .orchestration_extension import PROFILE as ORCHESTRATION_PROFILE, AUTH as ORCHESTRATION_AUTH
 
 
 def apply(spec,job):
     profile=spec.get('integration_profile')
-    if ORCHESTRATION_AUTH in spec and profile!=ORCHESTRATION_PROFILE:
+    if ORCHESTRATION_AUTH in spec and profile not in (ORCHESTRATION_PROFILE,ABC_ORCHESTRATION_PROFILE):
         raise ValueError('ORCHESTRATION_AUTHORIZATION_REQUIRES_OPT_IN_PROFILE')
     if profile is None:
         if spec.get('preload_study'):raise ValueError('PRELOAD_STUDY_REQUIRES_INTEGRATED_PROFILE')
         return
-    if profile not in (PROFILE,ACTIVE_PROFILE,PRISMATIC_ACTIVE_PROFILE,REVOLUTE_VALIDATION_PROFILE,ORCHESTRATION_PROFILE,ABC_PROFILE,ABC_SHORT_PROFILE) or spec.get('phase')!='engineering':
+    if profile not in (PROFILE,ACTIVE_PROFILE,PRISMATIC_ACTIVE_PROFILE,REVOLUTE_VALIDATION_PROFILE,ORCHESTRATION_PROFILE,ABC_PROFILE,ABC_SHORT_PROFILE,ABC_ORCHESTRATION_PROFILE) or spec.get('phase')!='engineering':
         raise ValueError('EXPLICIT_INTEGRATED_ENGINEERING_PROFILE_REQUIRED')
     if 'preload_study' in spec and type(spec['preload_study']) is not bool:
         raise ValueError('BOOLEAN_PRELOAD_STUDY_REQUIRED')
@@ -27,13 +28,13 @@ def apply(spec,job):
         job.update(v81_active_recovery=True,v81_minimum_reverse_native=math.radians(10.))
     if profile in (REVOLUTE_VALIDATION_PROFILE,ORCHESTRATION_PROFILE):
         job['v83_continuous_video_hz']=5
-    if profile==ORCHESTRATION_PROFILE:
+    if profile in (ORCHESTRATION_PROFILE,ABC_ORCHESTRATION_PROFILE):
         from .orchestration_extension import policy, FLAG
         job.update({FLAG:True, ORCHESTRATION_AUTH:policy(spec), 'v83_load_telemetry':True})
     if profile==PRISMATIC_ACTIVE_PROFILE:
         job.update(v81_active_recovery=True,v81_minimum_reverse_native=.04,
                    v83_continuous_video_hz=5)
-    if profile in (ABC_PROFILE,ABC_SHORT_PROFILE):
+    if profile in (ABC_PROFILE,ABC_SHORT_PROFILE,ABC_ORCHESTRATION_PROFILE):
         job.update(v84_abc=True,v81_active_recovery=True,v83_load_telemetry=True,
                    v83_continuous_video_hz=5)
         job['v84_short_comparison']=profile==ABC_SHORT_PROFILE
@@ -51,7 +52,7 @@ def apply(spec,job):
             raise ValueError('V83_PRISMATIC_PROFILE_REQUIRES_PRISMATIC')
         if joint:job['v81_task_goal_native']=(.18 if profile==PRISMATIC_ACTIVE_PROFILE
             else math.pi/2 if joint=='revolute' else .15)
-        if profile in (ABC_PROFILE,ABC_SHORT_PROFILE) and joint:
+        if profile in (ABC_PROFILE,ABC_SHORT_PROFILE,ABC_ORCHESTRATION_PROFILE) and joint:
             job.update(v81_task_goal_native=math.pi/2 if joint=='revolute' else .18,
                        v81_minimum_reverse_native=math.radians(10.) if joint=='revolute' else .04)
 

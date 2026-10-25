@@ -57,19 +57,23 @@ def serve(r):
             atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=not held,abc_contact=held,timeout_s=wait,
                 deadline_unix_s=deadline,requires_ACK_before_execution=True,
                 live_status_file='AGENT_SESSION_STATUS.json'))
-            began=time.perf_counter();path=commands/('%03d.json'%seq)
+            began=time.perf_counter();wait_started_sim=r.tick*r.dt;wait_recoveries=[];path=commands/('%03d.json'%seq)
             heartbeat=began
             while not path.exists():
                 if (not r.stopped and not (r.output/'STOP_AND_EXPORT').exists()
                         and time.perf_counter()-began>=wait and hasattr(r,'orchestration_extension')):
                     from .orchestration_extension import renew_parked_wait
-                    renewal=renew_parked_wait(ops,deadline)
+                    renewal=renew_parked_wait(ops,deadline,sequence=seq)
                     if renewal.get('extended'):
+                        if renewal.get('park_recovery_cost'):wait_recoveries.append(renewal['park_recovery_cost'])
                         # Keep began: finite authorized seconds add to this
                         # window instead of silently restarting its clock.
                         wait+=renewal['renewed_wait_s'];deadline+=renewal['renewed_wait_s']
                         packet['orchestration_extension']=r.orchestration_extension.packet()
                         packet['remaining_resources']=r.episode_budget.remaining(r.tick*r.dt)
+                        if renewal.get('current_plan_invalidated'):
+                            packet.update(joint_coordinate=float(r.actual()),current_plan_ready=False,plan_board=None,
+                                instruction='Authorized wait recovered through measured safe park; revalidate a fresh automatic plan before contact. Original task remains active.')
                         atomic_json(r.output/'DECISION_PACKET.json',packet)
                         status(r,seq,'WAITING',unloaded=True,deadline_unix_s=deadline)
                         atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,
@@ -89,7 +93,9 @@ def serve(r):
                 duration=time.perf_counter()-began
                 rows.append(dict(start_unix_s=time.time()-duration,end_unix_s=time.time(),
                     wall_s=duration,reason='UNLOADED_AGENT_COMMAND',dependency='Agent inspected current packet',
-                    sequence=seq,start_sim_s=r.tick*r.dt,end_sim_s=r.tick*r.dt))
+                    sequence=seq,start_sim_s=wait_started_sim,end_sim_s=r.tick*r.dt,
+                    guarded_park_recoveries=wait_recoveries,
+                    passive_wait_wall_s=max(0.,duration-sum(x['wall_s']for x in wait_recoveries))))
                 r.abc_waits=rows;atomic_json(r.output/'ABC_WAITS.json',dict(waits=rows))
             status(r,seq,'ACCEPTING',unloaded=True)
             command,ack=receive(path,seq,responses)

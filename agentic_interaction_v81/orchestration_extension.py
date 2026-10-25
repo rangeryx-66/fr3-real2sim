@@ -235,12 +235,39 @@ def handle(ops, command, deadline):
         return dict(extended=False, reason=str(error), physical_motion_executed=False)
 
 
-def renew_parked_wait(ops, deadline):
+def renew_parked_wait(ops, deadline, sequence=None):
     manager = getattr(ops.r, 'orchestration_extension', None)
     if manager is None:return dict(extended=False, reason='EXTENSION_NOT_INSTALLED_AT_LAUNCH')
     try:return manager.renew_wait(measured_evidence(ops), deadline)
     except (ValueError, KeyError, TypeError) as error:
-        return dict(extended=False, reason=str(error), physical_motion_executed=False)
+        # A paused, released observation pose is recoverable. With explicit
+        # standing authorization, use the SAME original guarded exit before
+        # requesting clock credit; never certify an unparked state as parked.
+        from .task_recovery import unloaded
+        r=ops.r
+        if (str(error)!='VERIFIED_NATIVE_PARK_REQUIRED' or not r.job.get('v84_abc')
+                or not manager.authorization.get('parked_decision_renewal_s',0)
+                or not unloaded(ops) or r.stopped or (r.output/'STOP_AND_EXPORT').exists()):
+            return dict(extended=False, reason=str(error), physical_motion_executed=False)
+        from .session_status import write as status
+        from agent_command_protocol_v12 import atomic_json
+        status(r,sequence,'RUNNING',operation='AUTHORIZED_TIMEOUT_SAFE_PARK',unloaded_decision=False)
+        began=time.monotonic();start_sim=r.tick*r.dt
+        safe=ops.release_park()  # hard safety exceptions propagate, never retry through
+        cost=dict(wall_s=time.monotonic()-began,start_sim_s=start_sim,end_sim_s=r.tick*r.dt)
+        atomic_json(r.output/('ORCHESTRATION_RECOVERY_%03d.json'%sequence),
+            dict(reason='AUTHORIZED_DECISION_WAIT_RECOVERY',safe_exit=safe,
+                original_task_goal_preserved=True,latch_cleared=False,cost=cost))
+        if not safe.get('safe'):
+            return dict(extended=False,reason='TIMEOUT_SAFE_PARK_UNCONFIRMED',safe_exit=safe)
+        ops.current_plan_ready=False
+        if hasattr(ops,'_v81_plan_ticket'):ops._v81_plan_ticket=None
+        r.world.pause()  # restore the original unloaded decision boundary
+        try:
+            result=manager.renew_wait(measured_evidence(ops),deadline)
+            return dict(result,guarded_park_recovery=True,current_plan_invalidated=True,park_recovery_cost=cost)
+        except (ValueError,KeyError,TypeError) as refusal:
+            return dict(extended=False,reason=str(refusal),safe_exit=safe)
 
 
 def accepted_total(output, binding, authorization, key):
