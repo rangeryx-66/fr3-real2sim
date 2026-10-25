@@ -1,0 +1,395 @@
+{
+  "schema": "v85-native-state-development-only",
+  "episode_id": "v84_r02_full90_20261025_01",
+  "joint_type": "revolute",
+  "F_T_input_used_by_A": true,
+  "F_T_input_used_by_B_effort_estimator": false,
+  "fit_family": "original_fit_cv",
+  "B_fit_scope": "Retrospective common-cohort fit, using privileged native object state; not the isolated sensorless estimator or visual validation.",
+  "B_robot_compensation_sha256": "fbcb6f7288719f70543125e717d3d30149e44ee061bc11ad12920d51be20ad33",
+  "B_effort_cache_sha256": "0137ddd1ae02e2b47a2663741e7463a5bc093ce49d91b616a42d3a5c7d3afc12",
+  "formal_independent_validation": false,
+  "old_validation_reclassified": "DEVELOPMENT_DIAGNOSTICS_ALREADY_EXAMINED",
+  "hidden_object_GT_used": false,
+  "common_FIT_bins": 668,
+  "configuration": {
+    "joint_type": "revolute",
+    "domain_native": [
+      -0.010471975511965976,
+      1.7453292519943295
+    ],
+    "units": {
+      "coordinate": "rad",
+      "effort": "N m",
+      "inertial": "kg m^2",
+      "damping": "N m s/rad"
+    },
+    "parameter_scales": [
+      1.0,
+      0.25,
+      0.045
+    ],
+    "intervals": [
+      2,
+      4,
+      8
+    ],
+    "smoothness": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "ridge": 0.001
+  },
+  "models": {
+    "A": {
+      "intervals": 8,
+      "active_controls": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "domain_native": [
+        -0.010471975511965976,
+        1.7453292519943295
+      ],
+      "joint_type": "revolute",
+      "units": {
+        "coordinate": "rad",
+        "effort": "N m",
+        "inertial": "kg m^2",
+        "damping": "N m s/rad"
+      },
+      "parameters": [
+        0.10893581424797458,
+        0.20833919075061194,
+        0.02592490685798309,
+        0.039885005616133035,
+        0.037261579630029046,
+        0.019404591153197745,
+        0.030084516681312533,
+        4.849250698333798e-20
+      ],
+      "conditional_covariance": [
+        [
+          0.0007174261737624085,
+          6.629061856035496e-05,
+          -6.720597748635352e-06,
+          3.552619023284482e-06,
+          -2.932586114322743e-06,
+          9.733357887551213e-07,
+          -3.3355360052245244e-06,
+          2.111436510387181e-05
+        ],
+        [
+          6.629061856035496e-05,
+          0.00012090188682853767,
+          -3.5560034520490772e-06,
+          -1.1065112051162775e-06,
+          -1.524914849152334e-06,
+          -1.3580095091310644e-06,
+          -6.741354401342751e-07,
+          -1.0036298164057202e-05
+        ],
+        [
+          -6.720597748635352e-06,
+          -3.5560034520490772e-06,
+          6.993683711916429e-07,
+          -1.9634724324851906e-07,
+          1.7588541013695506e-07,
+          -7.404872283411947e-08,
+          2.504893663858737e-07,
+          -2.6913889078157997e-06
+        ],
+        [
+          3.552619023284482e-06,
+          -1.1065112051162775e-06,
+          -1.9634724324851906e-07,
+          1.8248298974850967e-07,
+          -8.767109905270878e-08,
+          1.0194959381659665e-07,
+          -1.7169201228471397e-07,
+          2.3711517714850842e-06
+        ],
+        [
+          -2.932586114322743e-06,
+          -1.524914849152334e-06,
+          1.7588541013695506e-07,
+          -8.767109905270878e-08,
+          8.969689675375696e-08,
+          -5.153157297159395e-08,
+          1.4715818107799233e-07,
+          -1.7255457585146674e-06
+        ],
+        [
+          9.733357887551213e-07,
+          -1.3580095091310644e-06,
+          -7.404872283411945e-08,
+          1.0194959381659665e-07,
+          -5.153157297159396e-08,
+          1.0026781932137294e-07,
+          -1.7393870512861118e-07,
+          2.716972621938255e-06
+        ],
+        [
+          -3.335536005224525e-06,
+          -6.741354401342753e-07,
+          2.504893663858737e-07,
+          -1.7169201228471397e-07,
+          1.4715818107799233e-07,
+          -1.7393870512861118e-07,
+          4.894847165097276e-07,
+          -8.958954364835502e-06
+        ],
+        [
+          2.1114365103871813e-05,
+          -1.0036298164057204e-05,
+          -2.6913889078158e-06,
+          2.3711517714850842e-06,
+          -1.7255457585146676e-06,
+          2.7169726219382555e-06,
+          -8.958954364835504e-06,
+          0.00027326668933901066
+        ]
+      ],
+      "conditional_std": [
+        0.026784812371237705,
+        0.010995539405983577,
+        0.0008362824709340995,
+        0.000427180277808456,
+        0.0002994944018738196,
+        0.0003166509423977338,
+        0.0006996318435503973,
+        0.01653078005839442
+      ],
+      "algebraic_rank": 8,
+      "scaled_singular_values": [
+        0.6512400519147911,
+        0.36786844288112747,
+        0.2045989769624085,
+        0.10190011113746127,
+        0.06767900203830769,
+        0.021425209861473553,
+        0.015290643804476322,
+        0.0020067255663293168
+      ],
+      "scaled_condition": 324.52870628744375,
+      "support_intervals_native": [
+        [
+          0.01278883462683076,
+          0.5455259531736374
+        ]
+      ],
+      "FIT_rmse": 0.00035074914436300286,
+      "smoothness": 0.0001,
+      "validation_used": false,
+      "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "nonnegative_resistance_control_0",
+        "nonnegative_resistance_control_1",
+        "nonnegative_resistance_control_2",
+        "nonnegative_resistance_control_3",
+        "nonnegative_resistance_control_4",
+        "nonnegative_resistance_control_5"
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "inertial_sensitivity_after_velocity_and_friction_projection": 0.02148731795410485,
+      "uncalibrated_total_physical_accuracy": true,
+      "FIT_only_trajectory_CV": [
+        {
+          "segment": "FIT_ABC_FORWARD_01",
+          "rmse": 0.004145912983304629
+        },
+        {
+          "segment": "FIT_ABC_REVERSE_02",
+          "rmse": 0.001530481029952472
+        },
+        {
+          "segment": "FIT_ABC_SPEED_FORWARD_03",
+          "rmse": 0.0021703571937311777
+        }
+      ],
+      "cv_rmse": 0.0026155837356627598
+    },
+    "B": {
+      "intervals": 4,
+      "active_controls": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "domain_native": [
+        -0.010471975511965976,
+        1.7453292519943295
+      ],
+      "joint_type": "revolute",
+      "units": {
+        "coordinate": "rad",
+        "effort": "N m",
+        "inertial": "kg m^2",
+        "damping": "N m s/rad"
+      },
+      "parameters": [
+        4.775660006451347e-18,
+        9.551225313647254e-19,
+        0.03764526746910422,
+        0.05266336987318252,
+        0.009089903779247581,
+        0.05658952495433599,
+        4.5275350325008195e-18
+      ],
+      "conditional_covariance": [
+        [
+          0.003011752664844833,
+          9.826876949616177e-05,
+          4.920945482105696e-08,
+          1.9248791674985525e-07,
+          -3.7882047691528677e-06,
+          5.888514269556835e-06,
+          1.4141670691641663e-05
+        ],
+        [
+          9.826876949616172e-05,
+          0.001849881413509522,
+          -4.3968487031468584e-05,
+          -1.4451570223216325e-05,
+          -2.3665845846564066e-05,
+          -7.541354162863862e-06,
+          -4.147790304837829e-05
+        ],
+        [
+          4.920945482105663e-08,
+          -4.3968487031468584e-05,
+          1.1968022721141753e-06,
+          2.256011275336466e-07,
+          7.407948496725121e-07,
+          -1.8860948185131149e-07,
+          1.256550561129596e-06
+        ],
+        [
+          1.924879167498553e-07,
+          -1.4451570223216325e-05,
+          2.256011275336466e-07,
+          3.003139519244098e-07,
+          -1.2752545910477638e-07,
+          7.231631483306362e-07,
+          -1.8221610436228068e-07
+        ],
+        [
+          -3.7882047691528673e-06,
+          -2.3665845846564066e-05,
+          7.407948496725121e-07,
+          -1.2752545910477638e-07,
+          8.684096521955256e-07,
+          -1.1537264962254487e-06,
+          8.280348978923474e-08
+        ],
+        [
+          5.888514269556835e-06,
+          -7.541354162863862e-06,
+          -1.8860948185131146e-07,
+          7.231631483306362e-07,
+          -1.1537264962254489e-06,
+          2.943069454035267e-06,
+          3.8659690073704116e-06
+        ],
+        [
+          1.4141670691641663e-05,
+          -4.1477903048378286e-05,
+          1.256550561129596e-06,
+          -1.8221610436228068e-07,
+          8.280348978923468e-08,
+          3.8659690073704116e-06,
+          0.0002531055627580665
+        ]
+      ],
+      "conditional_std": [
+        0.05487943754125796,
+        0.04301024777317055,
+        0.00109398458495272,
+        0.0005480090801477744,
+        0.0009318849994476387,
+        0.0017155376574226713,
+        0.015909291711388867
+      ],
+      "algebraic_rank": 7,
+      "scaled_singular_values": [
+        0.6927748581378893,
+        0.3052798501401582,
+        0.16200084654470395,
+        0.032524445664373645,
+        0.022283308050843217,
+        0.015352809842368456,
+        0.0002754203914606455
+      ],
+      "scaled_condition": 2515.3361175034097,
+      "support_intervals_native": [
+        [
+          0.01278883462683076,
+          0.5455259531736374
+        ]
+      ],
+      "FIT_rmse": 0.000634104896703769,
+      "smoothness": 0.0001,
+      "validation_used": false,
+      "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "nonnegative_resistance_control_0",
+        "nonnegative_resistance_control_1",
+        "nonnegative_resistance_control_2",
+        "nonnegative_resistance_control_3",
+        "nonnegative_resistance_control_4"
+      ],
+      "conditionally_supported": [
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "inertial_sensitivity_after_velocity_and_friction_projection": 0.02224742545452054,
+      "uncalibrated_total_physical_accuracy": true,
+      "FIT_only_trajectory_CV": [
+        {
+          "segment": "FIT_ABC_FORWARD_01",
+          "rmse": 0.002993445271359849
+        },
+        {
+          "segment": "FIT_ABC_REVERSE_02",
+          "rmse": 0.002830317504888318
+        },
+        {
+          "segment": "FIT_ABC_SPEED_FORWARD_03",
+          "rmse": 0.0014792011112892774
+        }
+      ],
+      "cv_rmse": 0.002434321295845815
+    }
+  },
+  "C": {
+    "status": "STRUCTURALLY_UNIDENTIFIABLE_WITH_UNOBSERVED_ACTIVE_CONTACT_INPUT",
+    "parameters": null,
+    "prediction_metrics": null,
+    "reason": "Scaling inertia, damping, resistance and the unobserved force together preserves the same active kinematics."
+  }
+}

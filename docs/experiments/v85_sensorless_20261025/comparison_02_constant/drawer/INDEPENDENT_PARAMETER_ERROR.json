@@ -1,0 +1,94 @@
+{
+  "schema": "v85-independent-postfreeze-parameter-error-v1",
+  "truth_access_utc": "2026-10-25T07:45:07.207839+00:00",
+  "frozen_model_sha256": "fac3b3b91419cb534c80fc7b3aa5c725ed8b2bd94422dd2535d14e95446ea9f7",
+  "hidden_reference_sha256": "44ff836f6f1a8314cf8008e57a00c7ab7d1044f6f59fb9311a4f2300275882d1",
+  "object_models_modified": false,
+  "truth_used_for_estimation_or_selection": false,
+  "state_source": "privileged native object state diagnostic, not RGBD validation",
+  "reference": "Authored randomized body combination and assigned passive joint law; not independently measured effective PhysX dynamics.",
+  "additional_unrandomized_moving_bodies": [],
+  "models": {
+    "A": {
+      "inertial_absolute_error": 0.0019919590989889713,
+      "inertial_relative_error_pct": 0.1264579113265718,
+      "damping_absolute_error": 0.0015199970541894814,
+      "damping_relative_error_pct": 0.0272320329552711,
+      "resistance_curve_RMSE_on_FIT_support": 9.486132408975667e-06,
+      "resistance_curve_RMSE_declared_domain_including_unsupported_extrapolation": 9.486132408975667e-06,
+      "fitted_resistance_intervals": 0,
+      "conditional_std": [
+        0.004319779310664578,
+        0.0008136719484529949,
+        5.0990998249721975e-06
+      ],
+      "conditional_intervals_exclude_model_and_sensor_systematic_error": true
+    },
+    "B": {
+      "inertial_absolute_error": -0.1230773292854277,
+      "inertial_relative_error_pct": -7.813464644423462,
+      "damping_absolute_error": 2.754847543241695,
+      "damping_relative_error_pct": 49.35542399737454,
+      "resistance_curve_RMSE_on_FIT_support": 0.015347485126806337,
+      "resistance_curve_RMSE_declared_domain_including_unsupported_extrapolation": 0.015347485126806337,
+      "fitted_resistance_intervals": 0,
+      "conditional_std": [
+        0.34982687252770145,
+        0.4711735570702708,
+        0.0032883147148655206
+      ],
+      "conditional_intervals_exclude_model_and_sensor_systematic_error": true
+    }
+  },
+  "generalized_effort_vs_authored_law_diagnostic": [
+    {
+      "block": "FIT_ABC_RAIL_INITIAL_PULL_01#0",
+      "samples": 1567,
+      "models": {
+        "A": {
+          "RMSE": 3.91221843290491e-06,
+          "MAE": 2.360781732356699e-06,
+          "bias": 1.1540143816667984e-06
+        },
+        "B": {
+          "RMSE": 0.005455679718863553,
+          "MAE": 0.005451806086034437,
+          "bias": 0.005451806086034437
+        }
+      }
+    },
+    {
+      "block": "FIT_ABC_RAIL_LARGE_PULL_02#0",
+      "samples": 4526,
+      "models": {
+        "A": {
+          "RMSE": 2.3731675972425272e-05,
+          "MAE": 8.328467063274147e-06,
+          "bias": 1.7132484603868552e-06
+        },
+        "B": {
+          "RMSE": 0.005097262728621247,
+          "MAE": 0.005089335933873759,
+          "bias": 0.005089335933873759
+        }
+      }
+    },
+    {
+      "block": "FIT_ABC_RAIL_LARGE_REVERSE_03#0",
+      "samples": 3986,
+      "models": {
+        "A": {
+          "RMSE": 8.63508194423675e-06,
+          "MAE": 4.915405691051008e-06,
+          "bias": 2.7281029797475164e-06
+        },
+        "B": {
+          "RMSE": 0.003450634253477653,
+          "MAE": 0.0034097095293690624,
+          "bias": 0.0034097095293690624
+        }
+      }
+    }
+  ],
+  "generalized_effort_GT_scope": "Assigned passive law plus authored inertial reference and native measured derivatives. A model-derived diagnostic upper bound, not an independent contact wrench sensor. Not used as estimator input."
+}

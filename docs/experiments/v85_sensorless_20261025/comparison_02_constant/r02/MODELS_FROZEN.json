@@ -1,0 +1,198 @@
+{
+  "schema": "v85-native-state-development-only",
+  "episode_id": "v84_r02_full90_20261025_01",
+  "joint_type": "revolute",
+  "F_T_input_used_by_A": true,
+  "F_T_input_used_by_B_effort_estimator": false,
+  "fit_family": "constant",
+  "B_fit_scope": "Retrospective common-cohort fit, using privileged native object state; not the isolated sensorless estimator or visual validation.",
+  "B_robot_compensation_sha256": "fbcb6f7288719f70543125e717d3d30149e44ee061bc11ad12920d51be20ad33",
+  "B_effort_cache_sha256": "0137ddd1ae02e2b47a2663741e7463a5bc093ce49d91b616a42d3a5c7d3afc12",
+  "formal_independent_validation": false,
+  "old_validation_reclassified": "DEVELOPMENT_DIAGNOSTICS_ALREADY_EXAMINED",
+  "hidden_object_GT_used": false,
+  "common_FIT_bins": 668,
+  "configuration": {
+    "joint_type": "revolute",
+    "domain_native": [
+      -0.010471975511965976,
+      1.7453292519943295
+    ],
+    "units": {
+      "coordinate": "rad",
+      "effort": "N m",
+      "inertial": "kg m^2",
+      "damping": "N m s/rad"
+    },
+    "parameter_scales": [
+      1.0,
+      0.25,
+      0.045
+    ],
+    "intervals": [
+      2,
+      4,
+      8
+    ],
+    "smoothness": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "ridge": 0.001
+  },
+  "models": {
+    "A": {
+      "intervals": 0,
+      "active_controls": [
+        0
+      ],
+      "domain_native": [
+        -0.010471975511965976,
+        1.7453292519943295
+      ],
+      "joint_type": "revolute",
+      "units": {
+        "coordinate": "rad",
+        "effort": "N m",
+        "inertial": "kg m^2",
+        "damping": "N m s/rad"
+      },
+      "parameters": [
+        3.2485606612752307e-15,
+        0.938907197216567,
+        0.022020302013396272
+      ],
+      "conditional_covariance": [
+        [
+          0.059879904178413185,
+          -0.0001508605802415787,
+          -4.078398160654255e-06
+        ],
+        [
+          -0.00015086058024157872,
+          0.008238818105325502,
+          -0.00011545767183832427
+        ],
+        [
+          -4.078398160654255e-06,
+          -0.00011545767183832427,
+          1.7311439651635127e-06
+        ]
+      ],
+      "conditional_std": [
+        0.24470370691596233,
+        0.09076793544708121,
+        0.0013157294422348057
+      ],
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        1.1656944981384398,
+        0.023999184196103935,
+        0.02006200799974938
+      ],
+      "scaled_condition": 58.10457747564461,
+      "support_intervals_native": [
+        [
+          0.01278883462683076,
+          0.5455259531736374
+        ]
+      ],
+      "FIT_rmse": 0.0040938924906127,
+      "smoothness": 0,
+      "validation_used": false,
+      "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "C_Nm"
+      ],
+      "conditionally_supported": [
+        false,
+        true,
+        true
+      ],
+      "inertial_sensitivity_after_velocity_and_friction_projection": 0.023097385222347108,
+      "uncalibrated_total_physical_accuracy": true
+    },
+    "B": {
+      "intervals": 0,
+      "active_controls": [
+        0
+      ],
+      "domain_native": [
+        -0.010471975511965976,
+        1.7453292519943295
+      ],
+      "joint_type": "revolute",
+      "units": {
+        "coordinate": "rad",
+        "effort": "N m",
+        "inertial": "kg m^2",
+        "damping": "N m s/rad"
+      },
+      "parameters": [
+        7.536766715185593e-14,
+        0.8477842460432753,
+        0.025168515065208674
+      ],
+      "conditional_covariance": [
+        [
+          0.10181382470995202,
+          -0.0006227362307070772,
+          -2.182371364412319e-06
+        ],
+        [
+          -0.0006227362307070772,
+          0.012906243774670595,
+          -0.0001681460735028871
+        ],
+        [
+          -2.182371364412319e-06,
+          -0.0001681460735028871,
+          2.359046485705268e-06
+        ]
+      ],
+      "conditional_std": [
+        0.31908278660866685,
+        0.11360565027616626,
+        0.0015359187757512662
+      ],
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        1.1656944981384398,
+        0.023999184196103935,
+        0.02006200799974938
+      ],
+      "scaled_condition": 58.10457747564461,
+      "support_intervals_native": [
+        [
+          0.01278883462683076,
+          0.5455259531736374
+        ]
+      ],
+      "FIT_rmse": 0.004609831778128439,
+      "smoothness": 0,
+      "validation_used": false,
+      "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+      "parameter_names": [
+        "I_eff_kg_m2",
+        "b_Nm_s_rad",
+        "C_Nm"
+      ],
+      "conditionally_supported": [
+        false,
+        true,
+        true
+      ],
+      "inertial_sensitivity_after_velocity_and_friction_projection": 0.023097385222347108,
+      "uncalibrated_total_physical_accuracy": true
+    }
+  },
+  "C": {
+    "status": "STRUCTURALLY_UNIDENTIFIABLE_WITH_UNOBSERVED_ACTIVE_CONTACT_INPUT",
+    "parameters": null,
+    "prediction_metrics": null,
+    "reason": "Scaling inertia, damping, resistance and the unobserved force together preserves the same active kinematics."
+  }
+}

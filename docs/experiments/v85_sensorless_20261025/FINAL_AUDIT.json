@@ -1,0 +1,165 @@
+{
+  "schema": "v85-final-offline-audit-v1",
+  "created_utc": "2026-10-25T08:07:11.018019+00:00",
+  "result": "OFFLINE_RESEARCH_NEGATIVE_FOR_RELIABLE_FULL_PARAMETER_RECOVERY",
+  "scored_method_sha": "0a5eeec20c491fcac0736c1a7693086265cc00fd",
+  "final_runtime_source_sha": "20e58dd05baaac954f587696558f09260f6711ec",
+  "source_unchanged_after_GT": true,
+  "local_server_source_hashes_match": true,
+  "v85_source_sha256": {
+    "agentic_interaction_v85/__init__.py": "2dec4deacbbfdf70203d5d69054264426478de3a62f3b8557c7f47aff1b8097b",
+    "agentic_interaction_v85/diagnostic.py": "9e4cafdb783d0a2fff89b00dd173750c34c4fc90a5de3310fffea88d3e868468",
+    "agentic_interaction_v85/effort.py": "2abd1176d95f5025ddf5d71485d1b132c305ceeef51da02325fd6f15fae5f659",
+    "agentic_interaction_v85/independent_parameter_evaluator.py": "b28a56da5f01b10cf9f34e1fbf1a67d3576163608329d7b1e5626632f9d058fc",
+    "agentic_interaction_v85/reference.py": "0107e6b724e70ab9b4df557dcda89dc0058777a236021a5a4875069c4a7f5167",
+    "agentic_interaction_v85/replay.py": "95f5e6a1030d4eb2ad49171573aa545de728fe2acbdc2b9cd4c1cd54b5bd2343"
+  },
+  "server_regression": {
+    "baseline_tests_passed": 223,
+    "v85_tests_passed": 25,
+    "total": 248,
+    "logs": {
+      "FINAL02_BASELINE_REGRESSION.log": {
+        "sha256": "ccb65f72958554ffa397d0d73f999d78a43bb93a21434d3ba86828bb3f882152",
+        "bytes": 317,
+        "tail": "/data1/home/rangeryx/isaaclab-arena/.venv/lib/python3.12/site-packages/cmeel.prefix/lib/python3.12/site-packages/hppfcl/__init__.py:3: DeprecationWarning: Please update your 'hppfcl' imports to 'coal'\n  warnings.warn(\n----------------------------------------------------------------------\nRan 223 tests in 1.123s\n\nOK\n"
+      },
+      "FINAL02_V85_REGRESSION.log": {
+        "sha256": "155d0ac48d3d91db233b6455770213869e6bdd58fb85569965e481e55165b2fe",
+        "bytes": 3943,
+        "tail": "test_sampling_gap_and_role_boundaries_are_not_interpolated (test_sensorless_v85.SensorlessTests.test_sampling_gap_and_role_boundaries_are_not_interpolated) ... ok\ntest_singular_pose_cannot_silently_output_plausible_force (test_sensorless_v85.SensorlessTests.test_singular_pose_cannot_silently_output_plausible_force) ... ok\ntest_virtual_work_recovers_generalized_effort_without_wrench_fit (test_sensorless_v85.SensorlessTests.test_virtual_work_recovers_generalized_effort_without_wrench_fit) ... ok\ntest_corrupt_or_stale_terminal_evidence_cannot_release_gate (test_terminal_safety_v85.TerminalSafetyTests.test_corrupt_or_stale_terminal_evidence_cannot_release_gate) ... ok\ntest_export_failure_preserves_original_hard_fault (test_terminal_safety_v85.TerminalSafetyTests.test_export_failure_preserves_original_hard_fault) ... ok\ntest_latch_dominates_even_old_valid_park (test_terminal_safety_v85.TerminalSafetyTests.test_latch_dominates_even_old_valid_park) ... ok\ntest_latest_hard_exit_beats_initial_park_in_trace (test_terminal_safety_v85.TerminalSafetyTests.test_latest_hard_exit_beats_initial_park_in_trace) ... ok\ntest_launcher_refuses_before_resource_preparation_or_actor_spawn (test_terminal_safety_v85.TerminalSafetyTests.test_launcher_refuses_before_resource_preparation_or_actor_spawn) ... ok\ntest_malformed_or_old_registry_fails_closed (test_terminal_safety_v85.TerminalSafetyTests.test_malformed_or_old_registry_fails_closed) ... ok\ntest_missing_terminal_record_rc_zero_creates_hold (test_terminal_safety_v85.TerminalSafetyTests.test_missing_terminal_record_rc_zero_creates_hold) ... ok\ntest_park_flag_or_rc_zero_never_proves_park (test_terminal_safety_v85.TerminalSafetyTests.test_park_flag_or_rc_zero_never_proves_park) ... ok\ntest_pause_not_faked_as_controller_ack_or_zero_velocity (test_terminal_safety_v85.TerminalSafetyTests.test_pause_not_faked_as_controller_ack_or_zero_velocity) ... ok\ntest_step_fault_pauses_without_retry_or_driving (test_terminal_safety_v85.TerminalSafetyTests.test_step_fault_pauses_without_retry_or_driving) ... ok\ntest_verified_exit_does_not_create_false_hold (test_terminal_safety_v85.TerminalSafetyTests.test_verified_exit_does_not_create_false_hold) ... ok\n\n----------------------------------------------------------------------\nRan 25 tests in 0.019s\n\nOK\n"
+      },
+      "FINAL02_FROZEN_AUDIT.log": {
+        "sha256": "2a343f5609dada2b6ca813efd346a7f7d389d2b1ea693cf79e5ff1e9e1be4dda",
+        "bytes": 761,
+        "tail": "{\n  \"status\": \"OFFLINE_PREFLIGHT_ONLY\",\n  \"baseline\": {\n    \"baseline_commit\": \"2f021639aea65e6ae859bac9a3385d49db10212f\",\n    \"modified_frozen_paths\": [],\n    \"physical_source_files\": 606,\n    \"frozen_revolute_source_files\": 71,\n    \"release_source_files\": 956,\n    \"failures\": []\n  },\n  \"SG121_support\": {\n    \"physics_hz\": 240.0,\n    \"window\": 121,\n    \"edge_samples\": 121,\n    \"centered_support_samples\": 62,\n    \"minimum_process_records\": 247,\n    \"requested_retained_span_s\": 3.0,\n    \"required_contiguous_records\": 963,\n    \"minimum_observed_span_s\": 4.008333333333333,\n    \"not_a_guarantee\": \"Requires actual transmission-qualified contiguous sliding; startup, gaps, stiction and warnings may remove support.\"\n  },\n  \"physical_episode_started\": false\n}\n"
+      }
+    }
+  },
+  "frozen_physical_audit": {
+    "status": "OFFLINE_PREFLIGHT_ONLY",
+    "baseline": {
+      "baseline_commit": "2f021639aea65e6ae859bac9a3385d49db10212f",
+      "modified_frozen_paths": [],
+      "physical_source_files": 606,
+      "frozen_revolute_source_files": 71,
+      "release_source_files": 956,
+      "failures": []
+    },
+    "SG121_support": {
+      "physics_hz": 240.0,
+      "window": 121,
+      "edge_samples": 121,
+      "centered_support_samples": 62,
+      "minimum_process_records": 247,
+      "requested_retained_span_s": 3.0,
+      "required_contiguous_records": 963,
+      "minimum_observed_span_s": 4.008333333333333,
+      "not_a_guarantee": "Requires actual transmission-qualified contiguous sliding; startup, gaps, stiction and warnings may remove support."
+    },
+    "physical_episode_started": false
+  },
+  "model_manifest_sha256": "fad671bb53cb6f690be2d19846f10afdd312d92800211f796763027f787b6836",
+  "sealed_model_checks": [
+    {
+      "model": "comparison_02_constant/r02/MODELS_FROZEN.json",
+      "sha256": "b62963c46d24e28a8ede1ef3ebfa17c65a4b2118f1061d8e6306a7e070a14122",
+      "matches_post_GT": true,
+      "GT_access_utc": "2026-10-25T07:44:53.383011+00:00"
+    },
+    {
+      "model": "comparison_02_constant/drawer/MODELS_FROZEN.json",
+      "sha256": "fac3b3b91419cb534c80fc7b3aa5c725ed8b2bd94422dd2535d14e95446ea9f7",
+      "matches_post_GT": true,
+      "GT_access_utc": "2026-10-25T07:45:07.207839+00:00"
+    },
+    {
+      "model": "comparison_02_original_fit_cv/r02/MODELS_FROZEN.json",
+      "sha256": "1754e143339695b25935913b7371fd6e05b1e8a24452e2d6205679677c9d43fe",
+      "matches_post_GT": true,
+      "GT_access_utc": "2026-10-25T07:45:11.689471+00:00"
+    },
+    {
+      "model": "comparison_02_original_fit_cv/drawer/MODELS_FROZEN.json",
+      "sha256": "e1e38d4ee1016e5e8a0b51a21371df3cbbbbe0cddec5a218421a31a9270d0f95",
+      "matches_post_GT": true,
+      "GT_access_utc": "2026-10-25T07:45:23.243775+00:00"
+    }
+  ],
+  "safety_hold": {
+    "denied": true,
+    "type": "RuntimeError",
+    "message": "UNRESOLVED_TERMINAL_SAFETY_HOLD:/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/owned_actor.lock.safety_hold.json",
+    "path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/owned_actor.lock.safety_hold.json",
+    "exists": true,
+    "sha256": "f9cec4d6bac8a3cba1681617b8d6ab64a5d7eb2087b05fb7a4c51dd879d58ab0",
+    "contents": {
+      "episode_id": "v84_prismatic_large_20261025_02",
+      "status": "HARD_STOP_UNPARKED",
+      "evidence": "/data1/home/rangeryx/agentic_v85_private/sensorless_20261025/P0_HARD_STOP_AUDIT.json",
+      "reason": "Retrospective measured nonzero load and velocity; no confirmed unload/park. No physical resume permitted by V85 launcher."
+    }
+  },
+  "protected_baselines": [
+    {
+      "path": "/Users/rangeryx/Documents/ChatGPT/robot in loop real2sim/github_release/fr3-real2sim-r02-active",
+      "head": "792fa3b55160c8e83d50ec70f82803af8de14e9b",
+      "clean": true
+    },
+    {
+      "path": "/Users/rangeryx/Documents/ChatGPT/robot in loop real2sim/github_release/fr3-real2sim-v84-abc",
+      "head": "90b391d25af05e9afd60f3c3f6f93fead542d41a",
+      "clean": true
+    },
+    {
+      "path": "/Users/rangeryx/Documents/ChatGPT/robot in loop real2sim/github_release/fr3-real2sim-v83-speed",
+      "head": "4d8c7b5985961db6462948cd516a0b60e601795e",
+      "clean": true
+    },
+    {
+      "path": "/Users/rangeryx/Documents/ChatGPT/robot in loop real2sim/github_release/fr3-real2sim-v83-prismatic",
+      "head": "b83b5a7b0979cc89e2a0885bfdd1c58366d38280",
+      "clean": true
+    },
+    {
+      "path": "/Users/rangeryx/Documents/ChatGPT/robot in loop real2sim/github_release/fr3-real2sim-v83-physics-id",
+      "head": "255dfecc3e38a1f8355f094912ee5b71481f40ae",
+      "clean": true
+    }
+  ],
+  "old_owned_pids": {
+    "240283": {
+      "exists": false
+    },
+    "260753": {
+      "exists": false
+    },
+    "2430811": {
+      "exists": false
+    },
+    "2449838": {
+      "exists": false
+    },
+    "3711791": {
+      "exists": false
+    },
+    "3732641": {
+      "exists": false
+    }
+  },
+  "physical_experiments_started": 0,
+  "historical_hard_stop_safe_park_verified": false,
+  "historical_controller_stop_verified": false,
+  "raw_data_private": true,
+  "raw_hidden_GT_values_exported": false,
+  "formal_RGBD_independent_validation": false,
+  "ABC_online_behavior": "No new physical episode; architecture and frozen owners retained, 223 regression checks passed. Not a new physical recertification.",
+  "publication_scope": "Derived statistics, estimated parameters, post-freeze errors, and derived plots only; no raw caches/images/video.",
+  "server_private_model_hashes_match": true,
+  "server_dependency_versions": {
+    "numpy": "2.3.1",
+    "scipy": "1.17.0",
+    "pin": "3.9.0",
+    "matplotlib": "3.10.8"
+  }
+}

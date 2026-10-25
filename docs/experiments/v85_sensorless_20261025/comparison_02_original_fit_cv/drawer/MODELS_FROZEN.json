@@ -1,0 +1,308 @@
+{
+  "schema": "v85-native-state-development-only",
+  "episode_id": "v84_prismatic_large_20261025_01",
+  "joint_type": "prismatic",
+  "F_T_input_used_by_A": true,
+  "F_T_input_used_by_B_effort_estimator": false,
+  "fit_family": "original_fit_cv",
+  "B_fit_scope": "Retrospective common-cohort fit, using privileged native object state; not the isolated sensorless estimator or visual validation.",
+  "B_robot_compensation_sha256": "fbcb6f7288719f70543125e717d3d30149e44ee061bc11ad12920d51be20ad33",
+  "B_effort_cache_sha256": "c346a27ec9982816a1dfa099dc69274268eff8d39a5e7590b7c3a9d3de23ffbe",
+  "formal_independent_validation": false,
+  "old_validation_reclassified": "DEVELOPMENT_DIAGNOSTICS_ALREADY_EXAMINED",
+  "hidden_object_GT_used": false,
+  "common_FIT_bins": 421,
+  "configuration": {
+    "joint_type": "prismatic",
+    "domain_native": [
+      -0.003,
+      0.378412895770898
+    ],
+    "units": {
+      "coordinate": "m",
+      "effort": "N",
+      "inertial": "kg",
+      "damping": "N s/m"
+    },
+    "parameter_scales": [
+      5.0,
+      10.0,
+      1.0
+    ],
+    "intervals": [
+      2,
+      4,
+      8
+    ],
+    "smoothness": [
+      0.0001,
+      0.001,
+      0.01
+    ],
+    "ridge": 0.001
+  },
+  "models": {
+    "A": {
+      "intervals": 0,
+      "active_controls": [
+        0
+      ],
+      "domain_native": [
+        -0.003,
+        0.378412895770898
+      ],
+      "joint_type": "prismatic",
+      "units": {
+        "coordinate": "m",
+        "effort": "N",
+        "inertial": "kg",
+        "damping": "N s/m"
+      },
+      "parameters": [
+        1.5771872775198514,
+        5.583171050012905,
+        0.2735737703020511
+      ],
+      "conditional_covariance": [
+        [
+          1.866049329284574e-05,
+          6.655155449059513e-08,
+          -5.146833442526967e-10
+        ],
+        [
+          6.655155449059513e-08,
+          6.620620396992933e-07,
+          -2.5833411986293533e-09
+        ],
+        [
+          -5.146833442526967e-10,
+          -2.583341198629353e-09,
+          2.60008190250315e-11
+        ]
+      ],
+      "conditional_std": [
+        0.004319779310664578,
+        0.0008136719484529949,
+        5.0990998249721975e-06
+      ],
+      "algebraic_rank": 3,
+      "scaled_singular_values": [
+        20.557868488456478,
+        0.16638181917958278,
+        0.05133316640806048
+      ],
+      "scaled_condition": 400.4792598421987,
+      "support_intervals_native": [
+        [
+          0.003609402949223295,
+          0.03739840118214488
+        ],
+        [
+          0.044969184058053155,
+          0.17675498840601547
+        ]
+      ],
+      "FIT_rmse": 1.3513777191219958e-05,
+      "smoothness": 0,
+      "validation_used": false,
+      "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+      "parameter_names": [
+        "m_eff_kg",
+        "b_N_s_m",
+        "F_c_N"
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true
+      ],
+      "inertial_sensitivity_after_velocity_and_friction_projection": 0.010266809286568979,
+      "uncalibrated_total_physical_accuracy": true,
+      "FIT_only_trajectory_CV": [
+        {
+          "segment": "FIT_ABC_RAIL_INITIAL_PULL_01",
+          "rmse": 5.356463852517378e-06
+        },
+        {
+          "segment": "FIT_ABC_RAIL_LARGE_PULL_02",
+          "rmse": 3.5981404579592775e-05
+        },
+        {
+          "segment": "FIT_ABC_RAIL_LARGE_REVERSE_03",
+          "rmse": 8.92043161426153e-06
+        }
+      ],
+      "cv_rmse": 1.6752766682123896e-05
+    },
+    "B": {
+      "intervals": 4,
+      "active_controls": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "domain_native": [
+        -0.003,
+        0.378412895770898
+      ],
+      "joint_type": "prismatic",
+      "units": {
+        "coordinate": "m",
+        "effort": "N",
+        "inertial": "kg",
+        "damping": "N s/m"
+      },
+      "parameters": [
+        1.3825470152486634,
+        9.920801796104444,
+        0.2591606617025274,
+        0.2544738214116112,
+        0.23835271471829406,
+        0.2591109080935916,
+        0.18956035899849932
+      ],
+      "conditional_covariance": [
+        [
+          0.04476018675709348,
+          0.009409364907554023,
+          -2.2604773830975866e-05,
+          -8.78476849782237e-05,
+          -6.781494425100047e-05,
+          4.6037827790014174e-05,
+          -0.0009043031043393536
+        ],
+        [
+          0.009409364907554023,
+          0.09272418726556197,
+          -0.00038413078692598027,
+          -0.0006578715190703467,
+          -0.0006288217278845375,
+          -0.0004502298054895454,
+          -0.0010820192250304732
+        ],
+        [
+          -2.260477383097586e-05,
+          -0.0003841307869259802,
+          4.1261826812885364e-06,
+          -4.6897483133836266e-07,
+          5.183887246155509e-06,
+          -1.6699756654146938e-06,
+          2.3163418636404763e-05
+        ],
+        [
+          -8.78476849782237e-05,
+          -0.0006578715190703466,
+          -4.6897483133836266e-07,
+          9.989474276333598e-06,
+          6.703707489963116e-08,
+          9.34517895206461e-06,
+          -2.517465042480165e-05
+        ],
+        [
+          -6.781494425100047e-05,
+          -0.0006288217278845375,
+          5.183887246155509e-06,
+          6.703707489963143e-08,
+          9.04666803246499e-06,
+          -4.888633078981057e-06,
+          5.406172749499239e-05
+        ],
+        [
+          4.6037827790014174e-05,
+          -0.00045022980548954536,
+          -1.6699756654146936e-06,
+          9.34517895206461e-06,
+          -4.888633078981057e-06,
+          1.7518337774429226e-05,
+          -9.155733046929005e-05
+        ],
+        [
+          -0.0009043031043393535,
+          -0.001082019225030473,
+          2.3163418636404763e-05,
+          -2.5174650424801644e-05,
+          5.406172749499239e-05,
+          -9.155733046929004e-05,
+          0.000724643914351359
+        ]
+      ],
+      "conditional_std": [
+        0.21156603403451482,
+        0.3045064650636534,
+        0.0020313007362989205,
+        0.003160612958958056,
+        0.0030077679485733255,
+        0.0041854913420564166,
+        0.026919210879061056
+      ],
+      "algebraic_rank": 7,
+      "scaled_singular_values": [
+        11.688795243600106,
+        6.153630539501173,
+        3.7072560405591766,
+        1.9131429932617563,
+        0.21849874837688812,
+        0.1369491971201672,
+        0.05116645238839041
+      ],
+      "scaled_condition": 228.44646634622407,
+      "support_intervals_native": [
+        [
+          0.003609402949223295,
+          0.03739840118214488
+        ],
+        [
+          0.044969184058053155,
+          0.17675498840601547
+        ]
+      ],
+      "FIT_rmse": 0.002147857789160832,
+      "smoothness": 0.0001,
+      "validation_used": false,
+      "uncertainty": "conditional Bartlett-HAC with iid diagonal floor; excludes model selection, compensation and contact/systematic error",
+      "parameter_names": [
+        "m_eff_kg",
+        "b_N_s_m",
+        "nonnegative_resistance_control_0",
+        "nonnegative_resistance_control_1",
+        "nonnegative_resistance_control_2",
+        "nonnegative_resistance_control_3",
+        "nonnegative_resistance_control_4"
+      ],
+      "conditionally_supported": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "inertial_sensitivity_after_velocity_and_friction_projection": 0.010233745239893087,
+      "uncalibrated_total_physical_accuracy": true,
+      "FIT_only_trajectory_CV": [
+        {
+          "segment": "FIT_ABC_RAIL_INITIAL_PULL_01",
+          "rmse": 0.009369013875330642
+        },
+        {
+          "segment": "FIT_ABC_RAIL_LARGE_PULL_02",
+          "rmse": 0.006599591987883494
+        },
+        {
+          "segment": "FIT_ABC_RAIL_LARGE_REVERSE_03",
+          "rmse": 0.008266393035101686
+        }
+      ],
+      "cv_rmse": 0.008078332966105274
+    }
+  },
+  "C": {
+    "status": "STRUCTURALLY_UNIDENTIFIABLE_WITH_UNOBSERVED_ACTIVE_CONTACT_INPUT",
+    "parameters": null,
+    "prediction_metrics": null,
+    "reason": "Scaling inertia, damping, resistance and the unobserved force together preserves the same active kinematics."
+  }
+}
