@@ -50,6 +50,10 @@ def operations_class(parent):
             return result
 
         def release_park(self):
+            if self.r.supervisor.latched is not None:
+                self._abc_retain=False;self.abc_state='A'
+                return dict(safe=False,reason='HARD_STOP_NO_AUTOMATIC_CONTINUATION',
+                    stop=self.r.supervisor.latched,requires_intervention=True)
             last=self.r.record.segments[-1].get('result',{}) if self.r.record.segments else {}
             if (self._abc_retain and last.get('status')=='TARGET_REACHED'
                     and self.r.record.segments[-1].get('first_step',0)>=getattr(self,'_v81_block_first_record',0)

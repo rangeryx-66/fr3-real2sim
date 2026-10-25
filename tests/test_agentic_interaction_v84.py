@@ -72,8 +72,8 @@ class ContactTests(unittest.TestCase):
 
     def test_hard_latch_never_retains_or_clears(self):
         o=self.fixture();o.r.supervisor.latched={'reason':'HARD'}
-        self.assertFalse(contact_trusted(o));self.assertTrue(o.release_park()['safe'])
-        self.assertTrue(o.called);self.assertEqual(o.r.supervisor.latched,{'reason':'HARD'})
+        self.assertFalse(contact_trusted(o));self.assertFalse(o.release_park()['safe'])
+        self.assertFalse(o.called);self.assertEqual(o.r.supervisor.latched,{'reason':'HARD'})
 
     def test_untrusted_sensor_returns_to_native_exit(self):
         o=self.fixture();o.r.rows[-1]['wrist_ft']['valid']=False

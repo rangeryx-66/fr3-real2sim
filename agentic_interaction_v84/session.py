@@ -86,6 +86,17 @@ def serve(r):
     # V81 dispatcher remains authoritative for every unloaded observation,
     # native plan/exit/base route, failure and final cleanup. Its next boundary
     # is extended explicitly for finite supervised C through the seam below.
-    with patch.object(owner,'operations_class',factory),patch.object(owner,'receive',transport.receive),\
-         patch.object(recovery,'before',before_command),patch.object(recovery,'after',after_command):
-        return owner.serve(r)
+    outcome=None
+    try:
+        with patch.object(owner,'operations_class',factory),patch.object(owner,'receive',transport.receive),\
+             patch.object(recovery,'before',before_command),patch.object(recovery,'after',after_command):
+            outcome=owner.serve(r)
+            return outcome
+    finally:
+        import sys
+        from agentic_interaction_v81.terminal_safety import persist
+        original_error=sys.exc_info()[1]
+        try:persist(r,outcome,pause=True)
+        except Exception as export_error:
+            if original_error is None:raise
+            original_error.add_note('Terminal safety finalization failed: '+repr(export_error))

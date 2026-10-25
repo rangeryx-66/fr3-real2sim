@@ -92,7 +92,16 @@ def runtime_class(original):
             return super().record_frame()
 
         def step(self):
-            row=super().step()
+            from interaction_runtime.policy import SafetyStop
+            try:row=super().step()
+            except SafetyStop as error:
+                if self.job.get('v84_abc'):
+                    from .terminal_safety import persist
+                    try:persist(self, dict(safe_exit=dict(safe=False,
+                        reason='HARD_STOP_NO_AUTOMATIC_CONTINUATION')), pause=True)
+                    except Exception as export_error:
+                        error.add_note('Terminal safety export failed: '+repr(export_error))
+                raise
             from .integration import progress
             progress(self,row)
             return row

@@ -10,6 +10,9 @@ ROOT=Path(__file__).resolve().parents[1]
 
 def launch(specfile,profile):
     baseline_audit()
+    from .terminal_safety import registry_path,require_clearance,process_outcome
+    safety_registry=registry_path(json.loads(Path(profile).read_text()))
+    require_clearance(safety_registry)
     spec=json.loads(Path(specfile).read_text())
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
@@ -49,6 +52,7 @@ def launch(specfile,profile):
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
     job=json.loads((out/'job.json').read_text())
+    job['terminal_safety_registry']=str(safety_registry)
     debug_budget(spec,job)
     integrated_profile(spec,job)
     job.update(v81_phase=phase,v81_frozen_release_commit=spec.get('frozen_release_commit'),
@@ -81,6 +85,7 @@ def launch(specfile,profile):
         original_controller_and_safety_sources_unchanged=True))
     with Path(p['actor_lock']).open('a') as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+        require_clearance(safety_registry)  # recheck after lock; prior actor may have faulted
         free={int(x.split(',')[0]):int(x.split(',')[1]) for x in subprocess.check_output(
             ['nvidia-smi','--query-gpu=index,memory.free','--format=csv,noheader,nounits'],text=True).splitlines()}
         if free[int(p['physics_gpu'])]<12000:raise ValueError('INSUFFICIENT_SHARED_GPU_CAPACITY')
@@ -102,7 +107,8 @@ def launch(specfile,profile):
                     actor.terminate()
                     try:rc=actor.wait(timeout=30)
                     except subprocess.TimeoutExpired:actor.kill();rc=actor.wait(timeout=10)
-        dump(out/'PROCESS_COMPLETION.json',dict(returncode=rc,wall_s=time.perf_counter()-began,actor_exited=True))
+        dump(out/'PROCESS_COMPLETION.json',dict(returncode=rc,wall_s=time.perf_counter()-began,actor_exited=True,
+            physical_outcome=process_outcome(out,rc)))
     return out
 
 
