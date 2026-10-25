@@ -1,0 +1,236 @@
+{
+  "episode_id": "v86_45746_abc_20261025_01",
+  "asset_id": "45746",
+  "source_sha": "d4a90ea06670a2740e40a2a8e2a68dfbefe249ac",
+  "operation": "PASS: original180mm/reverse/independent validation and finalpark",
+  "maximum_actual_mm": 180.27473986148834,
+  "final_actual_mm": 180.27473986148834,
+  "completed_postgoal_reverse_mm": 145.53416892886162,
+  "independent_reopen_recovery_mm": 145.698893815279,
+  "extended220mm": "NOT PASS: startup slip; dependent100mm reclose not executed",
+  "same_World": true,
+  "object_state_reset": false,
+  "completion": {
+    "returncode": 0,
+    "wall_s": 6247.047834038734,
+    "actor_exited": true,
+    "physical_outcome": {
+      "process_returncode": 0,
+      "terminal_safety_status": "SAFE_PARK_VERIFIED",
+      "physical_safe_park_verified": true,
+      "requires_intervention": false,
+      "process_exit_is_not_task_success": true,
+      "evidence_error": null
+    }
+  },
+  "physical_grasps": 5,
+  "base_migrations": 1,
+  "command_count": 21,
+  "command_counts": {
+    "prepare_grasp": 7,
+    "acquire_execute": 5,
+    "observe_view": 4,
+    "evaluate_station": 1,
+    "relocate_station": 1,
+    "observe": 2,
+    "finish": 1
+  },
+  "timing": {
+    "episode_wall_s": 6247.047834038734,
+    "command_wall_s": {
+      "prepare_grasp": 1365.344517770689,
+      "acquire_execute": 2887.9768126062118,
+      "observe_view": 275.11972250556573,
+      "evaluate_station": 23.317144189961255,
+      "relocate_station": 41.161960809957236,
+      "observe": 70.3057173481211,
+      "finish": 0.7524341838434339
+    },
+    "sum_command_wall_s": 4663.9783094143495,
+    "reported_unloaded_wait_s": 1398.1435520420782,
+    "labels": "command wall includes internal processing/motion; remaining time is not assumed to be physical motion"
+  },
+  "monitor": {
+    "metadata": {
+      "schema": "v86-readonly-object-all-dof-v1",
+      "enabled": true,
+      "dof_names": [
+        "joint_prismatic_l_0_abstract_0_1",
+        "joint_prismatic_l_0_abstract_0_2"
+      ],
+      "selected_dof": 0,
+      "passive_dofs": [
+        1
+      ],
+      "units": "native SI per named DOF: prismatic m/m s^-1; revolute rad/rad s^-1",
+      "alignment": "same completed physics step/t as original selected-coordinate record",
+      "unavailable": "fixed-shape NaN and valid=0; no interpolation or zero substitution",
+      "additional_readonly_queries_per_record": 2,
+      "object_actuation": false,
+      "feeds_controller_or_estimator": false,
+      "missing_channel_changes_motion_permission": false
+    },
+    "records": 51501,
+    "valid": 51501,
+    "min_q": [
+      -1.055214760015133e-08,
+      0.0
+    ],
+    "max_q": [
+      0.18027473986148834,
+      0.0
+    ],
+    "hard_stop_records": 0,
+    "soft_warning_records": 18993,
+    "export_issues": []
+  },
+  "segments": [
+    {
+      "id": 1,
+      "role": "FIT_FORWARD",
+      "target_q": 0.04,
+      "completed": true,
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "joint_coordinate": 0.0015092004323378205,
+      "gain_native": 0.0015092097550324368,
+      "elapsed_sim_s": 5.808333333333323,
+      "physical_transmission_valid": false
+    },
+    {
+      "id": 2,
+      "role": "FIT_RECOVERY_FORWARD",
+      "target_q": 0.045,
+      "completed": true,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.04519450664520264,
+      "gain_native": 0.04396927380003035,
+      "elapsed_sim_s": 16.51249999999999,
+      "physical_transmission_valid": true
+    },
+    {
+      "id": 3,
+      "role": "FIT_RECOVERY_REVERSE",
+      "target_q": 0.015,
+      "completed": true,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.01475418172776699,
+      "gain_native": -0.030440324917435646,
+      "elapsed_sim_s": 7.458333333333314,
+      "physical_transmission_valid": true
+    },
+    {
+      "id": 4,
+      "role": "FIT_RECOVERY_LONG",
+      "target_q": 0.1,
+      "completed": true,
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "joint_coordinate": 0.03622356802225113,
+      "gain_native": 0.02146938629448414,
+      "elapsed_sim_s": 7.487500000000011,
+      "physical_transmission_valid": false
+    },
+    {
+      "id": 5,
+      "role": "FIT_CONTINUE_CURRENT",
+      "target_q": 0.08,
+      "completed": true,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.08032867312431335,
+      "gain_native": 0.04410521313548088,
+      "elapsed_sim_s": 7.254166666666663,
+      "physical_transmission_valid": true
+    },
+    {
+      "id": 6,
+      "role": "FIT_LONG_CURRENT",
+      "target_q": 0.18,
+      "completed": true,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.18022531270980835,
+      "gain_native": 0.099896639585495,
+      "elapsed_sim_s": 16.620833333333337,
+      "physical_transmission_valid": true
+    },
+    {
+      "id": 7,
+      "role": "VALIDATION_RECOVERY_REVERSE",
+      "target_q": 0.05,
+      "completed": true,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.049741268157958984,
+      "gain_native": -0.1305285543203354,
+      "elapsed_sim_s": 20.566666666666663,
+      "physical_transmission_valid": true
+    },
+    {
+      "id": 8,
+      "role": "VALIDATION_REVERSE",
+      "target_q": 0.035,
+      "completed": true,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.034735653549432755,
+      "gain_native": -0.01500561460852623,
+      "elapsed_sim_s": 3.0166666666666515,
+      "physical_transmission_valid": true
+    },
+    {
+      "id": 9,
+      "role": "VALIDATION_REOPEN_EXTENDED",
+      "target_q": 0.22,
+      "completed": true,
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_STARTUP_KINEMATIC_TANGENTIAL_SLIP_EVIDENCE",
+      "joint_coordinate": 0.034575480967760086,
+      "gain_native": -0.00013737380504608154,
+      "elapsed_sim_s": 5.916666666666629,
+      "physical_transmission_valid": false
+    },
+    {
+      "id": 10,
+      "role": "VALIDATION_REOPEN_RECOVERY",
+      "target_q": 0.18,
+      "completed": true,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.18027418851852417,
+      "gain_native": 0.145698893815279,
+      "elapsed_sim_s": 23.174999999999955,
+      "physical_transmission_valid": true
+    }
+  ],
+  "evidence_sha256": {
+    "PROCESS_COMPLETION.json": "3554378872d94c6534388fc61e5c618f1d8c33f3852f6a169c0081c4cd84ed25",
+    "EPISODE_RESULT.json": "50f807f314a4ca662a778d9d7f1ebfb806fedccf094e0e17b033ab31b45c1b57",
+    "TASK_PROGRESS.json": "50d5db5becc51a55240a1cd50484c88e9ed9c86bd6f464c767e75299797dd178",
+    "UNLOADED_ADMISSION.json": "60ad09912b94af8c4b176f4e6565685e718e738775f6d4e06d89716e723b306d",
+    "SOURCE_PROVENANCE.json": "e8113a2e27698be460e0aad9ffc7324018f306a57f0be00f43f6dd72b4b933ae",
+    "agent_responses/020.json": "85a9d97565f44b73998fe6f6b622d475261602ea90a24d6d659e84b5e2f3ac27"
+  },
+  "physics_ID": {
+    "status": "INDEPENDENT_POST_EXIT_EVALUATION_COMPLETE",
+    "comparison_reference": "authored randomized mass/passive law; not independent real-hardware measurement",
+    "mass_error_percent": 0.2272290241,
+    "damping_error_percent": 1.1262393224,
+    "pooled_prediction_rmse_mm": 0.2290502924,
+    "qualified_validation_segments": [
+      7,
+      8,
+      10
+    ],
+    "excluded_incomplete_validation_segments": [
+      9
+    ],
+    "parameter_report": "PARAMETER_ERRORS.json",
+    "prediction_report": "FROZEN_PREDICTION.json",
+    "fit_validation_freeze": "MODEL_EVALUATION_FREEZE.json",
+    "no_online_GT_access": true
+  }
+}

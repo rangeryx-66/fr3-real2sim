@@ -1,0 +1,105 @@
+{
+  "episode_id": "v86_45746_abc_20261025_01",
+  "attempt": 2,
+  "result": "RECOVERABLE_FAILURE",
+  "same_World": true,
+  "object_state_reset": false,
+  "goal_native_m": 0.18,
+  "current_q_m": 0.03622358664870262,
+  "park_verified": true,
+  "segments": [
+    {
+      "declared_role": "FIT_RECOVERY_FORWARD",
+      "target_q": 0.045,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.04519450664520264,
+      "gain_native": 0.04396927380003035,
+      "elapsed_sim_s": 16.51249999999999,
+      "physical_transmission_valid": true,
+      "fit_prefix_transmission_valid": true
+    },
+    {
+      "declared_role": "FIT_RECOVERY_REVERSE",
+      "target_q": 0.015,
+      "status": "TARGET_REACHED",
+      "reason": null,
+      "joint_coordinate": 0.01475418172776699,
+      "gain_native": -0.030440324917435646,
+      "elapsed_sim_s": 7.458333333333314,
+      "physical_transmission_valid": true,
+      "fit_prefix_transmission_valid": true
+    },
+    {
+      "declared_role": "FIT_RECOVERY_LONG",
+      "target_q": 0.1,
+      "status": "TRANSMISSION_FAILURE",
+      "reason": "PRISMATIC_PERSISTENT_SLIDING_STALL",
+      "joint_coordinate": 0.03622356802225113,
+      "gain_native": 0.02146938629448414,
+      "elapsed_sim_s": 7.487500000000011,
+      "physical_transmission_valid": false,
+      "fit_prefix_transmission_valid": true
+    }
+  ],
+  "contact_diagnostics": [
+    {
+      "role": "FIT_RECOVERY_FORWARD",
+      "status": "TARGET_REACHED",
+      "measured_drawer_travel_m": 0.043969294405542314,
+      "duration_s": 16.504166666666663,
+      "last_pad_normal_mean_n": [
+        0.47891268134117126,
+        2.2615597248077393
+      ],
+      "command_TCP_travel_m": 0.046174201718417296,
+      "measured_TCP_travel_m": 0.04503492882589766,
+      "command_to_measured_TCP_error_change_m": 0.0011392728925196383,
+      "measured_TCP_to_drawer_relative_travel_m": 0.0010656344203553436
+    },
+    {
+      "role": "FIT_RECOVERY_REVERSE",
+      "status": "TARGET_REACHED",
+      "measured_drawer_travel_m": -0.0304413428530097,
+      "duration_s": 7.449999999999989,
+      "last_pad_normal_mean_n": [
+        0.0,
+        2.8208093643188477
+      ],
+      "command_TCP_travel_m": -0.03185042832987167,
+      "measured_TCP_travel_m": -0.03046422946392624,
+      "command_to_measured_TCP_error_change_m": -0.0013861988659454316,
+      "measured_TCP_to_drawer_relative_travel_m": -2.288661091653932e-05
+    },
+    {
+      "role": "FIT_RECOVERY_LONG",
+      "status": "TRANSMISSION_FAILURE",
+      "measured_drawer_travel_m": 0.02146938256919384,
+      "duration_s": 7.479166666666686,
+      "last_pad_normal_mean_n": [
+        1.945020079612732,
+        1.108729600906372
+      ],
+      "command_TCP_travel_m": 0.0254647384188037,
+      "measured_TCP_travel_m": 0.024399567188475746,
+      "command_to_measured_TCP_error_change_m": 0.0010651712303279548,
+      "measured_TCP_to_drawer_relative_travel_m": 0.002930184619281906
+    }
+  ],
+  "all_dof_through_checkpoint": {
+    "records": 18768,
+    "valid_samples": 18768,
+    "min_q": [
+      -1.055214760015133e-08,
+      0.0
+    ],
+    "max_q": [
+      0.045309633016586304,
+      0.0
+    ],
+    "passive_index": 1
+  },
+  "response_sha256": "be18b8296fa54b0fcd34bc7e7e0a46086ab4e7b25f75ec0552919e5c91294828",
+  "causal_scope": "Preload and automatically selected location changed together: evidence for recovery strategy, not isolated preload effect",
+  "independent_validation_complete": false
+}

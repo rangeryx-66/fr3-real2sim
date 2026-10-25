@@ -1,0 +1,540 @@
+{
+  "episode_id": "v86_46427_abc_20261025_02",
+  "asset_id": "46427",
+  "source_sha": "2be107024a521539678ab952a0d27aa0edc633f9",
+  "task": "NOT PASS",
+  "maximum_actual_deg": 0.0,
+  "reverse_actual_deg": 0.0,
+  "physics_id": "N/A: no physical acquisition/FIT",
+  "same_world": true,
+  "object_reset_after_initialization": false,
+  "physical_grasps": 0,
+  "commands_by_operation": {
+    "prepare_grasp": 17,
+    "evaluate_station": 4,
+    "relocate_station": 4,
+    "observe": 4,
+    "observe_view": 7,
+    "extend_orchestration_wall": 1,
+    "finish": 1
+  },
+  "command_count": 38,
+  "base_migrations": 4,
+  "final_task_progress": {
+    "requested_final_target_native": 1.5707963267948966,
+    "maximum_measured_native": 0.0,
+    "minimum_measured_native": 0.0,
+    "current_measured_native": 0.0,
+    "unit": "rad",
+    "global_goal_erased_by_shorter_action": false,
+    "first_goal_record": null
+  },
+  "completion": {
+    "returncode": 0,
+    "wall_s": 10379.363604960032,
+    "actor_exited": true,
+    "physical_outcome": {
+      "process_returncode": 0,
+      "terminal_safety_status": "SAFE_PARK_VERIFIED",
+      "physical_safe_park_verified": true,
+      "requires_intervention": false,
+      "process_exit_is_not_task_success": true,
+      "evidence_error": null
+    }
+  },
+  "close_reason": "Latest human instruction permitted switching to prism if 46427 could not proceed; safe stopped after distinct same-World view/candidate/station searches, not a success or proof of globally impossible task.",
+  "dominant_planning_rejection": "Approach-capable candidates rejected by original closing envelope; 2 mm centering offset can collide gripper_link2 with original42 door geometry. Other candidates rejected by IK/route/joint-margin checks.",
+  "safety_thresholds_relaxed": false,
+  "archive_scope": "Per-command planning responses preserved; mutable planner audits from early commands are not immutable originals. Later valid-time snapshots and explicit derived notes preserved.",
+  "evidence_sha256": {
+    "PROCESS_COMPLETION.json": "a77060e491f4e2db3ef67e01d7580fabe9a5fd6d34a98b72c563625c6c9f1a67",
+    "TASK_PROGRESS.json": "2c1cd836d9b85500062cbd72dd7f57185a9d2af7cd1db03f83a47534f1d51b9a",
+    "EPISODE_RESULT.json": "a8d35616ae27447e832ce87b13966de177571436cf332354e7a338baba9a052c",
+    "UNLOADED_ADMISSION.json": "48929f93ee8de7daf7b0a23cce81cdba5c3bfa5078c798912b7a8b1e1e2cfb50",
+    "SOURCE_PROVENANCE.json": "30a49fb7155d974e69e194a6f45a7ac9d5670f73cdc0eb96b314eb73b7176743",
+    "V81_PRELAUNCH.json": "55255f83c19d6f619b324ba3844ca60fd9a6d6a96f52a01a906b6b96bf7f4dde",
+    "agent_responses/037.json": "cd71f64b0d0f7e3a8a1180b58403daef379240bd2cace0510881cb170b515929"
+  },
+  "extension_ledgers": [],
+  "orchestration_extension_summary": {
+    "original_wall_budget_s": 7200,
+    "total_extra_wall_s": 5400,
+    "automatic_parked_renewals": 2,
+    "explicit_extensions": 1,
+    "sim_budget_and_exit_reserve_unchanged": true
+  },
+  "timing": {
+    "total_episode_wall_s": 10379.363604960032,
+    "sum_command_wall_s": 3374.153215680737,
+    "sum_reported_unloaded_wait_s": 6796.069428590126,
+    "command_wall_by_operation_s": {
+      "unknown": 0.0,
+      "prepare_grasp": 2652.9763234644197,
+      "evaluate_station": 78.4587403703481,
+      "relocate_station": 148.41571149462834,
+      "observe": 114.5288110896945,
+      "observe_view": 379.6202604393475,
+      "extend_orchestration_wall": 0.08132752729579806,
+      "finish": 0.07204129500314593
+    },
+    "method": "existing completed response wall_s and unloaded_wait_s; sums are measured command/wait categories, not an assertion that all remaining time is robot motion",
+    "commands": [
+      {
+        "sequence": 0,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 0,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 162.61630315193906,
+        "unloaded_wait_s": 223.02151640783995
+      },
+      {
+        "sequence": 1,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 1,
+        "operation": "evaluate_station",
+        "operation_wall_s": 13.919891108758748,
+        "unloaded_wait_s": 36.218288760166615
+      },
+      {
+        "sequence": 2,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 2,
+        "operation": "relocate_station",
+        "operation_wall_s": 27.11770961387083,
+        "unloaded_wait_s": 29.083671940956265
+      },
+      {
+        "sequence": 3,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 3,
+        "operation": "observe",
+        "operation_wall_s": 19.53417887305841,
+        "unloaded_wait_s": 33.84609984187409
+      },
+      {
+        "sequence": 4,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 4,
+        "operation": "observe_view",
+        "operation_wall_s": 49.703113650903106,
+        "unloaded_wait_s": 210.92134217871353
+      },
+      {
+        "sequence": 5,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 5,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 158.02396123111248,
+        "unloaded_wait_s": 136.0517026237212
+      },
+      {
+        "sequence": 6,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 6,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 102.57475113216788,
+        "unloaded_wait_s": 91.93143596081063
+      },
+      {
+        "sequence": 7,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 7,
+        "operation": "observe_view",
+        "operation_wall_s": 23.356659147888422,
+        "unloaded_wait_s": 42.35836233617738
+      },
+      {
+        "sequence": 8,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 8,
+        "operation": "observe_view",
+        "operation_wall_s": 61.34851997392252,
+        "unloaded_wait_s": 59.12997284904122
+      },
+      {
+        "sequence": 9,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 9,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 194.42275359574705,
+        "unloaded_wait_s": 61.14150034124032
+      },
+      {
+        "sequence": 10,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 10,
+        "operation": "evaluate_station",
+        "operation_wall_s": 24.5577929103747,
+        "unloaded_wait_s": 44.8372807377018
+      },
+      {
+        "sequence": 11,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 11,
+        "operation": "relocate_station",
+        "operation_wall_s": 46.178458044771105,
+        "unloaded_wait_s": 16.765386749990284
+      },
+      {
+        "sequence": 12,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 12,
+        "operation": "observe",
+        "operation_wall_s": 54.88833650806919,
+        "unloaded_wait_s": 216.60632865084335
+      },
+      {
+        "sequence": 13,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 13,
+        "operation": "observe_view",
+        "operation_wall_s": 79.55440237792209,
+        "unloaded_wait_s": 66.9591536722146
+      },
+      {
+        "sequence": 14,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 14,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 199.27584706014022,
+        "unloaded_wait_s": 60.094826025888324
+      },
+      {
+        "sequence": 15,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 15,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 153.62865935824811,
+        "unloaded_wait_s": 177.46585587598383
+      },
+      {
+        "sequence": 16,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 16,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 152.95183853711933,
+        "unloaded_wait_s": 82.78957818867639
+      },
+      {
+        "sequence": 17,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 17,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 154.67883184412494,
+        "unloaded_wait_s": 100.132592828013
+      },
+      {
+        "sequence": 18,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 18,
+        "operation": "observe_view",
+        "operation_wall_s": 60.53142422484234,
+        "unloaded_wait_s": 426.29913955787197
+      },
+      {
+        "sequence": 19,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 19,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 198.48973054578528,
+        "unloaded_wait_s": 52.09721986204386
+      },
+      {
+        "sequence": 20,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 20,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 144.6422440810129,
+        "unloaded_wait_s": 89.14206345425919
+      },
+      {
+        "sequence": 21,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 21,
+        "operation": "evaluate_station",
+        "operation_wall_s": 23.060905118938535,
+        "unloaded_wait_s": 97.32056070305407
+      },
+      {
+        "sequence": 22,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 22,
+        "operation": "relocate_station",
+        "operation_wall_s": 42.218312471639365,
+        "unloaded_wait_s": 37.05424540722743
+      },
+      {
+        "sequence": 23,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 23,
+        "operation": "observe",
+        "operation_wall_s": 19.919372783973813,
+        "unloaded_wait_s": 70.89428839506581
+      },
+      {
+        "sequence": 24,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 24,
+        "operation": "observe_view",
+        "operation_wall_s": 50.43574503296986,
+        "unloaded_wait_s": 321.3537241970189
+      },
+      {
+        "sequence": 25,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 25,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 147.65616803104058,
+        "unloaded_wait_s": 46.082779658958316
+      },
+      {
+        "sequence": 26,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 26,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 155.7521156850271,
+        "unloaded_wait_s": 124.12366729229689
+      },
+      {
+        "sequence": 27,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 27,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 155.8633218756877,
+        "unloaded_wait_s": 96.65903689712286
+      },
+      {
+        "sequence": 28,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 28,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 155.55327752884477,
+        "unloaded_wait_s": 147.0155193270184
+      },
+      {
+        "sequence": 29,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 29,
+        "operation": "extend_orchestration_wall",
+        "operation_wall_s": 0.08132752729579806,
+        "unloaded_wait_s": 830.9893306507729
+      },
+      {
+        "sequence": 30,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 30,
+        "operation": "evaluate_station",
+        "operation_wall_s": 16.920151232276112,
+        "unloaded_wait_s": 1408.4250573636964
+      },
+      {
+        "sequence": 31,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 31,
+        "operation": "relocate_station",
+        "operation_wall_s": 32.90123136434704,
+        "unloaded_wait_s": 493.81894402671605
+      },
+      {
+        "sequence": 32,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 32,
+        "operation": "observe",
+        "operation_wall_s": 20.18692292459309,
+        "unloaded_wait_s": 32.25761605333537
+      },
+      {
+        "sequence": 33,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 33,
+        "operation": "observe_view",
+        "operation_wall_s": 54.69039603089914,
+        "unloaded_wait_s": 87.52055208710954
+      },
+      {
+        "sequence": 34,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 34,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 148.4827999342233,
+        "unloaded_wait_s": 58.696946520823985
+      },
+      {
+        "sequence": 35,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 35,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 134.6267020162195,
+        "unloaded_wait_s": 544.9481372418813
+      },
+      {
+        "sequence": 36,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 36,
+        "operation": "prepare_grasp",
+        "operation_wall_s": 133.7370178559795,
+        "unloaded_wait_s": 91.80280501907691
+      },
+      {
+        "sequence": 37,
+        "operation": "unknown",
+        "operation_wall_s": 0.0,
+        "unloaded_wait_s": 0.0
+      },
+      {
+        "sequence": 37,
+        "operation": "finish",
+        "operation_wall_s": 0.07204129500314593,
+        "unloaded_wait_s": 50.21289890492335
+      }
+    ]
+  }
+}

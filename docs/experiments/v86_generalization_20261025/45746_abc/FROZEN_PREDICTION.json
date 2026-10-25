@@ -1,0 +1,200 @@
+{
+  "schema": "v84-exact-frozen-heldout-v1",
+  "fitting_called": false,
+  "hidden_truth_used": false,
+  "validation_used_for_selection": false,
+  "source_sha256": "d933de0b4022f602c116d9551f7f36c0b57250e1af5b316dff6dcc3689ae848f",
+  "segments": [
+    {
+      "id": 7,
+      "role": "VALIDATION_RECOVERY_REVERSE",
+      "blocks": [
+        {
+          "block": 0,
+          "records": 4695,
+          "measured_duration_s": 19.558333333333337,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.004166666666662877,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333330984,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "coordinate_unit": "m",
+            "minimum_absolute_native_velocity": 0.0001,
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          },
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 7.070917247550331e-05,
+            "coordinate_rmse": 0.0002635181489101594,
+            "velocity_rmse": 2.762481121289424e-05,
+            "final_coordinate_error": 0.0004744812145422786,
+            "outside_FIT_support": true,
+            "samples": 4453,
+            "duration_s": 18.55000000000001,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction",
+            "display_coordinate_rmse": 0.2635181489101594,
+            "display_final_coordinate_error": 0.4744812145422786,
+            "display_unit": "mm"
+          }
+        }
+      ],
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION"
+      },
+      "status": "SEALED_COMPLETE_VALIDATION",
+      "model_sha256": "cb1a3fdc9a3ed41efce6f4e74fcef6fe45dc4bae351a2ca45689d1dec2fdf609",
+      "seal_sha256": "7b0432cb65d099e5087cf0a95648005267bea70085c5f1627785c9a78b9c7260",
+      "compensation_settings_sha256": "affc6a8c6fd9b68b0b405a7a1079e86982c5afea1871dd8ef94a9510ae615891",
+      "immutable_packet": "006",
+      "physical_duration_s": 20.566666666666663,
+      "requested_target_reached": true,
+      "coordinate_unit": "m"
+    },
+    {
+      "id": 8,
+      "role": "VALIDATION_REVERSE",
+      "blocks": [
+        {
+          "block": 0,
+          "records": 603,
+          "measured_duration_s": 2.5083333333333258,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.004166666666662877,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333330984,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "coordinate_unit": "m",
+            "minimum_absolute_native_velocity": 0.0001,
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          },
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 0.00024467172028111835,
+            "coordinate_rmse": 3.260608156392679e-05,
+            "velocity_rmse": 4.999139554035849e-05,
+            "final_coordinate_error": -4.647769318401329e-05,
+            "outside_FIT_support": false,
+            "samples": 361,
+            "duration_s": 1.5,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction",
+            "display_coordinate_rmse": 0.03260608156392679,
+            "display_final_coordinate_error": -0.04647769318401329,
+            "display_unit": "mm"
+          }
+        }
+      ],
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION"
+      },
+      "status": "SEALED_COMPLETE_VALIDATION",
+      "model_sha256": "cb1a3fdc9a3ed41efce6f4e74fcef6fe45dc4bae351a2ca45689d1dec2fdf609",
+      "seal_sha256": "4092acbf2980feec91b64fcdc4f0ea40ec2a58fe67db211c9228bfadce46486f",
+      "compensation_settings_sha256": "affc6a8c6fd9b68b0b405a7a1079e86982c5afea1871dd8ef94a9510ae615891",
+      "immutable_packet": "006",
+      "physical_duration_s": 3.0166666666666515,
+      "requested_target_reached": true,
+      "coordinate_unit": "m"
+    },
+    {
+      "id": 9,
+      "role": "VALIDATION_REOPEN_EXTENDED",
+      "blocks": [],
+      "quality": {
+        "action_ok": false,
+        "action_status": "TRANSMISSION_FAILURE",
+        "label": "INCOMPLETE_VALIDATION_EXCLUDED"
+      },
+      "status": "INCOMPLETE_VALIDATION_EXCLUDED"
+    },
+    {
+      "id": 10,
+      "role": "VALIDATION_REOPEN_RECOVERY",
+      "blocks": [
+        {
+          "block": 0,
+          "records": 5441,
+          "measured_duration_s": 22.666666666666742,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.0041666666667197205,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333366227,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "coordinate_unit": "m",
+            "minimum_absolute_native_velocity": 0.0001,
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          },
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 8.04204706090569e-05,
+            "coordinate_rmse": 0.0002036945712807273,
+            "velocity_rmse": 0.000155310760670409,
+            "final_coordinate_error": -0.00021731982809569672,
+            "outside_FIT_support": true,
+            "samples": 5199,
+            "duration_s": 21.658333333333303,
+            "units": {
+              "coordinate": "m",
+              "effort": "N",
+              "inertial": "kg",
+              "damping": "N s/m"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction",
+            "display_coordinate_rmse": 0.2036945712807273,
+            "display_final_coordinate_error": -0.21731982809569672,
+            "display_unit": "mm"
+          }
+        }
+      ],
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION"
+      },
+      "status": "SEALED_COMPLETE_VALIDATION",
+      "model_sha256": "9a369589eb6ab3d335a0e76708b5fae969a27ea1b6068a4d01861e49d2725572",
+      "seal_sha256": "19b499183d93bdc7eace710dde3e3ef2876c97dfd2cce7cc29dc182b454b8b84",
+      "compensation_settings_sha256": "75c0a1e6b71b21c591a14b49e22856d914b527ef2d37f770075013b920415b5d",
+      "immutable_packet": "009",
+      "physical_duration_s": 23.174999999999955,
+      "requested_target_reached": true,
+      "coordinate_unit": "m"
+    }
+  ]
+}
