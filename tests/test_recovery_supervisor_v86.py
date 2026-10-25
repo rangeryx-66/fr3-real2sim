@@ -97,6 +97,15 @@ class RecoveryTests(unittest.TestCase):
         self.assertTrue(result['task_recovery']['episode_termination_required'])
         self.assertFalse(result['recovery']['safe_park_verified'])
 
+    def test_exit_metadata_error_keeps_world_only_after_fresh_guarded_hold(self):
+        self.ops.release_park=Mock(side_effect=TypeError('event field ownership'))
+        world=self.ops.r.world
+        result=self.finish('initialize_observation',dict(observation=False,reason='route rejected'))
+        self.assertEqual(result['task_recovery']['status'],'RECOVERY_EXIT_PENDING')
+        self.assertFalse(result['task_recovery']['episode_termination_required'])
+        self.assertIs(self.ops.r.world,world);self.ops.r.hold.assert_called_once_with(.3)
+        self.assertFalse(result['recovery']['park_verified']);self.assertTrue(result['recovery']['hold_verified'])
+
     def test_checked_exit_success_clears_only_pending_exit_not_historical_latches(self):
         self.ops._v86_exit_pending=True
         result=supervisor.complete(self.ops,dict(operation='safe_release_retreat'),

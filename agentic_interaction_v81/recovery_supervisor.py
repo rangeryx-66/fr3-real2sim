@@ -47,6 +47,13 @@ def released(ops):
         and r.supervisor.force.settled())
 
 
+def released_hold(ops):
+    if not released(ops):return False
+    ops.r.hold(.3)  # original measured controller/force/collision supervision
+    q=np.asarray(ops.r.robot.get_joint_positions())[ops.r.arm]
+    return bool(released(ops) and ops.r.station_motion.ready(ops.r.rows[-1]['t'],q))
+
+
 def exception_result(ops,command,error):
     op=command['operation'];message=str(error)
     if isinstance(error,SafetyStop):
@@ -152,13 +159,23 @@ def complete(ops,command,result):
             if not parked:raise RuntimeError('RECOVERY_PARK_EVIDENCE_INCOMPLETE')
             ops._v86_exit_pending=False
         elif released(ops):
-            r.hold(.3)  # same per-step guards; verify actual stationary hold
-            q=np.asarray(r.robot.get_joint_positions())[r.arm]
-            if not r.station_motion.ready(r.rows[-1]['t'],q):
+            if not released_hold(ops):
                 raise RuntimeError('RECOVERY_STATIONARY_HOLD_NOT_CONFIRMED')
             parked=False;ops._v86_exit_pending=True
         else:raise RuntimeError('RECOVERY_UNLOAD_NOT_CONFIRMED')
     except SafetyStop as error:return exception_result(ops,command,error)
+    except (TypeError,ValueError,KeyError,OSError) as error:
+        # A software failure in exit planning/publication is not proof that
+        # the controller failed. Only a fresh original guarded stationary hold
+        # can retain the World; no new contact/base actuation is permitted.
+        try:
+            if not released_hold(ops):raise RuntimeError('RECOVERY_HOLD_UNCONFIRMED')
+        except SafetyStop as hard:return exception_result(ops,command,hard)
+        except Exception as failure:
+            return dict(result,status='CONTROL_STATE_UNTRUSTED',outcome=UNRECOVERABLE,
+                recovery=dict(reason=repr(failure),safe_park_verified=False,automatic_motion_allowed=False))
+        safe=dict(safe=False,reason='EXIT_SOFTWARE_FAILURE_AT_VERIFIED_RELEASED_HOLD',error=repr(error))
+        parked=False;ops._v86_exit_pending=True
     except Exception as error:
         return dict(result,status='CONTROL_STATE_UNTRUSTED',outcome=UNRECOVERABLE,
             recovery=dict(reason=repr(error),safe_park_verified=False,automatic_motion_allowed=False))

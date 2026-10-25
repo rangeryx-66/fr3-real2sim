@@ -62,5 +62,25 @@ class PathAdmissionTests(unittest.TestCase):
         r.step.assert_not_called();r.collision.check.assert_not_called()
         np.testing.assert_array_equal(r.qtarget,np.zeros(7,dtype=np.float32))
 
+    @unittest.skipUnless(importlib.util.find_spec('scipy'),'server numerical dependencies required')
+    def test_scene_audit_uses_original_event_reserved_fields_without_aborting_motion(self):
+        events=[]
+        # Same keyword ownership as Runtime.event, rather than a permissive Mock.
+        def event(name,**data):events.append(dict(event=name,t=0.,phase='PREGRASP',**data))
+        policy=SimpleNamespace(data={'joint_margin_rad':.05,'arm_command_acceleration_rad_s2':{'FREE':1.6}},
+            phase=lambda p:'FREE',motion=lambda p:{})
+        r=SimpleNamespace(job={'v86_recovery_supervisor':True},ensure_execution_budget=Mock(),
+            robot=SimpleNamespace(get_joint_positions=lambda:np.zeros(13)),
+            fingers=np.arange(7,13),arm=np.arange(7),moving=lambda:np.eye(4),actual=lambda:0.,
+            grasp_reference=None,base_generation=0,policy=policy,event=event,
+            model=SimpleNamespace(margin=lambda q:1.,poses=lambda *a,**k:np.eye(4)),
+            collision=SimpleNamespace(check=lambda *a:(True,'SAFE')),
+            qtarget=np.zeros(7,dtype=np.float32),solver=None,base=np.zeros(4),dt=1/240,
+            c={'arm_speed_limits':[1]*7},step=Mock())
+        with patch('interaction_runtime.motion.timed_path',return_value=iter([(np.zeros(7),np.zeros(7))])):
+            self.assertEqual(preflight(r,[np.zeros(7)],'PREGRASP',0.),1)
+        self.assertEqual(events[0]['motion_phase'],'PREGRASP')
+        self.assertEqual(events[0]['phase'],'PREGRASP');r.step.assert_not_called()
+
 
 if __name__=='__main__':unittest.main()

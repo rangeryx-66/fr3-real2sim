@@ -36,5 +36,5 @@ def preflight(r,path,phase,minimum_duration):
         from .scene_stamp import capture,same
         latest=capture(r)
         if not same(stamp,latest):raise RuntimeError('MOTION_PATH_UNAVAILABLE:SCENE_CHANGED_DURING_PLANNING')
-        r.event('V86_FULL_ROUTE_CURRENT_SCENE_CHECK',scene=stamp,phase=phase,actual_timed_samples=count)
+        r.event('V86_FULL_ROUTE_CURRENT_SCENE_CHECK',scene=stamp,motion_phase=phase,actual_timed_samples=count)
     return count
