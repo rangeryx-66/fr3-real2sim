@@ -1,0 +1,62 @@
+{
+  "schema": "v86-conditional-isolation-verification-v1",
+  "UTC": "2026-10-25T09:40:45.241591+00:00",
+  "old_episode": "/data1/home/rangeryx/agentic_v84_private/abc_20261025/prismatic_02/episodes/v84_prismatic_large_20261025_02",
+  "process_source_sha": "78b83523143c84b6a7f90856c1e38c7716b220f3",
+  "old_processes": {
+    "2430811": {
+      "exists": false
+    },
+    "2449838": {
+      "exists": false
+    }
+  },
+  "process_completion": {
+    "returncode": 0,
+    "wall_s": 1230.5257427520119,
+    "actor_exited": true
+  },
+  "owned_GPU_processes": [],
+  "shared_lock_available": true,
+  "old_audit_sha256": "f6db4ba90a84cbd6b6aa1fda49c57c6c3b3820954b351a3495432825fdc185ce",
+  "old_hardstop_status": "HARD_STOP_UNPARKED",
+  "old_park_verified": false,
+  "old_stop_completed_verified": false,
+  "original_evidence_integrity": {
+    "response": {
+      "expected_sha256": "dfe435f82b684e2c703ebc8eb2021d0595a2ff49fd1642c828c3b3545a6da486",
+      "matching_files": [
+        "/data1/home/rangeryx/agentic_v84_private/abc_20261025/prismatic_02/episodes/v84_prismatic_large_20261025_02/agent_responses/007.json"
+      ],
+      "unchanged": true
+    },
+    "final_chunk": {
+      "expected_sha256": "e6d1c058a74efdc71ab6029c64634a3deb6a2ce58118469c7d81cc7869f2a110",
+      "matching_files": [
+        "/data1/home/rangeryx/agentic_v84_private/abc_20261025/prismatic_02/episodes/v84_prismatic_large_20261025_02/telemetry/00041157.npz"
+      ],
+      "unchanged": true
+    }
+  },
+  "hold_path": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/fast_runtime_v1_20261018/owned_actor.lock.safety_hold.json",
+  "hold_sha256": "f9cec4d6bac8a3cba1681617b8d6ab64a5d7eb2087b05fb7a4c51dd879d58ab0",
+  "hold_unchanged": true,
+  "source_hashes": {
+    "agentic_interaction_v81/launch.py": "68b5e323bc6dc50e7c7859a8c712ad14c7c20572ae4b845ef1c90feab466e0a4",
+    "agentic_interaction_v81/terminal_safety.py": "6fcf78d4fa63b0c311987128a8939b070eca54bb92816d0ff6bb78fc72b8e7e5"
+  },
+  "new_output": "/data1/home/rangeryx/agentic_v86_private/generalization_20261025/episodes",
+  "new_output_exists": false,
+  "new_controller_initialized": false,
+  "guard_scope": "SHARED_LAUNCH_GLOBAL_FOR_ALL_PROFILES_USING_SAME_ACTOR_LOCK",
+  "scope_evidence": "registry_path depends only on environment.actor_lock; require_clearance rejects any existing file without episode/instance matching; launcher checks before prepare and again inside shared lock.",
+  "independent_instance_locks_currently_configured": false,
+  "condition_1_old_instance_terminated": true,
+  "condition_2_failure_preserved": true,
+  "condition_3_instance_only_archive": false,
+  "condition_4_fully_isolated_launch_ready": false,
+  "authorized_new_physics": false,
+  "archive_performed": false,
+  "global_lock_modified": false,
+  "conclusion": "User conditional authorization does not permit retiring this globally checked file. Preserve it and provide a launcher-native isolation design; no fresh actor."
+}

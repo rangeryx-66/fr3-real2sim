@@ -15,6 +15,8 @@ Source asset/manifest and kinematic station inputs come from the existing declar
 
 ## Environment safety
 
+Amendment after conditional user authorization: current legacy safety_hold has GLOBAL launcher effect, not instance-only scope. Do not retire/move it. Keep it effective and follow MINIMAL_ISOLATION_PLAN.md; the earlier retirement proposal below is historical and not authorized for this global file. No new physics until the global gate and independent-instance safety requirements are both satisfied.
+
 The old v84_prismatic_large_20261025_02 remains HARD_STOP_UNPARKED: braking completion/parking cannot be retrospectively proved. No old latch is reset and no old scene is resumed.
 
 Before a new simulator instance, operator-only review must verify the old simulator/owned processes are gone, the common actor lock is free, no Isaac compute process survives, and the declared entry is the unchanged simulation-only native runtime. Preserve the exact previous startup-hold bytes and their hash alongside a dated retirement record for the destroyed process-scoped simulator, without relabeling its physical outcome. This is environmental isolation, not hardware safety clearance or a successful park. Any new unresolved exit creates the original fail-closed hold again. Fresh-world unloaded observation/force/state checks must pass before contact. Do not bypass original force, velocity, collision, joint, grasp or controller protection.
@@ -42,4 +44,3 @@ Each failed hypothesis is logged before any minimal shared repair. Freeze source
 For every case report actual max joint progress, signed reverse, acquisitions/recoveries, A/B/C wall/simulation/wait costs, full operation outcome, complete physical validation, frozen-model prediction outcome, parameter errors, effective support, safety terminal evidence and cleanup.
 
 Aggregate separately: existing-success control, new-to-ABC transfer objects, all physical attempts and all incomplete/not-started slots. No population reliability claim from a handful of nonidentical development episodes. Report actuator/known-geometry/ideal-virtual-sensor assumptions and source/config/data hashes.
-
