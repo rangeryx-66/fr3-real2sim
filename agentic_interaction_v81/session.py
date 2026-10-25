@@ -57,7 +57,8 @@ def serve(r):
             atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=not held,abc_contact=held,timeout_s=wait,
                 deadline_unix_s=deadline,requires_ACK_before_execution=True,
                 live_status_file='AGENT_SESSION_STATUS.json'))
-            began=time.perf_counter();wait_started_sim=r.tick*r.dt;wait_recoveries=[];path=commands/('%03d.json'%seq)
+            began=time.perf_counter();wait_started_sim=r.tick*r.dt if r.job.get('v84_abc') else None
+            wait_recoveries=[];path=commands/('%03d.json'%seq)
             heartbeat=began
             while not path.exists():
                 if (not r.stopped and not (r.output/'STOP_AND_EXPORT').exists()
