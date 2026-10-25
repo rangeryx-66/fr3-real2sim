@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 from update_probing_v7_model import load_segments
 from update_prismatic_v73_model import qualify
-from xarm_ft_v7_estimator import samples,fit,prediction
+from xarm_ft_v7_estimator import samples,fit,prediction,analyze,basis
 from interaction_runtime.serialization import result_packet
 
 
@@ -30,12 +30,14 @@ def summarize_strata(q,v,acc,error,kind):
 
 
 def half_step_sensitivity(piece,model):
-    mass,damping,resistance=model['parameters']
+    mass,damping=model['parameters'][:2]
     if mass<=1e-8:return dict(status='unsupported inertial term')
     q=float(piece['q'][0]);v=float(piece['native_qd'][0]);prediction=[q]
     for j in range(1,len(piece['t'])):
         dt=(piece['t'][j]-piece['t'][j-1])/2;effort=piece['torque'][j-1]
         for _ in range(2):
+            if not model['domain_native'][0]<=q<=model['domain_native'][1]:return dict(status='prediction left declared domain; no state correction')
+            resistance=(float(basis([q],model['domain_native'],model['intervals'])[0,model['active_controls']]@model['parameters'][2:]) if model['intervals'] else model['parameters'][2])
             momentum=mass*v+dt*effort
             v=float(np.sign(momentum)*max(abs(momentum)-dt*resistance,0)/(mass+dt*damping));q+=dt*v
         prediction.append(q)
@@ -44,7 +46,14 @@ def half_step_sensitivity(piece,model):
         final_coordinate_error=float(error[-1]),scope='Numerical half-steps with zero-order-held same measured effort; no extra excitation or state correction.')
 
 
-def compare(episode,cache,output):
+def slice_piece(source,indices):
+    length=len(source['t'])
+    piece={k:(v[indices]if isinstance(v,np.ndarray)and v.shape[0]==length else v)for k,v in source.items()}
+    if 'features' in source:piece['features']={n:v[indices]for n,v in source['features'].items()}
+    return piece
+
+
+def compare(episode,cache,output,fit_family="constant"):
     assert (episode/'PROCESS_COMPLETION.json').exists()
     pieces,settings,quality=load_segments(episode,True)
     kind=settings['prior']['joint_type'];config=settings['estimation']
@@ -69,14 +78,19 @@ def compare(episode,cache,output):
         # Filter has already run; masks and timestamps are identical for A/B.
         p=dict(d,valid=valid.copy());pb=dict(p,torque=b.copy())
         for label,piece in [('A',p),('B',pb)]:
-            ss=samples(piece,config['domain_native'],[])
+            ss=samples(piece,config['domain_native'],config['intervals'] if fit_family=='original_fit_cv' else [])
             if str(d['segments'][0]).startswith('FIT'):train[label].extend(ss)
         paired.append((p,pb,common))
         series.append(dict(block=d['block_id'],t=d['t'],q=d['q'],A=d['torque'],B=b))
     assert len(train['A'])==len(train['B'])
-    models={label:fit(records,config,intervals=0,smoothness=0)for label,records in train.items()}
+    if fit_family=='original_fit_cv':
+        choices={label:analyze(records,config)for label,records in train.items()}
+        models={label:value['selected']for label,value in choices.items()}
+    elif fit_family=='constant':
+        models={label:fit(records,config,intervals=0,smoothness=0)for label,records in train.items()}
+    else:raise ValueError('UNKNOWN_PREDECLARED_FAMILY')
     frozen=dict(schema='v85-native-state-development-only',episode_id=episode.name,joint_type=kind,
-        F_T_input_used_by_A=True,F_T_input_used_by_B_effort_estimator=False,
+        F_T_input_used_by_A=True,F_T_input_used_by_B_effort_estimator=False,fit_family=fit_family,
         B_fit_scope='Retrospective common-cohort fit, using privileged native object state; not the isolated sensorless estimator or visual validation.',
         B_robot_compensation_sha256=sha(cache.parent/'ROBOT_COMPENSATION_FROZEN.json'),
         B_effort_cache_sha256=sha(cache/'effort_only.npz'),
@@ -96,14 +110,14 @@ def compare(episode,cache,output):
             if len(run)<2:continue
             row=dict(block=pa['block_id'],samples=len(run),duration_s=float(pa['t'][run[-1]]-pa['t'][run[0]]),models={})
             for label,source in [('A',pa),('B',pb)]:
-                piece={k:(v[run]if isinstance(v,np.ndarray)and v.shape[0]==len(common) else v)for k,v in source.items()}
+                piece=slice_piece(source,run)
                 piece['processing']=dict(piece['processing'],boundary_exclusion_samples=0)
                 # Centered derivative support was excluded by common already.
                 full=prediction(piece,models[label]);short={}
                 for horizon in [.5,2.,5.]:
                     end=np.searchsorted(piece['t'],piece['t'][0]+horizon,side='right')
                     if end<2 or piece['t'][-1]-piece['t'][0]+1e-8<horizon:short[str(horizon)]=dict(status='insufficient common horizon');continue
-                    cut={k:(v[:end]if isinstance(v,np.ndarray)and v.shape[0]==len(run)else v)for k,v in piece.items()}
+                    cut=slice_piece(piece,slice(None,end))
                     short[str(horizon)]=prediction(cut,models[label])
                 row['models'][label]=dict(full_rollout=full,short_horizons_s=short,numerical_half_step=half_step_sensitivity(piece,models[label]))
             scores.append(row)
@@ -132,5 +146,5 @@ def compare(episode,cache,output):
 
 
 if __name__=='__main__':
-    p=argparse.ArgumentParser();p.add_argument('episode',type=Path);p.add_argument('cache',type=Path);p.add_argument('output',type=Path);a=p.parse_args()
-    print(json.dumps(result_packet(compare(a.episode,a.cache,a.output)),indent=2))
+    p=argparse.ArgumentParser();p.add_argument('episode',type=Path);p.add_argument('cache',type=Path);p.add_argument('output',type=Path);p.add_argument('--fit-family',choices=['constant','original_fit_cv'],default='constant');a=p.parse_args()
+    print(json.dumps(result_packet(compare(a.episode,a.cache,a.output,a.fit_family)),indent=2))
