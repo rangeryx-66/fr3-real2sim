@@ -24,7 +24,8 @@ def update(folder,output=None,allow_interrupted_fit=False):
         captured.extend(pieces)
         return pieces,config,provenance
     began=time.perf_counter()
-    with patch.object(frozen,'load_segments',capture):
+    from agentic_interaction_v84.quality import selection_scope
+    with patch.object(frozen,'load_segments',capture), selection_scope():
         if settings['prior']['joint_type']=='prismatic':
             from update_prismatic_v73_model import update as qualified_update
             result=qualified_update(folder,out,allow_interrupted_fit)

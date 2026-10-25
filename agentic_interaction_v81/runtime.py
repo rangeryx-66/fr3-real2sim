@@ -30,6 +30,9 @@ def runtime_class(original):
                 super().__init__(job)
             from .load_telemetry import instrument as instrument_load
             instrument_load(self)
+            if job.get('v84_abc') and job['articulation_v7']['joint_type']=='revolute':
+                from .preload_extension import instrument as instrument_preload
+                instrument_preload(self)
             from .video_evidence import configure
             configure(self)
             from .orchestration_extension import install

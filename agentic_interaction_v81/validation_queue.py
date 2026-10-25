@@ -162,7 +162,7 @@ def boundary(ops):
     # computation, never indefinitely for insufficient data or a failed worker.
     remaining=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
     deadline=time.monotonic()+min(60.,max(0.,remaining['wall_s']))
-    while status['state']=='MODEL_COMPUTING' and time.monotonic()<deadline:
+    while (not ops.r.job.get('v84_abc') and status['state']=='MODEL_COMPUTING' and time.monotonic()<deadline):
         if not any(not f.done() for f in ops.updates):break
         time.sleep(.05);status=model_state(ops)
     if status['state']=='READY':

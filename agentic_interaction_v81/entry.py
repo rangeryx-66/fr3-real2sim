@@ -29,6 +29,8 @@ def main():
     xarm7_native_gripper.OUT=Path(job['v8_robot_io'])
     from .runtime import runtime_class
     from .session import serve
+    if job.get('v84_abc'):
+        from agentic_interaction_v84.session import serve
     if 'v81_contact_comparison' in job:
         if job['v81_phase']!='engineering':raise ValueError('ENGINEERING_COMPARISON_CANNOT_RUN_AS_REPETITION')
         from .contact_fixture import serve
@@ -50,7 +52,7 @@ def main():
     from functools import partial
     owner=PrismaticRuntimeV751 if job['articulation_v7']['joint_type']=='prismatic' else RuntimeV7
     return run(runtime_class(owner),partial(finish_before_shutdown,serve=serve,finalize=sources),
-        extra_sources=tuple(str(f.relative_to(ROOT)) for f in sorted((ROOT/'agentic_interaction_v81').glob('*.py')))+(
+        extra_sources=tuple(str(f.relative_to(ROOT)) for folder in ('agentic_interaction_v81','agentic_interaction_v84') for f in sorted((ROOT/folder).glob('*.py')))+(
         'scripts/xarm_ft_v7_scene.py','scripts/xarm_ft_v7_estimator.py','scripts/update_probing_v7_model.py',
         'scripts/update_prismatic_v73_model.py','scripts/xarm_ft_v31_estimator.py'))
 

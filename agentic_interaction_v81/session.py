@@ -25,7 +25,11 @@ def serve(r):
         sequences=(itertools.count() if r.job.get('v81_active_recovery')
                    else range(int(r.job.get('maximum_agent_operations',100))))
         for seq in sequences:
-            if g['recovery_state']!='UNLOADED_OBSERVATION' or r.supervisor.latched is not None:
+            if r.job.get('v84_abc') and g['recovery_state']=='LOADED_CRITIQUE':
+                from agentic_interaction_v84.session import loaded_command
+                loaded_command(ops,seq)
+            held=bool(r.job.get('v84_abc') and g['recovery_state']=='LOADED_CRITIQUE')
+            if (g['recovery_state']!='UNLOADED_OBSERVATION' and not held) or r.supervisor.latched is not None:
                 return dict(status='HARD_STOP_OR_NO_SAFE_DECISION_BOUNDARY',trace=trace,stop=r.supervisor.latched)
             wait,resources=window(r)
             if wait<=0:return dict(status='BUDGET_EXHAUSTED',safe_exit=ops.release_park(),trace=trace)
@@ -49,8 +53,8 @@ def serve(r):
                     completion=task_recovery.completed(ops))
             atomic_json(r.output/'DECISION_PACKET.json',packet)
             deadline=time.time()+wait
-            status(r,seq,'WAITING',unloaded=True,deadline_unix_s=deadline)
-            atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=True,timeout_s=wait,
+            status(r,seq,'WAITING',unloaded=not held,abc_contact=held,deadline_unix_s=deadline)
+            atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=seq,unloaded=not held,abc_contact=held,timeout_s=wait,
                 deadline_unix_s=deadline,requires_ACK_before_execution=True,
                 live_status_file='AGENT_SESSION_STATUS.json'))
             began=time.perf_counter();path=commands/('%03d.json'%seq)
@@ -80,6 +84,13 @@ def serve(r):
                     status(r,seq,'WAITING',unloaded=True,deadline_unix_s=deadline)
                     heartbeat=time.perf_counter()
                 time.sleep(.05)
+            if r.job.get('v84_abc') and not held:
+                rows=getattr(r,'abc_waits',[])
+                duration=time.perf_counter()-began
+                rows.append(dict(start_unix_s=time.time()-duration,end_unix_s=time.time(),
+                    wall_s=duration,reason='UNLOADED_AGENT_COMMAND',dependency='Agent inspected current packet',
+                    sequence=seq,start_sim_s=r.tick*r.dt,end_sim_s=r.tick*r.dt))
+                r.abc_waits=rows;atomic_json(r.output/'ABC_WAITS.json',dict(waits=rows))
             status(r,seq,'ACCEPTING',unloaded=True)
             command,ack=receive(path,seq,responses)
             if command is None:trace.append(ack);continue

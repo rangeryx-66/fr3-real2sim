@@ -71,7 +71,7 @@ def launch(specfile,profile):
     limits=job['articulation_v7']['limits_native'];old_domain=job['estimation_v7']['domain_native']
     job['estimation_v7']['domain_native']=[min(old_domain[0],limits[0]),max(old_domain[1],limits[1])]
     dump(out/'job.json',job)
-    sources={str(f.relative_to(ROOT)):digest(f) for f in sorted((ROOT/'agentic_interaction_v81').glob('*.py'))}
+    sources={str(f.relative_to(ROOT)):digest(f) for folder in ('agentic_interaction_v81','agentic_interaction_v84') for f in sorted((ROOT/folder).glob('*.py'))}
     sources['agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json']=digest(ROOT/'agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json')
     dump(out/'V81_PRELAUNCH.json',dict(spec=spec,spec_sha256=digest(specfile),job_sha256=digest(out/'job.json'),
         source_commit=commit,source_sha256=sources,baseline_audit=baseline_audit(),
