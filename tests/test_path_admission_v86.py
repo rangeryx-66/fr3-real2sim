@@ -40,5 +40,27 @@ class PathAdmissionTests(unittest.TestCase):
         self.assertEqual(result,('original-owner',[1,2],'APPROACH'))
         check.assert_called_once_with(r,[1,2],'APPROACH',0.)
 
+    @unittest.skipUnless(importlib.util.find_spec('scipy'),'server numerical dependencies required')
+    def test_native_float32_assignment_cannot_cross_original_margin_after_approval(self):
+        # Recorded xArm joint2 lower=-2.059, last good command approaches -2.009.
+        # Solver precision passes .05; assigning the endpoint into native float32
+        # produces .04999994 and used to trip COMMAND_JOINT_MARGIN at execution.
+        endpoint=np.zeros(7);endpoint[1]=np.nextafter(-2.009,np.inf)
+        margin=lambda q:float(q[1])+2.059
+        self.assertGreater(margin(endpoint),.05)
+        self.assertLess(margin(endpoint.astype(np.float32)),.05)
+        policy=SimpleNamespace(data={'joint_margin_rad':.05,'arm_command_acceleration_rad_s2':{'FREE':1.6}},
+            phase=lambda p:'FREE',motion=lambda p:{})
+        r=SimpleNamespace(ensure_execution_budget=Mock(),robot=SimpleNamespace(get_joint_positions=lambda:np.zeros(13)),
+            fingers=np.arange(7,13),arm=np.arange(7),moving=lambda:np.eye(4),policy=policy,
+            model=SimpleNamespace(margin=margin),collision=SimpleNamespace(check=Mock()),
+            qtarget=np.zeros(7,dtype=np.float32),solver=None,base=np.zeros(4),dt=1/240,
+            c={'arm_speed_limits':[1]*7},step=Mock())
+        with patch('interaction_runtime.motion.timed_path',return_value=iter([(endpoint,np.zeros(7))])):
+            with self.assertRaisesRegex(RuntimeError,'EXECUTED_SAMPLE:JOINT_MARGIN'):
+                preflight(r,[endpoint],'PREGRASP',0.)
+        r.step.assert_not_called();r.collision.check.assert_not_called()
+        np.testing.assert_array_equal(r.qtarget,np.zeros(7,dtype=np.float32))
+
 
 if __name__=='__main__':unittest.main()

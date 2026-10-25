@@ -30,6 +30,7 @@ def timed_returns(r):
         moving=np.asarray(g['moving']()).copy()
         fingers=np.asarray(g['robot'].get_joint_positions())[g['fingers']].copy()
         def checked(q):
+            q=np.asarray(q,dtype=g['qtarget'].dtype)
             if g['model'].margin(q)<=r.policy.data['joint_margin_rad']:return False,'JOINT_MARGIN'
             return scene.check(g['model'].poses(q,g['base'],finger_q=fingers),moving,False)
         try:

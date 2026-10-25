@@ -22,6 +22,10 @@ def preflight(r,path,phase,minimum_duration):
     moving=r.moving().copy()
     allow=r.policy.phase(phase) in ('ESTABLISH','LOADED','RELEASE')
     def check(q):
+        # Runtime assigns spline float64 samples into the native qtarget array.
+        # Check that exact representable command, including float32 rounding at
+        # a limit; checking only spline precision misses the original hard guard.
+        q=np.asarray(q,dtype=r.qtarget.dtype)
         if r.model.margin(q)<=r.policy.data['joint_margin_rad']:return False,'JOINT_MARGIN'
         return r.collision.check(r.model.poses(q,r.base,finger_q=fingers),moving,allow)
     count=check_samples(timed_path(r.solver,r.base,[r.qtarget[r.arm].copy()]+path,r.dt,
