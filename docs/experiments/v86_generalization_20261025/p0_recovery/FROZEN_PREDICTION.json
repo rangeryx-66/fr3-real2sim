@@ -1,0 +1,69 @@
+{
+  "schema": "v84-exact-frozen-heldout-v1",
+  "fitting_called": false,
+  "hidden_truth_used": false,
+  "validation_used_for_selection": false,
+  "source_sha256": "d933de0b4022f602c116d9551f7f36c0b57250e1af5b316dff6dcc3689ae848f",
+  "segments": [
+    {
+      "id": 5,
+      "role": "VALIDATION_REVERSE_HIGH",
+      "blocks": [
+        {
+          "block": 0,
+          "records": 4440,
+          "measured_duration_s": 18.49583333333328,
+          "processing": {
+            "version": "V3.1-common-SG2",
+            "window": 121,
+            "dt_s": 0.0041666666667197205,
+            "boundary_exclusion_samples": 121,
+            "centered_future_support_samples": 62,
+            "filter_lookahead_s": 0.2583333333366227,
+            "kernel": "SG3 second-derivative equivalent acceleration smoother; unit DC gain",
+            "tool_compensation_count": 1,
+            "reference": "fixed world hinge origin before filtering",
+            "friction_basis": "K(sign(native_velocity))",
+            "coordinate_unit": "rad",
+            "minimum_absolute_native_velocity": 0.0001,
+            "finite_difference_error_remains": true,
+            "availability": "completed segment plus worker latency; not zero-latency online state"
+          },
+          "prediction": {
+            "status": "predicted",
+            "effort_rmse": 0.0009194610874070578,
+            "coordinate_rmse": 0.012666977259229677,
+            "velocity_rmse": 0.0019929829878786026,
+            "final_coordinate_error": 0.014029847648028504,
+            "outside_FIT_support": false,
+            "samples": 4198,
+            "duration_s": 17.487499999999955,
+            "units": {
+              "coordinate": "rad",
+              "effort": "N m",
+              "inertial": "kg m^2",
+              "damping": "N m s/rad"
+            },
+            "input": "held-out compensated wrist effort, one measured initial q/qd; no subsequent state correction",
+            "display_coordinate_rmse": 0.7257643361420514,
+            "display_final_coordinate_error": 0.8038510574435778,
+            "display_unit": "deg"
+          }
+        }
+      ],
+      "quality": {
+        "action_ok": true,
+        "action_status": "TARGET_REACHED",
+        "label": "COMPLETE_ACTION"
+      },
+      "status": "SEALED_COMPLETE_VALIDATION",
+      "model_sha256": "52d6be6e1e3cd85cc850e912d72bee3f7c146c9ed84de68ddc3fcfbde325f8ff",
+      "seal_sha256": "6f00c65e34cd48a380eafbe77abedfcb8fd62c3578d7d6032c08187a522f71e3",
+      "compensation_settings_sha256": "ce7033137d8a9c7271645f04ccb8178c169f8096ed617ea3dc2534c625a2d12b",
+      "immutable_packet": "004",
+      "physical_duration_s": 18.5,
+      "requested_target_reached": true,
+      "coordinate_unit": "rad"
+    }
+  ]
+}
