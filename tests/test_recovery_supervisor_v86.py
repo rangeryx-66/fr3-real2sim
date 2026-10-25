@@ -138,7 +138,8 @@ class RecoveryTests(unittest.TestCase):
     def test_real_session_continues_after_initial_view_and_action_failures(self):
         from agentic_interaction_v81.session import serve
         ops=self.ops;r=ops.r;world=r.world;events=[]
-        ops.decision_packet=lambda *a:dict(unloaded=True)
+        ops.decision_packet=Mock(side_effect=[RuntimeError('numerical publication incomplete')]
+            +[dict(unloaded=True)]*5)
         ops.articulation=lambda:NS(units={},validate_target=lambda a:True)
         ops.close_workers=Mock(side_effect=lambda:events.append('closed'))
         ops.prepare_grasp=Mock(side_effect=[RuntimeError('NO_CURRENT_PREGRASP_IK'),dict(plan=False,reason='collision'),dict(plan=True)])

@@ -48,8 +48,12 @@ def serve(r):
                 packet=ops.decision_packet(seq,last) if hasattr(ops,'decision_packet') else dict(
                     sequence=seq,joint_coordinate=r.actual(),units=ops.articulation().units,
                     remaining_resources=resources,feedback=ops.feedback(),unloaded=True)
-            except (json.JSONDecodeError,FileNotFoundError,TimeoutError) as error:
-                if not task_recovery.enabled(ops) or not task_recovery.unloaded(ops):raise
+            except Exception as error:
+                if isinstance(error,SafetyStop):raise
+                legacy_read_error=isinstance(error,(json.JSONDecodeError,FileNotFoundError,TimeoutError))
+                trusted_read=(recovery_supervisor.enabled(ops) and recovery_supervisor.trusted(ops))
+                if (not task_recovery.enabled(ops) or not task_recovery.unloaded(ops)
+                        or not (legacy_read_error or trusted_read)):raise
                 packet=dict(sequence=seq,joint_coordinate=r.actual(),units=ops.articulation().units,
                     remaining_resources=resources,unloaded=True,
                     feedback_status='READ_ONLY_FEEDBACK_UNAVAILABLE',feedback_error=repr(error),
