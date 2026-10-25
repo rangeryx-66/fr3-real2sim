@@ -137,6 +137,7 @@ def classify(ops, result):
                 'VISUAL_PREGRASP_LOCAL_IK_UNAVAILABLE','AGENT_EXECUTION_RETURN_OR_APPROACH_UNAVAILABLE',
                 'MEASURED_STATE_APPROACH_UNAVAILABLE','MOTION_PATH_UNAVAILABLE:',
                 'DANGEROUS_GEOMETRY_COLLISION:','SELF_COLLISION:'))
+            known=known or bool(ops.r.job.get('v84_abc') and message=='LOCAL_IK_UNAVAILABLE')
         if not known:return 'CONTROL_STATE_UNTRUSTED'
     if not unloaded(ops):return 'SAFE_BOUNDARY_UNAVAILABLE'
     segments=result.get('segments',[])

@@ -2,6 +2,7 @@
 import time
 from unittest.mock import patch
 from agent_command_protocol_v12 import atomic_json
+from interaction_runtime.serialization import result_packet
 from agentic_interaction_v81.session_status import write as status
 from .operations import contact_trusted
 from .waits import wait
@@ -13,23 +14,37 @@ def loaded_command(ops,sequence):
     resources=r.episode_budget.remaining(sim)
     wall_cap=min(20.,resources['wall_s']);sim_cap=min(5.,resources['sim_s'])
     deadline=time.time()+wall_cap
-    packet=ops.packet();atomic_json(r.output/'ABC_CONTACT_PACKET.json',packet)
-    status(r,sequence,'WAITING',unloaded=False,abc_contact=True,deadline_unix_s=deadline)
-    atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=sequence,unloaded=False,
-        abc_contact=True,timeout_s=wall_cap,deadline_unix_s=deadline))
+    try:
+        packet=result_packet(ops.packet())
+        atomic_json(r.output/'ABC_CONTACT_PACKET.json',packet)
+        status(r,sequence,'WAITING',unloaded=False,abc_contact=True,deadline_unix_s=deadline)
+        atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=sequence,unloaded=False,
+            abc_contact=True,timeout_s=wall_cap,deadline_unix_s=deadline))
+    except (TypeError,ValueError,OSError) as error:
+        # Only the read-only packet/publication boundary is caught here, never
+        # hold(), actuation or a safety exception. Do not lose guarded exit to
+        # a presentation/JSON error while the contact controller is healthy.
+        if r.supervisor.latched is not None:raise
+        ops._abc_retain=False;exit_result=ops.release_park()
+        atomic_json(r.output/('ABC_C_METADATA_RECOVERY_%03d.json'%sequence),
+            result_packet(dict(error=repr(error),safe_exit=exit_result,
+                original_goal_preserved=True,metadata_error_not_controller_fault=True)))
+        return None
     path=r.output/'agent_commands'/('%03d.json'%sequence)
+    expired=False
     with wait(r,'GUARDED_CONTACT_CRITIQUE','Agent continuation or finite supervised unload',sequence=sequence):
         while not path.exists():
             if (r.stopped or (r.output/'STOP_AND_EXPORT').exists()
                     or time.monotonic()-start>=wall_cap or r.tick*r.dt-sim>=sim_cap
                     or not contact_trusted(ops)):
-                ops._abc_retain=False;exit_result=ops.release_park()
-                atomic_json(r.output/('ABC_C_TIMEOUT_%03d.json'%sequence),
-                    dict(safe_exit=exit_result,contact_hold_expired=True,
-                        original_goal_preserved=True))
-                return None
+                expired=True;break
             r.hold(.05)
-        return True
+    if expired:
+        ops._abc_retain=False;exit_result=ops.release_park()
+        atomic_json(r.output/('ABC_C_TIMEOUT_%03d.json'%sequence),
+            dict(safe_exit=exit_result,contact_hold_expired=True,original_goal_preserved=True))
+        return None
+    return True
 
 
 def serve(r):

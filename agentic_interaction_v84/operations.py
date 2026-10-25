@@ -22,7 +22,7 @@ def contact_trusted(ops):
     # Same original handover aperture/slip-change cells, allowing finite slip.
     if np.ptp([x['aperture_m'] for x in recent])>=.0005:return False
     if np.ptp([x['relative_translation_slip_m'] for x in recent])>=r.closure_policy['max_slip_m']:return False
-    return max(r.filtered())>=.05
+    return bool(max(r.filtered())>=.05)
 
 
 def operations_class(parent):
@@ -44,20 +44,24 @@ def operations_class(parent):
             if self.articulation().joint_type=='revolute' and 'native_g1_preload_request_n' in command:
                 from agentic_interaction_v81.preload_extension import select
                 select(self,command)
-            result=super().request_plan(command)
+            from .planning import schedule
+            with schedule(self):result=super().request_plan(command)
             if result.get('plan'):self.abc_declared=list(command['planned_segments'])
             return result
 
         def release_park(self):
             last=self.r.record.segments[-1].get('result',{}) if self.r.record.segments else {}
             if (self._abc_retain and last.get('status')=='TARGET_REACHED'
+                    and self.r.record.segments[-1].get('first_step',0)>=getattr(self,'_v81_block_first_record',0)
                     and last.get('physical_transmission_valid') and contact_trusted(self)):
                 self.abc_state='C';self.g['recovery_state']='LOADED_CRITIQUE'
                 return dict(safe=False,contact_retained=True,unloaded=False,
                     reason='FINITE_GUARDED_C_BOUNDARY_NOT_SAFE_PARK',
                     maximum_C_wall_s=20.,maximum_C_sim_s=5.)
             self.abc_state='A'
-            return super().release_park()
+            result=super().release_park()
+            if self.articulation().joint_type=='prismatic':self.g['v75_active_attempt']=0
+            return result
 
         def rotate_segment(self,*args,**kwargs):
             action=kwargs.get('action') or (args[2] if len(args)>2 else {}) or {}
@@ -84,12 +88,17 @@ def operations_class(parent):
             if any(canonical(a) not in declared for a in command.get('segments',[])):
                 return dict(executed=False,status='UNDECLARED_ACTION_REQUIRES_UNLOADED_PLAN')
             full=self._v81_declared_chain
+            rail_full=self.g.get('v75_declared_chain')
             self._v81_declared_chain=command['segments']
+            if self.articulation().joint_type=='prismatic':self.g['v75_declared_chain']=command['segments']
             self._abc_retain=bool(command.get('retain_contact',False))
             try:result=super().attempt(command)
-            finally:self._abc_retain=False;self._v81_declared_chain=full
+            finally:
+                self._abc_retain=False;self._v81_declared_chain=full
+                if rail_full is not None:self.g['v75_declared_chain']=rail_full
             if result.get('safe_exit',{}).get('contact_retained'):
                 self.abc_contact_generation+=1;self.abc_state='C'
+                if self.articulation().joint_type=='prismatic':self.g['v75_active_attempt']=len(self.g['contact_attempts'])
                 result['abc']=self.packet()
             else:self.abc_state='A'
             return result
@@ -107,6 +116,8 @@ def operations_class(parent):
             declared={canonical(a) for a in self.abc_declared}
             if any(canonical(a) not in declared for a in actions):
                 return dict(executed=False,status='UNDECLARED_ACTION_REQUIRES_UNLOADED_PLAN')
+            from agentic_interaction_v81.validation_queue import enqueue
+            enqueue(self,command)
             self.actions=list(actions);self._v81_action_index=1;result=dict(segments=[],acquisition_reused=True)
             self.abc_state='B';self.g['recovery_state']='FINITE_CONTACT_OPERATION'
             try:
@@ -117,12 +128,17 @@ def operations_class(parent):
                     segment=self.interact(self.action_target(action),action=action)
                     result['segments'].append(segment)
                     if segment.get('status')!='TARGET_REACHED':break
-                self._abc_retain=bool(command.get('retain_contact',False)) and bool(result['segments'])
+                self._abc_retain=bool(command.get('retain_contact',False)) and bool(result['segments']) and result['segments'][-1].get('status')=='TARGET_REACHED'
                 result['safe_exit']=self.release_park()
                 self.abc_contact_generation+=1
             except SafetyStop:raise
             except ExecutionBudgetExhausted as error:
                 self._abc_retain=False;result.update(status='OPERATION_BUDGET_EXHAUSTED',reason=str(error),safe_exit=self.release_park())
+            except RuntimeError as error:
+                if str(error)!='LOCAL_IK_UNAVAILABLE':raise
+                self._abc_retain=False
+                result.update(status='PLANNING_REJECTED',reason=str(error),
+                    safe_exit=self.release_park(),recoverable=True)
             finally:self._abc_retain=False
             if self.g['contact_attempts']:
                 previous=self.g['contact_attempts'][-1]

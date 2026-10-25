@@ -58,12 +58,15 @@ class ContactTests(unittest.TestCase):
             closure_policy=dict(max_slip_m=.001),filtered=lambda:np.array([0.,1.2]),
             record=S(segments=[dict(result=dict(status='TARGET_REACHED',physical_transmission_valid=True))]))
         class Parent:
-            def release_park(self):self.called=True;return dict(safe=True)
+            def articulation(self):return S(joint_type='revolute')
+            def release_park(self):
+                self.called=True;self.g['recovery_state']='UNLOADED_OBSERVATION';return dict(safe=True)
         cls=operations_class(Parent);o=object.__new__(cls);o.r=r;o.g={};o._abc_retain=True;o.called=False
         return o
 
     def test_nonzero_slip_and_one_pad_do_not_veto_contact(self):
         o=self.fixture();self.assertTrue(contact_trusted(o))
+        self.assertIs(type(contact_trusted(o)),bool)
         result=o.release_park();self.assertTrue(result['contact_retained'])
         self.assertFalse(result['safe']);self.assertFalse(o.called)
 
@@ -104,6 +107,35 @@ class QualityTests(unittest.TestCase):
         self.assertEqual(len(ix),0);self.assertTrue(q['action_ok'])
 
 class FiniteHoldTests(unittest.TestCase):
+    def boundary_fixture(self,d):
+        o=ContactTests().fixture();r=o.r;r.output=Path(d);r.tick=0;r.dt=1/240
+        r.job=dict(episode_id='test',safe_exit_wall_reserve_s=300)
+        r.base_generation=0;r.g=dict(observation_generations=[])
+        r.episode_budget=S(remaining=lambda sim:dict(wall_s=100,sim_s=100))
+        r.stopped=False;r.hold=lambda seconds:setattr(r,'tick',r.tick+12)
+        o.g['recovery_state']='LOADED_CRITIQUE'
+        return o
+
+    def test_real_numpy_packet_serializes_at_loaded_boundary(self):
+        import json
+        from agentic_interaction_v84.session import loaded_command
+        with tempfile.TemporaryDirectory() as d:
+            o=self.boundary_fixture(d);o.packet=lambda:dict(contact_trusted=np.bool_(True))
+            directory=o.r.output/'agent_commands';directory.mkdir();(directory/'004.json').write_text('{}')
+            self.assertTrue(loaded_command(o,4));self.assertFalse(o.called)
+            self.assertIs(json.loads((o.r.output/'ABC_CONTACT_PACKET.json').read_text())['contact_trusted'],True)
+
+    def test_metadata_error_unloads_and_preserves_episode_goal(self):
+        import json
+        from agentic_interaction_v84.session import loaded_command
+        with tempfile.TemporaryDirectory() as d:
+            o=self.boundary_fixture(d)
+            def broken():raise TypeError('injected JSON presentation failure')
+            o.packet=broken
+            self.assertIsNone(loaded_command(o,4));self.assertTrue(o.called)
+            v=json.loads((o.r.output/'ABC_C_METADATA_RECOVERY_004.json').read_text())
+            self.assertTrue(v['safe_exit']['safe']);self.assertTrue(v['original_goal_preserved'])
+
     def test_contact_timeout_steps_physics_then_unloads_without_ending_task(self):
         from agentic_interaction_v84.session import loaded_command
         with tempfile.TemporaryDirectory() as d:
@@ -116,5 +148,39 @@ class FiniteHoldTests(unittest.TestCase):
             result=loaded_command(o,4)
             self.assertIsNone(result);self.assertGreater(r.tick,0);self.assertTrue(o.called)
             self.assertTrue((r.output/'ABC_C_TIMEOUT_004.json').exists())
+
+class PlanningScheduleTests(unittest.TestCase):
+    def test_identical_winner_fewer_checks_without_pruning_invalid_winner(self):
+        from agentic_interaction_v84.planning import dominated_checker
+        candidates=[dict(shared_selection_utility=x,good=good) for x,good in
+            [(10,False),(8,True),(7,True),(9,True),(9,True),(6,True)]]
+        calls=[];audit=[];pool=[];owner=S()
+        def native(owner,c):calls.append(c['shared_selection_utility']);return dict(valid=c['good'])
+        checked=dominated_checker(native,audit,pool);winner=None
+        for c in candidates:
+            result=checked(owner,c)
+            if result['valid'] and (winner is None or c['shared_selection_utility']>winner):winner=c['shared_selection_utility']
+        self.assertEqual(winner,9);self.assertEqual(calls,[10,8,9])
+        self.assertEqual(len(pool),3)
+        self.assertTrue(all(x['native_checks_not_claimed'] for x in audit if x.get('pruned_not_collision_failure')))
+
+class RecoveryRouteTests(unittest.TestCase):
+    def test_local_ik_failure_after_verified_unload_is_recoverable(self):
+        from agentic_interaction_v81.task_recovery import classify
+        r=S(supervisor=S(latched=None,force=S(settled=lambda:True)),
+            job={'v84_abc':True},
+            grasp_reference=None,actual=lambda:.3,filtered=lambda:np.array([0.,0.]),
+            policy=S(data={'force':{'unloaded_pad_n':.05}}))
+        ops=S(r=r,g={'recovery_state':'UNLOADED_OBSERVATION'})
+        self.assertEqual(classify(ops,dict(error="RuntimeError('LOCAL_IK_UNAVAILABLE')")),
+            'OPERATION_REPLAN_REQUIRED')
+        self.assertEqual(classify(ops,dict(error="RuntimeError('UNCONFIRMED_CONTROLLER_FAULT')")),
+            'CONTROL_STATE_UNTRUSTED')
+        r.job['v84_abc']=False
+        self.assertEqual(classify(ops,dict(error="RuntimeError('LOCAL_IK_UNAVAILABLE')")),
+            'CONTROL_STATE_UNTRUSTED')
+        r.job['v84_abc']=True
+        r.supervisor.latched={'reason':'COLLISION'}
+        self.assertEqual(classify(ops,dict(error="RuntimeError('LOCAL_IK_UNAVAILABLE')")),'HARD_STOP')
 
 if __name__=='__main__':unittest.main()
