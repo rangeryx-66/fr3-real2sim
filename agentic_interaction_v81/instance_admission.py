@@ -150,7 +150,8 @@ def check_child(job,verify_history=True):
             or manifest['status']!='RESERVED' or not manifest['launcher']
             or manifest['launcher']!=identity(os.getppid())):
         raise RuntimeError('INSTANCE_LAUNCH_OWNERSHIP_UNVERIFIED')
-    for path in (Path(manifest['shared_actor_lock']),folder/'instance.lock'):
+    paths=([Path(manifest['shared_actor_lock'])] if verify_history else [])+[folder/'instance.lock']
+    for path in paths:
         with path.open('a') as f:
             try:fcntl.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB)
             except BlockingIOError:continue

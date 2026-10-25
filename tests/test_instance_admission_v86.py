@@ -107,6 +107,23 @@ class InstanceAdmissionTests(unittest.TestCase):
             record=S(flush=Mock(),queue=S(join=Mock())),close=Mock())
         return r,boundary
 
+    def test_online_lease_check_does_not_open_legacy_history_resource_path(self):
+        with m.reserve(self.env,'fresh') as i:
+            job=dict(instance_uuid=i['uuid'],instance_directory=i['directory'],
+                episode_id='fresh',output=i['output'],instance_environment=self.env)
+            # Simulate the child having the already verified live parent.
+            launcher=json.loads((Path(i['directory'])/'INSTANCE.json').read_text())['launcher']
+            launcher=launcher or dict(pid=123,start_tick='fixture')
+            manifest=Path(i['directory'])/'INSTANCE.json';value=json.loads(manifest.read_text())
+            value['launcher']=launcher;dump(manifest,value)
+            original=Path.open
+            def no_history(path,*args,**kwargs):
+                if path==self.lock:raise AssertionError('online history IO')
+                return original(path,*args,**kwargs)
+            with patch.object(m,'identity',return_value=launcher),patch.object(Path,'open',no_history),patch.object(m,'global_and_history') as history:
+                m.check_child(job,verify_history=False)
+                history.assert_not_called()
+
     def test_native_unloaded_admission_required_before_interaction(self):
         r,b=self.fake_runtime()
         with patch.object(m,'check_child'),patch('agentic_interaction_v81.policy_checks.settle_station',return_value=b),patch('dataclasses.asdict',return_value={}):
