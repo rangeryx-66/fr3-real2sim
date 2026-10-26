@@ -105,7 +105,8 @@ def operations_class(parent):
                 data=json.loads((self.r.output/'agent_geometry/observed_geometry.json').read_text())
                 def rescore(geometries,model,surfaces,base,origin,axis,config,output):
                     candidates=geometry_candidates(payload,camera,data,model,surfaces,
-                        multi.closing_scene(model,self.r.output/'agent_geometry'),base,np.asarray(origin),axis)
+                        multi.closing_scene(model,self.r.output/'agent_geometry'),base,np.asarray(origin),axis,
+                        self.r.job['articulation_v7']['joint_type'])
                     generated.extend(candidates)
                     with patch.object(ranking,'diverse_shortlist',novel_shortlist):
                         return original(candidates,model,surfaces,base,origin,axis,config,output)

@@ -104,7 +104,8 @@ def compare(episode,frame,inference,output,mode,scored_cache=None):
             return cached
         if mode=='rule':return original(geometries,model,surfaces,base,origin,axis,config,out)
         generated=geometry_candidates(json.loads(Path(inference).read_text()),camera,data,model,
-            surfaces,multi.closing_scene(model,output/'agent_geometry'),base,np.asarray(origin),axis)
+            surfaces,multi.closing_scene(model,output/'agent_geometry'),base,np.asarray(origin),axis,
+            job['articulation_v7']['joint_type'])
         proposal_audit.extend(dict(pose_id=c['pose_id'],generator_rank=c['generator_rank'],
             contact_rank=c['contact']['rank'],observed_closing_blocker=c['contact']['non_handle_closing_collision'])for c in generated)
         (output/'GENERATED_CANDIDATES.json').write_text(json.dumps(proposal_audit,indent=2))

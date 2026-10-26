@@ -32,6 +32,13 @@ class CandidateTests(unittest.TestCase):
         payload,camera,_=self.payload();payload['grasps']*=2
         self.assertEqual(len(transforms(payload,camera)),1)
 
+    def test_contact_score_uses_explicit_joint_motion_not_asset_manifest_guess(self):
+        from agentic_interaction_v87.grasp_candidates import motion_tangent
+        axis=np.array([0,0,1.]);point=np.array([2.,0,0]);origin=np.zeros(3)
+        np.testing.assert_array_equal(motion_tangent('prismatic',axis,point,origin),axis)
+        np.testing.assert_array_equal(motion_tangent('revolute',axis,point,origin),[0,2,0])
+        with self.assertRaises(ValueError):motion_tangent('unknown',axis,point,origin)
+
     def test_search_diversity_does_not_change_pose_or_safety_score(self):
         candidates=[]
         for x in [0,.001,.02,.04]:

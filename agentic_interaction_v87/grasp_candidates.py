@@ -37,7 +37,14 @@ def transforms(payload,camera):
     return result
 
 
-def geometry_candidates(payload,camera,data,model,surfaces,scene,base,origin,joint_axis):
+def motion_tangent(joint_type,joint_axis,point,origin):
+    axis=np.asarray(joint_axis,float)
+    if joint_type=='prismatic':return axis
+    if joint_type=='revolute':return np.cross(axis,np.asarray(point)-origin)
+    raise ValueError('EXPLICIT_SINGLE_JOINT_TYPE_REQUIRED')
+
+
+def geometry_candidates(payload,camera,data,model,surfaces,scene,base,origin,joint_axis,joint_type):
     import plan_shared_door_skill as shared
     import xarm7_native_planning as native
     from native_g1_multiview_input import fast_ray
@@ -55,7 +62,7 @@ def geometry_candidates(payload,camera,data,model,surfaces,scene,base,origin,joi
     output=[]
     for item in transforms(payload,camera):
         T=item['T'];quality=closing_ns['closing_quality'](model,scene,T,base,.084)
-        tangent=joint_axis if model.manifest.get('joint_type')=='prismatic' else np.cross(joint_axis,T[:3,3]-origin)
+        tangent=motion_tangent(joint_type,joint_axis,T[:3,3],origin)
         if np.linalg.norm(tangent)<1e-10:continue
         quality['patch']=common_ns['common_quality'](model,surfaces,T,base,tangent)
         quality['physical_aperture_m']=float(np.clip(quality['patch']['native']['best_common_pose_aperture']['common_aperture_m'],.001641,.084))
