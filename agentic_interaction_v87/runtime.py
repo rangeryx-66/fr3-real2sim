@@ -1,11 +1,13 @@
 """Final-command rate governance; original native drive and safety stay owners."""
 import numpy as np
+from unittest.mock import patch
 from .command_governor import CommandGovernor
 
 
 def runtime_class(parent):
     class GovernedRuntime(parent):
         def __init__(self,job):
+            self._v87_diagnostics_installed=False
             super().__init__(job)
             from interaction_reference_handover import seed_pose
             self.command_governor=CommandGovernor(lambda q:seed_pose(self.solver,self.base,q),self.dt)
@@ -17,32 +19,46 @@ def runtime_class(parent):
                 self.supervisor.force = ActionForceMonitor(self.policy, self, previous=self.supervisor.force)
                 self.record.metadata['v87_constraint_policy'] = dict(
                     policy=job['v87_constraint_policy'], emergency_limits_unchanged=True,
-                    sustained_band_authority='bounded stop/unload, never continued pulling',
+                    sustained_band_authority='bounded continuous reference braking; measured stall/resource returns to Agent',
                     frozen_policy_bytes_unchanged=True)
             from .recovery import annotate_interrupted_end
             self.record.end=annotate_interrupted_end(self.record.end)
-            previous=self.record.coordinate_fields
-            def fields(row):
-                result=previous(row);m=self.command_governor.latest
-                feedback=getattr(self.supervisor.force,'feedback',{})
-                result.update(v87_constraint_speed_scale=float(feedback.get('scale',1.)),
-                    v87_constraint_unload_required=bool(feedback.get('unload_required',False)))
-                result.update(v87_command_linear_speed_m_s=float(m.get('linear_speed_m_s',np.nan)),
-                    v87_command_linear_acceleration_m_s2=float(m.get('linear_acceleration_m_s2',np.nan)),
-                    v87_command_governor_limited=bool(m.get('limited',False)),
-                    v87_command_governor_valid=bool(m))
-                return result
-            self.record.coordinate_fields=fields
+            self._install_diagnostics()
+            if enabled(self):
+                from .motion_policy import PhysicalMotionDwell, articulation_prior
+                self.station_motion=PhysicalMotionDwell(self.dt,lambda:articulation_prior(self))
             self.record.metadata['v87_command_governor']=dict(
                 scope='nonlinear FK of final arm command, joint/TCP velocity and acceleration',
                 unchanged_native_drive_and_hard_limits=True,feeds_Physics_ID=False)
 
+        def _install_diagnostics(self):
+            if getattr(self,'_v87_diagnostics_installed',False) or not hasattr(self,'record'):
+                return
+            from .motion_policy import diagnostic_fields
+            previous=self.record.coordinate_fields
+            def fields(row):
+                return dict(previous(row),**diagnostic_fields(self))
+            self.record.coordinate_fields=fields
+            self._v87_diagnostics_installed=True
+
         def step(self):
-            row = super().step()
-            from .constraint_feedback import enabled, require_recovery
-            if enabled(self):
-                row['constraint_feedback'] = dict(getattr(self.supervisor.force, 'feedback', {}))
-                require_recovery(self)
+            # Mobile constructor performs native admission steps before this
+            # outer constructor returns. Keys must exist on its FIRST row.
+            self._install_diagnostics()
+            context=getattr(self,'_v87_submission',None)
+            if context is not None and not context['submitted']:
+                command,velocity=self._project_proposal(self.qtarget[self.arm],context)
+                phase=context['phase']
+                if self.tick%8==0 or phase in ('PANEL_APPROACH','PANEL_PUSH','PANEL_SEPARATION'):
+                    okay,why=context['original_check'](command)
+                    if not okay:
+                        raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COMMAND_PATH_REJECTED:'+why)
+                self.qtarget[self.arm]=command;self.g['qvelocity']=velocity
+                self.seed=command-self.reference_bias
+                self._v87_last_command_phase=phase;self._v87_last_command_motion=context['motion']
+                context['submitted']=True
+            row=super().step()
+            row['constraint_feedback']=dict(getattr(self.supervisor.force,'feedback',{}))
             return row
 
         def begin_reference(self):
@@ -56,17 +72,46 @@ def runtime_class(parent):
                 np.asarray(self.g['qvelocity']),np.asarray(self.c['arm_speed_limits'])/3,
                 acc,self.motion_limits(phase)if motion is None else motion)
 
+        def motion_limits(self,phase):
+            limits=super().motion_limits(phase)
+            from .constraint_feedback import enabled,motion
+            if (getattr(self,'_v87_submission',None) is not None and enabled(self)
+                    and self.policy.phase(phase)=='LOADED' and not self._decelerating):
+                return motion(self,limits)
+            return limits
+
+        def _project_proposal(self,proposal,context):
+            proposal=np.asarray(proposal,float)
+            if context.get('proposal') is not None and np.array_equal(proposal,context['proposal']):
+                return context['projected'],context['velocity']
+            governor=self.command_governor
+            governor.previous_twist=context['twist'].copy()
+            governor.calls=context['calls'];governor.limited=context['limited']
+            wanted=(proposal-context['q'])/self.dt
+            acceleration=self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(context['phase'])]
+            velocity=governor.velocity(context['q'],wanted,context['previous_velocity'],
+                np.asarray(self.c['arm_speed_limits'])/3,acceleration,context['motion'])
+            command=context['q']+velocity*self.dt
+            if self.model.margin(command)<=self.policy.data['joint_margin_rad']:
+                raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COMMAND_JOINT_MARGIN_REJECTED')
+            context.update(proposal=proposal.copy(),projected=command,velocity=velocity)
+            return command,velocity
+
+        def _restore_unsubmitted(self,context):
+            if context.get('submitted'):return
+            self.qtarget[self.arm]=context['q']
+            self.g['qvelocity']=context['previous_velocity'].copy()
+            self.seed=context['seed']
+            self.command_governor.previous_twist=context['twist'].copy()
+            self.command_governor.calls=context['calls'];self.command_governor.limited=context['limited']
+            self.command_governor.latest=context['latest'].copy()
+
         def cartesian_step(self,goal,phase):
-            self.ensure_execution_budget(phase);self.g['phase']=phase;self.phase=phase
-            if self.reference_drive is None:self.begin_reference()
-            self._v87_cartesian_active=True
+            self.ensure_execution_budget(phase);self._v87_cartesian_active=True
+            from .constraint_feedback import enabled,action_fault
             if self.policy.phase(phase)=='LOADED' and not self._decelerating:
-                hard=self.policy.motion(phase)['measured_speed_stop_m_s']
-                measured=float(self.rows[-1].get('tcp_speed_m_s',0.))
-                from .constraint_feedback import enabled
-                if not enabled(self) and measured>=.9*hard:
-                    self.event('V87_CONTROLLED_INTERRUPT',reason='MEASURED_SPEED_APPROACHING_HARD_LIMIT',
-                        measured_tcp_speed_m_s=measured,hard_limit_unchanged_m_s=hard)
+                if (not enabled(self) and float(self.rows[-1].get('tcp_speed_m_s',0.))
+                        >=.9*self.policy.motion(phase)['measured_speed_stop_m_s']):
                     raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:MEASURED_SPEED_APPROACHING_HARD_LIMIT')
                 fixture=self.job.get('v87_controlled_interruption_fixture')
                 if fixture and not self._v87_fixture_done and self.record.segments:
@@ -78,42 +123,30 @@ def runtime_class(parent):
                         self.event('V87_ENGINEERING_CONTROLLED_INTERRUPT',engineering_injected=True,
                             measured_coordinate_native=float(self.actual()))
                         raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:REGISTERED_ENGINEERING_FIXTURE')
-            if np.max(abs(np.asarray(goal)-self.reference_drive.pose))<1e-12 and np.max(abs(self.g['qvelocity']))<1e-10:
-                return self.step()
-            motion=self.motion_limits(phase)
-            # Feedback slows an ordinary tracking deviation before a controlled
-            # interruption is needed; it does not replace measured hard guards.
-            measured=float(self.rows[-1].get('tcp_speed_m_s',0.))
-            from .constraint_feedback import enabled
-            if not enabled(self) and measured>1.5*motion['speed_m_s']:
-                motion=dict(motion,speed_m_s=motion['speed_m_s']**2/measured)
-            from .constraint_feedback import motion as feedback_motion, require_recovery
-            if enabled(self):
-                require_recovery(self)
-                motion=feedback_motion(self,motion)
-            target=self.reference_drive.advance(goal,self.dt,motion)
-            with self.profile.measure('Pink_IK'):
-                q=self.solver.velocity_step(target,self.base,self.seed,self.dt)
-            if q is None:raise RuntimeError('LOCAL_IK_UNAVAILABLE')
-            wanted=(q+self.reference_bias-self.qtarget[self.arm])/self.dt
-            previous_twist=self.command_governor.previous_twist.copy()
-            governed_motion=dict(self.motion_limits(phase))
-            with self.profile.measure('v87_final_command_governor'):
-                velocity=self._govern(wanted,phase,governed_motion)
-            command=self.qtarget[self.arm]+velocity*self.dt
-            if self.model.margin(command)<=self.policy.data['joint_margin_rad']:
-                self.command_governor.previous_twist=previous_twist
-                raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COMMAND_JOINT_MARGIN_REJECTED')
-            if self.tick%8==0 or phase in ('PANEL_APPROACH','PANEL_PUSH','PANEL_SEPARATION'):
-                with self.profile.measure('command_collision_queries'):ok,why=self.check_q(command)
-                if not ok:
-                    self.command_governor.previous_twist=previous_twist
-                    raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COMMAND_PATH_REJECTED:'+why)
-            self.qtarget[self.arm]=command;self.g['qvelocity']=velocity
-            self._v87_last_command_phase=phase
-            self._v87_last_command_motion=governed_motion
-            self.seed=command-self.reference_bias
-            return self.step()
+            # Keep the actual inherited rail/revolute reference, retention,
+            # bias, anti-windup and IK owners. Govern only their final proposal.
+            context=dict(q=self.qtarget[self.arm].copy(),previous_velocity=np.asarray(self.g['qvelocity']).copy(),
+                twist=self.command_governor.previous_twist.copy(),calls=self.command_governor.calls,
+                limited=self.command_governor.limited,phase=phase,motion=super().motion_limits(phase),
+                seed=None if self.seed is None else np.asarray(self.seed).copy(),
+                latest=dict(self.command_governor.latest),submitted=False,original_check=self.check_q)
+            self._v87_submission=context
+            def checked(proposal,*args,**kwargs):
+                command,_=self._project_proposal(proposal,context)
+                return context['original_check'](command,*args,**kwargs)
+            try:
+                with patch.object(self,'check_q',checked):
+                    return super().cartesian_step(goal,phase)
+            except Exception as error:
+                self._restore_unsubmitted(context)
+                from interaction_runtime.policy import SafetyStop
+                if isinstance(error,SafetyStop):
+                    normalized=action_fault(self,error)
+                    if normalized is not error and normalized is not None:raise normalized from error
+                raise
+            finally:
+                self._restore_unsubmitted(context)
+                self._v87_submission=None
 
         def stop_command(self):
             if not getattr(self,'_v87_cartesian_active',False):return super().stop_command()

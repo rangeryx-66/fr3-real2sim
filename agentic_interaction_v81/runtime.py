@@ -110,6 +110,8 @@ def runtime_class(original):
                 from agentic_interaction_v87.constraint_feedback import action_fault
                 normalized = action_fault(self, error)
                 if normalized is None:
+                    from .integration import progress
+                    progress(self,self.rows[-1])
                     return self.rows[-1]  # pad-report absence must not abort braking
                 if normalized is not error:
                     raise normalized from error

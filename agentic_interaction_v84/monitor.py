@@ -3,7 +3,7 @@
 The original progress clock, lead, increasing-slip detector and all native
 guards are retained. Only the nominal-demand soft diagnosis is disambiguated.
 """
-import math
+import math,time
 import numpy as np
 from interaction_runtime.segments import TransmissionMonitor, MIN_TRANSMISSION_RATIO
 
@@ -24,6 +24,8 @@ def factory(runtime, articulation, captures):
             self.shadow=TransmissionMonitor(*args,**kwargs)
             self.initial=runtime.tcp()[:3,3].copy();self.window_tcp=0.
             self.measured_bad=0;self.first_advisory_s=None;self.history=[]
+            self.window_q=self.start;self.window_position=self.initial.copy()
+            self.window_wall=time.monotonic();self.resource_windows=[]
             captures.append(self)
 
         def update(self,t,q,state,dt,remaining):
@@ -38,7 +40,15 @@ def factory(runtime, articulation, captures):
                 tcp=self.window_tcp+math.atan2(math.sin(tcp-self.window_tcp),math.cos(tcp-self.window_tcp))
             actual_demand=max(0.,self.direction*(tcp-self.window_tcp));self.window_tcp=tcp
             scale=articulation.path_scale(runtime.tcp()[:3,3])
-            resolved=previous['progress_rad']*scale>=1e-4*previous['window_s']
+            resolution=None
+            from agentic_interaction_v87.constraint_feedback import enabled
+            if enabled(runtime):
+                from agentic_interaction_v87.motion_policy import representable_progress
+                resolution=representable_progress(self.window_q,q,self.window_position,
+                    runtime.tcp()[:3,3],scale)
+                resolved=previous['progress_rad']*scale>resolution
+            else:resolved=previous['progress_rad']*scale>=1e-4*previous['window_s']
+            self.window_q=float(q);self.window_position=runtime.tcp()[:3,3].copy()
             ratio=previous['progress_rad']/max(actual_demand,1e-12)
             real_bad=bool(previous['suspect'] and (not resolved or ratio<MIN_TRANSMISSION_RATIO))
             self.measured_bad=self.measured_bad+1 if real_bad else 0
@@ -46,6 +56,7 @@ def factory(runtime, articulation, captures):
                 nominal_transmission_ratio=previous['transmission_ratio'],
                 actual_TCP_travel_native=actual_demand,actual_transmission_ratio=ratio,
                 suspect=real_bad,advisory=bool(previous['suspect'] and not real_bad),
+                representable_progress_budget_m=resolution,
                 transmission_ratio=ratio if previous['suspect'] else previous['transmission_ratio'])
             self.history.append(self.last.copy())
             if previous['suspect'] and self.first_advisory_s is None:
@@ -54,6 +65,20 @@ def factory(runtime, articulation, captures):
             if self.measured_bad>=2:
                 self.failure=dict(self.last,first_suspect_s=t-2*self.window)
                 return self.failure
+            now=time.monotonic();wall_window=now-self.window_wall;self.window_wall=now
+            if (resolution is not None and not real_bad and previous['suspect']
+                    and hasattr(runtime,'episode_budget')):
+                from agentic_interaction_v87.motion_policy import resource_forecast
+                resources=runtime.episode_budget.remaining(runtime.tick*runtime.dt)
+                forecast=resource_forecast(previous['progress_rad'],previous['window_s'],
+                    remaining,wall_window,resources)
+                self.resource_windows=self.resource_windows+[forecast] if forecast else []
+                if len(self.resource_windows)>=2:
+                    self.failure=dict(self.last,first_suspect_s=t-2*self.window,
+                        classification='CURRENT_STRATEGY_EXCEEDS_REGISTERED_RESOURCES',
+                        resource_forecast=self.resource_windows[-2:],actual_co_motion_confirmed=True)
+                    return self.failure
+            else:self.resource_windows=[]
             return None
 
         def stable(self):return self.last is not None and not self.last['suspect']

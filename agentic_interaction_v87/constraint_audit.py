@@ -11,7 +11,17 @@ PACKAGES = ('interaction_runtime','agentic_interaction_v81',
 
 
 def inventory(root, ledger):
-    root=Path(root); loaded=json.loads(Path(ledger).read_text())['sources']
+    root=Path(root)
+    ledgers=[Path(x)for x in ledger] if isinstance(ledger,(list,tuple)) else [Path(ledger)]
+    loaded={};loaded_hashes={};ledger_commitments=[]
+    for source in ledgers:
+        ledger_commitments.append(dict(episode=source.parent.name,
+            sha256=hashlib.sha256(source.read_bytes()).hexdigest()))
+        for name,digest in json.loads(source.read_text())['sources'].items():
+            if Path(name).is_absolute() or '..'in Path(name).parts:
+                raise ValueError('REPOSITORY_RELATIVE_SOURCE_REQUIRED')
+            loaded.setdefault(name,digest)
+            loaded_hashes.setdefault(name,set()).add(digest)
     names=set(loaded)
     for folder in PACKAGES:
         names.update(str(p.relative_to(root)) for p in (root/folder).glob('*.py'))
@@ -21,7 +31,7 @@ def inventory(root, ledger):
         if not p.is_file() or p.suffix!='.py':continue
         data=p.read_bytes();tree=ast.parse(data,filename=name)
         sources.append(dict(file=name,sha256=hashlib.sha256(data).hexdigest(),
-            historical_loaded_sha256=loaded.get(name),in_incident_ledger=name in loaded))
+            historical_loaded_sha256=loaded.get(name),historical_loaded_hashes=sorted(loaded_hashes.get(name,())),in_incident_ledger=name in loaded))
         class Scan(ast.NodeVisitor):
             def __init__(self):self.scope=[]
             def visit_FunctionDef(self,node):
@@ -44,14 +54,14 @@ def inventory(root, ledger):
         Scan().visit(tree)
     return dict(schema='v87-execution-branch-inventory-v1',
         scope='Historical loaded modules plus all current runtime/adapters; includes cold branches. Not dynamic coverage.',
-        ledger_sha256=hashlib.sha256(Path(ledger).read_bytes()).hexdigest(),
+        loaded_ledger_commitments=ledger_commitments,
         missing_loaded_sources=sorted(n for n in loaded if not (root/n).is_file()),
         source_count=len(sources),branch_count=len(branches),sources=sources,branches=branches)
 
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('--root',type=Path,default=Path(__file__).resolve().parents[1])
-    p.add_argument('--ledger',type=Path,required=True);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--ledger',type=Path,action='append',required=True);p.add_argument('--output',type=Path,required=True)
     a=p.parse_args();result=inventory(a.root,a.ledger)
     a.output.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
     print(json.dumps({k:result[k]for k in ('source_count','branch_count','missing_loaded_sources')}))

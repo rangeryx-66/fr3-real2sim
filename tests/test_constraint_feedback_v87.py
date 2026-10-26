@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import numpy as np
 from interaction_runtime.policy import Policy, SafetySupervisor, SafetyStop
 from agentic_interaction_v87.constraint_feedback import (
-    POLICY, ActionForceMonitor, motion, require_recovery, action_fault)
+    POLICY, ActionForceMonitor, motion, action_fault)
 from agentic_interaction_v87.activation import activate
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,7 +35,7 @@ def step(r, t, torque=.0, pad=.1, force=0., **changes):
 
 
 class ClassifiedConstraintTests(unittest.TestCase):
-    def test_recorded_torque_mean_owns_action_not_latch(self):
+    def test_recorded_small_torque_band_crossing_regulates_without_action_stop_or_latch(self):
         # Exact published trailing mean, not a fabricated new physical run.
         for audited in (False, True):
             r = fixture(audited)
@@ -45,22 +45,18 @@ class ClassifiedConstraintTests(unittest.TestCase):
                 self.assertIsNotNone(r.supervisor.latched)
             else:
                 for i in range(36): out = step(r, i/240, torque=.6001997743592373)
-                self.assertEqual(out['status'], 'CONTROLLED_LOAD_UNLOAD_REQUIRED')
+                self.assertEqual(out['status'], 'CONTINUOUS_LOAD_REGULATION')
                 self.assertIsNone(r.supervisor.latched)
-                with self.assertRaisesRegex(RuntimeError, 'REQUIRES_UNLOAD'): require_recovery(r)
-                r._decelerating=True
-                require_recovery(r)  # only the existing stop owner can brake
-                r._decelerating=False
+                self.assertEqual(out['authority'],'CONTINUOUS_REGULATION')
+                self.assertEqual(r.supervisor.force.feedback['scale'],0.)
                 r.g['phase']='RELEASE'
-                require_recovery(r)
                 for i in range(36, 110): step(r, i/240, torque=0., pad=0.)
-                self.assertFalse(r.supervisor.force.unload_required)
+                self.assertFalse(r.supervisor.force.regulation_active)
 
     def test_warning_noise_does_not_interrupt_long_B(self):
         r=fixture()
         for i in range(12000):
             step(r, i/240, torque=.30001 + .00001*np.sin(i))
-            require_recovery(r)
         self.assertIsNone(r.supervisor.latched)
         self.assertGreater(r.supervisor.force.feedback['scale'], .99)
 
@@ -72,14 +68,13 @@ class ClassifiedConstraintTests(unittest.TestCase):
                 out=motion(r,r.policy.motion('LOADED'))
                 self.assertAlmostEqual(out['speed_m_s'], .006)
                 self.assertEqual(out['acceleration_m_s2'], .04)
-                require_recovery(r)
 
     def test_speed_90_percent_is_continuously_regulated(self):
         r=fixture();r.rows[-1]['tcp_speed_m_s']=.027001
         out=motion(r,r.policy.motion('LOADED'))
         self.assertGreater(out['speed_m_s'],0.)
         self.assertLess(out['speed_m_s'],.012)
-        require_recovery(r)
+        self.assertIsNone(r.supervisor.latched)
         with self.assertRaisesRegex(SafetyStop,'PHASE_TCP_VELOCITY'):
             step(r,0.,tcp_speed=.03212595152927349)
 
@@ -172,7 +167,7 @@ class BrakingAuthorityTests(unittest.TestCase):
         new=ActionForceMonitor(r.policy,r,previous=old)
         r.supervisor.force=new
         out=new.update({'left':.1},1/240,35/240,[0,0,0,0,0,.61])
-        self.assertEqual(out['status'],'CONTROLLED_LOAD_UNLOAD_REQUIRED')
+        self.assertEqual(out['status'],'CONTINUOUS_LOAD_REGULATION')
         self.assertIs(new.history,old.history)
 
     def test_untrusted_command_margin_cannot_claim_recovery_qualification(self):

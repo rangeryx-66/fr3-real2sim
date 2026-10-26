@@ -53,9 +53,11 @@ def serve(r):
                     return retain(ops,seq,trace,dict(status='SAFETY_STOP',reason=error.reason,evidence=error.evidence))
             held=bool(r.job.get('v84_abc') and g['recovery_state']=='LOADED_CRITIQUE')
             if (g['recovery_state']!='UNLOADED_OBSERVATION' and not held) or r.supervisor.latched is not None:
-                if r.job.get('v87_continuous_recovery') and r.supervisor.latched is not None:
+                if r.job.get('v87_continuous_recovery'):
                     from agentic_interaction_v87.lifecycle import retain
-                    return retain(ops,seq,trace,last or {})
+                    uncertain=dict(status='CONTROL_STATE_UNTRUSTED',outcome='UNRECOVERABLE',
+                        reason='NO_VERIFIED_SAFE_DECISION_BOUNDARY',automatic_motion_allowed=False)
+                    return retain(ops,seq,trace,last or uncertain)
                 return dict(status='HARD_STOP_OR_NO_SAFE_DECISION_BOUNDARY',trace=trace,stop=r.supervisor.latched)
             wait,resources=window(r)
             if wait<=0:return dict(status='BUDGET_EXHAUSTED',safe_exit=ops.release_park(),trace=trace)
@@ -212,7 +214,8 @@ def serve(r):
             status(r,seq,'COMPLETED',operation=op)
             if (r.job.get('v87_continuous_recovery') and (r.supervisor.latched is not None
                     or result.get('status')=='SAFETY_STOP'
-                    or result.get('operation_status')=='SAFETY_STOP')):
+                    or result.get('operation_status')=='SAFETY_STOP'
+                    or result.get('outcome')=='UNRECOVERABLE')):
                 from agentic_interaction_v87.lifecycle import retain
                 return retain(ops,seq+1,trace,result)
             if op=='finish' and (result.get('finish_authorized') if recovery_supervisor.enabled(ops)

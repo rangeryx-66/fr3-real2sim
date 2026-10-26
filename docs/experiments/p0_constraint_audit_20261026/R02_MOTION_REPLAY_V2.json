@@ -1,0 +1,84 @@
+{
+  "scope": "Same recorded motion classifications only; no new physical command, collision sweep, release or parking claimed",
+  "source_episode": "p0_constraints_r02_20261026_01",
+  "source_commit": "22b9facd33d94bb844a43608363209b2e83fdae7",
+  "source_chunks": [
+    {
+      "file": "00000000.npz",
+      "sha256": "d8eace424608a3f700bcc95317e3560491df8365ea6f90af7c1400f743d7a8e3"
+    },
+    {
+      "file": "00033619.npz",
+      "sha256": "ae44e6ef7cb129c8312a10bea47ef28f3deedef82dbb4aabc53c96d6efc72f46"
+    },
+    {
+      "file": "00041811.npz",
+      "sha256": "dd53ef102c9657df4b355e7d316bab9b195d848c35a45ee56d46d6879859cea6"
+    },
+    {
+      "file": "00050003.npz",
+      "sha256": "50de2eedb23db2b4d192a1ea01397e7ebd94283a96de0277d60053bc3a015b73"
+    },
+    {
+      "file": "00057363.npz",
+      "sha256": "615f3cb34643dc0f7f22f5eb401657e9f1586aed5c9f04a832726926a5f7ca26"
+    }
+  ],
+  "source_outcome": {
+    "process_returncode": 0,
+    "terminal_safety_status": "EXIT_UNVERIFIED",
+    "physical_safe_park_verified": false,
+    "requires_intervention": true,
+    "process_exit_is_not_task_success": true,
+    "evidence_error": null
+  },
+  "original_segment_status": "TRANSMISSION_FAILURE",
+  "original_segment_reason": "SUSTAINED_LOW_TRANSMISSION",
+  "actual_maximum_deg": 34.536591990981016,
+  "original_low_speed_suspect_windows": [
+    {
+      "t_s": 112.00833333333334,
+      "window_s": 2.0,
+      "progress_rad": 0.00028258562088012695,
+      "requested_travel_rad": 0.04228795783683279,
+      "transmission_ratio": 0.9960650638935261,
+      "lead_rad": 0.008725928542463124,
+      "suspect": true,
+      "nominal_suspect": true,
+      "nominal_transmission_ratio": 0.00668241351286051,
+      "actual_TCP_travel_native": 0.0002837019700053789,
+      "actual_transmission_ratio": 0.9960650638935261,
+      "advisory": false
+    },
+    {
+      "t_s": 114.00833333333334,
+      "window_s": 2.0,
+      "progress_rad": 0.00014460086822509766,
+      "requested_travel_rad": 0.04228887244376229,
+      "transmission_ratio": 0.8282868758170845,
+      "lead_rad": 0.008726349065296568,
+      "suspect": true,
+      "nominal_suspect": true,
+      "nominal_transmission_ratio": 0.003419359748061257,
+      "actual_TCP_travel_native": 0.000174578243899437,
+      "actual_transmission_ratio": 0.8282868758170845,
+      "advisory": false
+    }
+  ],
+  "new_transmission_failure_windows": [],
+  "reconstruction_scope": "recorded reference/coordinate window timing; original nominal state inferred from saved reference. Resource forecast intentionally not replayed.",
+  "stop_proof": {
+    "rows": 505,
+    "original_any_ready": false,
+    "new_any_ready": true,
+    "new_last_ready": true,
+    "object_path_speed_max_m_s": 0.00012785944327512594,
+    "threshold_source": "existing stationary TCP linear/angular cells, through known articulation; scalar native-rate cutoff removed for this release proof"
+  },
+  "diagnostic_columns_missing_in_initial_chunks": [
+    "00000000.npz"
+  ],
+  "raw_FT_joint_TCP_preserved": true,
+  "new_physics_started": false,
+  "old_terminal_record_unchanged": true
+}

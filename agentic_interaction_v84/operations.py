@@ -15,7 +15,6 @@ from interaction_runtime.segments import ExecutionBudgetExhausted
 def contact_trusted(ops):
     r=ops.r
     if r.supervisor.latched is not None or r.grasp_reference is None or not r.rows:return False
-    if getattr(getattr(r.supervisor,'force',None),'unload_required',False):return False
     row=r.rows[-1]
     if not row['wrist_ft']['valid'] or not np.isfinite(row['joint_coordinate']):return False
     recent=[x for x in r.rows if x['t']>=row['t']-.5]
@@ -85,6 +84,15 @@ def operations_class(parent):
                 nominal_warning_is_not_contact_failure=True,
                 FIT_exclude_entire_segment=bool(alerts),
                 first_nominal_warning_s=min(alerts) if alerts else None)
+            forecasts=[m.failure for m in captures if m.failure and
+                m.failure.get('classification')=='CURRENT_STRATEGY_EXCEEDS_REGISTERED_RESOURCES']
+            if forecasts and result.get('safely_stopped') and self.r.supervisor.latched is None:
+                result.update(status='SAFE_PARTIAL_PROGRESS',
+                    reason='CURRENT_STRATEGY_EXCEEDS_REGISTERED_RESOURCES',
+                    physical_transmission_valid=True,fit_prefix_transmission_valid=False,
+                    resource_forecast=forecasts[-1],
+                    original_nominal_stop_reason=result.get('reason'),
+                    transmission_failure=None,requested_target_reached=False)
             return result
 
         def attempt(self,command):

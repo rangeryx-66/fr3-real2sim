@@ -55,13 +55,13 @@ def replay(episode):
             scales.append(new.feedback['scale']);count+=1
             if before['stop'] and first_old is None:
                 first_old=dict(t=t,status=before['status'],angle_deg=float(np.degrees(a['joint_q'][i])))
-            if after['status']=='CONTROLLED_LOAD_UNLOAD_REQUIRED' and first_new is None:
-                first_new=dict(t=t,status=after['status'],authority='STOP_ACTION_AND_UNLOAD',
+            if after['status']=='CONTINUOUS_LOAD_REGULATION' and first_new is None:
+                first_new=dict(t=t,status=after['status'],authority='CONTINUOUS_REGULATION',
                     trailing_torque_nm=new.feedback['trailing_torque_nm'],
                     trailing_pad_n=new.feedback['trailing_pad_n'])
     return dict(scope='Closed measured wrench/pad classification only. No new motion, no collision/IK replay, no counterfactual contact success.',
         source_episode=episode.name,source_chunk_sha256=digest,policy_sha256=policy.sha256,
-        source_rows=count,original_first_stop=first_old,new_first_action_boundary=first_new,
+        source_rows=count,original_first_stop=first_old,new_first_continuous_regulation=first_new,
         minimum_reference_scale=min(scales),new_requests_hard_stop=bool(after['stop']),
         old_episode_latch_untouched=True,physical_stop_or_unload_verified=False,
         no_physics_started=True)

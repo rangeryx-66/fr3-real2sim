@@ -1,19 +1,19 @@
 """Engineering action authority, separate from immutable emergency supervision.
 
 Only an explicitly registered V87 actor can use this policy. No threshold is
-increased. The provisional sustained band requests bounded stop/unload; it is
+increased. The provisional sustained band requests bounded reference braking; it is
 never permission to continue pulling above that band. Emergency measurements,
 invalid state, actual collision, joint/speed/effort guards remain authoritative.
 """
 from types import SimpleNamespace
 from interaction_runtime.policy import ForceMonitor
 
-POLICY = 'classified_continuous_v1'
+POLICY = 'classified_continuous_v2'
 PREFIX = 'CONTROLLED_EXECUTION_INTERRUPT:'
 
 
 def enabled(r):
-    return bool(r.job.get('v87_constraint_policy') == POLICY)
+    return bool(getattr(r,'job',{}).get('v87_constraint_policy') == POLICY)
 
 
 def actionable(r):
@@ -32,7 +32,7 @@ class ActionForceMonitor(ForceMonitor):
             self.events = previous.events
             self.pending = previous.pending
         self.runtime = runtime
-        self.unload_required = False
+        self.regulation_active = False
         self.feedback = dict(scale=1., authority='RECORD')
 
     def update(self, pads, dt, t, wrench=None):
@@ -50,23 +50,22 @@ class ActionForceMonitor(ForceMonitor):
         loaded = self.runtime.policy.phase(self.runtime.g['phase']) == 'LOADED'
         qualified = event['status'] == 'SUSTAINED_OVERLOAD' and actionable(self.runtime)
         original = event['status']
-        if original == 'SUSTAINED_OVERLOAD' and qualified and (loaded or self.unload_required):
+        if original == 'SUSTAINED_OVERLOAD' and qualified and (loaded or self.regulation_active):
             # This event has not reached SafetySupervisor.check's latch branch.
             # An existing latch is never cleared or rewritten here.
-            self.unload_required = True
-            event = dict(event, status='CONTROLLED_LOAD_UNLOAD_REQUIRED', stop=False,
-                original_status=original, authority='STOP_ACTION_AND_UNLOAD',
+            self.regulation_active = True
+            event = dict(event, status='CONTINUOUS_LOAD_REGULATION', stop=False,
+                original_status=original, authority='CONTINUOUS_REGULATION',
                 emergency_limits_unchanged=True)
             self.last = event.copy()
             self.events[-1] = event.copy()
-        elif self.unload_required and self.settled() and not loaded:
-            self.unload_required = False
+        elif self.regulation_active and self.settled() and not loaded:
+            self.regulation_active = False
         self.feedback = dict(scale=scale if loaded else 1.,
-            authority='STOP_ACTION_AND_UNLOAD' if self.unload_required else
-                'CONTINUOUS_REGULATION' if loaded and scale < 1. else 'RECORD',
+            authority='CONTINUOUS_REGULATION' if self.regulation_active or loaded and scale < 1. else 'RECORD',
             trailing_pad_n=means[0], trailing_wrist_n=means[1],
             trailing_torque_nm=means[2], original_status=original,
-            unload_required=self.unload_required)
+            load_regulation_active=self.regulation_active)
         return event
 
 
@@ -75,7 +74,7 @@ def motion(r, limits):
 
     Acceleration is still bounded by the original reference and final-command
     governors; a reduced desired speed is never imposed as an instantaneous
-    final-command cap. Leave acceleration and angular bounds unchanged.
+    final-command cap. Keep original acceleration bounds and scale both speeds.
     """
     monitor = getattr(r.supervisor, 'force', None)
     feedback = getattr(monitor, 'feedback', {})
@@ -89,14 +88,6 @@ def motion(r, limits):
     combined = min(scale, speed_scale)
     return dict(limits, speed_m_s=limits['speed_m_s']*combined,
         angular_speed_rad_s=limits['angular_speed_rad_s']*combined)
-
-
-def require_recovery(r):
-    monitor = r.supervisor.force
-    if (getattr(monitor, 'unload_required', False)
-            and r.policy.phase(r.g['phase']) == 'LOADED'
-            and not getattr(r, '_decelerating', False)):
-        raise RuntimeError(PREFIX+'PROVISIONAL_LOAD_BAND_REQUIRES_UNLOAD')
 
 
 def action_fault(r, error):
