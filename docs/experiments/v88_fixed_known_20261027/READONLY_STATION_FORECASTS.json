@@ -1,0 +1,149 @@
+{
+  "schema": "v88-readonly-station-forecasts/v1",
+  "source_commit": "da900daef98fbc582e662fcff2f7a6539ba56c6d",
+  "episode_id": "v88_goal_45600_01",
+  "actual_object_q_rad": 0.0,
+  "physical_grasp_count": 0,
+  "physics_interaction_started": false,
+  "scope": "one current automatic observed candidate only; no hidden dynamics; no physical execution approval; hypothetical32deg is not actual progress",
+  "scripts": [
+    {
+      "private_file": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01/readonly_analysis/v88_station_forecast.py",
+      "sha256": "786c0eaba5a4a3a99a00980115446beba4ed776e0050650370d09db6fb91c45c"
+    },
+    {
+      "private_file": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01/readonly_analysis/v88_station_forecast_02.py",
+      "sha256": "b052c6317bec5f3a2465c1c48368d2df7e3b39f548d44ea2c6d4c87b02298b3d"
+    }
+  ],
+  "first": {
+    "scope": "read-only current measured unloaded snapshot and one unexecuted automatic observed candidate; forecast only, no robot/World/geometry/dynamics modification",
+    "candidate_family": [
+      -0.3,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "native_predicates_unchanged": true,
+    "physical_execution_approved": false,
+    "requires_actual_station_admission_fresh_wrist_new_plan_and_timed_checks": true,
+    "wall_s": 0.21542895724996924,
+    "checks": [
+      {
+        "target_xy_m": [
+          -0.1,
+          -0.65
+        ],
+        "check": {
+          "tested_current_candidate_only": true,
+          "goal_native": 1.5725416560468908,
+          "reached_native": 1.5218145058518298,
+          "full_arc_supported": false,
+          "reason": "DANGEROUS_GEOMETRY_COLLISION:link2:/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/tn__l_1_original23_aL/tn__l_1_original23_aL",
+          "samples": 31,
+          "minimum_joint_margin_rad": 0.47044184020399604,
+          "executable_route": false,
+          "requires_fresh_reobservation_regrasp_and_timed_path": true,
+          "native_geometry_use": "collision safety only",
+          "hidden_dynamics_used": false
+        }
+      },
+      {
+        "target_xy_m": [
+          -0.15,
+          -0.65
+        ],
+        "check": {
+          "tested_current_candidate_only": true,
+          "goal_native": 1.5725416560468908,
+          "reached_native": null,
+          "full_arc_supported": false,
+          "reason": "NO_CONTINUOUS_IK_FOR_TESTED_CANDIDATE",
+          "samples": 0,
+          "minimum_joint_margin_rad": null,
+          "executable_route": false,
+          "requires_fresh_reobservation_regrasp_and_timed_path": true,
+          "native_geometry_use": "collision safety only",
+          "hidden_dynamics_used": false
+        }
+      }
+    ]
+  },
+  "second": {
+    "scope": "read-only kinematic hypothetical32deg successor and actual0deg snapshot with same current automatic candidate; no physical progress claim and no robot/World/geometry/dynamics modification",
+    "candidate_family": [
+      -0.3,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "native_predicates_unchanged": true,
+    "physical_execution_approved": false,
+    "requires_actual_station_admission_fresh_wrist_new_plan_and_timed_checks": true,
+    "wall_s": 0.3350377702154219,
+    "checks": [
+      {
+        "target_xy_m": [
+          -0.15,
+          -0.65
+        ],
+        "hypothetical_start_deg": 32.0,
+        "check": {
+          "tested_current_candidate_only": true,
+          "goal_native": 1.5725416560468908,
+          "reached_native": 1.5725416560468908,
+          "full_arc_supported": true,
+          "reason": null,
+          "samples": 21,
+          "minimum_joint_margin_rad": 0.4185896112510623,
+          "executable_route": false,
+          "requires_fresh_reobservation_regrasp_and_timed_path": true,
+          "native_geometry_use": "collision safety only",
+          "hidden_dynamics_used": false
+        }
+      },
+      {
+        "target_xy_m": [
+          -0.15,
+          -0.8
+        ],
+        "hypothetical_start_deg": 32.0,
+        "check": {
+          "tested_current_candidate_only": true,
+          "goal_native": 1.5725416560468908,
+          "reached_native": 1.0148216935721028,
+          "full_arc_supported": false,
+          "reason": "SELF_COLLISION:link2:link5",
+          "samples": 10,
+          "minimum_joint_margin_rad": 0.42328271426393516,
+          "executable_route": false,
+          "requires_fresh_reobservation_regrasp_and_timed_path": true,
+          "native_geometry_use": "collision safety only",
+          "hidden_dynamics_used": false
+        }
+      },
+      {
+        "target_xy_m": [
+          -0.1,
+          -0.5
+        ],
+        "hypothetical_start_deg": 0.0,
+        "check": {
+          "tested_current_candidate_only": true,
+          "goal_native": 1.5725416560468908,
+          "reached_native": 1.4710873556567687,
+          "full_arc_supported": false,
+          "reason": "DANGEROUS_GEOMETRY_COLLISION:link2:/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/tn__l_1_original23_aL/tn__l_1_original23_aL",
+          "samples": 30,
+          "minimum_joint_margin_rad": 0.7911117424919321,
+          "executable_route": false,
+          "requires_fresh_reobservation_regrasp_and_timed_path": true,
+          "native_geometry_use": "collision safety only",
+          "hidden_dynamics_used": false
+        }
+      }
+    ]
+  },
+  "next_required": "wait actual dispatcher result; inspect checked grasp plan; execute useful first segment only if complete native motion check passes; actual current-state release and station admission; fresh wrist/new grasp/whole-chain native checks",
+  "unresolved_search_cost": "GraspGenX inference completed in6.053s; subsequent200-candidate native geometry scoring has not yet returned; no non-destructive search cancel API found; no process interruption or live source changes"
+}
