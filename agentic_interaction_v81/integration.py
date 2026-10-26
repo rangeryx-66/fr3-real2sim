@@ -14,6 +14,9 @@ from .orchestration_extension import PROFILE as ORCHESTRATION_PROFILE, AUTH as O
 
 def apply(spec,job):
     profile=spec.get('integration_profile')
+    if profile=='v87_abc_hybrid_recovery_v1':
+        from agentic_interaction_v87.activation import activate
+        return activate(spec,job,apply,ABC_ORCHESTRATION_PROFILE)
     if ORCHESTRATION_AUTH in spec and profile not in (ORCHESTRATION_PROFILE,ABC_ORCHESTRATION_PROFILE):
         raise ValueError('ORCHESTRATION_AUTHORIZATION_REQUIRES_OPT_IN_PROFILE')
     if profile is None:

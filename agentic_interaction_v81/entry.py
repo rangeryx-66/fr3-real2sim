@@ -31,6 +31,10 @@ def main():
     import xarm7_native_gripper
     xarm7_native_gripper.OUT=Path(job['v8_robot_io'])
     from .runtime import runtime_class
+    if job.get('v87_continuous_recovery'):
+        from agentic_interaction_v87.runtime import runtime_class as govern
+        existing_runtime_class=runtime_class
+        runtime_class=lambda parent:govern(existing_runtime_class(parent))
     from .session import serve
     if job.get('v84_abc'):
         from agentic_interaction_v84.session import serve
@@ -55,7 +59,7 @@ def main():
     from functools import partial
     owner=PrismaticRuntimeV751 if job['articulation_v7']['joint_type']=='prismatic' else RuntimeV7
     return run(runtime_class(owner),partial(finish_before_shutdown,serve=serve,finalize=sources),
-        extra_sources=tuple(str(f.relative_to(ROOT)) for folder in ('agentic_interaction_v81','agentic_interaction_v84') for f in sorted((ROOT/folder).glob('*.py')))+(
+        extra_sources=tuple(str(f.relative_to(ROOT)) for folder in ('agentic_interaction_v81','agentic_interaction_v84','agentic_interaction_v87') for f in sorted((ROOT/folder).glob('*.py')))+(
         'scripts/xarm_ft_v7_scene.py','scripts/xarm_ft_v7_estimator.py','scripts/update_probing_v7_model.py',
         'scripts/update_prismatic_v73_model.py','scripts/xarm_ft_v31_estimator.py'))
 

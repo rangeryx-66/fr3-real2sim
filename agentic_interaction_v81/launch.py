@@ -27,7 +27,7 @@ def _launch(specfile,profile,instance=None):
     spec=json.loads(Path(specfile).read_text())
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
-             'integration_profile','preload_study','orchestration_authorization'}
+             'integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture'}
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     from .integration import apply as integrated_profile
@@ -58,7 +58,7 @@ def _launch(specfile,profile,instance=None):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
@@ -89,7 +89,7 @@ def _launch(specfile,profile,instance=None):
     limits=job['articulation_v7']['limits_native'];old_domain=job['estimation_v7']['domain_native']
     job['estimation_v7']['domain_native']=[min(old_domain[0],limits[0]),max(old_domain[1],limits[1])]
     dump(out/'job.json',job)
-    sources={str(f.relative_to(ROOT)):digest(f) for folder in ('agentic_interaction_v81','agentic_interaction_v84') for f in sorted((ROOT/folder).glob('*.py'))}
+    sources={str(f.relative_to(ROOT)):digest(f) for folder in ('agentic_interaction_v81','agentic_interaction_v84','agentic_interaction_v87') for f in sorted((ROOT/folder).glob('*.py'))}
     sources['agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json']=digest(ROOT/'agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json')
     dump(out/'V81_PRELAUNCH.json',dict(spec=spec,spec_sha256=digest(specfile),job_sha256=digest(out/'job.json'),
         source_commit=commit,source_sha256=sources,baseline_audit=baseline_audit(),

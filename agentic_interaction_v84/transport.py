@@ -42,6 +42,18 @@ def publish(episode,sequence,command):
     episode=Path(episode);value=dict(command,protocol_version=1,sequence=sequence)
     validate(value,sequence)
     state=json.loads((episode/'AGENT_SESSION_STATUS.json').read_text())
+    if state.get('diagnostic_only') and state.get('safety_latched'):
+        if value['operation'] not in ('inspect','finish'):
+            raise ProtocolError('HARD_LATCH_READ_ONLY_DIAGNOSIS_OR_FINALIZE_ONLY')
+        if (state['state']!='WAITING' or state['sequence']!=sequence
+                or time.time()>=state['deadline_unix_s']
+                or (episode/'PROCESS_COMPLETION.json').exists()):
+            raise ProtocolError('STALE_OR_CLOSED_DIAGNOSTIC_BOUNDARY')
+        with (episode/'agent_commands'/'.publisher.lock').open('a')as lock:
+            fcntl.flock(lock,fcntl.LOCK_EX)
+            if json.loads((episode/'AGENT_SESSION_STATUS.json').read_text())!=state:
+                raise ProtocolError('DIAGNOSTIC_STATE_CHANGED_RETRY')
+            return atomic_publish(episode/'agent_commands',sequence,value)
     if not state.get('abc_contact'):
         with patch.object(legacy,'validate',validate):return legacy.publish(episode/'agent_commands',sequence,value)
     if (episode/'PROCESS_COMPLETION.json').exists() or state['state']!='WAITING' or state['sequence']!=sequence or time.time()>=state['deadline_unix_s']:

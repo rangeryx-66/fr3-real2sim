@@ -59,7 +59,9 @@ def exception_result(ops,command,error):
     if isinstance(error,SafetyStop):
         return dict(status=SAFETY_STOP,outcome=SAFETY_STOP,reason=error.reason,evidence=error.evidence)
     worker=op in WORKERS
-    known_path=isinstance(error,RuntimeError) and message.startswith((
+    controlled=bool(ops.r.job.get('v87_continuous_recovery') and isinstance(error,RuntimeError)
+        and message.startswith('CONTROLLED_EXECUTION_INTERRUPT:'))
+    known_path=controlled or isinstance(error,RuntimeError) and message.startswith((
         'MOTION_PATH_UNAVAILABLE:','NO_CURRENT_PREGRASP_IK','APPROACH_IK',
         'VISUAL_PREGRASP_LOCAL_IK_UNAVAILABLE','AGENT_EXECUTION_RETURN_OR_APPROACH_UNAVAILABLE',
         'MEASURED_STATE_APPROACH_UNAVAILABLE','BILATERAL_HOLD_NOT_ESTABLISHED','LOCAL_IK_UNAVAILABLE'))
@@ -68,7 +70,7 @@ def exception_result(ops,command,error):
     if not recoverable or not trusted(ops):
         return dict(status='CONTROL_STATE_UNTRUSTED',outcome=UNRECOVERABLE,
             reason=repr(error),recovery=dict(control_trusted=False,automatic_motion_allowed=False))
-    category=ACTION_REJECTED if op in PLANNING or known_path else RECOVERABLE_FAILURE
+    category=RECOVERABLE_FAILURE if controlled else ACTION_REJECTED if op in PLANNING or known_path else RECOVERABLE_FAILURE
     return dict(status=category,outcome=category,reason=repr(error),
         exception_type=type(error).__name__,worker_pending=worker,operation_stopped=True)
 
@@ -145,6 +147,26 @@ def complete(ops,command,result):
             recovery=dict(control_trusted=True,worker_deferred=True,original_goal_preserved=True))
     r=ops.r;coordinate_before=float(r.actual())
     goal_before=r.job['v81_task_goal_native'];records_before=len(r.record.segments)
+    if r.job.get('v87_continuous_recovery'):
+        from agentic_interaction_v87.recovery import current_released_hold,invalidate
+        from .terminal_safety import classify
+        existing=result.get('safe_exit',{})
+        already_parked=classify(None,existing)['safe_park_verified']
+        planning_only=command['operation'] in PLANNING and not result.get('physical_motion_executed',False)
+        if (planning_only or already_parked) and current_released_hold(ops):
+            invalidate(ops)
+            fresh=None
+            if already_parked:
+                try:fresh=ops.observe()
+                except SafetyStop as error:return exception_result(ops,command,error)
+                except Exception as error:fresh=dict(observation_error=repr(error))
+            return dict(result,status=category,recoverable=True,episode_termination_required=False,
+                recovery=dict(control_trusted=True,hold_verified=True,
+                    park_verified=already_parked or bool(r.g.get('at_safe_park')),
+                    repeated_physical_parking_skipped=True,pure_planning_rejection=planning_only,
+                    fresh_observation=fresh,original_goal_preserved=True,
+                    current_coordinate_native=float(r.actual()),World_recreated=False,
+                    object_state_reset=False,history_preserved=True))
     try:
         if hasattr(ops,'_abc_retain'):ops._abc_retain=False
         from .physics_lifecycle import resume_for_exit

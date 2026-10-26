@@ -32,15 +32,26 @@ def serve(r):
             trace.append(dict(command=command,result=result,initialization_recovery=True))
             last=result
             if result['task_recovery']['episode_termination_required']:
+                if r.job.get('v87_continuous_recovery') and (r.supervisor.latched is not None
+                        or result.get('status')=='SAFETY_STOP'):
+                    from agentic_interaction_v87.lifecycle import retain
+                    return retain(ops,0,trace,result)
                 return dict(status=result['task_recovery']['status'],trace=trace)
         sequences=(itertools.count() if r.job.get('v81_active_recovery')
                    else range(int(r.job.get('maximum_agent_operations',100))))
         for seq in sequences:
             if r.job.get('v84_abc') and g['recovery_state']=='LOADED_CRITIQUE':
                 from agentic_interaction_v84.session import loaded_command
-                loaded_command(ops,seq)
+                try:loaded_command(ops,seq)
+                except SafetyStop as error:
+                    if not r.job.get('v87_continuous_recovery'):raise
+                    from agentic_interaction_v87.lifecycle import retain
+                    return retain(ops,seq,trace,dict(status='SAFETY_STOP',reason=error.reason,evidence=error.evidence))
             held=bool(r.job.get('v84_abc') and g['recovery_state']=='LOADED_CRITIQUE')
             if (g['recovery_state']!='UNLOADED_OBSERVATION' and not held) or r.supervisor.latched is not None:
+                if r.job.get('v87_continuous_recovery') and r.supervisor.latched is not None:
+                    from agentic_interaction_v87.lifecycle import retain
+                    return retain(ops,seq,trace,last or {})
                 return dict(status='HARD_STOP_OR_NO_SAFE_DECISION_BOUNDARY',trace=trace,stop=r.supervisor.latched)
             wait,resources=window(r)
             if wait<=0:return dict(status='BUDGET_EXHAUSTED',safe_exit=ops.release_park(),trace=trace)
@@ -184,10 +195,21 @@ def serve(r):
             if recovery_supervisor.enabled(ops):
                 result=recovery_supervisor.complete(ops,command,result)
             result=task_recovery.after(ops,command,result)
+            if (r.job.get('v87_continuous_recovery') and (r.supervisor.latched is not None
+                    or result.get('status')=='SAFETY_STOP'
+                    or result.get('operation_status')=='SAFETY_STOP')):
+                result['task_recovery'].update(episode_termination_required=False,
+                    lifecycle_owner='session safety diagnosis',motion_resume_allowed=False,
+                    original_terminal_fault_retained=True)
             entry=dict(command=command,result=result,wall_s=time.perf_counter()-started,unloaded_wait_s=started-began)
             complete(responses,seq,result_packet(entry));trace.append(entry);last=result
             atomic_json(r.output/'AGENT_ACTION_TRACE.json',result_packet(trace))
             status(r,seq,'COMPLETED',operation=op)
+            if (r.job.get('v87_continuous_recovery') and (r.supervisor.latched is not None
+                    or result.get('status')=='SAFETY_STOP'
+                    or result.get('operation_status')=='SAFETY_STOP')):
+                from agentic_interaction_v87.lifecycle import retain
+                return retain(ops,seq+1,trace,result)
             if op=='finish' and (result.get('finish_authorized') if recovery_supervisor.enabled(ops)
                     else result.get('status')!='CONTINUATION_REQUIRED'):
                 return dict(status='SESSION_COMPLETE',trace=trace,safe_exit=result.get('safe_exit'))
