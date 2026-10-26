@@ -1,0 +1,114 @@
+{
+  "schema": "v88-actual-first-leg-progress/v1",
+  "episode_id": "v88_goal_45600_01",
+  "episode_terminal": false,
+  "scope": "Interim evidence only: first32deg leg and same-scene recovery; not90deg task success, not Physics-ID success, not independent validation",
+  "original_goal_deg": 90.0,
+  "formal_start_unix_s": 1793032994.3368087,
+  "absolute_deadline_unix_s": 1793047394.3368087,
+  "report_unix_s": 1793037752.5827184,
+  "run_directory": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01",
+  "first_leg": {
+    "actual_stopped_deg": 32.166560745216195,
+    "actual_B_max_deg": 32.166560745216195,
+    "target_status": "TARGET_REACHED",
+    "B_sim_s": 57.20833333333333,
+    "A_B_exit_wall_s": 1261.9741518981755,
+    "FIT_entire_segment_excluded": false,
+    "physical_transmission_valid": true,
+    "physical_grasps": 1,
+    "full_rate_B_samples": 13730,
+    "hard_stop_samples": 0,
+    "load_warning_samples": 0,
+    "all_FT_valid": true,
+    "actual_TCP_speed_max_finite_difference_m_s": 0.012769524188790965,
+    "command_TCP_speed_max_m_s": 0.011999988005999697,
+    "command_TCP_acceleration_max_m_s2": 0.034999965017055136,
+    "command_governor_limited_samples": 7088
+  },
+  "unload_and_park": {
+    "released": true,
+    "local_retreat_reached": true,
+    "local_retreat_m": 0.04,
+    "parking_status": "SAFE_PARK_REACHED",
+    "measured_park_reached": true,
+    "park_region": "native_rest_heading_-3.839724",
+    "pad_loads_n": [
+      0.0,
+      0.0
+    ],
+    "measured_door_deg": 32.18508080315068,
+    "rejected_parking_candidates": 15,
+    "hard_latch": null
+  },
+  "same_scene_recovery": {
+    "relocation_executed": true,
+    "destination_reached": true,
+    "base_before": [
+      0.19605375826358795,
+      -0.5328198075294495,
+      -0.10000000149011612,
+      -0.7952486758187507
+    ],
+    "base_after": [
+      -0.15000005066394806,
+      -0.6500000357627869,
+      -0.09999997913837433,
+      -0.7952486758187507
+    ],
+    "error_m": 6.201461566659781e-08,
+    "object_deg_after": 32.18508080315068,
+    "object_joint_command": false,
+    "station_generation": 1,
+    "destination_parking_reached": true,
+    "World_recreated": false,
+    "object_reset": false,
+    "old_views_and_grasp_invalidated": true
+  },
+  "evidence": {
+    "telemetry_chunks": [
+      {
+        "file": "00000000.npz",
+        "records": 8192,
+        "first_step": 0,
+        "last_step": 33642,
+        "bytes": 9693561,
+        "sha256": "0ae1142fd980441171d681d0f9f81e7ed8912b0592667eaeccb613729fae6063"
+      },
+      {
+        "file": "00033643.npz",
+        "records": 7991,
+        "first_step": 33643,
+        "last_step": 41633,
+        "bytes": 9832667,
+        "sha256": "ecfe4d86c87d8a21b2c9929c567b8ed6560b9aeb43cfe3e21db50adc9a6fc646"
+      }
+    ],
+    "responses": [
+      {
+        "file": "agent_responses/003.json",
+        "sha256": "90dee0042584d61110cee43a6a4d507656b8c354f02df8dfb21c7b9a7104edb9"
+      },
+      {
+        "file": "agent_responses/004.json",
+        "sha256": "1a9c6df194cfd7d9763c2d77a16423fe8c722d4d40fe03a59bd460fe5d19e2a3"
+      },
+      {
+        "file": "agent_responses/005.json",
+        "sha256": "881bd12a7e159888fa214c82d83580247f5ba2871aaad90a1c25bc325d266630"
+      },
+      {
+        "file": "agent_responses/006.json",
+        "sha256": "0fedcc8f6fe2d897f0b5372f1f40c4770a9d1da6f1240983481ac6f49a0e99df"
+      },
+      {
+        "file": "agent_responses/007.json",
+        "sha256": "45b433c22216dc94becea754150d1ea92c21d432b25e5f51dae2892e9f3dae64"
+      }
+    ],
+    "continuous_video": "events.mp4 (still recording; final hash after episode closes)"
+  },
+  "resource_policy": "User disabled GraspGenX during this episode; explicit worker-only source intervention7ed566e recorded separately. Frozen physics/controller/estimator unchanged. No future GraspGenX CUDA/model load.",
+  "GT_separation": "No hidden plant coefficients or authored-object dynamics read; reveal after both online/model records seal and actors close.",
+  "next": "Current new-station wrist survey command008, then fresh rule-generated native-checked grasp toward90deg; meaningful reverse and independent validation still outstanding.45290 not started."
+}
