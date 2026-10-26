@@ -1,0 +1,80 @@
+{
+  "schema": "v88-cancelled-known-object/v1",
+  "asset_id": "45600",
+  "joint": "joint_revolute_l_0_abstract_0_1",
+  "verdict": "NOT PASS",
+  "max_forward_deg": 32.18508080315068,
+  "reverse_after_forward_target_deg": null,
+  "target_reached": false,
+  "independent_validation_completed": false,
+  "qualified_physics_id": false,
+  "physical_grasp_attempts": 2,
+  "verified_acquisitions": 1,
+  "base_relocations": 1,
+  "final_release_verified": false,
+  "final_retreat_verified": false,
+  "final_park_verified": false,
+  "terminal_native_status": "HARD_STOP_UNPARKED",
+  "physical_hard_event_established": false,
+  "software_latch_reason": "SAFE_HOLD_OR_RELEASE_NOT_CONFIRMED",
+  "lock_preserved": true,
+  "process_completion": {
+    "returncode": 0,
+    "wall_s": 14104.346373836976,
+    "actor_exited": true,
+    "physical_outcome": {
+      "process_returncode": 0,
+      "terminal_safety_status": "HARD_STOP_UNPARKED",
+      "physical_safe_park_verified": false,
+      "requires_intervention": true,
+      "process_exit_is_not_task_success": true,
+      "evidence_error": null
+    },
+    "formal_start_unix_s": 1793032994.3368087,
+    "formal_deadline_unix_s": 1793047394.3368087,
+    "formal_elapsed_wall_s": 14109.348741054535,
+    "cleanup_overrun_s": 0.0,
+    "deadline_never_extended": true
+  },
+  "actual_end_cause": "latched diagnostic lease expiry before cancellation reply",
+  "user_cancellation": {
+    "schema": "explicit-user-episode-stop/v1",
+    "episode_id": "v88_goal_45600_01",
+    "authorization": "direct_user_message",
+    "user_request": "明确取消45600，保留失败并继续45290",
+    "recorded_unix_s": 1793052771.5257313,
+    "received_after_actor_closed": true,
+    "retroactive_terminal_cause_changed": false,
+    "actual_terminal_cause": "latched diagnostic lease expired; original work budget excludes 300s exit reserve",
+    "locks_cleared": false
+  },
+  "prior_first_leg_park_is_not_final_park": true,
+  "owned_processes_absent": [
+    3604980,
+    3604874,
+    3606484
+  ],
+  "evidence_directory": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01",
+  "evidence_manifest_sha256": "4806097eefca2d75a7c631309dc0f4e31ec7a43d1df61c189b4963dd78cc2d40",
+  "continuous_video": {
+    "sha256": "3f8ec558d2018a880dc007fb3a97f46544f27fe5d7e0d9df5fe783a3d95b47c5",
+    "bytes": 4159733
+  },
+  "video_metadata": {
+    "programs": [],
+    "stream_groups": [],
+    "streams": [
+      {
+        "codec_name": "h264",
+        "nb_frames": "2115"
+      }
+    ],
+    "format": {
+      "duration": "423.000000",
+      "size": "4159733"
+    }
+  },
+  "posthoc_hidden_physics_read": false,
+  "prospective_fix": "c0df8ab; not loaded by this actor; apply only to next independent object",
+  "source_intervention": "GraspGenX worker veto recorded explicitly; no hot reload of physical owner"
+}
