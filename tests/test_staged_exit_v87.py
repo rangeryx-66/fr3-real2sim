@@ -79,6 +79,7 @@ class StagedExitTests(unittest.TestCase):
         r.job.update(v87_staged_exit=True,v87_continuous_recovery=True)
         r.fingers=np.arange(7,13);r.g['qvelocity']=np.zeros(7)
         r.collision=NS(check=Mock(return_value=(True,'native clear')))
+        r.intentional_contact=Mock(return_value=True)  # existing RELEASE phase
         r.model.poses=Mock(return_value={});r.event=Mock();r.tcp=lambda:np.eye(4)
         r.move_path=Mock();r.step=Mock();r.policy.data['jaw_release_m_s']=.01
         self.ops.articulation=lambda:NS(joint_type='revolute')
@@ -185,6 +186,44 @@ class StagedExitTests(unittest.TestCase):
         out=self.run_exit();self.assertEqual(out['status'],staged.SAFE_HOLD_NOT_ESTABLISHED)
         self.modules['native_g1_contact_recovery'].release_geometry.assert_not_called()
         self.ops.r.step.assert_not_called();self.ops.r.move_path.assert_not_called()
+
+    def test_partial_acquisition_contact_does_not_require_verified_grasp_reference(self):
+        r=self.ops.r
+        self.assertIsNone(r.grasp_reference)
+        r.collision.check.side_effect=lambda poses,moving,allow:(bool(allow),'finger/allowed handle')
+        self.assertTrue(staged.safe_hold(self.ops))
+        self.assertTrue(r.collision.check.call_args.args[2])
+        r.step.assert_not_called();r.move_path.assert_not_called()
+
+    def test_failed_bilateral_acquisition_can_release_and_recover_same_world(self):
+        r=self.ops.r;world=r.world;coordinate=r.coordinate
+        r.rows[-1]['aperture_m']=.02;r.jaw_width=.02
+        r.filtered=lambda:np.array([.2,0.]) if r.rows[-1]['aperture_m']<.083 else np.zeros(2)
+        r.collision.check.side_effect=lambda poses,moving,allow:(
+            bool(allow or r.rows[-1]['aperture_m']>=.083),'finger/allowed handle')
+        r.step.side_effect=lambda:r.rows[-1].update(aperture_m=r.jaw_width)
+        def move_only_released(path,phase):
+            self.assertGreaterEqual(r.rows[-1]['aperture_m'],.083)
+            self.assertEqual(float(max(r.filtered())),0.)
+        r.move_path.side_effect=move_only_released
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertTrue(out['release']['confirmed'])
+        result=supervisor.complete(self.ops,dict(operation='acquire_execute'),dict(
+            error="RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",segments=[],safe_exit=out))
+        self.assertTrue(result['recoverable']);self.assertFalse(result['episode_termination_required'])
+        self.assertIsNone(r.supervisor.latched);self.assertIs(r.world,world)
+        self.assertEqual(r.coordinate,coordinate);self.assertEqual(r.job['v81_task_goal_native'],1.57)
+
+    def test_phase_contact_scope_does_not_waive_other_native_collisions(self):
+        self.ops.r.collision.check.return_value=(False,'arm/table collision')
+        self.assertFalse(staged.safe_hold(self.ops))
+        self.ops.r.step.assert_not_called();self.ops.r.move_path.assert_not_called()
+
+    def test_unloaded_phase_cannot_reuse_stale_verified_grasp_contact_scope(self):
+        r=self.ops.r;r.grasp_reference=np.eye(4);r.g['reference']=np.eye(4)
+        r.intentional_contact.return_value=False
+        r.collision.check.side_effect=lambda poses,moving,allow:(bool(allow),'finger/handle')
+        self.assertFalse(staged.safe_hold(self.ops))
 
     def test_original_hard_latch_blocks_all_exit_motion_and_is_not_cleared(self):
         r=self.ops.r;latch=dict(reason='original hard');r.supervisor.latched=latch

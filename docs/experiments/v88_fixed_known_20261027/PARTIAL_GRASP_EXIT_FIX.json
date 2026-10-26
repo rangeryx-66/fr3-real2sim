@@ -1,0 +1,59 @@
+{
+  "schema": "v88-shared-partial-grasp-exit-fix/v1",
+  "scope": "Prospective shared correction in isolated checkout; not applied to live45600 actor and not a physical PASS",
+  "problem": "Failed bilateral acquisition never assigns grasp_reference, but staged safe_hold used that reference to decide native pad/handle contact permission. The unchanged real-time owner permits that contact during ESTABLISH and RELEASE. Its legitimate partial contact was rejected by the exit gate, escalating to synthetic hard-latch diagnosis.",
+  "change": "safe_hold uses runtime.intentional_contact(), identical to original per-step phase scope. Stationarity, trusted F/T/state, bounds, stopped command, all non-handle collisions, native per-point contact ownership, jaw sweep, real-time hard protection and latches remain authoritative.",
+  "code_diff": "one behavioral call replacement in agentic_interaction_v87/staged_exit.py; no numeric threshold or object condition changed",
+  "native_pose_replay": {
+    "schema": "v88-current-partial-acquisition-collision-replay/v1",
+    "scope": "Pure native collision replay of already persisted CENTER sample, not final425sim state; no live motion/reset/GT dynamics reads.",
+    "source_chunk": "00041634.npz",
+    "source_chunk_sha256": "dc264755104269f5863d408f292873ff2f851aff3c0b67b3d4b7956b70b51dec",
+    "sample_sim_s": 392.8208333333333,
+    "phase": "CENTER",
+    "mode": "HANDLE",
+    "actual_joint_velocity_abs_max_rad_s": 3.108730015810579e-05,
+    "FT_valid": true,
+    "pad_load_n": [
+      0.052213288843631744,
+      0.0
+    ],
+    "measured_joint_margin_rad": 1.1387094968795775,
+    "check_without_intentional_handle_contact": [
+      false,
+      "DANGEROUS_GEOMETRY_COLLISION:gripper_link1:/World/articulated_pose/asset/Geometry/l_world/l_0/abstract_0_1/l_1/tn__l_1_original25_aL/tn__l_1_original25_aL"
+    ],
+    "check_with_original_establish_or_release_contact_scope": [
+      true,
+      "SAFE"
+    ],
+    "original_runtime_contact_policy": "intentional_contact(): policy.phase in ESTABLISH/LOADED/RELEASE; same native contact_guard still checks pad ownership every step",
+    "staged_safe_hold_current_policy": "uses grasp_reference is not None; acquired reference is assigned only AFTER bilateral verification",
+    "proposed_shared_correction": "Align safe_hold with original runtime intentional_contact(), preserving original dangerous non-pad/arm/table checks and every hard latch. No live code/guard modification performed.",
+    "final_state_confirmation_pending_full_raw_export": true
+  },
+  "before_fault_injection": {
+    "tests": 4,
+    "failures": 3,
+    "passing_dangerous_collision_guard": 1,
+    "result": "REPRODUCED"
+  },
+  "after_tests": {
+    "command": "PYTHONDONTWRITEBYTECODE=1 PYTHONPATH=.:scripts:tests /data1/home/rangeryx/isaaclab-arena/.venv/bin/python -m unittest test_staged_exit_v87 test_lifecycle_recovery_v87 test_recovery_supervisor_v86 test_persistent_goal_v87",
+    "tests": 62,
+    "failures": 0,
+    "result": "PASS"
+  },
+  "frozen_audit": {
+    "physical_source_files": 606,
+    "frozen_revolute_source_files": 71,
+    "release_source_files": 956,
+    "frozen_external_files": 22,
+    "failures": [],
+    "bundle_sha256": "2dc262c39cfd14e279aaf71739e3b04c4f9b392b6f7e5b3058bad694bf5f3009"
+  },
+  "hard_latch_reset_added": false,
+  "live_actor_source_modified": false,
+  "current45600_latch_cleared": false,
+  "physical_recovery_with_fix": "NOT RUN; requires a new independently admitted object episode after current actor is finalized, never restart/stitch45600"
+}

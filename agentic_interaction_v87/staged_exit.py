@@ -31,8 +31,12 @@ def safe_hold(ops):
     if not trusted(ops) or np.max(abs(r.g['qvelocity']))>1e-10:return False
     q=np.asarray(r.robot.get_joint_positions())
     if not r.station_motion.ready(r.rows[-1]['t'],q[r.arm]):return False
+    # Acquisition assigns grasp_reference only after bilateral verification.
+    # A failed acquisition can still own the original permitted pad/handle
+    # contact during RELEASE. Use the real-time owner's identical phase scope;
+    # all other native collisions and the per-step contact guard remain active.
     okay,_=r.collision.check(r.model.poses(q[r.arm],r.base,finger_q=q[r.fingers]),
-        r.moving(),r.grasp_reference is not None)
+        r.moving(),r.intentional_contact())
     return bool(okay)
 
 
