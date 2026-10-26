@@ -1,0 +1,92 @@
+{
+  "schema": "v88-failed-acquisition-lifecycle-diagnosis/v1",
+  "episode_id": "v88_goal_45600_01",
+  "episode_terminal": false,
+  "actor_pid": 3604980,
+  "instance_uuid": "bf455db8-900d-49a3-a56b-8f3dee5f44c0",
+  "diagnosed_unix_s": 1793040433.5209265,
+  "manipulation": {
+    "maximum_observed_deg": 32.18508080315068,
+    "forward90_complete": false,
+    "meaningful_reverse_complete": false,
+    "independent_validation_complete": false,
+    "physical_grasps_started": 2,
+    "first_grasp_verified": true,
+    "second_grasp_verified": false,
+    "base_relocations": 1
+  },
+  "second_attempt": {
+    "error": "RuntimeError('BILATERAL_HOLD_NOT_ESTABLISHED')",
+    "segments_started": 0,
+    "wall_s": 445.7815357921645,
+    "exit_status": "SAFE_HOLD_NOT_ESTABLISHED",
+    "exit_safe": false
+  },
+  "actual_lifecycle_packet": {
+    "episode_id": "v88_goal_45600_01",
+    "instance_uuid": "bf455db8-900d-49a3-a56b-8f3dee5f44c0",
+    "status": "SAFETY_LATCHED_WORLD_RETAINED",
+    "fault": {
+      "reason": "SAFE_HOLD_OR_RELEASE_NOT_CONFIRMED",
+      "evidence": {
+        "hold_verified": false,
+        "park_verified": false,
+        "automatic_motion_allowed": false
+      },
+      "source": "unconfirmed controller state; not a measured force/speed hard event"
+    },
+    "measured_object_coordinate_native": 0.5617356300354004,
+    "World_identity": 137977001118512,
+    "world_recreated": false,
+    "object_reset": false,
+    "motion_authorized": false,
+    "simulation_paused": true,
+    "physical_park_verified": false,
+    "hardware_stop_not_inferred": true,
+    "reset_qualification": {
+      "qualified": false,
+      "reason": "NO_VALIDATED_RESET_OWNER; latch retained and every motion operation denied"
+    },
+    "sequence": 15,
+    "remaining_resources": {
+      "wall_s": 6943.3059918093495,
+      "sim_s": 13855.070833333333,
+      "exit_reserved": true
+    }
+  },
+  "root_cause": {
+    "primary_force_or_speed_hard_event_recorded": false,
+    "primary_actual_collision_event_recorded": false,
+    "physical_danger_not_established_by_this_result": true,
+    "source": "agentic_interaction_v87/lifecycle.py retain(): if supervisor.latched is None, synthesizes latch from UNRECOVERABLE outcome",
+    "trigger": "staged_exit.recovery_boundary classifies failed SAFE_HOLD_NOT_ESTABLISHED as CONTROL_STATE_UNTRUSTED/UNRECOVERABLE because hold/release not confirmed",
+    "policy_violation": "An ordinary failed bilateral acquisition plus unconfirmed hold becomes an unresettable hard-latch state without a measured hard event. This is a software lifecycle failure, not evidence of a physical mechanical limit or successful safety qualification.",
+    "further_motion_currently_forbidden": true,
+    "validated_reset_owner_exists": false,
+    "latch_not_cleared": true,
+    "World_recreated": false,
+    "object_reset": false
+  },
+  "next_authorization_required": "Current live API permits only inspect/finish. Do not use its permissive hard-stop finish path to evade the user four-hour/true-hard-safety rule. Seek explicit user cancellation of this failed45600 instance before early cleanup and45290 startup; do not claim a measured physical hard stop.",
+  "evidence": [
+    {
+      "file": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01/agent_responses/013.json",
+      "sha256": "2f11ea6ec188b378e19678c27cfda09fe6370a6d277ed329aa076131360472c5"
+    },
+    {
+      "file": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01/agent_responses/014.json",
+      "sha256": "53e83cd9d4bb859ecc971d554d1473f86e25c18b401bef179e5c392aaa7ad6cb"
+    },
+    {
+      "file": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01/DECISION_PACKET.json",
+      "sha256": "a3e894d811b2f28daa42478b7be61acca6246d80765aa0f183bc8872e6c36262"
+    },
+    {
+      "file": "/data1/home/rangeryx/agentic_v86_private/v88_fixed_known_20261027/runs/v88_goal_45600_01/episodes/v88_goal_45600_01/safety_events/hard_stop_015.json",
+      "sha256": "f6eb10b546e1e16d5a307855832319d34e7061544a3330d3d9f6f73d34a45f86"
+    }
+  ],
+  "hidden_dynamics_read": false,
+  "final_exit": "UNCONFIRMED; previous verified parking before second acquisition does not prove current parking",
+  "second_object_45290": "NOT STARTED; no shared Isaac owner concurrency"
+}
