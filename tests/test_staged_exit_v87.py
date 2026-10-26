@@ -220,4 +220,34 @@ class StagedBudgetTests(unittest.TestCase):
                 native.validate_execution.assert_called_once()
 
 
+class LauncherRegistrationTests(unittest.TestCase):
+    def test_strict_v87_entry_accepts_flags_but_frozen_v8_compat_does_not_receive_them(self):
+        import agentic_interaction_v81.launch as launcher
+        import json
+        class BeforePhysicalPrepare(Exception):pass
+        with tempfile.TemporaryDirectory()as tmp:
+            folder=Path(tmp);spec=folder/'spec.json';env=folder/'env.json';env.write_text('{}')
+            data=dict(schema='agentic-interaction/v81',episode_id='unit_only',phase='engineering',
+                scene='unit',physics_file='/unused',physics_sha256='0'*64,identification_case=0,
+                integration_profile='v87_abc_hybrid_recovery_v1',staged_exit=True,
+                staged_exit_fixture=dict(kind='reject_preferred_parking_route_once_after_task_goal'),
+                orchestration_authorization=dict(human_authorization_ref='unit explicit task',
+                    max_total_extra_wall_s=1800,parked_decision_renewal_s=1800))
+            spec.write_text(json.dumps(data))
+            prepare=Mock(side_effect=BeforePhysicalPrepare)
+            # Read-only unit mocks stop BEFORE prepare can export assets,
+            # reserve GPUs, create an Actor or issue a native control command.
+            with patch.object(launcher,'baseline_audit'),patch.object(launcher,'prepare',prepare),\
+                 patch('agentic_interaction_v81.terminal_safety.registry_path',return_value=folder/'safety'),\
+                 patch('agentic_interaction_v81.terminal_safety.require_clearance'):
+                with self.assertRaises(BeforePhysicalPrepare):launcher._launch(spec,env)
+                compat=json.loads(prepare.call_args.args[0].read_text())
+                self.assertEqual(compat['schema'],'agentic-interaction/v8')
+                self.assertNotIn('staged_exit',compat);self.assertNotIn('staged_exit_fixture',compat)
+                data['integration_profile']='v84_abc_continuous_v1';spec.write_text(json.dumps(data))
+                prepare.reset_mock()
+                with self.assertRaisesRegex(ValueError,'STRICT_V81_SPEC_REQUIRED'):launcher._launch(spec,env)
+                prepare.assert_not_called()
+
+
 if __name__=='__main__':unittest.main()

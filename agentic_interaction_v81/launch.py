@@ -28,6 +28,8 @@ def _launch(specfile,profile,instance=None):
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
              'integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence'}
+    if spec.get('integration_profile')=='v87_abc_hybrid_recovery_v1':
+        allowed.update({'staged_exit','staged_exit_fixture'})
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     from .integration import apply as integrated_profile
@@ -58,7 +60,7 @@ def _launch(specfile,profile,instance=None):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence','staged_exit','staged_exit_fixture')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
