@@ -117,7 +117,12 @@ def release_park(ops):
                     maximum_C_wall_s=20.,maximum_C_sim_s=5.)
         return out
     if r.supervisor.latched is not None:return end(HARD_SAFETY_STOP)
-    stage('ACTUAL_STATE');r.stop_command()
+    stage('ACTUAL_STATE')
+    # Request the ORIGINAL exit phase before stop, as the existing release
+    # owner does. V8.7 still brakes under the last accepted motion limits,
+    # then restores RELEASE. Its subsequent stationary dwell must retain
+    # access to the existing exit reserve when ordinary work is exhausted.
+    g['phase']='RELEASE';r.stop_command()
     if not settle(ops):return end(SAFE_HOLD_NOT_ESTABLISHED)
     # Existing verified parking may be reused only after measured revalidation.
     if g.get('at_safe_park') and g.get('last_exit_plan') and confirmed_unloaded(r):

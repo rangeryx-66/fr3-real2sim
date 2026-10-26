@@ -188,6 +188,15 @@ class StagedExitTests(unittest.TestCase):
         self.assertEqual(rejections.call_count,2);self.route.assert_not_called()
         self.assertEqual(self.ops.r.move_path.call_count,1)  # local only
 
+    def test_exit_dwell_uses_original_reserved_exit_phase_after_work_is_exhausted(self):
+        from interaction_runtime.runtime import Runtime
+        r=self.ops.r;r.g['phase']='OPEN_CONTINUE';r._decelerating=False;r.budget_exit_only=True
+        r.episode_budget.remaining=lambda t:dict(wall_s=0.,sim_s=0.)
+        r.hold.side_effect=lambda seconds:Runtime.ensure_execution_budget(r,r.g['phase'])
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertTrue(r.budget_exit_only)
+        self.assertEqual(r.g['phase'],'RELEASE')  # fake move_path does not change phases
+
 
 class StagedBudgetTests(unittest.TestCase):
     def test_unknown_future_route_keeps_exit_reserve_and_complete_motion_budget(self):
