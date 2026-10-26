@@ -4,6 +4,7 @@ from pathlib import Path
 
 COMBINED_MIB=12000
 RESERVE_MIB=1024
+INITIALIZE_ONLY_MIB=4096
 
 
 def evidence(registration,checkpoint,gpu):
@@ -23,12 +24,17 @@ def admission(free,physics,perception,measured):
     # Decompose the ORIGINAL combined 12GB reservation using the measured
     # unchanged SAM peak; do not invent a smaller combined requirement.
     physics_budget=COMBINED_MIB-peak
-    if free[physics]<physics_budget or free[perception]<peak+RESERVE_MIB:
+    # This grants ONLY initialization and the original no-load check. Actual
+    # native allocation plus reserves must pass confirm_initialized() before
+    # even the first wrist route or contact operation can start.
+    if free[physics]<min(INITIALIZE_ONLY_MIB,physics_budget) or free[perception]<peak+RESERVE_MIB:
         raise ValueError('INSUFFICIENT_MEASURED_SPLIT_GPU_CAPACITY')
     return dict(physics_gpu=physics,perception_gpu=perception,
         original_combined_budget_MiB=COMBINED_MIB,physics_budget_MiB=physics_budget,
         measured_SAM_peak_MiB=peak,perception_reserve_MiB=RESERVE_MIB,
-        free_before_MiB=free,initialized_native_qualification_required=True)
+        initialization_only_reservation_MiB=INITIALIZE_ONLY_MIB,
+        free_before_MiB=free,initialized_native_qualification_required=True,
+        interaction_authorized_before_native_measurement=False)
 
 
 def before_launch(job,profile,free):

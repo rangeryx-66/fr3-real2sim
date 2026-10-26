@@ -11,9 +11,14 @@ class CapacityTests(unittest.TestCase):
         self.assertTrue(r['initialized_native_qualification_required'])
 
     def test_separate_cards_each_require_adequate_capacity(self):
-        for free in [{0:7000,4:20000},{0:20000,4:5000}]:
+        for free in [{0:3500,4:20000},{0:20000,4:5000}]:
             with self.assertRaises(ValueError):admission(free,0,4,dict(peak_process_memory_MiB=4726))
         with self.assertRaises(ValueError):admission({0:20000},0,0,dict(peak_process_memory_MiB=4726))
+
+    def test_smaller_card_only_grants_no_load_qualification_not_interaction(self):
+        r=admission({7:5217,4:5841},7,4,dict(peak_process_memory_MiB=4726))
+        self.assertFalse(r['interaction_authorized_before_native_measurement'])
+        self.assertEqual(r['physics_budget_MiB'],7274)
 
     def test_worker_evidence_binds_hash_gpu_checkpoint_and_real_success(self):
         with tempfile.TemporaryDirectory()as folder:
