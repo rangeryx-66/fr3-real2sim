@@ -4,6 +4,7 @@ from pathlib import Path
 
 COMBINED_MIB=12000
 RESERVE_MIB=1024
+SAM_RESERVE_MIB=512
 INITIALIZE_ONLY_MIB=4096
 
 
@@ -27,11 +28,11 @@ def admission(free,physics,perception,measured):
     # This grants ONLY initialization and the original no-load check. Actual
     # native allocation plus reserves must pass confirm_initialized() before
     # even the first wrist route or contact operation can start.
-    if free[physics]<min(INITIALIZE_ONLY_MIB,physics_budget) or free[perception]<peak+RESERVE_MIB:
+    if free[physics]<min(INITIALIZE_ONLY_MIB,physics_budget) or free[perception]<peak+SAM_RESERVE_MIB:
         raise ValueError('INSUFFICIENT_MEASURED_SPLIT_GPU_CAPACITY')
     return dict(physics_gpu=physics,perception_gpu=perception,
         original_combined_budget_MiB=COMBINED_MIB,physics_budget_MiB=physics_budget,
-        measured_SAM_peak_MiB=peak,perception_reserve_MiB=RESERVE_MIB,
+        measured_SAM_peak_MiB=peak,perception_reserve_MiB=SAM_RESERVE_MIB,
         initialization_only_reservation_MiB=INITIALIZE_ONLY_MIB,
         free_before_MiB=free,initialized_native_qualification_required=True,
         interaction_authorized_before_native_measurement=False)
@@ -59,7 +60,7 @@ def confirm_initialized(r):
     used=max(own)if own else None
     passed=(used is not None and used+RESERVE_MIB<=proof['physics_budget_MiB']
         and free[proof['physics_gpu']]>=RESERVE_MIB
-        and free[proof['perception_gpu']]>=proof['measured_SAM_peak_MiB']+RESERVE_MIB)
+        and free[proof['perception_gpu']]>=proof['measured_SAM_peak_MiB']+SAM_RESERVE_MIB)
     result=dict(passed=passed,native_actor_GPU_MiB=used,free_after_MiB=free,
         original_no_load_passed=True,world_time_unchanged=True,interaction_started=False,
         original_hard_safety_unchanged=True)
