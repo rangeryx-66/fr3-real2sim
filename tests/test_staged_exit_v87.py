@@ -1,0 +1,223 @@
+"""Explicit fault injection; native physical acceptance is a separate result."""
+import ast,math,sys,tempfile,unittest
+from contextlib import contextmanager
+from pathlib import Path
+from types import SimpleNamespace as NS
+from unittest.mock import Mock,patch
+import numpy as np
+from test_agentic_interaction_v81_revolute_certificate import CertificateTests
+from test_recovery_supervisor_v86 import fixture
+from agentic_interaction_v81.revolute_certificate import evaluate
+from agentic_interaction_v81.replanning import coverage
+from agentic_interaction_v81 import recovery_supervisor as supervisor
+from agentic_interaction_v87 import staged_exit as staged
+from interaction_runtime.policy import SafetyStop
+
+
+@contextmanager
+def untimed(r):yield []
+
+
+class MotionAdmissionTests(unittest.TestCase):
+    def test_ninety_degree_motion_does_not_require_a_predicted_parking_route(self):
+        g,c,a,p,s,m,records,close,exit_check=CertificateTests().fixture()
+        g['job']['v87_staged_exit']=True
+        a=[dict(role='FIT_OPEN',target_q=math.pi/2,coordinate_unit='rad'),a[-1]]
+        exit_check.side_effect=AssertionError('future parking must not run during motion admission')
+        with patch.dict(sys.modules,m):out=evaluate(g,c,a,p,dict(gripper_kp_nm_rad=10.),s)
+        self.assertTrue(out['valid']);exit_check.assert_not_called();close.assert_called_once()
+        self.assertTrue(all(e['exit_valid'] is None for e in out['endpoints']))
+        plan=dict(path=[dict(state=0.),dict(state=.1)],execution_feasibility=dict(v81_revolute_chain=out))
+        self.assertTrue(coverage(plan,[math.pi/2])['full_requested_actions_feasible'])
+        self.assertGreater(len(records),100);self.assertEqual(g['actual'](),0.)
+
+    def test_stop_envelope_collision_margin_and_ik_still_reject(self):
+        for kind in ['collision','margin','ik','stopping_limit']:
+            g,c,a,p,s,m,records,close,exit_check=CertificateTests().fixture()
+            g['job']['v87_staged_exit']=True
+            if kind=='collision':g['collision'].check=lambda *args:(False,'original collision')
+            if kind=='margin':g['model'].margin=lambda q:.049
+            if kind=='ik':s.solve=lambda *args,**kw:None
+            if kind=='stopping_limit':g['job']['articulation_v7']['limits_native']=[0.,.1]
+            with self.subTest(kind=kind),patch.dict(sys.modules,m):
+                self.assertFalse(evaluate(g,c,a,p,dict(gripper_kp_nm_rad=10.),s)['valid'])
+
+    def test_an_exit_deferral_without_a_stopped_motion_proof_is_not_coverage(self):
+        for endpoint in [dict(target_rad=1.,exit_valid=None),
+                dict(target_rad=1.,exit_valid=None,motion_valid=True,stopped_hold_checked=False)]:
+            plan=dict(path=[dict(state=0.)],execution_feasibility=dict(v81_revolute_chain=
+                dict(valid=True,staged_exit=True,endpoints=[endpoint])))
+            self.assertFalse(coverage(plan,[1.])['full_requested_actions_feasible'])
+
+    def test_prismatic_motion_preserves_collisions_margins_and_exact_stopped_hold(self):
+        from agentic_interaction_v87.prismatic_motion import evaluate_prismatic_motion
+        for fault in [None,'collision','margin','ik','exact_stop_collision']:
+            g,c,a,p,s,m,records,close,exit_check=CertificateTests().fixture()
+            g['job']['articulation_v7']['limits_native']=[0.,.25]
+            g['v75_motion_prior']=dict(axis_world=[1.,0.,0.],origin_world_m=[0.,0.,0.])
+            for action in a:action['coordinate_unit']='m'
+            original=g['model'].poses
+            def poses(q,*args,**kw):
+                P=original(q,*args,**kw);P['tcp_link'][0,3]=q[0];return P
+            g['model'].poses=poses
+            s.solve=lambda T,*args,**kw:np.r_[T[0,3],np.zeros(6)]
+            if fault=='collision':g['collision'].check=lambda *args:(False,'native collision')
+            if fault=='margin':g['model'].margin=lambda q:.049
+            if fault=='ik':s.solve=lambda *args,**kw:None
+            if fault=='exact_stop_collision':
+                g['collision'].check=lambda P,*args:(abs(P['tcp_link'][0,3]-1.1)>1e-10,'exact stopped collision')
+            with self.subTest(fault=fault),patch.dict(sys.modules,m):
+                out=evaluate_prismatic_motion(g,c,a,p,dict(gripper_kp_nm_rad=10.),s)
+                self.assertEqual(out['valid'],fault is None)
+                if fault is None:self.assertIsNone(out['exit']['valid'])
+
+
+class StagedExitTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp=tempfile.TemporaryDirectory();self.addCleanup(self.tmp.cleanup)
+        self.ops=fixture(self.tmp.name);r=self.ops.r
+        r.job.update(v87_staged_exit=True,v87_continuous_recovery=True)
+        r.fingers=np.arange(7,13);r.g['qvelocity']=np.zeros(7)
+        r.collision=NS(check=Mock(return_value=(True,'native clear')))
+        r.model.poses=Mock(return_value={});r.event=Mock();r.tcp=lambda:np.eye(4)
+        r.move_path=Mock();r.step=Mock();r.policy.data['jaw_release_m_s']=.01
+        self.ops.articulation=lambda:NS(joint_type='revolute')
+        self.park=Mock(side_effect=lambda g,p:dict(reached=True,unloaded=True,
+            measured_collision_check=dict(valid=True),region=p['parking_region']))
+        self.route=Mock(side_effect=[(None,'native obstacle'),([[0.]*7,[.1]*7],'DIRECT')])
+        self.modules={'native_g1_safe_park':NS(verify_park=self.park,route_to_joint=self.route),
+            'native_g1_contact_recovery':NS(release_geometry=Mock(return_value=dict(valid=True)))}
+        self.routes=Mock(return_value=iter([([[0.]*7,[.04]*7],{})]))
+        self.targets=Mock(return_value=iter([('specified',np.zeros(7)),('alternative',np.full(7,.1))]))
+
+    def run_exit(self,time_scope=untimed):
+        with patch.dict(sys.modules,self.modules),patch.object(staged,'local_routes',self.routes),\
+             patch.object(staged,'parking_targets',self.targets),\
+             patch('agentic_interaction_v81.exit_clearance.ParkingClearance',lambda s:s),\
+             patch('agentic_interaction_v81.exit_routes.timed_returns',time_scope):
+            return staged.release_park(self.ops)
+
+    def test_actual_ninety_then_release_local_retreat_fresh_observation_and_alternative_park(self):
+        # This explicit fixture represents completed motion; it is not a
+        # simulation measurement or a claim that native physics reached90deg.
+        r=self.ops.r;r.coordinate=math.pi/2;world=r.world
+        order=[]
+        r.move_path.side_effect=lambda path,phase:order.append(phase)
+        self.ops.observe.side_effect=lambda:order.append('FRESH_RGBD')or dict(fresh=True)
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertTrue(out['release']['confirmed'])
+        self.assertTrue(out['retreat']['reached']);self.assertTrue(out['parking']['reached'])
+        self.assertEqual(out['park']['region'],'alternative')
+        self.assertEqual(order,['CLEARANCE_RETREAT','FRESH_RGBD','SAFE_PARK_MOTION'])
+        self.assertEqual([s['state']['coordinate_native']for s in out['stages']],[math.pi/2]*5)
+        self.assertIs(r.world,world);self.assertEqual(r.coordinate,math.pi/2)
+
+    def test_no_parking_route_retains_distinct_release_and_clearance_results(self):
+        self.route.side_effect=None;self.route.return_value=(None,'collision')
+        out=self.run_exit();self.assertEqual(out['status'],staged.EXIT_PATH_NOT_FOUND)
+        self.assertFalse(out['safe']);self.assertTrue(out['release']['confirmed'])
+        self.assertTrue(out['retreat']['reached']);self.assertFalse(out['parking']['reached'])
+        self.assertTrue(out['hold_confirmed'])
+        r=self.ops.r;result=dict(segments=[dict(status='TARGET_REACHED',gain_native=.5)],safe_exit=out)
+        finished=supervisor.complete(self.ops,dict(operation='acquire_execute'),result)
+        self.assertEqual(finished['segments'],result['segments'])
+        self.assertFalse(finished['episode_termination_required']);self.assertTrue(self.ops._v86_exit_pending)
+        self.ops.release_park.assert_not_called()
+
+    def test_no_local_retreat_never_attempts_remote_parking(self):
+        self.routes.return_value=iter([])
+        out=self.run_exit();self.assertEqual(out['status'],staged.LOCAL_RETREAT_NOT_FOUND)
+        self.assertTrue(out['release']['confirmed']);self.route.assert_not_called()
+        self.ops.r.move_path.assert_not_called();self.ops.observe.assert_not_called()
+
+    def test_release_sweep_rejection_keeps_grasp_and_never_opens_jaw(self):
+        r=self.ops.r;r.grasp_reference=np.eye(4);r.g['reference']=np.eye(4)
+        self.modules['native_g1_contact_recovery'].release_geometry.return_value=dict(valid=False,reason='native collision')
+        with patch('agentic_interaction_v84.operations.contact_trusted',return_value=True):out=self.run_exit()
+        self.assertEqual(out['status'],staged.SAFE_RELEASE_NOT_CONFIRMED)
+        self.assertTrue(out['contact_retained']);self.assertEqual(self.ops.abc_state,'C')
+        self.assertIsNotNone(r.grasp_reference);r.step.assert_not_called();r.move_path.assert_not_called()
+
+    def test_unstable_object_or_arm_cannot_release(self):
+        self.ops.r.station_motion.ready=lambda *a:False
+        out=self.run_exit();self.assertEqual(out['status'],staged.SAFE_HOLD_NOT_ESTABLISHED)
+        self.modules['native_g1_contact_recovery'].release_geometry.assert_not_called()
+        self.ops.r.step.assert_not_called();self.ops.r.move_path.assert_not_called()
+
+    def test_original_hard_latch_blocks_all_exit_motion_and_is_not_cleared(self):
+        r=self.ops.r;latch=dict(reason='original hard');r.supervisor.latched=latch
+        out=self.run_exit();self.assertEqual(out['status'],staged.HARD_SAFETY_STOP)
+        self.assertIs(r.supervisor.latched,latch);r.stop_command.assert_not_called()
+        r.hold.assert_not_called();r.move_path.assert_not_called()
+
+    def test_hard_safety_during_retreat_propagates_without_trying_alternative(self):
+        self.ops.r.move_path.side_effect=SafetyStop('NATIVE_HARD_COLLISION')
+        with self.assertRaises(SafetyStop):self.run_exit()
+        self.route.assert_not_called();self.ops.observe.assert_not_called()
+
+    def test_identical_failed_parking_edges_are_not_resubmitted(self):
+        self.route.side_effect=None;self.route.return_value=(None,'collision')
+        self.run_exit();self.assertEqual(self.route.call_count,2)
+        self.routes.return_value=iter([([[0.]*7,[.04]*7],{})])
+        self.targets.return_value=iter([('specified',np.zeros(7)),('alternative',np.full(7,.1))])
+        self.run_exit();self.assertEqual(self.route.call_count,2)
+
+    def test_current_motion_collision_prevents_even_local_clearance(self):
+        self.ops.r.collision.check.return_value=(False,'original collision')
+        out=self.run_exit();self.assertEqual(out['status'],staged.SAFE_HOLD_NOT_ESTABLISHED)
+        self.ops.r.move_path.assert_not_called()
+
+    def test_registered_preferred_route_rejection_is_once_only_after_real_goal_record(self):
+        r=self.ops.r
+        r.job['v87_staged_exit_fixture']=dict(kind='reject_preferred_parking_route_once_after_task_goal')
+        r.v81_task_progress=dict(maximum_measured_native=r.job['v81_task_goal_native'])
+        self.route.side_effect=None;self.route.return_value=([[0.]*7,[.1]*7],'DIRECT')
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertEqual(out['park']['region'],'alternative')
+        self.assertTrue(out['parking']['candidates'][0]['engineering_injected'])
+        self.assertTrue(self.ops._v87_park_rejection_injected)
+        self.assertEqual(self.ops.r.move_path.call_count,2)  # local + alternative only
+
+    def test_actual_parking_calls_the_original_timed_route_wrapper(self):
+        native=self.modules['native_g1_safe_park'];rejections=Mock(return_value=(None,'TIMED_RETURN_ROUTE_UNAVAILABLE:native obstacle'))
+        @contextmanager
+        def enforced(r):
+            with patch.object(native,'route_to_joint',rejections):yield []
+        out=self.run_exit(enforced)
+        self.assertEqual(out['status'],staged.EXIT_PATH_NOT_FOUND)
+        self.assertEqual(rejections.call_count,2);self.route.assert_not_called()
+        self.assertEqual(self.ops.r.move_path.call_count,1)  # local only
+
+
+class StagedBudgetTests(unittest.TestCase):
+    def test_unknown_future_route_keeps_exit_reserve_and_complete_motion_budget(self):
+        from agentic_interaction_v87.staged_cost import admit_staged_motion
+        for available,expected in [(1000.,True),(0.,False)]:
+            with self.subTest(available=available),tempfile.TemporaryDirectory()as tmp:
+                ops=fixture(tmp);r=ops.r
+                r.c=dict(arm_speed_limits=[1.]*7);r.base=np.zeros(4);r.solver=None;r.fingers=np.arange(7,13)
+                r.v75_config=dict(active_wall_per_sim_s_upper=2.,healthy_segment_additive_excess_sim_s=1.,
+                    closure_hold_sim_s_bound=2.,closure_bound_source='original recorded bound')
+                r.profile=NS(calls={'RGBD_SAM3_and_incremental_geometry':1},
+                    inclusive={'RGBD_SAM3_and_incremental_geometry':2.})
+                r.policy.motion=lambda phase:dict(speed_m_s=.01,acceleration_m_s2=.03)
+                r.policy.phase=lambda phase:phase
+                r.policy.data.update(arm_command_acceleration_rad_s2={'PREGRASP':.5,'APPROACH':.5})
+                r.episode_budget=NS(remaining=lambda t:dict(wall_s=available,sim_s=available),reserve_wall=300.,reserve_sim=60.)
+                transition=dict(valid=True,return_path=[[0.]*7,[0.]*7,[0.]*7],
+                    approach_audit=dict(preplan=[[0.]*7,[0.]*7],approach=[[0.]*7,[0.]*7]))
+                native=NS(validate_execution=Mock(return_value=transition))
+                actions=[dict(role='FIT_OPEN',target_q=.18),dict(role='VALIDATION_REVERSE',target_q=.08)]
+                with patch.dict(sys.modules,{'native_g1_agent_execution':native,'xarm7_native_gripper':NS(GRIPPER_JOINTS=[])}),\
+                     patch('agentic_interaction_v87.staged_cost.timed_path',return_value=iter([])),\
+                     patch('agentic_interaction_v87.staged_cost.segment_plan',return_value=dict(valid=True,nominal_duration_s=4.)):
+                    out=admit_staged_motion(r,{},actions,dict(v75_whole_chain=dict(valid=True,exit=dict(valid=None))))
+                self.assertEqual(out['admit'],expected)
+                self.assertTrue(out['future_exit_cost_unknown']);self.assertTrue(out['includes_complete_validation'])
+                self.assertEqual(out['cost_sources']['exit']['wall_s'],300.)
+                self.assertEqual(out['cost_sources']['exit']['sim_s'],60.)
+                self.assertEqual(r.episode_budget.reserve_wall,300.)
+                native.validate_execution.assert_called_once()
+
+
+if __name__=='__main__':unittest.main()

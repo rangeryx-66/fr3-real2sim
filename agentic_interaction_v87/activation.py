@@ -7,6 +7,8 @@ def activate(spec,job,existing,base_profile):
     shadow.pop('controlled_interruption_fixture',None)
     shadow.pop('graspgenx',None)
     shadow.pop('gpu_capacity_evidence',None)
+    shadow.pop('staged_exit',None)
+    shadow.pop('staged_exit_fixture',None)
     existing(shadow,job)
     fixture=spec.get('controlled_interruption_fixture')
     if fixture is not None:
@@ -17,6 +19,15 @@ def activate(spec,job,existing,base_profile):
             raise ValueError('FINITE_EXPLICIT_V87_ENGINEERING_FIXTURE_REQUIRED')
         job['v87_controlled_interruption_fixture']=dict(fixture)
     job['v87_continuous_recovery']=True
+    if 'staged_exit' in spec:
+        if spec['staged_exit'] is not True:raise ValueError('EXPLICIT_STAGED_EXIT_OPT_IN_REQUIRED')
+        job['v87_staged_exit']=True
+    if 'staged_exit_fixture' in spec:
+        fixture=spec['staged_exit_fixture']
+        if (not job.get('v87_staged_exit') or spec.get('phase')!='engineering'
+                or fixture!={'kind':'reject_preferred_parking_route_once_after_task_goal'}):
+            raise ValueError('EXPLICIT_ENGINEERING_STAGED_EXIT_FIXTURE_REQUIRED')
+        job['v87_staged_exit_fixture']=dict(fixture)
     registration=spec.get('gpu_capacity_evidence')
     if registration is not None:
         from pathlib import Path

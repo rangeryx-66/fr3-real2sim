@@ -109,6 +109,11 @@ def complete(ops,command,result):
     if result.get('outcome') in (SAFETY_STOP,UNRECOVERABLE) or result.get('status') in (
             'SAFETY_STOP','CONTROL_STATE_UNTRUSTED') or ops.r.supervisor.latched is not None:
         return result
+    if ops.r.job.get('v87_staged_exit'):
+        from agentic_interaction_v87.staged_exit import PARTIAL,recovery_boundary
+        exit_result=result if command['operation']=='safe_release_retreat' else result.get('safe_exit',{})
+        if exit_result.get('status') in PARTIAL:
+            return recovery_boundary(ops,command,result,exit_result)
     if result.get('error') and not result.get('outcome'):
         message=result['error']
         if isinstance(message,str) and message.startswith('RuntimeError(') and message.endswith(')'):

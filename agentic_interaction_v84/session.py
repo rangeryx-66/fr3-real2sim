@@ -58,6 +58,9 @@ def serve(r):
     real_factory=owner.operations_class
     def factory(parent):
         result=operations_class(real_factory(parent))
+        if r.job.get('v87_staged_exit'):
+            from agentic_interaction_v87.staged_exit import operations_class as staged
+            result=staged(result)
         if r.job.get('v87_graspgenx'):
             from agentic_interaction_v87.hybrid_grasp import operations_class as hybrid
             result=hybrid(result)

@@ -96,8 +96,24 @@ def evaluate(g, candidate, actions, policy, config, solver):
             goal = D @ T; goal[:3, 3] += center * (D[:3, :3] @ jaw)
             seed = solver.solve(goal, base, seed, starts=1)
             if seed is None:return dict(valid=False, reason='REVOLUTE_STOPPED_TARGET_IK', checked=checked)
+            if g['job'].get('v87_staged_exit'):
+                for command in (seed,seed+bias):
+                    for width in widths:
+                        okay,why=check(command,D @ moving,width)
+                        if not okay:return dict(valid=False,reason='REVOLUTE_STOPPED_HOLD:'+str(why),
+                            role=action['role'],center_m=center,checked=checked)
             previous = target
             if center != 0:continue
+            if g['job'].get('v87_staged_exit'):
+                # The checked loaded motion includes the stopped endpoint,
+                # retained bias, centering and reference/braking envelope.
+                # Future release/parking is a different measured-state task;
+                # absence of its route cannot invalidate this motion proof.
+                endpoints.append(dict(role=action['role'],target_rad=target,
+                    stopping_envelope_rad=stopping,motion_valid=True,
+                    stopped_hold_checked=True,exit_valid=None,
+                    exit_planning='DEFERRED_TO_ACTUAL_STOPPED_STATE'))
+                continue
             # Predict release/exit at every declared stopped boundary. Real
             # measured-state guarded exit remains authoritative in execution.
             for width in np.linspace(min(widths), .084, 35):
@@ -115,6 +131,7 @@ def evaluate(g, candidate, actions, policy, config, solver):
             if not exit_plan['valid']:
                 return dict(valid=False, reason='REVOLUTE_CHAIN_EXIT_UNAVAILABLE', endpoints=endpoints, checked=checked)
     return dict(valid=True, closing=closing, endpoints=endpoints, checked_native_configurations=checked,
+        staged_exit=bool(g['job'].get('v87_staged_exit')),
         minimum_joint_margin_rad=minimum, perpendicular_radius_m=radius,
         actual_start_rad=start, measured_finger_joints_rad=joints[g['fingers']].tolist(),
         retained_command_bias_rad=bias.tolist(), reference_lead_rad=LOOKAHEAD_RAD,

@@ -77,7 +77,10 @@ def operations_class(original):
             from .physics_lifecycle import resume_for_exit
             resume_for_exit(self.r)
             from .exit_routes import release_park
-            result=release_park(self.r,super().release_park)
+            if self.r.job.get('v87_staged_exit'):
+                from agentic_interaction_v87.staged_exit import release_park as staged
+                result=staged(self)
+            else:result=release_park(self.r,super().release_park)
             if self.r.job.get('v81_integrated_repair'):
                 from .costs import record
                 record(self,'release',started)

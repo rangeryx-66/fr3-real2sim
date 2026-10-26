@@ -26,7 +26,9 @@ def coverage(plan, targets, horizon=None):
     if plan.get('coordinate_unit')!='m' and revolute.get('valid') is True:
         certified=[float(a['target_rad']) for a in revolute.get('endpoints',[])
                    if type(a.get('target_rad')) in (int,float) and math.isfinite(a['target_rad'])
-                   and a.get('exit_valid') is True]
+                   and (a.get('exit_valid') is True or
+                        revolute.get('staged_exit') is True and
+                        a.get('motion_valid') is True and a.get('stopped_hold_checked') is True)]
     def includes(q):
         return ((valid and low-1e-10<=float(q)<=high+1e-10)
                 or any(abs(float(q)-v)<=1e-10 for v in certified))
