@@ -153,7 +153,9 @@ def complete(ops,command,result):
         existing=result.get('safe_exit',{})
         already_parked=classify(None,existing)['safe_park_verified']
         planning_only=command['operation'] in PLANNING and not result.get('physical_motion_executed',False)
-        if (planning_only or already_parked) and current_released_hold(ops):
+        try:held=(planning_only or already_parked) and current_released_hold(ops)
+        except SafetyStop as error:return exception_result(ops,command,error)
+        if held:
             invalidate(ops)
             fresh=None
             if already_parked:

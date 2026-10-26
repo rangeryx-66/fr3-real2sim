@@ -39,6 +39,26 @@ class RecoveryV87Tests(unittest.TestCase):
         r.stop_command.assert_not_called();ops.release_park.assert_not_called();ops.observe.assert_called_once()
         self.assertIsNone(r.supervisor.latched)
 
+    def test_rejected_plan_uses_original_settling_before_repeating_parking(self):
+        ops=self.ops;r=ops.r
+        r.robot.get_joint_velocities=lambda:np.full(7,.02)
+        r.station_motion=NS(ready=Mock(return_value=True))
+        out=supervisor.complete(ops,dict(operation='prepare_grasp'),dict(plan=False,reason='IK'))
+        self.assertEqual(out['outcome'],'ACTION_REJECTED')
+        self.assertTrue(out['recovery']['repeated_physical_parking_skipped'])
+        r.hold.assert_called_once_with(.3);r.station_motion.ready.assert_called_once()
+        ops.release_park.assert_not_called();ops.observe.assert_not_called()
+
+    def test_hard_safety_during_planning_settle_returns_to_lifecycle_owner(self):
+        from interaction_runtime.policy import SafetyStop
+        ops=self.ops;r=ops.r;world=r.world
+        r.robot.get_joint_velocities=lambda:np.full(7,.02)
+        r.hold.side_effect=SafetyStop('REGISTERED_HARD_GUARD')
+        out=supervisor.complete(ops,dict(operation='prepare_grasp'),dict(plan=False,reason='IK'))
+        self.assertEqual(out['outcome'],'SAFETY_STOP')
+        self.assertEqual(out['reason'],'REGISTERED_HARD_GUARD')
+        self.assertIs(r.world,world);ops.release_park.assert_not_called()
+
     def test_interrupted_segment_excluded_before_worker_end_callback(self):
         end=Mock();wrapped=annotate_interrupted_end(end)
         try:raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:test')

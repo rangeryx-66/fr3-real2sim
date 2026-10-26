@@ -6,15 +6,26 @@ PREFIX='CONTROLLED_EXECUTION_INTERRUPT:'
 
 
 def current_released_hold(ops):
-    from agentic_interaction_v81.recovery_supervisor import released
+    from agentic_interaction_v81.recovery_supervisor import released,trusted
     r=ops.r
-    if not released(ops):return False
+    if (not trusted(ops) or r.grasp_reference is not None or ops.g.get('reference') is not None
+            or r.rows[-1]['aperture_m']<.083
+            or max(r.filtered())>r.policy.data['force']['unloaded_pad_n']):return False
     try:
         if np.max(abs(r.g['qvelocity']))>1e-10:return False
         q=np.asarray(r.robot.get_joint_positions());dq=np.asarray(r.robot.get_joint_velocities())
-        if not np.isfinite(np.r_[q,dq]).all() or np.max(abs(dq[r.arm]))>=.01:return False
+        if not np.isfinite(np.r_[q,dq]).all():return False
         ok,_=r.collision.check(r.model.poses(q[r.arm],r.base,finger_q=q[r.fingers]),r.moving(),False)
-        return bool(ok)
+        if not ok:return False
+        if released(ops) and np.max(abs(dq[r.arm]))<.01:return True
+        # A single native velocity sample or an unsettled unloaded filter is
+        # not evidence that a rejected plan needs a physical parking cycle.
+        # Keep the current command; use the ORIGINAL supervised settling
+        # duration and measured stationarity test. Failure still falls back
+        # to the existing stop/unload/park owner. Hard safety propagates.
+        r.hold(.3)
+        measured=np.asarray(r.robot.get_joint_positions())[r.arm]
+        return bool(released(ops) and r.station_motion.ready(r.rows[-1]['t'],measured))
     except (AttributeError,KeyError,TypeError,ValueError):return False
 
 
