@@ -1,0 +1,74 @@
+{
+  "schema": "v88-fixed-known-goal-driven/v1",
+  "research_reference": "V8.8-fixed-known-45600-45290",
+  "fixed_cases": [
+    {
+      "asset_id": "45600",
+      "joint_type": "revolute",
+      "target_joint": "joint_revolute_l_0_abstract_0_1",
+      "moving_link": "abstract_0_1",
+      "contact_body": "l_1",
+      "goal_native": 1.5707963267948966,
+      "meaningful_reverse_native": 0.17453292519943295,
+      "limits_native": {
+        "lower": 0.0,
+        "upper": 1.6022122533307945
+      },
+      "wall_budget_s": 14400,
+      "asset_source": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/inputs/45600/asset",
+      "prepared_urdf_sha256": "5ba1f704a3ffa31af03110a62d6a2071ad20cdbbce8b8d900082fdeec381fc64",
+      "selection_reason": "explicit user fixed historical asset; no outcome-based substitution"
+    },
+    {
+      "asset_id": "45290",
+      "joint_type": "prismatic",
+      "target_joint": "joint_prismatic_l_0_abstract_0_2",
+      "moving_link": "abstract_0_2",
+      "contact_body": "l_2",
+      "goal_native": 0.18,
+      "meaningful_reverse_native": 0.04,
+      "limits_native": {
+        "lower": 0.0,
+        "upper": 0.378412895770898
+      },
+      "wall_budget_s": 14400,
+      "asset_source": "/data1/home/rangeryx/fr3_real2sim_known_whole_20261007/results/cross_object_v7_20261019/inputs/45290/asset",
+      "prepared_urdf_sha256": "1df6d2ff46e055bcd64b25eb7bf1c89e4333bd0f2d33f2ef0bb9db2b50c427b9",
+      "selection_reason": "explicit user fixed historical asset; no outcome-based substitution"
+    }
+  ],
+  "created_unix_s": 1793032711.9230883,
+  "source_commit_before_registration": "82b92f3",
+  "known_joint_geometry": true,
+  "hidden_dynamics": "opaque shared V7 family; reveal only after both actors close and online/model records seal",
+  "asset_preparation": {
+    "installation": {
+      "x_m": 0.5,
+      "y_m": -0.05,
+      "yaw_deg": -90,
+      "fixture_height_m": 0.04
+    },
+    "initial_station": [
+      0.19605376022549204,
+      -0.5328198023693291,
+      -0.1,
+      -0.7953990037810357
+    ]
+  },
+  "episode_rules": {
+    "no_swap": true,
+    "no_reset": true,
+    "sequential": true,
+    "total_wall_s": 14400,
+    "exit_wall_reserve_s": 300,
+    "deadline_from_formal_launch": true,
+    "normal_failures_keep_world": true,
+    "end_only": [
+      "complete_task_validation_and_exit",
+      "absolute_deadline",
+      "explicit_user_cancel",
+      "independent_hard_prohibition_or_untrusted_simulation"
+    ]
+  },
+  "prior_unseen_trials_cancelled_by_user": true
+}

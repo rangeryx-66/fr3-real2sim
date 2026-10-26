@@ -72,6 +72,32 @@ class PersistentGoalTests(unittest.TestCase):
         with patch('time.time',return_value=1100.),self.assertRaisesRegex(ValueError,'FROZEN_ASSET'):
             persistent.activate(dict(spec,scene='asset_45936'),{})
 
+    def test_human_cancel_requires_external_episode_record_not_agent_failure_reason(self):
+        self.r.job['episode_id']='fixed_episode'
+        self.r.job[persistent.FLAG]['formal_start_unix_s']=1000.
+        completion=dict(actual_goal_reached=False,meaningful_reverse=False,complete_independent_validation=False)
+        path=self.r.output/'USER_REQUESTED_STOP.json'
+        path.write_text(json.dumps(dict(reason='NO_IK')))
+        with patch('time.time',return_value=1100.):
+            self.assertFalse(persistent.finish_assessment(self.ops,completion)['allowed'])
+            path.write_text(json.dumps(dict(schema='explicit-user-episode-stop/v1',episode_id='fixed_episode',authorization='direct_user_message',user_request='Stop this episode',requested_unix_s=1050.)))
+            self.assertEqual(persistent.finish_assessment(self.ops,completion)['reason'],'USER_EXPLICIT_CANCEL')
+        self.assertFalse((self.r.output/'STOP_AND_EXPORT').exists())
+        self.r.supervisor.latched={'reason':'actual collision'}
+        self.assertEqual(persistent.finish_assessment(self.ops,completion)['reason'],'INDEPENDENT_HARD_SAFETY_BLOCK')
+
+    def test_known_v88_registration_keeps_exact_assets_and_absolute_deadline(self):
+        p=Path(self.tmp.name)/'v88.json'
+        p.write_text(json.dumps(dict(fixed_cases=[dict(asset_id=a,wall_budget_s=14400) for a in ['45600','45290']])))
+        declaration=dict(kind=persistent.KNOWN_KIND,registration=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),formal_start_unix_s=1000.)
+        for asset in ['45600','45290']:
+            spec=dict(phase='engineering',scene='asset_'+asset,wall_budget_s=14400,sim_budget_s=14400,staged_exit=True,persistent_goal=declaration)
+            with patch('time.time',return_value=1100.):
+                job={};persistent.activate(spec,job)
+                self.assertEqual(job[persistent.FLAG]['deadline_unix_s'],15400.)
+                with self.assertRaisesRegex(ValueError,'FROZEN_ASSET'):
+                    persistent.activate(dict(spec,scene='asset_32086'),{})
+
 
 class RealDispatcherTests(unittest.TestCase):
     def test_soft_failure_then_premature_finish_then_inspect_stays_same_world_until_deadline(self):

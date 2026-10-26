@@ -1,0 +1,74 @@
+{
+  "cases": [
+    {
+      "asset_id": "45600",
+      "target_joint": "joint_revolute_l_0_abstract_0_1",
+      "joint_type": "revolute",
+      "physics_sha256": "5984587fd7069b3195600d065faf1a94f53d606485d60f097effe11a98cbbc9f",
+      "source_sha256": "8aaecd107d5e9473f7a8a1aa900d8d8669e82f8453fe881fbf47ef4773e859c7",
+      "prepared_sha256": "5ba1f704a3ffa31af03110a62d6a2071ad20cdbbce8b8d900082fdeec381fc64",
+      "nonfixed_joints_retained": [
+        "joint_revolute_l_0_abstract_0_1"
+      ],
+      "limits_native": {
+        "lower": 0.0,
+        "upper": 1.6022122533307945
+      },
+      "goal_native": 1.5707963267948966,
+      "selected_joint_commands": false
+    },
+    {
+      "asset_id": "45290",
+      "target_joint": "joint_prismatic_l_0_abstract_0_2",
+      "joint_type": "prismatic",
+      "physics_sha256": "7f17e149a57d5db37412955bdcc09562c34e74a2fc1b54004b1e194a66b21a03",
+      "source_sha256": "cd1f38219ad1edc4428a9be2eb85a18b7e6e327a126192829aab402ca5437c54",
+      "prepared_sha256": "1df6d2ff46e055bcd64b25eb7bf1c89e4333bd0f2d33f2ef0bb9db2b50c427b9",
+      "nonfixed_joints_retained": [
+        "joint_prismatic_l_0_abstract_0_2",
+        "joint_prismatic_l_0_abstract_0_3",
+        "joint_prismatic_l_0_abstract_0_4"
+      ],
+      "limits_native": {
+        "lower": 0.0,
+        "upper": 0.378412895770898
+      },
+      "goal_native": 0.18,
+      "selected_joint_commands": false
+    }
+  ],
+  "registered_shared_plant_family": {
+    "mass_scale": [
+      0.75,
+      1.25
+    ],
+    "density_gradient": [
+      -0.3,
+      0.3
+    ],
+    "revolute": {
+      "coulomb_nm": [
+        0.018,
+        0.03
+      ],
+      "viscous_nm_s_rad": [
+        0.1,
+        0.35
+      ]
+    },
+    "prismatic": {
+      "coulomb_n": [
+        0.2,
+        0.6
+      ],
+      "viscous_n_s_m": [
+        1.0,
+        6.0
+      ]
+    },
+    "resistance_family": "constant native passive friction; no spring or joint drive"
+  },
+  "dynamics_reveal": "after both actors exit and model/online decisions seal; no online coefficient reads",
+  "bundle_sha256": "2dc262c39cfd14e279aaf71739e3b04c4f9b392b6f7e5b3058bad694bf5f3009",
+  "no_old_grasp_view_or_motion_import": true
+}

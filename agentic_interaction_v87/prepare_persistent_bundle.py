@@ -23,7 +23,7 @@ def prepare(root,assembly,registration,descriptor):
         (source/'report.json').write_text(json.dumps(source_report,indent=2)+'\n')
         template=copy.deepcopy(original['scenes']['asset_45936'if kind=='revolute'else'asset_45746']['job_template'])
         for k in ('episode_id','deadline_shanghai','debug_budget_profile','passive_geometry_cameras','passive_rgbd','passive_dataset_output','passive_evaluation_output'):template.pop(k,None)
-        template.update(asset_id=aid,research_reference='fixed-two-unseen-persistent-ABC',skill=dict(joint_type=kind),
+        template.update(asset_id=aid,research_reference=reg.get('research_reference','fixed-two-unseen-persistent-ABC'),skill=dict(joint_type=kind),
             articulation_v7=dict(joint_type=kind,limits_native=[a['limits_native'][k]for k in ('lower','upper')],units=template['articulation_v7']['units']),
             benchmark_goal_native=case['goal_native'],benchmark_goal_rad=case['goal_native'],authored_target_rad=a['limits_native']['upper'],
             grasp_geometry_candidates=[a['selection']],visual_prompt='cabinet door handle'if kind=='revolute'else'drawer handle',

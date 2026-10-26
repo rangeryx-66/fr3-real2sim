@@ -9,6 +9,7 @@ from pathlib import Path
 
 FLAG='v87_persistent_goal'
 KIND='fixed_two_unseen_four_hour_v1'
+KNOWN_KIND='fixed_known_four_hour_v88'
 
 
 def enabled(r):return bool(getattr(r,'job',{}).get(FLAG))
@@ -20,7 +21,7 @@ def activate(spec,job):
     if (spec.get('phase')!='engineering' or spec.get('staged_exit') is not True
             or not isinstance(declaration,dict)
             or set(declaration)!={'kind','registration','sha256','formal_start_unix_s'}
-            or declaration['kind']!=KIND or 'orchestration_authorization'in spec
+            or declaration['kind'] not in (KIND,KNOWN_KIND) or 'orchestration_authorization'in spec
             or spec.get('wall_budget_s')!=14400 or spec.get('sim_budget_s')!=14400):
         raise ValueError('EXPLICIT_FIXED_FOUR_HOUR_PERSISTENT_REGISTRATION_REQUIRED')
     source=Path(declaration['registration'])
@@ -48,6 +49,20 @@ def finish_assessment(ops,completion):
     r=ops.r
     if r.supervisor.latched is not None:
         return dict(allowed=True,reason='INDEPENDENT_HARD_SAFETY_BLOCK',task_complete=False)
+    # External owner records a direct human cancellation separately from the
+    # Agent's ordinary failed-plan finish request. Do not use STOP_AND_EXPORT:
+    # that marker interrupts runtime.step itself, including guarded parking.
+    request=r.output/'USER_REQUESTED_STOP.json'
+    if request.is_file():
+        try:
+            user=json.loads(request.read_text())
+            valid=(isinstance(user,dict) and user.get('schema')=='explicit-user-episode-stop/v1'
+                and user.get('episode_id')==r.job.get('episode_id')
+                and user.get('authorization')=='direct_user_message'
+                and isinstance(user.get('user_request'),str) and bool(user['user_request'].strip())
+                and r.job[FLAG].get('formal_start_unix_s',math.inf)<=user['requested_unix_s']<=time.time())
+        except (OSError,ValueError,KeyError,TypeError):valid=False
+        if valid:return dict(allowed=True,reason='USER_EXPLICIT_CANCEL',task_complete=False,user_request=str(request))
     if all(completion[k]for k in ('actual_goal_reached','meaningful_reverse','complete_independent_validation')):
         return dict(allowed=True,reason='MEASURED_TASK_LIFECYCLE_COMPLETE',task_complete=True,completion=completion)
     if remaining_wall(r)<=0:
