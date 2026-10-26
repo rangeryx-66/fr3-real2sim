@@ -22,7 +22,11 @@ def serve(r):
     try:
         from interaction_runtime.registered_observation_v71 import initialize
         from . import recovery_supervisor
-        try:initialize(r,ops)
+        try:
+            if r.job.get('v87_gpu_capacity_evidence'):
+                from agentic_interaction_v87.gpu_capacity import confirm_initialized
+                confirm_initialized(r)
+            initialize(r,ops)
         except Exception as error:
             if not recovery_supervisor.enabled(ops):raise
             command=dict(operation='initialize_observation',sequence=-1)

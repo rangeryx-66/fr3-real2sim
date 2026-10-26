@@ -5,6 +5,8 @@ import math
 def activate(spec,job,existing,base_profile):
     shadow=dict(spec,integration_profile=base_profile)
     shadow.pop('controlled_interruption_fixture',None)
+    shadow.pop('graspgenx',None)
+    shadow.pop('gpu_capacity_evidence',None)
     existing(shadow,job)
     fixture=spec.get('controlled_interruption_fixture')
     if fixture is not None:
@@ -15,6 +17,14 @@ def activate(spec,job,existing,base_profile):
             raise ValueError('FINITE_EXPLICIT_V87_ENGINEERING_FIXTURE_REQUIRED')
         job['v87_controlled_interruption_fixture']=dict(fixture)
     job['v87_continuous_recovery']=True
+    registration=spec.get('gpu_capacity_evidence')
+    if registration is not None:
+        from pathlib import Path
+        if (not isinstance(registration,dict)or set(registration)!={'path','sha256'}
+                or not isinstance(registration['path'],str)or not Path(registration['path']).is_absolute()
+                or not isinstance(registration['sha256'],str)or len(registration['sha256'])!=64):
+            raise ValueError('EXPLICIT_MEASURED_SPLIT_GPU_EVIDENCE_REQUIRED')
+        job['v87_gpu_capacity_evidence']=dict(registration)
     config=spec.get('graspgenx')
     if config is not None:
         from pathlib import Path

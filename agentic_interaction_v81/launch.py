@@ -27,7 +27,7 @@ def _launch(specfile,profile,instance=None):
     spec=json.loads(Path(specfile).read_text())
     allowed={'schema','episode_id','phase','scene','physics_file','physics_sha256','identification_case',
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
-             'integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx'}
+             'integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence'}
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     from .integration import apply as integrated_profile
@@ -58,7 +58,7 @@ def _launch(specfile,profile,instance=None):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
@@ -105,7 +105,11 @@ def _launch(specfile,profile,instance=None):
             global_and_history(instance['environment'])
         free={int(x.split(',')[0]):int(x.split(',')[1]) for x in subprocess.check_output(
             ['nvidia-smi','--query-gpu=index,memory.free','--format=csv,noheader,nounits'],text=True).splitlines()}
-        if free[int(p['physics_gpu'])]<12000:raise ValueError('INSUFFICIENT_SHARED_GPU_CAPACITY')
+        if job.get('v87_gpu_capacity_evidence'):
+            if instance is None:raise ValueError('MEASURED_SPLIT_REQUIRES_ORIGINAL_ISOLATED_INSTANCE')
+            from agentic_interaction_v87.gpu_capacity import before_launch
+            dump(out/'V87_GPU_CAPACITY_PRELAUNCH.json',before_launch(job,p,free))
+        elif free[int(p['physics_gpu'])]<12000:raise ValueError('INSUFFICIENT_SHARED_GPU_CAPACITY')
         env=dict(os.environ,PYTHONPATH=str(ROOT)+':'+str(ROOT/'scripts'),PYTHONNOUSERSITE='1',
             OPENBLAS_NUM_THREADS='1',OMP_NUM_THREADS='1',MPLCONFIGDIR=str(out/'plot_cache'),
             PATH=p['ffmpeg_dir']+':'+os.environ['PATH'])
