@@ -12,11 +12,21 @@ def runtime_class(parent):
             self._v87_cartesian_active=False;self._v87_fixture_done=False
             self._v87_last_command_phase=None
             self._v87_last_command_motion=None
+            from .constraint_feedback import enabled, ActionForceMonitor
+            if enabled(self):
+                self.supervisor.force = ActionForceMonitor(self.policy, self, previous=self.supervisor.force)
+                self.record.metadata['v87_constraint_policy'] = dict(
+                    policy=job['v87_constraint_policy'], emergency_limits_unchanged=True,
+                    sustained_band_authority='bounded stop/unload, never continued pulling',
+                    frozen_policy_bytes_unchanged=True)
             from .recovery import annotate_interrupted_end
             self.record.end=annotate_interrupted_end(self.record.end)
             previous=self.record.coordinate_fields
             def fields(row):
                 result=previous(row);m=self.command_governor.latest
+                feedback=getattr(self.supervisor.force,'feedback',{})
+                result.update(v87_constraint_speed_scale=float(feedback.get('scale',1.)),
+                    v87_constraint_unload_required=bool(feedback.get('unload_required',False)))
                 result.update(v87_command_linear_speed_m_s=float(m.get('linear_speed_m_s',np.nan)),
                     v87_command_linear_acceleration_m_s2=float(m.get('linear_acceleration_m_s2',np.nan)),
                     v87_command_governor_limited=bool(m.get('limited',False)),
@@ -26,6 +36,14 @@ def runtime_class(parent):
             self.record.metadata['v87_command_governor']=dict(
                 scope='nonlinear FK of final arm command, joint/TCP velocity and acceleration',
                 unchanged_native_drive_and_hard_limits=True,feeds_Physics_ID=False)
+
+        def step(self):
+            row = super().step()
+            from .constraint_feedback import enabled, require_recovery
+            if enabled(self):
+                row['constraint_feedback'] = dict(getattr(self.supervisor.force, 'feedback', {}))
+                require_recovery(self)
+            return row
 
         def begin_reference(self):
             super().begin_reference()
@@ -45,7 +63,8 @@ def runtime_class(parent):
             if self.policy.phase(phase)=='LOADED' and not self._decelerating:
                 hard=self.policy.motion(phase)['measured_speed_stop_m_s']
                 measured=float(self.rows[-1].get('tcp_speed_m_s',0.))
-                if measured>=.9*hard:
+                from .constraint_feedback import enabled
+                if not enabled(self) and measured>=.9*hard:
                     self.event('V87_CONTROLLED_INTERRUPT',reason='MEASURED_SPEED_APPROACHING_HARD_LIMIT',
                         measured_tcp_speed_m_s=measured,hard_limit_unchanged_m_s=hard)
                     raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:MEASURED_SPEED_APPROACHING_HARD_LIMIT')
@@ -65,8 +84,13 @@ def runtime_class(parent):
             # Feedback slows an ordinary tracking deviation before a controlled
             # interruption is needed; it does not replace measured hard guards.
             measured=float(self.rows[-1].get('tcp_speed_m_s',0.))
-            if measured>1.5*motion['speed_m_s']:
+            from .constraint_feedback import enabled
+            if not enabled(self) and measured>1.5*motion['speed_m_s']:
                 motion=dict(motion,speed_m_s=motion['speed_m_s']**2/measured)
+            from .constraint_feedback import motion as feedback_motion, require_recovery
+            if enabled(self):
+                require_recovery(self)
+                motion=feedback_motion(self,motion)
             target=self.reference_drive.advance(goal,self.dt,motion)
             with self.profile.measure('Pink_IK'):
                 q=self.solver.velocity_step(target,self.base,self.seed,self.dt)

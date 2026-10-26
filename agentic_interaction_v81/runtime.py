@@ -107,6 +107,12 @@ def runtime_class(original):
             from interaction_runtime.policy import SafetyStop
             try:row=super().step()
             except SafetyStop as error:
+                from agentic_interaction_v87.constraint_feedback import action_fault
+                normalized = action_fault(self, error)
+                if normalized is None:
+                    return self.rows[-1]  # pad-report absence must not abort braking
+                if normalized is not error:
+                    raise normalized from error
                 if self.job.get('v84_abc'):
                     from .terminal_safety import persist
                     try:persist(self, dict(safe_exit=dict(safe=False,

@@ -15,6 +15,7 @@ from interaction_runtime.segments import ExecutionBudgetExhausted
 def contact_trusted(ops):
     r=ops.r
     if r.supervisor.latched is not None or r.grasp_reference is None or not r.rows:return False
+    if getattr(getattr(r.supervisor,'force',None),'unload_required',False):return False
     row=r.rows[-1]
     if not row['wrist_ft']['valid'] or not np.isfinite(row['joint_coordinate']):return False
     recent=[x for x in r.rows if x['t']>=row['t']-.5]

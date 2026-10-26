@@ -7,6 +7,7 @@ def activate(spec,job,existing,base_profile):
     shadow.pop('controlled_interruption_fixture',None)
     shadow.pop('graspgenx',None)
     shadow.pop('gpu_capacity_evidence',None)
+    shadow.pop('constraint_policy',None)
     shadow.pop('staged_exit',None)
     shadow.pop('staged_exit_fixture',None)
     existing(shadow,job)
@@ -19,6 +20,12 @@ def activate(spec,job,existing,base_profile):
             raise ValueError('FINITE_EXPLICIT_V87_ENGINEERING_FIXTURE_REQUIRED')
         job['v87_controlled_interruption_fixture']=dict(fixture)
     job['v87_continuous_recovery']=True
+    if 'constraint_policy' in spec:
+        from .constraint_feedback import POLICY
+        if (spec['constraint_policy'] != POLICY or spec.get('phase') != 'engineering'
+                or spec.get('staged_exit') is not True):
+            raise ValueError('CLASSIFIED_CONSTRAINT_POLICY_REQUIRES_ENGINEERING_STAGED_EXIT')
+        job['v87_constraint_policy'] = POLICY
     if 'staged_exit' in spec:
         if spec['staged_exit'] is not True:raise ValueError('EXPLICIT_STAGED_EXIT_OPT_IN_REQUIRED')
         job['v87_staged_exit']=True

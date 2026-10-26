@@ -38,7 +38,20 @@ def loaded_command(ops,sequence):
                     or time.monotonic()-start>=wall_cap or r.tick*r.dt-sim>=sim_cap
                     or not contact_trusted(ops)):
                 expired=True;break
-            r.hold(.05)
+            try:
+                r.hold(.05)
+            except RuntimeError as error:
+                from agentic_interaction_v87.constraint_feedback import enabled, PREFIX
+                from interaction_runtime.segments import ExecutionBudgetExhausted
+                resource_end=isinstance(error,ExecutionBudgetExhausted)
+                if not resource_end and (not enabled(r) or not str(error).startswith(PREFIX)):
+                    raise
+                ops._abc_retain=False
+                exit_result=ops.release_park()
+                atomic_json(r.output/('ABC_C_CONTROLLED_RECOVERY_%03d.json'%sequence),
+                    result_packet(dict(reason=str(error),safe_exit=exit_result,
+                        original_goal_preserved=True,contact_hold_expired=False)))
+                return None
     if expired:
         ops._abc_retain=False;exit_result=ops.release_park()
         atomic_json(r.output/('ABC_C_TIMEOUT_%03d.json'%sequence),

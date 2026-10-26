@@ -1,0 +1,40 @@
+{
+  "baseline_commit": "d65f0d8cfd557cd3c7ecb3c3898d98492f609003",
+  "pytest": {
+    "passed": 140,
+    "subtests_passed": 39,
+    "failed": 0,
+    "wall_s": 57.87,
+    "junit_sha256": "13968b757e6d54fbd5cb470896e8923c59163363a27eb4cb4bc5a17ad89c66e9"
+  },
+  "frozen_audit": {
+    "physical_sources": 606,
+    "revolute_sources": 71,
+    "release_sources": 956,
+    "failures": []
+  },
+  "fault_families": [
+    "warning_noise_12000_samples",
+    "all_three_load_bands",
+    "recorded_torque_band",
+    "emergency_pad_force_torque",
+    "measured_speed_45134",
+    "actual_collision",
+    "joint_margin_velocity_effort",
+    "invalid_robot_wrench",
+    "untrusted_state_no_downgrade",
+    "existing_latch_immutable",
+    "brake_pad_absence",
+    "C_controlled_interrupt",
+    "C_exit_resource_exhaustion",
+    "planning_rejections_preserve_world",
+    "staged_exit_missing_route",
+    "original_stop_and_exit_guards"
+  ],
+  "qualification": "OFFLINE_ONLY_PHYSICAL_ACCEPTANCE_PENDING",
+  "earlier_failures": [
+    "3 existing ContactTests fixture compatibility failures fixed with optional monitor lookup",
+    "2 new C dispatch fixture missing station metadata fixed",
+    "load replay initially used seven-column command indices as full native DOF; failed qualification, corrected to original arm_indices; no runtime change inferred from that replay failure"
+  ]
+}
