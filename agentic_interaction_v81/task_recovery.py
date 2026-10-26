@@ -70,6 +70,8 @@ def completed(ops):
 
 def finish_check(ops, command):
     s=state(ops);done=completed(ops);resources=remaining(ops)
+    from agentic_interaction_v87.persistent_goal import enabled as persistent,finish_assessment
+    if persistent(ops.r):return finish_assessment(ops,done)
     if command.get('owner_requested_stop') is True:
         return dict(allowed=True,reason='EXPLICIT_OWNER_STOP',task_complete=False)
     if s['terminal_fault'] or ops.r.supervisor.latched is not None:

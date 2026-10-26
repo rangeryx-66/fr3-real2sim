@@ -25,4 +25,7 @@ def apply(spec,job):
 
 def window(r):
     resources=r.episode_budget.remaining(r.tick*r.dt)
+    from agentic_interaction_v87.persistent_goal import enabled,remaining_wall
+    if enabled(r):
+        return min(float(r.job['agent_wait_timeout_s']),remaining_wall(r)),resources
     return min(float(r.job['agent_wait_timeout_s']),resources['wall_s']),resources

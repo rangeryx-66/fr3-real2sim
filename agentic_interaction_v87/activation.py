@@ -8,9 +8,15 @@ def activate(spec,job,existing,base_profile):
     shadow.pop('graspgenx',None)
     shadow.pop('gpu_capacity_evidence',None)
     shadow.pop('constraint_policy',None)
+    shadow.pop('persistent_goal',None)
+    if spec.get('persistent_goal') is not None:
+        from agentic_interaction_v81.integration import ABC_PROFILE
+        shadow['integration_profile']=ABC_PROFILE
     shadow.pop('staged_exit',None)
     shadow.pop('staged_exit_fixture',None)
     existing(shadow,job)
+    from .persistent_goal import activate as persistent
+    persistent(spec,job)
     fixture=spec.get('controlled_interruption_fixture')
     if fixture is not None:
         if (not isinstance(fixture,dict) or set(fixture)!={'kind','progress_native'}

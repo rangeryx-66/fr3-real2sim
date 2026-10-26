@@ -29,7 +29,7 @@ def _launch(specfile,profile,instance=None):
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
              'integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence'}
     if spec.get('integration_profile')=='v87_abc_hybrid_recovery_v1':
-        allowed.update({'staged_exit','staged_exit_fixture','constraint_policy'})
+        allowed.update({'staged_exit','staged_exit_fixture','constraint_policy','persistent_goal'})
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     from .integration import apply as integrated_profile
@@ -60,8 +60,12 @@ def _launch(specfile,profile,instance=None):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence','staged_exit','staged_exit_fixture','constraint_policy')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence','staged_exit','staged_exit_fixture','constraint_policy','persistent_goal')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
+    if spec.get('persistent_goal') is not None:
+        # V8 materializes immutable IO under its original smoke contract; the
+        # explicit V87 registration below owns the actual14400s deadline.
+        compat.update(wall_budget_s=7200,sim_budget_s=3600)
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
     dump(compat_path,compat);out,p=prepare(compat_path,profile)
     job=json.loads((out/'job.json').read_text())
@@ -136,8 +140,16 @@ def _launch(specfile,profile,instance=None):
                     except subprocess.TimeoutExpired:actor.kill();rc=actor.wait(timeout=10)
         physical=(preserve_unverified_process_hold(out,rc,safety_registry) if job.get('v84_abc')
             else process_outcome(out,rc))
+        timing={}
+        if job.get('v87_persistent_goal'):
+            declaration=job['v87_persistent_goal']
+            timing=dict(formal_start_unix_s=declaration['formal_start_unix_s'],
+                formal_deadline_unix_s=declaration['deadline_unix_s'],
+                formal_elapsed_wall_s=time.time()-declaration['formal_start_unix_s'],
+                cleanup_overrun_s=max(0.,time.time()-declaration['deadline_unix_s']),
+                deadline_never_extended=True)
         dump(out/'PROCESS_COMPLETION.json',dict(returncode=rc,wall_s=time.perf_counter()-began,actor_exited=True,
-            physical_outcome=physical))
+            physical_outcome=physical,**timing))
     return out
 
 

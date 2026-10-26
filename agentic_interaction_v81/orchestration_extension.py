@@ -296,6 +296,10 @@ def accepted_total(output, binding, authorization, key):
 
 
 def wait_actor(actor, job, output, key=None, now=time.monotonic, poll_s=1.):
+    from agentic_interaction_v87.persistent_goal import FLAG as PERSISTENT
+    if job.get(PERSISTENT):
+        # Includes resource preparation and actor startup, without wall credit.
+        return actor.wait(timeout=max(0.,job[PERSISTENT]['deadline_unix_s']-time.time()))
     if not job.get(FLAG):
         return actor.wait(timeout=float(job['episode_wall_budget_s'])+180)
     started = now(); credit = 0

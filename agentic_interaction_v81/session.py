@@ -113,6 +113,11 @@ def serve(r):
                             timeout_s=wait,deadline_unix_s=deadline,requires_ACK_before_execution=True,
                             live_status_file='AGENT_SESSION_STATUS.json',orchestration_renewal=renewal))
                     else:atomic_json(r.output/'ORCHESTRATION_WAIT_RENEWAL_REFUSAL.json',renewal)
+                from agentic_interaction_v87.persistent_goal import enabled as persistent,renew_decision
+                if (persistent(r) and not r.stopped and not (r.output/'STOP_AND_EXPORT').exists()
+                        and time.perf_counter()-began>=wait):
+                    renewed=renew_decision(r,began,wait,seq)
+                    if renewed is not None:wait,deadline=renewed
                 if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.perf_counter()-began>=wait:
                     status(r,seq,'FINALIZING',unloaded=True,reason='decision deadline or owner stop')
                     return dict(status='ORCHESTRATION_TIMEOUT' if not r.stopped else 'OWNER_STOP',
@@ -200,6 +205,12 @@ def serve(r):
                         result.update(status='CONTROL_STATE_UNTRUSTED',recoverable=False)
             if recovery_supervisor.enabled(ops):
                 result=recovery_supervisor.complete(ops,command,result)
+            from agentic_interaction_v87.persistent_goal import enabled as persistent,remaining_wall
+            if (persistent(r) and remaining_wall(r)>0 and r.supervisor.latched is None
+                    and result.get('status')=='BUDGET_EXHAUSTED'
+                    and recovery_supervisor.trusted(ops) and task_recovery.unloaded(ops)):
+                result.update(status='OPERATION_BUDGET_EXHAUSTED',recoverable=True,
+                    episode_termination_required=False,original_budget_result_preserved=True)
             result=task_recovery.after(ops,command,result)
             if (r.job.get('v87_continuous_recovery') and (r.supervisor.latched is not None
                     or result.get('status')=='SAFETY_STOP'

@@ -1,0 +1,75 @@
+{
+  "cases": [
+    {
+      "asset_id": "32086",
+      "target_joint": "joint_0",
+      "joint_type": "revolute",
+      "physics_sha256": "9c086925e7d234f811062beb3786d83f8abdc5327aca7e2d2d4518d74cfa35c7",
+      "source_sha256": "ab51e776ca87e56490017ca81e356889a90048f235939457b940d49ca229df94",
+      "prepared_sha256": "8556ef82ab624d3a4ca2f121a9edf599dd03f30c030390ccbaf99058b260ef2d",
+      "nonfixed_joints_retained": [
+        "joint_0",
+        "joint_1"
+      ],
+      "limits_native": {
+        "lower": 0.0,
+        "upper": 2.9670597283903604
+      },
+      "goal_native": 1.5707963267948966,
+      "selected_joint_commands": false
+    },
+    {
+      "asset_id": "46230",
+      "target_joint": "joint_1",
+      "joint_type": "prismatic",
+      "physics_sha256": "626bd593e8e0d34ed3107ca15554fb4feb2427fb1ce49112a617cfcebc729486",
+      "source_sha256": "e05cc4020fd07dc81bef6a0911fe7ee5259a81fb1fd1574be3abf12e45ba72cc",
+      "prepared_sha256": "c8e015dbe5b128c75fd9994d6eeec8d989c8c69117e915bbe5129ffae08db884",
+      "nonfixed_joints_retained": [
+        "joint_0",
+        "joint_1",
+        "joint_2"
+      ],
+      "limits_native": {
+        "lower": 0.0,
+        "upper": 0.2802676301078776
+      },
+      "goal_native": 0.18,
+      "selected_joint_commands": false
+    }
+  ],
+  "registered_shared_plant_family": {
+    "mass_scale": [
+      0.75,
+      1.25
+    ],
+    "density_gradient": [
+      -0.3,
+      0.3
+    ],
+    "revolute": {
+      "coulomb_nm": [
+        0.018,
+        0.03
+      ],
+      "viscous_nm_s_rad": [
+        0.1,
+        0.35
+      ]
+    },
+    "prismatic": {
+      "coulomb_n": [
+        0.2,
+        0.6
+      ],
+      "viscous_n_s_m": [
+        1.0,
+        6.0
+      ]
+    },
+    "resistance_family": "constant native passive friction; no spring or joint drive"
+  },
+  "dynamics_reveal": "after both actors exit and model/online decisions seal; no online coefficient reads",
+  "bundle_sha256": "a54d9b00633b6caacfbac979239e7c3543d0dcd769913dc1160753b4b0f9296c",
+  "no_old_grasp_view_or_motion_import": true
+}
