@@ -6,11 +6,11 @@ from pathlib import Path
 
 def start_latest(ops, command):
     from .boundary_operations import wrist_evidence
-    if (ops.r.job['articulation_v7']['joint_type']!='prismatic'
+    if (ops.r.job['articulation_v7']['joint_type'] not in ('prismatic','revolute')
             or ops.g['recovery_state']!='UNLOADED_OBSERVATION'
             or ops.r.supervisor.latched is not None
             or not command.get('reason') or not wrist_evidence(ops,command)):
-        raise ValueError('INSPECTED_FRESH_UNLOADED_PRISMATIC_TARGET_REQUIRED')
+        raise ValueError('INSPECTED_FRESH_UNLOADED_ARTICULATED_TARGET_REQUIRED')
     rows=ops.g['agent_observations'];latest=rows[-1];folder=Path(latest['folder'])
     choice=command.get('observed_handle_hypothesis',{})
     if not choice.get('reason'):raise ValueError('EXPLICIT_OBSERVED_TARGET_SELECTION_REQUIRED')
@@ -59,6 +59,13 @@ def accept_latest(ops,command):
     np.save(folder/'handle_mask.npy',mask);np.save(folder/'sam3_mask_raw.npy',mask)
     atomic_json(folder/'AGENT_HANDLE_HYPOTHESIS_APPROVAL.json',dict(request=request,
         source='explicit current observed-target selection before further sensing',GT_used=False))
-    feedback=ops.accept_geometry(folder,'Agent-inspected current target, no GT or threshold change')
+    # Reuse the existing observed-mask/depth owner for both articulation types.
+    # Revolute OperationsV7 lacks this perception convenience method; it has
+    # no dependence on rail dynamics or any physical contact permission.
+    accept=getattr(ops,'accept_geometry',None)
+    if accept is None:
+        from interaction_runtime.prismatic_v73 import PrismaticOperationsV73
+        accept=lambda folder,reason:PrismaticOperationsV73.accept_geometry(ops,folder,reason)
+    feedback=accept(folder,'Agent-inspected current target, no GT or threshold change')
     return dict(accepted=True,target_association=evidence,incremental=feedback,
         robot_motion_executed=False,grasp_search_started=False)

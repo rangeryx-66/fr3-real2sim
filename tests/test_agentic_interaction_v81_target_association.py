@@ -42,13 +42,23 @@ class AssociationTests(unittest.TestCase):
             with self.assertRaises(ValueError):start_latest(ops,c)
             self.assertEqual(ops.g['observation_generations'],[])
 
-    def test_revolute_and_after_contact_old_image_rejected(self):
+    def test_revolute_switch_is_perception_only_and_after_contact_old_image_rejected(self):
         with tempfile.TemporaryDirectory()as d:
             ops,c=self.fixture(d);ops.r.job['articulation_v7']['joint_type']='revolute'
-            with self.assertRaises(ValueError):start_latest(ops,c)
-            ops.r.job['articulation_v7']['joint_type']='prismatic'
+            result=start_latest(ops,c)
+            self.assertEqual(len(ops.g['agent_observations']),1)
+            self.assertFalse(result['camera_or_robot_motion'])
+            self.assertFalse(ops.current_plan_ready)
             ops._last_contact_finished_world_s=4
             with self.assertRaises(ValueError):start_latest(ops,c)
+
+    def test_hard_latch_blocks_revolute_switch_without_mutation(self):
+        with tempfile.TemporaryDirectory()as d:
+            ops,c=self.fixture(d);ops.r.job['articulation_v7']['joint_type']='revolute'
+            ops.r.supervisor.latched={'reason':'actual collision'}
+            with self.assertRaises(ValueError):start_latest(ops,c)
+            self.assertEqual(len(ops.g['agent_observations']),2)
+            self.assertTrue(ops.current_plan_ready)
 
     def test_accept_before_another_view_does_not_search_or_move(self):
         with tempfile.TemporaryDirectory()as d:
