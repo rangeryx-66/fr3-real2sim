@@ -34,8 +34,11 @@ def retain(ops,sequence,trace,last):
         return dict(status='UNRECOVERABLE_SIMULATION_STATE',trace=trace,
             safe_exit=dict(safe=False,reason='NONFINITE_OR_UNREADABLE_NATIVE_STATE'))
     if r.supervisor.latched is None:
-        r.supervisor.latched=dict(reason=last.get('reason','UNCONFIRMED_HARD_STOP'),
-            evidence=last.get('evidence'),source='original action safety exception')
+        uncertain=last.get('outcome')=='UNRECOVERABLE'
+        r.supervisor.latched=dict(reason=last.get('reason')or(
+            'CONTROLLED_STOP_OR_STATE_UNCONFIRMED'if uncertain else'UNCONFIRMED_HARD_STOP'),
+            evidence=last.get('recovery')if uncertain else last.get('evidence'),
+            source='unconfirmed controller state; not a measured force/speed hard event'if uncertain else'original action safety exception')
     r.world.pause()
     initial=snapshot(r);folder=r.output/'safety_events';folder.mkdir(exist_ok=True)
     event=folder/('hard_stop_%03d.json'%sequence)

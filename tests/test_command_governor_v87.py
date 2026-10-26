@@ -49,5 +49,28 @@ class GovernorTests(unittest.TestCase):
         g=CommandGovernor(fk,1/240)
         with self.assertRaises(ValueError):g.velocity(np.full(7,np.nan),np.zeros(7),np.zeros(7),np.ones(7),.8,MOTION)
 
+    def test_loaded_motion_brakes_before_entering_slower_release_phase(self):
+        from types import SimpleNamespace as NS
+        from agentic_interaction_v87.runtime import runtime_class
+        Runtime=runtime_class(object);r=Runtime.__new__(Runtime)
+        r.dt=1/240;r.arm=np.arange(7);r.qtarget=np.zeros(7)
+        r.g=dict(phase='RELEASE',qvelocity=np.array([.012,0,0,0,0,0,0]))
+        r.command_governor=CommandGovernor(fk,r.dt)
+        r.command_governor.previous_twist[0]=.012
+        r.c=dict(arm_speed_limits=np.full(7,3.))
+        r.policy=NS(data=dict(arm_command_acceleration_rad_s2=dict(LOADED=.8)),phase=lambda p:'LOADED')
+        r._v87_cartesian_active=True;r._v87_last_command_phase='OPEN_CONTINUE'
+        r._v87_last_command_motion=dict(MOTION);r.event=lambda *a,**kw:None
+        r.check_q=lambda q:(True,None);phases=[]
+        r.step=lambda:phases.append(r.g['phase'])
+        # Imposing RELEASE's 8mm/s bound on the existing 12mm/s command is
+        # infeasible; the previous implementation did exactly that.
+        r.motion_limits=lambda phase:dict(MOTION,speed_m_s=.008)
+        r.stop_command()
+        self.assertTrue(phases);self.assertEqual(set(phases),{'OPEN_CONTINUE'})
+        self.assertEqual(r.g['phase'],'RELEASE')
+        self.assertLessEqual(np.max(abs(r.g['qvelocity'])),1e-12)
+        self.assertLess(r.qtarget[0],.002)
+
 
 if __name__=='__main__':unittest.main()

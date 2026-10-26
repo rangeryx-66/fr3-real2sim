@@ -10,6 +10,8 @@ def runtime_class(parent):
             from interaction_reference_handover import seed_pose
             self.command_governor=CommandGovernor(lambda q:seed_pose(self.solver,self.base,q),self.dt)
             self._v87_cartesian_active=False;self._v87_fixture_done=False
+            self._v87_last_command_phase=None
+            self._v87_last_command_motion=None
             from .recovery import annotate_interrupted_end
             self.record.end=annotate_interrupted_end(self.record.end)
             previous=self.record.coordinate_fields
@@ -30,11 +32,11 @@ def runtime_class(parent):
             if hasattr(self,'command_governor') and np.max(abs(self.g['qvelocity']))<1e-10:
                 self.command_governor.reset()
 
-        def _govern(self,wanted,phase):
+        def _govern(self,wanted,phase,motion=None):
             acc=self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(phase)]
             return self.command_governor.velocity(self.qtarget[self.arm],wanted,
                 np.asarray(self.g['qvelocity']),np.asarray(self.c['arm_speed_limits'])/3,
-                acc,self.motion_limits(phase))
+                acc,self.motion_limits(phase)if motion is None else motion)
 
         def cartesian_step(self,goal,phase):
             self.ensure_execution_budget(phase);self.g['phase']=phase;self.phase=phase
@@ -71,8 +73,9 @@ def runtime_class(parent):
             if q is None:raise RuntimeError('LOCAL_IK_UNAVAILABLE')
             wanted=(q+self.reference_bias-self.qtarget[self.arm])/self.dt
             previous_twist=self.command_governor.previous_twist.copy()
+            governed_motion=dict(self.motion_limits(phase))
             with self.profile.measure('v87_final_command_governor'):
-                velocity=self._govern(wanted,phase)
+                velocity=self._govern(wanted,phase,governed_motion)
             command=self.qtarget[self.arm]+velocity*self.dt
             if self.model.margin(command)<=self.policy.data['joint_margin_rad']:
                 self.command_governor.previous_twist=previous_twist
@@ -83,16 +86,30 @@ def runtime_class(parent):
                     self.command_governor.previous_twist=previous_twist
                     raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COMMAND_PATH_REJECTED:'+why)
             self.qtarget[self.arm]=command;self.g['qvelocity']=velocity
+            self._v87_last_command_phase=phase
+            self._v87_last_command_motion=governed_motion
             self.seed=command-self.reference_bias
             return self.step()
 
         def stop_command(self):
             if not getattr(self,'_v87_cartesian_active',False):return super().stop_command()
+            # The release owner requests RELEASE before calling stop(). Its
+            # lower speed ceiling cannot be imposed instantaneously on motion
+            # accepted in LOADED. Brake in the last accepted phase first; only
+            # a stopped command may enter the lower-speed release phase.
+            requested_phase=self.g['phase']
+            braking_phase=self._v87_last_command_phase or requested_phase
+            braking_motion=self._v87_last_command_motion
+            if requested_phase!=braking_phase:
+                self.event('V87_PHASE_TRANSITION_BRAKE',braking_phase=braking_phase,
+                    requested_next_phase=requested_phase,limits=braking_motion,
+                    policy_thresholds_unchanged=True)
+            self.g['phase']=braking_phase
             self._decelerating=True
             try:
                 for _ in range(int(5/self.dt)):
                     if np.max(abs(self.g['qvelocity']))<=1e-12:return
-                    v=self._govern(np.zeros(7),self.g['phase'])
+                    v=self._govern(np.zeros(7),braking_phase,braking_motion)
                     q=self.qtarget[self.arm]+v*self.dt
                     ok,why=self.check_q(q)
                     if not ok:
@@ -101,7 +118,9 @@ def runtime_class(parent):
                     self.qtarget[self.arm]=q;self.g['qvelocity']=v;self.step()
                 from interaction_runtime.policy import SafetyStop
                 raise SafetyStop('CONTROLLED_STOP_NOT_VERIFIED')
-            finally:self._decelerating=False
+            finally:
+                self._decelerating=False
+                self.g['phase']=requested_phase
 
         def move_path(self,*args,**kwargs):
             self._v87_cartesian_active=False

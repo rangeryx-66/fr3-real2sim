@@ -33,7 +33,7 @@ def serve(r):
             last=result
             if result['task_recovery']['episode_termination_required']:
                 if r.job.get('v87_continuous_recovery') and (r.supervisor.latched is not None
-                        or result.get('status')=='SAFETY_STOP'):
+                        or result.get('status')=='SAFETY_STOP' or result.get('outcome')=='UNRECOVERABLE'):
                     from agentic_interaction_v87.lifecycle import retain
                     return retain(ops,0,trace,result)
                 return dict(status=result['task_recovery']['status'],trace=trace)
@@ -197,7 +197,8 @@ def serve(r):
             result=task_recovery.after(ops,command,result)
             if (r.job.get('v87_continuous_recovery') and (r.supervisor.latched is not None
                     or result.get('status')=='SAFETY_STOP'
-                    or result.get('operation_status')=='SAFETY_STOP')):
+                    or result.get('operation_status')=='SAFETY_STOP'
+                    or result.get('outcome')=='UNRECOVERABLE')):
                 result['task_recovery'].update(episode_termination_required=False,
                     lifecycle_owner='session safety diagnosis',motion_resume_allowed=False,
                     original_terminal_fault_retained=True)

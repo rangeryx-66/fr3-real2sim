@@ -57,7 +57,11 @@ def serve(r):
     before,after=recovery.before,recovery.after
     real_factory=owner.operations_class
     def factory(parent):
-        return operations_class(real_factory(parent))
+        result=operations_class(real_factory(parent))
+        if r.job.get('v87_graspgenx'):
+            from agentic_interaction_v87.hybrid_grasp import operations_class as hybrid
+            result=hybrid(result)
+        return result
     def before_command(ops,command):
         if ops.abc_state=='C' and command['operation'] not in ('continue_motion','safe_release_retreat','finish','inspect'):
             return dict(executed=False,status='CONTACT_BOUNDARY_OPERATION_NOT_ALLOWED')

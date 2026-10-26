@@ -5,7 +5,7 @@ import numpy as np
 from .command_governor import CommandGovernor
 
 
-def replay(episode,output,segment):
+def replay(episode,output,segment,brake_at_end=False):
     episode=Path(episode);output=Path(output)
     closed=json.loads((episode/'PROCESS_COMPLETION.json').read_text())
     if not closed.get('actor_exited'):raise ValueError('CLOSED_SOURCE_EPISODE_REQUIRED')
@@ -47,7 +47,7 @@ def replay(episode,output,segment):
         records.append(dict(t=float(a['t'][row]),**governor.latest))
         if offset%1000==999:print('REPLAY_PROGRESS',offset+1,len(rows)-1,flush=True)
     braking=[];braking_error=None
-    if error is not None:
+    if error is not None or brake_at_end:
         for step in range(int(5/dt)):
             if np.max(abs(v))<=1e-12:break
             try:
@@ -82,5 +82,5 @@ def replay(episode,output,segment):
 
 if __name__=='__main__':
     p=argparse.ArgumentParser();p.add_argument('episode',type=Path);p.add_argument('output',type=Path)
-    p.add_argument('--segment',type=int,default=4);args=p.parse_args()
-    replay(args.episode,args.output,args.segment)
+    p.add_argument('--segment',type=int,default=4);p.add_argument('--brake-at-end',action='store_true');args=p.parse_args()
+    replay(args.episode,args.output,args.segment,args.brake_at_end)

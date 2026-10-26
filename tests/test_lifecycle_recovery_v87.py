@@ -82,6 +82,24 @@ class RecoveryV87Tests(unittest.TestCase):
         c.update(operation='inspect',reason='read-only diagnosis')
         self.assertIn('published',publish(r.output,3,c))
 
+    def test_unconfirmed_stop_retains_finite_world_without_claiming_hard_force_event(self):
+        ops=self.ops;r=ops.r;playing=[True]
+        r.world.pause=Mock(side_effect=lambda:playing.__setitem__(0,False))
+        r.world.is_playing=lambda:playing[0];r.world.close=Mock()
+        (r.output/'agent_commands').mkdir();(r.output/'agent_responses').mkdir()
+        for i,name in enumerate(['inspect','finish']):
+            (r.output/'agent_commands'/('%03d.json'%i)).write_text(json.dumps(dict(
+                operation=name,protocol_version=1,sequence=i,reason='stop-unconfirmed regression')))
+        failed=dict(status='CONTROL_STATE_UNTRUSTED',outcome='UNRECOVERABLE',
+            recovery=dict(reason='CONTROLLED_EXECUTION_INTERRUPT:TCP_PROJECTION_INFEASIBLE'))
+        outcome=retain(ops,0,[],failed)
+        report=outcome['trace'][0]['result']
+        self.assertEqual(report['World_identity'],id(r.world))
+        self.assertFalse(report['motion_authorized']);self.assertFalse(report['physical_park_verified'])
+        self.assertEqual(r.supervisor.latched['reason'],'CONTROLLED_STOP_OR_STATE_UNCONFIRMED')
+        self.assertIn('not a measured force/speed',r.supervisor.latched['source'])
+        r.world.close.assert_not_called();ops.release_park.assert_not_called()
+
     def test_real_dispatcher_delegates_hard_fault_to_retained_diagnosis(self):
         import sys
         from types import ModuleType

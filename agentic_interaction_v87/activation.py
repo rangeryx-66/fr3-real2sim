@@ -15,4 +15,12 @@ def activate(spec,job,existing,base_profile):
             raise ValueError('FINITE_EXPLICIT_V87_ENGINEERING_FIXTURE_REQUIRED')
         job['v87_controlled_interruption_fixture']=dict(fixture)
     job['v87_continuous_recovery']=True
+    config=spec.get('graspgenx')
+    if config is not None:
+        from pathlib import Path
+        if (not isinstance(config,dict)or set(config)!={'python','source','gpu'}
+                or type(config['gpu'])is not int or config['gpu']<0
+                or not all(isinstance(config[k],str)and Path(config[k]).is_absolute()for k in ['python','source'])):
+            raise ValueError('EXPLICIT_NATIVE_G1_GRASPGENX_RESOURCES_REQUIRED')
+        job['v87_graspgenx']=dict(config)
 
