@@ -90,6 +90,18 @@ class RecoveryTests(unittest.TestCase):
         for op in ('acquire_execute','relocate_station'):
             self.assertFalse(supervisor.before(self.ops,dict(operation=op))['executed'])
 
+    def test_staged_exit_pending_allows_planning_but_never_contact_or_base_actuation(self):
+        self.ops.r.job['v87_staged_exit']=True;self.ops._v86_exit_pending=True
+        world=self.ops.r.world
+        for operation in supervisor.PLANNING:
+            with self.subTest(operation=operation):
+                self.assertIsNone(supervisor.before(self.ops,dict(operation=operation)))
+        for operation in ('acquire_execute','attempt_grasp_and_probe','relocate_station','relocate_observe_prepare'):
+            with self.subTest(operation=operation):
+                self.assertFalse(supervisor.before(self.ops,dict(operation=operation))['executed'])
+        self.assertIs(self.ops.r.world,world);self.assertTrue(self.ops._v86_exit_pending)
+        self.ops.r.move_path=Mock();self.ops.release_park.assert_not_called()
+
     def test_unconfirmed_hold_is_unrecoverable_and_does_not_fake_park(self):
         self.ops.release_park=Mock(return_value=dict(safe=False));self.ops.r.station_motion.ready=lambda *a:False
         result=self.finish('prepare_grasp',dict(plan=False))

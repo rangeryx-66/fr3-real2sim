@@ -124,11 +124,53 @@ class StagedExitTests(unittest.TestCase):
         self.assertFalse(finished['episode_termination_required']);self.assertTrue(self.ops._v86_exit_pending)
         self.ops.release_park.assert_not_called()
 
-    def test_no_local_retreat_never_attempts_remote_parking(self):
+    def test_local_direction_failure_can_use_independently_native_checked_parking(self):
         self.routes.return_value=iter([])
-        out=self.run_exit();self.assertEqual(out['status'],staged.LOCAL_RETREAT_NOT_FOUND)
-        self.assertTrue(out['release']['confirmed']);self.route.assert_not_called()
-        self.ops.r.move_path.assert_not_called();self.ops.observe.assert_not_called()
+        world=self.ops.r.world;coordinate=self.ops.r.coordinate
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertFalse(out['retreat']['reached'])
+        self.assertTrue(out['retreat']['independent_parking_search'])
+        self.assertTrue(out['release']['confirmed']);self.assertTrue(out['parking']['reached'])
+        self.assertEqual(self.ops.r.move_path.call_count,1)
+        self.assertEqual(self.ops.r.move_path.call_args.args[1],'SAFE_PARK_MOTION')
+        self.ops.observe.assert_called_once();self.assertIs(self.ops.r.world,world)
+        self.assertEqual(self.ops.r.coordinate,coordinate)
+
+    def test_local_failure_cannot_bypass_original_timed_parking_rejection(self):
+        self.routes.return_value=iter([])
+        self.route.side_effect=None;self.route.return_value=(None,'TIMED_RETURN_ROUTE_UNAVAILABLE:native obstacle')
+        out=self.run_exit()
+        self.assertFalse(out['safe']);self.assertEqual(out['status'],staged.LOCAL_RETREAT_NOT_FOUND)
+        self.assertTrue(out['release']['confirmed']);self.assertFalse(out['parking']['reached'])
+        self.ops.r.move_path.assert_not_called();self.assertEqual(self.route.call_count,2)
+
+    def test_rest_heading_search_keeps_other_joints_and_native_limits(self):
+        r=self.ops.r;home=np.array([0.,-.5,0.,1.,0.,.5,0.])
+        limits=np.tile([-math.pi,math.pi],(7,1));r.model.limits=limits
+        r.model.margin=lambda q:float(np.minimum(q-limits[:,0],limits[:,1]-q).min())
+        r.robot.get_joint_positions=lambda:np.r_[1.4,np.zeros(12)]
+        def original(g):
+            for yaw in [0.,-math.radians(20),math.radians(20)]:
+                q=home.copy();q[0]=yaw;yield 'original',q
+        self.modules['native_g1_safe_park'].parking_targets=original
+        with patch.dict(sys.modules,self.modules):targets=list(staged.parking_targets(self.ops))
+        self.assertGreater(len(targets),3);self.assertLessEqual(len(targets),24)
+        self.assertTrue(any(abs(q[0]-1.4)<1e-10 for _,q in targets))
+        self.assertEqual([q[0] for _,q in targets[:3]],[0.,-math.radians(20),math.radians(20)])
+        for _,q in targets:
+            np.testing.assert_array_equal(q[1:],home[1:]);self.assertGreater(r.model.margin(q),.05)
+        self.assertEqual(len({tuple(q)for _,q in targets}),len(targets))
+
+    def test_sensing_failure_does_not_veto_independently_checked_safety_exit(self):
+        self.ops.observe.side_effect=OSError('segmentation worker unavailable')
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertIn('unavailable',out['post_clearance_observation_error'])
+        self.assertTrue(out['parking']['reached'])
+
+    def test_physical_hard_fault_during_sensing_never_attempts_parking(self):
+        self.ops.observe.side_effect=SafetyStop('INVALID_WRIST_FT')
+        with self.assertRaises(SafetyStop):self.run_exit()
+        self.route.assert_not_called()
 
     def test_release_sweep_rejection_keeps_grasp_and_never_opens_jaw(self):
         r=self.ops.r;r.grasp_reference=np.eye(4);r.g['reference']=np.eye(4)

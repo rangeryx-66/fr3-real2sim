@@ -87,3 +87,22 @@ Final-command governance now delegates to the inherited revolute/rail reference,
 No further long physical qualification is launched until revised fault injection, raw failure replay, original-limit FK braking and frozen-source audit pass. Full90-degree /180mm operation remains PENDING until a new version's own continuous video, raw telemetry, recovery and actual exit prove it.
 
 V2 selected regression: **158 passed,47 subtests passed,0 failed**,57.21s. See [OFFLINE_V2_RESULTS.json](OFFLINE_V2_RESULTS.json). The old158/140/etc selections overlap and are not cumulative.
+
+## Actual V2 qualification and shared exit follow-up
+
+[PHYSICAL_02.md](PHYSICAL_02.md) and [PHYSICAL_02.json](PHYSICAL_02.json): measured50.001 degrees,8656 continuous-load-regulation samples,zero safety-stop rows. Actual reverse route genuinely collides and is rejected. World retained across recovery, no reset; final parking unverified, NOT PASS. The old episode is closed/cleaned and cannot be continued or counted toward a later90-degree success.
+
+| Newly exercised limitation | Before | After / unchanged physical basis |
+|---|---|---|
+| Fixed4/8cm Cartesian clearance candidates | No candidate prevented all onward parking search, even at a released, stationary, collision-checked state | Independently test original timed joint parking routes; full native hand contact envelope applies from their current start through every sample. Neither release nor clearance is fabricated. No valid path -> retained released hold. |
+| Three rest shoulder headings | Treated0/+/-20deg as exhaustive; opened panel can occupy those exact cells | Same six retracted rest joints, original20deg heading spacing and current measured shoulder heading within actual native limits. Finite search, original collision/timed-route/actual parking proof mandatory. This extends planner alternatives, not safety margins. |
+| Exit-pending action whitelist | Also barred geometric planning | Permit pure existing PLANNING operations in staged profile; acquisition and base actuation remain blocked until verified exit. |
+| Ungrasped reverse fallback | Mobile panel mode lacks support validation | Human preference recorded: retained handle reversal first; optional panel push only after failed reverse and release. Not enabled by deleting the unsupported-mode guard. |
+
+The correction is shared across geometry/episodes, with no asset-ID exception, altered physical controller or raised protection threshold. New full Isaac qualifications wait for failure injection, closed-state native geometry replay and frozen-source audit.
+
+Closed-state [R02_EXIT_REPLAY.json](R02_EXIT_REPLAY.json) reproduces all three original native refusals from the second P0 trial's last released hold. The shared rest-heading search then finds native rest at shoulder-40 degrees; original DIRECT/timed validation accepts3196 samples including native hand contact envelopes. This is a geometric/time-law replay, not executed parking and not a retrospective PASS. It reads the retained `planning_current_scene.json` (full native geometry); the existing finalizer deletes redundant `cooked_initial.json`, not a compressed archive of that file. Response/geometry hashes bind the replay inputs.
+
+Non-safety wrist observation/segmentation exceptions are recorded and no longer veto independently native-checked parking. Fresh actual hold/unload is rechecked after the sensing attempt; SafetyStop still propagates immediately. Fault injection covers both outcomes.
+
+Exit follow-up selected regression: **163 passed,59 subtests passed,0 failed**,60.20s. [OFFLINE_EXIT_RESULTS.json](OFFLINE_EXIT_RESULTS.json). Counts overlap prior regressions and are not cumulative. Frozen606/71/956 source audit unchanged.

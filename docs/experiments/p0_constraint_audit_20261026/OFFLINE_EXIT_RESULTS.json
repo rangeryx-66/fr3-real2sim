@@ -1,0 +1,26 @@
+{
+  "policy": "classified_continuous_v2",
+  "passed": 163,
+  "subtests_passed": 59,
+  "failed": 0,
+  "wall_s": 60.199,
+  "junit_sha256": "614cc534012f26268cc71a428ad5351466562360c4428210ccd50f45969d50ba",
+  "frozen_audit": {
+    "baseline_commit": "2f021639aea65e6ae859bac9a3385d49db10212f",
+    "modified_frozen_paths": [],
+    "physical_source_files": 606,
+    "frozen_revolute_source_files": 71,
+    "release_source_files": 956,
+    "failures": []
+  },
+  "faults": [
+    "local Cartesian route unavailable; independent original timed parking may succeed",
+    "native parking collision/timed failure still denies motion",
+    "native hard latch/sensor failure never auto resumes",
+    "same six native rest joints with finite legal shoulder heading search",
+    "read-only planning allowed, acquisition/base actuation denied while exit pending",
+    "segmentation presentation failure cannot veto independently checked safety exit"
+  ],
+  "closed_state_replay": "R02_EXIT_REPLAY.json",
+  "physical_acceptance": "NOT_PASS; measured50deg then true successor collision/parking unavailable. New90deg and180mm qualification pending."
+}

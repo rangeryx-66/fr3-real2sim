@@ -87,7 +87,11 @@ def failed(result):
 
 
 def before(ops,command):
-    if getattr(ops,'_v86_exit_pending',False) and command['operation'] not in EXIT_REPLAN:
+    # Geometric planning cannot acquire contact or move a base. A missing
+    # parking route must not prevent the Agent from examining alternatives.
+    # Actual acquisition/base execution still require verified exit below.
+    permitted=EXIT_REPLAN | PLANNING if ops.r.job.get('v87_staged_exit') else EXIT_REPLAN
+    if getattr(ops,'_v86_exit_pending',False) and command['operation'] not in permitted:
         return dict(status=RECOVERABLE_FAILURE,outcome=RECOVERABLE_FAILURE,
             reason='VERIFIED_RELEASED_HOLD_REQUIRES_CHECKED_EXIT_BEFORE_NEW_CONTACT_OR_BASE_MOTION',
             recovery=dict(hold_verified=True,park_verified=False,exit_pending=True),

@@ -1,0 +1,81 @@
+{
+  "episode": "p0_constraints_r02_20261026_02",
+  "source_commit": "86b3b55159aa4428fc57cade0b5ee164537b8464",
+  "trial_status": "NOT_PASS",
+  "maximum_measured_deg": 50.00107259271159,
+  "last_measured_deg": 50.00081646061771,
+  "telemetry": {
+    "chunks": 8,
+    "records": 59696,
+    "all_chunk_hashes_valid": true,
+    "issues": [],
+    "native_safety_stop_rows": 0,
+    "continuous_load_regulation_rows": 8656,
+    "command_speed_max_m_s": 0.007435279608674473,
+    "command_acceleration_max_m_s2": 0.03499996499554948
+  },
+  "segment_sim_s": 222.70833333333331,
+  "action_wall_s": 1261.1276173219085,
+  "completion": {
+    "returncode": 0,
+    "wall_s": 3562.4528759317473,
+    "actor_exited": true,
+    "physical_outcome": {
+      "process_returncode": 0,
+      "terminal_safety_status": "EXIT_UNVERIFIED",
+      "physical_safe_park_verified": false,
+      "requires_intervention": true,
+      "process_exit_is_not_task_success": true,
+      "evidence_error": null
+    }
+  },
+  "terminal": {
+    "status": "EXIT_UNVERIFIED",
+    "latch_present": false,
+    "fault": null,
+    "agent_park_flag": false,
+    "safe_park_verified": false,
+    "requires_intervention": true,
+    "motion_resume_allowed": false,
+    "controller_stop_verified": false,
+    "controller_stop_scope": "No post-fault controller acknowledgement/stationary dwell; simulator exit is not hardware braking.",
+    "unload": {},
+    "latch_cleared": false,
+    "episode_id": "p0_constraints_r02_20261026_02",
+    "simulation_paused_verified": true,
+    "last_measurement_t": 385.5875,
+    "last_measured_object_coordinate": 0.8726788759231567,
+    "last_arm_velocity_abs_max": 1.5761097529320978e-05,
+    "post_stop_stationary_window_available": false,
+    "physical_state_not_inferred_from_process_exit": true
+  },
+  "reverse_native_rejection": {
+    "valid": false,
+    "reason": "DANGEROUS_GEOMETRY_COLLISION:link4:/World/articulated_pose/asset/Geometry/l_world/l_3/abstract_3_2/l_2/tn__l_2_original31_aL/tn__l_2_original31_aL",
+    "actual_start_q": 0.8726833462715149,
+    "status": "PLANNING_REJECTED",
+    "recoverable": true,
+    "episode_termination_required": false,
+    "global_target_infeasibility_proven": false,
+    "alternative_checks": []
+  },
+  "world_recoveries": 11,
+  "video": {
+    "file": "events.mp4",
+    "bytes": 3363007,
+    "sha256": "b9fa1c73e24d912585308d50d4f02e2f8fce1fee93d88d5e58b60d96f52a7dd2",
+    "probe": {
+      "programs": [],
+      "stream_groups": [],
+      "streams": [
+        {
+          "codec_name": "h264",
+          "width": 640,
+          "height": 480,
+          "r_frame_rate": "5/1",
+          "duration": "383.800000"
+        }
+      ]
+    }
+  }
+}

@@ -90,7 +90,25 @@ def parking_targets(ops):
     if ops.articulation().joint_type=='prismatic':
         from interaction_runtime.prismatic_park_v75 import parking_targets as equivalent
         yield from equivalent(ops.g,native.parking_targets)
-    else:yield from native.parking_targets(ops.g)
+    else:
+        # Native rest's other six joints stay identical. +/-20deg were early
+        # task headings, not a physical safety envelope. Search the SAME rest
+        # family over legal shoulder headings, retaining native endpoint,
+        # complete swept/timed collision checks and measured rest-cell proof.
+        original=list(native.parking_targets(ops.g))
+        yield from original
+        r=ops.r;home=np.asarray(original[0][1]).copy()
+        measured_q=np.asarray(r.robot.get_joint_positions())[r.arm]
+        lo,hi=np.asarray(r.model.limits)[0];margin=r.policy.data['joint_margin_rad']
+        step=math.radians(20.)  # existing native shoulder-heading spacing
+        headings=[float(measured_q[0])]+[k*step for k in range(
+            math.ceil((lo+margin)/step),math.floor((hi-margin)/step)+1)]
+        seen=[np.asarray(q) for _,q in original]
+        for yaw in sorted(headings,key=lambda value:abs(value-measured_q[0])):
+            target=home.copy();target[0]=yaw
+            if r.model.margin(target)<=margin or any(np.allclose(target,q,atol=1e-10,rtol=0) for q in seen):continue
+            seen.append(target)
+            yield 'native_rest_heading_%+.6f'%yaw,target
 
 
 def release_park(ops):
@@ -157,14 +175,22 @@ def release_park(ops):
         if not settle(ops):return end(SAFE_HOLD_NOT_ESTABLISHED)
         if not confirmed_unloaded(r):return end(SAFE_RELEASE_NOT_CONFIRMED)
         out['retreat'].update(reached=True,state=measured(r));stage('LOCAL_CLEARANCE_REACHED');break
-    if not out['retreat']['reached']:return end(LOCAL_RETREAT_NOT_FOUND)
+    if not out['retreat']['reached']:
+        # Failure of a particular 4/8cm Cartesian direction does not disprove
+        # an independently checked joint-space parking route. That route's
+        # ORIGINAL timed_returns checks include its current start, every edge,
+        # native hand contact envelopes and actual stopped endpoint. Do not
+        # fabricate a clearance certificate or authorize any new contact.
+        out['retreat']['independent_parking_search']=True
     # Fresh wrist sensing is a separate unloaded boundary, followed by a new
     # current moving-body state for EVERY parking target/edge.
     try:out['post_clearance_observation']=ops.observe()
     except SafetyStop:raise
     except (OSError,RuntimeError,ValueError) as error:
+        # Wrist presentation/segmentation cannot veto an independently native
+        # checked safety exit. Re-read trusted physical hold/unload below;
+        # hard SafetyStop above still propagates without another movement.
         out['post_clearance_observation_error']=repr(error)
-        return end(EXIT_PATH_NOT_FOUND)
     if not safe_hold(ops) or not confirmed_unloaded(r):return end(SAFE_HOLD_NOT_ESTABLISHED)
     stage('FRESH_POST_CLEARANCE_STATE');out['parking']['candidates']=[]
     with timed_returns(r) as timed:
@@ -202,7 +228,7 @@ def release_park(ops):
             out['parking'].update(reached=True,verification=park)
             stage('MEASURED_PARK_REACHED');out['timed_parking_audit']=timed;return out
         out['timed_parking_audit']=timed
-    return end(EXIT_PATH_NOT_FOUND)
+    return end(EXIT_PATH_NOT_FOUND if out['retreat']['reached'] else LOCAL_RETREAT_NOT_FOUND)
 
 
 def recovery_boundary(ops,command,result,exit_result):
