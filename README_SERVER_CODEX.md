@@ -6,6 +6,10 @@
 
 ## 1. 换到任意项目目录
 
+本次已验证、可直接在服务器Codex中打开的独立目录：
+`/data1/home/rangeryx/agentic_real2sim_server_codex_20261026`。
+下面是另行克隆的方法；已有这个交付目录时无需重复下载。
+
 ```bash
 git clone --branch codex/v87-continuous-recovery \
   https://github.com/rangeryx-66/fr3-real2sim.git agentic-real2sim
@@ -43,6 +47,8 @@ export PYTHONPATH="$REAL2SIM_REPO:$REAL2SIM_REPO/scripts"
 私有目录权限为700，环境和 spec 文件为600。`PRIVATE_CATALOG.json` 固定每个环境 / spec 的 SHA256。`TEMPLATE_PREPARATION.json` 记录来源与改动：45936 复用此次 P0 的预声明；46427 加 `staged_exit:true`；45746 从原 V8.6 spec 改为 V8.7 profile 并加 staged exit。**后两项只是准备好的待验证模板，不是物理通过证据。**
 
 原 canonical Python、共享 `actor_lock`、全局保护和已审核的历史事故绑定必须保持。源码可以换目录；不能因为换项目目录而改成一个新的互斥锁、隐藏旧事故或绕过 launcher。原 `ISOLATION_DOMAIN.json` 限制私有输出在 `/data1/home/rangeryx/agentic_v86_private` 内；准备工具会检查，拒绝把私有输出写进 Git checkout。
+
+特别是旧 `fr3_real2sim_known_whole_20261007/results/...` 中的canonical锁和事故记录仍是显式共享资源，不能随旧代码目录一起删除。此次迁移只解耦代码位置，不迁移或解除这个安全资源域。
 
 ## 3. 只读核查：不会创建 World
 

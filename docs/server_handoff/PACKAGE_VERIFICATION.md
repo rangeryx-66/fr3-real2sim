@@ -19,6 +19,29 @@
 
 ## 全新服务器目录验证
 
-在最终交付前，从GitHub克隆到独立新目录，运行原源码审计 / bundle审计、上述迁移工具的实际目录准备及必要离线回归。结果与测试源码SHA随后补在本节；在记录出现前不要将“已准备”误读为“已验证”。
+已从GitHub克隆到全新独立目录：
+`/data1/home/rangeryx/agentic_real2sim_server_codex_20261026`。
+
+测试源码：`047a249d65aa0038221faeaed1b140b56300f575`。随后仅补充本核查结果和文档，运行 / 安全源码没有再修改。
+
+| 核查 | 实际结果 |
+|---|---|
+| GitHub克隆、完整祖先与对象连接 | 通过；`git fsck --connectivity-only --no-dangling`通过 |
+| 新目录对旧Git对象库的依赖 | 无；临时reference加速后已`--dissociate`，没有alternates文件 |
+| V8.0 baseline_audit | 606个物理源、71个旋转冻结源、956个发布源检查通过，failures为空 |
+| 私有bundle审计与真实URDF重定位 | 通过；两套URDF的非路径XML和网格字节一致 |
+| 项目模块导入 | V81、V84、V87、server_transfer均从新checkout加载 |
+| 两套Skill及RUNBOOK/API | 四文件哈希核对通过，均位于新checkout |
+| 45936、46427、45746私有模板准备 | 三个全新私有目录成功生成，未授予启动准入 |
+| 原历史全局hold | 原SHA `f9cec4d6...879d58ab0`不变，未移动 / 清除 |
+| 迁移 / staged exit / governor / instance / lifecycle / V8打包回归 | **63项测试、16项子测试通过，63.82秒** |
+| 新物理实验 / 新Actor | **未启动**；这些结果不是90°或参数辨识PASS |
+
+最初的普通全量网络克隆太慢，已停止仅属于本次打包的git进程；随后采用已有服务器Git对象作临时缓存，完成后独立化。没有停止任何机器人 / Isaac进程，也没有保留对旧checkout的对象引用。
+
+第一次新目录审计发现新增导航使 `AGENTS.md` 偏离原V8发布哈希，原回归为1失败 / 62通过 / 16子测试。恢复原AGENTS字节后通过上述全部检查；冻结manifest没有改。失败日志和修复记录均保留，不把第一次写成成功。
+
+私有验证证据在 `/data1/home/rangeryx/agentic_v86_private/server_codex_handoff_20261026`：
+`MIGRATION_VERIFICATION_02.json`、`MIGRATION_REGRESSION_02.log`、`MIGRATION_AUDIT_FAILURE_01.json`及旧失败日志。离线Git bundle与最终SHA索引也放在该目录，包仅包含Git代码 / Skill / 文档 / 必需历史，外部资源仍由私有catalog明确引用。
 
 整个迁移过程不启动新Actor，不提交旧episode命令，不改变旧事故结论。最新原R02已关闭，仍NOT PASS / HARD_STOP_UNPARKED；转移时最终哈希存于私有 `CLOSED_R02_AT_TRANSFER.json`，早先live-World审计不删除。
