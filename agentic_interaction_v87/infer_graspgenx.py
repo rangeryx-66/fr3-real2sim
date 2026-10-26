@@ -13,6 +13,12 @@ def main():
     parser=argparse.ArgumentParser(add_help=False)
     parser.add_argument('--native-geometry',required=True,type=Path)
     args,remaining=parser.parse_known_args()
+    # Resource cancellation is checked in each new worker, before importing
+    # the CUDA/model adapter. The live physics owner is never hot-reloaded.
+    directory=args.native_geometry.parent
+    if (directory.parent.name=='hybrid_grasp'
+            and (directory.parent.parent/'GRASPGENX_DISABLED_BY_USER.json').exists()):
+        raise RuntimeError('GRASPGENX_DISABLED_BY_USER_RESOURCE_POLICY')
     payload=args.native_geometry.read_bytes();geometry=json.loads(payload)
     if geometry.get('schema')!='xarm-native-g1-graspgenx-geometry-v1':
         raise ValueError('EXPLICIT_NATIVE_G1_GEOMETRY_REQUIRED')
