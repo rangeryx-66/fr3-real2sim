@@ -127,10 +127,12 @@ export REAL2SIM_EPISODE="$REAL2SIM_RUN/episodes/server_codex_45936_NEW_UNIQUE_ID
 
 ```bash
 "$REAL2SIM_PYTHON" -m agentic_interaction_v84.transport \
-  --episode "$REAL2SIM_EPISODE" --sequence 0 --json /private/command_000.json
+  --episode "$REAL2SIM_EPISODE" --sequence 0 --json "$REAL2SIM_RUN/command_000.json"
 ```
 
 不要用旧 v8 generic publisher 发送 `acquire_execute`、`continue_motion` 或硬锁存诊断命令；也不要直接写半截 `agent_commands/NNN.json`。发布成功不等于执行成功；读取 `.accepted.json` 和最终 `NNN.json`，再发下一个 sequence。
+
+当前RGB-D / 抓姿板直接用服务器Codex的本地图片读取能力查看其绝对路径，无需再SCP到Mac。没有真正看到图片时，不得把文件存在或文字摘要当成看图批准；原始图像仍留在服务器私有目录。
 
 实际动作顺序：
 
