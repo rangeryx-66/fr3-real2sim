@@ -62,6 +62,8 @@ Read-only command 20 confirmed `SAFETY_LATCHED_WORLD_RETAINED`, `motion_authoriz
 
 Private evidence: `STAGED_R02_HARD_GUARD_REPLAY_01.json`, `STAGED_R02_HARD_STOP_AUDIT_01.json`, original responses, sensor chunks and both old/new safety records. All chunk hashes were verified. The interrupted final FIT segment is ineligible under the original selection rules. Earlier safe parking is not substituted for the current unconfirmed terminal state.
 
+Final source check kept runtime HEAD at `4b94ad7`; the original runtime generated one untracked asset-path text sidecar. Its content, hash and worktree status are preserved in private `STAGED_R02_RUNTIME_SIDECAR_01.json`. It was not deleted while the Actor remained alive; source code was not hot-modified.
+
 The actual R02 90° alternative-parking test and a new 45746 physical episode remain incomplete. The shared robot/Isaac resource is still owned by the retained R02 World; no second controller was started. The native 45746 geometric replay above passed, and the historical 180 mm/reverse/independent-validation/safe-parking episode remains preserved; neither is presented as a new physical success of this source. Further physical continuation requires the existing safety qualification to be satisfied. Fixing a new hard-latch reset owner or changing force control lies outside this narrowly scoped parking-admission change.
 
 ### Earlier completed block (separate evidence)
