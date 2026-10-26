@@ -49,6 +49,31 @@ class GovernorTests(unittest.TestCase):
         g=CommandGovernor(fk,1/240)
         with self.assertRaises(ValueError):g.velocity(np.full(7,np.nan),np.zeros(7),np.zeros(7),np.ones(7),.8,MOTION)
 
+    def test_internal_optimizer_headroom_is_not_a_new_physical_stop_limit(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        g=CommandGovernor(fk,1/240);q=np.zeros(7);v=np.zeros(7);v[0]=MOTION['speed_m_s']
+        g.previous_twist[0]=v[0]
+        # A numerical optimizer may leave its tightened target unsatisfied
+        # while the actual FK command remains within every declared limit.
+        result=SimpleNamespace(x=np.zeros(7),success=False)
+        with patch('agentic_interaction_v87.command_governor.minimize',return_value=result):
+            accepted=g.velocity(q,[.04,0,0,0,0,0,0],v,np.ones(7),.8,MOTION)
+        np.testing.assert_allclose(accepted,v)
+        self.assertLess(g.latest['minimum_normalized_slack'],0)
+        self.assertGreaterEqual(g.latest['minimum_declared_slack'],-1e-12)
+
+    def test_optimizer_success_cannot_authorize_exceeding_original_limit(self):
+        from types import SimpleNamespace
+        from unittest.mock import patch
+        g=CommandGovernor(fk,1/240);q=np.zeros(7);v=np.zeros(7);v[0]=.013
+        g.previous_twist[0]=v[0];before=g.previous_twist.copy()
+        with patch('agentic_interaction_v87.command_governor.minimize',
+                return_value=SimpleNamespace(x=np.zeros(7),success=True)):
+            with self.assertRaisesRegex(RuntimeError,'TCP_PROJECTION_INFEASIBLE'):
+                g.velocity(q,[.04,0,0,0,0,0,0],v,np.ones(7),.8,MOTION)
+        np.testing.assert_array_equal(g.previous_twist,before);self.assertEqual(g.calls,0)
+
     def test_loaded_motion_brakes_before_entering_slower_release_phase(self):
         from types import SimpleNamespace as NS
         from agentic_interaction_v87.runtime import runtime_class

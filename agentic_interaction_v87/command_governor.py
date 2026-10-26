@@ -28,6 +28,7 @@ class CommandGovernor:
         limits=np.array([motion['speed_m_s'],motion['angular_speed_rad_s'],
             motion['acceleration_m_s2'],motion['angular_acceleration_rad_s2']],float)
         if not np.isfinite(limits).all() or np.any(limits<=0):raise ValueError('INVALID_TCP_LIMITS')
+        declared_limits=limits.copy()
         # Small numerical headroom, not a change to physical safety thresholds.
         limits*=1-1e-6
         low=np.maximum(-speeds,previous-acceleration*self.dt)
@@ -82,16 +83,25 @@ class CommandGovernor:
                         if np.min(constraints(trial))>=-1e-9:left=middle
                         else:right=middle
                     selected=anchor+left*(selected-anchor)
-        # Independent validation: no optimizer flag can authorize invalid output.
+        # The optimizer aims inside a small numerical headroom. That target
+        # is not another physical safety limit: a converged-or-not proposal
+        # must be checked against the ORIGINAL declared limits independently.
+        # The closed-record failure was inside every original limit, yet just
+        # outside this artificial target after SLSQP exhausted its iterations.
         if (not np.isfinite(selected).all() or np.any(selected<low-1e-10)
-                or np.any(selected>high+1e-10) or np.min(constraints(selected)) < -1e-7):
+                or np.any(selected>high+1e-10)):
+            raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:TCP_PROJECTION_INFEASIBLE')
+        current=twist(selected);delta=(current-self.previous_twist)/self.dt
+        measured_norms=np.array([np.linalg.norm(current[:3]),np.linalg.norm(current[3:]),
+            np.linalg.norm(delta[:3]),np.linalg.norm(delta[3:])])
+        if not np.isfinite(measured_norms).all() or np.any(measured_norms>declared_limits*(1+1e-12)):
             raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:TCP_PROJECTION_INFEASIBLE')
         slack=float(np.min(constraints(selected)))
-        current=twist(selected);delta=(current-self.previous_twist)/self.dt
         self.previous_twist=current.copy();self.calls+=1;self.limited+=int(limited)
         self.latest=dict(limited=limited,linear_speed_m_s=float(np.linalg.norm(current[:3])),
             angular_speed_rad_s=float(np.linalg.norm(current[3:])),
             linear_acceleration_m_s2=float(np.linalg.norm(delta[:3])),
             angular_acceleration_rad_s2=float(np.linalg.norm(delta[3:])),
-            minimum_normalized_slack=slack)
+            minimum_normalized_slack=slack,
+            minimum_declared_slack=float(np.min(1-(measured_norms/declared_limits)**2)))
         return selected
