@@ -1,0 +1,57 @@
+{
+  "schema": "goal-driven-persistent-abc/two-unseen-v1",
+  "registered_unix_s": 1793029635.5053747,
+  "catalog_sha256": "f4ff6ba175fb6c7ca399fb24f605cf8eb49da88be70193afcf389cab7a009a52",
+  "selection": "user selected20; door/drawer semantics; conservative historical-reference exclusions; lowest numerical unused ID per articulation; no motion/grasp score or range used",
+  "history_scope": {
+    "server_roots": 56,
+    "metadata_files": 12020,
+    "git_tracked_sources_and_regressions": true
+  },
+  "fixed_cases": [
+    {
+      "asset_id": "32086",
+      "candidate_id": "32086__joint_0",
+      "joint_type": "revolute",
+      "goal_native": 1.5707963267948966,
+      "minimum_reverse_native": 0.17453292519943295,
+      "wall_budget_s": 14400
+    },
+    {
+      "asset_id": "46230",
+      "candidate_id": "46230__joint_1",
+      "joint_type": "prismatic",
+      "goal_native": 0.18,
+      "minimum_reverse_native": 0.04,
+      "wall_budget_s": 14400
+    }
+  ],
+  "known_joint_geometry_authorized": true,
+  "hidden_dynamics_authorized_for_online_input": false,
+  "termination": [
+    "measured forward,reverse,independent validation and safe exit complete",
+    "14400wall seconds including startup and exit",
+    "independently confirmed hard safety block or severe simulation corruption"
+  ],
+  "local_failure_must_not_end_episode": true,
+  "replacement_on_failure": false,
+  "other_joints": "source mechanisms retained; exactly selected joint targeted, no silent locking/reset",
+  "formal_start": "per-case launcher start recorded only after preparation/admission; no clock extension",
+  "asset_preparation": {
+    "height_m": 0.55,
+    "same_existing_convex_per_visual_preparation": true,
+    "initial_station": [
+      0.0,
+      -0.65,
+      -0.1,
+      0.0
+    ],
+    "installation": {
+      "x_m": 0.5,
+      "y_m": -0.05,
+      "yaw_deg": -90.0,
+      "fixture_height_m": 0.04
+    }
+  },
+  "actors": "strictly sequential; only these two cases"
+}
