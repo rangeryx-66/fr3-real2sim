@@ -1,6 +1,6 @@
 # V8.7 continuous recovery and hybrid grasp planning
 
-Status: IN PROGRESS / PHYSICAL QUALIFICATION NOT PASS. Latest user priority is separation of motion admission from terminal parking; see [STAGED_EXIT.md](STAGED_EXIT.md). The new R02 run retained one World through planning rejection, completed a 20.222°/12.255° reverse block and actual staged exit, then reached 40.144539° in a later long action before the original sustained wrist-torque guard latched. That World remains read-only; its current parking is unconfirmed. The 90° alternative-parking test and new drawer physical regression remain incomplete. The old 45134 exploration below was safely closed for the owner-directed priority change; it did not complete 90 degrees.
+Status: IN PROGRESS / PHYSICAL QUALIFICATION NOT PASS. Latest experiment priority is separation of motion admission from terminal parking; see [STAGED_EXIT.md](STAGED_EXIT.md). The new R02 run retained one World through planning rejection, completed a20.222°/12.255° reverse block and actual staged exit, then reached40.144539° before the original sustained wrist-torque guard latched. Transfer-time verification found that its original finite diagnostic session has since ended: Actor exited, physical outcome remains HARD_STOP_UNPARKED. The90° alternative-parking test and new drawer physical regression remain incomplete. See root `HANDOFF_SERVER_CODEX.md` for current transfer status; no new experiment was launched for packaging.
 
 ## Scope and protected baselines
 

@@ -1,5 +1,12 @@
 # FR3 grasp, scan and physical asset identification
 
+> **Agentic Real2Sim V8.7 / server Codex:** start with
+> [README_SERVER_CODEX.md](README_SERVER_CODEX.md) and
+> [HANDOFF_SERVER_CODEX.md](HANDOFF_SERVER_CODEX.md).
+> Repository-local Skills, exact server entry points, private resource
+> catalog and current NOT PASS safety state are documented there.
+> The historical FR3 workflow below is a separate entry point.
+
 This repository contains the research code used to grasp objects with AnyGrasp + MoveIt 2 + FR3/Franka Hand in Isaac Sim, scan released objects with a stationary RGB-D camera, reconstruct visual shape with the **external official MV-SAM3D** implementation, and estimate payload mass and center of mass (COM) from paired empty/loaded FR3 torque records. It also contains CoACD collision and Isaac USD packaging utilities.
 
 **Reproduction status.** The grasp and PayloadID branches were run on the lab Isaac host. The stationary scan and official MV-SAM3D 2/4/8-view inference were run there as separate stages. `result.glb` is an MV-SAM3D output; it does **not** by itself have verified metric scale, collision or measured inertial properties. The provided metric/CoACD/USD utilities require metric mesh and inertial inputs. There is currently no validated one-command `MV-SAM3D GLB → metric USD` runner, so do not describe an arbitrary GLB as a validated physical asset. The station simulator initializes an object at the scan station; automatically transporting a previously grasped object to that station is not part of the tested runner.
