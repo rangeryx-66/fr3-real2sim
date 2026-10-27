@@ -62,7 +62,12 @@ def main():
             baseline='agentic-interaction-v8.0.0',phase=job['v81_phase']))
     from functools import partial
     owner=PrismaticRuntimeV751 if job['articulation_v7']['joint_type']=='prismatic' else RuntimeV7
-    return run(runtime_class(owner),partial(finish_before_shutdown,serve=serve,finalize=sources),
+    from contextlib import nullcontext
+    if job.get('v88_physics_study'):
+        from agentic_interaction_v88.physics_study import constructor_scope
+        scope=constructor_scope(job)
+    else:scope=nullcontext()
+    with scope:return run(runtime_class(owner),partial(finish_before_shutdown,serve=serve,finalize=sources),
         extra_sources=tuple(str(f.relative_to(ROOT)) for folder in ('agentic_interaction_v81','agentic_interaction_v84','agentic_interaction_v87','agentic_interaction_v88') for f in sorted((ROOT/folder).glob('*.py')))+(
         'scripts/xarm_ft_v7_scene.py','scripts/xarm_ft_v7_estimator.py','scripts/update_probing_v7_model.py',
         'scripts/update_prismatic_v73_model.py','scripts/xarm_ft_v31_estimator.py'))

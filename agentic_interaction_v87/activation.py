@@ -11,6 +11,7 @@ def activate(spec,job,existing,base_profile):
     shadow.pop('persistent_goal',None)
     shadow.pop('coordination_policy',None)
     shadow.pop('native_assets',None)
+    shadow.pop('physics_study',None)
     if spec.get('persistent_goal') is not None or spec.get('coordination_policy') is not None:
         from agentic_interaction_v81.integration import ABC_PROFILE
         shadow['integration_profile']=ABC_PROFILE
@@ -28,6 +29,11 @@ def activate(spec,job,existing,base_profile):
             raise ValueError('FINITE_EXPLICIT_V87_ENGINEERING_FIXTURE_REQUIRED')
         job['v87_controlled_interruption_fixture']=dict(fixture)
     job['v87_continuous_recovery']=True
+    if 'physics_study' in spec:
+        from agentic_interaction_v88.physics_study import validate
+        if spec.get('phase')!='engineering' or 'coordination_policy' not in spec:
+            raise ValueError('PHYSICS_STUDY_REQUIRES_COORDINATED_ENGINEERING')
+        job['v88_physics_study']=validate(spec['physics_study'])
     if 'coordination_policy' in spec:
         from agentic_interaction_v88 import POLICY
         if (spec['coordination_policy'] != POLICY or spec.get('phase') != 'engineering'
