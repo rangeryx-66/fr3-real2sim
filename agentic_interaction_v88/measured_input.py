@@ -22,8 +22,7 @@ def summarize(model,pieces):
     residual=raw-X@beta;bound=float(np.percentile(abs(residual),99))
     bidirectional=bool(np.any(X[:,1]>0) and np.any(X[:,1]<0))
     trajectories=len(set(d['segments'][0] for d in fit))
-    usable=bool(trajectories>=2 and bidirectional and constant['algebraic_rank']==3
-        and all(constant['conditionally_supported']))
+    usable=bool(trajectories>=2 and bidirectional and constant['algebraic_rank']==3)
     return dict(model_usable=usable,demand_model=dict(parameters=beta.tolist(),
         covariance=constant['conditional_covariance'],residual_bound_n=bound,
         source='original worker constant candidate; eligible FIT only'),
@@ -49,8 +48,16 @@ def from_episode(episode,contact_capabilities):
     pieces,_,_=load_segments(p,True)  # original predeclared transmitting-prefix / interval eligibility
     for d in pieces:qualify(d)  # unchanged production full-window sliding rule
     index=json.loads((p/'telemetry/index.json').read_text())
+    summary=summarize(model,pieces)
+    startup=[abs(w['rail_effort_N']) for segment in index['segments']
+        if segment['role'].startswith('FIT') and segment.get('result',{}).get('physical_transmission_valid') is True
+        for w in segment['result'].get('prismatic_startup',{}).get('observed_windows',[])
+        if w.get('phase')=='CONTACT_PRELOAD' and np.isfinite(w.get('rail_effort_N',np.nan))]
+    if startup and 'demand_model' in summary:
+        summary['demand_model']['breakaway_force_upper_n']=max(startup)+summary['FIT_raw_residual_abs99_n']
+        summary['observed_startup_effort_bound_scope']='FIT startup window wrist effort plus FIT residual; empirical, not an identified static-friction point value'
     return dict(schema='physics-aware-measured-input/v1',hidden_dynamics_used=False,
-        validation_used_for_fit_or_selection=False,**summarize(model,pieces),
+        validation_used_for_fit_or_selection=False,**summary,
         contact_capabilities=contact_capabilities,
         measurement_sources=dict(model_sha256=digest(model_path),
             identification_input_sha256=digest(p/'identification_input.json'),

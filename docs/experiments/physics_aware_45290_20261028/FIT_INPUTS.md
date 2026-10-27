@@ -13,8 +13,10 @@ original conditional covariance with the empirical absolute 99th-percentile
 unfiltered FIT residual. This is a conservative empirical margin, not a calibrated
 total physical confidence interval or a guarantee outside the sampled range.
 
-At least two eligible trajectories, actual bidirectional velocities, rank three
-and original conditional parameter support are needed to use that candidate.
+At least two eligible trajectories, actual bidirectional velocities and rank
+three are needed to use that candidate. Conditional parameter support is
+reported separately: a zero or unresolved coefficient retains its covariance
+and empirical prediction margin; it is not another hard model gate.
 Otherwise normal reactive control continues. No new episode or safety-stop
 authority is created. The interrupted first pilot has just one eligible FIT
 trajectory and is correctly rejected as a usable M0 despite its plausible fit.

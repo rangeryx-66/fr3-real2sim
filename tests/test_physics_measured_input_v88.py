@@ -23,5 +23,14 @@ class FitIsolationTests(unittest.TestCase):
         result=summarize(self.model(),[self.piece('FIT_ONLY_FORWARD',.003,.42)])
         self.assertFalse(result['model_usable']);self.assertFalse(result['actual_bidirectional_FIT'])
 
+    def test_zero_or_uncertain_damping_uses_covariance_instead_of_a_new_model_veto(self):
+        model=self.model();model['constant_model']['parameters'][1]=0.
+        model['constant_model']['conditionally_supported'][1]=False
+        result=summarize(model,[self.piece('FIT_FORWARD',.003,.42),
+            self.piece('FIT_REVERSE',-.003,-.42)])
+        self.assertTrue(result['model_usable'])
+        self.assertFalse(result['conditional_parameter_support'][1])
+        self.assertEqual(result['demand_model']['covariance'],np.eye(3).tolist())
+
 
 if __name__=='__main__':unittest.main()
