@@ -50,6 +50,14 @@ class CommandTests(unittest.TestCase):
         self.assertFalse(result['ordinary_failure_ends_episode'])
         self.assertEqual(result['fallback'],'NO_PREDICTED_FEASIBLE_ACTION_USE_REACTIVE_AND_OBSERVE')
 
+    def test_reactive_uses_measured_transmission_not_the_largest_pinch_request(self):
+        m=self.inputs(2.)
+        m['contact_capabilities'][0]['transmitted_axis_force_lower_n']=1.1
+        m['contact_capabilities'][1]['transmitted_axis_force_lower_n']=.7
+        result=self.select('reactive',m)
+        self.assertEqual(result['action']['requested_preload_n'],1.)
+        self.assertEqual(result['action']['reference_speed_m_s'],.006)
+
     def test_oracle_or_leaked_truth_is_not_a_formal_method(self):
         with self.assertRaises(ValueError):self.select('oracle',self.inputs(2.))
         m=self.inputs(2.);m['hidden_dynamics_used']=True
