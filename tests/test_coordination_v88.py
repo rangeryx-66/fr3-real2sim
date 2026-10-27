@@ -31,6 +31,41 @@ class LinearCoupled(CoupledKinematics):
 
 
 class CoordinationTests(unittest.TestCase):
+    def test_post_contact_replan_uses_measured_base_without_relocation(self):
+        from agentic_interaction_v88.operations import sync_planning_station
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder); old=root/'source'; old.mkdir()
+            source=dict(robot_base_pose=[.2,-.3,-.1,0.], geometry='unchanged')
+            file=old/'report.json'; file.write_text(json.dumps(source)); before=file.read_bytes()
+            actual=np.array([-.4,-.9,-.1,0.]); output=root/'episode'; output.mkdir()
+            r=NS(base=actual,read_base=Mock(),supervisor=NS(latched=None),
+                job=dict(source=str(old)),output=output,base_generation=1)
+            observations=[dict(folder='fresh wrist',world_sim_s=300.)]
+            ops=NS(r=r,g=dict(recovery_state='UNLOADED_OBSERVATION',a=NS(source=old),
+                agent_observations=observations,recovery_candidate_catalog={'stale':True}),
+                current_plan_ready=True,_v81_plan_ticket='stale',cache={'old':1})
+            sync_planning_station(ops)
+            current=Path(r.job['source'])
+            self.assertEqual(json.loads((current/'report.json').read_text()),
+                dict(source,robot_base_pose=actual.tolist()))
+            self.assertEqual(file.read_bytes(),before)
+            self.assertIs(ops.g['agent_observations'],observations)
+            self.assertEqual(ops.g['a'].source,current)
+            self.assertFalse(ops.current_plan_ready); self.assertIsNone(ops._v81_plan_ticket)
+            self.assertEqual(ops.cache,{}); self.assertNotIn('recovery_candidate_catalog',ops.g)
+            sync_planning_station(ops)
+            self.assertEqual(len(list((output/'station_states').iterdir())),1)
+            r.read_base.assert_called_with()
+
+    def test_station_sync_does_not_touch_loaded_or_latched_state(self):
+        from agentic_interaction_v88.operations import sync_planning_station
+        for state,latch in [('FINITE_CONTACT_OPERATION',None),('UNLOADED_OBSERVATION',{'hard':True})]:
+            r=NS(read_base=Mock(),supervisor=NS(latched=latch))
+            ops=NS(r=r,g=dict(recovery_state=state))
+            sync_planning_station(ops)
+            r.read_base.assert_not_called()
+            self.assertIs(r.supervisor.latched,latch)
+
     def test_translation_is_primarily_base_with_arm_compensation(self):
         model = LinearCoupled(); q = np.zeros(9); target = np.eye(4); target[0, 3] = .02
         result = model.solve(target, q)
@@ -137,6 +172,35 @@ class CoordinationTests(unittest.TestCase):
         self.assertLess(np.max(abs(np.r_[r.base_velocity, r.g['qvelocity']])), 1e-12)
         self.assertEqual(r.g['phase'], 'RELEASE')
         self.assertLess(r.base_goal[0], .001)
+
+    def test_canceling_base_arm_motion_brakes_without_stalling_at_tcp_cap(self):
+        from agentic_interaction_v88.runtime import runtime_class
+        Runtime = runtime_class(object); r = Runtime.__new__(Runtime)
+        r._coord_active = True; r.dt = 1/240; r.arm = np.arange(7)
+        r.qtarget = np.zeros(7); r.base_goal = np.zeros(2)
+        r.base_velocity = np.array([.004, 0.])
+        arm_velocity = np.zeros(7); arm_velocity[0] = -.00100001/.3
+        r.g = dict(phase='RELEASE', qvelocity=arm_velocity)
+        motion = dict(MOTION, speed_m_s=.003, acceleration_m_s2=.008)
+        r._v87_last_command_phase = 'OPEN_CONTINUE'; r._v87_last_command_motion = motion
+        r.policy = NS(data={'arm_command_acceleration_rad_s2': {'LOADED': .8}}, phase=lambda p: 'LOADED')
+        r.coupled = LinearCoupled()
+        r.coupled_governor = CommandGovernor(r.coupled.fk, r.dt, preserve_direction=True)
+        r.coupled_governor.previous_twist[0] = .00299999
+        r.check_q = lambda q: (True, None); seen = []
+        def step():
+            seen.append(np.r_[r.base_velocity, r.g['qvelocity']])
+            self.assertLessEqual(r.coupled_governor.latest['linear_speed_m_s'], .003*(1+1e-12))
+            self.assertLessEqual(r.coupled_governor.latest['linear_acceleration_m_s2'], .008*(1+1e-12))
+        r.step = step
+        r.stop_command()
+        self.assertTrue(seen)
+        self.assertLess(len(seen)*r.dt, 1.)
+        self.assertLess(np.max(abs(np.r_[r.base_velocity, r.g['qvelocity']])), 1e-12)
+        self.assertEqual(r.g['phase'], 'RELEASE')
+        # The old component-wise clip stopped the compensating arm first,
+        # increased world TCP speed, then selected the unchanged prior command
+        # for all five seconds. No stopping deadline or safety cap is widened.
 
     def test_actual_native_base_overspeed_latches_and_is_never_cleared(self):
         from agentic_interaction_v88.runtime import runtime_class

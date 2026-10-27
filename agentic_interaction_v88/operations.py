@@ -3,6 +3,41 @@ from contextlib import contextmanager
 from unittest.mock import patch
 
 
+def sync_planning_station(ops):
+    """Use measured post-coordination station, preserving the source evidence."""
+    import json
+    from pathlib import Path
+    import numpy as np
+    from agent_command_protocol_v12 import atomic_json
+    r=ops.r; g=ops.g
+    if g.get('recovery_state')!='UNLOADED_OBSERVATION' or r.supervisor.latched is not None:
+        return
+    r.read_base()
+    base=np.asarray(r.base,float)
+    if base.shape!=(4,) or not np.isfinite(base).all():
+        raise ValueError('NONFINITE_MEASURED_PLANNING_STATION')
+    original=Path(r.job['source'])/'report.json'
+    source=json.loads(original.read_text())
+    if np.array_equal(np.asarray(source['robot_base_pose']),base):return
+    # The legacy planner reconstructs its station from this report, whereas
+    # loaded coordination updates r.base continuously. No unloaded base move
+    # should be necessary just to make those two representations agree.
+    root=r.output/'station_states'; root.mkdir(exist_ok=True)
+    number=max([int(p.name.rsplit('_',1)[1])
+        for p in root.glob('v88_measured_*') if p.is_dir()],default=-1)+1
+    location=root/('v88_measured_%03d'%number); location.mkdir()
+    previous=source['robot_base_pose']; source['robot_base_pose']=base.tolist()
+    atomic_json(location/'report.json',source)
+    atomic_json(location/'TRANSITION.json',dict(
+        previous_source=str(original),previous_planner_base=previous,
+        measured_base=base.tolist(),station_generation=r.base_generation,
+        physical_motion_executed=False,object_reset=False,
+        reason='Synchronize measured station before new automatic grasp search'))
+    r.job['source']=str(location); g['a'].source=location
+    ops.current_plan_ready=False; ops._v81_plan_ticket=None; ops.cache.clear()
+    g.pop('recovery_candidate_catalog',None)
+
+
 @contextmanager
 def planning_scope():
     import agentic_interaction_v87.prismatic_motion as rail
@@ -15,6 +50,7 @@ def planning_scope():
 def operations_class(parent):
     class CoordinatedOperations(parent):
         def request_plan(self, command):
+            sync_planning_station(self)
             with planning_scope(): return super().request_plan(command)
 
         def attempt(self, command):

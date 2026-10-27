@@ -50,7 +50,19 @@ class CommandGovernor:
             t=twist(v);delta=(t-self.previous_twist)/self.dt
             return 1-(np.array([np.linalg.norm(t[:3]),np.linalg.norm(t[3:]),
                 np.linalg.norm(delta[:3]),np.linalg.norm(delta[3:])])/limits)**2
-        desired=np.clip(wanted,low,high);selected=desired.copy();limited=False
+        desired=np.clip(wanted,low,high)
+        if not np.any(wanted) and np.any(previous):
+            # Brake a coordinated allocation together. Independent slew clips
+            # can remove a compensating joint before the base slows, raising
+            # world TCP speed. The feasible-anchor projection then keeps the
+            # old command forever. A common fraction respects every joint's
+            # slew bound while retaining that cancellation; nonlinear TCP
+            # speed/acceleration checks below still own acceptance.
+            moving=previous!=0
+            fraction=min(1.,float(np.min(
+                acceleration[moving]*self.dt/np.abs(previous[moving]))))
+            desired=np.clip(previous*(1.-fraction),low,high)
+        selected=desired.copy();limited=False
         if self.preserve_direction and np.min(constraints(selected)) < -1e-8:
             # Keep an already jointly planned allocation. Acceleration-scaled
             # SLSQP can invent opposing XY/arm null motion because their units
