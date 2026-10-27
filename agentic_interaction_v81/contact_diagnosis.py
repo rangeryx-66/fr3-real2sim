@@ -88,12 +88,21 @@ def analyze(folder):
             p=np.flatnonzero(mask)
             anchor=(anchors.get('step',np.array([]))>=a['step'][first])&(anchors.get('step',np.array([]))<=a['step'][last])&(anchors.get('finger',np.array([]))==side)
             anchor_points=anchors['point_pad'][anchor] if len(anchors) else np.empty((0,3))
+            # Integrate one median material slip speed per native contact step,
+            # not one contribution per manifold point. Missing-contact steps
+            # remain unobserved, rather than being interpreted as zero slip.
+            slip_steps=np.unique(points['step'][p][np.isfinite(relative[p])]) if len(p) else []
+            slip_distance=sum(float(np.nanmedian(relative[p][points['step'][p]==step]))/240
+                              for step in slip_steps)
             pd.append(dict(finger=side,normal_point_records=len(p),
                 friction_anchor_records=len(anchor_points),
                 friction_anchor_pad_bounds_m=np.percentile(anchor_points,[5,95],axis=0).tolist() if len(anchor_points) else None,
                 lateral_margin_m=stats(points['lateral_margin_m'][p]) if len(p) else None,
                 longitudinal_margin_m=stats(points['longitudinal_margin_m'][p]) if len(p) else None,
                 derived_material_tangent_speed_m_s=stats(relative[p]),
+                contact_sampled_material_sliding_distance_m=float(slip_distance),
+                material_slip_observed_duration_s=len(slip_steps)/240,
+                material_slip_scope='integral of per-step median instantaneous material-point tangent speed; no persistent point tracks; missing steps excluded',
                 contact_point_pad_bounds_m=np.percentile(points['point_pad'][p],[5,95],axis=0).tolist() if len(p) else None,
                 contact_point_object_bounds_m=np.nanpercentile(moving_local[p],[5,95],axis=0).tolist() if len(p) and np.isfinite(moving_local[p]).any() else None))
         motion=dict(start_native=float(a['joint_q'][first]),end_native=float(a['joint_q'][last]))

@@ -13,6 +13,15 @@ import numpy as np
 ROLES=('qualification','calibration','identify_m0','identify_m1','reactive','stale','updated')
 
 
+def independent_heldout(job,action):
+    """Formal A/B/C motion must not require fitting changed conditions first."""
+    study=job.get('v88_physics_study') or {}
+    return bool(job.get('v84_abc') and job.get('v88_coordination_policy')
+        and study.get('schema')=='physics-aware-contact-v1'
+        and study.get('role') in ('reactive','stale','updated')
+        and action and action.get('role','').startswith('VALIDATION'))
+
+
 def validate(config):
     if (not isinstance(config,dict) or set(config)-{'schema','role','reference'}
             or config.get('schema')!='physics-aware-contact-v1' or config.get('role') not in ROLES):

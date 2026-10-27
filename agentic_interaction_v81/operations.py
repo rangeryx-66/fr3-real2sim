@@ -114,7 +114,15 @@ def operations_class(original):
                         requested_target_reached=False,safely_stopped=True,
                         physical_transmission_valid=False)
             self._v81_action_index=getattr(self,'_v81_action_index',0)+1
-            if proposed and proposed['role'].startswith('VALIDATION'):
+            from agentic_interaction_v88.physics_study import independent_heldout
+            external=independent_heldout(self.r.job,proposed)
+            if external:
+                from agent_command_protocol_v12 import atomic_json
+                atomic_json(self.r.output/('INDEPENDENT_HELDOUT_%02d.json'%(len(self.r.record.segments)+1)),dict(
+                    method=self.r.job['v88_physics_study']['role'],declared_action=proposed,
+                    no_episode_FIT_required_for_manipulation=True,model_accuracy_not_claimed=True,
+                    actual_native_motion_and_safety_admission_unchanged=True))
+            if proposed and proposed['role'].startswith('VALIDATION') and not external:
                 if integrated:
                     from .validation_queue import admit
                     admission=admit(self,proposed)
