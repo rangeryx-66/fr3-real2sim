@@ -178,6 +178,28 @@ def runtime_class(parent):
             if (np.any(command <= self.coupled.limits[:, 0]) or
                     np.any(command >= self.coupled.limits[:, 1])):
                 raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COUPLED_COMMAND_LIMIT')
+            # The inherited command geometry check runs at 30 Hz. Coupled
+            # null motion can move the base much faster than the TCP and reach
+            # an obstacle between those checks. Check every combined proposal;
+            # additionally preview the existing stop at the original 30 Hz
+            # geometry cadence. The independent actual-contact guard remains
+            # authoritative; this preview is not a dynamic safety guarantee.
+            from .stopping import check_stop
+            fingers=np.asarray(self.robot.get_joint_positions())[self.fingers].copy()
+            moving=self.moving().copy();allow=self.intentional_contact()
+            def collision(q):
+                if (np.any(q<=self.coupled.limits[:,0]) or np.any(q>=self.coupled.limits[:,1])
+                        or self.model.margin(q[2:])<=self.policy.data['joint_margin_rad']):
+                    return False,'COUPLED_STOP_JOINT_LIMIT'
+                return self.collision.check(self.model.poses(q[2:],self.coupled.base(q[:2]),
+                    finger_q=fingers),moving,allow)
+            with self.profile.measure('V88_current_command_and_stop_path'):
+                okay,why=collision(command)
+                proof=(dict(valid=False,reason=why) if not okay else
+                    check_stop(command,velocity,governor,self.coupled.speeds,acc,motion,collision)
+                    if self.tick%8==0 else dict(valid=True))
+            if not proof['valid']:
+                raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COUPLED_STOP_PATH_REJECTED:'+proof['reason'])
             self.base_goal = command[:2].copy(); self.base_velocity = velocity[:2].copy()
             context.update(proposal=np.asarray(proposal).copy(), projected=command[2:].copy(), velocity=velocity[2:].copy())
             context['coord_projected'] = True
