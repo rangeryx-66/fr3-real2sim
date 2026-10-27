@@ -10,10 +10,11 @@ from scipy.spatial.transform import Rotation
 
 
 class CommandGovernor:
-    def __init__(self, fk, dt):
+    def __init__(self, fk, dt, *, preserve_direction=False):
         if not np.isfinite(dt) or dt <= 0:raise ValueError('INVALID_CONTROL_PERIOD')
         self.fk=fk;self.dt=float(dt);self.previous_twist=np.zeros(6)
         self.latest={};self.calls=0;self.limited=0
+        self.preserve_direction=bool(preserve_direction)
 
     def reset(self):
         self.previous_twist=np.zeros(6)
@@ -50,6 +51,21 @@ class CommandGovernor:
             return 1-(np.array([np.linalg.norm(t[:3]),np.linalg.norm(t[3:]),
                 np.linalg.norm(delta[:3]),np.linalg.norm(delta[3:])])/limits)**2
         desired=np.clip(wanted,low,high);selected=desired.copy();limited=False
+        if self.preserve_direction and np.min(constraints(selected)) < -1e-8:
+            # Keep an already jointly planned allocation. Acceleration-scaled
+            # SLSQP can invent opposing XY/arm null motion because their units
+            # and slew scales differ. Search from a VERIFIED feasible command;
+            # if no anchor exists, the original nonlinear optimizer still owns
+            # recovery. Every result retains the independent checks below.
+            anchors=[np.clip(previous,low,high),np.clip(np.zeros_like(previous),low,high)]
+            anchor=next((v for v in anchors if np.min(constraints(v))>=-1e-9),None)
+            if anchor is not None:
+                limited=True;left=0.;right=1.
+                for _ in range(30):
+                    middle=(left+right)/2;trial=anchor+middle*(desired-anchor)
+                    if np.min(constraints(trial))>=-1e-9:left=middle
+                    else:right=middle
+                selected=anchor+left*(desired-anchor)
         if np.min(constraints(selected)) < -1e-8:
             limited=True
             initial=np.clip(previous,low,high)

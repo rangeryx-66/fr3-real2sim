@@ -85,9 +85,42 @@ def motion(r, limits):
     span = hard-limits['speed_m_s']
     speed_scale = max(0., min(1., (hard-measured)/span)) if span > 0 else 0.
     r.constraint_feedback = dict(feedback, measured_speed_scale=speed_scale)
-    combined = min(scale, speed_scale)
+    predictive = float(getattr(r, 'v87_predictive_feedback', {}).get('scale', 1.))
+    combined = min(scale, speed_scale, predictive)
     return dict(limits, speed_m_s=limits['speed_m_s']*combined,
         angular_speed_rad_s=limits['angular_speed_rad_s']*combined)
+
+
+class PredictiveLoadRegulator:
+    """Retain the old causal forecast as bounded feedback, without its latch.
+
+    A linear continuation of raw norms is not a measured overload. The SAME
+    measured warning/sustained bands and independent emergency owner remain.
+    This adapter is installed only under the existing classified policy.
+    """
+    def __init__(self, runtime, original):
+        self.runtime=runtime;self.original=original;self.last_event=-float('inf')
+
+    def update(self,t,dt,pads,wrench,stopping_time_s):
+        import numpy as np
+        r=self.runtime
+        base=np.asarray(getattr(r,'base_velocity',np.zeros(2)))
+        acc=r.motion_limits(r.phase)['acceleration_m_s2']
+        horizon=max(stopping_time_s,float(np.max(abs(base)))/acc)
+        risk=self.original.update(t,dt,pads,wrench,horizon)
+        scale=1.
+        if risk is not None:
+            projected=np.asarray(risk['projected_window_mean'])
+            limits=np.asarray(risk['unchanged_sustained_limits'])
+            scale=float(min(1.,np.min(limits/np.maximum(projected,limits))))
+            if t-self.last_event>=1.:
+                r.event('CLASSIFIED_PREDICTIVE_LOAD_ADVISORY',forecast=risk,
+                    reference_scale=scale,authority='BOUNDED_REFERENCE_REGULATION',
+                    action_stop_authorized=False,hard_limits_unchanged=True)
+                self.last_event=t
+        r.v87_predictive_feedback=dict(scale=scale,active=risk is not None,
+            authority='CONTINUOUS_REFERENCE_REGULATION',forecast=risk)
+        return None
 
 
 def action_fault(r, error):

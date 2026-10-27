@@ -61,7 +61,7 @@ def representable_progress(q0,q1,p0,p1,scale):
 
 
 def diagnostic_fields(r):
-    governor=getattr(r,'command_governor',None)
+    governor=getattr(r,'coupled_governor',None) or getattr(r,'command_governor',None)
     m=getattr(governor,'latest',{})
     monitor=getattr(getattr(r,'supervisor',None),'force',None)
     feedback=getattr(monitor,'feedback',{})
@@ -70,7 +70,9 @@ def diagnostic_fields(r):
         v87_command_linear_speed_m_s=float(m.get('linear_speed_m_s',np.nan)),
         v87_command_linear_acceleration_m_s2=float(m.get('linear_acceleration_m_s2',np.nan)),
         v87_command_governor_limited=bool(m.get('limited',False)),
-        v87_command_governor_valid=bool(m))
+        v87_command_governor_valid=bool(m),
+        v87_predictive_reference_scale=float(getattr(r,'v87_predictive_feedback',{}).get('scale',1.)),
+        v87_predictive_advisory_active=bool(getattr(r,'v87_predictive_feedback',{}).get('active',False)))
 
 
 def resource_forecast(progress,window_s,remaining,window_wall_s,resources):

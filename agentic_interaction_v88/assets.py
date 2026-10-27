@@ -42,7 +42,7 @@ def constructor(job):
         settings = carb.settings.get_settings()
         key = '/persistent/isaac/asset_root/default'
         actual = settings.get(key)
-        if actual != manifest['original_sdk_root_uri']:
+        if actual not in (manifest['original_sdk_root_uri'],str(root)):
             value.close()
             raise ValueError('SDK_NATIVE_ASSET_VERSION_MISMATCH')
         settings.set_string(key, str(root))

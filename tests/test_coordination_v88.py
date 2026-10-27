@@ -82,6 +82,30 @@ class CoordinationTests(unittest.TestCase):
         with self.assertRaises((ValueError, RuntimeError)):
             model.velocity(target, q, np.zeros(9), 1/240, .04, MOTION, np.zeros(7))
 
+    def test_measured_seed_is_converted_to_joint_command_before_rate_limits(self):
+        model = LinearCoupled(); measured = np.zeros(9); measured[5] = .0001
+        command = np.zeros(9); target = np.eye(4); dt = 1/240
+        velocity = model.velocity(target, measured, np.zeros(9), dt, np.full(9,2.), MOTION,
+            np.zeros(7), command=command, bias=np.zeros(9))
+        # Same .75 native FrameTask gain: proposed command is 25% of measured
+        # deflection, rather than following it every cycle and drifting.
+        proposal = command + dt * velocity
+        self.assertLess(abs(proposal[5] - .25 * measured[5]), 2e-7)
+        self.assertLess(np.linalg.norm(proposal[:2]), 1e-8)
+
+    def test_projection_does_not_invent_opposing_arm_motion_for_pure_base_plan(self):
+        model = LinearCoupled(); q = np.zeros(9); velocity = np.zeros(9)
+        governor = CommandGovernor(model.fk, 1/240, preserve_direction=True)
+        for _ in range(100):
+            wanted = np.zeros(9); wanted[0] = .03
+            acceleration = np.r_[.04, .04, np.full(7, .8)]
+            velocity = governor.velocity(q, wanted, velocity, model.speeds, acceleration, MOTION)
+            q += velocity / 240
+            np.testing.assert_array_equal(velocity[2:], np.zeros(7))
+            self.assertLessEqual(governor.latest['linear_speed_m_s'], MOTION['speed_m_s'] * (1+1e-12))
+            self.assertLessEqual(governor.latest['linear_acceleration_m_s2'], MOTION['acceleration_m_s2'] * (1+1e-12))
+        self.assertGreater(q[0], .003)
+
     def test_combined_collision_check_uses_proposed_base_not_old_station(self):
         from agentic_interaction_v88.runtime import runtime_class
         Runtime = runtime_class(object); r = Runtime.__new__(Runtime)

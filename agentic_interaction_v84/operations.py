@@ -117,6 +117,10 @@ def operations_class(parent):
             return result
 
         def continue_motion(self,command):
+            if self.g.get('v87_hold_pending') and self.r.supervisor.latched is None:
+                return dict(executed=False,status='RECOVERABLE_FAILURE',
+                    reason='MEASURED_STABILITY_PENDING_PROTECTIVE_HOLD_ONLY',
+                    episode_termination_required=False,main_motion_authorized=False)
             if self.abc_state!='C' or not contact_trusted(self):
                 return dict(executed=False,status='CONTACT_RECOVERY_REQUIRED',
                     safe_exit=self.release_park(),reason='CURRENT_CONTACT_NOT_TRUSTED')
@@ -165,6 +169,8 @@ def operations_class(parent):
             return dict(state=self.abc_state,contact_generation=self.abc_contact_generation,
                 actual_joint_q=q,original_goal_q=goal,remaining_native=goal-q,
                 contact_trusted=contact_trusted(self),station_generation=r.base_generation,
+                protective_hold_only=bool(self.g.get('v87_hold_pending')),
+                main_motion_authorized=not bool(self.g.get('v87_hold_pending')),
                 record_count=r.record.count,model_not_a_manipulation_gate=True,
                 hard_latch=r.supervisor.latched)
 

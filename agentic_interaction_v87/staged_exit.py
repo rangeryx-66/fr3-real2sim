@@ -131,6 +131,19 @@ def release_park(ops):
     def end(status):
         out['status']=status;out['reason']=status
         out['hold_confirmed']=safe_hold(ops) if r.supervisor.latched is None else False
+        if (status==SAFE_HOLD_NOT_ESTABLISHED and not out['hold_confirmed']
+                and r.supervisor.latched is None):
+            from agentic_interaction_v81.recovery_supervisor import trusted
+            from agentic_interaction_v84.operations import contact_trusted
+            commands_stopped=(np.max(abs(r.g['qvelocity']))<=1e-10 and
+                np.max(abs(getattr(r,'base_velocity',np.zeros(2))))<=1e-10)
+            if commands_stopped and trusted(ops):
+                # A finite dwell's failure is not proof of lost control. Keep
+                # real-physics C supervision; no B continuation is authorized.
+                g['v87_hold_pending']=True
+                ops.abc_state='C';g['recovery_state']='LOADED_CRITIQUE'
+                out.update(contact_retained=bool(contact_trusted(ops)),unloaded=False,hold_pending=True,
+                    protective_hold_only=True,maximum_C_wall_s=20.,maximum_C_sim_s=5.)
         if status==SAFE_RELEASE_NOT_CONFIRMED and out['hold_confirmed'] and r.grasp_reference is not None:
             from agentic_interaction_v84.operations import contact_trusted
             if contact_trusted(ops):
@@ -146,6 +159,7 @@ def release_park(ops):
     # access to the existing exit reserve when ordinary work is exhausted.
     g['phase']='RELEASE';r.stop_command()
     if not settle(ops):return end(SAFE_HOLD_NOT_ESTABLISHED)
+    g.pop('v87_hold_pending',None)
     # Existing verified parking may be reused only after measured revalidation.
     if g.get('at_safe_park') and g.get('last_exit_plan') and confirmed_unloaded(r):
         park=verify_park(g,g['last_exit_plan'])
@@ -239,6 +253,15 @@ def recovery_boundary(ops,command,result,exit_result):
     """A missing park route preserves completed motion and a verified hold."""
     from agentic_interaction_v81.recovery_supervisor import released,released_hold
     from .recovery import invalidate
+    if exit_result.get('hold_pending'):
+        from agentic_interaction_v81.recovery_supervisor import trusted
+        if trusted(ops):
+            ops.abc_state='C';ops.g['recovery_state']='LOADED_CRITIQUE'
+            return dict(result,status='RECOVERABLE_FAILURE',outcome='RECOVERABLE_FAILURE',
+                reason='MEASURED_STABILITY_PENDING',episode_termination_required=False,
+                recovery=dict(control_trusted=True,hold_verified=False,park_verified=False,
+                    protective_hold_only=True,motion_resume_allowed=False,
+                    World_recreated=False,object_state_reset=False,original_goal_preserved=True))
     if released(ops) and released_hold(ops):
         ops._v86_exit_pending=True
         invalidate(ops);ops.g['recovery_state']='UNLOADED_OBSERVATION'

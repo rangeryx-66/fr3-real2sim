@@ -41,36 +41,48 @@ class CoupledKinematics:
         J[3:, 2:] = B[:3, :3] @ local[3:]
         return J
 
-    def velocity(self, target, q, previous, dt, acceleration, motion, posture):
+    def velocity(self, target, q, previous, dt, acceleration, motion, posture,
+                 *, command=None, bias=None, integrated=False):
         q = np.asarray(q, float); previous = np.asarray(previous, float)
+        command_feedback = command is not None
+        command = q if command is None else np.asarray(command, float)
+        bias = np.zeros_like(q) if bias is None else np.asarray(bias, float)
         current = self.fk(q)
         error = np.r_[target[:3, 3] - current[:3, 3],
             Rotation.from_matrix(target[:3, :3] @ current[:3, :3].T).as_rotvec()]
         desired = .75 * error / dt  # preserved native FrameTask feedback gain
         task_scales = np.r_[np.full(3, motion['speed_m_s']),
             np.full(3, motion['angular_speed_rad_s'])]
-        for sl in (slice(0, 3), slice(3, 6)):
-            norm = np.linalg.norm(desired[sl] / task_scales[sl])
-            if norm > 1: desired[sl] /= norm
+        if not command_feedback:
+            # Offline pose continuation may start far from a target; take
+            # bounded geometric steps rather than recruit the arm to rush it.
+            for sl in (slice(0, 3), slice(3, 6)):
+                norm = np.linalg.norm(desired[sl] / task_scales[sl])
+                if norm > 1: desired[sl] /= norm
+        J = self.jacobian(q)
+        # Native measured-state IK returns a NEW seed position, not a command
+        # velocity. Translate that proposal into all nine COMMAND coordinates
+        # before applying rate bounds. Clipping the seed's corrective twist
+        # first lets compliance drift accumulate and breaks the XY/arm pair.
+        if not integrated: desired += J @ ((q + bias - command) / dt)
         acceleration = np.broadcast_to(acceleration, q.shape)
         low = np.maximum.reduce([-self.speeds, previous - acceleration * dt,
-            (self.limits[:, 0] - q) / dt])
+            (self.limits[:, 0] - command) / dt])
         high = np.minimum.reduce([self.speeds, previous + acceleration * dt,
-            (self.limits[:, 1] - q) / dt])
+            (self.limits[:, 1] - command) / dt])
         if not np.isfinite(np.r_[q, previous, low, high, desired]).all() or np.any(low >= high):
             raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COUPLED_RATE_INFEASIBLE')
-        J = self.jacobian(q)
         # Penalize task-space effect of arm motion, strengthened near limits.
         # This is a shared posture objective, not an asset-specific travel cap.
         half = (self.limits[2:, 1] - self.limits[2:, 0]) / 2
-        fraction = np.minimum(q[2:] - self.limits[2:, 0],
-            self.limits[2:, 1] - q[2:]) / half
+        fraction = np.minimum(command[2:] - self.limits[2:, 0],
+            self.limits[2:, 1] - command[2:]) / half
         effect = np.linalg.norm(J[:, 2:] / task_scales[:, None], axis=0)
         cost = np.r_[1 / task_scales[:2],
             np.sqrt(16 * len(q[2:])) * effect / np.maximum(fraction, 1e-6)]
         regularizer = 1e-3 * np.diag(cost * self.speeds)
         restoring = np.zeros(9)
-        restoring[2:] = np.clip(.75 * (np.asarray(posture) - q[2:]),
+        restoring[2:] = np.clip(.75 * (np.asarray(posture) - command[2:]),
             -self.speeds[2:], self.speeds[2:])
         A = np.vstack([J * self.speeds / task_scales[:, None], regularizer])
         b = np.r_[desired / task_scales, regularizer @ (restoring / self.speeds)]

@@ -100,6 +100,8 @@ def evaluate(g, candidate, actions, policy, config, solver, *, live=False):
                 endpoints.append(dict(role=action['role'], target_rad=target, target_m=target,
                     motion_valid=True, stopped_hold_checked=True, exit_valid=None,
                     stopping_envelope_native=stopping))
+    candidate.update(base_fixed_after_grasp=False, nominal_acquisition_arc_fixed_base=True,
+        motion_execution_strategy='simultaneous_native_XY_arm')
     return dict(valid=True, reason=None, coordinated_xy_arm=True, staged_exit=True,
         motion_valid=True, stopped_hold_checked=True, checked_native_configurations=checked,
         declared_actions=endpoints, endpoints=endpoints, minimum_joint_margin_rad=minimum,

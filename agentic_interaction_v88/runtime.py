@@ -19,14 +19,18 @@ def runtime_class(parent):
                 np.asarray(self.robot.get_joint_positions())[self.base_indices],
                 np.vstack([native, np.column_stack([lo, hi])]),
                 np.r_[np.full(2, .08), np.asarray(self.c['arm_speed_limits']) / 3])
-            self.coupled_governor = CommandGovernor(self.coupled.fk, self.dt)
-            self._coord_posture = np.asarray(self.robot.get_joint_positions())[self.arm].copy()
+            self.coupled_governor = CommandGovernor(self.coupled.fk, self.dt, preserve_direction=True)
+            self._coord_posture = self.qtarget[self.arm].copy()
+            self._coord_initial_measured_arm = np.asarray(self.robot.get_joint_positions())[self.arm].copy()
+            self._coord_base_reference_bias = np.zeros(2)
             self.g['v88_runtime'] = self
             self.record.metadata['v88_coordination'] = dict(
                 policy=job['v88_coordination_policy'], native_DOF=['mobile_x', 'mobile_y'] + self.c['arm_joint_names'],
                 physical_mount='existing driven XY carriage, fixed height/yaw; not wheeled hardware',
                 base_and_arm_submitted_before_same_physics_step=True,
                 command_governor='nonlinear world TCP FK of all nine commanded DOFs',
+                feedback_semantics='native measured/nominal seed and .75 gain converted jointly into command coordinates before rate bounds',
+                allocation_projection='verified feasible segment preserves selected XY/arm direction; original nonlinear fallback if no anchor exists',
                 actual_TCP_and_wrench_guards='original native owners unchanged',
                 tool_inertia='existing segment-local measured world body COM acceleration',
                 no_object_joint_commands=True, hidden_dynamics_input=False)
@@ -50,7 +54,11 @@ def runtime_class(parent):
                     v88_base_configuration_acceleration_m_s2=np.asarray(row.get('v88_base_configuration_acceleration_m_s2', np.full(2, np.nan))),
                     v88_base_tracking_error_m=xy - np.asarray(getattr(self, 'base_goal', np.full(2, np.nan))),
                     v88_coordination_active=float(self._coord_active),
-                    v88_arm_compensation_rad=q[self.arm] - getattr(self, '_coord_posture', q[self.arm]),
+                    v88_arm_compensation_rad=q[self.arm] - getattr(self, '_coord_initial_measured_arm', q[self.arm]),
+                    v88_command_linear_speed_m_s=float(getattr(getattr(self, 'coupled_governor', None), 'latest', {}).get('linear_speed_m_s', np.nan)),
+                    v88_command_linear_acceleration_m_s2=float(getattr(getattr(self, 'coupled_governor', None), 'latest', {}).get('linear_acceleration_m_s2', np.nan)),
+                    v88_command_angular_speed_rad_s=float(getattr(getattr(self, 'coupled_governor', None), 'latest', {}).get('angular_speed_rad_s', np.nan)),
+                    v88_command_angular_acceleration_rad_s2=float(getattr(getattr(self, 'coupled_governor', None), 'latest', {}).get('angular_acceleration_rad_s2', np.nan)),
                     v88_joint_margin_rad=float(self.model.margin(q[self.arm])))
             self.record.coordinate_fields = fields
             self._coord_fields_installed = True
@@ -83,6 +91,11 @@ def runtime_class(parent):
 
         def begin_reference(self):
             super().begin_reference()
+            if hasattr(self, 'coupled'):
+                actual = np.asarray(self.robot.get_joint_positions())
+                self._coord_base_reference_bias = self.base_goal - actual[self.base_indices]
+                self._coord_initial_integral_error = (self.coupled.fk(np.r_[self.base_goal, self.qtarget[self.arm]])[:3, 3]
+                    - self.coupled.fk(np.r_[actual[self.base_indices], actual[self.arm]])[:3, 3])
             if hasattr(self, 'coupled_governor') and not np.any(self.base_velocity) and np.max(abs(self.g['qvelocity'])) < 1e-10:
                 self.coupled_governor.reset()
 
@@ -92,7 +105,8 @@ def runtime_class(parent):
             if not loaded: return super().cartesian_step(goal, phase)
             if not self._coord_active:
                 self._coord_active = True; self.base_active = True
-                self._coord_posture = np.asarray(self.robot.get_joint_positions())[self.arm].copy()
+                self._coord_initial_measured_arm = np.asarray(self.robot.get_joint_positions())[self.arm].copy()
+                self._coord_posture = self.qtarget[self.arm].copy()
                 self.event('V88_COORDINATED_CONTACT_STARTED', base=self.base.tolist(),
                     arm_posture=self._coord_posture.tolist(), independent_base_relocation=False)
             governor = self.coupled_governor
@@ -100,16 +114,36 @@ def runtime_class(parent):
                 velocity=np.r_[self.base_velocity.copy(), np.asarray(self.g['qvelocity']).copy()],
                 twist=governor.previous_twist.copy(), calls=governor.calls, limited=governor.limited,
                 latest=dict(governor.latest), accepted=False)
-            original = self.solver.velocity_step
             def coupled_step(target, base, seed, dt):
-                q = np.r_[self.base_goal, seed]
-                motion = self.motion_limits(phase)
+                measured_feedback = bool(getattr(self, 'measured_rail_feedback', False))
+                xy = (np.asarray(self.robot.get_joint_positions())[self.base_indices] if measured_feedback
+                    else self.base_goal - self._coord_base_reference_bias)
+                q = np.r_[xy, seed]
+                # Reference slowdown already occurs in the original reference
+                # driver. The final command retains its positive phase bounds;
+                # a zero desired reference speed is a supervised hold, not NaN.
+                motion = self._v87_submission['motion']
                 acc = np.r_[np.full(2, motion['acceleration_m_s2']),
                     np.full(7, self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(phase)])]
                 velocity = self.coupled.velocity(target, q, self._coord_context['velocity'],
-                    dt, acc, motion, self._coord_posture)
-                self._coord_context['proposed_base'] = q[:2] + velocity[:2] * dt
-                return q[2:] + velocity[2:] * dt
+                    dt, acc, motion, self._coord_posture, command=self._coord_context['q'],
+                    bias=np.r_[self._coord_base_reference_bias, self.reference_bias],
+                    integrated=bool(getattr(self, 'integrated_measured_feedback', False)))
+                proposal = self._coord_context['q'] + velocity * dt
+                if getattr(self, 'integrated_measured_feedback', False):
+                    current = self.coupled.fk(q)
+                    command_pose = self.coupled.fk(self._coord_context['q'])
+                    deficit = command_pose[:3, 3] - current[:3, 3] - self._coord_initial_integral_error
+                    next_pose = self.coupled.fk(proposal)
+                    limits = self.policy.motion('LOADED')
+                    allowance = limits['speed_m_s'] ** 2 / (2 * limits['acceleration_m_s2']) + limits['speed_m_s'] * dt
+                    limited = np.linalg.norm(deficit) >= allowance and deficit @ (next_pose[:3, 3] - command_pose[:3, 3]) > 0
+                    if limited: proposal = self._coord_context['q'].copy()
+                    self._coord_context['integral_limited'] = bool(limited)
+                self._coord_context['proposal9'] = proposal
+                return (np.asarray(seed) + (proposal[2:] - self._coord_context['q'][2:])
+                    if getattr(self, 'integrated_measured_feedback', False)
+                    else proposal[2:] - self.reference_bias)
             try:
                 # The inherited reference, startup, retention and bounded
                 # transverse unloading execute unchanged around this joint solve.
@@ -128,23 +162,26 @@ def runtime_class(parent):
         def _project_proposal(self, proposal, context):
             combined = getattr(self, '_coord_context', None)
             if combined is None: return super()._project_proposal(proposal, context)
-            if context.get('proposal') is not None and np.array_equal(proposal, context['proposal']):
+            if context.get('coord_projected'):
                 return context['projected'], context['velocity']
             governor = self.coupled_governor
             governor.previous_twist = combined['twist'].copy()
             governor.calls = combined['calls']; governor.limited = combined['limited']
-            wanted = (np.r_[combined.get('proposed_base', combined['q'][:2]), proposal] - combined['q']) / self.dt
+            wanted = (combined.get('proposal9', combined['q']) - combined['q']) / self.dt
             motion = context['motion']
             acc = np.r_[np.full(2, motion['acceleration_m_s2']),
                 np.full(7, self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(context['phase'])])]
-            velocity = governor.velocity(combined['q'], wanted, combined['velocity'],
-                self.coupled.speeds, acc, motion)
+            with self.profile.measure('V88_final_command_governor'):
+                velocity = governor.velocity(combined['q'], wanted, combined['velocity'],
+                    self.coupled.speeds, acc, motion)
             command = combined['q'] + velocity * self.dt
             if (np.any(command <= self.coupled.limits[:, 0]) or
                     np.any(command >= self.coupled.limits[:, 1])):
                 raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:COUPLED_COMMAND_LIMIT')
             self.base_goal = command[:2].copy(); self.base_velocity = velocity[:2].copy()
             context.update(proposal=np.asarray(proposal).copy(), projected=command[2:].copy(), velocity=velocity[2:].copy())
+            context['coord_projected'] = True
+            if 'integral_limited' in combined: self.integral_limited = combined['integral_limited']
             return context['projected'], context['velocity']
 
         def check_q(self, q):

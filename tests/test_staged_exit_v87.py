@@ -2,7 +2,7 @@
 import ast,math,sys,tempfile,unittest
 from contextlib import contextmanager
 from pathlib import Path
-from types import SimpleNamespace as NS
+from types import SimpleNamespace as NS,ModuleType
 from unittest.mock import Mock,patch
 import numpy as np
 from test_agentic_interaction_v81_revolute_certificate import CertificateTests
@@ -112,6 +112,63 @@ class StagedExitTests(unittest.TestCase):
         self.assertEqual(order,['CLEARANCE_RETREAT','FRESH_RGBD','SAFE_PARK_MOTION'])
         self.assertEqual([s['state']['coordinate_native']for s in out['stages']],[math.pi/2]*5)
         self.assertIs(r.world,world);self.assertEqual(r.coordinate,math.pi/2)
+
+    def test_unconfirmed_dwell_retains_supervised_world_without_fake_hard_latch(self):
+        r=self.ops.r;world=r.world
+        r.station_motion.ready=lambda *a:False
+        with patch('agentic_interaction_v84.operations.contact_trusted',return_value=True):
+            out=self.run_exit()
+            self.assertEqual(out['status'],staged.SAFE_HOLD_NOT_ESTABLISHED)
+            self.assertTrue(out['hold_pending']);self.assertFalse(out['hold_confirmed'])
+            result=supervisor.complete(self.ops,dict(operation='acquire_execute'),dict(safe_exit=out))
+        self.assertEqual(result['outcome'],'RECOVERABLE_FAILURE')
+        self.assertFalse(result['episode_termination_required'])
+        self.assertFalse(result['recovery']['hold_verified'])
+        self.assertFalse(result['recovery']['motion_resume_allowed'])
+        self.assertTrue(self.ops.g['v87_hold_pending'])
+        self.assertEqual(self.ops.g['recovery_state'],'LOADED_CRITIQUE')
+        self.assertIsNone(r.supervisor.latched);self.assertIs(r.world,world)
+        r.station_motion.ready=lambda *a:True
+        with patch('agentic_interaction_v84.operations.contact_trusted',return_value=True):
+            recovered=self.run_exit()
+        self.assertTrue(recovered['safe']);self.assertNotIn('v87_hold_pending',self.ops.g)
+        self.assertIsNone(r.supervisor.latched);self.assertIs(r.world,world)
+
+    def test_pending_stability_cannot_authorize_main_motion(self):
+        from agentic_interaction_v84.operations import operations_class
+        Ops=operations_class(object);ops=Ops.__new__(Ops)
+        ops.g={'v87_hold_pending':True}
+        ops.r=NS(supervisor=NS(latched=None))
+        out=ops.continue_motion(dict(operation='continue_motion'))
+        self.assertFalse(out['executed']);self.assertFalse(out['main_motion_authorized'])
+
+    def test_pending_contact_returns_to_real_physics_C_instead_of_paused_unloaded_wait(self):
+        from agentic_interaction_v81.session import serve
+        ops=self.ops;r=ops.r;r.job.update(v84_abc=True,agent_wait_timeout_s=600.)
+        ops._abc_retain=False;ops.abc_state='C';ops.g.update(recovery_state='LOADED_CRITIQUE',v87_hold_pending=True,observation_generations=[])
+        ops.close_workers=Mock();ops.decision_packet=lambda *a:dict(unloaded=True)
+        r.world.close=Mock();r.world.reset=Mock()
+        commands=r.output/'agent_commands';commands.mkdir();(commands/'001.json').write_text('{}')
+        observations=ModuleType('interaction_runtime.registered_observation_v71');observations.initialize=Mock()
+        owner=ModuleType('interaction_runtime.probing_v7');owner.OperationsV7=object
+        windows=[]
+        def loaded(o,sequence):
+            windows.append(sequence)
+            if sequence==1:
+                o.abc_state='A';o.g['recovery_state']='UNLOADED_OBSERVATION'
+                o.g.pop('v87_hold_pending')
+            return None
+        with patch.dict(sys.modules,{'interaction_runtime.registered_observation_v71':observations,'interaction_runtime.probing_v7':owner}),\
+             patch('agentic_interaction_v81.session.operations_class',return_value=lambda runtime:ops),\
+             patch('agentic_interaction_v84.session.loaded_command',side_effect=loaded),\
+             patch('agentic_interaction_v81.session.window',return_value=(600,{})) as window,\
+             patch('agentic_interaction_v81.session.status'),\
+             patch('agentic_interaction_v81.session.receive',return_value=(dict(operation='finish',sequence=1,owner_requested_stop=True),{})),\
+             patch('agentic_interaction_v81.session.complete'):
+            result=serve(r)
+        self.assertEqual(windows,[0,1]);self.assertEqual(window.call_count,1)
+        self.assertEqual(result['status'],'SESSION_COMPLETE')
+        r.world.close.assert_not_called();r.world.reset.assert_not_called()
 
     def test_no_parking_route_retains_distinct_release_and_clearance_results(self):
         self.route.side_effect=None;self.route.return_value=(None,'collision')

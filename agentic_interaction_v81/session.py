@@ -51,6 +51,16 @@ def serve(r):
                     if not r.job.get('v87_continuous_recovery'):raise
                     from agentic_interaction_v87.lifecycle import retain
                     return retain(ops,seq,trace,dict(status='SAFETY_STOP',reason=error.reason,evidence=error.evidence))
+                # A failed stationary dwell can retain a valid, stopped-command
+                # contact. Never fall through into a 600s PAUSED loaded wait.
+                # Keep the existing finite real-physics C windows and exact
+                # deadline. At the work boundary, use the protected exit owner.
+                if (g['recovery_state']=='LOADED_CRITIQUE' and
+                        not (commands/('%03d.json'%seq)).exists()):
+                    available=r.episode_budget.remaining(r.tick*r.dt)
+                    if available['wall_s']<=0 or available['sim_s']<=0:
+                        return dict(status='BUDGET_EXHAUSTED',safe_exit=ops.release_park(),trace=trace)
+                    continue
             held=bool(r.job.get('v84_abc') and g['recovery_state']=='LOADED_CRITIQUE')
             if (g['recovery_state']!='UNLOADED_OBSERVATION' and not held) or r.supervisor.latched is not None:
                 if r.job.get('v87_continuous_recovery'):

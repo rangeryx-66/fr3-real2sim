@@ -36,7 +36,7 @@ def loaded_command(ops,sequence):
         while not path.exists():
             if (r.stopped or (r.output/'STOP_AND_EXPORT').exists()
                     or time.monotonic()-start>=wall_cap or r.tick*r.dt-sim>=sim_cap
-                    or not contact_trusted(ops)):
+                    or (not contact_trusted(ops) and not ops.g.get('v87_hold_pending'))):
                 expired=True;break
             try:
                 r.hold(.05)

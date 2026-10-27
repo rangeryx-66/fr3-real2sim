@@ -27,6 +27,9 @@ def runtime_class(parent):
             if enabled(self):
                 from .motion_policy import PhysicalMotionDwell, articulation_prior
                 self.station_motion=PhysicalMotionDwell(self.dt,lambda:articulation_prior(self))
+                if hasattr(self,'v75_load_trend'):
+                    from .constraint_feedback import PredictiveLoadRegulator
+                    self.v75_load_trend=PredictiveLoadRegulator(self,self.v75_load_trend)
             self.record.metadata['v87_command_governor']=dict(
                 scope='nonlinear FK of final arm command, joint/TCP velocity and acceleration',
                 unchanged_native_drive_and_hard_limits=True,feeds_Physics_ID=False)

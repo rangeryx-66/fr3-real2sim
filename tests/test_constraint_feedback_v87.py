@@ -6,7 +6,7 @@ from unittest.mock import Mock
 import numpy as np
 from interaction_runtime.policy import Policy, SafetySupervisor, SafetyStop
 from agentic_interaction_v87.constraint_feedback import (
-    POLICY, ActionForceMonitor, motion, action_fault)
+    POLICY, ActionForceMonitor, motion, action_fault, PredictiveLoadRegulator)
 from agentic_interaction_v87.activation import activate
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -35,6 +35,21 @@ def step(r, t, torque=.0, pad=.1, force=0., **changes):
 
 
 class ClassifiedConstraintTests(unittest.TestCase):
+    def test_recorded_forecast_is_continuous_feedback_not_an_action_or_world_stop(self):
+        r=fixture();r.phase='OPEN_CONTINUE';r.base_velocity=np.array([.004,0.])
+        r.motion_limits=lambda phase:dict(r.policy.motion('LOADED'),acceleration_m_s2=.008)
+        risk=dict(projected_window_mean=[2.810403137279542,4.027973211982282,.6278167582698038],
+            unchanged_sustained_limits=[4.,8.,.6],current_measured_norms=[2.810403137279542,2.347447106363562,.37934343591842345])
+        original=NS(update=Mock(return_value=risk));adapter=PredictiveLoadRegulator(r,original)
+        self.assertIsNone(adapter.update(1.,1/240,[1.,1.],np.zeros(6),.1))
+        self.assertGreater(r.v87_predictive_feedback['scale'],0.)
+        self.assertLess(r.v87_predictive_feedback['scale'],1.)
+        self.assertGreaterEqual(original.update.call_args.args[-1],.5)
+        self.assertIsNone(r.supervisor.latched)
+        bounded=motion(r,r.policy.motion('LOADED'))
+        self.assertLess(bounded['speed_m_s'],r.policy.motion('LOADED')['speed_m_s'])
+        with self.assertRaisesRegex(SafetyStop,'EMERGENCY_WRIST_TORQUE'):step(r,2.,torque=1.)
+
     def test_recorded_small_torque_band_crossing_regulates_without_action_stop_or_latch(self):
         # Exact published trailing mean, not a fabricated new physical run.
         for audited in (False, True):
