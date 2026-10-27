@@ -5,6 +5,7 @@ import numpy as np
 ROOT=Path(__file__).resolve().parents[1];sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 from agentic_interaction_v88.physics_aware import DemandModel,Capability,choose
 from update_probing_v7_model import load_segments
+from update_prismatic_v73_model import qualify
 
 
 def main():
@@ -12,7 +13,8 @@ def main():
     parser.add_argument('--output',required=True,type=Path);args=parser.parse_args()
     p=args.episode; idx=json.loads((p/'telemetry/index.json').read_text())
     model=json.loads((p/'model/estimate.json').read_text())['selected']
-    pieces,settings,quality=load_segments(p,False)
+    pieces,settings,quality=load_segments(p,True)
+    for piece in pieces:qualify(piece)
     fit=[d for d in pieces if str(d['block_id']).startswith('FIT')]
     X=np.concatenate([np.c_[d['qdd'][d['valid']],d['qd'][d['valid']],
         np.sign(d['qd'][d['valid']])] for d in fit])

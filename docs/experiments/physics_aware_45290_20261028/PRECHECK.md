@@ -3,14 +3,15 @@
 Historical closed 45290 data are used here only to audit sensor and model
 sensitivity. No prior successful grasp pose is imported into a new trial.
 
-Production FIT has three independent regressors. On 17690 eligible samples,
-normalized design condition was 12.90. The unfiltered effort residual absolute
-95th percentile was 0.02859 N. Filtered residual was much smaller, but the
+Production FIT has three independent regressors. With the original declared
+FIT intervals and complete sliding-filter support, 17418 samples qualify;
+normalized design condition is 12.96. The unfiltered effort residual absolute
+95th percentile is 0.02867 N. Filtered residual is much smaller, but the
 common SG filter and correlated samples do not establish calibrated physical
 confidence intervals.
 
 Replaying a 6 kg mass difference on the measured acceleration gives only
-0.00389 N RMS and 0.00168 N absolute 95th-percentile response. The old long
+0.00274 N RMS and 0.00152 N absolute 95th-percentile response. The old long
 near-steady segments are weak mass experiments. By contrast, +58.5 N s/m
 damping gives 0.2162 N RMS and +0.45 N Coulomb friction gives 0.45 N response.
 New FIT probes need repeated interior speed changes and acceleration excitation;
