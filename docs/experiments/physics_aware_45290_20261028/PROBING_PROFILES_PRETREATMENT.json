@@ -1,0 +1,128 @@
+{
+  "schema": "physics-aware-probing-profiles/v1",
+  "registered_before_changed_condition_outcomes": true,
+  "reason": "Qualification confirms acceleration8mm/s2 with real stopping and recovery;4mm/s2 doubles stop-preview horizon and lowers achieved speed. Use the already physically exercised8mm/s2 setting for future FIT profiles, with native per-instance path checks. No physical threshold or frozen actor is changed.",
+  "current_contact_p05_recovery_profile_unchanged": true,
+  "M0": [
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "FIT_M0_FORWARD_QUALIFIED_RAMP",
+      "target_q": 0.02,
+      "reference_speed_m_s": 0.004,
+      "reference_acceleration_m_s2": 0.008,
+      "fit_intervals_s": [
+        [
+          0.6,
+          100.0
+        ]
+      ]
+    },
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "FIT_M0_REVERSE_SLOW",
+      "target_q": 0.004,
+      "reference_speed_m_s": 0.002,
+      "reference_acceleration_m_s2": 0.008,
+      "fit_intervals_s": [
+        [
+          0.6,
+          100.0
+        ]
+      ]
+    },
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "FIT_M0_FORWARD_MID",
+      "target_q": 0.02,
+      "reference_speed_m_s": 0.003,
+      "reference_acceleration_m_s2": 0.008,
+      "fit_intervals_s": [
+        [
+          0.6,
+          100.0
+        ]
+      ]
+    },
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "VALIDATION_M0_HELDOUT",
+      "target_q": 0.006,
+      "reference_speed_m_s": 0.0035,
+      "reference_acceleration_m_s2": 0.006
+    }
+  ],
+  "M1_per_condition": [
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "FIT_M1_FORWARD",
+      "target_q": 0.012,
+      "reference_speed_m_s": 0.0015,
+      "reference_acceleration_m_s2": 0.008,
+      "fit_intervals_s": [
+        [
+          0.6,
+          100.0
+        ]
+      ]
+    },
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "FIT_M1_REVERSE",
+      "target_q": 0.002,
+      "reference_speed_m_s": 0.001,
+      "reference_acceleration_m_s2": 0.008,
+      "fit_intervals_s": [
+        [
+          0.6,
+          100.0
+        ]
+      ]
+    },
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "FIT_M1_FORWARD_MID",
+      "target_q": 0.012,
+      "reference_speed_m_s": 0.002,
+      "reference_acceleration_m_s2": 0.008,
+      "fit_intervals_s": [
+        [
+          0.6,
+          100.0
+        ]
+      ]
+    },
+    {
+      "coordinate_unit": "m",
+      "profile": "constant",
+      "hold": true,
+      "allow_target_truncation": false,
+      "role": "VALIDATION_M1_HELDOUT",
+      "target_q": 0.004,
+      "reference_speed_m_s": 0.00125,
+      "reference_acceleration_m_s2": 0.004
+    }
+  ],
+  "formal_common_control_menu_unchanged": true,
+  "GT_used_for_profile_choice": false
+}
