@@ -57,7 +57,7 @@ def material_values(case):
 
 
 def author_contact(stage,scene,case,output):
-    from pxr import UsdPhysics,UsdShade,PhysxSchema
+    from pxr import Usd,UsdPhysics,UsdShade,PhysxSchema
     from xarm7_native_gripper import FINGER_BODIES
     material,ratio=material_values(case)
     from agent_command_protocol_v12 import atomic_json
@@ -74,8 +74,8 @@ def author_contact(stage,scene,case,output):
     PhysxSchema.PhysxMaterialAPI.Apply(mat.GetPrim()).CreateFrictionCombineModeAttr().Set('average')
     normalize=lambda s:re.sub('[^A-Za-z0-9]','',s)
     stems=[normalize(x) for x in scene['manifest']['grasp_mesh_stems']]
-    pad_paths={name:[] for name in FINGER_BODIES};handle=[]
-    for prim in stage.Traverse():
+    pad_paths={name:[] for name in FINGER_BODIES};handle=[];binding_owners={}
+    for prim in Usd.PrimRange.Stage(stage,Usd.TraverseInstanceProxies()):
         if not prim.HasAPI(UsdPhysics.CollisionAPI):continue
         path=str(prim.GetPath());finger=None;parent=prim
         while parent and not parent.IsPseudoRoot():
@@ -83,15 +83,26 @@ def author_contact(stage,scene,case,output):
             parent=parent.GetParent()
         target=(path.startswith(scene['asset_path']+'/') and any(s in normalize(path) for s in stems))
         if not (finger and path.startswith('/World/Piper/') or target):continue
-        binding=UsdShade.MaterialBindingAPI.Apply(prim)
+        # Imported collision meshes are instance proxies. Bind on the closest
+        # writable instance root, then verify inherited physics material at
+        # each real collider. Preserve instancing and every geometry byte.
+        owner=prim
+        while owner.IsInstanceProxy():owner=owner.GetParent()
+        owner_path=str(owner.GetPath())
+        if ((finger and not owner_path.startswith(str(parent.GetPath())))
+                or (target and not any(s in normalize(owner_path) for s in stems))):
+            raise RuntimeError('LOCAL_PAD_OR_HANDLE_BINDING_REQUIRED_NO_ASSEMBLY_OVERRIDE')
+        binding=UsdShade.MaterialBindingAPI.Apply(owner)
         binding.Bind(mat,bindingStrength=UsdShade.Tokens.strongerThanDescendants,materialPurpose='physics')
-        bound,_=binding.ComputeBoundMaterial(materialPurpose='physics')
+        bound,_=UsdShade.MaterialBindingAPI(prim).ComputeBoundMaterial(materialPurpose='physics')
         if not bound or bound.GetPath()!=mat.GetPath():raise RuntimeError('NATIVE_MATERIAL_BINDING_FAILED')
+        binding_owners[path]=owner_path
         if finger:pad_paths[finger].append(path)
         if target:handle.append(path)
     if not handle or not all(pad_paths.values()):raise RuntimeError('EXACT_PAD_AND_HANDLE_COLLIDERS_REQUIRED')
     atomic_json(Path(output)/'PRIVATE_NATIVE_CONTACT_MATERIAL.json',dict(
         material=material,handle_colliders=handle,finger_colliders=pad_paths,
+        collider_binding_owners=binding_owners,instancing_preserved=True,
         both_sides_same_average_material=True,rigid_handle_damage_model=False,
         object_or_robot_geometry_changed=False,static_rail_multiplier=ratio))
 
