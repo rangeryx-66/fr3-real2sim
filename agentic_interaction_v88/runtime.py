@@ -10,7 +10,8 @@ def runtime_class(parent):
         def __init__(self, job):
             self._coord_fields_installed = False
             self._coord_active = False
-            super().__init__(job)
+            from .assets import constructor
+            with constructor(job): super().__init__(job)
             from interaction_runtime.prismatic_planning_v73 import representable_joint_bounds
             lo, hi = representable_joint_bounds(self.model.limits, self.policy.data['joint_margin_rad'])
             native = np.tile(np.asarray(self.mount['native_limits_m'], float), (2, 1))

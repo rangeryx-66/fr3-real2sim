@@ -1,5 +1,7 @@
 """Coupled controller fault tests; no simulated operation is claimed here."""
 import unittest
+import hashlib,json,tempfile
+from pathlib import Path
 from types import SimpleNamespace as NS
 from unittest.mock import Mock
 import numpy as np
@@ -137,6 +139,31 @@ class CoordinationTests(unittest.TestCase):
         sensor = np.eye(4); sensor[:3, 3] = [1., 2., 2.]
         shifted = wrench_at(wrench, sensor, np.array([1., 2., 0.]))
         np.testing.assert_allclose(shifted, [.2, 0., 0., 0., .6, 0.])
+
+    def test_native_asset_migration_rejects_byte_changes_and_path_escape(self):
+        from agentic_interaction_v88.assets import verify
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder); name = 'Isaac/Environments/Grid/default_environment.usd'
+            file = root / name; file.parent.mkdir(parents=True); file.write_bytes(b'original USD bytes')
+            manifest = dict(schema='native-asset-path-migration/v1', original_sdk_root_uri='original',
+                files={name: hashlib.sha256(file.read_bytes()).hexdigest()})
+            path = root / 'MANIFEST.json'
+            def declaration():
+                path.write_text(json.dumps(manifest))
+                return dict(path=str(path), sha256=hashlib.sha256(path.read_bytes()).hexdigest())
+            registered = declaration(); self.assertEqual(verify(registered)[0], root)
+            file.write_bytes(b'modified USD bytes')
+            with self.assertRaisesRegex(ValueError, 'NATIVE_ASSET_BYTES_CHANGED'): verify(registered)
+            manifest['files'][name] = hashlib.sha256(file.read_bytes()).hexdigest()
+            manifest['files']['../../escape'] = '0' * 64
+            with self.assertRaisesRegex(ValueError, 'NATIVE_ASSET_BYTES_CHANGED'): verify(declaration())
+
+    def test_native_asset_manifest_hash_cannot_be_silently_replaced(self):
+        from agentic_interaction_v88.assets import verify
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'MANIFEST.json'; path.write_text('{}')
+            with self.assertRaisesRegex(ValueError, 'COMMITMENT_MISMATCH'):
+                verify(dict(path=str(path), sha256='0' * 64))
 
 
 if __name__ == '__main__': unittest.main()

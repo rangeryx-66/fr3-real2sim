@@ -29,7 +29,7 @@ def _launch(specfile,profile,instance=None):
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
              'integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence'}
     if spec.get('integration_profile')=='v87_abc_hybrid_recovery_v1':
-        allowed.update({'staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy'})
+        allowed.update({'staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy','native_assets'})
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     from .integration import apply as integrated_profile
@@ -60,7 +60,7 @@ def _launch(specfile,profile,instance=None):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence','staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence','staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy','native_assets')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     if spec.get('persistent_goal') is not None:
         # V8 materializes immutable IO under its original smoke contract; the

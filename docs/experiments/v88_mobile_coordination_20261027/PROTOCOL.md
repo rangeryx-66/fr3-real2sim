@@ -71,3 +71,11 @@ comparison. Report actual single-grasp range, coordination allocation,
 failures/regrasps/recoveries, independent ID and final safety state for each.
 
 No additional assets or indefinite tuning follow these two formal outcomes.
+
+Startup resource migration: the first qualification instance failed the SDK's
+remote root-directory lookup before any observation or contact. Preserve that
+failed startup and its cleanup. A subsequent opt-in local mirror must use the
+exact official SDK-version ground USD and original texture bytes, verify all
+manifest hashes before launch, and require the SDK's original root URI to
+match. Only the resource root path is relocated; the original SDK constructor,
+USD values, geometry, materials and physics are unchanged.

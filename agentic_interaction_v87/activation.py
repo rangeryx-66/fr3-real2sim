@@ -10,6 +10,7 @@ def activate(spec,job,existing,base_profile):
     shadow.pop('constraint_policy',None)
     shadow.pop('persistent_goal',None)
     shadow.pop('coordination_policy',None)
+    shadow.pop('native_assets',None)
     if spec.get('persistent_goal') is not None or spec.get('coordination_policy') is not None:
         from agentic_interaction_v81.integration import ABC_PROFILE
         shadow['integration_profile']=ABC_PROFILE
@@ -32,7 +33,13 @@ def activate(spec,job,existing,base_profile):
         if (spec['coordination_policy'] != POLICY or spec.get('phase') != 'engineering'
                 or spec.get('staged_exit') is not True):
             raise ValueError('COORDINATION_REQUIRES_EXPLICIT_ENGINEERING_STAGED_EXIT')
-        job['v88_coordination_policy'] = POLICY
+        job.update(v88_coordination_policy=POLICY, v86_object_state_telemetry=True)
+    if 'native_assets' in spec:
+        if not job.get('v88_coordination_policy'):
+            raise ValueError('NATIVE_ASSET_MIGRATION_REQUIRES_COORDINATED_ENGINEERING')
+        from agentic_interaction_v88.assets import verify
+        verify(spec['native_assets'])
+        job['v88_native_assets'] = dict(spec['native_assets'])
     if 'constraint_policy' in spec:
         from .constraint_feedback import POLICY
         if (spec['constraint_policy'] != POLICY or spec.get('phase') != 'engineering'
