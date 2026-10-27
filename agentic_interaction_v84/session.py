@@ -77,6 +77,9 @@ def serve(r):
         if r.job.get('v87_graspgenx'):
             from agentic_interaction_v87.hybrid_grasp import operations_class as hybrid
             result=hybrid(result)
+        if r.job.get('v88_coordination_policy'):
+            from agentic_interaction_v88.operations import operations_class as coordinate
+            result=coordinate(result)
         return result
     def before_command(ops,command):
         if ops.abc_state=='C' and command['operation'] not in ('continue_motion','safe_release_retreat','finish','inspect'):

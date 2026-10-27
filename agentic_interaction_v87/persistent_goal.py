@@ -67,6 +67,9 @@ def finish_assessment(ops,completion):
         return dict(allowed=True,reason='MEASURED_TASK_LIFECYCLE_COMPLETE',task_complete=True,completion=completion)
     if remaining_wall(r)<=0:
         return dict(allowed=True,reason='REGISTERED_FOUR_HOUR_DEADLINE',task_complete=False)
+    resources=r.episode_budget.remaining(r.tick*r.dt)
+    if resources['wall_s']<=0 or resources['sim_s']<=0:
+        return dict(allowed=True,reason='PROTECTED_EXIT_RESOURCE_BOUNDARY',task_complete=False,resources=resources)
     return dict(allowed=False,status='CONTINUATION_REQUIRED',recoverable=True,
         reason='LOCAL_FAILURE_DOES_NOT_END_REGISTERED_GOAL',completion=completion,
         remaining_total_wall_s=remaining_wall(r),original_goal_native=r.job['v81_task_goal_native'])
@@ -79,7 +82,9 @@ def renew_decision(r,began,wait,sequence):
     The external Agent must continue observations, search and actual actions.
     """
     from agent_command_protocol_v12 import atomic_json
-    remaining=remaining_wall(r)
+    resources=r.episode_budget.remaining(r.tick*r.dt)
+    remaining=min(remaining_wall(r),resources['wall_s'])
+    if resources['sim_s']<=0:remaining=0.
     if remaining<=0:return None
     extension=min(float(r.job['agent_wait_timeout_s']),remaining)
     record=dict(sequence=sequence,reason='AGENT_SUBDEADLINE_STRATEGY_SWITCH_REQUIRED',

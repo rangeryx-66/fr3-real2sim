@@ -21,7 +21,11 @@ def prepare(root,assembly,registration,descriptor):
         source=root/'stations'/aid;source.mkdir(exist_ok=False,parents=True)
         source_report=dict(asset_installation=reg['asset_preparation']['installation'],robot_base_pose=reg['asset_preparation']['initial_station'])
         (source/'report.json').write_text(json.dumps(source_report,indent=2)+'\n')
-        template=copy.deepcopy(original['scenes']['asset_45936'if kind=='revolute'else'asset_45746']['job_template'])
+        # Reuse a declared same-asset IO template when migrating an existing
+        # fixed pair. It contains no observations or successful grasp poses.
+        key='asset_'+aid
+        if key not in original['scenes']:key='asset_45936'if kind=='revolute'else'asset_45746'
+        template=copy.deepcopy(original['scenes'][key]['job_template'])
         for k in ('episode_id','deadline_shanghai','debug_budget_profile','passive_geometry_cameras','passive_rgbd','passive_dataset_output','passive_evaluation_output'):template.pop(k,None)
         template.update(asset_id=aid,research_reference=reg.get('research_reference','fixed-two-unseen-persistent-ABC'),skill=dict(joint_type=kind),
             articulation_v7=dict(joint_type=kind,limits_native=[a['limits_native'][k]for k in ('lower','upper')],units=template['articulation_v7']['units']),

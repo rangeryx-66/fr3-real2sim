@@ -20,7 +20,7 @@ class PersistentGoalTests(unittest.TestCase):
         reasons=['NO_IK','ALL_CANDIDATES_REJECTED','GRASP_FAILED','SLIP','CONTACT_DEGRADED',
             'NO_CURRENT_PATH','JOINT_MARGIN_WARNING','SOFT_SPEED_WARNING','LOAD_WARNING',
             'EXIT_PATH_NOT_FOUND','RECOVERY_COUNT_REACHED','AGENT_UNCERTAIN']
-        self.r.episode_budget.remaining=lambda t:dict(wall_s=0.,sim_s=0.)
+        self.r.episode_budget.remaining=lambda t:dict(wall_s=1000.,sim_s=1000.)
         self.ops._v81_phase_costs=dict(acquire=1e9,release=1e9)
         with patch('time.time',return_value=1000.):
             for reason in reasons:
@@ -30,6 +30,20 @@ class PersistentGoalTests(unittest.TestCase):
                     out=task_recovery.finish_check(self.ops,command)
                     self.assertFalse(out['allowed']);self.assertTrue(out['recoverable'])
                     self.assertEqual(out['reason'],'LOCAL_FAILURE_DOES_NOT_END_REGISTERED_GOAL')
+
+    def test_exit_reserve_is_not_renewed_into_launcher_watchdog(self):
+        from agentic_interaction_v81.debug_budget import window
+        self.r.episode_budget.remaining=lambda t:dict(wall_s=50.,sim_s=100.)
+        with patch('time.time',return_value=15000.),patch('time.perf_counter',return_value=20.):
+            self.assertEqual(window(self.r)[0],50.)
+            self.assertEqual(persistent.renew_decision(self.r,0.,10.,3),(70.,15050.))
+        self.r.episode_budget.remaining=lambda t:dict(wall_s=0.,sim_s=100.)
+        incomplete=dict(actual_goal_reached=False,meaningful_reverse=False,complete_independent_validation=False)
+        with patch('time.time',return_value=15100.):
+            self.assertEqual(window(self.r)[0],0.)
+            self.assertIsNone(persistent.renew_decision(self.r,0.,10.,3))
+            self.assertEqual(persistent.finish_assessment(self.ops,incomplete)['reason'],'PROTECTED_EXIT_RESOURCE_BOUNDARY')
+        self.assertIsNone(self.r.supervisor.latched)
 
     def test_complete_goal_and_true_deadline_are_distinct_from_planning_failure(self):
         done=dict(actual_goal_reached=True,meaningful_reverse=True,complete_independent_validation=True)

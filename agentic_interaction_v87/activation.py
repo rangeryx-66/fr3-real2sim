@@ -9,7 +9,8 @@ def activate(spec,job,existing,base_profile):
     shadow.pop('gpu_capacity_evidence',None)
     shadow.pop('constraint_policy',None)
     shadow.pop('persistent_goal',None)
-    if spec.get('persistent_goal') is not None:
+    shadow.pop('coordination_policy',None)
+    if spec.get('persistent_goal') is not None or spec.get('coordination_policy') is not None:
         from agentic_interaction_v81.integration import ABC_PROFILE
         shadow['integration_profile']=ABC_PROFILE
     shadow.pop('staged_exit',None)
@@ -26,6 +27,12 @@ def activate(spec,job,existing,base_profile):
             raise ValueError('FINITE_EXPLICIT_V87_ENGINEERING_FIXTURE_REQUIRED')
         job['v87_controlled_interruption_fixture']=dict(fixture)
     job['v87_continuous_recovery']=True
+    if 'coordination_policy' in spec:
+        from agentic_interaction_v88 import POLICY
+        if (spec['coordination_policy'] != POLICY or spec.get('phase') != 'engineering'
+                or spec.get('staged_exit') is not True):
+            raise ValueError('COORDINATION_REQUIRES_EXPLICIT_ENGINEERING_STAGED_EXIT')
+        job['v88_coordination_policy'] = POLICY
     if 'constraint_policy' in spec:
         from .constraint_feedback import POLICY
         if (spec['constraint_policy'] != POLICY or spec.get('phase') != 'engineering'

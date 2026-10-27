@@ -27,5 +27,8 @@ def window(r):
     resources=r.episode_budget.remaining(r.tick*r.dt)
     from agentic_interaction_v87.persistent_goal import enabled,remaining_wall
     if enabled(r):
-        return min(float(r.job['agent_wait_timeout_s']),remaining_wall(r)),resources
+        # Decision/search subdeadlines never consume the protected exit reserve.
+        # Otherwise renewal waits until the launcher watchdog interrupts parking.
+        return (min(float(r.job['agent_wait_timeout_s']),remaining_wall(r),resources['wall_s'])
+                if resources['sim_s']>0 else 0.),resources
     return min(float(r.job['agent_wait_timeout_s']),resources['wall_s']),resources
