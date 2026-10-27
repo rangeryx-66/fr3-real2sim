@@ -5,7 +5,7 @@ projection rejects this action; it never widens a limit or submits that command.
 The nonlinear FK check is authoritative even when the optimizer reports success.
 """
 import numpy as np
-from scipy.optimize import minimize
+from scipy.optimize import minimize,minimize_scalar
 from scipy.spatial.transform import Rotation
 
 
@@ -50,7 +50,7 @@ class CommandGovernor:
             t=twist(v);delta=(t-self.previous_twist)/self.dt
             return 1-(np.array([np.linalg.norm(t[:3]),np.linalg.norm(t[3:]),
                 np.linalg.norm(delta[:3]),np.linalg.norm(delta[3:])])/limits)**2
-        desired=np.clip(wanted,low,high)
+        desired=np.clip(wanted,low,high);scalar_brake_repaired=False
         if not np.any(wanted) and np.any(previous):
             # Brake a coordinated allocation together. Independent slew clips
             # can remove a compensating joint before the base slows, raising
@@ -62,7 +62,24 @@ class CommandGovernor:
             fraction=min(1.,float(np.min(
                 acceleration[moving]*self.dt/np.abs(previous[moving]))))
             desired=np.clip(previous*(1.-fraction),low,high)
-        selected=desired.copy();limited=False
+            if np.min(constraints(desired)) < -1e-8:
+                # The maximal joint-slew brake can slightly exceed TCP slew.
+                # At a speed boundary neither clipped endpoint need be a
+                # feasible optimizer anchor. Search the ONE shared braking
+                # fraction first: retain the coordinated direction instead of
+                # asking a nine-variable solve to discover that interior.
+                trial=lambda f:np.clip(previous*(1.-f),low,high)
+                result=minimize_scalar(lambda f:-float(np.min(constraints(trial(f)))),
+                    bounds=(0.,fraction),method='bounded',
+                    options=dict(xatol=1e-14,maxiter=80))
+                if np.min(constraints(trial(result.x)))>=-1e-9:
+                    left=float(result.x);right=fraction
+                    for _ in range(30):
+                        middle=(left+right)/2
+                        if np.min(constraints(trial(middle)))>=-1e-9:left=middle
+                        else:right=middle
+                    desired=trial(left);scalar_brake_repaired=True
+        selected=desired.copy();limited=scalar_brake_repaired
         if self.preserve_direction and np.min(constraints(selected)) < -1e-8:
             # Keep an already jointly planned allocation. Acceleration-scaled
             # SLSQP can invent opposing XY/arm null motion because their units

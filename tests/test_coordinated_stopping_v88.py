@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 import numpy as np
 from agentic_interaction_v87.command_governor import CommandGovernor
 from agentic_interaction_v88.stopping import check_stop
@@ -32,6 +33,30 @@ class StoppingTests(unittest.TestCase):
         result=check_stop(np.zeros(2),np.array([.004,0]),g,[.08,.3],[.008,.8],motion,check)
         self.assertTrue(result['valid']);self.assertGreater(len(seen),2)
         self.assertLess(seen[-1][0],.0011)
+
+    def test_speed_boundary_has_a_feasible_interior_shared_brake(self):
+        g=CommandGovernor(self.fk,1/240,preserve_direction=True)
+        previous=np.array([.0027407,.00000134]);speed=float(previous.sum())
+        g.previous_twist=np.array([speed,0,0,0,0,0])
+        motion=dict(speed_m_s=speed/(1-1e-6),acceleration_m_s2=.008,
+            angular_speed_rad_s=.08,angular_acceleration_rad_s2=.2)
+        # Both clipped endpoints can fail the tighter numerical target. The
+        # interior shared fraction must succeed without a multivariable solve.
+        with patch('agentic_interaction_v87.command_governor.minimize',
+                side_effect=AssertionError('shared scalar brake should suffice')):
+            velocity=g.velocity(np.zeros(2),np.zeros(2),previous,[.08,.3],[.008,.8],motion)
+        self.assertTrue(np.all(velocity>=0));self.assertTrue(np.all(velocity<previous))
+        self.assertLessEqual(g.latest['linear_speed_m_s'],motion['speed_m_s'])
+        self.assertLessEqual(g.latest['linear_acceleration_m_s2'],motion['acceleration_m_s2']*(1+1e-12))
+        self.assertTrue(np.all(abs(velocity-previous)<=[.008/240+1e-12,.8/240+1e-12]))
+
+    def test_inconsistent_unsafe_twist_is_still_rejected(self):
+        g=CommandGovernor(self.fk,1/240,preserve_direction=True)
+        g.previous_twist=np.array([.1,0,0,0,0,0])
+        motion=dict(speed_m_s=.003,acceleration_m_s2=.008,
+            angular_speed_rad_s=.08,angular_acceleration_rad_s2=.2)
+        with self.assertRaisesRegex(RuntimeError,'TCP_PROJECTION_INFEASIBLE'):
+            g.velocity(np.zeros(2),np.zeros(2),np.array([.002,0]),[.08,.3],[.008,.8],motion)
 
 
 if __name__=='__main__':unittest.main()

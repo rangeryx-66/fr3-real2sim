@@ -17,6 +17,9 @@ def check_stop(q, velocity, governor, speeds, acceleration, motion, check):
         count+=1
         if not valid:return dict(valid=False,reason=str(why),checked=count)
         if np.max(abs(velocity))<=1e-12:return dict(valid=True,checked=count)
-        velocity=preview.velocity(q,np.zeros_like(velocity),velocity,speeds,acceleration,motion)
+        try:velocity=preview.velocity(q,np.zeros_like(velocity),velocity,speeds,acceleration,motion)
+        except RuntimeError as error:
+            if not str(error).startswith('CONTROLLED_EXECUTION_INTERRUPT:'):raise
+            return dict(valid=False,reason='NUMERICAL_STOP_PREVIEW_UNAVAILABLE:'+str(error),checked=count)
         q+=velocity*preview.dt
     return dict(valid=False,reason='COUPLED_CONTROLLED_STOP_NOT_VERIFIED',checked=count)
