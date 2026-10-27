@@ -1,0 +1,88 @@
+{
+  "schema": "physics-aware-short-comparison-registration/v1",
+  "registered_unix_s": 1793128709.5948536,
+  "source_sha": "23c73e6e7b05893162f11865ea036a9f86935839",
+  "initial_commitment": "02ab1eb782d8f312f366c26285a69b3703aba952a1166c075a20e040275bcebf",
+  "conditions": [
+    {
+      "condition": "condition_D",
+      "sha256": "22c1fc3760ae64fdcdbf4de2faf7025756f1ad2ab6542f470896563eec28e93c"
+    },
+    {
+      "condition": "condition_K",
+      "sha256": "8fb29bfec6b7564654700d357a84f54e6255ea8c6107b9936ad533ff798eb7a3"
+    }
+  ],
+  "orders": [
+    {
+      "condition": "condition_D",
+      "repeat": 1,
+      "methods": [
+        "stale",
+        "reactive",
+        "updated"
+      ]
+    },
+    {
+      "condition": "condition_D",
+      "repeat": 2,
+      "methods": [
+        "updated",
+        "stale",
+        "reactive"
+      ]
+    },
+    {
+      "condition": "condition_K",
+      "repeat": 1,
+      "methods": [
+        "reactive",
+        "updated",
+        "stale"
+      ]
+    },
+    {
+      "condition": "condition_K",
+      "repeat": 2,
+      "methods": [
+        "stale",
+        "updated",
+        "reactive"
+      ]
+    }
+  ],
+  "primary_comparison_count": 12,
+  "heldout_forward_m": 0.04,
+  "heldout_reverse_target_m": 0.004,
+  "normal_calibration_requests_n": [
+    0.5,
+    1.0,
+    1.5
+  ],
+  "only_actually_qualified_preloads_admitted": true,
+  "common_reference_speed_range_m_s": [
+    0.001,
+    0.004
+  ],
+  "common_reference_accelerations_m_s2": [
+    0.004,
+    0.008
+  ],
+  "max_wall_per_episode_s": 3600,
+  "exit_wall_reserved_s": 300,
+  "reset_within_episode": false,
+  "model_choice": "existing stationary-rail constant candidate, all methods, FIT only",
+  "model_probe_replicates_per_condition": 1,
+  "heldout_replicates_per_method_condition": 2,
+  "probing_cost": "full dedicated M1 episode charged to C; single-use and explicit two-use amortization separately",
+  "contact_practice_transfer": false,
+  "only_sealed_knowledge_transfers_to_fresh_formal_episodes": true,
+  "reactive": "highest demonstrated usable grip and highest qualified common v/a; original live F/T/slip/reference feedback",
+  "matched_speed_auxiliary_maximum": 4,
+  "matched_speed_auxiliary_rule": "if a C smoothness/slip advantage could be explained by lower actual speed, run A with C reference v/a and its own reactive grip, one per condition/repeat; otherwise make no matched-smoothness claim",
+  "long_extension_rule": "180mm only after real short-comparison benefit; no demonstration-only extension",
+  "no_threshold_or_condition_retuning_after_treatment_outcomes": true,
+  "raw_and_GT_inputs_private": true,
+  "GT_not_a_formal_policy_input": true,
+  "study_scope": "small engineered sensitivity study; not a blind benchmark or population significance claim"
+}

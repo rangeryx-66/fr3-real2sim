@@ -106,6 +106,26 @@ def collect(episode,output):
     axes[0].legend();axes[-1].set_xlabel('Native simulation time s')
     fig.suptitle(p.name+' — measured motion/contact; no cross-method smoothness claim')
     fig.tight_layout();fig.savefig(out/'MOTION_LOAD_CURVES.png',dpi=140);plt.close(fig)
+    fig,axes=plt.subplots(2,1,figsize=(10,6),sharex=True)
+    for c in curves:
+        for j,name in enumerate(('x','y','z')):
+            axes[0].plot(c['t'],c['w'][:,j],label=f"s{c['id']} F{name}")
+            axes[1].plot(c['t'],c['w'][:,j+3],label=f"s{c['id']} T{name}")
+    for ax,label in zip(axes,['Wrist force N','Wrist torque Nm']):
+        ax.set_ylabel(label);ax.grid(alpha=.2);ax.legend(fontsize=6,ncol=3)
+    axes[-1].set_xlabel('Native simulation time s')
+    fig.suptitle(p.name+' — six-axis wrist, measured sensor origin / world axes')
+    fig.tight_layout();fig.savefig(out/'WRIST_SIX_AXIS.png',dpi=140);plt.close(fig)
+    fig,axes=plt.subplots(2,1,figsize=(10,6),sharex=True)
+    for c in curves:
+        for j,name in enumerate(('x','y','z')):
+            axes[0].plot(c['t'],1000*(c['base'][:,j]-c['base'][0,j]),label=f"s{c['id']} {name}")
+            axes[1].plot(c['t'],1000*(c['comp'][:,j]-c['comp'][0,j]),label=f"s{c['id']} {name}")
+    for ax,label in zip(axes,['Base displacement mm','Arm Cartesian compensation mm']):
+        ax.set_ylabel(label);ax.grid(alpha=.2);ax.legend(fontsize=6,ncol=3)
+    axes[-1].set_xlabel('Native simulation time s')
+    fig.suptitle(p.name+' — actual simultaneous base / arm motion')
+    fig.tight_layout();fig.savefig(out/'COORDINATION_CURVES.png',dpi=140);plt.close(fig)
     return result
 
 
