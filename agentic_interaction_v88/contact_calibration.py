@@ -24,19 +24,31 @@ def point_normal_sums(steps,point_steps,sides,impulses,normals,axis,dt):
     return normal,tangent_budget,seen
 
 
-def bounds(normal,tangent_budget,friction,pads,mask,*,resolved_normal_n):
+def residual_axis_capacity(tangent_budget,off_axis_friction,mu):
+    """Empirical friction budget after observed transverse tangential loading."""
+    return np.sqrt(np.maximum((mu*np.asarray(tangent_budget))**2
+                              -np.asarray(off_axis_friction)**2,0.)).sum(1)
+
+
+def bounds(normal,tangent_budget,friction,pads,mask,*,resolved_normal_n,axis=None):
     ratios=[]
     for side in (0,1):
         m=mask&(normal[:,side]>resolved_normal_n)
         if not m.any():raise ValueError('NATIVE_NORMAL_AND_FRICTION_SUPPORT_REQUIRED')
         ratios.append(float(np.percentile(np.linalg.norm(friction[m,side],axis=1)/normal[m,side],95)))
-    return dict(used_traction_coefficient_lower=min(ratios),per_finger_used_ratio_p95=ratios,
+    result=dict(used_traction_coefficient_lower=min(ratios),per_finger_used_ratio_p95=ratios,
         normal_scalar_sum_lower_n=float(np.percentile(normal[mask].sum(1),5)),
         axis_tangent_normal_budget_lower_n=float(np.percentile(tangent_budget[mask].sum(1),5)),
         measured_pad_normal_lower_n=np.percentile(normal[mask],5,axis=0).tolist(),
         supervisor_pad_load_upper_n=np.max(pads[mask],axis=0).tolist(),
         supervisor_pad_load_median_n=np.median(pads[mask],axis=0).tolist(),
         friction_point_value_identified=False,geometry_and_normal_mapping_assumed_stationary=True)
+    if axis is not None:
+        f=friction[mask];other=f-np.einsum('nsi,i->ns',f,axis)[:,:,None]*axis
+        result['joint_axis_tangent_normal_budget_n']=tangent_budget[mask].tolist()
+        result['joint_off_axis_tangent_friction_n']=np.linalg.norm(other,axis=2).tolist()
+        result['axis_capacity_scope']='per-finger residual friction budget; joint native samples preserve pad-load redistribution; empirical transfer, not a future guarantee'
+    return result
 
 
 def observe(episode,request_n):
@@ -69,7 +81,7 @@ def observe(episode,request_n):
     if not mask.any():raise ValueError('NO_COMPLETE_NATIVE_TRANSMITTING_CONTACT_CALIBRATION')
     threshold=json.loads((Path(__file__).resolve().parents[1]/'configs/interaction_runtime_v1.json').read_text())['force']['unloaded_pad_n']
     result=bounds(normal,budget,a['friction_force_on_fingers_world_N'],a['pad_load'],mask,
-        resolved_normal_n=threshold)
+        resolved_normal_n=threshold,axis=axis)
     if 'FORCE_HOLD' in index['metadata']['phases']:
         hold=(a['phase']==index['metadata']['phases'].index('FORCE_HOLD'))&seen.any(1)
         hold&=np.isin(a['attempt_id_v75'],attempts)&(a['safety_stop']==0)
@@ -99,8 +111,10 @@ def capabilities(normal_calibrations,current_contact):
     rows=[]
     commitment=lambda d:hashlib.sha256(json.dumps(d,sort_keys=True,allow_nan=False).encode()).hexdigest()
     for cal in normal_calibrations:
+        capacity=residual_axis_capacity(cal['joint_axis_tangent_normal_budget_n'],
+            cal['joint_off_axis_tangent_friction_n'],mu)
         rows.append(dict(request_n=cal['requested_preload_n'],
-            transmitted_axis_force_lower_n=mu*cal['axis_tangent_normal_budget_lower_n'],
+            transmitted_axis_force_lower_n=float(np.percentile(capacity,5)),
             measured_pad_normal_lower_n=cal['measured_pad_normal_lower_n'],
             measured_pad_normal_upper_n=cal['supervisor_pad_load_upper_n'],
             source='native measured traction lower bound '+commitment(current_contact)+

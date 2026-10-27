@@ -42,6 +42,14 @@ class CommandTests(unittest.TestCase):
         self.assertFalse(result['ordinary_failure_ends_episode'])
         self.assertTrue(result['fallback'])
 
+    def test_zero_empirical_axis_budget_does_not_disable_qualified_reactive_fallback(self):
+        m=self.inputs(150.)
+        for c in m['contact_capabilities']:c['transmitted_axis_force_lower_n']=0.
+        result=self.select('updated',m)
+        self.assertEqual(result['action'],self.select('reactive',m)['action'])
+        self.assertFalse(result['ordinary_failure_ends_episode'])
+        self.assertEqual(result['fallback'],'NO_PREDICTED_FEASIBLE_ACTION_USE_REACTIVE_AND_OBSERVE')
+
     def test_oracle_or_leaked_truth_is_not_a_formal_method(self):
         with self.assertRaises(ValueError):self.select('oracle',self.inputs(2.))
         m=self.inputs(2.);m['hidden_dynamics_used']=True

@@ -28,13 +28,13 @@ def decision(method, measured, menu, *, distance, motion, sustained_pad_n, emerg
                 for x in list(speeds)+list(accelerations)+list(requests))
             or max(speeds)>motion['speed_m_s'] or max(accelerations)>motion['acceleration_m_s2']):
         raise ValueError('FINITE_COMMON_NATIVE_CONTROL_MENU_REQUIRED')
-    qualified=[c for c in capabilities if c.source and c.transmitted_axis_force_lower_n>0
+    qualified=[c for c in capabilities if c.source and c.transmitted_axis_force_lower_n>=0
         and len(c.measured_pad_normal_upper_n)==2
         and max(c.measured_pad_normal_upper_n)<sustained_pad_n]
     if not qualified:raise ValueError('NO_MEASURED_SAFE_CONTACT_CAPABILITY')
     # Strong reactive arm: fastest common qualified reference and greatest
     # measured usable grip. Normal F/T/slip/reference feedback is unchanged.
-    grip=max(qualified,key=lambda c:(c.transmitted_axis_force_lower_n,c.request_n))
+    grip=max(qualified,key=lambda c:(sum(c.measured_pad_normal_lower_n),c.request_n))
     reactive=dict(requested_preload_n=float(grip.request_n),reference_speed_m_s=float(max(speeds)),
         reference_acceleration_m_s2=float(max(accelerations)))
     action=reactive;selection=None;fallback=None

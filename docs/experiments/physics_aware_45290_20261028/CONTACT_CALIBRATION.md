@@ -23,7 +23,10 @@ quantiles.
 The smaller finger-wise used-ratio 95th percentile is a demonstrated traction
 lower bound; it is NOT an identified friction point estimate or upper bound.
 It combines with measured request/normal calibration to predict an empirical
-axis capacity. Transfer assumes the same G1/handle/contact geometry and stable
+axis capacity. The predictor retains the simultaneous per-finger native
+normal budgets and subtracts observed off-axis tangential loading in the
+friction-circle budget before taking the joint 5th percentile. The whole
+friction budget is not assumed free for rail pulling. Transfer assumes the same G1/handle/contact geometry and stable
 normal-load mapping. Held-out normals, slip and wrench test that assumption;
 native supervision still owns every actual contact. Input commitments include
 the raw contact-file hashes. No coefficient or request can declare a slip.
@@ -37,6 +40,12 @@ A read-only diagnostic of the closed, failed qualification 03 has 2831 eligible
 contact samples at request 1 N. The joint scalar normal sum's 5th percentile is
 1.99418 N; original pad-report medians are 0.94908 / 1.06322 N. Used-traction
 lower bound is 0.28769, giving a same-geometry predicted axis capacity of
-0.57371 N. These measurements do not qualify the failed episode's exit or
+0.57371 N before accounting for off-axis loading. This earlier scalar capacity
+is superseded by the residual per-finger friction budget. These measurements do not qualify the failed episode's exit or
 establish any Physics-Aware advantage. Further preload settings require actual
 native qualification; no high-preload damage or artificial cost is invented.
+
+An empirically exhausted predicted budget means no model-supported candidate,
+not observed slip or permission to stop the episode. The existing reactive
+fallback still uses an actually qualified normal-load setting and native
+safety checks; no contact capability or material coefficient is increased.

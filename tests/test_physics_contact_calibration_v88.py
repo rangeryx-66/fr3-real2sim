@@ -1,6 +1,6 @@
 import unittest
 import numpy as np
-from agentic_interaction_v88.contact_calibration import point_normal_sums,bounds
+from agentic_interaction_v88.contact_calibration import point_normal_sums,bounds,residual_axis_capacity
 
 
 class ContactCalibrationTests(unittest.TestCase):
@@ -15,6 +15,13 @@ class ContactCalibrationTests(unittest.TestCase):
         r=bounds(n,budget,friction,n,mask,resolved_normal_n=.05)
         self.assertAlmostEqual(r['used_traction_coefficient_lower'],.2)
         self.assertFalse(r['friction_point_value_identified'])
+
+    def test_transverse_friction_consumes_axis_transmission_budget(self):
+        np.testing.assert_allclose(residual_axis_capacity([[1.,1.]],[[.3,.3]],.5),[.8])
+        np.testing.assert_allclose(residual_axis_capacity([[1.,1.]],[[0.,0.]],.5),[1.])
+
+    def test_exhausted_predicted_budget_is_not_a_scripted_slip_outcome(self):
+        np.testing.assert_allclose(residual_axis_capacity([[1.,1.]],[[.6,.6]],.5),[0.])
 
 
 if __name__=='__main__':unittest.main()

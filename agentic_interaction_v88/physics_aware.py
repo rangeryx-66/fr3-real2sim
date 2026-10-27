@@ -59,12 +59,13 @@ def choose(model, capabilities, *, distance, speeds, accelerations, motion,
     candidates=[]
     for c in capabilities:
         if (not c.source or not math.isfinite(c.transmitted_axis_force_lower_n)
-                or c.transmitted_axis_force_lower_n<=0
+                or c.transmitted_axis_force_lower_n<0
                 or len(c.measured_pad_normal_lower_n)!=2 or len(c.measured_pad_normal_upper_n)!=2):
             raise ValueError('MEASURED_CONTACT_CAPABILITY_REQUIRED')
         lo=np.asarray(c.measured_pad_normal_lower_n,float);hi=np.asarray(c.measured_pad_normal_upper_n,float)
         if not np.isfinite(np.r_[lo,hi]).all() or np.any(lo<0) or np.any(hi<lo):
             raise ValueError('INVALID_PAD_LOAD_CALIBRATION')
+        if c.transmitted_axis_force_lower_n==0:continue
         if max(hi)>=sustained_pad_n:continue
         for v in speeds:
             for a in accelerations:
