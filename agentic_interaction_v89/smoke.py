@@ -19,9 +19,14 @@ def cancellation_check(r):
     if np.linalg.norm(J@wanted)>1e-7 or np.linalg.norm(wanted[:2])<5e-5:
         raise RuntimeError('FREE_CANCELLATION_INPUT_NOT_RESOLVED')
     r.g['phase']=r.phase='PREGRASP';r.base_active=r._v89_mobile=True
-    bounds=r._bounds('PREGRASP');excursion=[]
+    bounds=r._bounds('PREGRASP');excursion=[];command_excursion=[]
     for _ in range(round(2./r.dt)):
-        proposal=r.command_owner.propose(wanted,bounds,r._geometry())
+        # Joint feedforward alone cannot compensate native drive stiction/lag.
+        # Hold the CURRENT measured TCP with the same DLS feedback as normal
+        # Cartesian execution. The arm supplies correction; XY feedforward and
+        # arm reference enter one proposal, never separate drive submissions.
+        correction=r.kernel.velocity(T0,r._measured_position(),bounds,mobile=False)
+        proposal=r.command_owner.propose(wanted+correction,bounds,r._geometry())
         r._last_proposal=proposal
         if not proposal.accepted:
             r.stop_command()
@@ -29,10 +34,14 @@ def cancellation_check(r):
         r.command_owner.commit(proposal)
         r._last_bounds=bounds;r._last_phase='PREGRASP';r._write_command()
         r.step();excursion.append(float(np.linalg.norm(r.tcp()[:3,3]-T0[:3,3])))
+        command_excursion.append(float(np.linalg.norm(
+            r.coupled.fk(r.command_owner.command.position)[:3,3]-T0[:3,3])))
     r.stop_command();change=r._measured_position()-initial
     return dict(base_net_m=change[:2].tolist(),arm_net_rad=change[2:].tolist(),
         command_input_velocity=wanted.tolist(),linearized_TCP_twist=(J@wanted).tolist(),
         actual_TCP_excursion_peak_m=max(excursion),command_zero=r.command_owner.command_zero,
+        command_TCP_excursion_peak_m=max(command_excursion),
+        measured_TCP_feedback=True,feedforward_is_not_actual_cancellation=True,
         measured_stationary=r.command_owner.measured_stationary,
         unloaded=True,object_commands=False,
         passed=bool(np.linalg.norm(change[:2])>5e-5 and np.linalg.norm(change[2:])>1e-5

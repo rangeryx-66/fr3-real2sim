@@ -98,6 +98,10 @@ For the automatic free-space prerequisite ONLY, additionally use
 `"controller_validation":"free_stop_restart"`. Omit that field for normal
 fresh-observation ABC. The free check also executes a small current-Jacobian XY/opposing-arm
 cancellation input through the same owner, then confirms measured rest.
+The input includes measured-TCP DLS arm feedback, as normal Cartesian execution
+does; open-loop joint feedforward did not cancel native drive lag in free07
+(1.090mm actual TCP excursion for1.001mm XY motion, NOT PASS). That negative
+record remains intact. Command and actual TCP excursions are separate evidence.
 No grasp is imported or automatically authorized.
 
 ```bash
