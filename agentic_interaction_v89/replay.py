@@ -52,7 +52,7 @@ def replay(episode):
             acc = np.r_[np.full(2, m['acceleration_m_s2']),
                         np.full(7, policy['arm_command_acceleration_rad_s2']['LOADED'])]
             bounds = Bounds(limits, speeds, acc, m['speed_m_s'], m['angular_speed_rad_s'],
-                            m['acceleration_m_s2'], m['angular_acceleration_rad_s2'])
+                            m['acceleration_m_s2'], m['angular_acceleration_rad_s2'], m['measured_speed_stop_m_s'])
             owner = CommandOwner(k, q, dt, velocity=v, previous_twist=twist)
             began = time.perf_counter()
             plan = owner.brake(owner.command, bounds)
@@ -73,7 +73,27 @@ def replay(episode):
                 old=dict(reason=reason, command_stopped=not reason, steps=steps,
                          wall_s=time.perf_counter() - began),
                 new=dict(reason=plan.reason, command_stopped=plan.valid, steps=len(plan.commands), wall_s=new_s)))
-    return dict(episode=episode.name, cases=results,
+    rejected = []
+    from interaction_runtime.policy import PHASES
+    for event in json.loads((episode/'events.json').read_text()):
+        if event.get('event') != 'V89_CANDIDATE_REJECTED' or 'wanted_velocity' not in event:
+            continue
+        q, v = np.asarray(event['committed_position']), np.asarray(event['committed_velocity'])
+        phase = event['phase_requested']
+        key = phase if phase in policy['phases'] else PHASES[phase]
+        m = policy['phases'][key]
+        b = Bounds(limits, speeds, np.r_[np.full(2,m['acceleration_m_s2']),
+            np.full(7,policy['arm_command_acceleration_rad_s2'][key])],
+            m['speed_m_s'],m['angular_speed_rad_s'],m['acceleration_m_s2'],
+            m['angular_acceleration_rad_s2'],m['measured_speed_stop_m_s'])
+        twist = pose_error(k.fk(q),k.fk(q-v*dt))/dt
+        owner = CommandOwner(k,q,dt,velocity=v,previous_twist=twist)
+        began=time.perf_counter();p=owner.propose(event['wanted_velocity'],b)
+        rejected.append(dict(t_s=event['t'],phase=phase,original_reason=event['reason'],
+            new_accepted=p.accepted,new_reason=p.reason,wall_s=time.perf_counter()-began,
+            design_ratios=None if p.command is None else p.command.tcp_design_ratios,
+            geometry_rechecked=False,physical_continuation_executed=False))
+    return dict(episode=episode.name, cases=results, rejected_candidates=rejected,
         reconstruction='float32 arm, float64 XY; previous twist from adjacent recorded commands',
         physical_motion_verified=False, collisions_checked=False, release_verified=False,
         measured_stationarity_verified=False, hidden_dynamics_read=False)

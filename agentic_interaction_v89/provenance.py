@@ -12,6 +12,7 @@ from . import CONTROLLER
 REPLACEMENTS = frozenset({
     'agentic_interaction_v8/cli.py',
     'interaction_runtime/runtime.py',
+    'interaction_runtime/compact_v2.py',
     'scripts/xarm7_native_gripper.py',
 })
 

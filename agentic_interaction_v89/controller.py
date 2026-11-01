@@ -101,19 +101,22 @@ class Bounds:
     angular_speed: float
     linear_acceleration: float
     angular_acceleration: float
+    linear_guard_speed: float | None = None
 
     def __post_init__(self):
+        if self.linear_guard_speed is None:
+            object.__setattr__(self, 'linear_guard_speed', self.linear_speed)
         for k in ('position', 'speed', 'acceleration'):
             object.__setattr__(self, k, _freeze(getattr(self, k)))
         if (self.position.shape != (9, 2) or self.speed.shape != (9,)
                 or self.acceleration.shape != (9,)
                 or not np.isfinite(np.r_[self.position.ravel(), self.speed, self.acceleration,
                     self.linear_speed, self.angular_speed,
-                    self.linear_acceleration, self.angular_acceleration]).all()
+                    self.linear_acceleration, self.angular_acceleration, self.linear_guard_speed]).all()
                 or np.any(self.position[:, 0] >= self.position[:, 1])
                 or np.any(self.speed <= 0) or np.any(self.acceleration <= 0)
                 or min(self.linear_speed, self.angular_speed,
-                    self.linear_acceleration, self.angular_acceleration) <= 0):
+                    self.linear_acceleration, self.angular_acceleration, self.linear_guard_speed) <= 0):
             raise ValueError('POSITIVE_FINITE_NINE_DOF_BOUNDS_REQUIRED')
 
 
@@ -123,6 +126,7 @@ class Command:
     velocity: np.ndarray
     twist: np.ndarray
     generation: int
+    tcp_design_ratios: tuple = (0., 0., 0., 0.)
 
     def __post_init__(self):
         for k in ('position', 'velocity', 'twist'):
@@ -166,7 +170,7 @@ class WeightedDLS:
         self.kinematics = kinematics
         self.gain_s, self.damping, self.arm_cost = gain_s, damping, arm_cost
 
-    def velocity(self, goal, measured, bounds, *, feedforward=None, mobile=True):
+    def velocity(self, goal, measured, bounds, *, feedforward=None, mobile=True, speed_limits=None):
         q = np.asarray(measured, float)
         if q.shape != (9,) or not np.isfinite(q).all():
             raise ValueError('INVALID_MEASURED_STATE')
@@ -176,8 +180,12 @@ class WeightedDLS:
             desired += np.asarray(feedforward, float)
         # One task-speed saturation; feedback cannot request arbitrarily large
         # corrections when contact compliance produces a tracking deficit.
-        desired *= min(1., bounds.linear_speed / max(np.linalg.norm(desired[:3]), 1e-30),
-                       bounds.angular_speed / max(np.linalg.norm(desired[3:]), 1e-30))
+        linear, angular = ((bounds.linear_speed, bounds.angular_speed)
+                           if speed_limits is None else speed_limits)
+        if not np.isfinite([linear, angular]).all() or min(linear, angular) < 0:
+            raise ValueError('FINITE_NONNEGATIVE_REFERENCE_SPEED_REQUIRED')
+        desired *= min(1., linear / max(np.linalg.norm(desired[:3]), 1e-30),
+                       angular / max(np.linalg.norm(desired[3:]), 1e-30))
         half = (bounds.position[:, 1] - bounds.position[:, 0]) / 2
         margin = np.minimum(q - bounds.position[:, 0], bounds.position[:, 1] - q) / half
         mobility = bounds.speed.copy()
@@ -233,11 +241,15 @@ class CommandOwner:
                  np.linalg.norm(acc[:3]), np.linalg.norm(acc[3:]))
         limits = (bounds.linear_speed, bounds.angular_speed,
                   bounds.linear_acceleration, bounds.angular_acceleration)
-        labels = ('LINEAR_SPEED', 'ANGULAR_SPEED', 'LINEAR_ACCELERATION', 'ANGULAR_ACCELERATION')
-        for label, value, limit in zip(labels, norms, limits):
-            if value > limit * (1 + 1e-7) + 1e-9:
-                return None, 'CANDIDATE_TCP_%s:%.9g>%.9g' % (label, value, limit)
-        return Command(q, v, twist, previous.generation + 1), ''
+        # TCP reference speed/acceleration are DESIGN bounds. Their exact-FK
+        # deviations are telemetry, not a second nonlinear motion veto. The
+        # original independently supervised dangerous-speed boundary remains
+        # an explicit candidate guard. Actuator rate/position and geometry
+        # checks above are unchanged. No measured hard event is suppressed.
+        if norms[0] > bounds.linear_guard_speed * (1 + 1e-7) + 1e-9:
+            return None, 'CANDIDATE_TCP_GUARD_SPEED:%.9g>%.9g' % (norms[0], bounds.linear_guard_speed)
+        return Command(q, v, twist, previous.generation + 1,
+            tuple(float(x/y) for x,y in zip(norms,limits))), ''
 
     def brake(self, command, bounds, check=None):
         v0 = command.velocity
@@ -303,17 +315,12 @@ class CommandOwner:
                        bounds.angular_speed / max(np.linalg.norm(twist[3:]), 1e-30))
             delta = v - previous.velocity
             task_change = J @ delta
-            # Predict only the curvature drift at constant accepted velocity.
-            # Allocate remaining acceleration to the requested velocity change;
-            # no second optimizer, repeated line search or threshold relaxation.
-            current_pose = self.kinematics.fk(previous.position)
-            free_twist = pose_error(self.kinematics.fk(previous.position + previous.velocity*self.dt), current_pose)/self.dt
-            drift = (free_twist-previous.twist)/self.dt
-            linear_room = max(0., bounds.linear_acceleration - np.linalg.norm(drift[:3]))
-            angular_room = max(0., bounds.angular_acceleration - np.linalg.norm(drift[3:]))
+            # One continuous task/joint rate calculation, with half the task
+            # acceleration allocated to feedback. Exact FK design deviations
+            # do not freeze velocity, trigger a projection or end the action.
             fraction = min(_fraction(delta, bounds.acceleration * self.dt),
-                .8 * linear_room * self.dt / max(np.linalg.norm(task_change[:3]), 1e-30),
-                .8 * angular_room * self.dt / max(np.linalg.norm(task_change[3:]), 1e-30))
+                .5 * bounds.linear_acceleration * self.dt / max(np.linalg.norm(task_change[:3]), 1e-30),
+                .5 * bounds.angular_acceleration * self.dt / max(np.linalg.norm(task_change[3:]), 1e-30))
             v = previous.velocity + min(1., fraction) * delta
             command, reason = self._command(previous.position + v * self.dt, v, previous, bounds)
             if reason:

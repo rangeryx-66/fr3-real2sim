@@ -79,7 +79,7 @@ def runtime_class(parent):
                 np.r_[np.full(2, m['acceleration_m_s2']),
                       np.full(7, self.policy.data['arm_command_acceleration_rad_s2'][self.policy.phase(phase)])],
                 m['speed_m_s'], m['angular_speed_rad_s'],
-                m['acceleration_m_s2'], m['angular_acceleration_rad_s2'])
+                m['acceleration_m_s2'], m['angular_acceleration_rad_s2'], m['measured_speed_stop_m_s'])
 
         def _geometry(self):
             fingers = np.asarray(self.robot.get_joint_positions())[self.fingers].copy()
@@ -107,6 +107,7 @@ def runtime_class(parent):
                     v89_command_position=np.full(9, np.nan) if owner is None else owner.command.position,
                     v89_command_velocity=np.full(9, np.nan) if owner is None else owner.command.velocity,
                     v89_command_twist=np.full(6, np.nan) if owner is None else owner.command.twist,
+                    v89_tcp_design_ratios=np.full(4, np.nan) if owner is None else owner.command.tcp_design_ratios,
                     v89_stop_state=float(list(StopState).index(owner.state)) if owner else -1.,
                     v89_command_zero=float(owner.command_zero) if owner else 1.,
                     v89_measured_stationary=float(owner.measured_stationary) if owner else 0.,
@@ -230,9 +231,6 @@ def runtime_class(parent):
             measured = self._measured_position()
             self._v89_mobile = self.grasp_reference is not None and self.policy.phase(phase) == 'LOADED'
             self.base_active = self._v89_mobile
-            demand = Bounds(bounds.position, bounds.speed, bounds.acceleration,
-                max(m['speed_m_s'], 1e-12), max(m['angular_speed_rad_s'], 1e-12),
-                bounds.linear_acceleration, bounds.angular_acceleration)
             current = self.coupled.fk(measured)
             deficit = pose_error(self.coupled.fk(self.command_owner.command.position), current) - self._reference_bias_world
             allowance = bounds.linear_speed**2 / (2 * bounds.linear_acceleration) + bounds.linear_speed * self.dt
@@ -249,7 +247,8 @@ def runtime_class(parent):
             began = time.perf_counter()
             try:
                 wanted = (np.zeros(9) if self.integral_limited else
-                    self.kernel.velocity(goal, measured, demand, mobile=self._v89_mobile))
+                    self.kernel.velocity(goal, measured, bounds, mobile=self._v89_mobile,
+                        speed_limits=(m['speed_m_s'], m['angular_speed_rad_s'])))
                 solve_s = time.perf_counter() - began
                 with self.profile.measure('V89_command_and_stop'):
                     p = self.command_owner.propose(wanted, bounds, self._geometry())
@@ -329,6 +328,8 @@ def runtime_class(parent):
                     np.r_[np.asarray(row['q'])[self.base_indices], np.asarray(row['q'])[self.arm]],
                     row['T_tcp'], row['joint_coordinate'])
                 owner = self.command_owner
+                row['full_rate_control_evidence'] = owner.state in (
+                    StopState.RUNNING, StopState.BRAKING, StopState.SETTLING)
                 if motion is not None and owner.state in (StopState.SETTLING, StopState.STOPPED):
                     owner.observe_stop(motion['velocity'], motion['tcp_speed'], motion['object_speed'],
                         tcp_angular_speed=motion['tcp_angular_speed'])

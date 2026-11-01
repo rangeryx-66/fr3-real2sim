@@ -68,7 +68,8 @@ def evaluate(g, candidate, actions, policy, config, solver, *, live=False):
             target = float(action['target_q'])
             speed = min(action.get('reference_speed_m_s', motion['speed_m_s']), motion['speed_m_s'])
             acceleration = min(action.get('reference_acceleration_m_s2', motion['acceleration_m_s2']), motion['acceleration_m_s2'])
-            stopping = (speed ** 2 / (2 * acceleration) + speed * g['dt']) / radius
+            brake_factor = 2. if g['job'].get('v89_controller') else 1.
+            stopping = (brake_factor * speed ** 2 / (2 * acceleration) + speed * g['dt']) / radius
             end = target + np.sign(target - previous) * stopping
             if not articulation.limits[0] <= end <= articulation.limits[1]:
                 return dict(valid=False, reason='COUPLED_STOPPING_ENVELOPE_LIMIT', role=action['role'])

@@ -24,7 +24,7 @@ values. Soft load feedback changes reference demand, without abruptly shrinking
 the accepted command's authority. A bounded compliance anti-windup remains.
 
 The command owner computes a pure proposal. It applies one joint/task boundary
-calculation, exact FK checks, current native geometry, and a finite coordinated
+calculation, exact FK hard-speed guard, current native geometry, and a finite coordinated
 brake certificate. Only acceptance commits its position, velocity, twist and
 generation. Rejected candidates keep the previous command and certified stop.
 The runtime consumes that stop before returning a recoverable action error.
@@ -32,13 +32,19 @@ It never reruns a failed IK/projection to brake.
 
 Stopping follows one common scalar multiplying ALL nine accepted velocities.
 The discrete integration used for preview is exactly the integration executed.
-This preserves cancellation; FK curvature, actual collision and measured loads
-are still checked. Stop geometry is sampled along all9 joint coordinates at
+This preserves cancellation; FK dangerous-speed guard, actual collision and measured loads
+are still checked. TCP design speed/acceleration deviations are recorded as four
+ratios and do not veto an otherwise safe command or brake. Desired speed and
+acceleration continuously regulate the command; they are not certified hard
+physical limits. The candidate guard uses the UNCHANGED measured-speed safety
+envelope, and actual measured supervision is independent. Stop geometry is sampled along all9 joint coordinates at
 0.5mm XY / .005rad arm resolution (plus first/end samples); actual brake samples
 are checked individually. These are sampled
 geometric checks, not a continuous contact/dynamic proof. The twofold nominal
 stop duration reserves acceleration for curvature; a trajectory that still
-violates the declared bounds is rejected, not force-fit by an optimizer.
+violates actuator bounds, native geometry or the dangerous-speed envelope is
+rejected, not force-fit by an optimizer. No strict TCP design-acceleration
+guarantee is claimed for nonlinear FK; those deviations remain evidence.
 
 States are RUNNING -> BRAKING -> SETTLING -> STOPPED. Command zero and measured
 stationarity are separate. Release and restart require the latter. Failure to

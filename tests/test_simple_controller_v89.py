@@ -1,4 +1,5 @@
 import unittest
+from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 from pathlib import Path
@@ -49,6 +50,7 @@ class SimpleControllerTests(unittest.TestCase):
         self.assertTrue(np.isfinite(v).all())
         fixed = kernel.velocity(target, np.zeros(9), b, mobile=False)
         np.testing.assert_array_equal(fixed[:2], np.zeros(2))
+        np.testing.assert_array_equal(kernel.velocity(target,np.zeros(9),b,speed_limits=(0.,0.)),np.zeros(9))
         robot.J = np.zeros((6, 9))  # rank zero, not an optimizer exception
         np.testing.assert_array_equal(kernel.velocity(target, np.zeros(9), b), np.zeros(9))
 
@@ -160,6 +162,21 @@ class SimpleControllerTests(unittest.TestCase):
         self.assertIn('carriage_wall',plan.reason)
         self.assertGreater(len(checked),2)
         self.assertTrue(all(abs(q[0]+q[2])<1e-12 for q in checked))
+
+    def test_design_deviation_cannot_veto_safe_brake_but_dangerous_speed_can(self):
+        v=np.r_[.0120001,np.zeros(8)]
+        b=replace(bounds(),linear_guard_speed=.03)
+        o=CommandOwner(LinearRobot(),np.zeros(9),1/240,velocity=v,previous_twist=np.r_[.0120001,np.zeros(5)])
+        plan=o.brake(o.command,b)
+        self.assertTrue(plan.valid,plan.reason)
+        # A legacy accepted state can violate an empirical TCP acceleration
+        # design limit. It may still brake within actuators and true guard.
+        o=CommandOwner(LinearRobot(),np.zeros(9),1/240,velocity=np.r_[.01,np.zeros(8)],previous_twist=np.zeros(6))
+        plan=o.brake(o.command,b)
+        self.assertTrue(plan.valid,plan.reason)
+        self.assertGreater(plan.commands[0].tcp_design_ratios[2],1.)
+        o=CommandOwner(LinearRobot(),np.zeros(9),1/240,velocity=np.r_[.04,np.zeros(8)],previous_twist=np.r_[.04,np.zeros(5)])
+        self.assertFalse(o.brake(o.command,b).valid)
 
     def test_float32_native_readback_cannot_create_second_proposal_during_brake(self):
         from interaction_runtime.policy import Policy, ForceMonitor
