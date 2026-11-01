@@ -1,4 +1,7 @@
 import unittest
+from types import SimpleNamespace
+from unittest.mock import Mock, patch
+from pathlib import Path
 import numpy as np
 from scipy.spatial.transform import Rotation
 from agentic_interaction_v89.controller import (
@@ -124,6 +127,48 @@ class SimpleControllerTests(unittest.TestCase):
         p = o.propose(np.r_[.01, np.zeros(8)], bounds(), lambda q: (q[0] < 1e-9, 'wall'))
         self.assertFalse(p.accepted)
         self.assertIs(o.command, before)
+
+    def test_float32_native_readback_cannot_create_second_proposal_during_brake(self):
+        from interaction_runtime.policy import Policy, ForceMonitor
+        from agentic_interaction_v89.runtime import runtime_class
+        class Parent:
+            def __init__(r, job):
+                r.job=job; r.dt=1/240; r.base=np.zeros(4)
+                r.base_indices=np.array([0,1]); r.arm=np.arange(2,9)
+                r.qtarget=np.full(10, .1234567, dtype=np.float32)
+                r.base_goal=r.qtarget[:2].copy();r.base_velocity=np.zeros(2)
+                r.g=dict(qtarget=r.qtarget,qvelocity=np.zeros(7),phase='SETTLE')
+                r.mount=dict(native_limits_m=[-1.,1.])
+                r.policy=Policy.load(Path(__file__).resolve().parents[1]/'configs/interaction_runtime_v1.json')
+                r.model=SimpleNamespace(limits=np.tile([-2.,2.],(7,1)))
+                r.robot=SimpleNamespace(get_joint_positions=lambda:np.full(10,.1234567,dtype=np.float32))
+                r.c=dict(arm_speed_limits=np.full(7,.3));r.solver=None
+                r.record=SimpleNamespace(coordinate_fields=lambda row:{},metadata={'v81_base':{}},end=lambda *a,**kw:None)
+                r.supervisor=SimpleNamespace(force=ForceMonitor(r.policy))
+                r.controller=SimpleNamespace(apply_coordinated=Mock());r.jaw_width=.084
+                r.phase='SETTLE'
+            def step(r):
+                r.submit_drive()
+                return dict(q=r.robot.get_joint_positions(),joint_velocities=np.zeros(10),phase=r.phase,t=0.)
+        def geometry(solver, base, xy, limits, speed):
+            k=LinearRobot(); k.limits=limits; k.speeds=speed
+            return k
+        with patch('agentic_interaction_v89.runtime.WorldKinematics',side_effect=geometry):
+            r=runtime_class(Parent)({'v89_controller':'coordinated_dls_v1'})
+        self.assertEqual(r.qtarget.dtype,np.float64)
+        self.assertIs(r.g['qtarget'],r.qtarget)
+        o=r.command_owner
+        proposal=o.propose(np.r_[1e-3,np.zeros(8)],bounds())
+        self.assertTrue(proposal.accepted,proposal.reason)
+        o.commit(proposal);r._write_command()
+        generation=o.command.generation
+        r.step()
+        self.assertEqual(o.command.generation,generation)
+        for c in o.start_stop():
+            o.commit_brake(c);r._write_command();r.step()
+            self.assertEqual(o.command.generation,c.generation)
+        self.assertTrue(o.command_zero)
+        self.assertGreater(r.controller.apply_coordinated.call_count,1)
 
 
 if __name__ == '__main__': unittest.main()

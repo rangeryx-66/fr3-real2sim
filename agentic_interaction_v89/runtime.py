@@ -20,6 +20,11 @@ def runtime_class(parent):
             from agentic_interaction_v88.assets import constructor
             with constructor(job):
                 super().__init__(job)
+            # Isaac readback is float32. The submitted nominal command is a
+            # float64 integration state; do not round it on every assignment or
+            # mistake the rounding residual for a second external proposal.
+            self.qtarget = np.asarray(self.qtarget, dtype=np.float64).copy()
+            self.g['qtarget'] = self.qtarget
             from interaction_runtime.prismatic_planning_v73 import representable_joint_bounds
             low, high = representable_joint_bounds(self.model.limits, self.policy.data['joint_margin_rad'])
             limits = np.vstack([np.tile(self.mount['native_limits_m'], (2, 1)), np.c_[low, high]])
