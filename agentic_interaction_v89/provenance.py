@@ -13,6 +13,7 @@ REPLACEMENTS = frozenset({
     'agentic_interaction_v8/cli.py',
     'interaction_runtime/runtime.py',
     'interaction_runtime/compact_v2.py',
+    'interaction_runtime/probing_v7.py',  # failure-memory classification only
     'scripts/xarm7_native_gripper.py',
 })
 

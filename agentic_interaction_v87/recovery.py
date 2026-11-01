@@ -5,6 +5,31 @@ import numpy as np
 PREFIX='CONTROLLED_EXECUTION_INTERRUPT:'
 
 
+def failed_grasp_evidence(result, *, hard_latch=False):
+    """A known controller interruption does not disprove verified contact.
+
+    Keep the error, incomplete operation and FIT eligibility unchanged. This
+    only prevents an unrelated numeric/engineering action fault from poisoning
+    the episode's grasp-family memory. Unknown/physical faults stay failures.
+    """
+    if hard_latch or not (result.get('acquisition') or {}).get('acquired'):
+        return True
+    if any(s.get('status') in ('TRANSMISSION_FAILURE','SAFETY_STOP')
+            for s in (result.get('segments') or [])):
+        return True
+    error=result.get('error')
+    if not error:return False
+    for kind in ('RuntimeError','MeasuredStopPending'):
+        for quote in ("'",'"'):
+            prefix=kind+'('+quote+PREFIX
+            if str(error).startswith(prefix):
+                code=str(error)[len(prefix):].split(quote,1)[0].split(':',1)[0]
+                return not (code in ('REGISTERED_ENGINEERING_FIXTURE','NUMERICAL_IK',
+                    'NUMERICAL_CANDIDATE','MEASURED_STOP_PENDING')
+                    or code.startswith(('CANDIDATE_','BRAKE_')))
+    return True
+
+
 def current_released_hold(ops):
     from agentic_interaction_v81.recovery_supervisor import released,trusted
     r=ops.r

@@ -29,6 +29,7 @@ controller selection uses the replacement. No old physical record is changed.
 | Future90deg/180mm complete parking route as acquisition prerequisite | Still removed by existing staged exit. Current action route and actual-state release/retreat/parking remain checked. |
 | Planning and recovery subbudgets | Existing finite resource accounting retained; no new recovery-count or per-asset caps added. This is a short controller check, not a4h task success claim. |
 | Nominal pacing advisory invalidates whole FIT | REMOVE for the new profile. Actual sample safety/finite/sliding/direction/filter support and complete VALIDATION requirements remain. No estimator compensation/fitting mathematics changed. |
+| Grasp-family blacklist after any RuntimeError | ADJUST for new profile. Verified acquisition plus known numerical/candidate/brake or registered engineering interruption does not disprove the grasp; preserve error/incomplete action/FIT status and allow fresh native-checked reconsideration. Real transmission/contact loss, unknown faults and hard latches remain failures. Observed legacy3mm fixture incorrectly marked its successful grasp failed. |
 | Historical special stops/latches | Preserve original evidence and owner locks. No incident is resumed or rewritten. |
 
 Remaining planning/constructor/ABC wrappers still use some scoped bindings;

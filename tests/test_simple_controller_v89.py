@@ -166,6 +166,20 @@ class SimpleControllerTests(unittest.TestCase):
         self.assertFalse(o.observe_stop(np.zeros(9),0.,2e-4),'Moving object cannot qualify')
         self.assertFalse(o.observe_stop(np.r_[2e-4,np.zeros(8)],0.,0.),'Moving XY cannot hide behind quiet TCP')
 
+    def test_control_fault_does_not_blacklist_verified_grasp_or_erase_physical_fault(self):
+        from agentic_interaction_v87.recovery import failed_grasp_evidence
+        r=dict(acquisition={'acquired':True},segments=[],
+            error="RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:REGISTERED_ENGINEERING_FIXTURE')")
+        self.assertFalse(failed_grasp_evidence(r))
+        self.assertTrue(r['error']);self.assertEqual(r['segments'],[])
+        self.assertTrue(failed_grasp_evidence(r,hard_latch=True))
+        self.assertTrue(failed_grasp_evidence(dict(r,acquisition={'acquired':False})))
+        self.assertTrue(failed_grasp_evidence(dict(r,acquisition=None)))
+        self.assertTrue(failed_grasp_evidence(dict(r,segments=[{'status':'TRANSMISSION_FAILURE'}])))
+        self.assertTrue(failed_grasp_evidence(dict(r,error="RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:CONTACT_LOST_PAUSE_IN_SAME_SCENE')")))
+        self.assertTrue(failed_grasp_evidence(dict(r,error="RuntimeError('UNKNOWN_NATIVE_FAULT')")))
+        self.assertFalse(failed_grasp_evidence(dict(r,error="RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:NUMERICAL_IK:singular')")))
+
     def test_stop_spatial_checks_cover_cancelling_joint_motion(self):
         v=np.r_[.02,0,-.02,np.zeros(6)]
         o=CommandOwner(LinearRobot(),np.zeros(9),1/240,velocity=v)
