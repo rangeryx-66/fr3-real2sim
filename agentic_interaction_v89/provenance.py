@@ -5,6 +5,7 @@ physical, sensing, asset, closure and policy commitments remain byte checked.
 Replacement hashes are reported; they are never claimed to be frozen bytes.
 """
 import json
+import subprocess
 from pathlib import Path
 from agentic_interaction_v8.resources import digest, verify_bundle
 from . import CONTROLLER
@@ -16,6 +17,30 @@ REPLACEMENTS = frozenset({
     'interaction_runtime/probing_v7.py',  # failure-memory classification only
     'scripts/xarm7_native_gripper.py',
 })
+
+
+def frozen_controller_commit(root=None):
+    """Read-only launch admission: evidence must identify the actual code bytes.
+
+    Generated asset-path caches and untracked handoff documents are not code.
+    This is checked before reservation and again immediately before Popen;
+    it does not grant or remove any physical motion authority.
+    """
+    root = Path(root) if root else Path(__file__).resolve().parents[1]
+    def git(*args):
+        return subprocess.check_output(['git', *args], cwd=root)
+    for args in (('diff', '--quiet', 'HEAD', '--'),):
+        result = subprocess.run(['git', *args], cwd=root)
+        if result.returncode != 0:
+            raise ValueError('CONTROLLER_SOURCE_NOT_COMMITTED')
+    unknown = git('ls-files', '--others', '--exclude-standard', '-z').decode().split('\0')
+    executable = [name for name in unknown if name and (
+        Path(name).suffix in {'.py', '.so', '.sh'} or
+        name.split('/')[0].startswith('agentic_interaction_') or
+        name.split('/')[0] in {'interaction_runtime', 'scripts'})]
+    if executable:
+        raise ValueError('UNTRACKED_CONTROLLER_SOURCE:' + repr(executable))
+    return git('rev-parse', 'HEAD').decode().strip()
 
 
 def audit(bundle=None, *, controller=CONTROLLER, root=None):

@@ -110,6 +110,10 @@ commitments and process cleanup rules still apply. The replacement has a
 separate explicit source audit; it reports replaced source hashes and checks
 all other frozen files. It does not pretend to be unchanged V8 reproduction.
 Commit and freeze this checkout BEFORE launching; never edit a live actor.
+The new launcher checks tracked changes and untracked executable modules before
+reserving an instance and again before spawning the actor. Dirty or staged code
+cannot be recorded under an unrelated HEAD. Generated asset-path cache text and
+untracked handoff notes are permitted; they do not replace executable sources.
 
 Run CPU checks with the Isaac environment's Python (numpy/scipy/pin installed):
 

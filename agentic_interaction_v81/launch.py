@@ -10,6 +10,10 @@ ROOT=Path(__file__).resolve().parents[1]
 
 
 def launch(specfile,profile):
+    spec=json.loads(Path(specfile).read_text())
+    if spec.get('controller'):
+        from agentic_interaction_v89.provenance import frozen_controller_commit
+        frozen_controller_commit(ROOT)
     env=json.loads(Path(profile).read_text())
     if 'simulation_isolation' not in env:return _launch(specfile,profile)
     from .instance_admission import reserve
@@ -133,6 +137,10 @@ def _launch(specfile,profile,instance=None):
         if ledger_key is not None:env[KEY_ENV]=ledger_key
         command=[p['python'],'-u','-m','agentic_interaction_v81.entry','--job',str(out/'job.json')]
         began=time.perf_counter()
+        if spec.get('controller'):
+            from agentic_interaction_v89.provenance import frozen_controller_commit
+            if frozen_controller_commit(ROOT)!=commit:
+                raise ValueError('CONTROLLER_COMMIT_CHANGED_DURING_PREFLIGHT')
         with (out/'actor.log').open('wb') as log:
             actor=subprocess.Popen(command,cwd=ROOT,env=env,stdout=log,stderr=subprocess.STDOUT,start_new_session=True)
             dump(out/'PROCESS.json',dict(pid=actor.pid,command=command,checkout=str(ROOT),free_VRAM_MiB=free,
