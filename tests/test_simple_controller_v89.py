@@ -3,6 +3,7 @@ from dataclasses import replace
 from types import SimpleNamespace
 from unittest.mock import Mock, patch
 from pathlib import Path
+from contextlib import nullcontext
 import numpy as np
 from scipy.spatial.transform import Rotation
 from agentic_interaction_v89.controller import (
@@ -189,7 +190,7 @@ class SimpleControllerTests(unittest.TestCase):
         r.base_goal=np.zeros(2);r.base_velocity=np.zeros(2)
         playing=[False]
         r.world=SimpleNamespace(play=lambda:playing.__setitem__(0,True))
-        r._geometry=lambda:lambda q:(True,'')
+        r._geometry=lambda **kw:lambda q:(True,'')
         r.measured_motion=SimpleNamespace(latest=dict(velocity=np.zeros(9),tcp_speed=0.,tcp_angular_speed=0.,object_speed=0.))
         def step():
             self.assertTrue(playing[0],'A paused World cannot supply a valid physics dt')
@@ -202,7 +203,7 @@ class SimpleControllerTests(unittest.TestCase):
         with self.assertRaises(SafetyStop):r.stop_command()
         self.assertFalse(playing[0])
 
-    def test_float32_native_readback_cannot_create_second_proposal_during_brake(self):
+    def test_runtime_command_transaction_cadence_and_tracking_compensation(self):
         from interaction_runtime.policy import Policy, ForceMonitor
         from agentic_interaction_v89.runtime import runtime_class
         class Parent:
@@ -217,6 +218,8 @@ class SimpleControllerTests(unittest.TestCase):
                 r.model=SimpleNamespace(limits=np.tile([-2.,2.],(7,1)))
                 r.robot=SimpleNamespace(get_joint_positions=lambda:np.full(10,.1234567,dtype=np.float32))
                 r.c=dict(arm_speed_limits=np.full(7,.3));r.solver=None
+                r.fingers=np.array([9]);r.tick=1;r.base_active=False
+                r.moving=lambda:np.eye(4);r.intentional_contact=lambda:False
                 r.record=SimpleNamespace(coordinate_fields=lambda row:{},metadata={'v81_base':{}},end=lambda *a,**kw:None)
                 r.supervisor=SimpleNamespace(force=ForceMonitor(r.policy))
                 r.controller=SimpleNamespace(apply_coordinated=Mock());r.jaw_width=.084
@@ -224,6 +227,7 @@ class SimpleControllerTests(unittest.TestCase):
             def step(r):
                 r.submit_drive()
                 return dict(q=r.robot.get_joint_positions(),joint_velocities=np.zeros(10),phase=r.phase,t=0.)
+            def motion_limits(r,phase):return r.policy.motion(phase)
         def geometry(solver, base, xy, limits, speed):
             k=LinearRobot(); k.limits=limits; k.speeds=speed
             return k
@@ -243,6 +247,22 @@ class SimpleControllerTests(unittest.TestCase):
             self.assertEqual(o.command.generation,c.generation)
         self.assertTrue(o.command_zero)
         self.assertGreater(r.controller.apply_coordinated.call_count,1)
+        # Ordinary small servo offset must still allow measured TCP correction
+        # during CENTER, even beyond the removed stopping-distance allowance.
+        measured=r._measured_position();biased=measured.copy();biased[4]+=.002
+        r.command_owner=CommandOwner(r.coupled,biased,r.dt);r._write_command()
+        r.reference_drive=SimpleNamespace(pose=r.coupled.fk(measured));r.reference_bias=np.zeros(7)
+        r.grasp_reference=None;r.ensure_execution_budget=Mock();r.event=Mock()
+        r.profile=SimpleNamespace(measure=lambda name:nullcontext())
+        goal=r.coupled.fk(measured);goal[2,3]+=.0003
+        r.cartesian_step(goal,'CENTER')
+        self.assertGreater(np.linalg.norm(r.command_owner.command.velocity),1e-10)
+        self.assertFalse(r.integral_limited)
+        self.assertIsNone(r._geometry())
+        r.tick=8;self.assertTrue(callable(r._geometry()))
+        r.tick=1;r.g['phase']='OPEN_CONTINUE';self.assertTrue(callable(r._geometry()))
+        r.g['phase']='CENTER';r.base_active=True;self.assertTrue(callable(r._geometry()))
+        r.base_active=False;self.assertTrue(callable(r._geometry(stopping=True)))
 
 
 if __name__ == '__main__': unittest.main()

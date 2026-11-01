@@ -81,7 +81,14 @@ def runtime_class(parent):
                 m['speed_m_s'], m['angular_speed_rad_s'],
                 m['acceleration_m_s2'], m['angular_acceleration_rad_s2'], m['measured_speed_stop_m_s'])
 
-        def _geometry(self):
+        def _geometry(self, *, stopping=False):
+            # Fixed-station acquisition and prechecked unloaded timed routes
+            # retain the original30Hz command geometry cadence. Loaded XY/arm,
+            # independent carriage motion and actual braking stay per step;
+            # native contacts240Hz and measured geometry30Hz are unchanged.
+            if (not stopping and self.policy.phase(self.g['phase']) != 'LOADED'
+                    and not self.base_active and self.tick % 8):
+                return None
             fingers = np.asarray(self.robot.get_joint_positions())[self.fingers].copy()
             moving = self.moving().copy()
             allow = self.intentional_contact()
@@ -108,6 +115,7 @@ def runtime_class(parent):
                     v89_command_velocity=np.full(9, np.nan) if owner is None else owner.command.velocity,
                     v89_command_twist=np.full(6, np.nan) if owner is None else owner.command.twist,
                     v89_tcp_design_ratios=np.full(4, np.nan) if owner is None else owner.command.tcp_design_ratios,
+                    v89_nominal_TCP_tracking_m=float(np.linalg.norm(np.asarray(row['command_TCP'])[:3,3]-np.asarray(row['T_tcp'])[:3,3])) if 'command_TCP' in row else np.nan,
                     v89_stop_state=float(list(StopState).index(owner.state)) if owner else -1.,
                     v89_command_zero=float(owner.command_zero) if owner else 1.,
                     v89_measured_stationary=float(owner.measured_stationary) if owner else 0.,
@@ -173,9 +181,6 @@ def runtime_class(parent):
             self.seed = measured[2:].copy()
             self.reference_bias = self.qtarget[self.arm] - self.seed
             self.reference_drive = SimpleNamespace(pose=self.coupled.fk(measured))
-            self._reference_bias_world = pose_error(self.coupled.fk(self.command_owner.command.position),
-                                                   self.reference_drive.pose)
-            self._reference_previous = self.reference_drive.pose.copy()
             self.integral_limited = False
             if hasattr(self, 'retention'):
                 self.retention_epoch = self.retention.offset.copy() if self.retention is not None else np.zeros(3)
@@ -231,10 +236,12 @@ def runtime_class(parent):
             measured = self._measured_position()
             self._v89_mobile = self.grasp_reference is not None and self.policy.phase(phase) == 'LOADED'
             self.base_active = self._v89_mobile
-            current = self.coupled.fk(measured)
-            deficit = pose_error(self.coupled.fk(self.command_owner.command.position), current) - self._reference_bias_world
-            allowance = bounds.linear_speed**2 / (2 * bounds.linear_acceleration) + bounds.linear_speed * self.dt
-            self.integral_limited = np.linalg.norm(deficit[:3]) >= allowance and deficit[:3] @ pose_error(goal, current)[:3] > 0
+            # The old stopping-distance anti-windup froze even low-load A
+            # centering under ordinary gravity/compliance tracking offset.
+            # Task progress/closure bound the reference; finite actuator and
+            # joint authority, contact/progress feedback and measured hard
+            # supervision bound execution. Tracking deficit is evidence only.
+            self.integral_limited = False
             fixture = self.job.get('v87_controlled_interruption_fixture')
             if fixture and not self._v89_controlled_fixture_done and self.record.segments:
                 segment = self.record.segments[-1]['id']
@@ -246,9 +253,8 @@ def runtime_class(parent):
                     raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:REGISTERED_ENGINEERING_FIXTURE')
             began = time.perf_counter()
             try:
-                wanted = (np.zeros(9) if self.integral_limited else
-                    self.kernel.velocity(goal, measured, bounds, mobile=self._v89_mobile,
-                        speed_limits=(m['speed_m_s'], m['angular_speed_rad_s'])))
+                wanted = self.kernel.velocity(goal, measured, bounds, mobile=self._v89_mobile,
+                    speed_limits=(m['speed_m_s'], m['angular_speed_rad_s']))
                 solve_s = time.perf_counter() - began
                 with self.profile.measure('V89_command_and_stop'):
                     p = self.command_owner.propose(wanted, bounds, self._geometry())
@@ -294,8 +300,8 @@ def runtime_class(parent):
                 commands = owner.start_stop()
                 self.event('V89_STOP_BRAKING', command_zero=owner.command_zero, measured_stationary=False,
                     steps=len(commands))
-                check = self._geometry()
                 for command in commands:
+                    check = self._geometry(stopping=True)
                     valid, reason = check(command.position)
                     if not valid:
                         owner.state = StopState.BLOCKED

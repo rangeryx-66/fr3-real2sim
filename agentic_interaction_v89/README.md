@@ -21,14 +21,18 @@ or the old .75/dt gain. Weighted DLS favours base motion as geometry and arm
 margin permit, with no asset-specific allocation. Action speed and acceleration
 and Physics-Aware preload remain actual inputs to execution, not report-only
 values. Soft load feedback changes reference demand, without abruptly shrinking
-the accepted command's authority. A bounded compliance anti-windup remains.
+the accepted command's authority. Tracking deficit is recorded; the unsupported
+stopping-distance veto that froze low-load acquisition compensation is removed.
 
 The command owner computes a pure proposal. It applies one joint/task boundary
-calculation, exact FK hard-speed guard, current native geometry, and a finite coordinated
+calculation, exact FK hard-speed guard, native geometry, and a finite coordinated
 brake certificate. Only acceptance commits its position, velocity, twist and
 generation. Rejected candidates keep the previous command and certified stop.
 The runtime consumes that stop before returning a recoverable action error.
-It never reruns a failed IK/projection to brake.
+It never reruns a failed IK/projection to brake. Fixed-station acquisition and
+prechecked unloaded paths use the original30Hz candidate geometry cadence;
+loaded/coordinated commands and actual braking check every240Hz step. Native
+contact checks240Hz and measured geometry checks30Hz remain independent.
 
 Stopping follows one common scalar multiplying ALL nine accepted velocities.
 The discrete integration used for preview is exactly the integration executed.

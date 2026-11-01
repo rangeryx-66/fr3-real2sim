@@ -15,7 +15,8 @@ controller selection uses the replacement. No old physical record is changed.
 | SciPy bounded nine-variable LS + nonlinear final governor/SLSQP | REMOVE from new execution. One weighted 6x6 DLS and one transactional boundary/geometry owner. |
 | Pink online velocity_step substitution via scoped patch | REMOVE from new execution. Offline grasp/approach Pink remains as an existing geometric planner. |
 | CartesianReference, nominal seed bias, integrated measured QP, final governor all modifying trajectory | MERGE: measured feedback + command integration in one owner. Progress clock remains the task generator. Bounded contact centering is explicit before IK. |
-| Old command anti-windup | RETAIN one bounded compliance check using original stopping-distance allowance; no hidden per-asset multiplier. Soft saturation requests deceleration, not hard termination. |
+| Stopping-distance command-deficit anti-windup | DELETE. Contact02 showed ordinary ~0.65mm gravity/closure offset freezing low-load CENTER compensation. Actual task progress/closure references, finite actuator/joint authority, F/T regulation and hard supervision remain. Tracking deficit is telemetry, not an extra veto. |
+| Duplicate fixed-station candidate collision checks | MERGE at original30Hz for acquisition/prechecked unloaded paths. Loaded/base-active commands and actual braking remain every240Hz step; native actual contact240Hz and measured geometry30Hz unchanged. |
 | Ordinary load warning, provisional sustained band, predicted load | KEEP continuous demand adaptation through the existing classified force monitor. Emergency precedence unchanged. They cannot alone destroy World. |
 | Original .3/.6/1Nm wrist and other load bands | UNCHANGED. Provisional sustained band remains classified regulation; report actual safety semantics, not certified limits. |
 | Every8tick iterative governor stopping preview, <=5s, optimizer per step | REPLACE with finite scalar-ray brake built without IK/optimizer; same discrete command path used for actual stop. Cache consecutive FK poses. Geometry samples all9 DOFs at0.5mm XY/.005rad arm resolution plus first/end; actual brake geometry and contact supervision remain every step. Strict actuator and dangerous-speed bounds retained; TCP design ratios are diagnostics. |
@@ -33,14 +34,10 @@ Remaining planning/constructor/ABC wrappers still use some scoped bindings;
 they are not online motion solvers or drive writers. This is a controller-sized
 replacement, not a rewrite of perception, grasp ranking or native physics.
 
-Pre-physics checks:107 focused existing+new tests passed. Actual robot URDF
-world Jacobian max absolute finite-difference error8.03e-11. CPU perfect-state
-240-step motion had no candidate failure. These do not prove contact or stopping
-under native drive lag. Physical results belong in RESULTS.md after execution.
+Validation totals and physical outcomes are recorded in RESULTS.md. CPU tests,
+perfect-state integration and command replay do not prove contact dynamics.
 
-K closed-command replay:3/4 sample states have valid new brake; final old state
-fails strict bounds in BOTH old and new methods. Source telemetry arm float32
-makes reconstruction approximate. This is a real unresolved admission case,
-not proof of full K recovery; new execution must certify stop before acceptance.
-D slip dynamics require actual contact rerun, cannot be reproduced by a fake
-force/parameter-threshold script or kinematic command replay.
+K closed-command replay now admits4/4 sampled brakes after removing design-speed
+hard-stop authority; the last old projection fails. Arm float32 reconstruction
+is approximate and no collision/physical stop is reproduced. D sampled states
+were already stationary: its slip dynamics remain unreplicated.
