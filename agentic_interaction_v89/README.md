@@ -77,6 +77,20 @@ The original constructor's native unloaded admission precedes creation of the
 replacement owner, so its initialization-only hold remains the original path.
 Free09 exposed this ordering before any physics step; its failed admission is
 preserved. Active execution always uses the explicit replacement hold.
+When a stopped hold later loses measured quiet, the next explicit Cartesian or
+timed-path request waits through the existing supervised stop before proposing.
+SETTLING proposals are rejected without touching committed state. Contact05
+exposed the missing restart precondition: both action exits reached parking,
+but its final diagnostic lifecycle conservatively recorded EXIT_UNVERIFIED.
+The free check injects only conservative readiness loss and rebuilds the real
+native dwell; it changes no physical state and clears no latch. This is not a
+loaded contact recovery validation.
+
+Transactional proposals cover the nine motion coordinates. G1 aperture is an
+explicit upstream contact-policy request, sent in the same native submission
+with unchanged finite drive mapping. It is not measured force. Staged snapshots
+name the authoritative committed9D position/velocity separately from the legacy
+qtarget carrier (whose XY/G1 slots are not submitted targets).
 PhysX projected joint dq is retained separately and still goes through the
 original hard supervisor. Native dq can disagree with actual configuration
 motion during constraint stabilization; neither quantity is silently relabelled.

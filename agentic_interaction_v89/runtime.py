@@ -140,6 +140,13 @@ def runtime_class(parent):
             self.controller.apply_coordinated(self.base_goal, self.base_velocity,
                 self.qtarget[self.arm], np.asarray(self.g['qvelocity']), self.jaw_width)
 
+        def _await_restart(self):
+            # A qualified zero-command hold can subsequently lose its measured
+            # quiet witness. A new explicit motion request must reacquire that
+            # witness, not propose/commit from SETTLING or clear a hard latch.
+            if self.command_owner.state == StopState.SETTLING:
+                self.stop_command()
+
         def step(self):
             self._install_fields()
             owner = self.command_owner
@@ -147,6 +154,7 @@ def runtime_class(parent):
                 # Timed free-space/parking/station paths enter the SAME owner.
                 request = self._requested_position()
                 if not np.array_equal(request, owner.command.position):
+                    self._await_restart()
                     wanted = (request - owner.command.position) / self.dt
                     p = owner.propose_position(request, self._bounds(self.g['phase']), self._geometry())
                     self._last_proposal = p
@@ -228,6 +236,7 @@ def runtime_class(parent):
             if self.command_owner is None:
                 return super().cartesian_step(goal, phase)
             self.ensure_execution_budget(phase)
+            self._await_restart()
             self.g['phase'] = self.phase = phase
             if self.reference_drive is None:
                 self.begin_reference()

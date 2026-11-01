@@ -329,6 +329,10 @@ class CommandOwner:
 
     def _certify(self, position, velocity, bounds, check):
         previous=self.command
+        if self.state in (StopState.BRAKING,StopState.SETTLING,StopState.BLOCKED):
+            reason=('MEASURED_STOP_PENDING' if self.state==StopState.SETTLING
+                else 'MOTION_FORBIDDEN_IN_STOP_STATE:'+self.state.value)
+            return Proposal(None,None,reason,previous.generation)
         command, reason=self._command(position,velocity,previous,bounds)
         if reason:return Proposal(None,None,reason,previous.generation)
         if check is not None:

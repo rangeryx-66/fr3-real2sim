@@ -77,6 +77,22 @@ def free_stop_restart(r):
                 command_zero=r.command_owner.command_zero,
                 measured_stationary=r.command_owner.measured_stationary))
         result['motion_checks'] = results
+        # Conservative SUPERVISION-input fault, never a physical state reset:
+        # simulate loss of readiness after a qualified zero-command hold.
+        # The runtime must reacquire REAL native dwell before committing again.
+        owner=r.command_owner;before=owner.command.generation;began_rearm=r.tick
+        owner.settling();owner.measured_stationary=False
+        r.station_motion.stable_s=r.station_motion.physical_stable_s=0.
+        r.station_motion.latest=dict(r.station_motion.latest,ready=False,stable_s=0.)
+        r.cartesian_step(r.tcp().copy(),'PREGRASP')
+        restarted=owner.state.value=='RUNNING' and owner.command.generation>before
+        r.stop_command()
+        result['readiness_loss_injection']=dict(
+            kind='conservative readiness invalidation; no physical disturbance',
+            real_physics_steps=r.tick-began_rearm,explicit_restart_accepted=restarted,
+            measured_stationary=owner.measured_stationary,command_zero=owner.command_zero,
+            physics_state_changed_by_fixture=False,latch_cleared=False,
+            passed=bool(restarted and owner.measured_stationary and owner.command_zero))
         result['coordinated_cancellation_check'] = cancellation_check(r)
     except Exception as error:
         result['error'] = repr(error)
@@ -89,6 +105,7 @@ def free_stop_restart(r):
             object_coordinate_initial=qinitial, object_coordinate_final=float(r.actual()),
             profile=r.profile.report(r.tick*r.dt))
         passed = (len(results)==2 and all(x['measured_stationary'] and x['tracking_error_m']<.001 for x in results)
+                  and result.get('readiness_loss_injection',{}).get('passed') is True
                   and result.get('coordinated_cancellation_check',{}).get('passed') is True
                   and result.get('safe_exit',{}).get('safe') is True and r.supervisor.latched is None)
         result['status'] = 'PASS' if passed else 'NOT_PASS'

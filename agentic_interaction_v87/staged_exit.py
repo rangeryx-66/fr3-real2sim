@@ -19,10 +19,20 @@ PARTIAL={EXIT_PATH_NOT_FOUND,LOCAL_RETREAT_NOT_FOUND,SAFE_RELEASE_NOT_CONFIRMED,
 
 
 def measured(r):
-    return dict(coordinate_native=float(r.actual()),moving_pose=np.asarray(r.moving()).tolist(),
+    state=dict(coordinate_native=float(r.actual()),moving_pose=np.asarray(r.moving()).tolist(),
         robot_q=np.asarray(r.robot.get_joint_positions()).tolist(),
         retained_command=np.asarray(r.qtarget).tolist(),base=r.base.tolist(),
         t_sim=float(r.tick*r.dt),latch=r.supervisor.latched)
+    owner=getattr(r,'command_owner',None)
+    if owner is not None:
+        state.update(retained_command_scope='legacy qtarget carrier; only arm slots; XY/G1 slots are not submitted targets',
+            committed_motion_position=owner.command.position.tolist(),
+            committed_motion_velocity=owner.command.velocity.tolist(),
+            committed_motion_order=['mobile_x','mobile_y']+list(r.c['arm_joint_names']),
+            requested_G1_aperture_m=float(r.jaw_width),
+            G1_scope='explicit aperture policy request, finite NativeDrive mapping; not measured force',
+            command_zero=bool(owner.command_zero),measured_stationary=bool(owner.measured_stationary))
+    return state
 
 
 def safe_hold(ops):

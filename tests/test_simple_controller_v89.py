@@ -310,6 +310,28 @@ class SimpleControllerTests(unittest.TestCase):
         r.tick=1;r.g['phase']='OPEN_CONTINUE';self.assertTrue(callable(r._geometry()))
         r.g['phase']='CENTER';r.base_active=True;self.assertTrue(callable(r._geometry()))
         r.base_active=False;self.assertTrue(callable(r._geometry(stopping=True)))
+        # Actual Cartesian entry after a zero hold lost its quiet witness:
+        # requalify the stop before proposing, rather than raising at commit.
+        o=r.command_owner
+        for c in o.start_stop():o.commit_brake(c)
+        o.settling();r._write_command()
+        def requalify():
+            for _ in range(72):o.observe_stop(np.zeros(2),body_stationary=True)
+        r.stop_command=Mock(side_effect=requalify)
+        r.cartesian_step(goal,'CENTER')
+        r.stop_command.assert_called_once()
+        self.assertEqual(o.state,StopState.RUNNING)
+
+    def test_settling_proposal_is_rejected_without_committed_state_change(self):
+        o=CommandOwner(LinearRobot(),np.zeros(9),1/240);before=o.command
+        o.settling()
+        p=o.propose(np.r_[.001,np.zeros(8)],bounds())
+        self.assertFalse(p.accepted);self.assertEqual(p.reason,'MEASURED_STOP_PENDING')
+        self.assertIs(o.command,before);self.assertEqual(o.state,StopState.SETTLING)
+        for _ in range(72):o.observe_stop(np.zeros(2),body_stationary=True)
+        p=o.propose(np.r_[.001,np.zeros(8)],bounds())
+        self.assertTrue(p.accepted);o.commit(p)
+        self.assertEqual(o.state,StopState.RUNNING)
 
     def test_hold_cannot_restart_legacy_retention_motion(self):
         from agentic_interaction_v89.runtime import runtime_class

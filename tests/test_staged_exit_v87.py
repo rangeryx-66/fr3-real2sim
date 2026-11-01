@@ -169,6 +169,19 @@ class StagedExitTests(unittest.TestCase):
         r.command_owner.measured_stationary=False
         self.assertFalse(staged.settle(self.ops),'Unconfirmed stop still forbids release')
 
+    def test_snapshot_separates_committed_XY_arm_from_legacy_carrier_and_G1_request(self):
+        r=self.ops.r;r.c={'arm_joint_names':['joint%d'%i for i in range(1,8)]}
+        r.jaw_width=.012
+        q=np.r_[.01,-.02,np.linspace(0,.006,7)]
+        r.command_owner=NS(command=NS(position=q,velocity=np.zeros(9)),
+            command_zero=True,measured_stationary=False)
+        out=staged.measured(r)
+        self.assertEqual(out['committed_motion_position'],q.tolist())
+        self.assertEqual(out['retained_command'][:2],[0.,0.])
+        self.assertIn('not submitted targets',out['retained_command_scope'])
+        self.assertEqual(out['requested_G1_aperture_m'],.012)
+        self.assertTrue(out['command_zero']);self.assertFalse(out['measured_stationary'])
+
     def test_pending_contact_returns_to_real_physics_C_instead_of_paused_unloaded_wait(self):
         from agentic_interaction_v81.session import serve
         ops=self.ops;r=ops.r;r.job.update(v84_abc=True,v89_controller='coordinated_dls_v1',agent_wait_timeout_s=600.)
