@@ -178,6 +178,30 @@ class SimpleControllerTests(unittest.TestCase):
         o=CommandOwner(LinearRobot(),np.zeros(9),1/240,velocity=np.r_[.04,np.zeros(8)],previous_twist=np.r_[.04,np.zeros(5)])
         self.assertFalse(o.brake(o.command,b).valid)
 
+    def test_paused_world_stop_advances_real_physics_and_never_resumes_latch(self):
+        from agentic_interaction_v89.runtime import runtime_class
+        from interaction_runtime.policy import SafetyStop
+        r=runtime_class(object).__new__(runtime_class(object))
+        r.dt=1/240;r.command_owner=CommandOwner(LinearRobot(),np.zeros(9),r.dt)
+        r.g={'phase':'PREGRASP'};r.phase='PREGRASP';r._last_phase='PREGRASP'
+        r.supervisor=SimpleNamespace(latched=None);r.event=Mock()
+        r.qtarget=np.zeros(9);r.arm=np.arange(2,9)
+        r.base_goal=np.zeros(2);r.base_velocity=np.zeros(2)
+        playing=[False]
+        r.world=SimpleNamespace(play=lambda:playing.__setitem__(0,True))
+        r._geometry=lambda:lambda q:(True,'')
+        r.measured_motion=SimpleNamespace(latest=dict(velocity=np.zeros(9),tcp_speed=0.,tcp_angular_speed=0.,object_speed=0.))
+        def step():
+            self.assertTrue(playing[0],'A paused World cannot supply a valid physics dt')
+            r.command_owner.observe_stop(np.zeros(9),0.,0.)
+            return {'joint_velocities':np.zeros(9)}
+        r.step=step
+        r.stop_command()
+        self.assertTrue(r.command_owner.measured_stationary)
+        playing[0]=False;r.supervisor.latched={'reason':'TEST_HARD_STOP'}
+        with self.assertRaises(SafetyStop):r.stop_command()
+        self.assertFalse(playing[0])
+
     def test_float32_native_readback_cannot_create_second_proposal_during_brake(self):
         from interaction_runtime.policy import Policy, ForceMonitor
         from agentic_interaction_v89.runtime import runtime_class

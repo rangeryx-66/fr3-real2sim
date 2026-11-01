@@ -278,6 +278,10 @@ def runtime_class(parent):
             from interaction_runtime.policy import SafetyStop
             if self.supervisor.latched is not None:
                 raise SafetyStop('LATCHED_' + self.supervisor.latched['reason'], self.supervisor.latched)
+            # Unloaded observations pause World. A stop dwell needs REAL
+            # physics, including the first move_path after constructor admission.
+            # Never sample a paused World and reinterpret its zero window as dt.
+            self.world.play()
             if owner.state == StopState.STOPPED and owner.measured_stationary:
                 return
             requested = self.g['phase']
