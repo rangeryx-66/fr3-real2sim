@@ -16,7 +16,7 @@ def main():
     if job.get('v81_phase')=='independent_repetition' and not job.get('v81_frozen_release_commit'):
         raise ValueError('ENGINEERING_READINESS_AND_FROZEN_RELEASE_REQUIRED')
     from .preflight import baseline_audit
-    baseline_audit()
+    baseline_audit(controller=job.get('v89_controller'))
     from agentic_interaction_v8.cli import FREEZE
     excluded=json.loads(FREEZE.read_text())['execution_directory_snapshot']
     forbidden=tuple(job['v8_forbidden_history_roots'])
@@ -31,17 +31,23 @@ def main():
     import xarm7_native_gripper
     xarm7_native_gripper.OUT=Path(job['v8_robot_io'])
     from .runtime import runtime_class
-    if job.get('v87_continuous_recovery'):
+    if job.get('v89_controller'):
+        from agentic_interaction_v89.runtime import runtime_class as replace_controller
+        mobile_runtime_class=runtime_class
+        runtime_class=lambda parent:replace_controller(mobile_runtime_class(parent))
+    elif job.get('v87_continuous_recovery'):
         from agentic_interaction_v87.runtime import runtime_class as govern
         existing_runtime_class=runtime_class
         runtime_class=lambda parent:govern(existing_runtime_class(parent))
-    if job.get('v88_coordination_policy'):
+    if job.get('v88_coordination_policy') and not job.get('v89_controller'):
         from agentic_interaction_v88.runtime import runtime_class as coordinate
         governed_runtime_class=runtime_class
         runtime_class=lambda parent:coordinate(governed_runtime_class(parent))
     from .session import serve
     if job.get('v84_abc'):
         from agentic_interaction_v84.session import serve
+    if job.get('v89_validation'):
+        from agentic_interaction_v89.smoke import free_stop_restart as serve
     if 'v81_contact_comparison' in job:
         if job['v81_phase']!='engineering':raise ValueError('ENGINEERING_COMPARISON_CANNOT_RUN_AS_REPETITION')
         from .contact_fixture import serve
@@ -68,7 +74,7 @@ def main():
         scope=constructor_scope(job)
     else:scope=nullcontext()
     with scope:return run(runtime_class(owner),partial(finish_before_shutdown,serve=serve,finalize=sources),
-        extra_sources=tuple(str(f.relative_to(ROOT)) for folder in ('agentic_interaction_v81','agentic_interaction_v84','agentic_interaction_v87','agentic_interaction_v88') for f in sorted((ROOT/folder).glob('*.py')))+(
+        extra_sources=tuple(str(f.relative_to(ROOT)) for folder in ('agentic_interaction_v81','agentic_interaction_v84','agentic_interaction_v87','agentic_interaction_v88','agentic_interaction_v89') for f in sorted((ROOT/folder).glob('*.py')))+(
         'scripts/xarm_ft_v7_scene.py','scripts/xarm_ft_v7_estimator.py','scripts/update_probing_v7_model.py',
         'scripts/update_prismatic_v73_model.py','scripts/xarm_ft_v31_estimator.py'))
 

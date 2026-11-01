@@ -82,7 +82,8 @@ def operations_class(parent):
             result['abc_feedback']=dict(windows=history,original_reference_lead_unchanged=True,
                 original_increasing_slip_stop_unchanged=True,
                 nominal_warning_is_not_contact_failure=True,
-                FIT_exclude_entire_segment=bool(alerts),
+                FIT_exclude_entire_segment=bool(alerts) and not bool(self.r.job.get('v89_controller')),
+                FIT_sample_quality_separate_from_nominal_pacing=bool(self.r.job.get('v89_controller')),
                 first_nominal_warning_s=min(alerts) if alerts else None)
             forecasts=[m.failure for m in captures if m.failure and
                 m.failure.get('classification')=='CURRENT_STRATEGY_EXCEEDS_REGISTERED_RESOURCES']

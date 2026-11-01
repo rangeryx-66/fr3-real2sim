@@ -28,6 +28,8 @@ def measured(r):
 def safe_hold(ops):
     from agentic_interaction_v81.recovery_supervisor import trusted
     r=ops.r
+    owner=getattr(r,'command_owner',None)
+    if owner is not None and (not owner.command_zero or not owner.measured_stationary):return False
     if not trusted(ops) or np.max(abs(r.g['qvelocity']))>1e-10:return False
     q=np.asarray(r.robot.get_joint_positions())
     if not r.station_motion.ready(r.rows[-1]['t'],q[r.arm]):return False
@@ -157,7 +159,12 @@ def release_park(ops):
     # owner does. V8.7 still brakes under the last accepted motion limits,
     # then restores RELEASE. Its subsequent stationary dwell must retain
     # access to the existing exit reserve when ordinary work is exhausted.
-    g['phase']='RELEASE';r.stop_command()
+    g['phase']='RELEASE'
+    if r.job.get('v89_controller'):
+        from agentic_interaction_v89.controller import MeasuredStopPending
+        try:r.stop_command()
+        except MeasuredStopPending:return end(SAFE_HOLD_NOT_ESTABLISHED)
+    else:r.stop_command()
     if not settle(ops):return end(SAFE_HOLD_NOT_ESTABLISHED)
     g.pop('v87_hold_pending',None)
     # Existing verified parking may be reused only after measured revalidation.

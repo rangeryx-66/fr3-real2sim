@@ -122,6 +122,12 @@ class Runtime:
         comp=wrench_at(raw-bias,T,T[:3,3])+gravity
         return dict(raw_wrench_sensor=raw,T_world_sensor=T,valid=bool(np.isfinite(raw).all()),timestamp_s=self.tick*self.dt,world_simulation_timestamp_s=float(self.world.current_time),sample_period_s=self.dt,body_states=bodies,tool_gravity_wrench_world=gravity,gravity_compensated_wrench_world=comp,tool_inertia_compensation='segment-local estimator; raw poses retained'),comp
     def enrich_measurement(self,row,pre_contact_poses):pass
+    def submit_drive(self):
+        """Default legacy submission. Explicit replacement runtimes override once."""
+        from isaacsim.core.utils.types import ArticulationAction
+        self.controller.apply_action(ArticulationAction(joint_positions=self.qtarget[self.arm],
+            joint_velocities=self.qvelocity,joint_indices=self.arm))
+        self.controller.command_width(self.jaw_width)
     def step(self):
         from isaacsim.core.utils.types import ArticulationAction
         if self.stopped or (self.output/'STOP_AND_EXPORT').exists():raise KeyboardInterrupt('OWNER_REQUESTED_EXPORT')
@@ -140,7 +146,7 @@ class Runtime:
         # the already advanced end-of-step tip surface.
         pre_contact_poses={logical:self.pose(native)@self.pad_frames[native] for native,logical in [('left_finger','gripper_link1'),('right_finger','gripper_link2')]}
         with self.profile.measure('actuation'):
-            self.native.clear();self.controller.apply_action(ArticulationAction(joint_positions=self.qtarget[self.arm],joint_velocities=self.qvelocity,joint_indices=self.arm));self.controller.command_width(self.jaw_width)
+            self.native.clear();self.submit_drive()
         if self.engineering_before_physics is not None:self.engineering_before_physics()
         with self.profile.measure('physics_and_contact_callback'):self.world.step(render=False,update_fabric=True)
         with self.profile.measure('state_and_FT'):

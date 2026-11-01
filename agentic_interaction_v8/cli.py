@@ -56,8 +56,8 @@ def environment(profile):
     return p
 
 
-def prepare(specfile, profile):
-    spec = json.loads(Path(specfile).read_text()); p = environment(profile); frozen = audit(p['bundle'])
+def prepare(specfile, profile, *, audit_function=None):
+    spec = json.loads(Path(specfile).read_text()); p = environment(profile); frozen = (audit_function or audit)(p['bundle'])
     allowed = {'schema','episode_id','scene','purpose','physics_file','physics_sha256','identification_case',
                'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s'}
     if set(spec)-allowed: raise ValueError('UNKNOWN_JOB_FIELDS:'+repr(set(spec)-allowed))

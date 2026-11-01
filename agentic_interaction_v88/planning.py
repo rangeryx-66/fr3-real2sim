@@ -30,7 +30,11 @@ def evaluate(g, candidate, actions, policy, config, solver, *, live=False):
     ix = np.array([names.index(n) for n in ('mobile_x', 'mobile_y')])
     low, high = representable_joint_bounds(model.limits, policy.data['joint_margin_rad'])
     limits = np.vstack([np.tile([-1., 1.], (2, 1)), np.column_stack([low, high])])
-    coupled = CoupledKinematics(solver, base, measured[ix], limits,
+    if g['job'].get('v89_controller'):
+        from agentic_interaction_v89.kinematics import WorldKinematics
+        kinematics_class = WorldKinematics
+    else: kinematics_class = CoupledKinematics
+    coupled = kinematics_class(solver, base, measured[ix], limits,
         np.r_[.08, .08, np.asarray(config['arm_speed_limits']) / 3])
     initial = np.asarray(candidate['approach'][-1]).copy()
     start = float(g['actual']()); moving = np.asarray(g['moving']()).copy()

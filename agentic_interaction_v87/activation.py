@@ -12,6 +12,8 @@ def activate(spec,job,existing,base_profile):
     shadow.pop('coordination_policy',None)
     shadow.pop('native_assets',None)
     shadow.pop('physics_study',None)
+    shadow.pop('controller',None)
+    shadow.pop('controller_validation',None)
     if spec.get('persistent_goal') is not None or spec.get('coordination_policy') is not None:
         from agentic_interaction_v81.integration import ABC_PROFILE
         shadow['integration_profile']=ABC_PROFILE
@@ -29,6 +31,16 @@ def activate(spec,job,existing,base_profile):
             raise ValueError('FINITE_EXPLICIT_V87_ENGINEERING_FIXTURE_REQUIRED')
         job['v87_controlled_interruption_fixture']=dict(fixture)
     job['v87_continuous_recovery']=True
+    if 'controller' in spec:
+        from agentic_interaction_v89 import CONTROLLER
+        if (spec['controller'] != CONTROLLER or spec.get('phase') != 'engineering'
+                or spec.get('staged_exit') is not True or 'coordination_policy' not in spec):
+            raise ValueError('EXPLICIT_COORDINATED_DLS_ENGINEERING_STAGED_EXIT_REQUIRED')
+        job['v89_controller'] = CONTROLLER
+    if 'controller_validation' in spec:
+        if not job.get('v89_controller') or spec['controller_validation'] != 'free_stop_restart':
+            raise ValueError('EXPLICIT_FREE_SPACE_CONTROLLER_CHECK_REQUIRED')
+        job['v89_validation'] = spec['controller_validation']
     if 'physics_study' in spec:
         from agentic_interaction_v88.physics_study import validate
         if spec.get('phase')!='engineering' or 'coordination_policy' not in spec:

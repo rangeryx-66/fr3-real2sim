@@ -19,7 +19,8 @@ def launch(specfile,profile):
 
 
 def _launch(specfile,profile,instance=None):
-    baseline_audit()
+    spec=json.loads(Path(specfile).read_text())
+    baseline_audit(controller=spec.get('controller'))
     from .terminal_safety import registry_path,require_clearance,process_outcome,preserve_unverified_process_hold
     safety_registry=(Path(instance['safety_registry']) if instance else
         registry_path(json.loads(Path(profile).read_text())))
@@ -29,7 +30,7 @@ def _launch(specfile,profile,instance=None):
              'wall_budget_s','sim_budget_s','acquisition_budget','agent_wait_s','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture',
              'integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence'}
     if spec.get('integration_profile')=='v87_abc_hybrid_recovery_v1':
-        allowed.update({'staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy','native_assets','physics_study'})
+        allowed.update({'staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy','native_assets','physics_study','controller','controller_validation'})
     if set(spec)-allowed or spec.get('schema')!='agentic-interaction/v81':raise ValueError('STRICT_V81_SPEC_REQUIRED')
     phase=spec.get('phase')
     from .integration import apply as integrated_profile
@@ -60,14 +61,19 @@ def _launch(specfile,profile,instance=None):
     # separately authorized V8.1 runtime budget is explicit in the new record.
     from .debug_budget import apply as debug_budget
     debug_budget(spec,{})  # reject inconsistent resources before creating output
-    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence','staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy','native_assets','physics_study')}
+    compat={k:v for k,v in spec.items() if k not in ('phase','frozen_release_commit','contact_comparison','debug_budget_profile','path_rejection_fixture','integration_profile','preload_study','orchestration_authorization','controlled_interruption_fixture','graspgenx','gpu_capacity_evidence','staged_exit','staged_exit_fixture','constraint_policy','persistent_goal','coordination_policy','native_assets','physics_study','controller','controller_validation')}
     compat.update(schema='agentic-interaction/v8',purpose='engineering',acquisition_budget=min(budget,3))
     if spec.get('persistent_goal') is not None:
         # V8 materializes immutable IO under its original smoke contract; the
         # explicit V87 registration below owns the actual14400s deadline.
         compat.update(wall_budget_s=7200,sim_budget_s=3600)
     compat_path=Path(specfile).with_name(Path(specfile).stem+'_V8_RESOURCE_COMPAT.json')
-    dump(compat_path,compat);out,p=prepare(compat_path,profile)
+    dump(compat_path,compat)
+    if spec.get('controller'):
+        from functools import partial
+        from agentic_interaction_v89.provenance import audit
+        out,p=prepare(compat_path,profile,audit_function=partial(audit,controller=spec['controller']))
+    else:out,p=prepare(compat_path,profile)
     job=json.loads((out/'job.json').read_text())
     job['terminal_safety_registry']=str(safety_registry)
     if instance:
@@ -95,14 +101,15 @@ def _launch(specfile,profile,instance=None):
     limits=job['articulation_v7']['limits_native'];old_domain=job['estimation_v7']['domain_native']
     job['estimation_v7']['domain_native']=[min(old_domain[0],limits[0]),max(old_domain[1],limits[1])]
     dump(out/'job.json',job)
-    sources={str(f.relative_to(ROOT)):digest(f) for folder in ('agentic_interaction_v81','agentic_interaction_v84','agentic_interaction_v87','agentic_interaction_v88') for f in sorted((ROOT/folder).glob('*.py'))}
+    sources={str(f.relative_to(ROOT)):digest(f) for folder in ('agentic_interaction_v81','agentic_interaction_v84','agentic_interaction_v87','agentic_interaction_v88','agentic_interaction_v89') for f in sorted((ROOT/folder).glob('*.py'))}
     sources['agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json']=digest(ROOT/'agentic_interaction_v81/PRELOAD_EVIDENCE_POLICY.json')
     dump(out/'V81_PRELAUNCH.json',dict(spec=spec,spec_sha256=digest(specfile),job_sha256=digest(out/'job.json'),
-        source_commit=commit,source_sha256=sources,baseline_audit=baseline_audit(),
+        source_commit=commit,source_sha256=sources,baseline_audit=baseline_audit(controller=spec.get('controller')),
         effective_resources={k:job[k]for k in ('episode_wall_budget_s','episode_sim_budget_s','agent_wait_timeout_s','safe_exit_wall_reserve_s','safe_exit_sim_reserve_s')},
         simulation_mount='existing-authority XY carriage adapted to xArm; not wheeled hardware',
         estimator_domain_prior_only=dict(previous=old_domain,current=job['estimation_v7']['domain_native']),
-        original_controller_and_safety_sources_unchanged=True))
+        original_controller_and_safety_sources_unchanged=not bool(spec.get('controller')),
+        measured_hard_safety_policy_unchanged=True))
     with (nullcontext(instance['resource']) if instance else Path(p['actor_lock']).open('a')) as lock:
         fcntl.flock(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
         require_clearance(safety_registry)  # recheck after lock; prior actor may have faulted
