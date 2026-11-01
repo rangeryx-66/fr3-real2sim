@@ -1,6 +1,5 @@
 """Known robot geometry only; no object dynamics or archived grasp input."""
 import numpy as np
-from .controller import Bounds, WeightedDLS, pose_error
 
 
 class WorldKinematics:
@@ -36,21 +35,3 @@ class WorldKinematics:
         J[:3, 2:] = R @ local[:3, inverse]
         J[3:, 2:] = R @ local[3:, inverse]
         return J
-
-    def solve(self, target, q, posture=None):
-        """Finite OFFLINE continuation for sampled path admission, not control."""
-        q = np.asarray(q, float).copy()
-        bounds = Bounds(self.limits, self.speeds, np.ones(9), .08, .2, 1., 1.)
-        kernel = WeightedDLS(self)
-        for _ in range(120):
-            error = pose_error(target, self.fk(q))
-            if np.linalg.norm(error[:3]) < 1e-5 and np.linalg.norm(error[3:]) < 1e-4:
-                return q
-            try:
-                v = kernel.velocity(target, q, bounds)
-            except (ValueError, np.linalg.LinAlgError):
-                return None
-            q += .04 * v
-            if np.any(q < self.limits[:, 0]) or np.any(q > self.limits[:, 1]):
-                return None
-        return None

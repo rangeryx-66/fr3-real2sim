@@ -47,7 +47,15 @@ def settle(ops):
     # no requirement to be inside the unrelated native-rest joint cell.
     r=ops.r
     for _ in range(math.ceil(2./.3)):
-        r.hold(.3)
+        try:r.hold(.3)
+        except RuntimeError as error:
+            # Every dwell can return pending, not only the first stop call.
+            # Preserve supervised C; do not let a typed ordinary pending state
+            # escape through the session and destroy its still-trusted World.
+            if r.job.get('v89_controller'):
+                from agentic_interaction_v89.controller import MeasuredStopPending
+                if isinstance(error,MeasuredStopPending):return False
+            raise
         if safe_hold(ops):return True
     return False
 

@@ -116,6 +116,7 @@ class SimpleControllerTests(unittest.TestCase):
         o.settling()
         for _ in range(100):
             self.assertFalse(o.observe_stop(v, 0., 0.))
+        for _ in range(38): self.assertFalse(o.observe_stop(np.zeros(9), 0., 0.))
         for _ in range(38): o.observe_stop(np.zeros(9), 0., 0.)
         self.assertEqual(o.state, StopState.STOPPED)
         # Restart needs no reset or latch clearing.
@@ -134,14 +135,14 @@ class SimpleControllerTests(unittest.TestCase):
     def test_stop_observation_uses_actual_motion_and_rejects_rotating_or_moving_base(self):
         m=MeasuredMotion(1/240);o=CommandOwner(LinearRobot(),np.zeros(9),1/240)
         o.settling()
-        for i in range(40):
+        for i in range(80):
             # A .02rad/s projected native dq can coexist with static integrated
             # poses; it is retained by runtime, not used as a pose derivative.
             motion=m.update(i/240,np.zeros(9),np.eye(4),0.)
             if motion:o.observe_stop(**motion)
         self.assertTrue(o.measured_stationary)
-        for i in range(40,80):
-            T=np.eye(4);T[:3,:3]=Rotation.from_rotvec([0,0,.02*(i-40)/240]).as_matrix()
+        for i in range(80,120):
+            T=np.eye(4);T[:3,:3]=Rotation.from_rotvec([0,0,.02*(i-80)/240]).as_matrix()
             motion=m.update(i/240,np.zeros(9),T,0.)
             o.observe_stop(**motion)
         self.assertFalse(o.measured_stationary)
@@ -150,6 +151,20 @@ class SimpleControllerTests(unittest.TestCase):
         v=np.r_[.001,0,-.001,np.zeros(6)]
         for _ in range(40): self.assertFalse(o.observe_stop(v,0.,0.))
         self.assertIsNone(m.update(10.,np.zeros(9),np.eye(4),0.))
+
+    def test_stop_cell_matches_original_dwell_with_small_contact_jitter(self):
+        from agentic_interaction_v81.motion_dwell import MotionDwell
+        m=MeasuredMotion(1/240);original=MotionDwell(1/240)
+        o=CommandOwner(LinearRobot(),np.zeros(9),1/240);o.settling()
+        for i in range(100):
+            T=np.eye(4);T[0,3]=2e-6*np.sin(2*np.pi*20*i/240)
+            original.update(i/240,np.zeros(7),T,0.)
+            motion=m.update(i/240,np.zeros(9),T,0.)
+            if motion:o.observe_stop(**motion)
+        self.assertTrue(original.latest['ready'])
+        self.assertTrue(o.measured_stationary)
+        self.assertFalse(o.observe_stop(np.zeros(9),0.,2e-4),'Moving object cannot qualify')
+        self.assertFalse(o.observe_stop(np.r_[2e-4,np.zeros(8)],0.,0.),'Moving XY cannot hide behind quiet TCP')
 
     def test_stop_spatial_checks_cover_cancelling_joint_motion(self):
         v=np.r_[.02,0,-.02,np.zeros(6)]

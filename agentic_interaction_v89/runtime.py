@@ -114,6 +114,7 @@ def runtime_class(parent):
                     v89_command_position=np.full(9, np.nan) if owner is None else owner.command.position,
                     v89_command_velocity=np.full(9, np.nan) if owner is None else owner.command.velocity,
                     v89_command_twist=np.full(6, np.nan) if owner is None else owner.command.twist,
+                    v89_reference_TCP=np.full((4,4),np.nan) if self.reference_drive is None else self.reference_drive.pose,
                     v89_tcp_design_ratios=np.full(4, np.nan) if owner is None else owner.command.tcp_design_ratios,
                     v89_nominal_TCP_tracking_m=float(np.linalg.norm(np.asarray(row['command_TCP'])[:3,3]-np.asarray(row['T_tcp'])[:3,3])) if 'command_TCP' in row else np.nan,
                     v89_stop_state=float(list(StopState).index(owner.state)) if owner else -1.,

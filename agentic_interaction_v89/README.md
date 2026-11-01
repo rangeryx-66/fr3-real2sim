@@ -53,19 +53,25 @@ guarantee is claimed for nonlinear FK; those deviations remain evidence.
 States are RUNNING -> BRAKING -> SETTLING -> STOPPED. Command zero and measured
 stationarity are separate. Release and restart require the latter. Failure to
 settle holds the zero command under supervision and returns a typed pending
-state to staged exit, not an invented measured collision. A missing certified
+state to every staged-exit dwell, not an invented measured collision. The
+later settle() path also catches pending; it cannot leak into session teardown. A missing certified
 brake or a changed blocking scene is diagnostic/control uncertainty; it never
 authorizes automatic motion or latch clearing. Real hard supervision retains
 its original latch and evidence.
 
-Stationarity uses consecutive240Hz measured XY/arm/TCP/object configurations,
+Stationarity uses the original MotionDwell stop cell (TCP1mm/s, arm.01rad/s,
+TCP rotation.01rad/s, object1e-4native/s,300ms) plus XY1e-4m/s,
+from consecutive240Hz measured XY/arm/TCP/object configurations,
 including TCP orientation, extending the existing MotionDwell convention.
 PhysX projected joint dq is retained separately and still goes through the
 original hard supervisor. Native dq can disagree with actual configuration
 motion during constraint stabilization; neither quantity is silently relabelled.
 
-The new path has no runtime `patch.object`, old governor, bounded least-squares
+The online path has no runtime `patch.object`, old governor, bounded least-squares
 optimizer, SLSQP, iterative stop projection or second CartesianReference filter.
+The established offline coupled geometric continuation remains for grasp/path
+feasibility; it writes no commands. The unnecessary new offline DLS planner
+was removed to avoid changing grasp availability while replacing the servo.
 Existing constructor-only scene bindings, grasp planners and ABC operation
 wrappers remain outside this replacement. The inherited free-space timed paths
 also pass through the same final owner and submission interface.
@@ -83,7 +89,9 @@ In an engineering `v87_abc_hybrid_recovery_v1` spec, retain `staged_exit:true`,
 
 For the automatic free-space prerequisite ONLY, additionally use
 `"controller_validation":"free_stop_restart"`. Omit that field for normal
-fresh-observation ABC. No grasp is imported or automatically authorized.
+fresh-observation ABC. The free check also executes a small current-Jacobian XY/opposing-arm
+cancellation input through the same owner, then confirms measured rest.
+No grasp is imported or automatically authorized.
 
 ```bash
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=.:scripts "$ISAAC_PYTHON" -m agentic_interaction_v81.launch \

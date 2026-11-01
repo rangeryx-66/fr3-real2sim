@@ -142,6 +142,22 @@ class StagedExitTests(unittest.TestCase):
         out=ops.continue_motion(dict(operation='continue_motion'))
         self.assertFalse(out['executed']);self.assertFalse(out['main_motion_authorized'])
 
+    def test_later_typed_stop_pending_retains_world_and_recovers_exit(self):
+        from agentic_interaction_v89.controller import MeasuredStopPending
+        r=self.ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        r.world.close=Mock();r.world.reset=Mock();world=r.world
+        r.hold.side_effect=MeasuredStopPending()
+        r.station_motion.ready=lambda *a:False
+        with patch('agentic_interaction_v84.operations.contact_trusted',return_value=True):
+            out=self.run_exit()
+        self.assertEqual(out['status'],staged.SAFE_HOLD_NOT_ESTABLISHED)
+        self.assertTrue(out['protective_hold_only']);self.assertTrue(self.ops.g['v87_hold_pending'])
+        self.assertIsNone(r.supervisor.latched);r.move_path.assert_not_called()
+        r.world.close.assert_not_called();r.world.reset.assert_not_called()
+        r.hold.side_effect=None;r.station_motion.ready=lambda *a:True
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertIs(r.world,world)
+
     def test_pending_contact_returns_to_real_physics_C_instead_of_paused_unloaded_wait(self):
         from agentic_interaction_v81.session import serve
         ops=self.ops;r=ops.r;r.job.update(v84_abc=True,agent_wait_timeout_s=600.)

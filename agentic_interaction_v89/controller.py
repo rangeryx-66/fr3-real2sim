@@ -18,6 +18,9 @@ import time
 
 import numpy as np
 from scipy.spatial.transform import Rotation
+from agentic_interaction_v81.motion_dwell import (
+    STOP_DWELL_S, STOP_ARM_RAD_S, STOP_TCP_M_S, STOP_TCP_RAD_S,
+    STOP_OBJECT_NATIVE_S)
 
 
 def pose_xyzw(position_m, quaternion_xyzw):
@@ -390,10 +393,10 @@ class CommandOwner:
             return False
         # These are stop-confirmation tolerances, NOT hard motion limits.
         quiet = (np.max(abs(velocity[:2])) <= 1e-4 and
-                 np.max(abs(velocity[2:])) <= .01 and abs(tcp_speed) <= 1e-4
-                 and abs(tcp_angular_speed) <= .01 and abs(object_speed) <= 1e-4)
+                 np.max(abs(velocity[2:])) < STOP_ARM_RAD_S and abs(tcp_speed) < STOP_TCP_M_S
+                 and abs(tcp_angular_speed) < STOP_TCP_RAD_S and abs(object_speed) < STOP_OBJECT_NATIVE_S)
         self._settled_s = self._settled_s + (self.dt if dt is None else dt) if quiet and self.command_zero else 0.
-        self.measured_stationary = self._settled_s >= .15
+        self.measured_stationary = self._settled_s >= STOP_DWELL_S - 1e-10
         if self.measured_stationary:
             self.state = StopState.STOPPED
         elif self.command_zero and self.state == StopState.STOPPED:

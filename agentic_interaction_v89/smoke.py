@@ -5,6 +5,40 @@ from agent_command_protocol_v12 import atomic_json
 from interaction_runtime.serialization import result_packet
 
 
+def cancellation_check(r):
+    """Small unloaded XY/opposing-arm input from the CURRENT robot Jacobian.
+
+    Engineering test input only, through the same owner/drive and native
+    supervision. No fake contact, grasp, object command or robot state reset.
+    Linearized cancellation is a prediction; actual TCP motion is measured.
+    """
+    initial=r._measured_position();T0=r.tcp().copy()
+    J=r.coupled.jacobian(initial);base=np.array([.0005,0.])
+    arm=np.linalg.lstsq(J[:,2:],-J[:,:2]@base,rcond=None)[0]
+    wanted=np.r_[base,arm]*min(1.,.002/max(np.max(abs(arm)),1e-30))
+    if np.linalg.norm(J@wanted)>1e-7 or np.linalg.norm(wanted[:2])<5e-5:
+        raise RuntimeError('FREE_CANCELLATION_INPUT_NOT_RESOLVED')
+    r.g['phase']=r.phase='PREGRASP';r.base_active=r._v89_mobile=True
+    bounds=r._bounds('PREGRASP');excursion=[]
+    for _ in range(round(2./r.dt)):
+        proposal=r.command_owner.propose(wanted,bounds,r._geometry())
+        r._last_proposal=proposal
+        if not proposal.accepted:
+            r.stop_command()
+            raise RuntimeError('FREE_CANCELLATION_REJECTED:'+proposal.reason)
+        r.command_owner.commit(proposal)
+        r._last_bounds=bounds;r._last_phase='PREGRASP';r._write_command()
+        r.step();excursion.append(float(np.linalg.norm(r.tcp()[:3,3]-T0[:3,3])))
+    r.stop_command();change=r._measured_position()-initial
+    return dict(base_net_m=change[:2].tolist(),arm_net_rad=change[2:].tolist(),
+        command_input_velocity=wanted.tolist(),linearized_TCP_twist=(J@wanted).tolist(),
+        actual_TCP_excursion_peak_m=max(excursion),command_zero=r.command_owner.command_zero,
+        measured_stationary=r.command_owner.measured_stationary,
+        unloaded=True,object_commands=False,
+        passed=bool(np.linalg.norm(change[:2])>5e-5 and np.linalg.norm(change[2:])>1e-5
+            and max(excursion)<.001 and r.command_owner.measured_stationary))
+
+
 def free_stop_restart(r):
     from interaction_runtime.prismatic_radial_session_v751 import PrismaticRadialOperationsV751
     from agentic_interaction_v81.operations import operations_class
@@ -34,6 +68,7 @@ def free_stop_restart(r):
                 command_zero=r.command_owner.command_zero,
                 measured_stationary=r.command_owner.measured_stationary))
         result['motion_checks'] = results
+        result['coordinated_cancellation_check'] = cancellation_check(r)
     except Exception as error:
         result['error'] = repr(error)
     finally:
@@ -45,6 +80,7 @@ def free_stop_restart(r):
             object_coordinate_initial=qinitial, object_coordinate_final=float(r.actual()),
             profile=r.profile.report(r.tick*r.dt))
         passed = (len(results)==2 and all(x['measured_stationary'] and x['tracking_error_m']<.001 for x in results)
+                  and result.get('coordinated_cancellation_check',{}).get('passed') is True
                   and result.get('safe_exit',{}).get('safe') is True and r.supervisor.latched is None)
         result['status'] = 'PASS' if passed else 'NOT_PASS'
         atomic_json(r.output/'V89_FREE_SPACE_CHECK.json', result_packet(result))
