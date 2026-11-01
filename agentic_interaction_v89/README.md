@@ -3,6 +3,9 @@
 This opt-in replaces the V87 governor and V88 online solver/stop together.
 It is not a certified hardware controller. Short physical validation and
 remaining limitations are recorded in `docs/experiments/controller_simplification_20261101`.
+The final unloaded native check passed; the contact short-chain did not pass.
+The last native source is1138b892. The later typed-budget routing correction
+has144 passing tests and no further native run; see RESULTS.md for that boundary.
 
 ABC and its current wrist observation, automatic grasp generation, native
 contact/closure, object progress clock, FIT/VALIDATION separation and same-World
@@ -91,6 +94,9 @@ explicit upstream contact-policy request, sent in the same native submission
 with unchanged finite drive mapping. It is not measured force. Staged snapshots
 name the authoritative committed9D position/velocity separately from the legacy
 qtarget carrier (whose XY/G1 slots are not submitted targets).
+The9D committed position is a nominal reference. NativeDrive retains the
+original arm gravity-bias `reference + g/kp`; its implicit position target and
+bias are separately recorded. There is no second kinematic owner in that map.
 PhysX projected joint dq is retained separately and still goes through the
 original hard supervisor. Native dq can disagree with actual configuration
 motion during constraint stabilization; neither quantity is silently relabelled.
@@ -128,6 +134,32 @@ does; open-loop joint feedforward did not cancel native drive lag in free07
 record remains intact. Command and actual TCP excursions are separate evidence.
 No grasp is imported or automatically authorized.
 
+On this server, a complete resource profile and the registered short-chain spec
+are retained privately in
+`/data1/home/rangeryx/agentic_v86_private/controller_simplification_20261101/configuration`.
+Generate a NEW episode ID; the archived ID belongs to a completed failed trial:
+
+```bash
+export ISAAC_PYTHON=/data1/home/rangeryx/isaaclab-arena/.venv/bin/python
+"$ISAAC_PYTHON" - <<'PY'
+import datetime, json, pathlib
+archive = pathlib.Path('/data1/home/rangeryx/agentic_v86_private/controller_simplification_20261101/configuration')
+spec = json.loads((archive/'v89_contact_spec06.json').read_text())
+spec['episode_id'] = 'v89_engineering_' + datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+spec['controller_validation'] = 'free_stop_restart'  # automatic unloaded prerequisite
+pathlib.Path('/tmp/v89_new_spec.json').write_text(json.dumps(spec, indent=2))
+PY
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=.:scripts "$ISAAC_PYTHON" -m agentic_interaction_v81.launch \
+  --spec /tmp/v89_new_spec.json \
+  --environment /data1/home/rangeryx/agentic_v86_private/controller_simplification_20261101/configuration/v89_environment.json
+```
+
+For contact testing, generate another fresh ID and omit `controller_validation`.
+The archived short spec declares a3mm recoverable-interruption fixture; it is
+not a full-range success benchmark. Use the V84 transport and current returned
+image/catalog/plan hashes, never archived acquire commands. The original
+resource admission and all existing safety holds still apply.
+
 ```bash
 OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=.:scripts "$ISAAC_PYTHON" -m agentic_interaction_v81.launch \
   --spec /absolute/private/spec.json --environment /absolute/private/environment.json
@@ -161,6 +193,18 @@ executed controller, or `22e652417f5afc9683fdfcca15fc0690d58e34dc` for its
 later policy/report tooling. Omit `controller` in the old spec. Never hot-load
 the old controller into the new World, clear old incidents, or reinterpret
 an unparked exit as safe. The modified checkout is not a frozen V8 baseline.
+
+Closed prismatic records can be analyzed without Isaac actors:
+
+```bash
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=.:scripts "$ISAAC_PYTHON" -m agentic_interaction_v89.analyze_closed \
+  --source "$PWD" --episode /absolute/closed/episode --output /absolute/analysis
+```
+
+This refuses live/non-prismatic input, retains per-file hashes and never reads
+hidden plant parameters. Missing B motion is reported as missing motion/slip
+comparison. Diagnostic wrist plots retain dynamic tool inertia; the original
+Physics-ID estimator remains responsible for its full compensation.
 
 ## Source attribution
 
