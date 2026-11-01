@@ -340,6 +340,11 @@ def runtime_class(parent):
             # balancing belongs to explicit A/B references, not this state.
             if not np.isfinite(seconds) or seconds < 0:
                 raise ValueError('FINITE_NONNEGATIVE_HOLD_SECONDS_REQUIRED')
+            if self.command_owner is None:
+                # Original native unloaded admission runs inside super().__init__
+                # before the replacement owner exists. Preserve that exact
+                # construction-only path; it cannot start loaded manipulation.
+                return super().hold(seconds)
             self.stop_command()
             for _ in range(round(seconds / self.dt)):
                 self._write_command()

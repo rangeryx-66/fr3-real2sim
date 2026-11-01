@@ -73,6 +73,10 @@ valid300–600ms quiet windows (EXIT_UNVERIFIED); that negative run is preserved
 The new runtime's explicit hold submits only its stopped command and native G1
 target. It cannot inherit the old loaded-contact hold's implicit Cartesian
 retention restart. Intentional balancing remains in explicit A/B execution.
+The original constructor's native unloaded admission precedes creation of the
+replacement owner, so its initialization-only hold remains the original path.
+Free09 exposed this ordering before any physics step; its failed admission is
+preserved. Active execution always uses the explicit replacement hold.
 PhysX projected joint dq is retained separately and still goes through the
 original hard supervisor. Native dq can disagree with actual configuration
 motion during constraint stabilization; neither quantity is silently relabelled.

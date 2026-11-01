@@ -316,6 +316,7 @@ class SimpleControllerTests(unittest.TestCase):
         class Parent:
             def hold(self,seconds):raise AssertionError('legacy retention restart')
         cls=runtime_class(Parent);r=cls.__new__(cls);r.dt=1/240
+        r.command_owner=object()
         r.stop_command=Mock();r._write_command=Mock();r.step=Mock()
         r.cartesian_step=Mock(side_effect=AssertionError('stopped hold cannot start motion'))
         r.hold(.05)
@@ -325,6 +326,16 @@ class SimpleControllerTests(unittest.TestCase):
         r.stop_command.side_effect=MeasuredStopPending();r.step.reset_mock()
         with self.assertRaises(MeasuredStopPending):r.hold(.05)
         r.step.assert_not_called()
+
+    def test_constructor_unloaded_admission_precedes_command_owner(self):
+        from agentic_interaction_v89.runtime import runtime_class
+        prior=Mock(return_value='original native unloaded admission')
+        class Parent:
+            def hold(self,seconds):return prior(seconds)
+        cls=runtime_class(Parent);r=cls.__new__(cls);r.command_owner=None
+        r.stop_command=Mock(side_effect=AssertionError('replacement not assembled yet'))
+        self.assertEqual(r.hold(.3),'original native unloaded admission')
+        prior.assert_called_once_with(.3);r.stop_command.assert_not_called()
 
 
 if __name__ == '__main__': unittest.main()
