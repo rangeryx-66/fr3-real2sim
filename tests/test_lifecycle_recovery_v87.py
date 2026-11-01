@@ -20,6 +20,58 @@ class RecoveryV87Tests(unittest.TestCase):
         r.collision=NS(check=Mock(return_value=(True,None)))
         r.model.poses=Mock(return_value={})
 
+    def test_typed_budget_keeps_completed_exit_without_inventing_control_fault(self):
+        from agentic_interaction_v81.terminal_safety import classify
+        ops=self.ops;r=ops.r;world=r.world
+        r.job['v89_controller']='coordinated_dls_v1'
+        r.command_owner=NS(command_zero=True,measured_stationary=True)
+        ops._abc_retain=False;parked=ops.release_park();ops.release_park.reset_mock()
+        for remaining,expected in [(30.,'OPERATION_BUDGET_EXHAUSTED'),(0.,'BUDGET_EXHAUSTED')]:
+            with self.subTest(remaining=remaining):
+                r.episode_budget.remaining=lambda t:dict(wall_s=remaining,sim_s=100.)
+                c=dict(operation='acquire_execute',sequence=0)
+                out=supervisor.complete(ops,c,dict(operation_status='BUDGET_EXHAUSTED',
+                    error="ExecutionBudgetExhausted('EXIT_RESERVE_REACHED')",safe_exit=parked))
+                out=task_recovery.after(ops,c,out)
+                self.assertEqual(out['status'],expected)
+                self.assertNotEqual(out['outcome'],'UNRECOVERABLE')
+                self.assertFalse(out['task_recovery']['episode_termination_required'])
+                self.assertFalse(out['task_complete'])
+                self.assertTrue(classify(None,out['safe_exit'])['safe_park_verified'])
+                self.assertIs(out['safe_exit'],parked);self.assertIs(r.world,world)
+                self.assertIsNone(r.supervisor.latched)
+        r.stop_command.assert_not_called();r.hold.assert_not_called()
+        ops.release_park.assert_not_called();ops.observe.assert_not_called()
+
+    def test_budget_does_not_accept_incomplete_exit_evidence(self):
+        ops=self.ops;r=ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        r.command_owner=NS(command_zero=True,measured_stationary=True)
+        out=supervisor.complete(ops,dict(operation='acquire_execute'),dict(
+            operation_status='BUDGET_EXHAUSTED',error="ExecutionBudgetExhausted('EXIT_RESERVE_REACHED')",
+            safe_exit=dict(safe=True,park=dict(reached=True,unloaded=True,
+                measured_collision_check=dict(valid=False)))))
+        r.stop_command.assert_called_once();ops.release_park.assert_called_once()
+        self.assertEqual(out['outcome'],'RECOVERABLE_FAILURE')
+        self.assertEqual(out['recovery']['source'],'original supervised stop/unload/park')
+
+    def test_unknown_error_cannot_claim_budget_exit_from_its_string(self):
+        ops=self.ops;r=ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        r.command_owner=NS(command_zero=True,measured_stationary=True)
+        ops._abc_retain=False;parked=ops.release_park();ops.release_park.reset_mock()
+        out=supervisor.complete(ops,dict(operation='acquire_execute'),dict(
+            error="ExecutionBudgetExhausted('EXIT_RESERVE_REACHED')",safe_exit=parked))
+        self.assertEqual(out['outcome'],'UNRECOVERABLE')
+        ops.release_park.assert_not_called()
+
+    def test_native_latch_precedes_typed_budget_and_completed_exit(self):
+        ops=self.ops;r=ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        r.command_owner=NS(command_zero=True,measured_stationary=True)
+        ops._abc_retain=False;parked=ops.release_park();ops.release_park.reset_mock()
+        latch=dict(reason='REGISTERED_HARD_GUARD');r.supervisor.latched=latch
+        record=dict(operation_status='BUDGET_EXHAUSTED',safe_exit=parked)
+        self.assertIs(supervisor.complete(ops,dict(operation='acquire_execute'),record),record)
+        self.assertIs(r.supervisor.latched,latch);r.stop_command.assert_not_called()
+
     def test_pure_planning_rejection_does_not_repeat_physical_parking(self):
         ops=self.ops;r=ops.r;world=r.world
         out=supervisor.complete(ops,dict(operation='prepare_grasp'),dict(plan=False,reason='IK'))
