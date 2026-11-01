@@ -47,6 +47,12 @@ brake or a changed blocking scene is diagnostic/control uncertainty; it never
 authorizes automatic motion or latch clearing. Real hard supervision retains
 its original latch and evidence.
 
+Stationarity uses consecutive240Hz measured XY/arm/TCP/object configurations,
+including TCP orientation, extending the existing MotionDwell convention.
+PhysX projected joint dq is retained separately and still goes through the
+original hard supervisor. Native dq can disagree with actual configuration
+motion during constraint stabilization; neither quantity is silently relabelled.
+
 The new path has no runtime `patch.object`, old governor, bounded least-squares
 optimizer, SLSQP, iterative stop projection or second CartesianReference filter.
 Existing constructor-only scene bindings, grasp planners and ABC operation
@@ -69,7 +75,7 @@ For the automatic free-space prerequisite ONLY, additionally use
 fresh-observation ABC. No grasp is imported or automatically authorized.
 
 ```bash
-OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 "$ISAAC_PYTHON" -m agentic_interaction_v81.launch \
+OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONPATH=.:scripts "$ISAAC_PYTHON" -m agentic_interaction_v81.launch \
   --spec /absolute/private/spec.json --environment /absolute/private/environment.json
 ```
 

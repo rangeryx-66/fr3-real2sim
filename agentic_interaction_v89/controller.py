@@ -65,6 +65,33 @@ class MeasuredStopPending(RuntimeError):
         super().__init__('CONTROLLED_EXECUTION_INTERRUPT:MEASURED_STOP_PENDING')
 
 
+class MeasuredMotion:
+    """Consecutive native configuration motion; projected dq stays separate.
+
+    PhysX constraint stabilization can leave projected dq inconsistent with
+    integrated poses. This causal observation follows the project's existing
+    MotionDwell convention, extended to XY and TCP orientation. It does not
+    replace any native-velocity emergency supervision.
+    """
+    def __init__(self, dt):
+        self.dt, self.previous, self.latest = dt, None, None
+
+    def update(self, t, q9, tcp, coordinate):
+        current = (float(t), np.asarray(q9, float).copy(), np.asarray(tcp, float).copy(), float(coordinate))
+        result = None
+        if self.previous is not None:
+            t0, q0, T0, x0 = self.previous
+            elapsed = t - t0
+            if abs(elapsed - self.dt) <= self.dt * 1e-5:
+                twist = pose_error(tcp, T0) / elapsed
+                result = dict(velocity=(current[1]-q0)/elapsed,
+                    tcp_speed=float(np.linalg.norm(twist[:3])),
+                    tcp_angular_speed=float(np.linalg.norm(twist[3:])),
+                    object_speed=(coordinate-x0)/elapsed)
+        self.previous, self.latest = current, result
+        return result
+
+
 @dataclass(frozen=True)
 class Bounds:
     position: np.ndarray
@@ -326,17 +353,20 @@ class CommandOwner:
         self.stop = StopPlan(())
         self.state = StopState.SETTLING
 
-    def observe_stop(self, velocity, tcp_speed, object_speed, *, dt=None):
+    def observe_stop(self, velocity, tcp_speed, object_speed, *, tcp_angular_speed=0., dt=None):
         velocity = np.asarray(velocity, float)
-        values = np.r_[velocity, tcp_speed, object_speed]
+        values = np.r_[velocity, tcp_speed, tcp_angular_speed, object_speed]
         if velocity.shape != (9,) or not np.isfinite(values).all():
             self.state = StopState.BLOCKED
             return False
         # These are stop-confirmation tolerances, NOT hard motion limits.
         quiet = (np.max(abs(velocity[:2])) <= 1e-4 and
-                 np.max(abs(velocity[2:])) <= .01 and abs(tcp_speed) <= 1e-4 and abs(object_speed) <= 1e-4)
+                 np.max(abs(velocity[2:])) <= .01 and abs(tcp_speed) <= 1e-4
+                 and abs(tcp_angular_speed) <= .01 and abs(object_speed) <= 1e-4)
         self._settled_s = self._settled_s + (self.dt if dt is None else dt) if quiet and self.command_zero else 0.
         self.measured_stationary = self._settled_s >= .15
         if self.measured_stationary:
             self.state = StopState.STOPPED
+        elif self.command_zero and self.state == StopState.STOPPED:
+            self.state = StopState.SETTLING
         return self.measured_stationary

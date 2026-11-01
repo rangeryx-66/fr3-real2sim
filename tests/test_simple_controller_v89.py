@@ -5,7 +5,7 @@ from pathlib import Path
 import numpy as np
 from scipy.spatial.transform import Rotation
 from agentic_interaction_v89.controller import (
-    Bounds, CommandOwner, StopState, WeightedDLS, pose_error, pose_xyzw)
+    Bounds, CommandOwner, MeasuredMotion, StopState, WeightedDLS, pose_error, pose_xyzw)
 
 
 class LinearRobot:
@@ -127,6 +127,26 @@ class SimpleControllerTests(unittest.TestCase):
         p = o.propose(np.r_[.01, np.zeros(8)], bounds(), lambda q: (q[0] < 1e-9, 'wall'))
         self.assertFalse(p.accepted)
         self.assertIs(o.command, before)
+
+    def test_stop_observation_uses_actual_motion_and_rejects_rotating_or_moving_base(self):
+        m=MeasuredMotion(1/240);o=CommandOwner(LinearRobot(),np.zeros(9),1/240)
+        o.settling()
+        for i in range(40):
+            # A .02rad/s projected native dq can coexist with static integrated
+            # poses; it is retained by runtime, not used as a pose derivative.
+            motion=m.update(i/240,np.zeros(9),np.eye(4),0.)
+            if motion:o.observe_stop(**motion)
+        self.assertTrue(o.measured_stationary)
+        for i in range(40,80):
+            T=np.eye(4);T[:3,:3]=Rotation.from_rotvec([0,0,.02*(i-40)/240]).as_matrix()
+            motion=m.update(i/240,np.zeros(9),T,0.)
+            o.observe_stop(**motion)
+        self.assertFalse(o.measured_stationary)
+        self.assertEqual(o.state,StopState.SETTLING)
+        # Stationary TCP from XY/arm cancellation still is NOT measured rest.
+        v=np.r_[.001,0,-.001,np.zeros(6)]
+        for _ in range(40): self.assertFalse(o.observe_stop(v,0.,0.))
+        self.assertIsNone(m.update(10.,np.zeros(9),np.eye(4),0.))
 
     def test_float32_native_readback_cannot_create_second_proposal_during_brake(self):
         from interaction_runtime.policy import Policy, ForceMonitor

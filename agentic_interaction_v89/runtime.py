@@ -8,7 +8,7 @@ import time
 from types import SimpleNamespace
 import numpy as np
 
-from .controller import Bounds, CommandOwner, StopState, WeightedDLS, pose_error
+from .controller import Bounds, CommandOwner, MeasuredMotion, StopState, WeightedDLS, pose_error
 from .kinematics import WorldKinematics
 
 
@@ -33,6 +33,7 @@ def runtime_class(parent):
                 np.r_[.08, .08, np.asarray(self.c['arm_speed_limits']) / 3])
             self.kernel = WeightedDLS(self.coupled)
             self.command_owner = CommandOwner(self.coupled, self._requested_position(), self.dt)
+            self.measured_motion = MeasuredMotion(self.dt)
             self._last_bounds = self._bounds(self.g['phase'])
             self._last_phase = self.g['phase']
             self._v89_mobile = False
@@ -109,6 +110,7 @@ def runtime_class(parent):
                     v89_stop_state=float(list(StopState).index(owner.state)) if owner else -1.,
                     v89_command_zero=float(owner.command_zero) if owner else 1.,
                     v89_measured_stationary=float(owner.measured_stationary) if owner else 0.,
+                    v89_configuration_velocity=np.asarray((getattr(self, 'measured_motion', None).latest or {}).get('velocity', np.full(9, np.nan))) if hasattr(self, 'measured_motion') else np.full(9, np.nan),
                     v89_solve_s=0. if p is None else p.solve_s,
                     v89_stop_check_s=0. if p is None else p.stop_s)
             self.record.coordinate_fields = fields
@@ -272,6 +274,8 @@ def runtime_class(parent):
             from interaction_runtime.policy import SafetyStop
             if self.supervisor.latched is not None:
                 raise SafetyStop('LATCHED_' + self.supervisor.latched['reason'], self.supervisor.latched)
+            if owner.state == StopState.STOPPED and owner.measured_stationary:
+                return
             requested = self.g['phase']
             self.g['phase'] = self.phase = self._last_phase
             # Brake under the accepted phase's bounds. Release is entered only
@@ -295,16 +299,13 @@ def runtime_class(parent):
                 for _ in range(math_ceil(2. / self.dt)):
                     self._write_command()
                     row = self.step()
-                    dq = np.asarray(row['joint_velocities'])
-                    object_speed = row['joint_coordinate_velocity']
-                    if self.job['articulation_v7']['joint_type'] == 'revolute':
-                        from interaction_runtime.progress import hinge_radius
-                        p = self.g['v75_motion_prior'] if 'v75_motion_prior' in self.g else None
-                        if p is not None:
-                            object_speed *= hinge_radius(row['T_tcp'][:3, 3], p['origin_world_m'], p['axis_world'])
-                    if owner.observe_stop(np.r_[dq[self.base_indices], dq[self.arm]], row['tcp_speed_m_s'], object_speed):
+                    if owner.measured_stationary:
                         self.event('V89_STOP_CONFIRMED', command_zero=True, measured_stationary=True,
-                            wall_s=time.perf_counter() - began)
+                            wall_s=time.perf_counter() - began,
+                            source='consecutive native configurations; projected dq retained and hard-supervised',
+                            configuration_motion={k: v.tolist() if isinstance(v, np.ndarray) else v
+                                for k, v in self.measured_motion.latest.items()},
+                            native_projected_velocity=np.asarray(row['joint_velocities']).tolist())
                         return
                 # Motion is held and supervised, but no release or new B is
                 # authorized. A bounded settling failure is not a hard hazard.
@@ -319,6 +320,13 @@ def runtime_class(parent):
             result = super().enrich_measurement(row, pre_contact_poses)
             if hasattr(self, 'coupled'):
                 row['command_TCP'] = self.coupled.fk(self._requested_position())
+                motion = self.measured_motion.update(row['t'],
+                    np.r_[np.asarray(row['q'])[self.base_indices], np.asarray(row['q'])[self.arm]],
+                    row['T_tcp'], row['joint_coordinate'])
+                owner = self.command_owner
+                if motion is not None and owner.state in (StopState.SETTLING, StopState.STOPPED):
+                    owner.observe_stop(motion['velocity'], motion['tcp_speed'], motion['object_speed'],
+                        tcp_angular_speed=motion['tcp_angular_speed'])
             return result
 
         def move_path(self, *args, **kwargs):
