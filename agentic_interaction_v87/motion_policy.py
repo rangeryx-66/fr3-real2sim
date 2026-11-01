@@ -6,7 +6,8 @@ Use the existing stationary TCP linear/angular cells and dwell duration; no
 new numeric safety envelope, manual pose, plant dynamics or command is added.
 """
 import numpy as np
-from agentic_interaction_v81.motion_dwell import MotionDwell
+from agentic_interaction_v81.motion_dwell import (
+    MotionDwell, STOP_DWELL_S, STOP_ARM_RAD_S, STOP_TCP_M_S, STOP_TCP_RAD_S)
 
 
 def articulation_prior(r):
@@ -18,7 +19,7 @@ def articulation_prior(r):
 
 
 class PhysicalMotionDwell(MotionDwell):
-    def __init__(self,dt,articulation,duration=.3):
+    def __init__(self,dt,articulation,duration=STOP_DWELL_S):
         super().__init__(dt,duration)
         self.articulation_source=articulation
         self.articulation=None
@@ -35,8 +36,8 @@ class PhysicalMotionDwell(MotionDwell):
             linear=float(np.linalg.norm((self.articulation.delta(delta)@point-point)[:3])/self.dt)
             angular=abs(delta)/self.dt if self.articulation.joint_type=='revolute' else 0.
         stable=(rates is not None and linear is not None and np.isfinite([linear,angular]).all()
-            and rates['joint_max_rad_s']<.01 and rates['TCP_translation_m_s']<.001
-            and rates['TCP_rotation_rad_s']<.01 and linear<.001 and angular<.01)
+            and rates['joint_max_rad_s']<STOP_ARM_RAD_S and rates['TCP_translation_m_s']<STOP_TCP_M_S
+            and rates['TCP_rotation_rad_s']<STOP_TCP_RAD_S and linear<STOP_TCP_M_S and angular<STOP_TCP_RAD_S)
         self.physical_stable_s=self.physical_stable_s+self.dt if stable else 0.
         self.stable_s=self.physical_stable_s
         out.update(stable_s=self.stable_s,ready=self.stable_s>=self.duration-1e-10,

@@ -18,9 +18,7 @@ import time
 
 import numpy as np
 from scipy.spatial.transform import Rotation
-from agentic_interaction_v81.motion_dwell import (
-    STOP_DWELL_S, STOP_ARM_RAD_S, STOP_TCP_M_S, STOP_TCP_RAD_S,
-    STOP_OBJECT_NATIVE_S)
+from agentic_interaction_v81.motion_dwell import STOP_DWELL_S
 
 
 def pose_xyzw(position_m, quaternion_xyzw):
@@ -90,7 +88,7 @@ class MeasuredMotion:
                 result = dict(velocity=(current[1]-q0)/elapsed,
                     tcp_speed=float(np.linalg.norm(twist[:3])),
                     tcp_angular_speed=float(np.linalg.norm(twist[3:])),
-                    object_speed=(coordinate-x0)/elapsed)
+                    object_native_speed=(coordinate-x0)/elapsed)
         self.previous, self.latest = current, result
         return result
 
@@ -325,19 +323,34 @@ class CommandOwner:
                 .5 * bounds.linear_acceleration * self.dt / max(np.linalg.norm(task_change[:3]), 1e-30),
                 .5 * bounds.angular_acceleration * self.dt / max(np.linalg.norm(task_change[3:]), 1e-30))
             v = previous.velocity + min(1., fraction) * delta
-            command, reason = self._command(previous.position + v * self.dt, v, previous, bounds)
-            if reason:
-                return Proposal(None, None, reason, previous.generation)
-            if check is not None:
-                valid, reason = check(command.position)
-                if not valid:
-                    return Proposal(None, None, 'CANDIDATE_GEOMETRY:' + str(reason), previous.generation)
-            began = time.perf_counter()
-            stop = self.brake(command, bounds, check)
-            return Proposal(command if stop.valid else None, stop, stop.reason,
-                            previous.generation, stop_s=time.perf_counter() - began)
+            return self._certify(previous.position + v * self.dt, v, bounds, check)
         except (ValueError, np.linalg.LinAlgError) as error:
             return Proposal(None, None, 'NUMERICAL_CANDIDATE:' + str(error), previous.generation)
+
+    def _certify(self, position, velocity, bounds, check):
+        previous=self.command
+        command, reason=self._command(position,velocity,previous,bounds)
+        if reason:return Proposal(None,None,reason,previous.generation)
+        if check is not None:
+            valid,reason=check(command.position)
+            if not valid:return Proposal(None,None,'CANDIDATE_GEOMETRY:'+str(reason),previous.generation)
+        began=time.perf_counter();stop=self.brake(command,bounds,check)
+        return Proposal(command if stop.valid else None,stop,stop.reason,
+            previous.generation,stop_s=time.perf_counter()-began)
+
+    def propose_position(self, position, bounds, check=None):
+        """Validate an already timed native joint-path sample, without retiming.
+
+        A second rate filter would lag and drop the route's final endpoint.
+        The same owner still validates exact discrete rates, geometry and its
+        brake before committing; a rejected position cannot mutate state.
+        """
+        try:
+            q=np.asarray(position,float)
+            if q.shape!=(9,) or not np.isfinite(q).all():raise ValueError('FINITE_NINE_DOF_POSITION_REQUIRED')
+            return self._certify(q,(q-self.command.position)/self.dt,bounds,check)
+        except (ValueError,np.linalg.LinAlgError) as error:
+            return Proposal(None,None,'NUMERICAL_CANDIDATE:'+str(error),self.command.generation)
 
     def track(self, kernel, goal, measured, bounds, check=None, **kwargs):
         began = time.perf_counter()
@@ -385,18 +398,21 @@ class CommandOwner:
         self.stop = StopPlan(())
         self.state = StopState.SETTLING
 
-    def observe_stop(self, velocity, tcp_speed, object_speed, *, tcp_angular_speed=0., dt=None):
-        velocity = np.asarray(velocity, float)
-        values = np.r_[velocity, tcp_speed, tcp_angular_speed, object_speed]
-        if velocity.shape != (9,) or not np.isfinite(values).all():
+    def observe_stop(self, base_velocity, *, body_stationary, dt=None):
+        """Reuse the native SI body-stop witness; independently verify XY.
+
+        PhysicalMotionDwell owns arm/TCP/articulated-object confirmation,
+        including revolute surface speed and angular motion. Do not duplicate
+        those thresholds here or confuse object rad/s with m/s.
+        """
+        base_velocity = np.asarray(base_velocity, float)
+        if base_velocity.shape != (2,) or not np.isfinite(base_velocity).all():
             self.state = StopState.BLOCKED
             return False
-        # These are stop-confirmation tolerances, NOT hard motion limits.
-        quiet = (np.max(abs(velocity[:2])) <= 1e-4 and
-                 np.max(abs(velocity[2:])) < STOP_ARM_RAD_S and abs(tcp_speed) < STOP_TCP_M_S
-                 and abs(tcp_angular_speed) < STOP_TCP_RAD_S and abs(object_speed) < STOP_OBJECT_NATIVE_S)
+        quiet = np.max(abs(base_velocity)) <= 1e-4
         self._settled_s = self._settled_s + (self.dt if dt is None else dt) if quiet and self.command_zero else 0.
-        self.measured_stationary = self._settled_s >= STOP_DWELL_S - 1e-10
+        self.measured_stationary = bool(body_stationary and self.command_zero
+            and self._settled_s >= STOP_DWELL_S - 1e-10)
         if self.measured_stationary:
             self.state = StopState.STOPPED
         elif self.command_zero and self.state == StopState.STOPPED:

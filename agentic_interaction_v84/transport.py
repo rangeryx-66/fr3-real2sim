@@ -42,9 +42,10 @@ def publish(episode,sequence,command):
     episode=Path(episode);value=dict(command,protocol_version=1,sequence=sequence)
     validate(value,sequence)
     state=json.loads((episode/'AGENT_SESSION_STATUS.json').read_text())
-    if state.get('diagnostic_only') and state.get('safety_latched'):
+    if state.get('diagnostic_only') and (state.get('safety_latched') or state.get('control_blocked')):
         if value['operation'] not in ('inspect','finish'):
-            raise ProtocolError('HARD_LATCH_READ_ONLY_DIAGNOSIS_OR_FINALIZE_ONLY')
+            raise ProtocolError(('CONTROL_BLOCK' if state.get('control_blocked') else 'HARD_LATCH')+
+                '_READ_ONLY_DIAGNOSIS_OR_FINALIZE_ONLY')
         if (state['state']!='WAITING' or state['sequence']!=sequence
                 or time.time()>=state['deadline_unix_s']
                 or (episode/'PROCESS_COMPLETION.json').exists()):

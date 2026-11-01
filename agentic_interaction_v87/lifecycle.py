@@ -17,15 +17,18 @@ def finite_state(r):
     except Exception:return False
 
 
-def snapshot(r):
+def snapshot(r,control_fault=None):
     return dict(episode_id=r.job['episode_id'],instance_uuid=r.job.get('instance_uuid'),
-        status='SAFETY_LATCHED_WORLD_RETAINED',fault=r.supervisor.latched,
+        status='CONTROL_BLOCKED_WORLD_RETAINED' if control_fault else 'SAFETY_LATCHED_WORLD_RETAINED',
+        fault=control_fault or r.supervisor.latched,
+        native_hard_latch_present=r.supervisor.latched is not None,
         measured_object_coordinate_native=float(r.actual()),World_identity=id(r.world),
         world_recreated=False,object_reset=False,motion_authorized=False,
         simulation_paused=not r.world.is_playing(),
         physical_park_verified=False,hardware_stop_not_inferred=True,
         reset_qualification=dict(qualified=False,
-            reason='NO_VALIDATED_RESET_OWNER; latch retained and every motion operation denied'))
+            reason=('NO_VALIDATED_CONTROL_REQUALIFICATION; no hard latch asserted' if control_fault else
+                'NO_VALIDATED_RESET_OWNER; latch retained and every motion operation denied')))
 
 
 def retain(ops,sequence,trace,last):
@@ -33,15 +36,22 @@ def retain(ops,sequence,trace,last):
     if not finite_state(r):
         return dict(status='UNRECOVERABLE_SIMULATION_STATE',trace=trace,
             safe_exit=dict(safe=False,reason='NONFINITE_OR_UNREADABLE_NATIVE_STATE'))
-    if r.supervisor.latched is None:
+    control_fault=(dict(reason=last.get('reason','CONTROL_STATE_UNCONFIRMED'),
+        source='unconfirmed controller stop/ledger; not a measured hard safety event')
+        if r.job.get('v89_controller') and r.supervisor.latched is None
+            and (last.get('control_fault') or last.get('outcome')=='UNRECOVERABLE') else None)
+    if control_fault and getattr(r,'command_owner',None) is not None:
+        from agentic_interaction_v89.controller import StopState
+        r.command_owner.state=StopState.BLOCKED
+    if r.supervisor.latched is None and control_fault is None:
         uncertain=last.get('outcome')=='UNRECOVERABLE'
         r.supervisor.latched=dict(reason=last.get('reason')or(
             'CONTROLLED_STOP_OR_STATE_UNCONFIRMED'if uncertain else'UNCONFIRMED_HARD_STOP'),
             evidence=last.get('recovery')if uncertain else last.get('evidence'),
             source='unconfirmed controller state; not a measured force/speed hard event'if uncertain else'original action safety exception')
     r.world.pause()
-    initial=snapshot(r);folder=r.output/'safety_events';folder.mkdir(exist_ok=True)
-    event=folder/('hard_stop_%03d.json'%sequence)
+    initial=snapshot(r,control_fault);folder=r.output/'safety_events';folder.mkdir(exist_ok=True)
+    event=folder/(('control_block_%03d.json' if control_fault else 'hard_stop_%03d.json')%sequence)
     if not event.exists():
         with event.open('x')as f:json.dump(result_packet(initial),f,indent=2)
     from agentic_interaction_v81.session_status import write as status
@@ -52,17 +62,18 @@ def retain(ops,sequence,trace,last):
         resources=r.episode_budget.remaining(r.tick*r.dt)
         wait=max(0.,float(resources['wall_s']))
         deadline=time.time()+wait
-        packet=snapshot(r);packet.update(sequence=sequence,remaining_resources=resources)
+        packet=snapshot(r,control_fault);packet.update(sequence=sequence,remaining_resources=resources)
         atomic_json(r.output/'DECISION_PACKET.json',packet)
         status(r,sequence,'WAITING',unloaded=False,abc_contact=False,
-            diagnostic_only=True,safety_latched=True,deadline_unix_s=deadline)
+            diagnostic_only=True,safety_latched=not bool(control_fault),
+            control_blocked=bool(control_fault),deadline_unix_s=deadline)
         atomic_json(r.output/'WAITING_FOR_AGENT.json',dict(sequence=sequence,unloaded=False,
             diagnostic_only=True,timeout_s=wait,deadline_unix_s=deadline))
         path=commands/('%03d.json'%sequence)
         while not path.exists():
             if r.stopped or (r.output/'STOP_AND_EXPORT').exists() or time.time()>=deadline:
-                return dict(status='LATCHED_DIAGNOSTIC_RESOURCE_OR_OWNER_END',trace=trace,
-                    safe_exit=dict(safe=False,reason='HARD_LATCH_RETAINED_NOT_PARKED'),
+                return dict(status='CONTROL_DIAGNOSTIC_RESOURCE_OR_OWNER_END' if control_fault else 'LATCHED_DIAGNOSTIC_RESOURCE_OR_OWNER_END',trace=trace,
+                    safe_exit=dict(safe=False,reason='CONTROL_STOP_UNCONFIRMED_NOT_PARKED' if control_fault else 'HARD_LATCH_RETAINED_NOT_PARKED'),
                     retained_diagnostic_boundary=True)
             time.sleep(.05)
         command,ack=receive(path,sequence,responses)
@@ -70,15 +81,15 @@ def retain(ops,sequence,trace,last):
         if not finite_state(r):
             return dict(status='UNRECOVERABLE_SIMULATION_STATE',trace=trace,
                 safe_exit=dict(safe=False,reason='NATIVE_STATE_BECAME_UNTRUSTED'))
-        if command['operation']=='inspect':result=snapshot(r)
+        if command['operation']=='inspect':result=snapshot(r,control_fault)
         elif command['operation']=='finish':
-            result=dict(status='OWNER_FINALIZED_HARD_STOP',safe_exit=dict(safe=False,
-                reason='HARD_LATCH_RETAINED_NOT_PARKED'),task_complete=False,latch_cleared=False)
-        else:result=dict(status='HARD_LATCH_MOTION_FORBIDDEN',executed=False,
+            result=dict(status='OWNER_FINALIZED_CONTROL_BLOCK' if control_fault else 'OWNER_FINALIZED_HARD_STOP',safe_exit=dict(safe=False,
+                reason='CONTROL_STOP_UNCONFIRMED_NOT_PARKED' if control_fault else 'HARD_LATCH_RETAINED_NOT_PARKED'),task_complete=False,latch_cleared=False)
+        else:result=dict(status='CONTROL_BLOCK_MOTION_FORBIDDEN' if control_fault else 'HARD_LATCH_MOTION_FORBIDDEN',executed=False,
             latch_cleared=False,world_retained=True,episode_termination_required=False)
         entry=dict(command=command,result=result)
         complete(responses,sequence,result_packet(entry));trace.append(entry)
         atomic_json(r.output/'AGENT_ACTION_TRACE.json',result_packet(trace))
         if command['operation']=='finish':
-            return dict(status='HARD_STOP',trace=trace,safe_exit=result['safe_exit'])
+            return dict(status='CONTROL_BLOCKED' if control_fault else 'HARD_STOP',trace=trace,safe_exit=result['safe_exit'])
         sequence+=1

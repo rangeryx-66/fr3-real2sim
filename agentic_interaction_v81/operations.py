@@ -220,6 +220,7 @@ def operations_class(original):
                 acquisition_menu=menu_scope(self)
             else:acquisition_menu=nullcontext()
             with direct_return(self.r),acquisition_menu:result=super().attempt(command)
+            if self.r.job.get('v89_controller'):result['resource_admission']=resources
             result['observation_generation_v81']=generation
             self._last_contact_finished_world_s=float(self.r.world.current_time)
             result['station_generation']=self.r.base_generation
@@ -363,6 +364,7 @@ def operations_class(original):
                     result['native_scene_stamp']=scene_stamp
                 result['contact_following_v81']=following
             if association is not None:result['target_association']=association
+            if self.r.job.get('v89_controller'):result['resource_admission']=resources
             return result
 
         def redeclare_actions(self,command):

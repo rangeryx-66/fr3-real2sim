@@ -153,5 +153,57 @@ class RecoveryV87Tests(unittest.TestCase):
         self.assertFalse(outcome['trace'][1]['result']['reset_qualification']['qualified'])
         r.world.close.assert_not_called();ops.close_workers.assert_called_once()
 
+    def test_new_control_diagnostic_keeps_world_without_manufacturing_hard_latch(self):
+        from agentic_interaction_v89.controller import StopState
+        ops=self.ops;r=ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        playing=[True];r.world.pause=Mock(side_effect=lambda:playing.__setitem__(0,False))
+        r.world.is_playing=lambda:playing[0];r.world.close=Mock();r.world.reset=Mock()
+        r.command_owner=NS(state=StopState.BRAKING)
+        (r.output/'agent_commands').mkdir();(r.output/'agent_responses').mkdir()
+        for i,name in enumerate(['inspect','observe','finish']):
+            (r.output/'agent_commands'/('%03d.json'%i)).write_text(json.dumps(dict(
+                operation=name,protocol_version=1,sequence=i,reason='unconfirmed control diagnostic')))
+        out=retain(ops,0,[],dict(status='CONTROL_BLOCKED',control_fault=True,reason='STOP_LEDGER_INVALID'))
+        self.assertEqual(out['status'],'CONTROL_BLOCKED')
+        first=out['trace'][0]['result']
+        self.assertEqual(first['status'],'CONTROL_BLOCKED_WORLD_RETAINED')
+        self.assertFalse(first['native_hard_latch_present']);self.assertFalse(first['physical_park_verified'])
+        self.assertEqual(out['trace'][1]['result']['status'],'CONTROL_BLOCK_MOTION_FORBIDDEN')
+        self.assertIsNone(r.supervisor.latched);self.assertEqual(r.command_owner.state,StopState.BLOCKED)
+        r.world.close.assert_not_called();r.world.reset.assert_not_called();r.stop_command.assert_not_called()
+
+    def test_control_diagnostic_transport_allows_inspection_without_claiming_hard_latch(self):
+        import time
+        r=self.ops.r;(r.output/'agent_commands').mkdir()
+        state=dict(sequence=0,state='WAITING',unloaded=False,abc_contact=False,
+            diagnostic_only=True,safety_latched=False,control_blocked=True,deadline_unix_s=time.time()+30)
+        (r.output/'AGENT_SESSION_STATUS.json').write_text(json.dumps(state))
+        with self.assertRaisesRegex(ProtocolError,'CONTROL_BLOCK'):
+            publish(r.output,0,dict(operation='observe',reason='forbidden unqualified movement'))
+        self.assertIn('published',publish(r.output,0,dict(operation='inspect',reason='read-only diagnosis')))
+
+    def test_outer_C_stop_failure_enters_control_diagnosis_instead_of_world_teardown(self):
+        import sys
+        from types import ModuleType
+        from agentic_interaction_v81.session import serve
+        ops=self.ops;r=ops.r;r.job.update(v89_controller='coordinated_dls_v1',v84_abc=True)
+        ops.g.update(recovery_state='LOADED_CRITIQUE',v87_hold_pending=True)
+        playing=[True];r.world.pause=Mock(side_effect=lambda:playing.__setitem__(0,False))
+        r.world.is_playing=lambda:playing[0];r.world.close=Mock();ops.close_workers=Mock()
+        (r.output/'agent_commands').mkdir()
+        for i,name in enumerate(['inspect','finish']):
+            (r.output/'agent_commands'/('%03d.json'%i)).write_text(json.dumps(dict(
+                operation=name,protocol_version=1,sequence=i,reason='outer stop failure injection')))
+        observed=ModuleType('interaction_runtime.registered_observation_v71');observed.initialize=Mock()
+        owner=ModuleType('interaction_runtime.probing_v7');owner.OperationsV7=object
+        with patch.dict(sys.modules,{'interaction_runtime.registered_observation_v71':observed,
+                'interaction_runtime.probing_v7':owner}),\
+             patch('agentic_interaction_v81.session.operations_class',return_value=lambda runtime:ops),\
+             patch('agentic_interaction_v84.session.loaded_command',side_effect=RuntimeError('STOP_EXECUTION_GEOMETRY_CHANGED')):
+            out=serve(r)
+        self.assertEqual(out['status'],'CONTROL_BLOCKED');self.assertIsNone(r.supervisor.latched)
+        self.assertEqual(out['trace'][0]['result']['World_identity'],id(r.world))
+        r.world.close.assert_not_called();ops.close_workers.assert_called_once()
+
 
 if __name__=='__main__':unittest.main()

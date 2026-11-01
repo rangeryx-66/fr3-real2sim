@@ -160,7 +160,7 @@ class StagedExitTests(unittest.TestCase):
 
     def test_pending_contact_returns_to_real_physics_C_instead_of_paused_unloaded_wait(self):
         from agentic_interaction_v81.session import serve
-        ops=self.ops;r=ops.r;r.job.update(v84_abc=True,agent_wait_timeout_s=600.)
+        ops=self.ops;r=ops.r;r.job.update(v84_abc=True,v89_controller='coordinated_dls_v1',agent_wait_timeout_s=600.)
         ops._abc_retain=False;ops.abc_state='C';ops.g.update(recovery_state='LOADED_CRITIQUE',v87_hold_pending=True,observation_generations=[])
         ops.close_workers=Mock();ops.decision_packet=lambda *a:dict(unloaded=True)
         r.world.close=Mock();r.world.reset=Mock()
@@ -170,6 +170,9 @@ class StagedExitTests(unittest.TestCase):
         windows=[]
         def loaded(o,sequence):
             windows.append(sequence)
+            if sequence==0:
+                from agentic_interaction_v89.controller import MeasuredStopPending
+                raise MeasuredStopPending()
             if sequence==1:
                 o.abc_state='A';o.g['recovery_state']='UNLOADED_OBSERVATION'
                 o.g.pop('v87_hold_pending')

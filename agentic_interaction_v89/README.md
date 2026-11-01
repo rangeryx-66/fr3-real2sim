@@ -56,13 +56,17 @@ settle holds the zero command under supervision and returns a typed pending
 state to every staged-exit dwell, not an invented measured collision. The
 later settle() path also catches pending; it cannot leak into session teardown. A missing certified
 brake or a changed blocking scene is diagnostic/control uncertainty; it never
-authorizes automatic motion or latch clearing. Real hard supervision retains
-its original latch and evidence.
+authorizes automatic motion or latch clearing. Unexpected stop/ledger errors at outer C retain a paused finite World as
+CONTROL_BLOCKED diagnosis; this is not measured rest or a native hard latch.
+Only inspection/owner finalization is available there, without automatic reset.
+Real hard supervision retains its original latch and evidence.
 
-Stationarity uses the original MotionDwell stop cell (TCP1mm/s, arm.01rad/s,
-TCP rotation.01rad/s, object1e-4native/s,300ms) plus XY1e-4m/s,
-from consecutive240Hz measured XY/arm/TCP/object configurations,
-including TCP orientation, extending the existing MotionDwell convention.
+Stationarity directly reuses the executed V87 PhysicalMotionDwell SI witness:
+arm<.01rad/s, TCP/object path<.001m/s, TCP/object rotation<.01rad/s,300ms.
+Known articulation converts object motion to surface metres, preserving its
+native coordinate separately. The owner additionally confirms measured XY
+<=1e-4m/s for300ms; cancellation cannot hide moving carriage coordinates. No
+second TCP/object stop criterion is maintained.
 PhysX projected joint dq is retained separately and still goes through the
 original hard supervisor. Native dq can disagree with actual configuration
 motion during constraint stabilization; neither quantity is silently relabelled.
@@ -73,8 +77,11 @@ The established offline coupled geometric continuation remains for grasp/path
 feasibility; it writes no commands. The unnecessary new offline DLS planner
 was removed to avoid changing grasp availability while replacing the servo.
 Existing constructor-only scene bindings, grasp planners and ABC operation
-wrappers remain outside this replacement. The inherited free-space timed paths
-also pass through the same final owner and submission interface.
+wrappers remain outside this replacement. The inherited native C2 timed joint paths pass position samples through the
+same final owner (exact discrete-rate/geometry/brake validation), without a
+second retiming filter. Cartesian DLS demand uses the owner's one rate stage.
+Both submit through the same drive interface. Empirical attempt/ETA forecasts
+are advisory; actual episode work/exit budgets and native checks remain binding.
 
 ## Launch
 

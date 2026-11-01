@@ -14,6 +14,14 @@ def admit_staged_motion(r,candidate,actions,check):
     g=r.g;c=r.v75_config;dt=r.dt;speed=np.asarray(r.c['arm_speed_limits'])/3
     transition=validate_execution(g,candidate=candidate,write=False)
     if not transition['valid']:return dict(admit=False,status='CURRENT_TRANSITION_INVALID',physical_failure=False)
+    if r.job.get('v89_controller'):
+        remaining=r.episode_budget.remaining(r.tick*dt)
+        admitted=bool(check.get('valid') and remaining['wall_s']>0 and remaining['sim_s']>0)
+        return dict(admit=admitted,status='CURRENT_NATIVE_PROOF_AND_WORK_BUDGET' if admitted else 'NATIVE_PROOF_OR_ACTUAL_WORK_BUDGET_REQUIRED',
+            remaining_work=remaining,native_transition_checked=True,
+            empirical_cost_forecast_advisory=True,stale_timed_cost_recomputation_skipped=True,
+            exact_episode_deadline_unchanged=True,exit_reserve_unchanged=True,
+            future_parking_route_is_not_motion_admission=True,physical_failure=False)
     fingers=np.asarray(r.robot.get_joint_positions())[r.fingers].copy();M=r.moving().copy()
     def counted(path,phase,moving,finger_q):
         def okay(q):

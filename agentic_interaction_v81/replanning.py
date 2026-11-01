@@ -204,15 +204,22 @@ def admission(ops,actions=None):
     Unknown first-operation costs are reported, not invented as safety limits.
     """
     from .recovery_batch import measured_costs
+    def authority(forecast):
+        if not ops.r.job.get('v89_controller'):return forecast
+        available=forecast['remaining_work']
+        return dict(forecast,forecast_admitted=forecast['admitted'],
+            admitted=available['wall_s']>0 and available['sim_s']>0,
+            empirical_cost_forecast_advisory=True,
+            admission_basis='actual work resources; current native checks and protected exit remain authoritative')
     if getattr(ops.r,'job',{}).get('v81_integrated_repair'):
         from .costs import admission as measured_admission
-        return measured_admission(ops,actions)
+        return authority(measured_admission(ops,actions))
     cost=measured_costs(ops);remaining=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
     latest=cost['observed_max_operation_wall_s']
     names=('reobserve_and_replan','prepare_grasp','attempt_grasp_and_probe')
     reserve=sum(latest[n] for n in names) if all(n in latest for n in names) else None
     need=(reserve+latest['attempt_grasp_and_probe']) if reserve is not None else None
-    return dict(admitted=need is None or need<=remaining['wall_s'],
+    return authority(dict(admitted=need is None or need<=remaining['wall_s'],
         measured_current_attempt_plus_one_recovery_wall_s=need,
         remaining_work=remaining,exit_reserve_already_excluded=True,
-        cost_unknown=need is None)
+        cost_unknown=need is None))

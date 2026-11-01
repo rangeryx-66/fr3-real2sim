@@ -34,6 +34,8 @@ def runtime_class(parent):
             self.kernel = WeightedDLS(self.coupled)
             self.command_owner = CommandOwner(self.coupled, self._requested_position(), self.dt)
             self.measured_motion = MeasuredMotion(self.dt)
+            from agentic_interaction_v87.motion_policy import PhysicalMotionDwell, articulation_prior
+            self.station_motion = PhysicalMotionDwell(self.dt, lambda: articulation_prior(self))
             self._last_bounds = self._bounds(self.g['phase'])
             self._last_phase = self.g['phase']
             self._v89_mobile = False
@@ -146,7 +148,7 @@ def runtime_class(parent):
                 request = self._requested_position()
                 if not np.array_equal(request, owner.command.position):
                     wanted = (request - owner.command.position) / self.dt
-                    p = owner.propose(wanted, self._bounds(self.g['phase']), self._geometry())
+                    p = owner.propose_position(request, self._bounds(self.g['phase']), self._geometry())
                     self._last_proposal = p
                     if not p.accepted:
                         self.event('V89_CANDIDATE_REJECTED', reason=p.reason,
@@ -320,6 +322,7 @@ def runtime_class(parent):
                             source='consecutive native configurations; projected dq retained and hard-supervised',
                             configuration_motion={k: v.tolist() if isinstance(v, np.ndarray) else v
                                 for k, v in self.measured_motion.latest.items()},
+                            SI_body_stop_witness=self.station_motion.latest,
                             native_projected_velocity=np.asarray(row['joint_velocities']).tolist())
                         return
                 # Motion is held and supervised, but no release or new B is
@@ -342,8 +345,8 @@ def runtime_class(parent):
                 row['full_rate_control_evidence'] = owner.state in (
                     StopState.RUNNING, StopState.BRAKING, StopState.SETTLING)
                 if motion is not None and owner.state in (StopState.SETTLING, StopState.STOPPED):
-                    owner.observe_stop(motion['velocity'], motion['tcp_speed'], motion['object_speed'],
-                        tcp_angular_speed=motion['tcp_angular_speed'])
+                    owner.observe_stop(motion['velocity'][:2],
+                        body_stationary=bool(self.station_motion.latest and self.station_motion.latest['ready']))
             return result
 
         def move_path(self, *args, **kwargs):

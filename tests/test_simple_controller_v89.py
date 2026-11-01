@@ -72,6 +72,20 @@ class SimpleControllerTests(unittest.TestCase):
         np.testing.assert_array_equal(o.command.position, q)
         self.assertTrue(o.stop.valid)
 
+    def test_native_timed_position_is_not_rate_filtered_twice_or_lost(self):
+        o=CommandOwner(LinearRobot(),np.zeros(9),1/240);b=bounds()
+        for k in range(1,31):
+            # Native pre-timed triangular joint speed, exact discrete positions.
+            v=min(k,30-k)*1e-5
+            requested=o.command.position+np.r_[v,np.zeros(8)]*o.dt
+            p=o.propose_position(requested,b)
+            self.assertTrue(p.accepted,p.reason);o.commit(p)
+            np.testing.assert_array_equal(o.command.position,requested)
+        final=o.command
+        rejected=o.propose_position(final.position+np.r_[.1,np.zeros(8)],b)
+        self.assertFalse(rejected.accepted);self.assertIs(o.command,final)
+        self.assertTrue(o.stop.valid)
+
     def test_dt_gain_and_motion_time(self):
         endpoints = []
         for dt in (1/60, 1/240):
@@ -115,9 +129,9 @@ class SimpleControllerTests(unittest.TestCase):
         self.assertFalse(o.measured_stationary)
         o.settling()
         for _ in range(100):
-            self.assertFalse(o.observe_stop(v, 0., 0.))
-        for _ in range(38): self.assertFalse(o.observe_stop(np.zeros(9), 0., 0.))
-        for _ in range(38): o.observe_stop(np.zeros(9), 0., 0.)
+            self.assertFalse(o.observe_stop(v[:2], body_stationary=True))
+        for _ in range(38): self.assertFalse(o.observe_stop(np.zeros(2), body_stationary=True))
+        for _ in range(38): o.observe_stop(np.zeros(2), body_stationary=True)
         self.assertEqual(o.state, StopState.STOPPED)
         # Restart needs no reset or latch clearing.
         p = o.propose(np.r_[.001, np.zeros(8)], bounds())
@@ -133,23 +147,26 @@ class SimpleControllerTests(unittest.TestCase):
         self.assertIs(o.command, before)
 
     def test_stop_observation_uses_actual_motion_and_rejects_rotating_or_moving_base(self):
+        from agentic_interaction_v87.motion_policy import PhysicalMotionDwell
+        from interaction_runtime.articulation_v7 import Articulation
+        native=PhysicalMotionDwell(1/240,lambda:Articulation('prismatic',(1,0,0),(0,0,0),(-1,1)))
         m=MeasuredMotion(1/240);o=CommandOwner(LinearRobot(),np.zeros(9),1/240)
         o.settling()
         for i in range(80):
             # A .02rad/s projected native dq can coexist with static integrated
             # poses; it is retained by runtime, not used as a pose derivative.
             motion=m.update(i/240,np.zeros(9),np.eye(4),0.)
-            if motion:o.observe_stop(**motion)
+            if motion:o.observe_stop(motion['velocity'][:2],body_stationary=native.update(i/240,np.zeros(7),np.eye(4),0.)['ready'])
         self.assertTrue(o.measured_stationary)
         for i in range(80,120):
             T=np.eye(4);T[:3,:3]=Rotation.from_rotvec([0,0,.02*(i-80)/240]).as_matrix()
             motion=m.update(i/240,np.zeros(9),T,0.)
-            o.observe_stop(**motion)
+            o.observe_stop(motion['velocity'][:2],body_stationary=native.update(i/240,np.zeros(7),T,0.)['ready'])
         self.assertFalse(o.measured_stationary)
         self.assertEqual(o.state,StopState.SETTLING)
         # Stationary TCP from XY/arm cancellation still is NOT measured rest.
         v=np.r_[.001,0,-.001,np.zeros(6)]
-        for _ in range(40): self.assertFalse(o.observe_stop(v,0.,0.))
+        for _ in range(40): self.assertFalse(o.observe_stop(v[:2],body_stationary=True))
         self.assertIsNone(m.update(10.,np.zeros(9),np.eye(4),0.))
 
     def test_stop_cell_matches_original_dwell_with_small_contact_jitter(self):
@@ -160,11 +177,11 @@ class SimpleControllerTests(unittest.TestCase):
             T=np.eye(4);T[0,3]=2e-6*np.sin(2*np.pi*20*i/240)
             original.update(i/240,np.zeros(7),T,0.)
             motion=m.update(i/240,np.zeros(9),T,0.)
-            if motion:o.observe_stop(**motion)
+            if motion:o.observe_stop(motion['velocity'][:2],body_stationary=original.latest['ready'])
         self.assertTrue(original.latest['ready'])
         self.assertTrue(o.measured_stationary)
-        self.assertFalse(o.observe_stop(np.zeros(9),0.,2e-4),'Moving object cannot qualify')
-        self.assertFalse(o.observe_stop(np.r_[2e-4,np.zeros(8)],0.,0.),'Moving XY cannot hide behind quiet TCP')
+        self.assertFalse(o.observe_stop(np.zeros(2),body_stationary=False),'Moving object cannot qualify')
+        self.assertFalse(o.observe_stop(np.array([2e-4,0.]),body_stationary=True),'Moving XY cannot hide behind quiet TCP')
 
     def test_control_fault_does_not_blacklist_verified_grasp_or_erase_physical_fault(self):
         from agentic_interaction_v87.recovery import failed_grasp_evidence
@@ -221,9 +238,10 @@ class SimpleControllerTests(unittest.TestCase):
         r.world=SimpleNamespace(play=lambda:playing.__setitem__(0,True))
         r._geometry=lambda **kw:lambda q:(True,'')
         r.measured_motion=SimpleNamespace(latest=dict(velocity=np.zeros(9),tcp_speed=0.,tcp_angular_speed=0.,object_speed=0.))
+        r.station_motion=SimpleNamespace(latest=dict(ready=True))
         def step():
             self.assertTrue(playing[0],'A paused World cannot supply a valid physics dt')
-            r.command_owner.observe_stop(np.zeros(9),0.,0.)
+            r.command_owner.observe_stop(np.zeros(2),body_stationary=True)
             return {'joint_velocities':np.zeros(9)}
         r.step=step
         r.stop_command()

@@ -48,13 +48,30 @@ def validate(config):
     if o.stop.valid:
         for sample in o.start_stop(): o.commit_brake(sample)
         o.settling()
-        for _ in range(38): o.observe_stop(np.zeros(9), 0., 0.)
+        for _ in range(74): o.observe_stop(np.zeros(2), body_stationary=True)
+    # Exercise the actual native C2 timed-reference generator against the new
+    # position transaction. No second rate filter or lost terminal sample.
+    from interaction_runtime.motion import timed_path
+    from dataclasses import replace
+    timed_bounds=replace(b,linear_guard_speed=.03)
+    joint_target=q[2:].copy();joint_target[-1]+=.02
+    joint_owner=CommandOwner(k,q,1/240);timed_steps=0
+    motion=dict(speed_m_s=b.linear_speed,angular_speed_rad_s=b.angular_speed,
+        acceleration_m_s2=b.linear_acceleration,angular_acceleration_rad_s2=b.angular_acceleration)
+    for sample,_ in timed_path(solver,k.base(q[:2]),[q[2:],joint_target],1/240,
+            motion,speeds[2:],.8,lambda values:(True,'')):
+        p=joint_owner.propose_position(np.r_[q[:2],sample],timed_bounds)
+        if not p.accepted:raise AssertionError(('NATIVE_TIMED_REFERENCE',p.reason))
+        joint_owner.commit(p);timed_steps+=1
+    timed_error=float(np.max(abs(joint_owner.command.position[2:]-joint_target)))
+    if timed_error>1e-10:raise AssertionError(('TIMED_ENDPOINT_DROPPED',timed_error))
     return dict(physical_simulation=False, collision_or_contact_validation=False,
         world_jacobian_max_absolute_error=error, motion_steps=len(times), failures=failures,
         command_stop_valid=o.stop.valid, measured_stationarity='SYNTHETIC_ZERO_VELOCITY_ONLY',
         commanded_XY_displacement_m=(o.command.position[:2] - q[:2]).tolist(),
         commanded_arm_displacement_rad=(o.command.position[2:] - q[2:]).tolist(),
         max_reference_error_m=max_error,
+        native_timed_reference_steps=timed_steps,native_timed_endpoint_error_rad=timed_error,
         solve_and_command_median_s=float(np.median(times)),
         solve_and_command_p95_s=float(np.quantile(times, .95)),
         stop_check_median_s=float(np.median(stops)) if stops else None)
