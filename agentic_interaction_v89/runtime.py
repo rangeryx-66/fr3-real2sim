@@ -334,6 +334,17 @@ def runtime_class(parent):
                 self._decelerating = False
                 self.g['phase'] = self.phase = requested
 
+        def hold(self, seconds):
+            # A stop/hold cannot inherit PrismaticFeedback.hold(), which may
+            # begin a new Cartesian retention motion after stopping. Contact
+            # balancing belongs to explicit A/B references, not this state.
+            if not np.isfinite(seconds) or seconds < 0:
+                raise ValueError('FINITE_NONNEGATIVE_HOLD_SECONDS_REQUIRED')
+            self.stop_command()
+            for _ in range(round(seconds / self.dt)):
+                self._write_command()
+                self.step()
+
         def enrich_measurement(self, row, pre_contact_poses):
             result = super().enrich_measurement(row, pre_contact_poses)
             if hasattr(self, 'coupled'):

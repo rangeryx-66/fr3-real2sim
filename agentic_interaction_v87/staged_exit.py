@@ -46,6 +46,14 @@ def settle(ops):
     # Existing supervised stationary dwell, including actual object motion;
     # no requirement to be inside the unrelated native-rest joint cell.
     r=ops.r
+    if r.job.get('v89_controller'):
+        # The owner already waits for the SAME300ms measured witness plus XY.
+        # A second hold(.3) silently demands a longer quiet window and can miss
+        # a valid release boundary under intermittent low-amplitude motion.
+        from agentic_interaction_v89.controller import MeasuredStopPending
+        try:r.stop_command()
+        except MeasuredStopPending:return False
+        return safe_hold(ops)
     for _ in range(math.ceil(2./.3)):
         try:r.hold(.3)
         except RuntimeError as error:
@@ -189,8 +197,16 @@ def release_park(ops):
         width=float(r.rows[-1]['aperture_m'])
         count=max(2,math.ceil(abs(.084-width)/(r.policy.data['jaw_release_m_s']*r.dt)))
         for w in np.linspace(width,.084,count+1):r.jaw_width=float(w);r.step()
-        r.hold(.3)
-        if not confirmed_unloaded(r):r.hold(1.)
+        if r.job.get('v89_controller'):
+            if not settle(ops):return end(SAFE_RELEASE_NOT_CONFIRMED)
+        else:r.hold(.3)
+        if not confirmed_unloaded(r):
+            try:r.hold(1.)
+            except RuntimeError as error:
+                from agentic_interaction_v89.controller import MeasuredStopPending
+                if r.job.get('v89_controller') and isinstance(error,MeasuredStopPending):
+                    return end(SAFE_RELEASE_NOT_CONFIRMED)
+                raise
         if not confirmed_unloaded(r):return end(SAFE_RELEASE_NOT_CONFIRMED)
     if not settle(ops):return end(SAFE_RELEASE_NOT_CONFIRMED)
     out['release'].update(confirmed=True,state=measured(r));stage('RELEASE_CONFIRMED')

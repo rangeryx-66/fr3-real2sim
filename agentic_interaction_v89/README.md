@@ -67,6 +67,12 @@ Known articulation converts object motion to surface metres, preserving its
 native coordinate separately. The owner additionally confirms measured XY
 <=1e-4m/s for300ms; cancellation cannot hide moving carriage coordinates. No
 second TCP/object stop criterion is maintained.
+Staged exit consumes the qualified stop immediately instead of appending another
+300ms hold before checking it. Contact04 retained World but repeatedly missed
+valid300–600ms quiet windows (EXIT_UNVERIFIED); that negative run is preserved.
+The new runtime's explicit hold submits only its stopped command and native G1
+target. It cannot inherit the old loaded-contact hold's implicit Cartesian
+retention restart. Intentional balancing remains in explicit A/B execution.
 PhysX projected joint dq is retained separately and still goes through the
 original hard supervisor. Native dq can disagree with actual configuration
 motion during constraint stabilization; neither quantity is silently relabelled.

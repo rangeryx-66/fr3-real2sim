@@ -311,5 +311,20 @@ class SimpleControllerTests(unittest.TestCase):
         r.g['phase']='CENTER';r.base_active=True;self.assertTrue(callable(r._geometry()))
         r.base_active=False;self.assertTrue(callable(r._geometry(stopping=True)))
 
+    def test_hold_cannot_restart_legacy_retention_motion(self):
+        from agentic_interaction_v89.runtime import runtime_class
+        class Parent:
+            def hold(self,seconds):raise AssertionError('legacy retention restart')
+        cls=runtime_class(Parent);r=cls.__new__(cls);r.dt=1/240
+        r.stop_command=Mock();r._write_command=Mock();r.step=Mock()
+        r.cartesian_step=Mock(side_effect=AssertionError('stopped hold cannot start motion'))
+        r.hold(.05)
+        r.stop_command.assert_called_once();self.assertEqual(r.step.call_count,12)
+        r.cartesian_step.assert_not_called()
+        from agentic_interaction_v89.controller import MeasuredStopPending
+        r.stop_command.side_effect=MeasuredStopPending();r.step.reset_mock()
+        with self.assertRaises(MeasuredStopPending):r.hold(.05)
+        r.step.assert_not_called()
+
 
 if __name__ == '__main__': unittest.main()

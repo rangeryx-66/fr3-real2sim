@@ -146,7 +146,7 @@ class StagedExitTests(unittest.TestCase):
         from agentic_interaction_v89.controller import MeasuredStopPending
         r=self.ops.r;r.job['v89_controller']='coordinated_dls_v1'
         r.world.close=Mock();r.world.reset=Mock();world=r.world
-        r.hold.side_effect=MeasuredStopPending()
+        r.stop_command.side_effect=MeasuredStopPending()
         r.station_motion.ready=lambda *a:False
         with patch('agentic_interaction_v84.operations.contact_trusted',return_value=True):
             out=self.run_exit()
@@ -154,9 +154,20 @@ class StagedExitTests(unittest.TestCase):
         self.assertTrue(out['protective_hold_only']);self.assertTrue(self.ops.g['v87_hold_pending'])
         self.assertIsNone(r.supervisor.latched);r.move_path.assert_not_called()
         r.world.close.assert_not_called();r.world.reset.assert_not_called()
-        r.hold.side_effect=None;r.station_motion.ready=lambda *a:True
+        r.stop_command.side_effect=None;r.station_motion.ready=lambda *a:True
         out=self.run_exit()
         self.assertTrue(out['safe']);self.assertIs(r.world,world)
+
+    def test_new_exit_consumes_current_stop_without_an_extra_quiet_window(self):
+        r=self.ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        r.command_owner=NS(command_zero=True,measured_stationary=True)
+        # A valid original300ms window must remain usable. Advancing physics
+        # would lose it; the old extra hold(.3) was a second timing gate.
+        r.hold.side_effect=AssertionError('qualified stop must not be extended')
+        self.assertTrue(staged.settle(self.ops))
+        r.stop_command.assert_called_once();r.hold.assert_not_called()
+        r.command_owner.measured_stationary=False
+        self.assertFalse(staged.settle(self.ops),'Unconfirmed stop still forbids release')
 
     def test_pending_contact_returns_to_real_physics_C_instead_of_paused_unloaded_wait(self):
         from agentic_interaction_v81.session import serve
