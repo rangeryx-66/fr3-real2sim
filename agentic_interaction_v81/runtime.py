@@ -78,7 +78,9 @@ def runtime_class(original):
                 from isaacsim.core.utils.types import ArticulationAction
                 self.controller.raw.apply_action(ArticulationAction(joint_positions=self.base_goal,
                     joint_velocities=self.base_velocity,joint_indices=self.base_indices))
-            self.engineering_before_physics=actuate
+            # Replacement controller submits XY+arm+G1 in one NativeDrive call.
+            # Keep ONLY the passive object law in the before-physics hook.
+            self.engineering_before_physics=passive if job.get('v89_controller') else actuate
             self.record.metadata['v81_base']=dict(joint_indices=self.base_indices.tolist(),joint_names=self.mount['joint_names'],
                 moving_only_when_verified_unloaded=True,kind='simulated driven XY carriage; not wheels')
             if job.get('v81_integrated_repair') and job['articulation_v7']['joint_type']=='prismatic':

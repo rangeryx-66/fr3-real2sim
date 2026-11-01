@@ -40,9 +40,15 @@ def relocate_observe_prepare(ops,command):
         for_job(ops.r.job,preload)
     cost=measured_costs(ops)
     remaining=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
-    if cost['available'] and cost['recovery_preparation_and_attempt_observed_cost_s']>remaining['wall_s']:
+    if remaining['wall_s']<=0 or remaining['sim_s']<=0:
+        return dict(executed=False,recoverable=True,reason='ACTUAL_WORK_BUDGET_EXHAUSTED',remaining=remaining)
+    if (cost['available'] and cost['recovery_preparation_and_attempt_observed_cost_s']>remaining['wall_s']
+            and not ops.r.job.get('v89_controller')):
         return dict(executed=False,recoverable=True,reason='OBSERVED_RECOVERY_COST_EXCEEDS_WORK_BUDGET',
             costs=cost,remaining=remaining,physical_contact_approved=False)
+    if (cost['available'] and cost['recovery_preparation_and_attempt_observed_cost_s']>remaining['wall_s']
+            and ops.r.job.get('v89_controller')):
+        ops.r.event('RECOVERY_COST_FORECAST_ADVISORY',forecast=cost,remaining_work=remaining)
     evaluated=ops.evaluate_station(command)
     if not evaluated.get('valid'):
         return dict(executed=False,evaluation=evaluated,reason='NO_VALIDATED_STATION_ROUTE')

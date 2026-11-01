@@ -120,6 +120,11 @@ class OperationsV7(OperationsV5):
         result=super().attempt(command)
         self.current_plan_ready=False
         result['failed_contact_candidate']=bool(result.get('error')) or not result.get('acquisition',{}).get('acquired') or any(s.get('status') in ('TRANSMISSION_FAILURE','SAFETY_STOP') for s in result.get('segments',[]))
+        if self.r.job.get('v89_controller'):
+            from agentic_interaction_v87.recovery import failed_grasp_evidence
+            result['failed_contact_candidate']=failed_grasp_evidence(result,
+                hard_latch=self.r.supervisor.latched is not None)
+            result['candidate_failure_scope']='CONTACT_EVIDENCE_SEPARATE_FROM_CONTROL_ERROR'
         result.pop('short_success',None)
         # Legacy memory readers retain a boolean compatibility field; its V7
         # meaning is explicit, never a drawer-displacement/degree comparison.

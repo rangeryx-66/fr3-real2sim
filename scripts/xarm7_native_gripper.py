@@ -130,6 +130,27 @@ class NativeDrive:
     def command_width(self,width):
         self.aperture=float(width);a=self.geometry.angle(width);measured=float(self.robot.get_joint_positions()[self.master]);self.caps[self.master]=self.c['gripper_max_clamp_n']*abs(self.geometry.width_derivative(measured));self.robot._articulation_view.set_max_efforts(self.caps.reshape(1,-1))
         self.raw.apply_action(self.Action(joint_positions=np.array([a]),joint_velocities=np.zeros(1),joint_efforts=np.zeros(1),joint_indices=np.array([self.master])))
+    def apply_coordinated(self,xy,dxy,arm_q,arm_dq,width):
+        """Single atomic target for XY, arm and G1; original finite drive caps.
+
+        NativeDrive remains the only writer. Gravity bias and aperture preload
+        mapping are identical to apply_action + command_width, not direct force
+        control. No command is ever sent to the object articulation.
+        """
+        base=np.array([self.names.index(n) for n in ('mobile_x','mobile_y')])
+        ref=np.asarray(arm_q,float);vel=np.asarray(arm_dq,float)
+        q=np.asarray(self.robot.get_joint_positions()).copy();q[self.arm]=ref
+        g=pin.computeGeneralizedGravity(self.model,self.data,q[self.pin_native])[self.pin_arm].copy()
+        self.aperture=float(width);a=self.geometry.angle(width)
+        measured=float(self.robot.get_joint_positions()[self.master])
+        self.caps[self.master]=self.c['gripper_max_clamp_n']*abs(self.geometry.width_derivative(measured))
+        self.robot._articulation_view.set_max_efforts(self.caps.reshape(1,-1))
+        indices=np.r_[base,self.arm,self.master]
+        self.raw.apply_action(self.Action(joint_positions=np.r_[xy,ref+g/self.kp,a],
+            joint_velocities=np.r_[dxy,vel,0.],joint_efforts=np.zeros(10),joint_indices=indices))
+        self.last={'reference':ref.tolist(),'velocity_reference':vel.tolist(),
+            'gravity_bias_nm':g.tolist(),'implicit_position_target':(ref+g/self.kp).tolist(),
+            'external_effort_command_nm':[0.]*7,'synchronous_native_indices':indices.tolist()}
     def hold(self):self.command_width(self.aperture)
     def release(self,width=.084):self.command_width(width)
     def set_gains(self,kps=None,kds=None,save_to_usd=False):

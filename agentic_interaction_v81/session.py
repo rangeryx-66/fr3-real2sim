@@ -51,6 +51,18 @@ def serve(r):
                     if not r.job.get('v87_continuous_recovery'):raise
                     from agentic_interaction_v87.lifecycle import retain
                     return retain(ops,seq,trace,dict(status='SAFETY_STOP',reason=error.reason,evidence=error.evidence))
+                except RuntimeError as error:
+                    if not r.job.get('v89_controller'):raise
+                    from agentic_interaction_v89.controller import MeasuredStopPending
+                    if isinstance(error,MeasuredStopPending):
+                        g['v87_hold_pending']=True;g['recovery_state']='LOADED_CRITIQUE';ops.abc_state='C'
+                    else:
+                        # An unexpected stop/ledger failure at this outer
+                        # motion boundary must not destroy a finite World or
+                        # manufacture a measured hard-safety latch.
+                        from agentic_interaction_v87.lifecycle import retain
+                        return retain(ops,seq,trace,dict(status='CONTROL_BLOCKED',
+                            control_fault=True,reason=repr(error)))
                 # A failed stationary dwell can retain a valid, stopped-command
                 # contact. Never fall through into a 600s PAUSED loaded wait.
                 # Keep the existing finite real-physics C windows and exact

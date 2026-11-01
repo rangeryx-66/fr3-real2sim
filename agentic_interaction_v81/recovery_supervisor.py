@@ -118,6 +118,27 @@ def complete(ops,command,result):
         exit_result=result if command['operation']=='safe_release_retreat' else result.get('safe_exit',{})
         if exit_result.get('status') in PARTIAL:
             return recovery_boundary(ops,command,result,exit_result)
+    if (ops.r.job.get('v89_controller')
+            and result.get('operation_status')=='BUDGET_EXHAUSTED'):
+        # Operations preserves the typed ExecutionBudgetExhausted separately
+        # from its printable error. Do not turn that record into an unknown
+        # RuntimeError and discard an already completed, measured exit.
+        result=dict(result,status='BUDGET_EXHAUSTED',outcome=RECOVERABLE_FAILURE,
+            operation_stopped=True,budget_result_preserved=True)
+        from .terminal_safety import classify
+        owner=getattr(ops.r,'command_owner',None)
+        if (trusted(ops) and released(ops) and owner is not None
+                and owner.command_zero and owner.measured_stationary
+                and classify(None,result.get('safe_exit',{}))['safe_park_verified']):
+            from agentic_interaction_v87.recovery import invalidate
+            invalidate(ops)
+            resources=ops.r.episode_budget.remaining(ops.r.tick*ops.r.dt)
+            available=resources['wall_s']>0 and resources['sim_s']>0
+            return dict(result,status='OPERATION_BUDGET_EXHAUSTED' if available else 'BUDGET_EXHAUSTED',
+                task_complete=False,recoverable=available,
+                recovery=dict(control_trusted=True,hold_verified=True,park_verified=True,
+                    repeated_physical_parking_skipped=True,World_recreated=False,
+                    object_state_reset=False,original_goal_preserved=True))
     if result.get('error') and not result.get('outcome'):
         message=result['error']
         if isinstance(message,str) and message.startswith('RuntimeError(') and message.endswith(')'):

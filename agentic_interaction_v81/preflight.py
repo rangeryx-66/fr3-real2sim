@@ -17,8 +17,11 @@ ROOT = Path(__file__).resolve().parents[1]
 BASELINE = '2f021639aea65e6ae859bac9a3385d49db10212f'
 
 
-def baseline_audit(root=ROOT):
+def baseline_audit(root=ROOT, *, controller=None):
     """Verify every committed V8 source byte, not just a report reference."""
+    if controller is not None:
+        from agentic_interaction_v89.provenance import audit
+        return audit(root=root, controller=controller)
     from agentic_interaction_v8.cli import audit
     result = audit()
     # Untracked V8.1 modules are expected. A changed frozen tracked path is not.

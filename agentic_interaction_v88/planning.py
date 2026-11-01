@@ -30,6 +30,9 @@ def evaluate(g, candidate, actions, policy, config, solver, *, live=False):
     ix = np.array([names.index(n) for n in ('mobile_x', 'mobile_y')])
     low, high = representable_joint_bounds(model.limits, policy.data['joint_margin_rad'])
     limits = np.vstack([np.tile([-1., 1.], (2, 1)), np.column_stack([low, high])])
+    # Reuse the established OFFLINE geometric continuation. Replacing online
+    # servo IK does not require a second new grasp/path feasibility algorithm.
+    # These samples never write drives or govern actual stopping commands.
     coupled = CoupledKinematics(solver, base, measured[ix], limits,
         np.r_[.08, .08, np.asarray(config['arm_speed_limits']) / 3])
     initial = np.asarray(candidate['approach'][-1]).copy()
@@ -64,7 +67,8 @@ def evaluate(g, candidate, actions, policy, config, solver, *, live=False):
             target = float(action['target_q'])
             speed = min(action.get('reference_speed_m_s', motion['speed_m_s']), motion['speed_m_s'])
             acceleration = min(action.get('reference_acceleration_m_s2', motion['acceleration_m_s2']), motion['acceleration_m_s2'])
-            stopping = (speed ** 2 / (2 * acceleration) + speed * g['dt']) / radius
+            brake_factor = 2. if g['job'].get('v89_controller') else 1.
+            stopping = (brake_factor * speed ** 2 / (2 * acceleration) + speed * g['dt']) / radius
             end = target + np.sign(target - previous) * stopping
             if not articulation.limits[0] <= end <= articulation.limits[1]:
                 return dict(valid=False, reason='COUPLED_STOPPING_ENVELOPE_LIMIT', role=action['role'])

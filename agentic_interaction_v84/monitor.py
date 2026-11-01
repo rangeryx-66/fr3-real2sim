@@ -73,6 +73,10 @@ def factory(runtime, articulation, captures):
                 forecast=resource_forecast(previous['progress_rad'],previous['window_s'],
                     remaining,wall_window,resources)
                 self.resource_windows=self.resource_windows+[forecast] if forecast else []
+                if forecast and runtime.job.get('v89_controller'):
+                    self.last['resource_forecast_advisory']=forecast
+                    self.history[-1]=self.last.copy()
+                    return None  # Actual budget/stop owner, not an empirical ETA, ends work.
                 if len(self.resource_windows)>=2:
                     self.failure=dict(self.last,first_suspect_s=t-2*self.window,
                         classification='CURRENT_STRATEGY_EXCEEDS_REGISTERED_RESOURCES',

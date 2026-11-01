@@ -6,9 +6,17 @@ does not replace any original per-step velocity, collision or force protection.
 """
 import numpy as np
 
+# Shared measured stop cell; values are the original native MotionDwell
+# tolerances, not actuator/emergency limits. Keep replacement owners aligned.
+STOP_DWELL_S = .3
+STOP_ARM_RAD_S = .01
+STOP_TCP_M_S = .001
+STOP_TCP_RAD_S = .01
+STOP_OBJECT_NATIVE_S = 1e-4
+
 
 class MotionDwell:
-    def __init__(self, dt, duration=.3):
+    def __init__(self, dt, duration=STOP_DWELL_S):
         self.dt=float(dt);self.duration=float(duration);self.previous=None
         self.stable_s=0.;self.latest=None
 
@@ -25,7 +33,7 @@ class MotionDwell:
                     TCP_rotation_rad_s=float(np.arctan2(np.linalg.norm(R-R.T)/2**1.5,
                                                        (np.trace(R)-1)/2)/elapsed),
                     object_native_s=abs(coordinate-x0)/elapsed)
-        stable=rates is not None and rates['joint_max_rad_s']<.01 and rates['TCP_translation_m_s']<.001 and rates['TCP_rotation_rad_s']<.01 and rates['object_native_s']<1e-4
+        stable=rates is not None and rates['joint_max_rad_s']<STOP_ARM_RAD_S and rates['TCP_translation_m_s']<STOP_TCP_M_S and rates['TCP_rotation_rad_s']<STOP_TCP_RAD_S and rates['object_native_s']<STOP_OBJECT_NATIVE_S
         self.stable_s=self.stable_s+self.dt if stable else 0.
         self.previous=current if finite else None
         self.latest=dict(t=float(t),stable_s=self.stable_s,rates=rates,

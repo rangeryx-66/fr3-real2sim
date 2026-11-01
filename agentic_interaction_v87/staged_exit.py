@@ -19,15 +19,27 @@ PARTIAL={EXIT_PATH_NOT_FOUND,LOCAL_RETREAT_NOT_FOUND,SAFE_RELEASE_NOT_CONFIRMED,
 
 
 def measured(r):
-    return dict(coordinate_native=float(r.actual()),moving_pose=np.asarray(r.moving()).tolist(),
+    state=dict(coordinate_native=float(r.actual()),moving_pose=np.asarray(r.moving()).tolist(),
         robot_q=np.asarray(r.robot.get_joint_positions()).tolist(),
         retained_command=np.asarray(r.qtarget).tolist(),base=r.base.tolist(),
         t_sim=float(r.tick*r.dt),latch=r.supervisor.latched)
+    owner=getattr(r,'command_owner',None)
+    if owner is not None:
+        state.update(retained_command_scope='legacy qtarget carrier; only arm slots; XY/G1 slots are not submitted targets',
+            committed_motion_position=owner.command.position.tolist(),
+            committed_motion_velocity=owner.command.velocity.tolist(),
+            committed_motion_order=['mobile_x','mobile_y']+list(r.c['arm_joint_names']),
+            requested_G1_aperture_m=float(r.jaw_width),
+            G1_scope='explicit aperture policy request, finite NativeDrive mapping; not measured force',
+            command_zero=bool(owner.command_zero),measured_stationary=bool(owner.measured_stationary))
+    return state
 
 
 def safe_hold(ops):
     from agentic_interaction_v81.recovery_supervisor import trusted
     r=ops.r
+    owner=getattr(r,'command_owner',None)
+    if owner is not None and (not owner.command_zero or not owner.measured_stationary):return False
     if not trusted(ops) or np.max(abs(r.g['qvelocity']))>1e-10:return False
     q=np.asarray(r.robot.get_joint_positions())
     if not r.station_motion.ready(r.rows[-1]['t'],q[r.arm]):return False
@@ -44,8 +56,24 @@ def settle(ops):
     # Existing supervised stationary dwell, including actual object motion;
     # no requirement to be inside the unrelated native-rest joint cell.
     r=ops.r
+    if r.job.get('v89_controller'):
+        # The owner already waits for the SAME300ms measured witness plus XY.
+        # A second hold(.3) silently demands a longer quiet window and can miss
+        # a valid release boundary under intermittent low-amplitude motion.
+        from agentic_interaction_v89.controller import MeasuredStopPending
+        try:r.stop_command()
+        except MeasuredStopPending:return False
+        return safe_hold(ops)
     for _ in range(math.ceil(2./.3)):
-        r.hold(.3)
+        try:r.hold(.3)
+        except RuntimeError as error:
+            # Every dwell can return pending, not only the first stop call.
+            # Preserve supervised C; do not let a typed ordinary pending state
+            # escape through the session and destroy its still-trusted World.
+            if r.job.get('v89_controller'):
+                from agentic_interaction_v89.controller import MeasuredStopPending
+                if isinstance(error,MeasuredStopPending):return False
+            raise
         if safe_hold(ops):return True
     return False
 
@@ -157,7 +185,12 @@ def release_park(ops):
     # owner does. V8.7 still brakes under the last accepted motion limits,
     # then restores RELEASE. Its subsequent stationary dwell must retain
     # access to the existing exit reserve when ordinary work is exhausted.
-    g['phase']='RELEASE';r.stop_command()
+    g['phase']='RELEASE'
+    if r.job.get('v89_controller'):
+        from agentic_interaction_v89.controller import MeasuredStopPending
+        try:r.stop_command()
+        except MeasuredStopPending:return end(SAFE_HOLD_NOT_ESTABLISHED)
+    else:r.stop_command()
     if not settle(ops):return end(SAFE_HOLD_NOT_ESTABLISHED)
     g.pop('v87_hold_pending',None)
     # Existing verified parking may be reused only after measured revalidation.
@@ -174,8 +207,16 @@ def release_park(ops):
         width=float(r.rows[-1]['aperture_m'])
         count=max(2,math.ceil(abs(.084-width)/(r.policy.data['jaw_release_m_s']*r.dt)))
         for w in np.linspace(width,.084,count+1):r.jaw_width=float(w);r.step()
-        r.hold(.3)
-        if not confirmed_unloaded(r):r.hold(1.)
+        if r.job.get('v89_controller'):
+            if not settle(ops):return end(SAFE_RELEASE_NOT_CONFIRMED)
+        else:r.hold(.3)
+        if not confirmed_unloaded(r):
+            try:r.hold(1.)
+            except RuntimeError as error:
+                from agentic_interaction_v89.controller import MeasuredStopPending
+                if r.job.get('v89_controller') and isinstance(error,MeasuredStopPending):
+                    return end(SAFE_RELEASE_NOT_CONFIRMED)
+                raise
         if not confirmed_unloaded(r):return end(SAFE_RELEASE_NOT_CONFIRMED)
     if not settle(ops):return end(SAFE_RELEASE_NOT_CONFIRMED)
     out['release'].update(confirmed=True,state=measured(r));stage('RELEASE_CONFIRMED')

@@ -142,9 +142,49 @@ class StagedExitTests(unittest.TestCase):
         out=ops.continue_motion(dict(operation='continue_motion'))
         self.assertFalse(out['executed']);self.assertFalse(out['main_motion_authorized'])
 
+    def test_later_typed_stop_pending_retains_world_and_recovers_exit(self):
+        from agentic_interaction_v89.controller import MeasuredStopPending
+        r=self.ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        r.world.close=Mock();r.world.reset=Mock();world=r.world
+        r.stop_command.side_effect=MeasuredStopPending()
+        r.station_motion.ready=lambda *a:False
+        with patch('agentic_interaction_v84.operations.contact_trusted',return_value=True):
+            out=self.run_exit()
+        self.assertEqual(out['status'],staged.SAFE_HOLD_NOT_ESTABLISHED)
+        self.assertTrue(out['protective_hold_only']);self.assertTrue(self.ops.g['v87_hold_pending'])
+        self.assertIsNone(r.supervisor.latched);r.move_path.assert_not_called()
+        r.world.close.assert_not_called();r.world.reset.assert_not_called()
+        r.stop_command.side_effect=None;r.station_motion.ready=lambda *a:True
+        out=self.run_exit()
+        self.assertTrue(out['safe']);self.assertIs(r.world,world)
+
+    def test_new_exit_consumes_current_stop_without_an_extra_quiet_window(self):
+        r=self.ops.r;r.job['v89_controller']='coordinated_dls_v1'
+        r.command_owner=NS(command_zero=True,measured_stationary=True)
+        # A valid original300ms window must remain usable. Advancing physics
+        # would lose it; the old extra hold(.3) was a second timing gate.
+        r.hold.side_effect=AssertionError('qualified stop must not be extended')
+        self.assertTrue(staged.settle(self.ops))
+        r.stop_command.assert_called_once();r.hold.assert_not_called()
+        r.command_owner.measured_stationary=False
+        self.assertFalse(staged.settle(self.ops),'Unconfirmed stop still forbids release')
+
+    def test_snapshot_separates_committed_XY_arm_from_legacy_carrier_and_G1_request(self):
+        r=self.ops.r;r.c={'arm_joint_names':['joint%d'%i for i in range(1,8)]}
+        r.jaw_width=.012
+        q=np.r_[.01,-.02,np.linspace(0,.006,7)]
+        r.command_owner=NS(command=NS(position=q,velocity=np.zeros(9)),
+            command_zero=True,measured_stationary=False)
+        out=staged.measured(r)
+        self.assertEqual(out['committed_motion_position'],q.tolist())
+        self.assertEqual(out['retained_command'][:2],[0.,0.])
+        self.assertIn('not submitted targets',out['retained_command_scope'])
+        self.assertEqual(out['requested_G1_aperture_m'],.012)
+        self.assertTrue(out['command_zero']);self.assertFalse(out['measured_stationary'])
+
     def test_pending_contact_returns_to_real_physics_C_instead_of_paused_unloaded_wait(self):
         from agentic_interaction_v81.session import serve
-        ops=self.ops;r=ops.r;r.job.update(v84_abc=True,agent_wait_timeout_s=600.)
+        ops=self.ops;r=ops.r;r.job.update(v84_abc=True,v89_controller='coordinated_dls_v1',agent_wait_timeout_s=600.)
         ops._abc_retain=False;ops.abc_state='C';ops.g.update(recovery_state='LOADED_CRITIQUE',v87_hold_pending=True,observation_generations=[])
         ops.close_workers=Mock();ops.decision_packet=lambda *a:dict(unloaded=True)
         r.world.close=Mock();r.world.reset=Mock()
@@ -154,6 +194,9 @@ class StagedExitTests(unittest.TestCase):
         windows=[]
         def loaded(o,sequence):
             windows.append(sequence)
+            if sequence==0:
+                from agentic_interaction_v89.controller import MeasuredStopPending
+                raise MeasuredStopPending()
             if sequence==1:
                 o.abc_state='A';o.g['recovery_state']='UNLOADED_OBSERVATION'
                 o.g.pop('v87_hold_pending')

@@ -61,7 +61,7 @@ class CompactRecorder:
             pad_load=np.array(list(row['forces_n'].values()),dtype=np.float32),relative_slip_m=np.float32(row['relative_translation_slip_m']),phase=np.uint8(self.metadata['phases'].index(phase)),
             mode=np.uint8(mode),segment=np.uint16(self.segment),ft_valid=np.uint8(ft['valid']),safety_stop=np.uint8(bool(force.get('stop') or row.get('stop'))),
             load_warning=np.uint8(force.get('status')=='INFORMATIONAL_LOAD_WARNING'),positive_contacts=np.uint16(positive))
-        high=bool(self.segment or positive or mode==2 or force.get('status','NORMAL')!='NORMAL' or phase in ('LOW_PRELOAD','FORCE_HOLD','RELEASE'))
+        high=bool(self.segment or positive or mode==2 or force.get('status','NORMAL')!='NORMAL' or phase in ('LOW_PRELOAD','FORCE_HOLD','RELEASE') or row.get('full_rate_control_evidence',False))
         self.pre.append([x,high or self.count%24==0]);self.count+=1
         if high:
             for item in self.pre:item[1]=True

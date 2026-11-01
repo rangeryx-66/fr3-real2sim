@@ -43,11 +43,12 @@ class SIHoldTests(unittest.TestCase):
 
 
 class MeasurementAndResourceTests(unittest.TestCase):
-    def replay(self,object_rate,tcp_rate,resources=False):
+    def replay(self,object_rate,tcp_rate,resources=False,new_controller=False):
         from agentic_interaction_v84.monitor import factory
         from interaction_runtime.progress import LOOKAHEAD_RAD
         a=Articulation('revolute',(0,0,1),(0,0,0),(-2,2));T=np.eye(4);T[0,3]=.4
         r=NS(job={'v87_constraint_policy':POLICY},tcp=lambda:T.copy(),tick=0,dt=1/240)
+        if new_controller:r.job['v89_controller']='coordinated_dls_v1'
         if resources:r.episode_budget=NS(remaining=lambda t:{'sim_s':100.,'wall_s':100.})
         clock=[0.];captures=[];fail=None
         with patch('agentic_interaction_v84.monitor.time.monotonic',side_effect=lambda:clock[0]):
@@ -72,6 +73,13 @@ class MeasurementAndResourceTests(unittest.TestCase):
         self.assertEqual(fail['classification'],'CURRENT_STRATEGY_EXCEEDS_REGISTERED_RESOURCES')
         self.assertTrue(fail['actual_co_motion_confirmed']);self.assertFalse(fail['suspect'])
         self.assertEqual(len(fail['resource_forecast']),2)
+
+    def test_new_controller_eta_advisory_keeps_progress_but_real_stall_ends_action(self):
+        m,fail=self.replay(.00001,.00001,True,True)
+        self.assertIsNone(fail);self.assertTrue(m.stable())
+        self.assertIn('resource_forecast_advisory',m.last)
+        m,fail=self.replay(0.,.01,True,True)
+        self.assertIsNotNone(fail);self.assertTrue(fail['suspect'])
 
     def test_finite_budget_is_not_an_arbitrary_minimum_speed(self):
         self.assertIsNone(resource_forecast(.0001,2.,.001,2.,{'wall_s':100.,'sim_s':100.}))
