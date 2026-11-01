@@ -139,6 +139,11 @@ def runtime_class(parent):
                     p = owner.propose(wanted, self._bounds(self.g['phase']), self._geometry())
                     self._last_proposal = p
                     if not p.accepted:
+                        self.event('V89_CANDIDATE_REJECTED', reason=p.reason,
+                            committed_position=owner.command.position.tolist(),
+                            committed_velocity=owner.command.velocity.tolist(),
+                            wanted_velocity=wanted.tolist(), phase_requested=self.g['phase'],
+                            measured_hard_event=False, proposal_submitted=False)
                         self._write_command()
                         self.stop_command()
                         raise RuntimeError('CONTROLLED_EXECUTION_INTERRUPT:' + p.reason)

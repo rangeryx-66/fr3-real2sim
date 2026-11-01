@@ -148,6 +148,19 @@ class SimpleControllerTests(unittest.TestCase):
         for _ in range(40): self.assertFalse(o.observe_stop(v,0.,0.))
         self.assertIsNone(m.update(10.,np.zeros(9),np.eye(4),0.))
 
+    def test_stop_spatial_checks_cover_cancelling_joint_motion(self):
+        v=np.r_[.02,0,-.02,np.zeros(6)]
+        o=CommandOwner(LinearRobot(),np.zeros(9),1/240,velocity=v)
+        checked=[]
+        def check(q):
+            checked.append(q.copy())
+            return q[0]<.002,'carriage_wall'
+        plan=o.brake(o.command,bounds(),check)
+        self.assertFalse(plan.valid)
+        self.assertIn('carriage_wall',plan.reason)
+        self.assertGreater(len(checked),2)
+        self.assertTrue(all(abs(q[0]+q[2])<1e-12 for q in checked))
+
     def test_float32_native_readback_cannot_create_second_proposal_during_brake(self):
         from interaction_runtime.policy import Policy, ForceMonitor
         from agentic_interaction_v89.runtime import runtime_class

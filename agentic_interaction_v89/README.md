@@ -33,8 +33,9 @@ It never reruns a failed IK/projection to brake.
 Stopping follows one common scalar multiplying ALL nine accepted velocities.
 The discrete integration used for preview is exactly the integration executed.
 This preserves cancellation; FK curvature, actual collision and measured loads
-are still checked. Stop geometry is sampled at <=8 physics intervals during
-preview; actual brake samples are checked individually. These are sampled
+are still checked. Stop geometry is sampled along all9 joint coordinates at
+0.5mm XY / .005rad arm resolution (plus first/end samples); actual brake samples
+are checked individually. These are sampled
 geometric checks, not a continuous contact/dynamic proof. The twofold nominal
 stop duration reserves acceleration for curvature; a trajectory that still
 violates the declared bounds is rejected, not force-fit by an optimizer.

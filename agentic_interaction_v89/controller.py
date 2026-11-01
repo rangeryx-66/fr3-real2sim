@@ -217,7 +217,7 @@ class CommandOwner:
         self.command_zero = not np.any(v)
         self.measured_stationary = False
 
-    def _command(self, q, v, previous, bounds):
+    def _command(self, q, v, previous, bounds, *, pose=None, previous_pose=None):
         if not np.isfinite(np.r_[q, v]).all():
             return None, 'NONFINITE_CANDIDATE'
         if np.any(q < bounds.position[:, 0]) or np.any(q > bounds.position[:, 1]):
@@ -226,14 +226,17 @@ class CommandOwner:
             return None, 'CANDIDATE_JOINT_SPEED'
         if np.any(abs(v - previous.velocity) > bounds.acceleration * self.dt + 1e-10):
             return None, 'CANDIDATE_JOINT_ACCELERATION'
-        twist = pose_error(self.kinematics.fk(q), self.kinematics.fk(previous.position)) / self.dt
+        twist = pose_error(self.kinematics.fk(q) if pose is None else pose,
+            self.kinematics.fk(previous.position) if previous_pose is None else previous_pose) / self.dt
         acc = (twist - previous.twist) / self.dt
         norms = (np.linalg.norm(twist[:3]), np.linalg.norm(twist[3:]),
                  np.linalg.norm(acc[:3]), np.linalg.norm(acc[3:]))
         limits = (bounds.linear_speed, bounds.angular_speed,
                   bounds.linear_acceleration, bounds.angular_acceleration)
-        if any(x > y * (1 + 1e-7) + 1e-9 for x, y in zip(norms, limits)):
-            return None, 'CANDIDATE_TCP_BOUND'
+        labels = ('LINEAR_SPEED', 'ANGULAR_SPEED', 'LINEAR_ACCELERATION', 'ANGULAR_ACCELERATION')
+        for label, value, limit in zip(labels, norms, limits):
+            if value > limit * (1 + 1e-7) + 1e-9:
+                return None, 'CANDIDATE_TCP_%s:%.9g>%.9g' % (label, value, limit)
         return Command(q, v, twist, previous.generation + 1), ''
 
     def brake(self, command, bounds, check=None):
@@ -249,23 +252,34 @@ class CommandOwner:
         if steps > math.ceil(5 / self.dt):
             return StopPlan((), 'BRAKE_EXCEEDS_FINITE_HORIZON')
         samples, current, checked = [], command, 0
+        current_pose = self.kinematics.fk(command.position)
+        last_checked = command.position
+        resolution = np.r_[.0005, .0005, np.full(7, .005)]
         for i in range(1, steps + 1):
             v = v0 * ((steps - i) / steps)
-            next_command, reason = self._command(current.position + self.dt * v, v, current, bounds)
+            q = current.position + self.dt * v
+            next_pose = self.kinematics.fk(q)
+            next_command, reason = self._command(q, v, current, bounds,
+                pose=next_pose, previous_pose=current_pose)
             if reason:
                 return StopPlan((), 'BRAKE_' + reason, checked)
-            # Native geometry is sampled every <= 8 control intervals, plus
-            # endpoint. Actual collision/contact supervision remains every step.
-            if check is not None and (i == 1 or i % 8 == 0 or i == steps):
+            # Spatial sampling includes ALL9 coordinates, so cancellation cannot
+            # hide carriage/arm travel behind a stationary TCP. Slow motion does
+            # not repeat the same costly geometry query every few microseconds.
+            if check is not None and (i == 1 or i == steps or
+                    np.max(abs(next_command.position-last_checked)/resolution) >= 1.):
                 checked += 1
                 valid, reason = check(next_command.position)
                 if not valid:
                     return StopPlan((), 'BRAKE_GEOMETRY:' + str(reason), checked)
+                last_checked = next_command.position
             samples.append(next_command)
             current = next_command
+            current_pose = next_pose
         # Zero dq needs one more sample to confirm the command acceleration at
         # the terminal hold, independently of measured stationarity.
-        terminal, reason = self._command(current.position, np.zeros(9), current, bounds)
+        terminal, reason = self._command(current.position, np.zeros(9), current, bounds,
+            pose=current_pose, previous_pose=current_pose)
         if reason:
             return StopPlan((), 'BRAKE_TERMINAL_' + reason, checked)
         return StopPlan(tuple(samples + [terminal]), checked_configurations=checked)
@@ -289,9 +303,17 @@ class CommandOwner:
                        bounds.angular_speed / max(np.linalg.norm(twist[3:]), 1e-30))
             delta = v - previous.velocity
             task_change = J @ delta
+            # Predict only the curvature drift at constant accepted velocity.
+            # Allocate remaining acceleration to the requested velocity change;
+            # no second optimizer, repeated line search or threshold relaxation.
+            current_pose = self.kinematics.fk(previous.position)
+            free_twist = pose_error(self.kinematics.fk(previous.position + previous.velocity*self.dt), current_pose)/self.dt
+            drift = (free_twist-previous.twist)/self.dt
+            linear_room = max(0., bounds.linear_acceleration - np.linalg.norm(drift[:3]))
+            angular_room = max(0., bounds.angular_acceleration - np.linalg.norm(drift[3:]))
             fraction = min(_fraction(delta, bounds.acceleration * self.dt),
-                .5 * bounds.linear_acceleration * self.dt / max(np.linalg.norm(task_change[:3]), 1e-30),
-                .5 * bounds.angular_acceleration * self.dt / max(np.linalg.norm(task_change[3:]), 1e-30))
+                .8 * linear_room * self.dt / max(np.linalg.norm(task_change[:3]), 1e-30),
+                .8 * angular_room * self.dt / max(np.linalg.norm(task_change[3:]), 1e-30))
             v = previous.velocity + min(1., fraction) * delta
             command, reason = self._command(previous.position + v * self.dt, v, previous, bounds)
             if reason:
